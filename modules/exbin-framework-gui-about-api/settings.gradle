@@ -1,17 +1,6 @@
-rootProject.name = 'org.exbin.framework-gui-about-api'
+rootProject.name = 'exbin-framework-gui-about-api'
 
-include ":modules:xbup-core"
 include ":modules:exbin-framework-api"
 include ":modules:exbin-framework-gui-utils"
 
-def modifyPath(project) {
-    def rootProjectDir = rootProject.projectDir.parentFile.parent
-    project.children.each { p ->
-        p.projectDir = new File(rootProjectDir + p.projectDir.path.substring(rootProject.projectDir.path.length(), p.projectDir.path.length()))
-        modifyPath(p)
-    }
-}
-
-if (rootProject.path == ':') {
-    modifyPath(rootProject)
-}
+apply from: '../modules-settings.gradle'

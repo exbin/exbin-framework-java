@@ -1,4 +1,4 @@
-rootProject.name = 'org.exbin.framework-gui-component-api'
+rootProject.name = 'exbin-framework-gui-component-api'
 
 include ":modules:xbup-core"
 include ":modules:exbin-framework"

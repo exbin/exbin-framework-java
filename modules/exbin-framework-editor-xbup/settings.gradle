@@ -1,12 +1,5 @@
-rootProject.name = 'org.exbin.framework-editor-xbup'
+rootProject.name = 'exbin-framework-editor-xbup'
 
-include ":modules:xbup-core"
-include ":modules:xbup-catalog"
-include ":modules:xbup-operation"
-include ":modules:xbup-plugin"
-include ":modules:xbup-visual"
-include ":modules:xbup-parser-tree"
-include ":modules:xbup-parser-command"
 include ":modules:exbin-framework-client"
 include ":modules:exbin-framework"
 include ":modules:exbin-framework-api"
@@ -25,14 +18,4 @@ include ":modules:exbin-framework-editor-text"
 include ":modules:hexedit"
 include ":modules:simplyhtml"
 
-def modifyPath(project) {
-    def rootProjectDir = rootProject.projectDir.parentFile.parent
-    project.children.each { p ->
-        p.projectDir = new File(rootProjectDir + p.projectDir.path.substring(rootProject.projectDir.path.length(), p.projectDir.path.length()))
-        modifyPath(p)
-    }
-}
-
-if (rootProject.path == ':') {
-    modifyPath(rootProject)
-}
+apply from: '../modules-settings.gradle'

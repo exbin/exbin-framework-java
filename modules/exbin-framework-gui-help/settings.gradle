@@ -1,8 +1,5 @@
-rootProject.name = 'org.exbin.framework-gui-help'
+rootProject.name = 'exbin-framework-gui-help'
 
-include ":modules:xbup-core"
-include ":modules:xbup-operation"
-include ":modules:xbup-parser-tree"
 include ":modules:exbin-framework"
 include ":modules:exbin-framework-api"
 include ":modules:exbin-framework-gui-menu-api"
@@ -10,14 +7,4 @@ include ":modules:exbin-framework-gui-help-api"
 include ":modules:exbin-framework-gui-frame-api"
 include ":modules:exbin-framework-gui-utils"
 
-def modifyPath(project) {
-    def rootProjectDir = rootProject.projectDir.parentFile.parent
-    project.children.each { p ->
-        p.projectDir = new File(rootProjectDir + p.projectDir.path.substring(rootProject.projectDir.path.length(), p.projectDir.path.length()))
-        modifyPath(p)
-    }
-}
-
-if (rootProject.path == ':') {
-    modifyPath(rootProject)
-}
+apply from: '../modules-settings.gradle'

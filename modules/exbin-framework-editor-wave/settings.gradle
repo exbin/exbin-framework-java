@@ -1,4 +1,4 @@
-rootProject.name = 'org.exbin.framework-editor-wave'
+rootProject.name = 'exbin-framework-editor-wave'
 
 include ":modules:xbup-core"
 include ":modules:xbup-audio"
@@ -15,14 +15,4 @@ include ":modules:exbin-framework-gui-undo-api"
 include ":modules:exbin-framework-gui-utils"
 include ":modules:exbin-framework-gui-frame-api"
 
-def modifyPath(project) {
-    def rootProjectDir = rootProject.projectDir.parentFile.parent
-    project.children.each { p ->
-        p.projectDir = new File(rootProjectDir + p.projectDir.path.substring(rootProject.projectDir.path.length(), p.projectDir.path.length()))
-        modifyPath(p)
-    }
-}
-
-if (rootProject.path == ':') {
-    modifyPath(rootProject)
-}
+apply from: '../modules-settings.gradle'
