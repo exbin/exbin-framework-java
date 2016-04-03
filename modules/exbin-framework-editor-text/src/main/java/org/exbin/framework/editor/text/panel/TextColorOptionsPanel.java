@@ -25,6 +25,7 @@ import java.util.prefs.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * XBTEditor Color Selection panel.
@@ -37,14 +38,13 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     public static final String PREFERENCES_TEXT_COLOR_DEFAULT = "textColor.default";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private ResourceBundle resourceBundle;
+    private ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
     private TextColorPanelApi frame;
     private TextColorPanel colorPanel;
 
     public TextColorOptionsPanel(TextColorPanelApi frame) {
         this.frame = frame;
         initComponents();
-        resourceBundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextColorOptionsPanel");
 
         colorPanel = new TextColorPanel(frame);
         colorPanel.setEnabled(false);

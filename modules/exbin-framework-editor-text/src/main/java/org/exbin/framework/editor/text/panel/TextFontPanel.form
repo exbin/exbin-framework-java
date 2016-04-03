@@ -7,7 +7,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
-    <AuxValue name="FormSettings_formBundle" type="java.lang.String" value="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel"/>
+    <AuxValue name="FormSettings_formBundle" type="java.lang.String" value="org/exbin/framework/editor/text/panel/resources/TextFontPanel"/>
     <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
@@ -88,11 +88,8 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="fontFamilyLabel">
               <Properties>
-                <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="default"/>
-                </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.fontFamilyLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.fontFamilyLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="fontFamilyLabel" noResource="true"/>
               </Properties>
@@ -141,11 +138,8 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="fontSizeLabel">
               <Properties>
-                <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="default"/>
-                </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.fontSizeLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.fontSizeLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="fontSizeLabel" noResource="true"/>
               </Properties>
@@ -164,7 +158,7 @@
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
             <TitledBorder title="Style:">
-              <ResourceString PropertyName="titleX" bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.fontStylePanel.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString PropertyName="titleX" bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.fontStylePanel.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -180,7 +174,7 @@
           <Properties>
             <Property name="mnemonic" type="int" value="98"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.boldCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.boldCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="boldCheckBox" noResource="true"/>
           </Properties>
@@ -189,7 +183,7 @@
           <Properties>
             <Property name="mnemonic" type="int" value="105"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.italicCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.italicCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="italicCheckBox" noResource="true"/>
           </Properties>
@@ -198,7 +192,7 @@
           <Properties>
             <Property name="mnemonic" type="int" value="117"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.underlineCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.underlineCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="underlineCheckBox" noResource="true"/>
           </Properties>
@@ -207,7 +201,7 @@
           <Properties>
             <Property name="mnemonic" type="int" value="115"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.strikethroughCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.strikethroughCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="strikethroughCheckBox" noResource="true"/>
           </Properties>
@@ -216,7 +210,7 @@
           <Properties>
             <Property name="mnemonic" type="int" value="116"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.subscriptCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.subscriptCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="subscriptCheckBox" noResource="true"/>
           </Properties>
@@ -225,7 +219,7 @@
           <Properties>
             <Property name="mnemonic" type="int" value="112"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.superscriptCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.superscriptCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="superscriptCheckBox" noResource="true"/>
           </Properties>
@@ -237,7 +231,7 @@
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
             <TitledBorder title="Preview">
-              <ResourceString PropertyName="titleX" bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.previewPanel.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString PropertyName="titleX" bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.previewPanel.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -261,7 +255,7 @@
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/lib/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.previewTextField.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/text/panel/resources/TextFontPanel.properties" key="TextFontPanel.previewTextField.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="previewTextField" noResource="true"/>
           </Properties>

@@ -21,24 +21,23 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * XBTEditor Text Encoding Options panel.
  *
- * @version 0.1.22 2013/03/24
+ * @version 0.2.0 2016/04/03
  * @author ExBin Project (http://exbin.org)
  */
 public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
     public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private ResourceBundle resourceBundle;
+    private ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
     private TextAppearancePanelFrame frame;
 
-    /** Creates new form TextColorPanel */
     public TextAppearanceOptionsPanel(TextAppearancePanelFrame frame) {
         this.frame = frame;
-        resourceBundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextAppearanceOptionsPanel");
 
         initComponents();
     }

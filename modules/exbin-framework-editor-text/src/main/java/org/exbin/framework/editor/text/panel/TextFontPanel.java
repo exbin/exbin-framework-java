@@ -75,6 +75,8 @@ public class TextFontPanel extends javax.swing.JPanel {
     private void updatePreview() {
         previewTextField.setFont(getStoredFont());
         previewTextField.repaint();
+        subscriptCheckBox.setEnabled(!superscriptCheckBox.isSelected() || (superscriptCheckBox.isSelected() && subscriptCheckBox.isSelected()));
+        superscriptCheckBox.setEnabled(!subscriptCheckBox.isSelected());
     }
 
     public Font getStoredFont() {
