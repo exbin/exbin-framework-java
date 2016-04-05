@@ -126,7 +126,13 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
             DefaultTableModel modulesTableModel = (DefaultTableModel) modulesTable.getModel();
             List<XBModuleRecord> modulesList = appEditor.getModuleRepository().getModulesList();
             for (XBModuleRecord moduleRecord : modulesList) {
-                String[] newRow = {moduleRecord.getName(), moduleRecord.getDescription()};
+                String moduleName;
+                if (moduleRecord.getName() == null || moduleRecord.getName().isEmpty()) {
+                    moduleName = moduleRecord.getModuleId();
+                } else {
+                    moduleName = moduleRecord.getName();
+                }
+                String[] newRow = {moduleName, moduleRecord.getDescription()};
                 modulesTableModel.addRow(newRow);
             }
         }
