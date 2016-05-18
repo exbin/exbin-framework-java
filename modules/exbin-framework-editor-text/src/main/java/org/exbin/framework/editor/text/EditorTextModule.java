@@ -21,7 +21,6 @@ import java.awt.Font;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
-import javax.swing.JMenu;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -116,7 +115,6 @@ public class EditorTextModule implements XBApplicationModule {
 
     public void registerOptionsMenuPanels() {
         getEncodingsHandler();
-        JMenu toolsEncodingMenu = encodingsHandler.getToolsEncodingMenu();
         encodingsHandler.encodingsRebuild();
 
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
@@ -242,7 +240,7 @@ public class EditorTextModule implements XBApplicationModule {
 
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler(application, (TextPanel) getEditorProvider(), this);
+            encodingsHandler = new EncodingsHandler(application, (TextPanel) getEditorProvider(), getTextStatusPanel());
             encodingsHandler.init();
         }
 

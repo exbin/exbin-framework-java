@@ -235,6 +235,11 @@ public class GuiEditorModule implements GuiEditorModuleApi {
             }
 
             @Override
+            public void addCommand(Command cmnd) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public List<Command> getCommandList() {
                 return new ArrayList<>();
             }

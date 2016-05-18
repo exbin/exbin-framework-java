@@ -65,7 +65,7 @@ import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
 import org.exbin.framework.editor.text.EditorTextModule;
-import org.exbin.framework.editor.text.TextStatusApi;
+import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.dialog.FindTextDialog;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.editor.api.XBEditorProvider;
@@ -78,10 +78,10 @@ import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 /**
  * Text editor panel.
  *
- * @version 0.2.0 2016/02/27
+ * @version 0.2.0 2016/05/18
  * @author ExBin Project (http://exbin.org)
  */
-public class TextPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, UndoActionsHandler {
+public class TextPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, UndoActionsHandler, TextCharsetApi {
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
     private UndoUpdateListener undoUpdateListener = null;
@@ -95,7 +95,7 @@ public class TextPanel extends javax.swing.JPanel implements XBEditorProvider, C
     private Color[] defaultColors;
     private PropertyChangeListener propertyChangeListener;
     private CharsetChangeListener charsetChangeListener = null;
-    private TextStatusApi textStatus = null;
+    private TextStatusPanel textStatus = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
     public TextPanel() {
@@ -554,10 +554,12 @@ public class TextPanel extends javax.swing.JPanel implements XBEditorProvider, C
         textArea.getCaret().addChangeListener(listener);
     }
 
+    @Override
     public Charset getCharset() {
         return charset;
     }
 
+    @Override
     public void setCharset(Charset charset) {
         this.charset = charset;
     }
@@ -631,8 +633,8 @@ public class TextPanel extends javax.swing.JPanel implements XBEditorProvider, C
         return this;
     }
 
-    public void registerTextStatus(TextStatusApi textStatusApi) {
-        this.textStatus = textStatusApi;
+    public void registerTextStatus(TextStatusPanel textStatusPanel) {
+        this.textStatus = textStatusPanel;
         attachCaretListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {

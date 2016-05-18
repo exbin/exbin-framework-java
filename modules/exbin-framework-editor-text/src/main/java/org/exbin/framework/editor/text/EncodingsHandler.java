@@ -33,8 +33,6 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.dialog.ManageEncodingsDialog;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
-import org.exbin.framework.editor.text.panel.TextPanel;
-import org.exbin.framework.editor.text.panel.TextStatusPanel;
 import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
@@ -43,14 +41,14 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Encodings handler.
  *
- * @version 0.2.0 2016/01/23
+ * @version 0.2.0 2016/05/18
  * @author ExBin Project (http://exbin.org)
  */
 public class EncodingsHandler implements TextEncodingPanelApi {
 
     private final XBEditorProvider editorProvider;
     private final XBApplication application;
-    private final EditorTextModule textModule;
+    private TextEncodingStatusApi textEncodingStatus;
     private final ResourceBundle resourceBundle;
 
     private List<String> encodings = null;
@@ -61,10 +59,10 @@ public class EncodingsHandler implements TextEncodingPanelApi {
 
     private Action manageEncodingsAction;
 
-    public EncodingsHandler(XBApplication application, XBEditorProvider editorProvider, EditorTextModule textModule) {
+    public EncodingsHandler(XBApplication application, XBEditorProvider editorProvider, TextEncodingStatusApi textStatus) {
         this.application = application;
         this.editorProvider = editorProvider;
-        this.textModule = textModule;
+        this.textEncodingStatus = textStatus;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorTextModule.class);
     }
 
@@ -131,16 +129,19 @@ public class EncodingsHandler implements TextEncodingPanelApi {
 
     @Override
     public String getSelectedEncoding() {
-        return ((TextPanel) editorProvider.getPanel()).getCharset().name();
+        return ((TextCharsetApi) editorProvider.getPanel()).getCharset().name();
     }
 
     @Override
     public void setSelectedEncoding(String encoding) {
         if (encoding != null) {
-            ((TextPanel) editorProvider.getPanel()).setCharset(Charset.forName(encoding));
-            TextStatusPanel textStatusPanel = textModule.getTextStatusPanel();
-            textStatusPanel.setEncoding(encoding);
+            ((TextCharsetApi) editorProvider.getPanel()).setCharset(Charset.forName(encoding));
+            textEncodingStatus.setEncoding(encoding);
         }
+    }
+
+    public void setTextEncodingStatus(TextEncodingStatusApi textEncodingStatus) {
+        this.textEncodingStatus = textEncodingStatus;
     }
 
     public JMenu getToolsEncodingMenu() {

@@ -31,7 +31,6 @@ include ":modules:exbin-framework-editor-wave"
 include ":modules:exbin-framework-editor-picture"
 include ":modules:exbin-framework-editor-xbup"
 include ":modules:exbin-framework-service-data"
-include ":modules:exbin-framework-exbin"
 include ":modules:exbin-framework-preferences"
 
 include ":modules:hexedit"

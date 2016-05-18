@@ -17,12 +17,12 @@
 package org.exbin.framework.editor.text;
 
 /**
- * XBUP text editor module.
+ * Text position status interface.
  *
- * @version 0.2.0 2016/01/12
+ * @version 0.2.0 2016/05/18
  * @author ExBin Project (http://exbin.org)
  */
-public interface TextStatusApi {
+public interface TextPositionStatusApi {
 
     /**
      * Reports text position.
@@ -30,11 +30,4 @@ public interface TextStatusApi {
      * @param textPosition
      */
     void setTextPosition(String textPosition);
-
-    /**
-     * Reports currently active encoding.
-     *
-     * @param encodingName
-     */
-    void setEncoding(String encodingName);
 }

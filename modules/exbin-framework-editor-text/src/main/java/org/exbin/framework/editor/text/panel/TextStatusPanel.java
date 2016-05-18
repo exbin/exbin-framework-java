@@ -16,15 +16,16 @@
  */
 package org.exbin.framework.editor.text.panel;
 
-import org.exbin.framework.editor.text.TextStatusApi;
+import org.exbin.framework.editor.text.TextEncodingStatusApi;
+import org.exbin.framework.editor.text.TextPositionStatusApi;
 
 /**
  * Text editor status panel.
  *
- * @version 0.2.0 2016/01/12
+ * @version 0.2.0 2016/05/18
  * @author ExBin Project (http://exbin.org)
  */
-public class TextStatusPanel extends javax.swing.JPanel implements TextStatusApi {
+public class TextStatusPanel extends javax.swing.JPanel implements TextPositionStatusApi, TextEncodingStatusApi {
 
     public TextStatusPanel() {
         initComponents();
