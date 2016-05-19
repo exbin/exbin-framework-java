@@ -51,7 +51,7 @@ public interface GuiFileModuleApi extends XBApplicationModule {
     /**
      * Attempts to load given filename to active panel.
      *
-     * @param filename
+     * @param filename filename
      */
     void loadFromFile(String filename);
     

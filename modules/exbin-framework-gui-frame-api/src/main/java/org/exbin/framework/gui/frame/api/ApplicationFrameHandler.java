@@ -39,21 +39,21 @@ public interface ApplicationFrameHandler {
     /**
      * Sets tool bar visibility.
      *
-     * @param toolBarVisible
+     * @param toolBarVisible toolbar visible
      */
     void setToolBarVisible(boolean toolBarVisible);
 
     /**
      * Sets status bar visibility.
      *
-     * @param statusBarVisible
+     * @param statusBarVisible statusbar visible
      */
     void setStatusBarVisible(boolean statusBarVisible);
 
     /**
      * Sets tool bar captions visibility.
      *
-     * @param captionsVisible
+     * @param captionsVisible captions visible
      */
     void setToolBarCaptionsVisible(boolean captionsVisible);
 
@@ -74,14 +74,14 @@ public interface ApplicationFrameHandler {
     /**
      * Loads main menu for the frame.
      *
-     * @param application
+     * @param application application
      */
     void loadMainMenu(XBApplication application);
 
     /**
      * Loads main tool bar for the frame.
      *
-     * @param application
+     * @param application application
      */
     void loadMainToolBar(XBApplication application);
 

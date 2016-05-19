@@ -79,9 +79,9 @@ public interface ClipboardActionsHandler {
     public boolean canPaste();
 
     /**
-     * Set listener for clipboard actions related updates.
+     * Sets listener for clipboard actions related updates.
      *
-     * @param updateListener
+     * @param updateListener update listener
      */
-    void setUpdateListener(ClipboardActionsUpdateListener updateListener);
+    public void setUpdateListener(ClipboardActionsUpdateListener updateListener);
 }

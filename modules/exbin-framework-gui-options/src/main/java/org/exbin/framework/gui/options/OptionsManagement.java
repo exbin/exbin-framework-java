@@ -35,28 +35,28 @@ public interface OptionsManagement {
     /**
      * Adds options panel.
      *
-     * @param optionsPanel
+     * @param optionsPanel options panel
      */
     public void addOptionsPanel(OptionsPanel optionsPanel);
 
     /**
      * Extends main options panel.
      *
-     * @param optionsPanel
+     * @param optionsPanel options panel
      */
     public void extendMainOptionsPanel(OptionsPanel optionsPanel);
 
     /**
      * Extends appearance options panel.
      *
-     * @param optionsPanel
+     * @param optionsPanel options panel
      */
     public void extendAppearanceOptionsPanel(OptionsPanel optionsPanel);
 
     /**
      * Gets preferences.
      *
-     * @return prefereces.
+     * @return prefereces
      */
     public Preferences getPreferences();
 }

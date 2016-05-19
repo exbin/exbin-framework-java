@@ -24,7 +24,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Interface for application module management.
  *
- * @version 0.2.0 2016/03/28
+ * @version 0.2.0 2016/05/19
  * @author ExBin Project (http://exbin.org)
  */
 public interface XBApplication extends XBModuleHandler {
@@ -48,13 +48,14 @@ public interface XBApplication extends XBModuleHandler {
      *
      * @return the moduleRepository
      */
+    @Override
     public XBApplicationModuleRepository getModuleRepository();
 
     /**
      * Gets preferences key value.
      *
-     * @param key
-     * @param def
+     * @param key key
+     * @param def default value 
      * @return value
      */
     public String preferencesGet(String key, String def);

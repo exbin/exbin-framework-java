@@ -32,9 +32,9 @@ public interface TextAppearancePanelFrame {
     public boolean getWordWrapMode();
 
     /**
-     * Sets text word wrapping mode..
+     * Sets text word wrapping mode.
      *
-     * @param mode
+     * @param mode word wrapping mode
      */
     public void setWordWrapMode(boolean mode);
 }

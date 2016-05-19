@@ -27,23 +27,22 @@ import org.exbin.xbup.core.remote.XBCallHandler;
 /**
  * Fake XBService client using localhost database.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.0 2016/05/19
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDbServiceClient implements XBCatalogServiceClient {
 
     private final EntityManagerFactory entityManagerFactory;
-//    private XBL2CatalogHandler catalog;
     private XBTDefaultMatchingProvider source;
     private XBTListener target;
 
     /**
-     * Performs login to the server
+     * Performs login to the server.
      *
-     * @param user
-     * @param password
-     * @return
-     * @throws java.io.IOException
+     * @param user user
+     * @param password password
+     * @return state
+     * @throws java.io.IOException input/output exception
      */
     @Override
     public int login(String user, char[] password) throws IOException {
@@ -52,12 +51,8 @@ public class XBDbServiceClient implements XBCatalogServiceClient {
 
     public XBDbServiceClient(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
-//        catalog = new XBL2RemoteCatalog(new XBCatalogNetServiceClient(host, port));
     }
 
-    /*    public XBL2CatalogHandler getCatalog() {
-     return catalog;
-     } */
     @Override
     public String getVersion() {
         return "0.2.0";

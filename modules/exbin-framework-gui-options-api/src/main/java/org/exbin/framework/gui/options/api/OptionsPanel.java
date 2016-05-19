@@ -42,14 +42,14 @@ public interface OptionsPanel {
     /**
      * Loads configuration from given properties.
      *
-     * @param preferences
+     * @param preferences preferences
      */
     public void loadFromPreferences(Preferences preferences);
 
     /**
      * Saves configuration from given properties.
      *
-     * @param preferences
+     * @param preferences preferences
      */
     public void saveToPreferences(Preferences preferences);
 

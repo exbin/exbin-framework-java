@@ -27,7 +27,7 @@ public interface TextPositionStatusApi {
     /**
      * Reports text position.
      *
-     * @param textPosition
+     * @param textPosition text position
      */
     void setTextPosition(String textPosition);
 }

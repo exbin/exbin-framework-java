@@ -34,7 +34,7 @@ public interface UndoActions {
     /**
      * Sets undo handler.
      *
-     * @param undoHandler
+     * @param undoHandler undo handler
      */
     void setUndoActionsHandler(UndoActionsHandler undoHandler);
 

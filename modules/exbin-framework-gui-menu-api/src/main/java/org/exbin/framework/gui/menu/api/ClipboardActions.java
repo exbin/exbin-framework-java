@@ -34,7 +34,7 @@ public interface ClipboardActions {
     /**
      * Sets clipboard handler.
      *
-     * @param clipboardHandler
+     * @param clipboardHandler clipboard handler
      */
     void setClipboardActionsHandler(ClipboardActionsHandler clipboardHandler);
 

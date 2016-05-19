@@ -40,7 +40,7 @@ public interface GuiUndoModuleApi extends XBApplicationModule {
     /**
      * Sets current undo handler.
      *
-     * @param undoHandler
+     * @param undoHandler undo handler
      */
     void setUndoHandler(XBUndoHandler undoHandler);
 

@@ -29,7 +29,7 @@ public interface EditItemActions {
     /**
      * Sets edit action handler.
      *
-     * @param actionsHandler
+     * @param actionsHandler actions handler
      */
     void setEditItemActionsHandler(EditItemActionsHandler actionsHandler);
 

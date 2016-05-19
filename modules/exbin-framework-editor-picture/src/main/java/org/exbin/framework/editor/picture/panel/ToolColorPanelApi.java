@@ -29,28 +29,28 @@ public interface ToolColorPanelApi {
     /**
      * Returns tool color.
      *
-     * @return color.
+     * @return color
      */
     public Color getToolColor();
 
     /**
      * Returns selection color.
      *
-     * @return color.
+     * @return color
      */
     public Color getSelectionColor();
 
     /**
      * Sets tool color.
      *
-     * @param color
+     * @param color color
      */
     public void setToolColor(Color color);
 
     /**
      * Sets selection color.
      *
-     * @param color
+     * @param color color
      */
     public void setSelectionColor(Color color);
 }

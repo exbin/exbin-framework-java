@@ -56,7 +56,7 @@ public interface EditItemActionsHandler {
     /**
      * Set listener for actions related updates.
      *
-     * @param updateListener
+     * @param updateListener update listener
      */
     void setUpdateListener(EditItemActionsUpdateListener updateListener);
 }

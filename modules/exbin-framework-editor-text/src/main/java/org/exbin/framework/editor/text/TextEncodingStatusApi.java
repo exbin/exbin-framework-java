@@ -27,7 +27,7 @@ public interface TextEncodingStatusApi {
     /**
      * Reports currently active encoding.
      *
-     * @param encodingName
+     * @param encodingName encoding name
      */
     void setEncoding(String encodingName);
 }

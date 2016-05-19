@@ -61,7 +61,7 @@ public interface MoveItemActionsHandler {
     /**
      * Set listener for actions related updates.
      *
-     * @param updateListener
+     * @param updateListener update listener
      */
     void setUpdateListener(MoveItemActionsUpdateListener updateListener);
 }

@@ -73,9 +73,9 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
     /**
      * Registers menu as a child item for given menu.
      *
-     * @param menuId
-     * @param pluginId
-     * @param item
+     * @param menuId menu Id
+     * @param pluginId plugin Id
+     * @param item menu item
      * @param position menu position
      */
     void registerMenuItem(String menuId, String pluginId, JMenu item, MenuPosition position);
@@ -83,9 +83,9 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
     /**
      * Registers menu item as a child item for given menu.
      *
-     * @param menuId
-     * @param pluginId
-     * @param item
+     * @param menuId menu Id
+     * @param pluginId plugin Id
+     * @param item menu item
      * @param position menu position
      */
     void registerMenuItem(String menuId, String pluginId, JMenuItem item, MenuPosition position);
@@ -93,9 +93,9 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
     /**
      * Registers menu item as a child item for given menu.
      *
-     * @param menuId
-     * @param pluginId
-     * @param action
+     * @param menuId menu Id
+     * @param pluginId plugin Id
+     * @param action action
      * @param position menu position
      */
     void registerMenuItem(String menuId, String pluginId, Action action, MenuPosition position);
@@ -103,10 +103,10 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
     /**
      * Registers menu item as a child item for given menu.
      *
-     * @param menuId
-     * @param pluginId
-     * @param subMenuId
-     * @param subMenuName
+     * @param menuId menu Id
+     * @param pluginId plugin Id
+     * @param subMenuId sub-menu id
+     * @param subMenuName sub-menu name
      * @param position menu position
      */
     void registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName, MenuPosition position);
@@ -134,8 +134,8 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
     /**
      * Returns tool bar using given identificator.
      *
-     * @param targetToolBar
-     * @param toolBarId
+     * @param targetToolBar target toolbar
+     * @param toolBarId toolbar id
      */
     void buildToolBar(JToolBar targetToolBar, String toolBarId);
 
@@ -150,26 +150,26 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
     /**
      * Registers tool bar associating it with given identificator.
      *
-     * @param toolBarId
-     * @param pluginId
+     * @param toolBarId toolbar id
+     * @param pluginId plugin id
      */
     void registerToolBar(String toolBarId, String pluginId);
 
     /**
      * Registers tool bar group for particular tool bar.
      *
-     * @param toolBarId
-     * @param toolBarGroup
+     * @param toolBarId toolbar id
+     * @param toolBarGroup toolbar group
      */
     void registerToolBarGroup(String toolBarId, ToolBarGroup toolBarGroup);
 
     /**
      * Registers item as a child item for given tool bar.
      *
-     * @param toolBarId
-     * @param pluginId
-     * @param action
-     * @param position
+     * @param toolBarId toolbar id
+     * @param pluginId plugin id
+     * @param action action
+     * @param position toolbar position
      */
     void registerToolBarItem(String toolBarId, String pluginId, Action action, ToolBarPosition position);
 
@@ -183,15 +183,15 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
     /**
      * Registers clipboard handler for main clipboard actions.
      *
-     * @param clipboardHandler
+     * @param clipboardHandler clipboard handler
      */
     void registerClipboardHandler(ClipboardActionsHandler clipboardHandler);
 
     /**
      * Returns true if given menu group exists.
      *
-     * @param menuId
-     * @param groupId
+     * @param menuId menu id
+     * @param groupId group id
      * @return true if group exists
      */
     public boolean menuGroupExists(String menuId, String groupId);

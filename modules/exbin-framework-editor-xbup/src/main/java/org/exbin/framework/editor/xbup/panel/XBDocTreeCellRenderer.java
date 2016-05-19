@@ -109,7 +109,7 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
      *
      * Use cache if available.
      *
-     * @param blockDecl
+     * @param blockDecl block declaration
      * @return caption
      */
     public String getCaption(XBBlockDecl blockDecl) {
@@ -143,9 +143,11 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
     }
 
     /**
-     * Gets icon for given block type. Use cache if available.
+     * Gets icon for given block type.
      *
-     * @param blockDecl
+     * Use cache if available.
+     *
+     * @param blockDecl block declaration
      * @return icon
      */
     public ImageIcon getIcon(XBBlockDecl blockDecl) {

@@ -40,6 +40,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.frame.api.ApplicationExitListener;
+import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 
@@ -131,10 +133,19 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         AllFilesFilter filesFilter = new AllFilesFilter();
         addFileType(filesFilter);
         allFilesFilter = filesFilter;
+        
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        frameModule.addExitListener(new ApplicationExitListener() {
+            @Override
+            public boolean processExit(ApplicationFrameHandler frameHandler) {
+                saveState();
+                return true;
+            }
+        });
     }
 
     /**
-     * Try to release current file and warn if document was modified.
+     * Attempts to release current file and warn if document was modified.
      *
      * @return true if successfull
      */

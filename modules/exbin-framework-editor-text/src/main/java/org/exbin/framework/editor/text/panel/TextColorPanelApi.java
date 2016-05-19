@@ -29,21 +29,21 @@ public interface TextColorPanelApi {
     /**
      * Returns current colors used in application frame.
      *
-     * @return array of 5 colors.
+     * @return array of 5 colors
      */
     public Color[] getCurrentTextColors();
 
     /**
      * Returns default colors used in application frame.
      *
-     * @return array of 5 colors.
+     * @return array of 5 colors
      */
     public Color[] getDefaultTextColors();
 
     /**
      * Sets current colors used in application frame.
      *
-     * @param colors
+     * @param colors colors
      */
     public void setCurrentTextColors(Color[] colors);
 }

@@ -36,7 +36,7 @@ public interface TextCharsetApi {
     /**
      * Sets encoding.
      *
-     * @param charset
+     * @param charset charset
      */
     void setCharset(Charset charset);
 }

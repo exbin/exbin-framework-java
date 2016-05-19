@@ -46,7 +46,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
     public static String BUSY_STATUS_BAR_ID = "busy";
 
     public static String PREFERENCES_FRAME_RECTANGLE = "frameRectangle";
-    
+
     /**
      * Returns frame handler.
      *
@@ -98,20 +98,20 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
     void registerToolBarVisibilityActions();
 
     void registerStatusBarVisibilityActions();
-    
+
     /**
      * Registers new status bar with unique ID.
      *
-     * @param moduleId
-     * @param statusBarId
-     * @param panel
+     * @param moduleId module id
+     * @param statusBarId statusbar id
+     * @param panel panel
      */
     void registerStatusBar(String moduleId, String statusBarId, JPanel panel);
 
     /**
      * Switches to status bar with specific ID.
      *
-     * @param statusBarId
+     * @param statusBarId statusbar id
      */
     void switchStatusBar(String statusBarId);
 }

@@ -50,7 +50,7 @@ public interface TextEncodingPanelApi {
     /**
      * Sets selected encoding.
      *
-     * @param encoding
+     * @param encoding encoding
      */
     public void setSelectedEncoding(String encoding);
 

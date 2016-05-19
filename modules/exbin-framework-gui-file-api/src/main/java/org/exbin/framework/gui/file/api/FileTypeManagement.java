@@ -38,7 +38,7 @@ public interface FileTypeManagement {
     /**
      * Opens file from given fileChooser with the respect to used file type.
      *
-     * @param fileChooser
+     * @param fileChooser file chooser
      * @return true if file opened successfuly
      */
     public boolean openFile(JFileChooser fileChooser);

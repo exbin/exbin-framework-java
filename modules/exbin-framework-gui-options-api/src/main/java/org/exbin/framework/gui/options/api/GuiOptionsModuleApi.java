@@ -37,21 +37,21 @@ public interface GuiOptionsModuleApi extends XBApplicationModule {
     /**
      * Adds options panel.
      *
-     * @param optionsPanel
+     * @param optionsPanel options panel
      */
     void addOptionsPanel(OptionsPanel optionsPanel);
 
     /**
      * Extends main options panel.
      *
-     * @param optionsPanel
+     * @param optionsPanel options panel
      */
     void extendMainOptionsPanel(OptionsPanel optionsPanel);
 
     /**
      * Extends appearance options panel.
      *
-     * @param optionsPanel
+     * @param optionsPanel options panel
      */
     void extendAppearanceOptionsPanel(OptionsPanel optionsPanel);
 

@@ -29,7 +29,7 @@ public interface MoveItemActions {
     /**
      * Sets move action handler.
      *
-     * @param actionsHandler
+     * @param actionsHandler actions handler
      */
     void setMoveItemActionsHandler(MoveItemActionsHandler actionsHandler);
 

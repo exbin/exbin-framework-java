@@ -56,7 +56,7 @@ public interface UndoActionsHandler {
     /**
      * Sets listener for undo updates.
      *
-     * @param undoUpdateListener
+     * @param undoUpdateListener undo update listener
      */
     void setUndoUpdateListener(UndoUpdateListener undoUpdateListener);
 }

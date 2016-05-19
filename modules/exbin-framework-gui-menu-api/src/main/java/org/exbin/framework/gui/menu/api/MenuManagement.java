@@ -24,7 +24,7 @@ import javax.swing.JToolBar;
 /**
  * Interface for application's menus.
  *
- * @version 0.2.0 2015/11/01
+ * @version 0.2.0 2016/05/19
  * @author ExBin Project (http://exbin.org)
  */
 public interface MenuManagement {
@@ -32,44 +32,44 @@ public interface MenuManagement {
     /**
      * Adds all items from given menu instance into menu manager.
      *
-     * @param menu
-     * @param pluginId
-     * @param menuId
-     * @param positionMode
+     * @param menu menu
+     * @param pluginId plugin id
+     * @param menuId menu id
+     * @param positionMode position mode
      */
     public void extendMenu(JMenu menu, Integer pluginId, String menuId, PositionMode positionMode);
 
     /**
      * Adds given menu component into menu manager.
      *
-     * @param menuItem
-     * @param pluginId
-     * @param mode
-     * @param menuId
+     * @param menuItem menu item
+     * @param pluginId plugin id
+     * @param positionMode position mode
+     * @param menuId menu id
      */
-    public void addMenuItem(Component menuItem, Integer pluginId, String menuId, PositionMode mode);
+    public void addMenuItem(Component menuItem, Integer pluginId, String menuId, PositionMode positionMode);
 
     /**
      * Insert menu into menubar into main menu manager.
      *
-     * @param menu
-     * @param pluginId
-     * @param positionMode
+     * @param menu menu
+     * @param pluginId plugin id
+     * @param positionMode position mode
      */
     public void insertMenu(JMenu menu, Integer pluginId, PositionMode positionMode);
 
     /**
      * Adds all items from given toolbar instance into menu manager.
      *
-     * @param toolBar
+     * @param toolBar toolbar
      */
     public void extendToolBar(JToolBar toolBar);
 
     /**
      * Copy and insert main popup menu into given popup menu.
      *
-     * @param popupMenu
-     * @param position
+     * @param popupMenu popup menu
+     * @param position position
      */
     public void insertMainPopupMenu(JPopupMenu popupMenu, int position);
 }

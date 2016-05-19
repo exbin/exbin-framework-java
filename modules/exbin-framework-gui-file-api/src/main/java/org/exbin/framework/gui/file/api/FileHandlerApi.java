@@ -44,14 +44,14 @@ public interface FileHandlerApi {
     /**
      * Sets current filename.
      *
-     * @param fileName
+     * @param fileName filename
      */
     public void setFileName(String fileName);
 
     /**
      * Sets current filetype.
      *
-     * @param fileType
+     * @param fileType file type
      */
     public void setFileType(FileType fileType);
 
