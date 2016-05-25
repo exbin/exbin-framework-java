@@ -1,21 +1,3 @@
 rootProject.name = 'exbin-framework-editor-xbup'
 
-include ":modules:exbin-framework-client"
-include ":modules:exbin-framework"
-include ":modules:exbin-framework-api"
-include ":modules:exbin-framework-gui-menu"
-include ":modules:exbin-framework-gui-menu-api"
-include ":modules:exbin-framework-gui-file"
-include ":modules:exbin-framework-gui-file-api"
-include ":modules:exbin-framework-gui-undo"
-include ":modules:exbin-framework-gui-undo-api"
-include ":modules:exbin-framework-gui-editor-api"
-include ":modules:exbin-framework-gui-frame-api"
-include ":modules:exbin-framework-gui-options-api"
-include ":modules:exbin-framework-gui-service"
-include ":modules:exbin-framework-gui-utils"
-include ":modules:exbin-framework-editor-text"
-include ":modules:hexedit"
-include ":modules:simplyhtml"
-
 apply from: '../modules-settings.gradle'

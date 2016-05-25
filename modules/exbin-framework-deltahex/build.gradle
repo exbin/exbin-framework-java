@@ -1,0 +1,35 @@
+group = 'org.exbin.framework'
+ext.libraryName = 'Delta Hexadecimal Framework Library'
+ext.libraryDescription = 'Delta hexadecimal editor framework library'
+
+apply from: '../modules.gradle'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    flatDir {
+        dirs "../../lib"
+    }
+}
+
+dependencies {
+    compile "org.exbin.deltahex:deltahex:${deltahexVersion}"
+    compile "org.exbin.deltahex:deltahex-delta:${deltahexVersion}"
+    compile "org.exbin.deltahex:deltahex-operation:${deltahexVersion}"
+    compile "org.exbin.xbup:xbup-core:${xbupVersion}"
+    compile(project(':modules:exbin-framework'))
+    compile(project(':modules:exbin-framework-api'))
+    compile(project(':modules:exbin-framework-gui-frame-api'))
+    compile(project(':modules:exbin-framework-gui-editor-api'))
+    compile(project(':modules:exbin-framework-gui-file-api'))
+    compile(project(':modules:exbin-framework-gui-undo-api'))
+    compile(project(':modules:exbin-framework-gui-options-api'))
+    compile(project(':modules:exbin-framework-gui-utils'))
+    compile(project(':modules:exbin-framework-editor-text'))
+    testCompile group : 'junit', name: 'junit', version: '4.10'
+//    testCompile project(path: ':modules:deltahex', configuration: 'tests')
+}

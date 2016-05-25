@@ -25,12 +25,11 @@ dependencies {
     compile "org.exbin.xbup:xbup-parser-tree:${xbupVersion}"
     compile "org.exbin.xbup:xbup-parser-command:${xbupVersion}"
     compile "org.exbin.xbup.data:xbup-data-visual:${xbupVersion}"
+    compile "org.exbin.utils:simplyhtml:${exbinUtilsVersion}"
     compile(project(":modules:exbin-framework-api"))
     compile(project(":modules:exbin-framework-gui-frame-api"))
     compile(project(":modules:exbin-framework-gui-editor-api"))
     compile(project(":modules:exbin-framework-gui-utils"))
-    compile(project(":modules:hexedit"))
-    compile(project(":modules:simplyhtml"))
     compile 'javax.persistence:persistence-api:1.0.2'
     compile 'org.swinglabs:swing-layout:1.0.3'
     runtime 'org.eclipse.persistence:javax.persistence:2.1.0'

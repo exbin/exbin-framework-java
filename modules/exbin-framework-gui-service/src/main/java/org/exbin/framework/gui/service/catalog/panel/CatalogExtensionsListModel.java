@@ -31,7 +31,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCService;
  * @version 0.1.24 2014/12/08
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogExtensionsListModel extends AbstractListModel {
+public class CatalogExtensionsListModel extends AbstractListModel<Object> {
 
     private XBCatalog catalog;
     private final List<XBCService<? extends XBCBase>> extensions;

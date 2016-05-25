@@ -23,6 +23,7 @@ dependencies {
     compile "org.exbin.xbup:xbup-plugin:${xbupVersion}"
     compile "org.exbin.xbup:xbup-parser-tree:${xbupVersion}"
     compile "org.exbin.xbup:xbup-parser-command:${xbupVersion}"
+    compile(project(":modules:exbin-framework-deltahex"))
     compile(project(":modules:exbin-framework-client"))
     compile(project(":modules:exbin-framework-api"))
     compile(project(":modules:exbin-framework-gui-frame-api"))

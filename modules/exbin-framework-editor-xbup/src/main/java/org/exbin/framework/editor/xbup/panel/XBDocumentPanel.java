@@ -38,6 +38,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.XBFBlockType;
@@ -90,7 +91,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements XBEditorProvi
     private PanelMode mode = PanelMode.TREE;
 
     private final XBDocTreePanel treePanel;
-    private final XBDocHexPanel hexPanel;
+    private final HexPanel hexPanel;
     private final TextPanel textPanel;
 
     private XBPropertyPanel propertyPanel;
@@ -108,7 +109,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements XBEditorProvi
         mainSplitPane.setRightComponent(propertyPanel);
 
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
-        hexPanel = new XBDocHexPanel(mainDoc);
+        hexPanel = new HexPanel();
+        hexPanel.setNoBorder();
         textPanel = new TextPanel();
         textPanel.setNoBorder();
 
@@ -470,10 +472,10 @@ public class XBDocumentPanel extends javax.swing.JPanel implements XBEditorProvi
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                     try {
                         mainDoc.toStreamUB(buffer);
+                        hexPanel.loadFromStream(new ByteArrayInputStream(buffer.toByteArray()), buffer.size());
                     } catch (IOException ex) {
                         Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    hexPanel.loadFromStream(new ByteArrayInputStream(buffer.toByteArray()), buffer.size());
                     break;
                 }
                 default:
@@ -902,7 +904,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements XBEditorProvi
             case TEXT:
                 return true;
             case HEX:
-                return hexPanel.isEditEnabled();
+                return hexPanel.isEditable();
             default:
                 return false;
         }
@@ -932,7 +934,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements XBEditorProvi
                 // TODO Allow to paste text only
                 return true;
             case HEX:
-                return hexPanel.isPasteEnabled();
+                return hexPanel.canPaste();
             default:
                 return false;
         }

@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.editor.xbup.dialog;
 
-import hexedit.HexEditPanel;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ItemEvent;
@@ -32,7 +31,6 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -43,6 +41,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
+import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockTerminationMode;
 import org.exbin.xbup.core.block.XBFixedBlockType;
@@ -86,7 +85,7 @@ import org.exbin.xbup.plugin.XBCatalogPlugin;
 /**
  * Dialog for modifying item attributes or data.
  *
- * @version 0.1.25 2015/07/18
+ * @version 0.2.0 2016/05/25
  * @author ExBin Project (http://exbin.org)
  */
 public class ModifyBlockDialog extends javax.swing.JDialog {
@@ -100,11 +99,11 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     private XBTTreeNode srcNode;
     private XBTTreeNode newNode = null;
 
-    private final HexEditPanel hexPanel;
+    private final HexPanel hexPanel;
     private XBPanelEditor customPanel;
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
-    private HexEditPanel extAreaHexPanel = null;
+    private HexPanel extAreaHexPanel = null;
     private java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(ModifyBlockDialog.class);
 
     private final String attributesPanelTitle;
@@ -120,7 +119,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        hexPanel = new HexEditPanel((JFrame) parent);
+        hexPanel = new HexPanel();
         customPanel = null;
         hexEditPanel.add(hexPanel);
 
@@ -533,7 +532,11 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
             }
 
             newNode = srcNode.cloneNode();
-            newNode.setData(new ByteArrayInputStream(stream.toByteArray()));
+            try {
+                newNode.setData(new ByteArrayInputStream(stream.toByteArray()));
+            } catch (IOException ex) {
+                Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
             newNode.setTerminationMode(terminationModeCheckBox.isSelected() ? XBBlockTerminationMode.SIZE_SPECIFIED : XBBlockTerminationMode.TERMINATED_BY_ZERO);
         } else {
             newNode.setTerminationMode(terminationModeCheckBox.isSelected() ? XBBlockTerminationMode.SIZE_SPECIFIED : XBBlockTerminationMode.TERMINATED_BY_ZERO);
@@ -576,7 +579,6 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
 
             doc.setExtendedArea(new ByteArrayInputStream(buffer.toByteArray()));
         } */
-
         dialogOption = JOptionPane.OK_OPTION;
         WindowUtils.closeWindow(this);
     }//GEN-LAST:event_okButtonActionPerformed
@@ -591,21 +593,25 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_attributesTablePropertyChange
 
     private void loadFromButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFromButtonActionPerformed
-        hexPanel.openFile(null);
-        hexPanel.repaint();
+        throw new UnsupportedOperationException("Not supported yet.");
+//        hexPanel.openFile(null);
+//        hexPanel.repaint();
     }//GEN-LAST:event_loadFromButtonActionPerformed
 
     private void saveAsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsButtonActionPerformed
-        hexPanel.saveFile();
+        throw new UnsupportedOperationException("Not supported yet.");
+//        hexPanel.saveFile();
     }//GEN-LAST:event_saveAsButtonActionPerformed
 
     private void extLoadFromButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extLoadFromButtonActionPerformed
-        extAreaHexPanel.openFile(null);
-        extendedAreaPanel.repaint();
+        throw new UnsupportedOperationException("Not supported yet.");
+//        extAreaHexPanel.openFile(null);
+//        extendedAreaPanel.repaint();
     }//GEN-LAST:event_extLoadFromButtonActionPerformed
 
     private void extSaveFromButtoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extSaveFromButtoActionPerformed
-        extAreaHexPanel.saveFile();
+        throw new UnsupportedOperationException("Not supported yet.");
+//        extAreaHexPanel.saveFile();
     }//GEN-LAST:event_extSaveFromButtoActionPerformed
 
     public XBTTreeNode runDialog(XBTTreeNode srcNode, XBTTreeDocument doc) {
@@ -622,7 +628,11 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         if (dataMode == XBBlockDataMode.DATA_BLOCK) {
             mainTabbedPane.addTab(dataPanelTitle, dataPanel);
 
-            hexPanel.loadFromStream(srcNode.getData(), srcNode.getDataSize());
+            try {
+                hexPanel.loadFromStream(srcNode.getData(), srcNode.getDataSize());
+            } catch (IOException ex) {
+                Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             reloadParameters();
             TableColumnModel columnModel = parametersTable.getColumnModel();
@@ -712,7 +722,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     public int getDialogOption() {
         return dialogOption;
     }
-    
+
     public void saveExtendedArea(OutputStream stream) {
         try {
             if (extAreaHexPanel != null) {
@@ -841,11 +851,15 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     }
 
     private void reloadExtendedArea() {
-        extAreaHexPanel = new HexEditPanel((JFrame) WindowUtils.getFrame(this));
+        extAreaHexPanel = new HexPanel();
         hexEditScrollPane.setViewportView(extAreaHexPanel);
 
         if (doc != null && doc.getExtendedAreaSize() > 0) {
-            extAreaHexPanel.loadFromStream(doc.getExtendedArea(), doc.getExtendedAreaSize());
+            try {
+                extAreaHexPanel.loadFromStream(doc.getExtendedArea(), doc.getExtendedAreaSize());
+            } catch (IOException ex) {
+                Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

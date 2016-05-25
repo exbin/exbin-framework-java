@@ -1,0 +1,3 @@
+rootProject.name = 'exbin-framework-deltahex'
+
+apply from: '../modules-settings.gradle'

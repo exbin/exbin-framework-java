@@ -45,7 +45,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
 
         updateCatalog();
         // Patch for unchecked call to setModel(ListModel<E>) as a member of the raw type JList
-        JList newList = new JList();
+        JList newList = new JList<>();
         newList.setModel(extModel);
         extensionsList = newList;
         extensionsScrollPane.setViewportView(extensionsList);
@@ -296,7 +296,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
             specService = ((XBCSpecService) catalog.getCatalogService(XBCSpecService.class));
             revService = ((XBCRevService) catalog.getCatalogService(XBCRevService.class));
         }
-        
+
         lastUpdateNowButton.setEnabled(catalog instanceof XBECatalog);
 
         Long count = catalog == null ? null : ((XBCItemService) catalog.getCatalogService(XBCItemService.class)).getItemsCount();
