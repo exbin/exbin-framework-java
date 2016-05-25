@@ -17,8 +17,8 @@
 package org.exbin.framework.editor.wave.panel.command;
 
 import java.util.Date;
+import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.xbup.audio.swing.XBWavePanel;
-import org.exbin.xbup.core.type.XBData;
 import org.exbin.xbup.operation.AbstractCommand;
 
 /**
@@ -33,7 +33,7 @@ public class WaveDeleteCommand extends AbstractCommand {
     private final int startPosition;
     private final int endPosition;
 
-    XBData deletedData;
+    private BinaryData deletedData;
 
     public WaveDeleteCommand(XBWavePanel wave, int startPosition, int endPosition) {
         this.wave = wave;
@@ -61,7 +61,7 @@ public class WaveDeleteCommand extends AbstractCommand {
     public void undo() throws Exception {
         wave.getWave().insertData(deletedData, startPosition);
         wave.rebuildZoomCache();
-        deletedData.clear();
+        deletedData = null;
     }
 
     @Override

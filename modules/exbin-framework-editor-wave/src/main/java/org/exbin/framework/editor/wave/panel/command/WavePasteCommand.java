@@ -19,9 +19,9 @@ package org.exbin.framework.editor.wave.panel.command;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.util.Date;
+import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.audio.wave.XBWave;
-import org.exbin.xbup.core.type.XBData;
 import org.exbin.xbup.operation.AbstractCommand;
 
 /**
@@ -37,7 +37,7 @@ public class WavePasteCommand extends AbstractCommand {
     private final int startPosition;
     private int endPosition;
 
-    XBData deletedData;
+    private BinaryData deletedData;
 
     public WavePasteCommand(XBWavePanel wave, int startPosition) {
         this.wave = wave;
@@ -65,7 +65,7 @@ public class WavePasteCommand extends AbstractCommand {
     public void redo() throws Exception {
         wave.getWave().insertData(deletedData, startPosition);
         wave.rebuildZoomCache();
-        deletedData.clear();
+        deletedData = null;
     }
 
     @Override
