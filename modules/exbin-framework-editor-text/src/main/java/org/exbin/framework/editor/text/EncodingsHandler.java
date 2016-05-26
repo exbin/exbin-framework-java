@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
@@ -31,7 +32,9 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.dialog.ManageEncodingsDialog;
+import static org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel.PREFERENCES_TEXT_ENCODING_DEFAULT;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
+import static org.exbin.framework.editor.text.panel.TextEncodingPanel.PREFERENCES_TEXT_ENCODING_PREFIX;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -41,7 +44,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Encodings handler.
  *
- * @version 0.2.0 2016/05/18
+ * @version 0.2.0 2016/05/26
  * @author ExBin Project (http://exbin.org)
  */
 public class EncodingsHandler implements TextEncodingPanelApi {
@@ -173,5 +176,20 @@ public class EncodingsHandler implements TextEncodingPanelApi {
                 }
             }
         }
+    }
+
+    public void loadFromPreferences(Preferences preferences) {
+        setSelectedEncoding(preferences.get(PREFERENCES_TEXT_ENCODING_DEFAULT, TextEncodingPanel.ENCODING_UTF8));
+        encodings.clear();
+        String value;
+        int i = 0;
+        do {
+            value = preferences.get(PREFERENCES_TEXT_ENCODING_PREFIX + Integer.toString(i), null);
+            if (value != null) {
+                encodings.add(value);
+                i++;
+            }
+        } while (value != null);
+        encodingsRebuild();
     }
 }

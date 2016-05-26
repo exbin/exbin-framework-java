@@ -21,6 +21,7 @@ import java.awt.Font;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.prefs.Preferences;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -52,7 +53,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * XBUP text editor module.
  *
- * @version 0.2.0 2016/01/23
+ * @version 0.2.0 2016/05/26
  * @author ExBin Project (http://exbin.org)
  */
 public class EditorTextModule implements XBApplicationModule {
@@ -111,6 +112,9 @@ public class EditorTextModule implements XBApplicationModule {
         frameModule.registerStatusBar(MODULE_ID, TEXT_STATUS_BAR_ID, textStatusPanel);
         frameModule.switchStatusBar(TEXT_STATUS_BAR_ID);
         ((TextPanel) getEditorProvider()).registerTextStatus(textStatusPanel);
+        if (encodingsHandler != null) {
+            encodingsHandler.setTextEncodingStatus(textStatusPanel);
+        }
     }
 
     public void registerOptionsMenuPanels() {
@@ -316,6 +320,10 @@ public class EditorTextModule implements XBApplicationModule {
         getPrintHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, printHandler.getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
+    }
+
+    public void loadFromPreferences(Preferences preferences) {
+        encodingsHandler.loadFromPreferences(preferences);
     }
 
     public class XBTFileType extends FileFilter implements FileType {

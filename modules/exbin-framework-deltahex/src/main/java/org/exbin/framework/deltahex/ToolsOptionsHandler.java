@@ -38,7 +38,7 @@ import org.exbin.framework.deltahex.panel.HexColorPanelApi;
 public class ToolsOptionsHandler {
 
     private int metaMask;
-    private ResourceBundle resourceBundle;
+    private final ResourceBundle resourceBundle;
 
     private Action toolsSetFontAction;
     private Action toolsSetColorAction;

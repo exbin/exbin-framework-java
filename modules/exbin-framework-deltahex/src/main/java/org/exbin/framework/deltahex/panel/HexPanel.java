@@ -149,6 +149,11 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         return hexadecimal.isWrapMode();
     }
 
+    public boolean changeShowNonprintables() {
+        hexadecimal.setShowNonprintingCharacters(!hexadecimal.isShowNonprintingCharacters());
+        return hexadecimal.isShowNonprintingCharacters();
+    }
+
     public boolean getWordWrapMode() {
         return hexadecimal.isWrapMode();
     }

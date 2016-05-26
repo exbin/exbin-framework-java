@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.deltahex.dialog;
 
+import org.exbin.deltahex.Hexadecimal;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -22,7 +23,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * File properties dialog.
  *
- * @version 0.1.0 2016/04/03
+ * @version 0.1.0 2016/05/26
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesDialog extends javax.swing.JDialog {
@@ -54,15 +55,9 @@ public class PropertiesDialog extends javax.swing.JDialog {
         mainPanel = new javax.swing.JPanel();
         fileNameLabel = new javax.swing.JLabel();
         fileNameTextField = new javax.swing.JTextField();
-        documentSizePanel = new javax.swing.JPanel();
-        linesCountLabel = new javax.swing.JLabel();
-        linesCountTextField = new javax.swing.JTextField();
-        charCountLabel = new javax.swing.JLabel();
-        charCountTextField = new javax.swing.JTextField();
+        differencePanel = new javax.swing.JPanel();
         fileSizeLabel = new javax.swing.JLabel();
         fileSizeTextField = new javax.swing.JTextField();
-        wordsCountLabel = new javax.swing.JLabel();
-        wordsCountTextField = new javax.swing.JTextField();
         controlPanel = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
 
@@ -81,20 +76,19 @@ public class PropertiesDialog extends javax.swing.JDialog {
         fileNameTextField.setEditable(false);
         fileNameTextField.setName("fileNameTextField"); // NOI18N
 
-        documentSizePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("documentSizePanel.border.title"))); // NOI18N
-        documentSizePanel.setName("documentSizePanel"); // NOI18N
+        differencePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("documentSizePanel.border.title"))); // NOI18N
+        differencePanel.setName("differencePanel"); // NOI18N
 
-        linesCountLabel.setText(bundle.getString("linesCountLabel.text")); // NOI18N
-        linesCountLabel.setName("linesCountLabel"); // NOI18N
-
-        linesCountTextField.setEditable(false);
-        linesCountTextField.setName("linesCountTextField"); // NOI18N
-
-        charCountLabel.setText(bundle.getString("charCountLabel.text")); // NOI18N
-        charCountLabel.setName("charCountLabel"); // NOI18N
-
-        charCountTextField.setEditable(false);
-        charCountTextField.setName("charCountTextField"); // NOI18N
+        javax.swing.GroupLayout differencePanelLayout = new javax.swing.GroupLayout(differencePanel);
+        differencePanel.setLayout(differencePanelLayout);
+        differencePanelLayout.setHorizontalGroup(
+            differencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        differencePanelLayout.setVerticalGroup(
+            differencePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 136, Short.MAX_VALUE)
+        );
 
         fileSizeLabel.setText(bundle.getString("fileSizeLabel.text")); // NOI18N
         fileSizeLabel.setName("fileSizeLabel"); // NOI18N
@@ -102,76 +96,40 @@ public class PropertiesDialog extends javax.swing.JDialog {
         fileSizeTextField.setEditable(false);
         fileSizeTextField.setName("fileSizeTextField"); // NOI18N
 
-        wordsCountLabel.setText(bundle.getString("wordsCountLabel.text")); // NOI18N
-        wordsCountLabel.setName("wordsCountLabel"); // NOI18N
-
-        wordsCountTextField.setEditable(false);
-        wordsCountTextField.setName("wordsCountTextField"); // NOI18N
-
-        javax.swing.GroupLayout documentSizePanelLayout = new javax.swing.GroupLayout(documentSizePanel);
-        documentSizePanel.setLayout(documentSizePanelLayout);
-        documentSizePanelLayout.setHorizontalGroup(
-            documentSizePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(documentSizePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(documentSizePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(linesCountLabel)
-                    .addComponent(charCountLabel)
-                    .addComponent(fileSizeLabel)
-                    .addComponent(wordsCountLabel)
-                    .addComponent(charCountTextField)
-                    .addComponent(fileSizeTextField)
-                    .addComponent(wordsCountTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(linesCountTextField))
-                .addContainerGap())
-        );
-        documentSizePanelLayout.setVerticalGroup(
-            documentSizePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(documentSizePanelLayout.createSequentialGroup()
-                .addComponent(linesCountLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(linesCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(charCountLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(charCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fileSizeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fileSizeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(wordsCountLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(wordsCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 466, Short.MAX_VALUE)
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(documentSizePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(fileNameLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE))
-                    .addContainerGap()))
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(fileNameLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(differencePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(fileSizeTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                                .addComponent(fileSizeLabel)
+                                .addGap(0, 364, Short.MAX_VALUE))
+                            .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addContainerGap())))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(fileNameLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(documentSizePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(15, Short.MAX_VALUE)))
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(fileNameLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fileSizeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fileSizeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(differencePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
@@ -191,7 +149,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(389, Short.MAX_VALUE)
+                .addContainerGap(392, Short.MAX_VALUE)
                 .addComponent(closeButton)
                 .addContainerGap())
         );
@@ -218,42 +176,20 @@ public class PropertiesDialog extends javax.swing.JDialog {
     }
 
     public void setDocument(HexPanel panel) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        fileNameTextField.setText(panel.getFileName());
-//        Document document = panel.getDocument();
-//        linesCountTextField.setText(Integer.toString(panel.getLineCount()));
-//        charCountTextField.setText(Integer.toString(document.getLength()));
-//        CharBuffer buffer = CharBuffer.wrap(new StringBuffer(panel.getText()));
-//
-//        CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
-//        try {
-//            ByteBuffer result = encoder.encode(buffer);
-//            int length = 0;
-//            while (result.hasRemaining()) {
-//                result.get();
-//                length++;
-//            }
-//            fileSizeTextField.setText(Integer.toString(length));
-//        } catch (CharacterCodingException ex) {
-//            Logger.getLogger(PropertiesDialog.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        fileNameTextField.setText(panel.getFileName());
+        Hexadecimal hexadecimal = panel.getHexadecimal();
+        fileSizeTextField.setText(Long.toString(hexadecimal.getData().getDataSize()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel charCountLabel;
-    private javax.swing.JTextField charCountTextField;
     private javax.swing.JButton closeButton;
     private javax.swing.JPanel controlPanel;
-    private javax.swing.JPanel documentSizePanel;
+    private javax.swing.JPanel differencePanel;
     private javax.swing.JLabel fileNameLabel;
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JLabel fileSizeLabel;
     private javax.swing.JTextField fileSizeTextField;
-    private javax.swing.JLabel linesCountLabel;
-    private javax.swing.JTextField linesCountTextField;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JLabel wordsCountLabel;
-    private javax.swing.JTextField wordsCountTextField;
     // End of variables declaration//GEN-END:variables
 
 }

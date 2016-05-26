@@ -18,6 +18,7 @@ package org.exbin.framework.deltahex;
 import java.awt.Color;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.prefs.Preferences;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -46,26 +47,28 @@ import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.1.0 2016/05/18
+ * @version 0.1.0 2016/05/26
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(DeltaHexModule.class);
-    public static final String HEX_POPUP_MENU_ID = MODULE_ID + ".audioPopupMenu";
+    public static final String HEX_POPUP_MENU_ID = MODULE_ID + ".hexPopupMenu";
 
     private static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
+    private static final String VIEW_NONPRINTABLES_MENU_GROUP_ID = MODULE_ID + ".viewNonprintablesMenuGroup";
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
 
-    public static final String TEXT_STATUS_BAR_ID = "textStatusBar";
+    public static final String HEX_STATUS_BAR_ID = "hexStatusBar";
 
     private XBApplication application;
     private XBEditorProvider editorProvider;
     private HexStatusPanel textStatusPanel;
 
     private FindReplaceHandler findReplaceHandler;
+    private ViewNonprintablesHandler viewNonprintablesHandler;
     private ToolsOptionsHandler toolsOptionsHandler;
-    private WordWrappingHandler wordWrappingHandler;
+    private LineWrappingHandler wordWrappingHandler;
     private EncodingsHandler encodingsHandler;
     private GoToLineHandler goToLineHandler;
     private PropertiesHandler propertiesHandler;
@@ -95,8 +98,8 @@ public class DeltaHexModule implements XBApplicationModule {
     public void registerStatusBar() {
         textStatusPanel = new HexStatusPanel();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        frameModule.registerStatusBar(MODULE_ID, TEXT_STATUS_BAR_ID, textStatusPanel);
-        frameModule.switchStatusBar(TEXT_STATUS_BAR_ID);
+        frameModule.registerStatusBar(MODULE_ID, HEX_STATUS_BAR_ID, textStatusPanel);
+        frameModule.switchStatusBar(HEX_STATUS_BAR_ID);
         ((HexPanel) getEditorProvider()).registerTextStatus(textStatusPanel);
         if (encodingsHandler != null) {
             encodingsHandler.setTextEncodingStatus(textStatusPanel);
@@ -177,7 +180,7 @@ public class DeltaHexModule implements XBApplicationModule {
     public void registerWordWrapping() {
         getWordWrappingHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, wordWrappingHandler.getViewWordWrapAction(), new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, wordWrappingHandler.getViewLineWrapAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
@@ -199,6 +202,15 @@ public class DeltaHexModule implements XBApplicationModule {
         return findReplaceHandler;
     }
 
+    private ViewNonprintablesHandler getViewNonprintablesHandler() {
+        if (viewNonprintablesHandler == null) {
+            viewNonprintablesHandler = new ViewNonprintablesHandler(application, (HexPanel) getEditorProvider());
+            viewNonprintablesHandler.init();
+        }
+
+        return viewNonprintablesHandler;
+    }
+
     private ToolsOptionsHandler getToolsOptionsHandler() {
         if (toolsOptionsHandler == null) {
             toolsOptionsHandler = new ToolsOptionsHandler(application, (HexPanel) getEditorProvider());
@@ -208,9 +220,9 @@ public class DeltaHexModule implements XBApplicationModule {
         return toolsOptionsHandler;
     }
 
-    private WordWrappingHandler getWordWrappingHandler() {
+    private LineWrappingHandler getWordWrappingHandler() {
         if (wordWrappingHandler == null) {
-            wordWrappingHandler = new WordWrappingHandler(application, (HexPanel) getEditorProvider());
+            wordWrappingHandler = new LineWrappingHandler(application, (HexPanel) getEditorProvider());
             wordWrappingHandler.init();
         }
 
@@ -269,6 +281,13 @@ public class DeltaHexModule implements XBApplicationModule {
         menuModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceHandler.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
+    public void registerViewNonprintablesMenuActions() {
+        getViewNonprintablesHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_NONPRINTABLES_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewNonprintablesHandler.getViewNonprintablesAction(), new MenuPosition(VIEW_NONPRINTABLES_MENU_GROUP_ID));
+    }
+
     public void registerToolsOptionsMenuActions() {
         getToolsOptionsHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
@@ -296,5 +315,9 @@ public class DeltaHexModule implements XBApplicationModule {
         JPopupMenu popupMenu = new JPopupMenu();
         menuModule.buildMenu(popupMenu, HEX_POPUP_MENU_ID);
         return popupMenu;
+    }
+
+    public void loadFromPreferences(Preferences preferences) {
+        encodingsHandler.loadFromPreferences(preferences);
     }
 }

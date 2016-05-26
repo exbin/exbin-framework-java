@@ -61,7 +61,7 @@ public class XBBaseApplication implements XBApplication {
     }
 
     /**
-     * At init creates and shows the main frame of the application.
+     * Creates and shows the main frame of the application.
      */
     public void init() {
     }
@@ -90,7 +90,6 @@ public class XBBaseApplication implements XBApplication {
     public void setAppBundle(ResourceBundle appBundle, String bundleName) {
         if (!Locale.getDefault().equals(appBundle.getLocale())) {
             appBundle = ResourceBundle.getBundle(bundleName);
-            // appBundle = ResourceBundle.getBundle(appBundle.getBaseBundleName());
         }
 
         this.appBundle = appBundle;

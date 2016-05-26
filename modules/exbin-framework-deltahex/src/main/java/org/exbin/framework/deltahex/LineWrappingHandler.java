@@ -25,40 +25,40 @@ import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
- * Word wrapping handler.
+ * Line wrapping handler.
  *
- * @version 0.1.0 2016/04/03
+ * @version 0.1.0 2016/05/26
  * @author ExBin Project (http://exbin.org)
  */
-public class WordWrappingHandler {
+public class LineWrappingHandler {
 
     private final XBEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private Action viewWordWrapAction;
+    private Action viewLineWrapAction;
 
-    public WordWrappingHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public LineWrappingHandler(XBApplication application, XBEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {
-        viewWordWrapAction = new AbstractAction() {
+        viewLineWrapAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexPanel) {
                     boolean lineWraping = ((HexPanel) editorProvider).changeLineWrap();
-                    viewWordWrapAction.putValue(Action.SELECTED_KEY, lineWraping);
+                    viewLineWrapAction.putValue(Action.SELECTED_KEY, lineWraping);
                 }
             }
         };
-        ActionUtils.setupAction(viewWordWrapAction, resourceBundle, "viewWordWrapAction");
-        viewWordWrapAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
+        ActionUtils.setupAction(viewLineWrapAction, resourceBundle, "viewLineWrapAction");
+        viewLineWrapAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
     }
 
-    public Action getViewWordWrapAction() {
-        return viewWordWrapAction;
+    public Action getViewLineWrapAction() {
+        return viewLineWrapAction;
     }
 }
