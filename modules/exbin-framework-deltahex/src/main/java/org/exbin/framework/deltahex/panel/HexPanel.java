@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -41,6 +43,7 @@ import org.exbin.deltahex.CaretPosition;
 import org.exbin.deltahex.Hexadecimal;
 import org.exbin.deltahex.HexadecimalCaret;
 import org.exbin.deltahex.delta.MemoryHexadecimalData;
+import org.exbin.deltahex.highlight.HighlightHexadecimalPainter;
 import org.exbin.deltahex.operation.HexCommandHandler;
 import org.exbin.deltahex.operation.HexUndoHandler;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
@@ -89,12 +92,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     private void init() {
         hexadecimal = new Hexadecimal();
-//        try {
-//            // Testing
-//            hexadecimal.setData(new DeltaHexadecimalData(new DeltaDataSource(new File("/home/hajdam/Projekty/exbin/deltahex-java/modules/deltahex/src/test/resources/org/exbin/deltahex/resources/test/allbytes.dat"))));
-//        } catch (IOException ex) {
-//            Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        hexadecimal.setPainter(new HighlightHexadecimalPainter(hexadecimal));
         hexadecimal.setData(new MemoryHexadecimalData(new XBData()));
         hexadecimal.setHandleClipboard(false);
         hexadecimal.addSelectionChangedListener(new Hexadecimal.SelectionChangedListener() {
@@ -165,37 +163,68 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void findText(FindHexDialog dialog) {
-//        String text = textArea.getText();
-//        int pos = textArea.getCaretPosition();
-//        if (highlight != null) {
-//            if (((Highlight) highlight).getStartOffset() == pos) {
-//                pos++;
-//            }
-//            textArea.getHighlighter().removeHighlight(highlight);
-//        } else if (dialog.getSearchFromStart()) {
-//            pos = 0;
-//        }
-//        String findText = dialog.getFindText();
-//        pos = text.indexOf(findText, pos);
-//        if (pos >= 0) {
+        long position = hexadecimal.getCaretPosition().getDataPosition();
+        HighlightHexadecimalPainter painter = (HighlightHexadecimalPainter) hexadecimal.getPainter();
+        if (painter.getCurrentMatch() != null) {
+            if (painter.getCurrentMatch().getPosition() == position) {
+                position++;
+            }
+            // textArea.getHighlighter().removeHighlight(highlight);
+        } else if (dialog.getSearchFromStart()) {
+            position = 0;
+        }
+        String findText = dialog.getFindText();
+        byte[] findBytes = findText.getBytes(hexadecimal.getCharset());
+        BinaryData data = hexadecimal.getData();
+
+        List<HighlightHexadecimalPainter.SearchMatch> foundMatches = new ArrayList<>();
+
+        long dataSize = data.getDataSize();
+        while (position < dataSize - findBytes.length) {
+            int matchLength = 0;
+            while (matchLength < findBytes.length) {
+                if (data.getByte(position + matchLength) != findBytes[matchLength]) {
+                    break;
+                }
+                matchLength++;
+            }
+
+            if (matchLength == findBytes.length) {
+                HighlightHexadecimalPainter.SearchMatch match = new HighlightHexadecimalPainter.SearchMatch();
+                match.setPosition(position);
+                match.setLength(findBytes.length);
+                foundMatches.add(match);
+
+                if (foundMatches.size() == 100) {
+                    break;
+                }
+            }
+
+            position++;
+        }
+//        position = text.indexOf(findText, position);
+//        if (position >= 0) {
 //            try {
 //                int toPos;
 //                if (dialog.getShallReplace()) {
 //                    String replaceText = dialog.getReplaceText();
-//                    textArea.replaceRange(replaceText, pos, pos + findText.length());
-//                    toPos = pos + replaceText.length();
+//                    textArea.replaceRange(replaceText, position, position + findText.length());
+//                    toPos = position + replaceText.length();
 //                } else {
-//                    toPos = pos + findText.length();
+//                    toPos = position + findText.length();
 //                }
-//                highlight = textArea.getHighlighter().addHighlight(pos, toPos, new DefaultHighlighter.DefaultHighlightPainter(foundTextBackgroundColor));
-//                textArea.setCaretPosition(pos);
+//                highlight = textArea.getHighlighter().addHighlight(position, toPos, new DefaultHighlighter.DefaultHighlightPainter(foundTextBackgroundColor));
+//                textArea.setCaretPosition(position);
 //                return;
 //            } catch (BadLocationException ex) {
 //                Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
 //            }
 //        }
-//        JOptionPane.showMessageDialog(null, "String was not found", "Find text", JOptionPane.INFORMATION_MESSAGE); // getFrame
-//        highlight = null;
+        painter.setMatches(foundMatches);
+        if (foundMatches.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "String was not found", "Find text", JOptionPane.INFORMATION_MESSAGE); // getFrame
+        }
+        hexadecimal.repaint();
     }
 
     public Color[] getCurrentColors() {

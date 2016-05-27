@@ -20,6 +20,7 @@ dependencies {
     compile "org.exbin.deltahex:deltahex:${deltahexVersion}"
     compile "org.exbin.deltahex:deltahex-delta:${deltahexVersion}"
     compile "org.exbin.deltahex:deltahex-operation:${deltahexVersion}"
+    compile "org.exbin.deltahex:deltahex-highlight:${deltahexVersion}"
     compile "org.exbin.xbup:xbup-core:${xbupVersion}"
     compile(project(':modules:exbin-framework'))
     compile(project(':modules:exbin-framework-api'))
