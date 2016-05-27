@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
@@ -23,6 +24,8 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -62,7 +65,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/05/25
+ * @version 0.1.0 2016/05/27
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -77,6 +80,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     private CharsetChangeListener charsetChangeListener = null;
     private HexStatusPanel statusPanel = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
+    private FindTextPanel findTextPanel;
+    private boolean findTextPanelVisible = false;
 
     public HexPanel() {
         undoHandler = new HexUndoHandler(hexadecimal);
@@ -116,7 +121,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             }
         });
 
-        textAreaScrollPane.setViewportView(hexadecimal);
+        add(hexadecimal);
         fileName = "";
         foundTextBackgroundColor = Color.YELLOW;
         hexadecimal.setCharset(Charset.forName(TextEncodingPanel.ENCODING_UTF8));
@@ -134,6 +139,17 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
                 if (propertyChangeListener != null) {
                     propertyChangeListener.propertyChange(evt);
                 }
+            }
+        });
+
+        findTextPanel = new FindTextPanel();
+        findTextPanel.addCloseListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HexPanel.this.remove(findTextPanel);
+                HexPanel.this.validate();
+                HexPanel.this.repaint();
+                findTextPanelVisible = false;
             }
         });
     }
@@ -162,11 +178,22 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         }
     }
 
+    public void showFindPanel() {
+        if (!findTextPanelVisible) {
+            add(findTextPanel, BorderLayout.SOUTH);
+            validate();
+            repaint();
+            findTextPanelVisible = true;
+        }
+    }
+
     public void findText(FindHexDialog dialog) {
         long position = hexadecimal.getCaretPosition().getDataPosition();
         HighlightHexadecimalPainter painter = (HighlightHexadecimalPainter) hexadecimal.getPainter();
-        if (painter.getCurrentMatch() != null) {
-            if (painter.getCurrentMatch().getPosition() == position) {
+        HighlightHexadecimalPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+
+        if (currentMatch != null) {
+            if (currentMatch.getPosition() == position) {
                 position++;
             }
             // textArea.getHighlighter().removeHighlight(highlight);
@@ -267,10 +294,6 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         return ""; // textArea.getText();
     }
 
-    public void setNoBorder() {
-        textAreaScrollPane.setBorder(null);
-    }
-
     public void gotoLine(int line) {
 //        try {
 //            textArea.setCaretPosition(textArea.getLineStartOffset(line - 1));
@@ -354,21 +377,14 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        textAreaScrollPane = new javax.swing.JScrollPane();
-
         setInheritsPopupMenu(true);
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
-
-        textAreaScrollPane.setName("textAreaScrollPane"); // NOI18N
-        add(textAreaScrollPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane textAreaScrollPane;
     // End of variables declaration//GEN-END:variables
-
     @Override
     public boolean isModified() {
         return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();

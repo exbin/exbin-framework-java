@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.deltahex;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -59,6 +60,10 @@ public class FindReplaceHandler {
         editFindAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (editorProvider instanceof HexPanel) {
+                    ((HexPanel) editorProvider).showFindPanel();
+                }
+
                 initFindDialog();
                 findDialog.setShallReplace(false);
                 findDialog.setSelected();
