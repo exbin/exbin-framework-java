@@ -31,7 +31,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Find text/hexadecimal data dialog.
  *
- * @version 0.1.0 2016/05/27
+ * @version 0.1.0 2016/05/29
  * @author ExBin Project (http://exbin.org)
  */
 public class FindHexDialog extends javax.swing.JDialog {
@@ -208,11 +208,6 @@ public class FindHexDialog extends javax.swing.JDialog {
             .addGroup(findPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, findPanelLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(findTextComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(findTextMultilineButton))
                     .addComponent(matchCaseCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
                     .addComponent(searchFromCursorCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
                     .addGroup(findPanelLayout.createSequentialGroup()
@@ -222,9 +217,15 @@ public class FindHexDialog extends javax.swing.JDialog {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(findPanelLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addComponent(findHexComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(findHexMultilineButton)))
+                        .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, findPanelLayout.createSequentialGroup()
+                                .addComponent(findTextComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(findTextMultilineButton))
+                            .addGroup(findPanelLayout.createSequentialGroup()
+                                .addComponent(findHexComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(findHexMultilineButton)))))
                 .addContainerGap())
         );
         findPanelLayout.setVerticalGroup(
@@ -239,9 +240,11 @@ public class FindHexDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(hexModeRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(findHexComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(findHexMultilineButton))
+                .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(findHexMultilineButton)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, findPanelLayout.createSequentialGroup()
+                        .addComponent(findHexComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(3, 3, 3)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchFromCursorCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

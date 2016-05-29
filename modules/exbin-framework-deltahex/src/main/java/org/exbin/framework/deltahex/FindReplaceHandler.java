@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.deltahex;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -38,7 +37,7 @@ public class FindReplaceHandler {
 
     private final XBEditorProvider editorProvider;
     private final XBApplication application;
-    private ResourceBundle resourceBundle;
+    private final ResourceBundle resourceBundle;
 
     private int metaMask;
 
@@ -64,16 +63,16 @@ public class FindReplaceHandler {
                     ((HexPanel) editorProvider).showFindPanel();
                 }
 
-                initFindDialog();
-                findDialog.setShallReplace(false);
-                findDialog.setSelected();
-                findDialog.setLocationRelativeTo(findDialog.getParent());
-                findDialog.setVisible(true);
-                if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                    if (editorProvider instanceof HexPanel) {
-                        ((HexPanel) editorProvider).findText(findDialog);
-                    }
-                }
+//                initFindDialog();
+//                findDialog.setShallReplace(false);
+//                findDialog.setSelected();
+//                findDialog.setLocationRelativeTo(findDialog.getParent());
+//                findDialog.setVisible(true);
+//                if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
+//                    if (editorProvider instanceof HexPanel) {
+//                        ((HexPanel) editorProvider).findText(findDialog);
+//                    }
+//                }
             }
         };
         ActionUtils.setupAction(editFindAction, resourceBundle, "editFindAction");

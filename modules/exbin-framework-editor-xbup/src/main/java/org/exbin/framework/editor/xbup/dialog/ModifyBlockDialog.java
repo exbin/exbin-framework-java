@@ -85,7 +85,7 @@ import org.exbin.xbup.plugin.XBCatalogPlugin;
 /**
  * Dialog for modifying item attributes or data.
  *
- * @version 0.2.0 2016/05/25
+ * @version 0.2.0 2016/05/29
  * @author ExBin Project (http://exbin.org)
  */
 public class ModifyBlockDialog extends javax.swing.JDialog {

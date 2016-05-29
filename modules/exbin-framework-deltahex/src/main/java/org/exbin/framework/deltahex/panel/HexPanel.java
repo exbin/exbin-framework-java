@@ -142,7 +142,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             }
         });
 
-        findTextPanel = new FindTextPanel();
+        findTextPanel = new FindTextPanel(false);
         findTextPanel.addCloseListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -184,6 +184,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             validate();
             repaint();
             findTextPanelVisible = true;
+            findTextPanel.setRequestFocus();
         }
     }
 

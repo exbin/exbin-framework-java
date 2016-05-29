@@ -15,16 +15,23 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import javax.swing.JOptionPane;
+import org.exbin.framework.deltahex.dialog.FindHexDialog;
+import org.exbin.framework.gui.utils.WindowUtils;
+
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/05/27
+ * @version 0.1.0 2016/05/29
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
 
-    public FindTextPanel() {
+    public FindTextPanel(boolean replaceMode) {
         initComponents();
+        if (!replaceMode) {
+            super.remove(replacePanel);
+        }
     }
 
     /**
@@ -36,7 +43,8 @@ public class FindTextPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        closeButton = new javax.swing.JButton();
+        topSeparator = new javax.swing.JSeparator();
+        findPanel = new javax.swing.JPanel();
         findLabel = new javax.swing.JLabel();
         findComboBox = new javax.swing.JComboBox<>();
         findToolBar = new javax.swing.JToolBar();
@@ -44,28 +52,37 @@ public class FindTextPanel extends javax.swing.JPanel {
         prevButton = new javax.swing.JButton();
         matchCaseToggleButton = new javax.swing.JToggleButton();
         showMatchesToggleButton = new javax.swing.JToggleButton();
+        separator1 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
         infoLabel = new javax.swing.JLabel();
+        closeToolBar = new javax.swing.JToolBar();
+        closeButton = new javax.swing.JButton();
+        replacePanel = new javax.swing.JPanel();
+        replaceLabel = new javax.swing.JLabel();
+        replaceComboBox = new javax.swing.JComboBox<>();
 
         setName("Form"); // NOI18N
+        setLayout(new java.awt.BorderLayout());
+
+        topSeparator.setName("topSeparator"); // NOI18N
+        add(topSeparator, java.awt.BorderLayout.NORTH);
+
+        findPanel.setName("findPanel"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexStatusPanel"); // NOI18N
-        closeButton.setText(bundle.getString("FindTextPanel.closeButton.text")); // NOI18N
-        closeButton.setName("closeButton"); // NOI18N
-
         findLabel.setText(bundle.getString("FindTextPanel.findLabel.text")); // NOI18N
         findLabel.setName("findLabel"); // NOI18N
 
         findComboBox.setEditable(true);
         findComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        findComboBox.setEnabled(false);
         findComboBox.setName("findComboBox"); // NOI18N
 
+        findToolBar.setBorder(null);
         findToolBar.setFloatable(false);
         findToolBar.setRollover(true);
         findToolBar.setName("findToolBar"); // NOI18N
 
-        nextButton.setText(bundle.getString("FindTextPanel.nextButton.text")); // NOI18N
+        nextButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/open_icon_library/icons/png/16x16/actions/arrow-left.png"))); // NOI18N
         nextButton.setEnabled(false);
         nextButton.setFocusable(false);
         nextButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -73,7 +90,7 @@ public class FindTextPanel extends javax.swing.JPanel {
         nextButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         findToolBar.add(nextButton);
 
-        prevButton.setText(bundle.getString("FindTextPanel.prevButton.text")); // NOI18N
+        prevButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/open_icon_library/icons/png/16x16/actions/arrow-right.png"))); // NOI18N
         prevButton.setEnabled(false);
         prevButton.setFocusable(false);
         prevButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -81,76 +98,149 @@ public class FindTextPanel extends javax.swing.JPanel {
         prevButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         findToolBar.add(prevButton);
 
-        matchCaseToggleButton.setText(bundle.getString("FindTextPanel.matchCaseToggleButton.text")); // NOI18N
-        matchCaseToggleButton.setEnabled(false);
+        matchCaseToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/case_sensitive.gif"))); // NOI18N
         matchCaseToggleButton.setFocusable(false);
         matchCaseToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         matchCaseToggleButton.setName("matchCaseToggleButton"); // NOI18N
         matchCaseToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         findToolBar.add(matchCaseToggleButton);
 
-        showMatchesToggleButton.setText(bundle.getString("FindTextPanel.showMatchesToggleButton.text")); // NOI18N
-        showMatchesToggleButton.setEnabled(false);
+        showMatchesToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/mark_occurrences.png"))); // NOI18N
         showMatchesToggleButton.setFocusable(false);
         showMatchesToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         showMatchesToggleButton.setName("showMatchesToggleButton"); // NOI18N
         showMatchesToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         findToolBar.add(showMatchesToggleButton);
 
-        optionsButton.setText(bundle.getString("FindTextPanel.optionsButton.text")); // NOI18N
-        optionsButton.setEnabled(false);
-        optionsButton.setName("optionsButton"); // NOI18N
+        separator1.setName("separator1"); // NOI18N
+        findToolBar.add(separator1);
 
-        infoLabel.setText(bundle.getString("FindTextPanel.infoLabel.text")); // NOI18N
+        optionsButton.setText(bundle.getString("FindTextPanel.optionsButton.text")); // NOI18N
+        optionsButton.setFocusable(false);
+        optionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        optionsButton.setName("optionsButton"); // NOI18N
+        optionsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        optionsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optionsButtonActionPerformed(evt);
+            }
+        });
+        findToolBar.add(optionsButton);
+
         infoLabel.setEnabled(false);
         infoLabel.setName("infoLabel"); // NOI18N
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        closeToolBar.setBorder(null);
+        closeToolBar.setFloatable(false);
+        closeToolBar.setRollover(true);
+        closeToolBar.setName("closeToolBar"); // NOI18N
+
+        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/open_icon_library/icons/png/16x16/actions/dialog-cancel-3.png"))); // NOI18N
+        closeButton.setFocusable(false);
+        closeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        closeButton.setName("closeButton"); // NOI18N
+        closeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        closeToolBar.add(closeButton);
+
+        javax.swing.GroupLayout findPanelLayout = new javax.swing.GroupLayout(findPanel);
+        findPanel.setLayout(findPanelLayout);
+        findPanelLayout.setHorizontalGroup(
+            findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, findPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(findLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(findComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(findComboBox, 0, 360, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(findToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(optionsButton)
+                .addComponent(infoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(closeButton)
-                .addContainerGap())
+                .addComponent(closeToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(findToolBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(findLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(findComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(closeButton)
-                .addComponent(optionsButton)
-                .addComponent(infoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+        findPanelLayout.setVerticalGroup(
+            findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(closeToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(findLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(findPanelLayout.createSequentialGroup()
+                .addComponent(findComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(findToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        add(findPanel, java.awt.BorderLayout.CENTER);
+
+        replacePanel.setName("replacePanel"); // NOI18N
+
+        replaceLabel.setText(bundle.getString("FindTextPanel.replaceLabel.text")); // NOI18N
+        replaceLabel.setName("replaceLabel"); // NOI18N
+
+        replaceComboBox.setEditable(true);
+        replaceComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        replaceComboBox.setMinimumSize(new java.awt.Dimension(137, 25));
+        replaceComboBox.setName("replaceComboBox"); // NOI18N
+
+        javax.swing.GroupLayout replacePanelLayout = new javax.swing.GroupLayout(replacePanel);
+        replacePanel.setLayout(replacePanelLayout);
+        replacePanelLayout.setHorizontalGroup(
+            replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(replacePanelLayout.createSequentialGroup()
+                .addGap(74, 74, 74)
+                .addComponent(replaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(416, Short.MAX_VALUE))
+            .addGroup(replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(replacePanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(replaceLabel)
+                    .addContainerGap(756, Short.MAX_VALUE)))
+        );
+        replacePanelLayout.setVerticalGroup(
+            replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(replaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(replaceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+        );
+
+        add(replacePanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void optionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optionsButtonActionPerformed
+        FindHexDialog findDialog = new FindHexDialog(WindowUtils.getFrame(this), true);
+        findDialog.setShallReplace(false);
+        findDialog.setSelected();
+        findDialog.setLocationRelativeTo(findDialog.getParent());
+        findDialog.setVisible(true);
+        if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
+//            ((HexPanel) editorProvider).findText(findDialog);
+        }
+    }//GEN-LAST:event_optionsButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
+    private javax.swing.JToolBar closeToolBar;
     private javax.swing.JComboBox<String> findComboBox;
     private javax.swing.JLabel findLabel;
+    private javax.swing.JPanel findPanel;
     private javax.swing.JToolBar findToolBar;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JToggleButton matchCaseToggleButton;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton optionsButton;
     private javax.swing.JButton prevButton;
+    private javax.swing.JComboBox<String> replaceComboBox;
+    private javax.swing.JLabel replaceLabel;
+    private javax.swing.JPanel replacePanel;
+    private javax.swing.JToolBar.Separator separator1;
     private javax.swing.JToggleButton showMatchesToggleButton;
+    private javax.swing.JSeparator topSeparator;
     // End of variables declaration//GEN-END:variables
 
     public void addCloseListener(java.awt.event.ActionListener actionListener) {
         closeButton.addActionListener(actionListener);
+    }
+
+    public void setRequestFocus() {
+        findComboBox.requestFocus();
     }
 }
