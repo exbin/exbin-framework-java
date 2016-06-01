@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Find/replace handler.
  *
- * @version 0.1.0 2016/04/03
+ * @version 0.1.0 2016/06/01
  * @author ExBin Project (http://exbin.org)
  */
 public class FindReplaceHandler {
@@ -85,7 +85,7 @@ public class FindReplaceHandler {
                 initFindDialog();
                 findDialog.setShallReplace(false);
                 if (editorProvider instanceof HexPanel) {
-                    ((HexPanel) editorProvider).findText(findDialog);
+                    ((HexPanel) editorProvider).findText(findDialog.getSearchParameters());
                 }
             }
         };
@@ -102,7 +102,7 @@ public class FindReplaceHandler {
                 findDialog.setVisible(true);
                 if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
                     if (editorProvider instanceof HexPanel) {
-                        ((HexPanel) editorProvider).findText(findDialog);
+                        ((HexPanel) editorProvider).findText(findDialog.getSearchParameters());
                     }
                 }
             }

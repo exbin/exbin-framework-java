@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.LineBorder;
 import org.exbin.deltahex.Hexadecimal;
+import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
@@ -31,7 +32,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Find text/hexadecimal data dialog.
  *
- * @version 0.1.0 2016/05/29
+ * @version 0.1.0 2016/06/01
  * @author ExBin Project (http://exbin.org)
  */
 public class FindHexDialog extends javax.swing.JDialog {
@@ -106,10 +107,6 @@ public class FindHexDialog extends javax.swing.JDialog {
 
         updateRadioStates();
         pack();
-    }
-
-    public boolean getSearchFromStart() {
-        return !searchFromCursorCheckBox.isSelected();
     }
 
     public void setSelected() {
@@ -447,5 +444,12 @@ public class FindHexDialog extends javax.swing.JDialog {
 
     public String getReplaceText() {
         return textToReplaceTextField.getText();
+    }
+
+    public SearchParameters getSearchParameters() {
+        SearchParameters result = new SearchParameters();
+        result.setSearchText((String) findTextComboBox.getEditor().getItem());
+        result.setSearchFromCursor(searchFromCursorCheckBox.isSelected());
+        return result;
     }
 }

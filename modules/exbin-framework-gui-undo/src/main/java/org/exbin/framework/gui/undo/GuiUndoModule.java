@@ -37,6 +37,7 @@ import org.exbin.framework.gui.undo.dialog.UndoManagerModel;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
+import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
@@ -137,8 +138,12 @@ public class GuiUndoModule implements GuiUndoModuleApi {
         undoModel.setUndoHandler(undoHandler);
         undoHandler.addUndoUpdateListener(new XBUndoUpdateListener() {
             @Override
-            public void undoChanged() {
+            public void undoCommandPositionChanged() {
                 updateUndoStatus();
+            }
+
+            @Override
+            public void undoCommandAdded(Command cmnd) {
             }
         });
     }

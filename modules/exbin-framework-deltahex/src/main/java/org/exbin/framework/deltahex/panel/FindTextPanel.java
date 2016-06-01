@@ -15,6 +15,10 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JOptionPane;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -22,16 +26,42 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/05/29
+ * @version 0.1.0 2016/06/01
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
 
-    public FindTextPanel(boolean replaceMode) {
+    private java.util.Timer searchStartTimer;
+    private Thread searchThread;
+    private SearchParameters searchParameters;
+    private final HexPanel hexPanel;
+
+    public FindTextPanel(HexPanel hexPanel, boolean replaceMode) {
         initComponents();
+        this.hexPanel = hexPanel;
         if (!replaceMode) {
             super.remove(replacePanel);
         }
+
+        searchThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                performFind();
+            }
+        });
+
+        findComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+                findComboBoxKeyTyped(e);
+            }
+        });
     }
 
     /**
@@ -75,6 +105,7 @@ public class FindTextPanel extends javax.swing.JPanel {
 
         findComboBox.setEditable(true);
         findComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        findComboBox.setSelectedItem("");
         findComboBox.setName("findComboBox"); // NOI18N
 
         findToolBar.setBorder(null);
@@ -178,6 +209,7 @@ public class FindTextPanel extends javax.swing.JPanel {
 
         replaceComboBox.setEditable(true);
         replaceComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        replaceComboBox.setSelectedItem("");
         replaceComboBox.setMinimumSize(new java.awt.Dimension(137, 25));
         replaceComboBox.setName("replaceComboBox"); // NOI18N
 
@@ -206,13 +238,15 @@ public class FindTextPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void optionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optionsButtonActionPerformed
+        cancelSearch();
         FindHexDialog findDialog = new FindHexDialog(WindowUtils.getFrame(this), true);
         findDialog.setShallReplace(false);
         findDialog.setSelected();
         findDialog.setLocationRelativeTo(findDialog.getParent());
         findDialog.setVisible(true);
         if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-//            ((HexPanel) editorProvider).findText(findDialog);
+            SearchParameters findParameters = findDialog.getSearchParameters();
+            hexPanel.findText(findParameters);
         }
     }//GEN-LAST:event_optionsButtonActionPerformed
 
@@ -236,11 +270,37 @@ public class FindTextPanel extends javax.swing.JPanel {
     private javax.swing.JSeparator topSeparator;
     // End of variables declaration//GEN-END:variables
 
+    private void findComboBoxKeyTyped(java.awt.event.KeyEvent evt) {
+        if (searchStartTimer != null) {
+            searchStartTimer.cancel();
+        }
+        searchStartTimer = new Timer();
+        searchParameters = new SearchParameters();
+        searchParameters.setSearchText((String) findComboBox.getEditor().getItem());
+        searchStartTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (searchThread != null) {
+                    searchThread.interrupt();
+                }
+                searchThread.start();
+            }
+        }, 1000);
+    }
+
     public void addCloseListener(java.awt.event.ActionListener actionListener) {
         closeButton.addActionListener(actionListener);
     }
 
     public void setRequestFocus() {
         findComboBox.requestFocus();
+    }
+
+    public void cancelSearch() {
+        searchThread.interrupt();
+    }
+
+    public void performFind() {
+        hexPanel.findText(searchParameters);
     }
 }

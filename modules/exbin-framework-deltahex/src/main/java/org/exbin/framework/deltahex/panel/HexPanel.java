@@ -49,7 +49,6 @@ import org.exbin.deltahex.delta.MemoryHexadecimalData;
 import org.exbin.deltahex.highlight.HighlightHexadecimalPainter;
 import org.exbin.deltahex.operation.HexCommandHandler;
 import org.exbin.deltahex.operation.HexUndoHandler;
-import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.gui.editor.api.XBEditorProvider;
@@ -60,12 +59,13 @@ import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.type.XBData;
+import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/05/27
+ * @version 0.1.0 2016/06/01
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -87,8 +87,12 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         undoHandler = new HexUndoHandler(hexadecimal);
         undoHandler.addUndoUpdateListener(new XBUndoUpdateListener() {
             @Override
-            public void undoChanged() {
+            public void undoCommandPositionChanged() {
                 hexadecimal.repaint();
+            }
+
+            @Override
+            public void undoCommandAdded(Command cmnd) {
             }
         });
         initComponents();
@@ -142,7 +146,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             }
         });
 
-        findTextPanel = new FindTextPanel(false);
+        findTextPanel = new FindTextPanel(this, false);
         findTextPanel.addCloseListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -188,7 +192,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         }
     }
 
-    public void findText(FindHexDialog dialog) {
+    public void findText(SearchParameters findParameters) {
         long position = hexadecimal.getCaretPosition().getDataPosition();
         HighlightHexadecimalPainter painter = (HighlightHexadecimalPainter) hexadecimal.getPainter();
         HighlightHexadecimalPainter.SearchMatch currentMatch = painter.getCurrentMatch();
@@ -198,10 +202,10 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
                 position++;
             }
             // textArea.getHighlighter().removeHighlight(highlight);
-        } else if (dialog.getSearchFromStart()) {
+        } else if (!findParameters.isSearchFromCursor()) {
             position = 0;
         }
-        String findText = dialog.getFindText();
+        String findText = findParameters.getSearchText();
         byte[] findBytes = findText.getBytes(hexadecimal.getCharset());
         BinaryData data = hexadecimal.getData();
 
