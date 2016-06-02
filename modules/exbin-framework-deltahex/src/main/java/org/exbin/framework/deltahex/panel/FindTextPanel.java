@@ -26,13 +26,13 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/01
+ * @version 0.1.0 2016/06/02
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
 
     private java.util.Timer searchStartTimer;
-    private Thread searchThread;
+    private final Thread searchThread;
     private SearchParameters searchParameters;
     private final HexPanel hexPanel;
 
@@ -275,7 +275,10 @@ public class FindTextPanel extends javax.swing.JPanel {
             searchStartTimer.cancel();
         }
         searchStartTimer = new Timer();
-        searchParameters = new SearchParameters();
+        if (searchParameters == null) {
+            searchParameters = new SearchParameters();
+        }
+
         searchParameters.setSearchText((String) findComboBox.getEditor().getItem());
         searchStartTimer.schedule(new TimerTask() {
             @Override
@@ -283,7 +286,7 @@ public class FindTextPanel extends javax.swing.JPanel {
                 if (searchThread != null) {
                     searchThread.interrupt();
                 }
-                searchThread.start();
+                searchThread.run();
             }
         }, 1000);
     }

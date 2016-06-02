@@ -185,8 +185,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     public void showFindPanel() {
         if (!findTextPanelVisible) {
             add(findTextPanel, BorderLayout.SOUTH);
-            validate();
-            repaint();
+            revalidate();
             findTextPanelVisible = true;
             findTextPanel.setRequestFocus();
         }
