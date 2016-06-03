@@ -406,6 +406,9 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     public void loadFromFile() {
         File file = new File(getFileName());
         try {
+//            DeltaDataSource dataSource = new DeltaDataSource(file);
+//            DeltaHexadecimalData deltaData = new DeltaHexadecimalData(dataSource);
+//            hexadecimal.setData(deltaData);
             try (FileInputStream fileStream = new FileInputStream(file)) {
                 BinaryData data = hexadecimal.getData();
                 ((EditableBinaryData) data).loadFromStream(fileStream);

@@ -15,24 +15,25 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/02
+ * @version 0.1.0 2016/06/03
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
 
-    private java.util.Timer searchStartTimer;
-    private final Thread searchThread;
+    private javax.swing.Timer searchStartTimer;
+    private Thread searchThread;
     private SearchParameters searchParameters;
     private final HexPanel hexPanel;
 
@@ -42,13 +43,6 @@ public class FindTextPanel extends javax.swing.JPanel {
         if (!replaceMode) {
             super.remove(replacePanel);
         }
-
-        searchThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                performFind();
-            }
-        });
 
         findComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
@@ -272,23 +266,33 @@ public class FindTextPanel extends javax.swing.JPanel {
 
     private void findComboBoxKeyTyped(java.awt.event.KeyEvent evt) {
         if (searchStartTimer != null) {
-            searchStartTimer.cancel();
+            searchStartTimer.stop();
         }
-        searchStartTimer = new Timer();
         if (searchParameters == null) {
             searchParameters = new SearchParameters();
         }
 
         searchParameters.setSearchText((String) findComboBox.getEditor().getItem());
-        searchStartTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (searchThread != null) {
-                    searchThread.interrupt();
+        if (searchStartTimer != null) {
+            searchStartTimer.restart();
+        } else {
+            searchStartTimer = new Timer(1000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (searchThread != null) {
+                        searchThread.interrupt();
+                    }
+
+                    searchThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            performFind();
+                        }
+                    });
+                    searchThread.start();
                 }
-                searchThread.run();
-            }
-        }, 1000);
+            });
+        }
     }
 
     public void addCloseListener(java.awt.event.ActionListener actionListener) {
