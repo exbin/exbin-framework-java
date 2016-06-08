@@ -45,7 +45,12 @@ import javax.swing.JPopupMenu;
 import org.exbin.deltahex.CaretPosition;
 import org.exbin.deltahex.Hexadecimal;
 import org.exbin.deltahex.HexadecimalCaret;
+import org.exbin.deltahex.delta.BinaryDataSegment;
+import org.exbin.deltahex.delta.DataSegment;
+import org.exbin.deltahex.delta.DeltaHexadecimalData;
+import org.exbin.deltahex.delta.DocumentSegment;
 import org.exbin.deltahex.delta.MemoryHexadecimalData;
+import org.exbin.deltahex.delta.list.DefaultDoublyLinkedList;
 import org.exbin.deltahex.highlight.HighlightHexadecimalPainter;
 import org.exbin.deltahex.operation.HexCommandHandler;
 import org.exbin.deltahex.operation.HexUndoHandler;
@@ -65,7 +70,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/06/01
+ * @version 0.1.0 2016/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -233,24 +238,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
             position++;
         }
-//        position = text.indexOf(findText, position);
-//        if (position >= 0) {
-//            try {
-//                int toPos;
-//                if (dialog.getShallReplace()) {
-//                    String replaceText = dialog.getReplaceText();
-//                    textArea.replaceRange(replaceText, position, position + findText.length());
-//                    toPos = position + replaceText.length();
-//                } else {
-//                    toPos = position + findText.length();
-//                }
-//                highlight = textArea.getHighlighter().addHighlight(position, toPos, new DefaultHighlighter.DefaultHighlightPainter(foundTextBackgroundColor));
-//                textArea.setCaretPosition(position);
-//                return;
-//            } catch (BadLocationException ex) {
-//                Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
+
         painter.setMatches(foundMatches);
         if (foundMatches.isEmpty()) {
             JOptionPane.showMessageDialog(null, "String was not found", "Find text", JOptionPane.INFORMATION_MESSAGE); // getFrame
@@ -290,24 +278,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         }
     }
 
-    public int getLineCount() {
-        return 0; // textArea.getLineCount();
-    }
-
-    public String getText() {
-        return ""; // textArea.getText();
-    }
-
-    public void gotoLine(int line) {
-//        try {
-//            textArea.setCaretPosition(textArea.getLineStartOffset(line - 1));
-//        } catch (BadLocationException ex) {
-//            Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-    }
-
-    public void gotoRelative(int charPos) {
-//        textArea.setCaretPosition(textArea.getCaretPosition() + charPos - 1);
+    public void goToPosition(long position) {
+        hexadecimal.getCaret().setCaretPosition(position);
     }
 
     @Override
@@ -381,13 +353,57 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        debugPanel = new javax.swing.JPanel();
+        debugButton = new javax.swing.JButton();
+
+        debugPanel.setName("debugPanel"); // NOI18N
+
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/Bundle"); // NOI18N
+        debugButton.setText(bundle.getString("HexPanel.debugButton.text")); // NOI18N
+        debugButton.setName("debugButton"); // NOI18N
+        debugButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                debugButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout debugPanelLayout = new javax.swing.GroupLayout(debugPanel);
+        debugPanel.setLayout(debugPanelLayout);
+        debugPanelLayout.setHorizontalGroup(
+            debugPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(debugButton)
+        );
+        debugPanelLayout.setVerticalGroup(
+            debugPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(debugPanelLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(debugButton))
+        );
+
         setInheritsPopupMenu(true);
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
+    private void debugButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugButtonActionPerformed
+        DefaultDoublyLinkedList<DataSegment> segments = ((DeltaHexadecimalData) hexadecimal.getData()).getSegments();
+        DataSegment segment = segments.first();
+        System.out.println("Segments list: " + ((DeltaHexadecimalData) hexadecimal.getData()).getDataSize());
+        while (segment != null) {
+            if (segment instanceof DocumentSegment) {
+                System.out.println("FILE: " + ((DocumentSegment) segment).getStartPosition() + ", " + ((DocumentSegment) segment).getLength());
+            } else {
+                System.out.println("DATA: " + ((BinaryDataSegment) segment).getLength());
+            }
+            segment = segment.getNext();
+        }
+        System.out.println();
+    }//GEN-LAST:event_debugButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton debugButton;
+    private javax.swing.JPanel debugPanel;
     // End of variables declaration//GEN-END:variables
     @Override
     public boolean isModified() {
@@ -435,7 +451,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     @Override
     public void newFile() {
-        ((EditableBinaryData) hexadecimal.getData()).setDataSize(0);
+        ((EditableBinaryData) hexadecimal.getData()).clear();
         hexadecimal.setData(hexadecimal.getData());
         hexadecimal.repaint();
         undoHandler.clear();

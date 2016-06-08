@@ -21,7 +21,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.deltahex.dialog.GotoHexDialog;
+import org.exbin.framework.deltahex.dialog.GoToHexDialog;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -33,7 +33,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  * @version 0.1.0 2016/04/03
  * @author ExBin Project (http://exbin.org)
  */
-public class GoToLineHandler {
+public class GoToPositionHandler {
 
     private final XBEditorProvider editorProvider;
     private final XBApplication application;
@@ -41,11 +41,11 @@ public class GoToLineHandler {
 
     private int metaMask;
 
-    private GotoHexDialog gotoDialog = null;
+    private GoToHexDialog goToDialog = null;
 
     private Action goToLineAction;
 
-    public GoToLineHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public GoToPositionHandler(XBApplication application, XBEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
@@ -60,13 +60,11 @@ public class GoToLineHandler {
                 if (editorProvider instanceof HexPanel) {
                     HexPanel activePanel = (HexPanel) editorProvider;
                     initGotoDialog();
-                    gotoDialog.setMaxLine(activePanel.getLineCount());
-                    gotoDialog.setCharPos(1);
-                    gotoDialog.setLocationRelativeTo(gotoDialog.getParent());
-                    gotoDialog.setVisible(true);
-                    if (gotoDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                        activePanel.gotoLine(gotoDialog.getLine());
-                        activePanel.gotoRelative(gotoDialog.getCharPos());
+                    goToDialog.setMaxPosition(activePanel.getHexadecimal().getData().getDataSize());
+                    goToDialog.setLocationRelativeTo(goToDialog.getParent());
+                    goToDialog.setVisible(true);
+                    if (goToDialog.getDialogOption() == JOptionPane.OK_OPTION) {
+                        activePanel.goToPosition(goToDialog.getPosition());
                     }
                 }
             }
@@ -81,10 +79,10 @@ public class GoToLineHandler {
     }
 
     private void initGotoDialog() {
-        if (gotoDialog == null) {
+        if (goToDialog == null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            gotoDialog = new GotoHexDialog(frameModule.getFrame(), true);
-            gotoDialog.setIconImage(application.getApplicationIcon());
+            goToDialog = new GoToHexDialog(frameModule.getFrame(), true);
+            goToDialog.setIconImage(application.getApplicationIcon());
         }
     }
 }

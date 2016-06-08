@@ -26,22 +26,22 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Goto line dialog.
+ * Goto position dialog for hexadecimal editor.
  *
- * @version 0.1.0 2016/04/03
+ * @version 0.1.0 2016/06/08
  * @author ExBin Project (http://exbin.org)
  */
-public class GotoHexDialog extends javax.swing.JDialog {
+public class GoToHexDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GotoHexDialog.class);
+    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GoToHexDialog.class);
 
-    public GotoHexDialog(java.awt.Frame parent, boolean modal) {
+    public GoToHexDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
 
         // Spinner selection workaround from http://forums.sun.com/thread.jspa?threadID=409748&forumID=57
-        ((JSpinner.DefaultEditor) jumpLineSpinner.getEditor()).getTextField().addFocusListener(new FocusAdapter() {
+        ((JSpinner.DefaultEditor) positionSpinner.getEditor()).getTextField().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (e.getSource() instanceof JTextComponent) {
@@ -67,28 +67,16 @@ public class GotoHexDialog extends javax.swing.JDialog {
         pack();
     }
 
-    public void setCharPos(int i) {
-        ((SpinnerNumberModel) posLineSpinner.getModel()).setValue(i);
+    public int getPosition() {
+        return (Integer) positionSpinner.getValue();
     }
 
-    public int getLine() {
-        return (Integer) jumpLineSpinner.getValue();
-    }
-
-    public int getCharPos() {
-        return (Integer) posLineSpinner.getValue();
-    }
-
-    public void setMaxLine(int i) {
-        ((SpinnerNumberModel) jumpLineSpinner.getModel()).setMaximum(i);
-    }
-
-    public void setMaxCharPos(int i) {
-        ((SpinnerNumberModel) posLineSpinner.getModel()).setMaximum(i);
+    public void setMaxPosition(long maxPosition) {
+        ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition);
     }
 
     public void setSelected() {
-        jumpLineSpinner.requestFocusInWindow();
+        positionSpinner.requestFocusInWindow();
     }
 
     /**
@@ -100,16 +88,19 @@ public class GotoHexDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        positionTypeButtonGroup = new javax.swing.ButtonGroup();
         mainPanel = new javax.swing.JPanel();
-        jumpLineLabel = new javax.swing.JLabel();
-        jumpLineSpinner = new javax.swing.JSpinner();
-        posLineLabel = new javax.swing.JLabel();
-        posLineSpinner = new javax.swing.JSpinner();
+        absoluteRadioButton = new javax.swing.JRadioButton();
+        relativeRadioButton = new javax.swing.JRadioButton();
+        decimalPositionLabel = new javax.swing.JLabel();
+        positionSpinner = new javax.swing.JSpinner();
+        hexadecimalPositionLabel1 = new javax.swing.JLabel();
+        hexPositionSpinner = new javax.swing.JSpinner();
         controlPanel = new javax.swing.JPanel();
         jumpButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/resources/GotoHexDialog"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/resources/GoToHexDialog"); // NOI18N
         setTitle(bundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
@@ -117,52 +108,66 @@ public class GotoHexDialog extends javax.swing.JDialog {
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        jumpLineLabel.setLabelFor(jumpLineSpinner);
-        jumpLineLabel.setText(bundle.getString("jumpLineLabel.text")); // NOI18N
-        jumpLineLabel.setName("jumpLineLabel"); // NOI18N
+        positionTypeButtonGroup.add(absoluteRadioButton);
+        absoluteRadioButton.setSelected(true);
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/Bundle"); // NOI18N
+        absoluteRadioButton.setText(bundle1.getString("GoToHexDialog.absoluteRadioButton.text")); // NOI18N
+        absoluteRadioButton.setName("absoluteRadioButton"); // NOI18N
 
-        jumpLineSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 1, 1));
-        jumpLineSpinner.setName("jumpLineSpinner"); // NOI18N
+        positionTypeButtonGroup.add(relativeRadioButton);
+        relativeRadioButton.setText(bundle1.getString("GoToHexDialog.relativeRadioButton.text")); // NOI18N
+        relativeRadioButton.setEnabled(false);
+        relativeRadioButton.setName("relativeRadioButton"); // NOI18N
 
-        posLineLabel.setLabelFor(posLineSpinner);
-        posLineLabel.setText(bundle.getString("posLineLabel.text")); // NOI18N
-        posLineLabel.setName("posLineLabel"); // NOI18N
+        decimalPositionLabel.setLabelFor(positionSpinner);
+        decimalPositionLabel.setText(bundle.getString("jumpLineLabel.text")); // NOI18N
+        decimalPositionLabel.setName("decimalPositionLabel"); // NOI18N
 
-        posLineSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
-        posLineSpinner.setName("posLineSpinner"); // NOI18N
+        positionSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 0, 1));
+        positionSpinner.setName("positionSpinner"); // NOI18N
+
+        hexadecimalPositionLabel1.setLabelFor(positionSpinner);
+        hexadecimalPositionLabel1.setText(bundle1.getString("GoToHexDialog.hexadecimalPositionLabel1.text")); // NOI18N
+        hexadecimalPositionLabel1.setName("hexadecimalPositionLabel1"); // NOI18N
+
+        hexPositionSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 0, 1));
+        hexPositionSpinner.setEnabled(false);
+        hexPositionSpinner.setName("hexPositionSpinner"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 281, Short.MAX_VALUE)
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jumpLineSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                        .addComponent(posLineSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                        .addGroup(mainPanelLayout.createSequentialGroup()
-                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jumpLineLabel)
-                                .addComponent(posLineLabel))
-                            .addGap(0, 0, Short.MAX_VALUE)))
-                    .addContainerGap()))
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(positionSpinner)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(absoluteRadioButton)
+                            .addComponent(relativeRadioButton)
+                            .addComponent(decimalPositionLabel)
+                            .addComponent(hexadecimalPositionLabel1))
+                        .addGap(0, 173, Short.MAX_VALUE))
+                    .addComponent(hexPositionSpinner))
+                .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 106, Short.MAX_VALUE)
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addGap(6, 6, 6)
-                    .addComponent(jumpLineLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jumpLineSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(posLineLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(posLineSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(absoluteRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(relativeRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(decimalPositionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(positionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hexadecimalPositionLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hexPositionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
@@ -190,7 +195,7 @@ public class GotoHexDialog extends javax.swing.JDialog {
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(177, Short.MAX_VALUE)
                 .addComponent(jumpButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelButton)
@@ -223,18 +228,21 @@ public class GotoHexDialog extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeWindow(new GotoHexDialog(new javax.swing.JFrame(), true));
+        WindowUtils.invokeWindow(new GoToHexDialog(new javax.swing.JFrame(), true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton absoluteRadioButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel controlPanel;
+    private javax.swing.JLabel decimalPositionLabel;
+    private javax.swing.JSpinner hexPositionSpinner;
+    private javax.swing.JLabel hexadecimalPositionLabel1;
     private javax.swing.JButton jumpButton;
-    private javax.swing.JLabel jumpLineLabel;
-    private javax.swing.JSpinner jumpLineSpinner;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JLabel posLineLabel;
-    private javax.swing.JSpinner posLineSpinner;
+    private javax.swing.JSpinner positionSpinner;
+    private javax.swing.ButtonGroup positionTypeButtonGroup;
+    private javax.swing.JRadioButton relativeRadioButton;
     // End of variables declaration//GEN-END:variables
 
     /**

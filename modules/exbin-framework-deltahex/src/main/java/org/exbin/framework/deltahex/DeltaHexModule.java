@@ -70,7 +70,7 @@ public class DeltaHexModule implements XBApplicationModule {
     private ToolsOptionsHandler toolsOptionsHandler;
     private LineWrappingHandler wordWrappingHandler;
     private EncodingsHandler encodingsHandler;
-    private GoToLineHandler goToLineHandler;
+    private GoToPositionHandler goToLineHandler;
     private PropertiesHandler propertiesHandler;
     private PrintHandler printHandler;
 
@@ -229,9 +229,9 @@ public class DeltaHexModule implements XBApplicationModule {
         return wordWrappingHandler;
     }
 
-    private GoToLineHandler getGoToLineHandler() {
+    private GoToPositionHandler getGoToLineHandler() {
         if (goToLineHandler == null) {
-            goToLineHandler = new GoToLineHandler(application, (HexPanel) getEditorProvider());
+            goToLineHandler = new GoToPositionHandler(application, (HexPanel) getEditorProvider());
             goToLineHandler.init();
         }
 
