@@ -27,7 +27,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/03
+ * @version 0.1.0 2016/06/09
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
@@ -44,16 +44,16 @@ public class FindTextPanel extends javax.swing.JPanel {
             super.remove(replacePanel);
         }
 
+        findComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                comboBoxValueChanged();
+            }
+        });
         findComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-            }
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                super.keyTyped(e);
-                findComboBoxKeyTyped(e);
+            public void keyReleased(KeyEvent e) {
+                comboBoxValueChanged();
             }
         });
     }
@@ -264,7 +264,8 @@ public class FindTextPanel extends javax.swing.JPanel {
     private javax.swing.JSeparator topSeparator;
     // End of variables declaration//GEN-END:variables
 
-    private void findComboBoxKeyTyped(java.awt.event.KeyEvent evt) {
+    private void comboBoxValueChanged() {
+        String findValue = (String) findComboBox.getEditor().getItem();
         if (searchStartTimer != null) {
             searchStartTimer.stop();
         }
@@ -272,7 +273,17 @@ public class FindTextPanel extends javax.swing.JPanel {
             searchParameters = new SearchParameters();
         }
 
-        searchParameters.setSearchText((String) findComboBox.getEditor().getItem());
+        if (findValue == null || findValue.isEmpty()) {
+            searchParameters.setSearchText(findValue);
+            performFind();
+            return;
+        }
+
+        if (findValue.equals(searchParameters.getSearchText())) {
+            return;
+        }
+
+        searchParameters.setSearchText(findValue);
         if (searchStartTimer != null) {
             searchStartTimer.restart();
         } else {
@@ -292,6 +303,7 @@ public class FindTextPanel extends javax.swing.JPanel {
                     searchThread.start();
                 }
             });
+            searchStartTimer.setRepeats(false);
         }
     }
 
