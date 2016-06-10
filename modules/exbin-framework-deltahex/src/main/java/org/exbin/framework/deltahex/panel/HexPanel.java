@@ -281,6 +281,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     public void goToPosition(long position) {
         hexadecimal.getCaret().setCaretPosition(position);
+        hexadecimal.revealCursor();
     }
 
     @Override

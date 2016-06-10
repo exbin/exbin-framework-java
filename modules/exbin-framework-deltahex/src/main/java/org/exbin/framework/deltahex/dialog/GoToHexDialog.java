@@ -28,13 +28,17 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Goto position dialog for hexadecimal editor.
  *
- * @version 0.1.0 2016/06/08
+ * @version 0.1.0 2016/06/10
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToHexDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GoToHexDialog.class);
+
+    private long cursorPosition;
+    private long maxPosition;
+    private GO_TO_MODE goToMode = GO_TO_MODE.ABSOLUTE;
 
     public GoToHexDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -67,12 +71,28 @@ public class GoToHexDialog extends javax.swing.JDialog {
         pack();
     }
 
-    public int getPosition() {
-        return (Integer) positionSpinner.getValue();
+    public long getGoToPosition() {
+        long value = (Long) positionSpinner.getValue();
+        if (goToMode == GO_TO_MODE.ABSOLUTE) {
+            return value;
+        } else {
+            return cursorPosition + value;
+        }
+    }
+
+    public long getCursorPosition() {
+        return cursorPosition;
+    }
+
+    public void setCursorPosition(long cursorPosition) {
+        this.cursorPosition = cursorPosition;
+        positionSpinner.setValue(cursorPosition);
     }
 
     public void setMaxPosition(long maxPosition) {
+        this.maxPosition = maxPosition;
         ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition);
+        positionSpinner.revalidate();
     }
 
     public void setSelected() {
@@ -113,17 +133,26 @@ public class GoToHexDialog extends javax.swing.JDialog {
         java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/Bundle"); // NOI18N
         absoluteRadioButton.setText(bundle1.getString("GoToHexDialog.absoluteRadioButton.text")); // NOI18N
         absoluteRadioButton.setName("absoluteRadioButton"); // NOI18N
+        absoluteRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                absoluteRadioButtonActionPerformed(evt);
+            }
+        });
 
         positionTypeButtonGroup.add(relativeRadioButton);
         relativeRadioButton.setText(bundle1.getString("GoToHexDialog.relativeRadioButton.text")); // NOI18N
-        relativeRadioButton.setEnabled(false);
         relativeRadioButton.setName("relativeRadioButton"); // NOI18N
+        relativeRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                relativeRadioButtonActionPerformed(evt);
+            }
+        });
 
         decimalPositionLabel.setLabelFor(positionSpinner);
         decimalPositionLabel.setText(bundle.getString("jumpLineLabel.text")); // NOI18N
         decimalPositionLabel.setName("decimalPositionLabel"); // NOI18N
 
-        positionSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 0, 1));
+        positionSpinner.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), Long.valueOf(0L), Long.valueOf(1L)));
         positionSpinner.setName("positionSpinner"); // NOI18N
 
         hexadecimalPositionLabel1.setLabelFor(positionSpinner);
@@ -144,12 +173,12 @@ public class GoToHexDialog extends javax.swing.JDialog {
                     .addComponent(positionSpinner)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(absoluteRadioButton)
-                            .addComponent(relativeRadioButton)
                             .addComponent(decimalPositionLabel)
                             .addComponent(hexadecimalPositionLabel1))
-                        .addGap(0, 173, Short.MAX_VALUE))
-                    .addComponent(hexPositionSpinner))
+                        .addGap(0, 179, Short.MAX_VALUE))
+                    .addComponent(hexPositionSpinner)
+                    .addComponent(absoluteRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(relativeRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -157,7 +186,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(absoluteRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(relativeRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(decimalPositionLabel)
@@ -167,7 +196,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
                 .addComponent(hexadecimalPositionLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(hexPositionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
@@ -224,6 +253,24 @@ public class GoToHexDialog extends javax.swing.JDialog {
         WindowUtils.closeWindow(this);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    private void absoluteRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_absoluteRadioButtonActionPerformed
+        if (goToMode == GO_TO_MODE.RELATIVE && absoluteRadioButton.isSelected()) {
+            goToMode = GO_TO_MODE.ABSOLUTE;
+            positionSpinner.setValue(cursorPosition + ((Long) positionSpinner.getValue()));
+            ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(0);
+            ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition);
+        }
+    }//GEN-LAST:event_absoluteRadioButtonActionPerformed
+
+    private void relativeRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relativeRadioButtonActionPerformed
+        if (goToMode == GO_TO_MODE.ABSOLUTE && relativeRadioButton.isSelected()) {
+            goToMode = GO_TO_MODE.RELATIVE;
+            positionSpinner.setValue(((Long) positionSpinner.getValue()) - cursorPosition);
+            ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(-cursorPosition);
+            ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition - cursorPosition);
+        }
+    }//GEN-LAST:event_relativeRadioButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -250,5 +297,9 @@ public class GoToHexDialog extends javax.swing.JDialog {
      */
     public int getDialogOption() {
         return dialogOption;
+    }
+
+    public enum GO_TO_MODE {
+        ABSOLUTE, RELATIVE
     }
 }
