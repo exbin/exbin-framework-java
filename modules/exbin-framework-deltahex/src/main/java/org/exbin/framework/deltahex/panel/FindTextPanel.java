@@ -15,11 +15,11 @@
  */
 package org.exbin.framework.deltahex.panel;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.Component;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -43,18 +43,25 @@ public class FindTextPanel extends javax.swing.JPanel {
             super.remove(replacePanel);
         }
 
-        findComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                comboBoxValueChanged();
-            }
-        });
-        findComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                comboBoxValueChanged();
-            }
-        });
+        Component editorComponent = findComboBox.getEditor().getEditorComponent();
+        if (editorComponent instanceof JTextField) {
+            ((JTextField) editorComponent).getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    comboBoxValueChanged();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    comboBoxValueChanged();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    comboBoxValueChanged();
+                }
+            });
+        }
     }
 
     /**
@@ -282,29 +289,28 @@ public class FindTextPanel extends javax.swing.JPanel {
         searchParameters.setSearchText(findValue);
         if (searchStartThread != null) {
             searchStartThread.interrupt();
-        } else {
-            searchStartThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(1000);
-                        if (searchThread != null) {
-                            searchThread.interrupt();
-                        }
-                        searchThread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                performFind();
-                            }
-                        });
-                        searchThread.start();
-                    } catch (InterruptedException ex) {
-                        // don't search
-                    }
-                }
-            });
-            searchStartThread.start();
         }
+        searchStartThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    if (searchThread != null) {
+                        searchThread.interrupt();
+                    }
+                    searchThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            performFind();
+                        }
+                    });
+                    searchThread.start();
+                } catch (InterruptedException ex) {
+                    // don't search
+                }
+            }
+        });
+        searchStartThread.start();
     }
 
     public void addCloseListener(java.awt.event.ActionListener actionListener) {
@@ -329,7 +335,7 @@ public class FindTextPanel extends javax.swing.JPanel {
         if (matches == 0) {
             infoLabel.setText("No matches found");
         } else {
-            infoLabel.setText("Match " + position + " of " + matches);
+            infoLabel.setText("Match " + (position + 1) + " of " + matches);
         }
     }
 

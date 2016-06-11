@@ -199,11 +199,17 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void findText(SearchParameters findParameters) {
-        System.out.println("SEARCH: " + findParameters.getSearchText());
-        long position = hexadecimal.getCaretPosition().getDataPosition();
         HighlightHexadecimalPainter painter = (HighlightHexadecimalPainter) hexadecimal.getPainter();
-        HighlightHexadecimalPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        String searchText = findParameters.getSearchText();
         findTextPanel.clearInfoStatus();
+        if (searchText == null || searchText.isEmpty()) {
+            painter.clearMatches();
+            hexadecimal.repaint();
+            return;
+        }
+
+        long position = hexadecimal.getCaretPosition().getDataPosition();
+        HighlightHexadecimalPainter.SearchMatch currentMatch = painter.getCurrentMatch();
 
         if (currentMatch != null) {
             if (currentMatch.getPosition() == position) {
