@@ -20,19 +20,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
-import javax.swing.Timer;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/09
+ * @version 0.1.0 2016/06/11
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
 
-    private javax.swing.Timer searchStartTimer;
+    private Thread searchStartThread;
     private Thread searchThread;
     private SearchParameters searchParameters;
     private final HexPanel hexPanel;
@@ -266,9 +265,6 @@ public class FindTextPanel extends javax.swing.JPanel {
 
     private void comboBoxValueChanged() {
         String findValue = (String) findComboBox.getEditor().getItem();
-        if (searchStartTimer != null) {
-            searchStartTimer.stop();
-        }
         if (searchParameters == null) {
             searchParameters = new SearchParameters();
         }
@@ -284,26 +280,30 @@ public class FindTextPanel extends javax.swing.JPanel {
         }
 
         searchParameters.setSearchText(findValue);
-        if (searchStartTimer != null) {
-            searchStartTimer.restart();
+        if (searchStartThread != null) {
+            searchStartThread.interrupt();
         } else {
-            searchStartTimer = new Timer(1000, new ActionListener() {
+            searchStartThread = new Thread(new Runnable() {
                 @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (searchThread != null) {
-                        searchThread.interrupt();
-                    }
-
-                    searchThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            performFind();
+                public void run() {
+                    try {
+                        Thread.sleep(1000);
+                        if (searchThread != null) {
+                            searchThread.interrupt();
                         }
-                    });
-                    searchThread.start();
+                        searchThread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                performFind();
+                            }
+                        });
+                        searchThread.start();
+                    } catch (InterruptedException ex) {
+                        // don't search
+                    }
                 }
             });
-            searchStartTimer.setRepeats(false);
+            searchStartThread.start();
         }
     }
 
@@ -316,10 +316,24 @@ public class FindTextPanel extends javax.swing.JPanel {
     }
 
     public void cancelSearch() {
-        searchThread.interrupt();
+        if (searchThread != null) {
+            searchThread.interrupt();
+        }
     }
 
     public void performFind() {
         hexPanel.findText(searchParameters);
+    }
+
+    public void setInfoStatus(int matches, int position) {
+        if (matches == 0) {
+            infoLabel.setText("No matches found");
+        } else {
+            infoLabel.setText("Match " + position + " of " + matches);
+        }
+    }
+
+    void clearInfoStatus() {
+        infoLabel.setText("");
     }
 }

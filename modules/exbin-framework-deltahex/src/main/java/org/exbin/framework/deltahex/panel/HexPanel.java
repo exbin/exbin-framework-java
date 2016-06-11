@@ -70,7 +70,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/06/08
+ * @version 0.1.0 2016/06/11
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -155,10 +155,12 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         findTextPanel.addCloseListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HexPanel.this.remove(findTextPanel);
-                HexPanel.this.validate();
-                HexPanel.this.repaint();
-                findTextPanelVisible = false;
+                if (findTextPanelVisible) {
+                    findTextPanel.cancelSearch();
+                    HexPanel.this.remove(findTextPanel);
+                    HexPanel.this.revalidate();
+                    findTextPanelVisible = false;
+                }
             }
         });
     }
@@ -201,12 +203,13 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         long position = hexadecimal.getCaretPosition().getDataPosition();
         HighlightHexadecimalPainter painter = (HighlightHexadecimalPainter) hexadecimal.getPainter();
         HighlightHexadecimalPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        findTextPanel.clearInfoStatus();
 
         if (currentMatch != null) {
             if (currentMatch.getPosition() == position) {
                 position++;
             }
-            // textArea.getHighlighter().removeHighlight(highlight);
+            painter.clearMatches();
         } else if (!findParameters.isSearchFromCursor()) {
             position = 0;
         }
@@ -241,9 +244,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         }
 
         painter.setMatches(foundMatches);
-        if (foundMatches.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "String was not found", "Find text", JOptionPane.INFORMATION_MESSAGE); // getFrame
-        }
+        findTextPanel.setInfoStatus(foundMatches.size(), 0);
         hexadecimal.repaint();
     }
 
