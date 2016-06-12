@@ -18,7 +18,7 @@ package org.exbin.framework.deltahex.panel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Point;
+import java.awt.Graphics;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -26,6 +26,10 @@ import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -70,7 +74,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/06/11
+ * @version 0.1.0 2016/06/12
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -201,7 +205,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     public void findText(SearchParameters findParameters) {
         HighlightHexadecimalPainter painter = (HighlightHexadecimalPainter) hexadecimal.getPainter();
         String searchText = findParameters.getSearchText();
-        findTextPanel.clearInfoStatus();
+        findTextPanel.clearStatus();
         if (searchText == null || searchText.isEmpty()) {
             painter.clearMatches();
             hexadecimal.repaint();
@@ -250,7 +254,12 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         }
 
         painter.setMatches(foundMatches);
-        findTextPanel.setInfoStatus(foundMatches.size(), 0);
+        if (foundMatches.size() > 0) {
+            painter.setCurrentMatchIndex(0);
+            HighlightHexadecimalPainter.SearchMatch firstMatch = painter.getCurrentMatch();
+            hexadecimal.revealPosition(firstMatch.getPosition(), hexadecimal.getActiveSection());
+        }
+        findTextPanel.setStatus(foundMatches.size(), 0);
         hexadecimal.repaint();
     }
 
@@ -322,11 +331,28 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void printFile() {
-//        try {
-//            textArea.print();
-//        } catch (PrinterException ex) {
-//            Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        PrinterJob job = PrinterJob.getPrinterJob();
+        if (job.printDialog()) {
+            try {
+//                PrintJob myJob = imageArea.getToolkit().getPrintJob(null, fileName, null);
+//                if (myJob != null) {
+                job.setPrintable(new Printable() {
+
+                    @Override
+                    public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+                        hexadecimal.print(graphics);
+                        if (pageIndex == 0) {
+                            return Printable.PAGE_EXISTS;
+                        }
+                        return Printable.NO_SUCH_PAGE;
+                    }
+                });
+                job.print();
+//                }
+            } catch (PrinterException ex) {
+                Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public void setCurrentFont(Font font) {
@@ -492,20 +518,6 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         hexadecimal.getData().saveToStream(stream);
     }
 
-    public Point getCaretPosition() {
-//        int line;
-//        int caretPosition = textArea.getCaretPosition();
-//        javax.swing.text.Element root = textArea.getDocument().getDefaultRootElement();
-//        line = root.getElementIndex(caretPosition);
-//        try {
-//            return new Point(caretPosition - textArea.getLineStartOffset(line) + 1, line + 1);
-//        } catch (BadLocationException ex) {
-//            Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
-//            return new Point(0, 0);
-//        }
-        return new Point();
-    }
-
     public void attachCaretListener(Hexadecimal.CaretMovedListener listener) {
         hexadecimal.addCaretMovedListener(listener);
     }
@@ -623,7 +635,15 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         return hexadecimal.canPaste();
     }
 
-    public interface CharsetChangeListener {
+    public void setMatchPosition(int matchPosition) {
+        HighlightHexadecimalPainter painter = (HighlightHexadecimalPainter) hexadecimal.getPainter();
+        painter.setCurrentMatchIndex(matchPosition);
+        HighlightHexadecimalPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        hexadecimal.revealPosition(currentMatch.getPosition(), hexadecimal.getActiveSection());
+        hexadecimal.repaint();
+    }
+
+    public static interface CharsetChangeListener {
 
         public void charsetChanged();
     }

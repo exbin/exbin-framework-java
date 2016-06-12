@@ -16,17 +16,28 @@
 package org.exbin.framework.deltahex.panel;
 
 /**
- * Paramters for action to search for occurences of text or data.
+ * Parameters for action to search for occurences of text or data.
  *
- * @version 0.1.0 2016/06/01
+ * @version 0.1.0 2016/06/12
  * @author ExBin Project (http://exbin.org)
  */
 public class SearchParameters {
 
+    private SearchMode searchMode = SearchMode.TEXT;
     private String searchText;
     private boolean searchFromCursor;
+    private boolean matchCase;
+    private boolean multipleMatches;
 
     public SearchParameters() {
+    }
+
+    public SearchMode getSearchMode() {
+        return searchMode;
+    }
+
+    public void setSearchMode(SearchMode searchMode) {
+        this.searchMode = searchMode;
     }
 
     public String getSearchText() {
@@ -43,5 +54,25 @@ public class SearchParameters {
 
     public void setSearchFromCursor(boolean searchFromCursor) {
         this.searchFromCursor = searchFromCursor;
+    }
+
+    public boolean isMatchCase() {
+        return matchCase;
+    }
+
+    public void setMatchCase(boolean matchCase) {
+        this.matchCase = matchCase;
+    }
+
+    public boolean isMultipleMatches() {
+        return multipleMatches;
+    }
+
+    public void setMultipleMatches(boolean multipleMatches) {
+        this.multipleMatches = multipleMatches;
+    }
+
+    public static enum SearchMode {
+        TEXT, BINARY
     }
 }

@@ -26,7 +26,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/11
+ * @version 0.1.0 2016/06/12
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
@@ -35,6 +35,8 @@ public class FindTextPanel extends javax.swing.JPanel {
     private Thread searchThread;
     private SearchParameters searchParameters;
     private final HexPanel hexPanel;
+    private int matchesCount;
+    private int matchPosition;
 
     public FindTextPanel(HexPanel hexPanel, boolean replaceMode) {
         initComponents();
@@ -78,8 +80,8 @@ public class FindTextPanel extends javax.swing.JPanel {
         findLabel = new javax.swing.JLabel();
         findComboBox = new javax.swing.JComboBox<>();
         findToolBar = new javax.swing.JToolBar();
-        nextButton = new javax.swing.JButton();
         prevButton = new javax.swing.JButton();
+        nextButton = new javax.swing.JButton();
         matchCaseToggleButton = new javax.swing.JToggleButton();
         showMatchesToggleButton = new javax.swing.JToggleButton();
         separator1 = new javax.swing.JToolBar.Separator();
@@ -113,21 +115,31 @@ public class FindTextPanel extends javax.swing.JPanel {
         findToolBar.setRollover(true);
         findToolBar.setName("findToolBar"); // NOI18N
 
-        nextButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/open_icon_library/icons/png/16x16/actions/arrow-left.png"))); // NOI18N
-        nextButton.setEnabled(false);
-        nextButton.setFocusable(false);
-        nextButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        nextButton.setName("nextButton"); // NOI18N
-        nextButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        findToolBar.add(nextButton);
-
-        prevButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/open_icon_library/icons/png/16x16/actions/arrow-right.png"))); // NOI18N
+        prevButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/open_icon_library/icons/png/16x16/actions/arrow-left.png"))); // NOI18N
         prevButton.setEnabled(false);
         prevButton.setFocusable(false);
         prevButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         prevButton.setName("prevButton"); // NOI18N
         prevButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        prevButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prevButtonActionPerformed(evt);
+            }
+        });
         findToolBar.add(prevButton);
+
+        nextButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/open_icon_library/icons/png/16x16/actions/arrow-right.png"))); // NOI18N
+        nextButton.setEnabled(false);
+        nextButton.setFocusable(false);
+        nextButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        nextButton.setName("nextButton"); // NOI18N
+        nextButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
+        findToolBar.add(nextButton);
 
         matchCaseToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/case_sensitive.gif"))); // NOI18N
         matchCaseToggleButton.setFocusable(false);
@@ -250,6 +262,18 @@ public class FindTextPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_optionsButtonActionPerformed
 
+    private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
+        matchPosition--;
+        hexPanel.setMatchPosition(matchPosition);
+        setStatus(matchesCount, matchPosition);
+    }//GEN-LAST:event_prevButtonActionPerformed
+
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        matchPosition++;
+        hexPanel.setMatchPosition(matchPosition);
+        setStatus(matchesCount, matchPosition);
+    }//GEN-LAST:event_nextButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JToolBar closeToolBar;
@@ -331,15 +355,26 @@ public class FindTextPanel extends javax.swing.JPanel {
         hexPanel.findText(searchParameters);
     }
 
-    public void setInfoStatus(int matches, int position) {
-        if (matches == 0) {
+    public void setStatus(int matchesCount, int matchPosition) {
+        this.matchesCount = matchesCount;
+        this.matchPosition = matchPosition;
+        if (matchesCount == 0) {
             infoLabel.setText("No matches found");
+        } else if (matchesCount == 1) {
+            infoLabel.setText("Single match found");
         } else {
-            infoLabel.setText("Match " + (position + 1) + " of " + matches);
+            infoLabel.setText("Match " + (matchPosition + 1) + " of " + matchesCount);
+            updateTraverseButtons();
         }
+        updateTraverseButtons();
     }
 
-    void clearInfoStatus() {
+    public void clearStatus() {
         infoLabel.setText("");
+    }
+
+    private void updateTraverseButtons() {
+        prevButton.setEnabled(matchesCount > 1 && matchPosition > 0);
+        nextButton.setEnabled(matchPosition < matchesCount - 1);
     }
 }
