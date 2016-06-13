@@ -23,7 +23,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.LineBorder;
-import org.exbin.deltahex.Hexadecimal;
+import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -39,8 +39,8 @@ public class FindHexDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(FindHexDialog.class);
-    private final Hexadecimal hexadecimalRenderer = new Hexadecimal();
-    private final Hexadecimal hexadecimalEditor = new Hexadecimal();
+    private final CodeArea hexadecimalRenderer = new CodeArea();
+    private final CodeArea hexadecimalEditor = new CodeArea();
 
     public FindHexDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -56,17 +56,17 @@ public class FindHexDialog extends javax.swing.JDialog {
         hexadecimalRenderer.setShowHeader(false);
         hexadecimalRenderer.setShowLineNumbers(false);
         hexadecimalRenderer.setWrapMode(true);
-        hexadecimalRenderer.setBackgroundMode(Hexadecimal.BackgroundMode.PLAIN);
-        hexadecimalRenderer.setVerticalScrollBarVisibility(Hexadecimal.ScrollBarVisibility.NEVER);
-        hexadecimalRenderer.setHorizontalScrollBarVisibility(Hexadecimal.ScrollBarVisibility.NEVER);
+        hexadecimalRenderer.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
+        hexadecimalRenderer.setVerticalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
+        hexadecimalRenderer.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
 
         hexadecimalEditor.setShowHeader(false);
         hexadecimalEditor.setShowLineNumbers(false);
         hexadecimalEditor.setWrapMode(true);
-        hexadecimalEditor.setBackgroundMode(Hexadecimal.BackgroundMode.PLAIN);
-        hexadecimalEditor.setVerticalScrollBarVisibility(Hexadecimal.ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setHorizontalScrollBarVisibility(Hexadecimal.ScrollBarVisibility.NEVER);
+        hexadecimalEditor.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
+        hexadecimalEditor.setVerticalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
+        hexadecimalEditor.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
         hexadecimalEditor.setData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
         hexadecimalEditor.setBorder(new LineBorder(Color.LIGHT_GRAY));
 

@@ -16,6 +16,8 @@
 package org.exbin.framework.deltahex.panel;
 
 import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -26,7 +28,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/12
+ * @version 0.1.0 2016/06/13
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
@@ -45,6 +47,10 @@ public class FindTextPanel extends javax.swing.JPanel {
             super.remove(replacePanel);
         }
 
+        init();
+    }
+
+    private void init() {
         Component editorComponent = findComboBox.getEditor().getEditorComponent();
         if (editorComponent instanceof JTextField) {
             ((JTextField) editorComponent).getDocument().addDocumentListener(new DocumentListener() {
@@ -64,6 +70,12 @@ public class FindTextPanel extends javax.swing.JPanel {
                 }
             });
         }
+        findComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+            }
+        });
     }
 
     /**
@@ -358,19 +370,26 @@ public class FindTextPanel extends javax.swing.JPanel {
     public void setStatus(int matchesCount, int matchPosition) {
         this.matchesCount = matchesCount;
         this.matchPosition = matchPosition;
-        if (matchesCount == 0) {
-            infoLabel.setText("No matches found");
-        } else if (matchesCount == 1) {
-            infoLabel.setText("Single match found");
-        } else {
-            infoLabel.setText("Match " + (matchPosition + 1) + " of " + matchesCount);
-            updateTraverseButtons();
+        switch (matchesCount) {
+            case 0:
+                infoLabel.setText("No matches found");
+                break;
+            case 1:
+                infoLabel.setText("Single match found");
+                break;
+            default:
+                infoLabel.setText("Match " + (matchPosition + 1) + " of " + matchesCount);
+                updateTraverseButtons();
+                break;
         }
         updateTraverseButtons();
     }
 
     public void clearStatus() {
         infoLabel.setText("");
+        matchesCount = 0;
+        matchPosition = -1;
+        updateTraverseButtons();
     }
 
     private void updateTraverseButtons() {

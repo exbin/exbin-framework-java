@@ -47,17 +47,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import org.exbin.deltahex.CaretPosition;
-import org.exbin.deltahex.Hexadecimal;
-import org.exbin.deltahex.HexadecimalCaret;
+import org.exbin.deltahex.CodeArea;
 import org.exbin.deltahex.delta.BinaryDataSegment;
 import org.exbin.deltahex.delta.DataSegment;
 import org.exbin.deltahex.delta.DeltaHexadecimalData;
 import org.exbin.deltahex.delta.DocumentSegment;
-import org.exbin.deltahex.delta.MemoryHexadecimalData;
+import org.exbin.deltahex.delta.MemoryPagedData;
 import org.exbin.deltahex.delta.list.DefaultDoublyLinkedList;
-import org.exbin.deltahex.highlight.HighlightHexadecimalPainter;
-import org.exbin.deltahex.operation.HexCommandHandler;
-import org.exbin.deltahex.operation.HexUndoHandler;
+import org.exbin.deltahex.highlight.HighlightCodeAreaPainter;
+import org.exbin.deltahex.operation.CodeAreaUndoHandler;
+import org.exbin.deltahex.operation.CodeCommandHandler;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.gui.editor.api.XBEditorProvider;
@@ -74,13 +73,13 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/06/12
+ * @version 0.1.0 2016/06/13
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
 
-    private Hexadecimal hexadecimal;
-    private HexUndoHandler undoHandler;
+    private CodeArea codeArea;
+    private CodeAreaUndoHandler undoHandler;
     private String fileName;
     private Color foundTextBackgroundColor;
     private Font defaultFont;
@@ -93,11 +92,11 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     private boolean findTextPanelVisible = false;
 
     public HexPanel() {
-        undoHandler = new HexUndoHandler(hexadecimal);
+        undoHandler = new CodeAreaUndoHandler(codeArea);
         undoHandler.addUndoUpdateListener(new XBUndoUpdateListener() {
             @Override
             public void undoCommandPositionChanged() {
-                hexadecimal.repaint();
+                codeArea.repaint();
             }
 
             @Override
@@ -109,20 +108,20 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     private void init() {
-        hexadecimal = new Hexadecimal();
-        hexadecimal.setPainter(new HighlightHexadecimalPainter(hexadecimal));
-        hexadecimal.setData(new MemoryHexadecimalData(new XBData()));
-        hexadecimal.setHandleClipboard(false);
-        hexadecimal.addSelectionChangedListener(new Hexadecimal.SelectionChangedListener() {
+        codeArea = new CodeArea();
+        codeArea.setPainter(new HighlightCodeAreaPainter(codeArea));
+        codeArea.setData(new MemoryPagedData(new XBData()));
+        codeArea.setHandleClipboard(false);
+        codeArea.addSelectionChangedListener(new CodeArea.SelectionChangedListener() {
             @Override
-            public void selectionChanged(Hexadecimal.SelectionRange selection) {
+            public void selectionChanged(CodeArea.SelectionRange selection) {
                 if (clipboardActionsUpdateListener != null) {
                     clipboardActionsUpdateListener.stateChanged();
                 }
             }
         });
-        HexCommandHandler commandHandler = new HexCommandHandler(hexadecimal, undoHandler);
-        hexadecimal.setCommandHandler(commandHandler);
+        CodeCommandHandler commandHandler = new CodeCommandHandler(codeArea, undoHandler);
+        codeArea.setCommandHandler(commandHandler);
         // TODO use listener in hexadecimal instead
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.addFlavorListener(new FlavorListener() {
@@ -134,16 +133,16 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             }
         });
 
-        add(hexadecimal);
+        add(codeArea);
         fileName = "";
         foundTextBackgroundColor = Color.YELLOW;
-        hexadecimal.setCharset(Charset.forName(TextEncodingPanel.ENCODING_UTF8));
-        defaultFont = hexadecimal.getFont();
+        codeArea.setCharset(Charset.forName(TextEncodingPanel.ENCODING_UTF8));
+        defaultFont = codeArea.getFont();
         defaultColors = new Color[5];
-        defaultColors[0] = new Color(hexadecimal.getForeground().getRGB());
+        defaultColors[0] = new Color(codeArea.getForeground().getRGB());
         defaultColors[1] = new Color(SystemColor.text.getRGB()); // Patch on wrong value in textArea.getBackground()
-        defaultColors[2] = new Color(hexadecimal.getSelectionColor().getRGB());
-        defaultColors[3] = new Color(hexadecimal.getSelectionBackgroundColor().getRGB());
+        defaultColors[2] = new Color(codeArea.getSelectionColor().getRGB());
+        defaultColors[3] = new Color(codeArea.getSelectionBackgroundColor().getRGB());
         defaultColors[4] = foundTextBackgroundColor;
 
         addPropertyChangeListener(new PropertyChangeListener() {
@@ -169,26 +168,26 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         });
     }
 
-    public Hexadecimal getHexadecimal() {
-        return hexadecimal;
+    public CodeArea getCodeArea() {
+        return codeArea;
     }
 
     public boolean changeLineWrap() {
-        hexadecimal.setWrapMode(!hexadecimal.isWrapMode());
-        return hexadecimal.isWrapMode();
+        codeArea.setWrapMode(!codeArea.isWrapMode());
+        return codeArea.isWrapMode();
     }
 
     public boolean changeShowNonprintables() {
-        hexadecimal.setShowNonprintingCharacters(!hexadecimal.isShowNonprintingCharacters());
-        return hexadecimal.isShowNonprintingCharacters();
+        codeArea.setShowNonprintingCharacters(!codeArea.isShowNonprintingCharacters());
+        return codeArea.isShowNonprintingCharacters();
     }
 
     public boolean getWordWrapMode() {
-        return hexadecimal.isWrapMode();
+        return codeArea.isWrapMode();
     }
 
     public void setWordWrapMode(boolean mode) {
-        if (hexadecimal.isWrapMode() != mode) {
+        if (codeArea.isWrapMode() != mode) {
             changeLineWrap();
         }
     }
@@ -203,17 +202,17 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void findText(SearchParameters findParameters) {
-        HighlightHexadecimalPainter painter = (HighlightHexadecimalPainter) hexadecimal.getPainter();
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
         String searchText = findParameters.getSearchText();
         findTextPanel.clearStatus();
         if (searchText == null || searchText.isEmpty()) {
             painter.clearMatches();
-            hexadecimal.repaint();
+            codeArea.repaint();
             return;
         }
 
-        long position = hexadecimal.getCaretPosition().getDataPosition();
-        HighlightHexadecimalPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        long position = codeArea.getCaretPosition().getDataPosition();
+        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
 
         if (currentMatch != null) {
             if (currentMatch.getPosition() == position) {
@@ -224,10 +223,10 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             position = 0;
         }
         String findText = findParameters.getSearchText();
-        byte[] findBytes = findText.getBytes(hexadecimal.getCharset());
-        BinaryData data = hexadecimal.getData();
+        byte[] findBytes = findText.getBytes(codeArea.getCharset());
+        BinaryData data = codeArea.getData();
 
-        List<HighlightHexadecimalPainter.SearchMatch> foundMatches = new ArrayList<>();
+        List<HighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
 
         long dataSize = data.getDataSize();
         while (position < dataSize - findBytes.length) {
@@ -240,7 +239,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             }
 
             if (matchLength == findBytes.length) {
-                HighlightHexadecimalPainter.SearchMatch match = new HighlightHexadecimalPainter.SearchMatch();
+                HighlightCodeAreaPainter.SearchMatch match = new HighlightCodeAreaPainter.SearchMatch();
                 match.setPosition(position);
                 match.setLength(findBytes.length);
                 foundMatches.add(match);
@@ -256,19 +255,19 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         painter.setMatches(foundMatches);
         if (foundMatches.size() > 0) {
             painter.setCurrentMatchIndex(0);
-            HighlightHexadecimalPainter.SearchMatch firstMatch = painter.getCurrentMatch();
-            hexadecimal.revealPosition(firstMatch.getPosition(), hexadecimal.getActiveSection());
+            HighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
+            codeArea.revealPosition(firstMatch.getPosition(), codeArea.getActiveSection());
         }
         findTextPanel.setStatus(foundMatches.size(), 0);
-        hexadecimal.repaint();
+        codeArea.repaint();
     }
 
     public Color[] getCurrentColors() {
         Color[] colors = new Color[5];
-        colors[0] = hexadecimal.getForeground();
-        colors[1] = hexadecimal.getBackground();
-        colors[2] = hexadecimal.getSelectionColor();
-        colors[3] = hexadecimal.getSelectionBackgroundColor();
+        colors[0] = codeArea.getForeground();
+        colors[1] = codeArea.getBackground();
+        colors[2] = codeArea.getSelectionColor();
+        colors[3] = codeArea.getSelectionBackgroundColor();
         colors[4] = getFoundTextBackgroundColor();
         return colors;
     }
@@ -279,16 +278,16 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     public void setCurrentColors(Color[] colors) {
         if (colors[0] != null) {
-            hexadecimal.setForeground(colors[0]);
+            codeArea.setForeground(colors[0]);
         }
         if (colors[1] != null) {
-            hexadecimal.setBackground(colors[1]);
+            codeArea.setBackground(colors[1]);
         }
         if (colors[2] != null) {
-            hexadecimal.setSelectionColor(colors[2]);
+            codeArea.setSelectionColor(colors[2]);
         }
         if (colors[3] != null) {
-            hexadecimal.setSelectionBackgroundColor(colors[3]);
+            codeArea.setSelectionBackgroundColor(colors[3]);
         }
         if (colors[4] != null) {
             setFoundTextBackgroundColor(colors[4]);
@@ -296,38 +295,38 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void goToPosition(long position) {
-        hexadecimal.getCaret().setCaretPosition(position);
-        hexadecimal.revealCursor();
+        codeArea.getCaret().setCaretPosition(position);
+        codeArea.revealCursor();
     }
 
     @Override
     public void performCopy() {
-        hexadecimal.copy();
+        codeArea.copy();
     }
 
     @Override
     public void performCut() {
-        hexadecimal.cut();
+        codeArea.cut();
     }
 
     @Override
     public void performDelete() {
-        hexadecimal.delete();
+        codeArea.delete();
     }
 
     @Override
     public void performPaste() {
-        hexadecimal.paste();
+        codeArea.paste();
     }
 
     @Override
     public void performSelectAll() {
-        hexadecimal.selectAll();
+        codeArea.selectAll();
     }
 
     @Override
     public boolean isSelection() {
-        return hexadecimal.hasSelection();
+        return codeArea.hasSelection();
     }
 
     public void printFile() {
@@ -340,7 +339,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
                     @Override
                     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-                        hexadecimal.print(graphics);
+                        codeArea.print(graphics);
                         if (pageIndex == 0) {
                             return Printable.PAGE_EXISTS;
                         }
@@ -356,18 +355,18 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void setCurrentFont(Font font) {
-        hexadecimal.setFont(font);
+        codeArea.setFont(font);
     }
 
     public Font getCurrentFont() {
-        return hexadecimal.getFont();
+        return codeArea.getFont();
     }
 
     public void showFontDialog(TextFontDialog dlg) {
-        dlg.setStoredFont(hexadecimal.getFont());
+        dlg.setStoredFont(codeArea.getFont());
         dlg.setVisible(true);
         if (dlg.getDialogOption() == JOptionPane.OK_OPTION) {
-            hexadecimal.setFont(dlg.getStoredFont());
+            codeArea.setFont(dlg.getStoredFont());
         }
     }
 
@@ -421,9 +420,9 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }// </editor-fold>//GEN-END:initComponents
 
     private void debugButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugButtonActionPerformed
-        DefaultDoublyLinkedList<DataSegment> segments = ((DeltaHexadecimalData) hexadecimal.getData()).getSegments();
+        DefaultDoublyLinkedList<DataSegment> segments = ((DeltaHexadecimalData) codeArea.getData()).getSegments();
         DataSegment segment = segments.first();
-        System.out.println("Segments list: " + ((DeltaHexadecimalData) hexadecimal.getData()).getDataSize());
+        System.out.println("Segments list: " + ((DeltaHexadecimalData) codeArea.getData()).getDataSize());
         while (segment != null) {
             if (segment instanceof DocumentSegment) {
                 System.out.println("FILE: " + ((DocumentSegment) segment).getStartPosition() + ", " + ((DocumentSegment) segment).getLength());
@@ -445,11 +444,11 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();
     }
 
-    public HexUndoHandler getHexUndoHandler() {
+    public CodeAreaUndoHandler getHexUndoHandler() {
         return undoHandler;
     }
 
-    public void setHexUndoHandler(HexUndoHandler hexUndoHandler) {
+    public void setHexUndoHandler(CodeAreaUndoHandler hexUndoHandler) {
         this.undoHandler = hexUndoHandler;
     }
 
@@ -461,9 +460,9 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 //            DeltaHexadecimalData deltaData = new DeltaHexadecimalData(dataSource);
 //            hexadecimal.setData(deltaData);
             try (FileInputStream fileStream = new FileInputStream(file)) {
-                BinaryData data = hexadecimal.getData();
+                BinaryData data = codeArea.getData();
                 ((EditableBinaryData) data).loadFromStream(fileStream);
-                hexadecimal.setData(data);
+                codeArea.setData(data);
             }
         } catch (IOException ex) {
             Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -476,7 +475,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     public void saveToFile() {
         File file = new File(getFileName());
         try {
-            hexadecimal.getData().saveToStream(new FileOutputStream(file));
+            codeArea.getData().saveToStream(new FileOutputStream(file));
         } catch (IOException ex) {
             Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -486,9 +485,9 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     @Override
     public void newFile() {
-        ((EditableBinaryData) hexadecimal.getData()).clear();
-        hexadecimal.setData(hexadecimal.getData());
-        hexadecimal.repaint();
+        ((EditableBinaryData) codeArea.getData()).clear();
+        codeArea.setData(codeArea.getData());
+        codeArea.repaint();
         undoHandler.clear();
     }
 
@@ -503,37 +502,37 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void setPopupMenu(JPopupMenu menu) {
-        hexadecimal.setComponentPopupMenu(menu);
+        codeArea.setComponentPopupMenu(menu);
     }
 
     public void loadFromStream(InputStream stream) throws IOException {
-        ((EditableBinaryData) hexadecimal.getData()).loadFromStream(stream);
+        ((EditableBinaryData) codeArea.getData()).loadFromStream(stream);
     }
 
     public void loadFromStream(InputStream stream, long dataSize) throws IOException {
-        ((EditableBinaryData) hexadecimal.getData()).loadFromStream(stream, 0, dataSize);
+        ((EditableBinaryData) codeArea.getData()).loadFromStream(stream, 0, dataSize);
     }
 
     public void saveToStream(OutputStream stream) throws IOException {
-        hexadecimal.getData().saveToStream(stream);
+        codeArea.getData().saveToStream(stream);
     }
 
-    public void attachCaretListener(Hexadecimal.CaretMovedListener listener) {
-        hexadecimal.addCaretMovedListener(listener);
+    public void attachCaretListener(CodeArea.CaretMovedListener listener) {
+        codeArea.addCaretMovedListener(listener);
     }
 
-    public void attachSelectionListener(Hexadecimal.SelectionChangedListener listener) {
-        hexadecimal.addSelectionChangedListener(listener);
+    public void attachSelectionListener(CodeArea.SelectionChangedListener listener) {
+        codeArea.addSelectionChangedListener(listener);
     }
 
     @Override
     public Charset getCharset() {
-        return hexadecimal.getCharset();
+        return codeArea.getCharset();
     }
 
     @Override
     public void setCharset(Charset charset) {
-        hexadecimal.setCharset(charset);
+        codeArea.setCharset(charset);
     }
 
     public Font getDefaultFont() {
@@ -569,7 +568,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     private void changeCharset(Charset charset) {
-        hexadecimal.setCharset(charset);
+        codeArea.setCharset(charset);
         if (charsetChangeListener != null) {
             charsetChangeListener.charsetChanged();
         }
@@ -582,20 +581,18 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     public void registerTextStatus(HexStatusPanel hexStatusPanel) {
         this.statusPanel = hexStatusPanel;
-        attachCaretListener(new Hexadecimal.CaretMovedListener() {
+        attachCaretListener(new CodeArea.CaretMovedListener() {
             @Override
-            public void caretMoved(CaretPosition caretPosition, HexadecimalCaret.Section section) {
+            public void caretMoved(CaretPosition caretPosition, CodeArea.Section section) {
                 String position = String.valueOf(caretPosition.getDataPosition());
-                if (caretPosition.isLowerHalf()) {
-                    position += ".5";
-                }
+                position += ":" + caretPosition.getCodeOffset();
                 statusPanel.setCursorPosition(position);
             }
         });
 
-        attachSelectionListener(new Hexadecimal.SelectionChangedListener() {
+        attachSelectionListener(new CodeArea.SelectionChangedListener() {
             @Override
-            public void selectionChanged(Hexadecimal.SelectionRange selection) {
+            public void selectionChanged(CodeArea.SelectionRange selection) {
                 if (selection == null) {
                     statusPanel.setSelectionPosition("", "");
                 } else {
@@ -622,7 +619,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     @Override
     public boolean isEditable() {
-        return hexadecimal.isEditable();
+        return codeArea.isEditable();
     }
 
     @Override
@@ -632,15 +629,15 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     @Override
     public boolean canPaste() {
-        return hexadecimal.canPaste();
+        return codeArea.canPaste();
     }
 
     public void setMatchPosition(int matchPosition) {
-        HighlightHexadecimalPainter painter = (HighlightHexadecimalPainter) hexadecimal.getPainter();
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
         painter.setCurrentMatchIndex(matchPosition);
-        HighlightHexadecimalPainter.SearchMatch currentMatch = painter.getCurrentMatch();
-        hexadecimal.revealPosition(currentMatch.getPosition(), hexadecimal.getActiveSection());
-        hexadecimal.repaint();
+        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        codeArea.revealPosition(currentMatch.getPosition(), codeArea.getActiveSection());
+        codeArea.repaint();
     }
 
     public static interface CharsetChangeListener {

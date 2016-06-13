@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Go to line handler.
  *
- * @version 0.1.0 2016/06/10
+ * @version 0.1.0 2016/06/13
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToPositionHandler {
@@ -60,8 +60,8 @@ public class GoToPositionHandler {
                 if (editorProvider instanceof HexPanel) {
                     HexPanel activePanel = (HexPanel) editorProvider;
                     initGotoDialog();
-                    goToDialog.setCursorPosition(activePanel.getHexadecimal().getCaretPosition().getDataPosition());
-                    goToDialog.setMaxPosition(activePanel.getHexadecimal().getData().getDataSize());
+                    goToDialog.setCursorPosition(activePanel.getCodeArea().getCaretPosition().getDataPosition());
+                    goToDialog.setMaxPosition(activePanel.getCodeArea().getData().getDataSize());
                     goToDialog.setLocationRelativeTo(goToDialog.getParent());
                     goToDialog.setVisible(true);
                     if (goToDialog.getDialogOption() == JOptionPane.OK_OPTION) {

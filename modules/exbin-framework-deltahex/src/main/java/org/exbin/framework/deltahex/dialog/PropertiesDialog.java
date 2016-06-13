@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.deltahex.dialog;
 
-import org.exbin.deltahex.Hexadecimal;
+import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -177,8 +177,8 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
     public void setDocument(HexPanel panel) {
         fileNameTextField.setText(panel.getFileName());
-        Hexadecimal hexadecimal = panel.getHexadecimal();
-        fileSizeTextField.setText(Long.toString(hexadecimal.getData().getDataSize()));
+        CodeArea codeArea = panel.getCodeArea();
+        fileSizeTextField.setText(Long.toString(codeArea.getData().getDataSize()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
