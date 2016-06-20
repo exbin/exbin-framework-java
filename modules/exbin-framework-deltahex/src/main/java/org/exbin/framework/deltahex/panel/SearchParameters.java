@@ -23,29 +23,21 @@ package org.exbin.framework.deltahex.panel;
  */
 public class SearchParameters {
 
-    private SearchMode searchMode = SearchMode.TEXT;
-    private String searchText;
+    private SearchCondition condition = new SearchCondition();
     private boolean searchFromCursor;
-    private boolean matchCase;
-    private boolean multipleMatches;
+    private boolean matchCase = true;
+    private boolean multipleMatches = true;
+    private SearchDirection searchDirection;
 
     public SearchParameters() {
     }
 
-    public SearchMode getSearchMode() {
-        return searchMode;
+    public SearchCondition getCondition() {
+        return condition;
     }
 
-    public void setSearchMode(SearchMode searchMode) {
-        this.searchMode = searchMode;
-    }
-
-    public String getSearchText() {
-        return searchText;
-    }
-
-    public void setSearchText(String searchText) {
-        this.searchText = searchText;
+    public void setCondition(SearchCondition condition) {
+        this.condition = condition;
     }
 
     public boolean isSearchFromCursor() {
@@ -72,7 +64,19 @@ public class SearchParameters {
         this.multipleMatches = multipleMatches;
     }
 
+    public SearchDirection getSearchDirection() {
+        return searchDirection;
+    }
+
+    public void setSearchDirection(SearchDirection searchDirection) {
+        this.searchDirection = searchDirection;
+    }
+
     public static enum SearchMode {
         TEXT, BINARY
+    }
+
+    public static enum SearchDirection {
+        FORWARD, BACKWARD
     }
 }

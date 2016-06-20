@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.LineBorder;
 import org.exbin.deltahex.CodeArea;
+import org.exbin.framework.deltahex.panel.SearchCondition;
 import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -448,7 +449,8 @@ public class FindHexDialog extends javax.swing.JDialog {
 
     public SearchParameters getSearchParameters() {
         SearchParameters result = new SearchParameters();
-        result.setSearchText((String) findTextComboBox.getEditor().getItem());
+        SearchCondition condition = result.getCondition();
+        condition.setSearchText((String) findTextComboBox.getEditor().getItem());
         result.setSearchFromCursor(searchFromCursorCheckBox.isSelected());
         return result;
     }
