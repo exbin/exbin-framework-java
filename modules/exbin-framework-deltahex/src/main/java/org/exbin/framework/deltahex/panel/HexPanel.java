@@ -72,7 +72,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/06/20
+ * @version 0.1.0 2016/06/21
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -121,6 +121,12 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         });
         CodeCommandHandler commandHandler = new CodeCommandHandler(codeArea, undoHandler);
         codeArea.setCommandHandler(commandHandler);
+        codeArea.addDataChangedListener(new CodeArea.DataChangedListener() {
+            @Override
+            public void dataChanged() {
+                findTextPanel.dataChanged();
+            }
+        });
         // TODO use listener in hexadecimal instead
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.addFlavorListener(new FlavorListener() {
@@ -214,6 +220,25 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             return;
         }
 
+        long position;
+        if (searchParameters.isSearchFromCursor()) {
+            position = codeArea.getCaretPosition().getDataPosition();
+        } else {
+            switch (searchParameters.getSearchDirection()) {
+                case FORWARD: {
+                    position = 0;
+                    break;
+                }
+                case BACKWARD: {
+                    position = codeArea.getData().getDataSize() - 1;
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
+            }
+        }
+        searchParameters.setStartPosition(position);
+
         switch (condition.getSearchMode()) {
             case TEXT: {
                 searchForText(searchParameters);
@@ -293,13 +318,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
 
-        long position;
-        if (searchParameters.isSearchFromCursor()) {
-            position = codeArea.getCaretPosition().getDataPosition();
-        } else {
-            position = 0;
-        }
-
+        long position = searchParameters.getStartPosition();
         String findText;
         if (searchParameters.isMatchCase()) {
             findText = condition.getSearchText();
@@ -351,7 +370,18 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
                 }
             }
 
-            position++;
+            switch (searchParameters.getSearchDirection()) {
+                case FORWARD: {
+                    position++;
+                    break;
+                }
+                case BACKWARD: {
+                    position--;
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
+            }
         }
 
         painter.setMatches(foundMatches);
@@ -740,6 +770,15 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
         codeArea.revealPosition(currentMatch.getPosition(), codeArea.getActiveSection());
         codeArea.repaint();
+    }
+
+    public void updatePosition() {
+        findTextPanel.updatePosition(codeArea.getCaretPosition().getDataPosition(), codeArea.getData().getDataSize());
+    }
+
+    public void clearMatches() {
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        painter.clearMatches();
     }
 
     public static interface CharsetChangeListener {

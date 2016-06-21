@@ -33,7 +33,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Find text/hexadecimal data dialog.
  *
- * @version 0.1.0 2016/06/01
+ * @version 0.1.0 2016/06/21
  * @author ExBin Project (http://exbin.org)
  */
 public class FindHexDialog extends javax.swing.JDialog {
@@ -68,7 +68,7 @@ public class FindHexDialog extends javax.swing.JDialog {
         hexadecimalEditor.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
         hexadecimalEditor.setVerticalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
         hexadecimalEditor.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
+        hexadecimalEditor.setData(new ByteArrayEditableData());
         hexadecimalEditor.setBorder(new LineBorder(Color.LIGHT_GRAY));
 
         findHexComboBox.setRenderer(new ListCellRenderer<String>() {
@@ -135,6 +135,7 @@ public class FindHexDialog extends javax.swing.JDialog {
         findHexMultilineButton = new javax.swing.JButton();
         searchFromCursorCheckBox = new javax.swing.JCheckBox();
         matchCaseCheckBox = new javax.swing.JCheckBox();
+        multipleMatchesCheckBox = new javax.swing.JCheckBox();
         replacePanel = new javax.swing.JPanel();
         performReplaceCheckBox = new javax.swing.JCheckBox();
         textToReplaceLabel = new javax.swing.JLabel();
@@ -196,8 +197,11 @@ public class FindHexDialog extends javax.swing.JDialog {
         searchFromCursorCheckBox.setName("searchFromCursorCheckBox"); // NOI18N
 
         matchCaseCheckBox.setText(bundle.getString("matchCaseCheckBox.text")); // NOI18N
-        matchCaseCheckBox.setEnabled(false);
         matchCaseCheckBox.setName("matchCaseCheckBox"); // NOI18N
+
+        multipleMatchesCheckBox.setSelected(true);
+        multipleMatchesCheckBox.setText(bundle1.getString("FindHexDialog.multipleMatchesCheckBox.text")); // NOI18N
+        multipleMatchesCheckBox.setName("multipleMatchesCheckBox"); // NOI18N
 
         javax.swing.GroupLayout findPanelLayout = new javax.swing.GroupLayout(findPanel);
         findPanel.setLayout(findPanelLayout);
@@ -223,7 +227,8 @@ public class FindHexDialog extends javax.swing.JDialog {
                             .addGroup(findPanelLayout.createSequentialGroup()
                                 .addComponent(findHexComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(findHexMultilineButton)))))
+                                .addComponent(findHexMultilineButton))))
+                    .addComponent(multipleMatchesCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE))
                 .addContainerGap())
         );
         findPanelLayout.setVerticalGroup(
@@ -243,11 +248,12 @@ public class FindHexDialog extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, findPanelLayout.createSequentialGroup()
                         .addComponent(findHexComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchFromCursorCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(matchCaseCheckBox)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(multipleMatchesCheckBox)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         replacePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("replacePanel.border.title"))); // NOI18N
@@ -395,6 +401,7 @@ public class FindHexDialog extends javax.swing.JDialog {
         boolean mode = textModeRadioButton.isSelected();
         findTextComboBox.setEnabled(mode);
         findHexComboBox.setEnabled(!mode);
+        matchCaseCheckBox.setEnabled(mode);
     }
 
     /**
@@ -417,6 +424,7 @@ public class FindHexDialog extends javax.swing.JDialog {
     private javax.swing.JRadioButton hexModeRadioButton;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JCheckBox matchCaseCheckBox;
+    private javax.swing.JCheckBox multipleMatchesCheckBox;
     private javax.swing.JCheckBox performReplaceCheckBox;
     private javax.swing.JCheckBox replaceAllMatchesCheckBox;
     private javax.swing.JPanel replacePanel;

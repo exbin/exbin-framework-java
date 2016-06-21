@@ -20,6 +20,8 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -39,7 +41,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/20
+ * @version 0.1.0 2016/06/21
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
@@ -54,6 +56,7 @@ public class FindTextPanel extends javax.swing.JPanel {
     private final CodeArea hexadecimalEditor = new CodeArea();
     private ComboBoxEditor textComboBoxEditor;
     private ComboBoxEditor binaryComboBoxEditor;
+    private final List<SearchCondition> searchHistory = new ArrayList<>();
 
     private ClosePanelListener closePanelListener = null;
 
@@ -82,7 +85,7 @@ public class FindTextPanel extends javax.swing.JPanel {
         hexadecimalEditor.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
         hexadecimalEditor.setVerticalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
         hexadecimalEditor.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
+        hexadecimalEditor.setData(new ByteArrayEditableData());
         hexadecimalEditor.setBorder(new LineBorder(Color.LIGHT_GRAY));
 
         textComboBoxEditor = findComboBox.getEditor();
@@ -114,13 +117,12 @@ public class FindTextPanel extends javax.swing.JPanel {
             public void removeActionListener(ActionListener l) {
             }
         };
-        findComboBox.setRenderer(new ListCellRenderer<String>() {
+        findComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
             private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
 
             @Override
-            public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-                SearchCondition condition = searchParameters.getCondition();
-                if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            public Component getListCellRendererComponent(JList<? extends SearchCondition> list, SearchCondition value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value.getSearchMode() == SearchCondition.SearchMode.TEXT) {
                     return listCellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 } else {
                     return hexadecimalRenderer;
@@ -169,6 +171,12 @@ public class FindTextPanel extends javax.swing.JPanel {
             }
         });
         hexadecimalEditor.addKeyListener(editorKeyListener);
+        findComboBox.setModel(new SearchHistoryModel(searchHistory));
+
+        // TODO remove
+        SearchCondition testSearchCondition = new SearchCondition();
+        testSearchCondition.setSearchText("test");
+        searchHistory.add(testSearchCondition);
     }
 
     /**
@@ -190,7 +198,7 @@ public class FindTextPanel extends javax.swing.JPanel {
         prevButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
         matchCaseToggleButton = new javax.swing.JToggleButton();
-        showMatchesToggleButton = new javax.swing.JToggleButton();
+        multipleMatchesToggleButton = new javax.swing.JToggleButton();
         separator1 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
         infoLabel = new javax.swing.JLabel();
@@ -233,7 +241,6 @@ public class FindTextPanel extends javax.swing.JPanel {
         searchTypeToolBar.add(searchTypeButton);
 
         findComboBox.setEditable(true);
-        findComboBox.setModel(new SearchConditionModel());
         findComboBox.setSelectedItem("");
         findComboBox.setName("findComboBox"); // NOI18N
 
@@ -282,18 +289,18 @@ public class FindTextPanel extends javax.swing.JPanel {
         });
         findToolBar.add(matchCaseToggleButton);
 
-        showMatchesToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/mark_occurrences.png"))); // NOI18N
-        showMatchesToggleButton.setSelected(true);
-        showMatchesToggleButton.setFocusable(false);
-        showMatchesToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        showMatchesToggleButton.setName("showMatchesToggleButton"); // NOI18N
-        showMatchesToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        showMatchesToggleButton.addActionListener(new java.awt.event.ActionListener() {
+        multipleMatchesToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/mark_occurrences.png"))); // NOI18N
+        multipleMatchesToggleButton.setSelected(true);
+        multipleMatchesToggleButton.setFocusable(false);
+        multipleMatchesToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        multipleMatchesToggleButton.setName("multipleMatchesToggleButton"); // NOI18N
+        multipleMatchesToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        multipleMatchesToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showMatchesToggleButtonActionPerformed(evt);
+                multipleMatchesToggleButtonActionPerformed(evt);
             }
         });
-        findToolBar.add(showMatchesToggleButton);
+        findToolBar.add(multipleMatchesToggleButton);
 
         separator1.setName("separator1"); // NOI18N
         findToolBar.add(separator1);
@@ -420,10 +427,10 @@ public class FindTextPanel extends javax.swing.JPanel {
         setStatus(matchesCount, matchPosition);
     }//GEN-LAST:event_nextButtonActionPerformed
 
-    private void showMatchesToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMatchesToggleButtonActionPerformed
-        searchParameters.setMultipleMatches(showMatchesToggleButton.isSelected());
+    private void multipleMatchesToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multipleMatchesToggleButtonActionPerformed
+        searchParameters.setMultipleMatches(multipleMatchesToggleButton.isSelected());
         performSearch();
-    }//GEN-LAST:event_showMatchesToggleButtonActionPerformed
+    }//GEN-LAST:event_multipleMatchesToggleButtonActionPerformed
 
     private void matchCaseToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matchCaseToggleButtonActionPerformed
         searchParameters.setMatchCase(matchCaseToggleButton.isSelected());
@@ -456,12 +463,13 @@ public class FindTextPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JToolBar closeToolBar;
-    private javax.swing.JComboBox<String> findComboBox;
+    private javax.swing.JComboBox<SearchCondition> findComboBox;
     private javax.swing.JLabel findLabel;
     private javax.swing.JPanel findPanel;
     private javax.swing.JToolBar findToolBar;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JToggleButton matchCaseToggleButton;
+    private javax.swing.JToggleButton multipleMatchesToggleButton;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton optionsButton;
     private javax.swing.JButton prevButton;
@@ -471,7 +479,6 @@ public class FindTextPanel extends javax.swing.JPanel {
     private javax.swing.JButton searchTypeButton;
     private javax.swing.JToolBar searchTypeToolBar;
     private javax.swing.JToolBar.Separator separator1;
-    private javax.swing.JToggleButton showMatchesToggleButton;
     private javax.swing.JSeparator topSeparator;
     // End of variables declaration//GEN-END:variables
 
@@ -511,6 +518,7 @@ public class FindTextPanel extends javax.swing.JPanel {
                 break;
             }
         }
+        hexPanel.updatePosition();
         performSearch(500);
     }
 
@@ -572,6 +580,27 @@ public class FindTextPanel extends javax.swing.JPanel {
         hexPanel.findText(searchParameters);
     }
 
+    public void updatePosition(long position, long dataSize) {
+        long startPosition;
+        if (searchParameters.isSearchFromCursor()) {
+            startPosition = position;
+        } else {
+            switch (searchParameters.getSearchDirection()) {
+                case FORWARD: {
+                    startPosition = 0;
+                    break;
+                }
+                case BACKWARD: {
+                    startPosition = dataSize - 1;
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
+            }
+        }
+        searchParameters.setStartPosition(startPosition);
+    }
+
     public void setStatus(int matchesCount, int matchPosition) {
         this.matchesCount = matchesCount;
         this.matchPosition = matchPosition;
@@ -595,6 +624,11 @@ public class FindTextPanel extends javax.swing.JPanel {
         matchesCount = 0;
         matchPosition = -1;
         updateTraverseButtons();
+    }
+
+    public void dataChanged() {
+        hexPanel.clearMatches();
+        performSearch(500);
     }
 
     public void closePanel() {
@@ -631,6 +665,9 @@ public class FindTextPanel extends javax.swing.JPanel {
         return true;
     }
 
+    /**
+     * Listener for panel closing.
+     */
     public static interface ClosePanelListener {
 
         void panelClosed();

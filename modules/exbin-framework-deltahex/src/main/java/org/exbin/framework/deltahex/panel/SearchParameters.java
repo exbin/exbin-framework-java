@@ -18,16 +18,17 @@ package org.exbin.framework.deltahex.panel;
 /**
  * Parameters for action to search for occurences of text or data.
  *
- * @version 0.1.0 2016/06/12
+ * @version 0.1.0 2016/06/21
  * @author ExBin Project (http://exbin.org)
  */
 public class SearchParameters {
 
     private SearchCondition condition = new SearchCondition();
+    private long startPosition;
     private boolean searchFromCursor;
     private boolean matchCase = true;
     private boolean multipleMatches = true;
-    private SearchDirection searchDirection;
+    private SearchDirection searchDirection = SearchDirection.FORWARD;
 
     public SearchParameters() {
     }
@@ -38,6 +39,14 @@ public class SearchParameters {
 
     public void setCondition(SearchCondition condition) {
         this.condition = condition;
+    }
+
+    public long getStartPosition() {
+        return startPosition;
+    }
+
+    public void setStartPosition(long startPosition) {
+        this.startPosition = startPosition;
     }
 
     public boolean isSearchFromCursor() {
