@@ -146,10 +146,10 @@ public class HexColorDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void showDialog() {
-        textColorPanel.setColorsFromArray(frame.getCurrentTextColors());
+        textColorPanel.setColorsFromMap(frame.getCurrentTextColors());
         setVisible(true);
         if (getDialogOption() == JOptionPane.OK_OPTION) {
-            frame.setCurrentTextColors(textColorPanel.getArrayFromColors());
+            frame.setCurrentTextColors(textColorPanel.getMapFromColors());
         }
     }
 }

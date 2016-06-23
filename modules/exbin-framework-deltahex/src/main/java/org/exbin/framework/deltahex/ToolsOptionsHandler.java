@@ -17,6 +17,7 @@ package org.exbin.framework.deltahex;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,6 +29,7 @@ import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
+import org.exbin.framework.deltahex.panel.HexColorType;
 
 /**
  * Tools options action handler.
@@ -74,17 +76,17 @@ public class ToolsOptionsHandler {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 HexColorPanelApi textColorPanelFrame = new HexColorPanelApi() {
                     @Override
-                    public Color[] getCurrentTextColors() {
+                    public Map<HexColorType, Color> getCurrentTextColors() {
                         return ((HexPanel) editorProvider).getCurrentColors();
                     }
 
                     @Override
-                    public Color[] getDefaultTextColors() {
+                    public Map<HexColorType, Color> getDefaultTextColors() {
                         return ((HexPanel) editorProvider).getDefaultColors();
                     }
 
                     @Override
-                    public void setCurrentTextColors(Color[] colors) {
+                    public void setCurrentTextColors(Map<HexColorType, Color> colors) {
                         ((HexPanel) editorProvider).setCurrentColors(colors);
                     }
                 };

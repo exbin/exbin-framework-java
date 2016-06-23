@@ -18,6 +18,7 @@ package org.exbin.framework.deltahex;
 import java.awt.Color;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.api.XBApplication;
@@ -40,6 +41,7 @@ import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.deltahex.panel.HexAppearancePanelFrame;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
+import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
@@ -47,7 +49,7 @@ import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.1.0 2016/05/26
+ * @version 0.1.0 2016/06/23
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -118,17 +120,17 @@ public class DeltaHexModule implements XBApplicationModule {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
         HexColorPanelApi textColorPanelFrame = new HexColorPanelApi() {
             @Override
-            public Color[] getCurrentTextColors() {
+            public Map<HexColorType, Color> getCurrentTextColors() {
                 return ((HexPanel) getEditorProvider()).getCurrentColors();
             }
 
             @Override
-            public Color[] getDefaultTextColors() {
+            public Map<HexColorType, Color> getDefaultTextColors() {
                 return ((HexPanel) getEditorProvider()).getDefaultColors();
             }
 
             @Override
-            public void setCurrentTextColors(Color[] colors) {
+            public void setCurrentTextColors(Map<HexColorType, Color> colors) {
                 ((HexPanel) getEditorProvider()).setCurrentColors(colors);
             }
         };

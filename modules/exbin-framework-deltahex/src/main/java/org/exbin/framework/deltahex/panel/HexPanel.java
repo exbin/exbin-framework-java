@@ -19,7 +19,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
@@ -39,7 +38,9 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -72,7 +73,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/06/21
+ * @version 0.1.0 2016/06/23
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -82,7 +83,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     private String fileName;
     private Color foundTextBackgroundColor;
     private Font defaultFont;
-    private Color[] defaultColors;
+    private Map<HexColorType, Color> defaultColors;
     private PropertyChangeListener propertyChangeListener;
     private CharsetChangeListener charsetChangeListener = null;
     private HexStatusPanel statusPanel = null;
@@ -143,12 +144,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         foundTextBackgroundColor = Color.YELLOW;
         codeArea.setCharset(Charset.forName(TextEncodingPanel.ENCODING_UTF8));
         defaultFont = codeArea.getFont();
-        defaultColors = new Color[5];
-        defaultColors[0] = new Color(codeArea.getForeground().getRGB());
-        defaultColors[1] = new Color(SystemColor.text.getRGB()); // Patch on wrong value in textArea.getBackground()
-        defaultColors[2] = new Color(codeArea.getSelectionColor().getRGB());
-        defaultColors[3] = new Color(codeArea.getSelectionBackgroundColor().getRGB());
-        defaultColors[4] = foundTextBackgroundColor;
+
+        defaultColors = getCurrentColors();
 
         addPropertyChangeListener(new PropertyChangeListener() {
             @Override
@@ -187,8 +184,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public boolean changeShowNonprintables() {
-        codeArea.setShowNonprintingCharacters(!codeArea.isShowNonprintingCharacters());
-        return codeArea.isShowNonprintingCharacters();
+        codeArea.setShowUnprintableCharacters(!codeArea.isShowUnprintableCharacters());
+        return codeArea.isShowUnprintableCharacters();
     }
 
     public boolean getWordWrapMode() {
@@ -394,35 +391,22 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         codeArea.repaint();
     }
 
-    public Color[] getCurrentColors() {
-        Color[] colors = new Color[5];
-        colors[0] = codeArea.getForeground();
-        colors[1] = codeArea.getBackground();
-        colors[2] = codeArea.getSelectionColor();
-        colors[3] = codeArea.getSelectionBackgroundColor();
-        colors[4] = getFoundTextBackgroundColor();
+    public Map<HexColorType, Color> getCurrentColors() {
+        Map<HexColorType, Color> colors = new HashMap<>();
+        for (HexColorType colorType : HexColorType.values()) {
+            Color color = colorType.getColorFromCodeArea(codeArea);
+            colors.put(colorType, color);
+        }
         return colors;
     }
 
-    public Color[] getDefaultColors() {
+    public Map<HexColorType, Color> getDefaultColors() {
         return defaultColors;
     }
 
-    public void setCurrentColors(Color[] colors) {
-        if (colors[0] != null) {
-            codeArea.setForeground(colors[0]);
-        }
-        if (colors[1] != null) {
-            codeArea.setBackground(colors[1]);
-        }
-        if (colors[2] != null) {
-            codeArea.setSelectionColor(colors[2]);
-        }
-        if (colors[3] != null) {
-            codeArea.setSelectionBackgroundColor(colors[3]);
-        }
-        if (colors[4] != null) {
-            setFoundTextBackgroundColor(colors[4]);
+    public void setCurrentColors(Map<HexColorType, Color> colors) {
+        for (Map.Entry<HexColorType, Color> entry : colors.entrySet()) {
+            entry.getKey().setColorToCodeArea(codeArea, entry.getValue());
         }
     }
 
@@ -524,8 +508,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
         debugPanel.setName("debugPanel"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/Bundle"); // NOI18N
-        debugButton.setText(bundle.getString("HexPanel.debugButton.text")); // NOI18N
+        debugButton.setText("I");
         debugButton.setName("debugButton"); // NOI18N
         debugButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

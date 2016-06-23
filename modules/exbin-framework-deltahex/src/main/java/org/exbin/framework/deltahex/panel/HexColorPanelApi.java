@@ -16,11 +16,12 @@
 package org.exbin.framework.deltahex.panel;
 
 import java.awt.Color;
+import java.util.Map;
 
 /**
  * Hexadecimal editor color panel interface.
  *
- * @version 0.1.0 2016/04/03
+ * @version 0.1.0 2016/06/23
  * @author ExBin Project (http://exbin.org)
  */
 public interface HexColorPanelApi {
@@ -28,21 +29,21 @@ public interface HexColorPanelApi {
     /**
      * Returns current colors used in application frame.
      *
-     * @return array of 5 colors.
+     * @return map of colors
      */
-    public Color[] getCurrentTextColors();
+    public Map<HexColorType, Color> getCurrentTextColors();
 
     /**
      * Returns default colors used in application frame.
      *
-     * @return array of 5 colors.
+     * @return map of colors
      */
-    public Color[] getDefaultTextColors();
+    public Map<HexColorType, Color> getDefaultTextColors();
 
     /**
      * Sets current colors used in application frame.
      *
-     * @param colors array of 5 colors
+     * @param colors map of colors
      */
-    public void setCurrentTextColors(Color[] colors);
+    public void setCurrentTextColors(Map<HexColorType, Color> colors);
 }
