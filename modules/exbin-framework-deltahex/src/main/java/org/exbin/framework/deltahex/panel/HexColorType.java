@@ -29,12 +29,22 @@ public enum HexColorType {
     HEADER_BACKGROUND("Header Background", "hexColor.headerBackground"),
     MAIN_AREA_TEXT("Main Area Text", "hexColor.mainAreaText"),
     MAIN_AREA_BACKGROUND("Main Area Background", "hexColor.mainAreaBackground"),
-    MAIN_AREA_UNPRINTABLES("Main Area Nonprintables", "hexColor.mainAreaUnprintables"),
-    MAIN_AREA_UNPRINTABLES_BACKGROUND("Main Area Nonprintables Background", "hexColor.mainAreaUnprintablesBackground"),
+    MAIN_AREA_UNPRINTABLES("Main Area Unprintables", "hexColor.mainAreaUnprintables"),
+    MAIN_AREA_UNPRINTABLES_BACKGROUND("Main Area Unprintables Background", "hexColor.mainAreaUnprintablesBackground"),
+    ALTERNATE_TEXT("Alternate Text", "hexColor.alternateText"),
+    ALTERNATE_BACKGROUND("Alternate Background", "hexColor.alternateBackground"),
+    ALTERNATE_UNPRINTABLES("Alternate Unprintables", "hexColor.alternateUnprintables"),
+    ALTERNATE_UNPRINTABLES_BACKGROUND("Alternate Unprintables Background", "hexColor.alternateUnprintablesBackground"),
     SELECTION("Selection Text", "hexColor.selection"),
     SELECTION_BACKGROUND("Selection Background", "hexColor.selectionBackground"),
     SELECTION_UNPRINTABLES("Selection Nonprintables", "hexColor.selectionUnprintables"),
     SELECTION_UNPRINTABLES_BACKGROUND("Selection Nonprintables Background", "hexColor.selectionUnprintablesBackground"),
+    MIRROR_SELECTION("Mirror Selection Text", "hexColor.mirrorSelection"),
+    MIRROR_SELECTION_BACKGROUND("Mirror Selection Background", "hexColor.mirrorSelectionBackground"),
+    MIRROR_SELECTION_UNPRINTABLES("Mirror Selection Nonprintables", "hexColor.mirrorSelectionUnprintables"),
+    MIRROR_SELECTION_UNPRINTABLES_BACKGROUND("Mirror Selection Nonprintables Background", "hexColor.mirrorSelectionUnprintablesBackground"),
+    CURSOR("Cursor", "hexColor.cursor"),
+    DECORATION_LINE("Decoration Line", "hexColor.decorationLine"),
     FOUND("Decoration Line", "hexColor.found");
 
     private final String preferencesString;
@@ -66,7 +76,15 @@ public enum HexColorType {
             case MAIN_AREA_UNPRINTABLES:
                 return codeArea.getMainColors().getUnprintablesColor();
             case MAIN_AREA_UNPRINTABLES_BACKGROUND:
-                return codeArea.getMainColors().getUnprintablesBackgroundColor();
+                return codeArea.getAlternateColors().getUnprintablesBackgroundColor();
+            case ALTERNATE_TEXT:
+                return codeArea.getAlternateColors().getTextColor();
+            case ALTERNATE_BACKGROUND:
+                return codeArea.getAlternateColors().getBackgroundColor();
+            case ALTERNATE_UNPRINTABLES:
+                return codeArea.getAlternateColors().getUnprintablesColor();
+            case ALTERNATE_UNPRINTABLES_BACKGROUND:
+                return codeArea.getAlternateColors().getUnprintablesBackgroundColor();
             case SELECTION:
                 return codeArea.getSelectionColors().getTextColor();
             case SELECTION_BACKGROUND:
@@ -75,6 +93,18 @@ public enum HexColorType {
                 return codeArea.getSelectionColors().getUnprintablesColor();
             case SELECTION_UNPRINTABLES_BACKGROUND:
                 return codeArea.getSelectionColors().getUnprintablesBackgroundColor();
+            case MIRROR_SELECTION:
+                return codeArea.getMirrorSelectionColors().getTextColor();
+            case MIRROR_SELECTION_BACKGROUND:
+                return codeArea.getMirrorSelectionColors().getBackgroundColor();
+            case MIRROR_SELECTION_UNPRINTABLES:
+                return codeArea.getMirrorSelectionColors().getUnprintablesColor();
+            case MIRROR_SELECTION_UNPRINTABLES_BACKGROUND:
+                return codeArea.getMirrorSelectionColors().getUnprintablesBackgroundColor();
+            case CURSOR:
+                return codeArea.getCursorColor();
+            case DECORATION_LINE:
+                return codeArea.getDecorationLineColor();
             case FOUND:
                 return Color.RED;
             default:
@@ -116,6 +146,30 @@ public enum HexColorType {
                 codeArea.setMainColors(mainColors);
                 break;
             }
+            case ALTERNATE_TEXT: {
+                CodeArea.ColorsGroup alternateColors = codeArea.getAlternateColors();
+                alternateColors.setTextColor(color);
+                codeArea.setAlternateColors(alternateColors);
+                break;
+            }
+            case ALTERNATE_BACKGROUND: {
+                CodeArea.ColorsGroup alternateColors = codeArea.getAlternateColors();
+                alternateColors.setBackgroundColor(color);
+                codeArea.setAlternateColors(alternateColors);
+                break;
+            }
+            case ALTERNATE_UNPRINTABLES: {
+                CodeArea.ColorsGroup alternateColors = codeArea.getAlternateColors();
+                alternateColors.setUnprintablesColor(color);
+                codeArea.setAlternateColors(alternateColors);
+                break;
+            }
+            case ALTERNATE_UNPRINTABLES_BACKGROUND: {
+                CodeArea.ColorsGroup alternateColors = codeArea.getAlternateColors();
+                alternateColors.setUnprintablesBackgroundColor(color);
+                codeArea.setAlternateColors(alternateColors);
+                break;
+            }
             case SELECTION: {
                 CodeArea.ColorsGroup selectionColors = codeArea.getSelectionColors();
                 selectionColors.setTextColor(color);
@@ -138,6 +192,38 @@ public enum HexColorType {
                 CodeArea.ColorsGroup selectionColors = codeArea.getSelectionColors();
                 selectionColors.setUnprintablesBackgroundColor(color);
                 codeArea.setSelectionColors(selectionColors);
+                break;
+            }
+            case MIRROR_SELECTION: {
+                CodeArea.ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
+                selectionColors.setTextColor(color);
+                codeArea.setMirrorSelectionColors(selectionColors);
+                break;
+            }
+            case MIRROR_SELECTION_BACKGROUND: {
+                CodeArea.ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
+                selectionColors.setBackgroundColor(color);
+                codeArea.setMirrorSelectionColors(selectionColors);
+                break;
+            }
+            case MIRROR_SELECTION_UNPRINTABLES: {
+                CodeArea.ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
+                selectionColors.setUnprintablesColor(color);
+                codeArea.setMirrorSelectionColors(selectionColors);
+                break;
+            }
+            case MIRROR_SELECTION_UNPRINTABLES_BACKGROUND: {
+                CodeArea.ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
+                selectionColors.setUnprintablesBackgroundColor(color);
+                codeArea.setMirrorSelectionColors(selectionColors);
+                break;
+            }
+            case CURSOR: {
+                codeArea.setCursorColor(color);
+                break;
+            }
+            case DECORATION_LINE: {
+                codeArea.setDecorationLineColor(color);
                 break;
             }
             case FOUND: {

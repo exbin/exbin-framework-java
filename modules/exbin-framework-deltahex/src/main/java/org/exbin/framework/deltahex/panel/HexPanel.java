@@ -128,7 +128,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
                 findTextPanel.dataChanged();
             }
         });
-        // TODO use listener in hexadecimal instead
+        // TODO use listener in code area component instead
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.addFlavorListener(new FlavorListener() {
             @Override

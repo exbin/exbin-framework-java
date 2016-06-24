@@ -41,7 +41,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/21
+ * @version 0.1.0 2016/06/23
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel {
@@ -54,8 +54,7 @@ public class FindTextPanel extends javax.swing.JPanel {
     private int matchPosition;
     private final CodeArea hexadecimalRenderer = new CodeArea();
     private final CodeArea hexadecimalEditor = new CodeArea();
-    private ComboBoxEditor textComboBoxEditor;
-    private ComboBoxEditor binaryComboBoxEditor;
+    private ComboBoxEditor comboBoxEditor;
     private final List<SearchCondition> searchHistory = new ArrayList<>();
 
     private ClosePanelListener closePanelListener = null;
@@ -88,67 +87,7 @@ public class FindTextPanel extends javax.swing.JPanel {
         hexadecimalEditor.setData(new ByteArrayEditableData());
         hexadecimalEditor.setBorder(new LineBorder(Color.LIGHT_GRAY));
 
-        textComboBoxEditor = findComboBox.getEditor();
-        binaryComboBoxEditor = new ComboBoxEditor() {
-            @Override
-            public Component getEditorComponent() {
-                return hexadecimalEditor;
-            }
-
-            @Override
-            public void setItem(Object anObject) {
-            }
-
-            @Override
-            public Object getItem() {
-                return null;
-            }
-
-            @Override
-            public void selectAll() {
-                hexadecimalRenderer.selectAll();
-            }
-
-            @Override
-            public void addActionListener(ActionListener l) {
-            }
-
-            @Override
-            public void removeActionListener(ActionListener l) {
-            }
-        };
-        findComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
-            private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
-
-            @Override
-            public Component getListCellRendererComponent(JList<? extends SearchCondition> list, SearchCondition value, int index, boolean isSelected, boolean cellHasFocus) {
-                if (value.getSearchMode() == SearchCondition.SearchMode.TEXT) {
-                    return listCellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                } else {
-                    return hexadecimalRenderer;
-                }
-            }
-        });
-        Component editorComponent = textComboBoxEditor.getEditorComponent();
-        if (editorComponent instanceof JTextField) {
-            ((JTextField) editorComponent).getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    comboBoxValueChanged();
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    comboBoxValueChanged();
-                }
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    comboBoxValueChanged();
-                }
-            });
-        }
-        KeyAdapter editorKeyListener = new KeyAdapter() {
+        final KeyAdapter editorKeyListener = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -163,7 +102,124 @@ public class FindTextPanel extends javax.swing.JPanel {
                 super.keyPressed(e);
             }
         };
-        textComboBoxEditor.getEditorComponent().addKeyListener(editorKeyListener);
+
+        findComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
+            private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
+
+            @Override
+            public Component getListCellRendererComponent(JList<? extends SearchCondition> list, SearchCondition value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+                    return listCellRenderer.getListCellRendererComponent(list, value.getSearchText(), index, isSelected, cellHasFocus);
+                } else {
+                    hexadecimalRenderer.setData(value.getBinaryData());
+                    return hexadecimalRenderer;
+                }
+            }
+        });
+
+        comboBoxEditor = new ComboBoxEditor() {
+
+            private SearchCondition item;
+            private JTextField textField;
+
+            @Override
+            public Component getEditorComponent() {
+                SearchCondition.SearchMode searchMode;
+                if (item == null) {
+                    searchMode = SearchCondition.SearchMode.TEXT;
+                } else {
+                    searchMode = item.getSearchMode();
+                }
+                switch (searchMode) {
+                    case TEXT: {
+                        if (textField == null) {
+                            textField = new JTextField();
+                            textField.getDocument().addDocumentListener(new DocumentListener() {
+                                @Override
+                                public void insertUpdate(DocumentEvent e) {
+                                    comboBoxValueChanged();
+                                }
+
+                                @Override
+                                public void removeUpdate(DocumentEvent e) {
+                                    comboBoxValueChanged();
+                                }
+
+                                @Override
+                                public void changedUpdate(DocumentEvent e) {
+                                    comboBoxValueChanged();
+                                }
+                            });
+                            textField.addKeyListener(editorKeyListener);
+                        }
+
+                        String searchText = item == null ? null : item.getSearchText();
+                        if (searchText == null) {
+                            searchText = "";
+                        }
+                        textField.setText(searchText);
+                        textField.selectAll();
+                        return textField;
+                    }
+                    case BINARY: {
+                        hexadecimalEditor.setData(item.getBinaryData());
+                        return hexadecimalEditor;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public void setItem(Object item) {
+                if (item == null || item instanceof String) {
+                    this.item = new SearchCondition();
+                    this.item.setSearchMode(SearchCondition.SearchMode.TEXT);
+                    if (item != null) {
+                        this.item.setSearchText((String) item);
+                    }
+                } else {
+                    this.item = (SearchCondition) item;
+                }
+            }
+
+            @Override
+            public Object getItem() {
+                switch (item.getSearchMode()) {
+                    case TEXT: {
+                        item.setSearchText(textField.getText());
+                        break;
+                    }
+                    case BINARY: {
+                        item.setBinaryData((EditableBinaryData) hexadecimalEditor.getData());
+                    }
+                }
+                return item;
+            }
+
+            @Override
+            public void selectAll() {
+                switch (item.getSearchMode()) {
+                    case TEXT: {
+                        textField.selectAll();
+                        break;
+                    }
+                    case BINARY: {
+                        hexadecimalEditor.selectAll();
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void addActionListener(ActionListener l) {
+            }
+
+            @Override
+            public void removeActionListener(ActionListener l) {
+            }
+        };
+        findComboBox.setEditor(comboBoxEditor);
+
         hexadecimalEditor.addDataChangedListener(new CodeArea.DataChangedListener() {
             @Override
             public void dataChanged() {
@@ -442,14 +498,12 @@ public class FindTextPanel extends javax.swing.JPanel {
         if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
             condition.setSearchMode(SearchCondition.SearchMode.BINARY);
             matchCaseToggleButton.setEnabled(false);
-            findComboBox.setEditor(binaryComboBoxEditor);
             findComboBox.repaint();
             searchTypeButton.setText("B");
             performSearch();
         } else {
             condition.setSearchMode(SearchCondition.SearchMode.TEXT);
             matchCaseToggleButton.setEnabled(true);
-            findComboBox.setEditor(textComboBoxEditor);
             findComboBox.repaint();
             searchTypeButton.setText("T");
             performSearch();
@@ -484,26 +538,26 @@ public class FindTextPanel extends javax.swing.JPanel {
 
     private void comboBoxValueChanged() {
         SearchCondition condition = searchParameters.getCondition();
+        SearchCondition searchCondition = (SearchCondition) findComboBox.getEditor().getItem();
 
-        switch (condition.getSearchMode()) {
+        switch (searchCondition.getSearchMode()) {
             case TEXT: {
-                String findValue = (String) findComboBox.getEditor().getItem();
-                if (findValue == null || findValue.isEmpty()) {
-                    condition.setSearchText(findValue);
+                String searchText = searchCondition.getSearchText();
+                if (searchText == null || searchText.isEmpty()) {
+                    condition.setSearchText(searchText);
                     performFind();
                     return;
                 }
 
-                if (findValue.equals(condition.getSearchText())) {
+                if (searchText.equals(condition.getSearchText())) {
                     return;
                 }
 
-                condition.setSearchText(findValue);
+                condition.setSearchText(searchText);
                 break;
             }
             case BINARY: {
-                EditableBinaryData searchData = new ByteArrayEditableData();
-                searchData.insert(0, hexadecimalEditor.getData());
+                EditableBinaryData searchData = (EditableBinaryData) searchCondition.getBinaryData();
                 if (searchData.isEmpty()) {
                     condition.setBinaryData(null);
                     performFind();
@@ -560,10 +614,6 @@ public class FindTextPanel extends javax.swing.JPanel {
         } else {
             findComboBox.getEditor().setItem("");
         }
-    }
-
-    public void addCloseListener(java.awt.event.ActionListener actionListener) {
-        closeButton.addActionListener(actionListener);
     }
 
     public void setRequestFocus() {
@@ -633,6 +683,10 @@ public class FindTextPanel extends javax.swing.JPanel {
 
     public void closePanel() {
         if (closePanelListener != null) {
+            SearchCondition condition = searchParameters.getCondition();
+            if (!condition.isEmpty()) {
+                clearSearch();
+            }
             closePanelListener.panelClosed();
         }
     }

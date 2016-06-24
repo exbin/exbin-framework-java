@@ -139,7 +139,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         colorsScrollPane.setName("colorsScrollPane"); // NOI18N
 
         colorsPanel.setName("colorsPanel"); // NOI18N
-        colorsPanel.setLayout(new java.awt.GridLayout(11, 1));
+        colorsPanel.setLayout(new java.awt.GridLayout(21, 1));
         colorsScrollPane.setViewportView(colorsPanel);
 
         splitPane.setLeftComponent(colorsScrollPane);
