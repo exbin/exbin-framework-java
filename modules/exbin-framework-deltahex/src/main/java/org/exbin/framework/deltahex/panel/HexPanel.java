@@ -73,7 +73,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/06/23
+ * @version 0.1.0 2016/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -88,7 +88,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     private CharsetChangeListener charsetChangeListener = null;
     private HexStatusPanel statusPanel = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private FindTextPanel findTextPanel;
+    private HexSearchPanel findTextPanel;
     private boolean findTextPanelVisible = false;
 
     public HexPanel() {
@@ -156,8 +156,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             }
         });
 
-        findTextPanel = new FindTextPanel(this, false);
-        findTextPanel.setClosePanelListener(new FindTextPanel.ClosePanelListener() {
+        findTextPanel = new HexSearchPanel(this, false);
+        findTextPanel.setClosePanelListener(new HexSearchPanel.ClosePanelListener() {
             @Override
             public void panelClosed() {
                 hideFindPanel();

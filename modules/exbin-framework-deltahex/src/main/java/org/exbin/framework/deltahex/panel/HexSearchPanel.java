@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.deltahex.panel;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -26,11 +25,7 @@ import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -41,10 +36,10 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/23
+ * @version 0.1.0 2016/06/27
  * @author ExBin Project (http://exbin.org)
  */
-public class FindTextPanel extends javax.swing.JPanel {
+public class HexSearchPanel extends javax.swing.JPanel {
 
     private Thread searchStartThread;
     private Thread searchThread;
@@ -53,13 +48,13 @@ public class FindTextPanel extends javax.swing.JPanel {
     private int matchesCount;
     private int matchPosition;
     private final CodeArea hexadecimalRenderer = new CodeArea();
-    private final CodeArea hexadecimalEditor = new CodeArea();
     private ComboBoxEditor comboBoxEditor;
+    private HexSearchComboBoxPanel comboBoxEditorComponent;
     private final List<SearchCondition> searchHistory = new ArrayList<>();
 
     private ClosePanelListener closePanelListener = null;
 
-    public FindTextPanel(HexPanel hexPanel, boolean replaceMode) {
+    public HexSearchPanel(HexPanel hexPanel, boolean replaceMode) {
         initComponents();
         this.hexPanel = hexPanel;
         if (!replaceMode) {
@@ -78,14 +73,7 @@ public class FindTextPanel extends javax.swing.JPanel {
         hexadecimalRenderer.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
 
-        hexadecimalEditor.setShowHeader(false);
-        hexadecimalEditor.setShowLineNumbers(false);
-        hexadecimalEditor.setWrapMode(true);
-        hexadecimalEditor.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
-        hexadecimalEditor.setVerticalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setData(new ByteArrayEditableData());
-        hexadecimalEditor.setBorder(new LineBorder(Color.LIGHT_GRAY));
+        comboBoxEditorComponent = new HexSearchComboBoxPanel();
 
         final KeyAdapter editorKeyListener = new KeyAdapter() {
             @Override
@@ -120,53 +108,10 @@ public class FindTextPanel extends javax.swing.JPanel {
         comboBoxEditor = new ComboBoxEditor() {
 
             private SearchCondition item;
-            private JTextField textField;
 
             @Override
             public Component getEditorComponent() {
-                SearchCondition.SearchMode searchMode;
-                if (item == null) {
-                    searchMode = SearchCondition.SearchMode.TEXT;
-                } else {
-                    searchMode = item.getSearchMode();
-                }
-                switch (searchMode) {
-                    case TEXT: {
-                        if (textField == null) {
-                            textField = new JTextField();
-                            textField.getDocument().addDocumentListener(new DocumentListener() {
-                                @Override
-                                public void insertUpdate(DocumentEvent e) {
-                                    comboBoxValueChanged();
-                                }
-
-                                @Override
-                                public void removeUpdate(DocumentEvent e) {
-                                    comboBoxValueChanged();
-                                }
-
-                                @Override
-                                public void changedUpdate(DocumentEvent e) {
-                                    comboBoxValueChanged();
-                                }
-                            });
-                            textField.addKeyListener(editorKeyListener);
-                        }
-
-                        String searchText = item == null ? null : item.getSearchText();
-                        if (searchText == null) {
-                            searchText = "";
-                        }
-                        textField.setText(searchText);
-                        textField.selectAll();
-                        return textField;
-                    }
-                    case BINARY: {
-                        hexadecimalEditor.setData(item.getBinaryData());
-                        return hexadecimalEditor;
-                    }
-                }
-                return null;
+                return comboBoxEditorComponent;
             }
 
             @Override
@@ -180,34 +125,17 @@ public class FindTextPanel extends javax.swing.JPanel {
                 } else {
                     this.item = (SearchCondition) item;
                 }
+                comboBoxEditorComponent.setItem(this.item);
             }
 
             @Override
             public Object getItem() {
-                switch (item.getSearchMode()) {
-                    case TEXT: {
-                        item.setSearchText(textField.getText());
-                        break;
-                    }
-                    case BINARY: {
-                        item.setBinaryData((EditableBinaryData) hexadecimalEditor.getData());
-                    }
-                }
-                return item;
+                return this.item;
             }
 
             @Override
             public void selectAll() {
-                switch (item.getSearchMode()) {
-                    case TEXT: {
-                        textField.selectAll();
-                        break;
-                    }
-                    case BINARY: {
-                        hexadecimalEditor.selectAll();
-                        break;
-                    }
-                }
+                comboBoxEditorComponent.selectAll();
             }
 
             @Override
@@ -220,13 +148,13 @@ public class FindTextPanel extends javax.swing.JPanel {
         };
         findComboBox.setEditor(comboBoxEditor);
 
-        hexadecimalEditor.addDataChangedListener(new CodeArea.DataChangedListener() {
+        comboBoxEditorComponent.setValueChangedListener(new HexSearchComboBoxPanel.ValueChangedListener() {
             @Override
-            public void dataChanged() {
+            public void valueChanged() {
                 comboBoxValueChanged();
             }
         });
-        hexadecimalEditor.addKeyListener(editorKeyListener);
+        comboBoxEditorComponent.addValueKeyListener(editorKeyListener);
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
 
         // TODO remove
@@ -273,7 +201,7 @@ public class FindTextPanel extends javax.swing.JPanel {
         findPanel.setName("findPanel"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexStatusPanel"); // NOI18N
-        findLabel.setText(bundle.getString("FindTextPanel.findLabel.text")); // NOI18N
+        findLabel.setText(bundle.getString("HexSearchPanel.findLabel.text")); // NOI18N
         findLabel.setName("findLabel"); // NOI18N
 
         searchTypeToolBar.setBorder(null);
@@ -282,8 +210,8 @@ public class FindTextPanel extends javax.swing.JPanel {
         searchTypeToolBar.setFocusable(false);
         searchTypeToolBar.setName("searchTypeToolBar"); // NOI18N
 
-        searchTypeButton.setText(bundle.getString("FindTextPanel.searchTypeButton.text")); // NOI18N
-        searchTypeButton.setToolTipText(bundle.getString("FindTextPanel.searchTypeButton.toolTipText")); // NOI18N
+        searchTypeButton.setText(bundle.getString("HexSearchPanel.searchTypeButton.text")); // NOI18N
+        searchTypeButton.setToolTipText(bundle.getString("HexSearchPanel.searchTypeButton.toolTipText")); // NOI18N
         searchTypeButton.setFocusable(false);
         searchTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));
         searchTypeButton.setMinimumSize(new java.awt.Dimension(27, 27));
@@ -361,7 +289,7 @@ public class FindTextPanel extends javax.swing.JPanel {
         separator1.setName("separator1"); // NOI18N
         findToolBar.add(separator1);
 
-        optionsButton.setText(bundle.getString("FindTextPanel.optionsButton.text")); // NOI18N
+        optionsButton.setText(bundle.getString("HexSearchPanel.optionsButton.text")); // NOI18N
         optionsButton.setFocusable(false);
         optionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         optionsButton.setName("optionsButton"); // NOI18N
@@ -425,7 +353,7 @@ public class FindTextPanel extends javax.swing.JPanel {
 
         replacePanel.setName("replacePanel"); // NOI18N
 
-        replaceLabel.setText(bundle.getString("FindTextPanel.replaceLabel.text")); // NOI18N
+        replaceLabel.setText(bundle.getString("HexSearchPanel.replaceLabel.text")); // NOI18N
         replaceLabel.setName("replaceLabel"); // NOI18N
 
         replaceComboBox.setEditable(true);
@@ -498,12 +426,16 @@ public class FindTextPanel extends javax.swing.JPanel {
         if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
             condition.setSearchMode(SearchCondition.SearchMode.BINARY);
             matchCaseToggleButton.setEnabled(false);
+            comboBoxEditor.setItem(condition);
+            findComboBox.setEditor(comboBoxEditor);
             findComboBox.repaint();
             searchTypeButton.setText("B");
             performSearch();
         } else {
             condition.setSearchMode(SearchCondition.SearchMode.TEXT);
             matchCaseToggleButton.setEnabled(true);
+            comboBoxEditor.setItem(condition);
+            findComboBox.setEditor(comboBoxEditor);
             findComboBox.repaint();
             searchTypeButton.setText("T");
             performSearch();
@@ -558,7 +490,7 @@ public class FindTextPanel extends javax.swing.JPanel {
             }
             case BINARY: {
                 EditableBinaryData searchData = (EditableBinaryData) searchCondition.getBinaryData();
-                if (searchData.isEmpty()) {
+                if (searchData == null || searchData.isEmpty()) {
                     condition.setBinaryData(null);
                     performFind();
                     return;
