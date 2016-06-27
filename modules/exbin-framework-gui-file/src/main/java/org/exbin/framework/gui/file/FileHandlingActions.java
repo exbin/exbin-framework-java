@@ -48,7 +48,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * File handling operations.
  *
- * @version 0.2.0 2016/03/20
+ * @version 0.2.0 2016/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class FileHandlingActions implements FileHandlingActionsApi {
@@ -133,7 +133,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         AllFilesFilter filesFilter = new AllFilesFilter();
         addFileType(filesFilter);
         allFilesFilter = filesFilter;
-        
+
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         frameModule.addExitListener(new ApplicationExitListener() {
             @Override
@@ -273,9 +273,9 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                         i++;
                     }
 
-                    recentFiles.add(new RecentItem(fileName, "", ((FileType) openFileChooser.getFileFilter()).getFileTypeId()));
+                    recentFiles.add(0, new RecentItem(fileName, "", ((FileType) openFileChooser.getFileFilter()).getFileTypeId()));
                     if (recentFiles.size() > 15) {
-                        recentFiles.remove(14);
+                        recentFiles.remove(15);
                     }
                     rebuildRecentFilesMenu();
                 }
@@ -409,6 +409,13 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                                 fileHandler.setFileType(fileType);
                                 fileHandler.setFileName(recentItem.getFileName());
                                 fileHandler.loadFromFile();
+
+                                if (itemIndex > 0) {
+                                    // Move recent item on top
+                                    recentFiles.remove(itemIndex);
+                                    recentFiles.add(0, recentItem);
+                                    rebuildRecentFilesMenu();
+                                }
                             }
                         }
                     }
