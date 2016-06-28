@@ -16,6 +16,7 @@
 package org.exbin.framework.deltahex.panel;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -100,6 +101,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
                     return listCellRenderer.getListCellRendererComponent(list, value.getSearchText(), index, isSelected, cellHasFocus);
                 } else {
                     hexadecimalRenderer.setData(value.getBinaryData());
+                    hexadecimalRenderer.setMinimumSize(new Dimension(200, 30));
                     return hexadecimalRenderer;
                 }
             }
@@ -158,6 +160,10 @@ public class HexSearchPanel extends javax.swing.JPanel {
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
 
         // TODO remove
+        SearchCondition binarySearchCondition = new SearchCondition();
+        binarySearchCondition.setSearchMode(SearchCondition.SearchMode.BINARY);
+        binarySearchCondition.setBinaryData(new ByteArrayEditableData(new byte[]{1, 2}));
+        searchHistory.add(binarySearchCondition);
         SearchCondition testSearchCondition = new SearchCondition();
         testSearchCondition.setSearchText("test");
         searchHistory.add(testSearchCondition);

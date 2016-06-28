@@ -16,23 +16,22 @@
 package org.exbin.framework.deltahex.panel;
 
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.event.KeyListener;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
+import org.exbin.utils.binary_data.EditableBinaryData;
 
 /**
  * Combo box panel supporting both binary and text values.
  *
- * @version 0.1.0 2016/06/27
+ * @version 0.1.0 2016/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchComboBoxPanel extends JPanel {
@@ -89,6 +88,17 @@ public class HexSearchComboBoxPanel extends JPanel {
     }
 
     public SearchCondition getItem() {
+        switch (item.getSearchMode()) {
+            case TEXT: {
+                item.setSearchText(textField.getText());
+                break;
+            }
+            case BINARY: {
+                item.setBinaryData((EditableBinaryData) hexadecimalEditor.getData());
+                break;
+            }
+        }
+
         return item;
     }
 
