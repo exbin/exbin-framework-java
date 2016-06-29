@@ -1,0 +1,6 @@
+rootProject.name = 'exbin-framework-gui-update-api'
+
+include ":modules:exbin-framework-api"
+include ":modules:exbin-framework-gui-utils"
+
+apply from: '../modules-settings.gradle'
