@@ -20,25 +20,25 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.about.api.GuiAboutModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
+import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework about module.
+ * Implementation of XBUP framework check updates module.
  *
- * @version 0.2.0 2016/02/07
+ * @version 0.2.0 2016/06/30
  * @author ExBin Project (http://exbin.org)
  */
-public class GuiUpdateModule implements GuiAboutModuleApi {
+public class GuiUpdateModule implements GuiUpdateModuleApi {
 
     private XBApplication application;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GuiUpdateModule.class);
-    private Action aboutAction;
+    private Action checkUpdateAction;
 
     public GuiUpdateModule() {
     }
@@ -53,9 +53,9 @@ public class GuiUpdateModule implements GuiAboutModuleApi {
     }
 
     @Override
-    public Action getAboutAction() {
-        if (aboutAction == null) {
-            aboutAction = new AbstractAction() {
+    public Action getCheckUpdateAction() {
+        if (checkUpdateAction == null) {
+            checkUpdateAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
@@ -64,16 +64,16 @@ public class GuiUpdateModule implements GuiAboutModuleApi {
                     aboutDialog.setVisible(true);
                 }
             };
-            ActionUtils.setupAction(aboutAction, bundle, "aboutAction");
-            aboutAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+            ActionUtils.setupAction(checkUpdateAction, bundle, "checkUpdateAction");
+            checkUpdateAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         }
 
-        return aboutAction;
+        return checkUpdateAction;
     }
 
     @Override
     public void registerDefaultMenuItem() {
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(PositionMode.BOTTOM_LAST));
+        menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
     }
 }

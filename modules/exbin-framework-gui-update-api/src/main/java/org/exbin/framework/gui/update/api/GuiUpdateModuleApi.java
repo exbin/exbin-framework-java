@@ -35,7 +35,7 @@ public interface GuiUpdateModuleApi extends XBApplicationModule {
      *
      * @return action
      */
-    public Action getUpdateAction();
+    public Action getCheckUpdateAction();
 
     public void registerDefaultMenuItem();
 }

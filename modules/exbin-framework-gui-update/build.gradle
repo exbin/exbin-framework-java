@@ -20,7 +20,7 @@ dependencies {
     compile "org.exbin.xbup:xbup-core:${xbupVersion}"
     compile(project(':modules:exbin-framework-api'))
     compile(project(':modules:exbin-framework-gui-menu-api'))
-    compile(project(':modules:exbin-framework-gui-about-api'))
+    compile(project(':modules:exbin-framework-gui-update-api'))
     compile(project(':modules:exbin-framework-gui-frame-api'))
     compile(project(':modules:exbin-framework-gui-utils'))
 
