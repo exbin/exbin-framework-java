@@ -23,21 +23,21 @@ import java.util.ResourceBundle;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Check updates dialog.
  *
- * @version 0.2.0 2016/06/29
+ * @version 0.2.0 2016/07/03
  * @author ExBin Project (http://exbin.org)
  */
 public class CheckUpdatesDialog extends javax.swing.JDialog implements HyperlinkListener {
 
-    private static final String BUNDLE_PACKAGE = "org/exbin/framework/gui/update/resources/";
     private final XBApplication appEditor;
     private ResourceBundle appBundle;
-    private final ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_PACKAGE + "AboutDialog");
+    private final ResourceBundle bundle = ActionUtils.getResourceBundleByClass(CheckUpdatesDialog.class);
     private String updateWebsite;
 
     public CheckUpdatesDialog(java.awt.Frame parent, boolean modal, XBApplication appEditor) {
