@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Check updates dialog.
  *
- * @version 0.2.0 2016/07/03
+ * @version 0.2.0 2016/07/04
  * @author ExBin Project (http://exbin.org)
  */
 public class CheckUpdatesDialog extends javax.swing.JDialog implements HyperlinkListener {
@@ -57,7 +57,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         initComponents();
 
         WindowUtils.initWindow(this);
-//        WindowUtils.assignGlobalKeyListener(this, closeButton);
+        WindowUtils.assignGlobalKeyListener(this, closeButton);
     }
 
     /**
@@ -83,6 +83,9 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
         linkPopupMenu = new javax.swing.JPopupMenu();
         copyLinkMenuItem = new javax.swing.JMenuItem();
+        mainPanel = new javax.swing.JPanel();
+        controlPanel = new javax.swing.JPanel();
+        closeButton = new javax.swing.JButton();
 
         linkPopupMenu.setName("linkPopupMenu"); // NOI18N
 
@@ -96,20 +99,52 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         });
         linkPopupMenu.add(copyLinkMenuItem);
 
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/about/resources/AboutDialog"); // NOI18N
-        setTitle(bundle1.getString("aboutBox.title")); // NOI18N
+        setTitle(bundle.getString("checkUpdaBox.title")); // NOI18N
         setLocationByPlatform(true);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 664, Short.MAX_VALUE)
+        mainPanel.setName("mainPanel"); // NOI18N
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 537, Short.MAX_VALUE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 502, Short.MAX_VALUE)
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 369, Short.MAX_VALUE)
         );
+
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
+
+        controlPanel.setName("controlPanel"); // NOI18N
+
+        closeButton.setText(bundle.getString("closeButton.text")); // NOI18N
+        closeButton.setName("closeButton"); // NOI18N
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
+        controlPanel.setLayout(controlPanelLayout);
+        controlPanelLayout.setHorizontalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
+                .addContainerGap(462, Short.MAX_VALUE)
+                .addComponent(closeButton)
+                .addContainerGap())
+        );
+        controlPanelLayout.setVerticalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(closeButton)
+                .addContainerGap())
+        );
+
+        getContentPane().add(controlPanel, java.awt.BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -119,6 +154,10 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         clipboard.setContents(new StringSelection(updateWebsite), null);
     }//GEN-LAST:event_copyLinkMenuItemActionPerformed
 
+    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+        WindowUtils.closeWindow(this);
+    }//GEN-LAST:event_closeButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -127,8 +166,11 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton closeButton;
+    private javax.swing.JPanel controlPanel;
     private javax.swing.JMenuItem copyLinkMenuItem;
     private javax.swing.JPopupMenu linkPopupMenu;
+    private javax.swing.JPanel mainPanel;
     // End of variables declaration//GEN-END:variables
 
     public ResourceBundle getProjectResourceBundle() {
