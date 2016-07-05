@@ -125,7 +125,9 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         codeArea.addDataChangedListener(new CodeArea.DataChangedListener() {
             @Override
             public void dataChanged() {
-                findTextPanel.dataChanged();
+                if (findTextPanel.isVisible()) {
+                    findTextPanel.dataChanged();
+                }
             }
         });
         // TODO use listener in code area component instead
