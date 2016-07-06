@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Check updates dialog.
  *
- * @version 0.2.0 2016/07/04
+ * @version 0.2.0 2016/07/06
  * @author ExBin Project (http://exbin.org)
  */
 public class CheckUpdatesDialog extends javax.swing.JDialog implements HyperlinkListener {
@@ -57,6 +57,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         initComponents();
 
         WindowUtils.initWindow(this);
+        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, closeButton);
     }
 
@@ -84,6 +85,13 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         linkPopupMenu = new javax.swing.JPopupMenu();
         copyLinkMenuItem = new javax.swing.JMenuItem();
         mainPanel = new javax.swing.JPanel();
+        statusPanel = new javax.swing.JPanel();
+        statusIconLabel = new javax.swing.JLabel();
+        statusTextLabel = new javax.swing.JLabel();
+        currentVersionLabel = new javax.swing.JLabel();
+        currentVersionTextField = new javax.swing.JTextField();
+        availableVersionLabel = new javax.swing.JLabel();
+        availableVersionTextField = new javax.swing.JTextField();
         controlPanel = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
 
@@ -104,15 +112,81 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
         mainPanel.setName("mainPanel"); // NOI18N
 
+        statusPanel.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.selectionBackground"));
+        statusPanel.setMaximumSize(new java.awt.Dimension(32767, 60));
+        statusPanel.setMinimumSize(new java.awt.Dimension(100, 60));
+        statusPanel.setName("statusPanel"); // NOI18N
+
+        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-ok-5.png"))); // NOI18N
+        statusIconLabel.setName("statusIconLabel"); // NOI18N
+        statusIconLabel.setPreferredSize(new java.awt.Dimension(48, 48));
+
+        statusTextLabel.setText("Checking for available updates...");
+        statusTextLabel.setName("statusTextLabel"); // NOI18N
+
+        javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
+        statusPanel.setLayout(statusPanelLayout);
+        statusPanelLayout.setHorizontalGroup(
+            statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(statusIconLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statusTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        statusPanelLayout.setVerticalGroup(
+            statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(statusTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(statusIconLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        currentVersionLabel.setText(bundle.getString("currentVersionLabel.text")); // NOI18N
+        currentVersionLabel.setName("currentVersionLabel"); // NOI18N
+
+        currentVersionTextField.setText("unknown");
+        currentVersionTextField.setName("currentVersionTextField"); // NOI18N
+
+        availableVersionLabel.setText(bundle.getString("availableVersionLabel.text")); // NOI18N
+        availableVersionLabel.setName("availableVersionLabel"); // NOI18N
+
+        availableVersionTextField.setText("unknown");
+        availableVersionTextField.setName("availableVersionTextField"); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 537, Short.MAX_VALUE)
+            .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(currentVersionTextField)
+                    .addComponent(availableVersionTextField)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(currentVersionLabel)
+                            .addComponent(availableVersionLabel))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 369, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addComponent(statusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(currentVersionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(currentVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(availableVersionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(availableVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(181, Short.MAX_VALUE))
         );
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
@@ -132,7 +206,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(462, Short.MAX_VALUE)
+                .addContainerGap(743, Short.MAX_VALUE)
                 .addComponent(closeButton)
                 .addContainerGap())
         );
@@ -166,11 +240,18 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel availableVersionLabel;
+    private javax.swing.JTextField availableVersionTextField;
     private javax.swing.JButton closeButton;
     private javax.swing.JPanel controlPanel;
     private javax.swing.JMenuItem copyLinkMenuItem;
+    private javax.swing.JLabel currentVersionLabel;
+    private javax.swing.JTextField currentVersionTextField;
     private javax.swing.JPopupMenu linkPopupMenu;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JLabel statusIconLabel;
+    private javax.swing.JPanel statusPanel;
+    private javax.swing.JLabel statusTextLabel;
     // End of variables declaration//GEN-END:variables
 
     public ResourceBundle getProjectResourceBundle() {
