@@ -112,14 +112,13 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        statusPanel.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.selectionBackground"));
+        statusPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         statusPanel.setMaximumSize(new java.awt.Dimension(32767, 60));
         statusPanel.setMinimumSize(new java.awt.Dimension(100, 60));
         statusPanel.setName("statusPanel"); // NOI18N
 
-        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-ok-5.png"))); // NOI18N
+        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/apps/internet-web-browser-7.png"))); // NOI18N
         statusIconLabel.setName("statusIconLabel"); // NOI18N
-        statusIconLabel.setPreferredSize(new java.awt.Dimension(48, 48));
 
         statusTextLabel.setText("Checking for available updates...");
         statusTextLabel.setName("statusTextLabel"); // NOI18N
@@ -130,30 +129,32 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(statusIconLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(statusIconLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+                .addComponent(statusTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         statusPanelLayout.setVerticalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(statusTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(statusIconLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(statusIconLabel)
+                    .addComponent(statusTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         currentVersionLabel.setText(bundle.getString("currentVersionLabel.text")); // NOI18N
         currentVersionLabel.setName("currentVersionLabel"); // NOI18N
 
+        currentVersionTextField.setEditable(false);
         currentVersionTextField.setText("unknown");
         currentVersionTextField.setName("currentVersionTextField"); // NOI18N
 
         availableVersionLabel.setText(bundle.getString("availableVersionLabel.text")); // NOI18N
         availableVersionLabel.setName("availableVersionLabel"); // NOI18N
 
+        availableVersionTextField.setEditable(false);
         availableVersionTextField.setText("unknown");
         availableVersionTextField.setName("availableVersionTextField"); // NOI18N
 
@@ -161,22 +162,23 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(mainPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(currentVersionTextField)
-                    .addComponent(availableVersionTextField)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(currentVersionTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(availableVersionTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(currentVersionLabel)
                             .addComponent(availableVersionLabel))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 235, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(statusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(currentVersionLabel)
@@ -186,7 +188,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                 .addComponent(availableVersionLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(availableVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(181, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
@@ -206,7 +208,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(743, Short.MAX_VALUE)
+                .addContainerGap(377, Short.MAX_VALUE)
                 .addComponent(closeButton)
                 .addContainerGap())
         );
