@@ -30,22 +30,23 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Check updates dialog.
  *
- * @version 0.2.0 2016/07/06
+ * @version 0.2.0 2016/07/08
  * @author ExBin Project (http://exbin.org)
  */
 public class CheckUpdatesDialog extends javax.swing.JDialog implements HyperlinkListener {
 
-    private final XBApplication appEditor;
+    private final XBApplication application;
     private ResourceBundle appBundle;
     private final ResourceBundle bundle = ActionUtils.getResourceBundleByClass(CheckUpdatesDialog.class);
     private String updateWebsite;
+    private VersionNumbers versionNumbers;
 
-    public CheckUpdatesDialog(java.awt.Frame parent, boolean modal, XBApplication appEditor) {
+    public CheckUpdatesDialog(java.awt.Frame parent, boolean modal, XBApplication application) {
         super(parent, modal);
 
-        this.appEditor = appEditor;
-        if (appEditor != null) {
-            appBundle = appEditor.getAppBundle();
+        this.application = application;
+        if (application != null) {
+            appBundle = application.getAppBundle();
         } else {
             appBundle = bundle;
         }
@@ -92,6 +93,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         currentVersionTextField = new javax.swing.JTextField();
         availableVersionLabel = new javax.swing.JLabel();
         availableVersionTextField = new javax.swing.JTextField();
+        recheckButton = new javax.swing.JButton();
         controlPanel = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
 
@@ -131,7 +133,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                 .addContainerGap()
                 .addComponent(statusIconLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(statusTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
                 .addContainerGap())
         );
         statusPanelLayout.setVerticalGroup(
@@ -158,21 +160,25 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         availableVersionTextField.setText("unknown");
         availableVersionTextField.setName("availableVersionTextField"); // NOI18N
 
+        recheckButton.setText("Recheck");
+        recheckButton.setName("recheckButton"); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+            .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(currentVersionTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(availableVersionTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(statusPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(currentVersionTextField)
+                    .addComponent(availableVersionTextField)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(currentVersionLabel)
-                            .addComponent(availableVersionLabel))
-                        .addGap(0, 235, Short.MAX_VALUE)))
+                            .addComponent(availableVersionLabel)
+                            .addComponent(recheckButton))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -188,6 +194,8 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                 .addComponent(availableVersionLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(availableVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(recheckButton)
                 .addContainerGap(93, Short.MAX_VALUE))
         );
 
@@ -251,6 +259,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
     private javax.swing.JTextField currentVersionTextField;
     private javax.swing.JPopupMenu linkPopupMenu;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JButton recheckButton;
     private javax.swing.JLabel statusIconLabel;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JLabel statusTextLabel;
@@ -262,5 +271,10 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
     public void setProjectResourceBundle(ResourceBundle projectResourceBundle) {
         this.appBundle = projectResourceBundle;
+    }
+
+    public void setVersionNumbers(VersionNumbers versionNumbers) {
+        this.versionNumbers = versionNumbers;
+        currentVersionTextField.setText(versionNumbers.versionAsString());
     }
 }

@@ -17,6 +17,8 @@
 package org.exbin.framework.gui.update;
 
 import java.awt.event.ActionEvent;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
@@ -31,7 +33,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of XBUP framework check updates module.
  *
- * @version 0.2.0 2016/06/30
+ * @version 0.2.0 2016/07/08
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiUpdateModule implements GuiUpdateModuleApi {
@@ -39,6 +41,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     private XBApplication application;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GuiUpdateModule.class);
     private Action checkUpdateAction;
+    private URL updateUrl;
 
     public GuiUpdateModule() {
     }
@@ -59,9 +62,10 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    CheckUpdatesDialog aboutDialog = new CheckUpdatesDialog(frameModule.getFrame(), true, application);
-                    aboutDialog.setProjectResourceBundle(application.getAppBundle());
-                    aboutDialog.setVisible(true);
+                    CheckUpdatesDialog checkUpdatesDialog = new CheckUpdatesDialog(frameModule.getFrame(), true, application);
+                    checkUpdatesDialog.setProjectResourceBundle(application.getAppBundle());
+                    checkUpdatesDialog.setVersionNumbers(getVersionNumbers());
+                    checkUpdatesDialog.setVisible(true);
                 }
             };
             ActionUtils.setupAction(checkUpdateAction, bundle, "checkUpdateAction");
@@ -75,5 +79,18 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     public void registerDefaultMenuItem() {
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
+    }
+
+    public VersionNumbers getVersionNumbers() {
+        ResourceBundle appBundle = application.getAppBundle();
+        String releaseString = appBundle.getString("Application.release");
+        VersionNumbers versionNumbers = new VersionNumbers();
+        versionNumbers.versionFromString(releaseString);
+        return versionNumbers;
+    }
+
+    @Override
+    public void setUpdateUrl(URL updateUrl) {
+        this.updateUrl = updateUrl;
     }
 }
