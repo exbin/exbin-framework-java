@@ -16,50 +16,36 @@
  */
 package org.exbin.framework.gui.frame;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.swing.JPanel;
 
 /**
  * Status bar handler.
  *
- * @version 0.2.0 2016/01/12
+ * @version 0.2.0 2016/07/10
  * @author ExBin Project (http://exbin.org)
  */
 public class StatusBarHandler {
 
     private final XBApplicationFrame frame;
 
-    private final List<StatusBarRecord> statusBar = new ArrayList<>();
+    private final Map<String, JPanel> statusBars = new HashMap<>();
 
     // Map of status bar to module connections
-    private Map<String, StatusBarRecord> statusBarModules = new HashMap<>();
+    private final Map<String, String> statusBarModules = new HashMap<>();
 
     public StatusBarHandler(XBApplicationFrame frame) {
         this.frame = frame;
     }
 
     public void registerStatusBar(String moduleId, String statusBarId, JPanel panel) {
-        StatusBarRecord record = new StatusBarRecord(statusBarId, panel);
-        statusBar.add(record);
-        statusBarModules.put(moduleId, record);
-        frame.addStatusBar(panel, statusBarId);
+        statusBars.put(statusBarId, panel);
+        statusBarModules.put(moduleId, statusBarId);
     }
 
     public void switchStatusBar(String statusBarId) {
-        frame.switchStatusBar(statusBarId);
-    }
-
-    private class StatusBarRecord {
-
-        String statusBarId;
-        JPanel panel;
-
-        public StatusBarRecord(String statusBarId, JPanel panel) {
-            this.statusBarId = statusBarId;
-            this.panel = panel;
-        }
+        JPanel panel = statusBars.get(statusBarId);
+        frame.switchStatusBar(panel);
     }
 }

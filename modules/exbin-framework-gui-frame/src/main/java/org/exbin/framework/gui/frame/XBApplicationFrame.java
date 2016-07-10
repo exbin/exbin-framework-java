@@ -37,13 +37,14 @@ import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 /**
  * Basic appplication frame.
  *
- * @version 0.2.0 2016/03/25
+ * @version 0.2.0 2016/07/10
  * @author ExBin Project (http://exbin.org)
  */
 public class XBApplicationFrame extends javax.swing.JFrame implements ApplicationFrameHandler {
 
     private XBApplication application;
     private ApplicationExitHandler exitHandler;
+    private JPanel currentStatusBarPanel = null;
 
     public XBApplicationFrame() {
         initComponents();
@@ -67,11 +68,6 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        toolBar = new javax.swing.JToolBar();
-        statusBar = new javax.swing.JPanel();
-        javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
-        statusPanel = new javax.swing.JPanel();
-        emptyStatusPanel = new javax.swing.JPanel();
         mainStatusPanel = new javax.swing.JPanel();
         statusLabel = new javax.swing.JLabel();
         progressStatusPanel = new javax.swing.JPanel();
@@ -79,47 +75,14 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         stopProgressButton = new javax.swing.JButton();
         busyStatusPanel = new javax.swing.JPanel();
         busyProgressBar = new javax.swing.JProgressBar();
+        toolBar = new javax.swing.JToolBar();
+        statusBar = new javax.swing.JPanel();
+        javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
+        statusPanel = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
-        });
-
-        toolBar.setFloatable(false);
-        toolBar.setRollover(true);
-        toolBar.setFocusable(false);
-        getContentPane().add(toolBar, java.awt.BorderLayout.NORTH);
-
-        statusBar.setLayout(new java.awt.BorderLayout());
-        statusBar.add(statusPanelSeparator, java.awt.BorderLayout.NORTH);
-
-        statusPanel.setPreferredSize(new java.awt.Dimension(649, 26));
-        statusPanel.setRequestFocusEnabled(false);
-        statusPanel.setLayout(new java.awt.CardLayout());
-
-        javax.swing.GroupLayout emptyStatusPanelLayout = new javax.swing.GroupLayout(emptyStatusPanel);
-        emptyStatusPanel.setLayout(emptyStatusPanelLayout);
-        emptyStatusPanelLayout.setHorizontalGroup(
-            emptyStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        emptyStatusPanelLayout.setVerticalGroup(
-            emptyStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 26, Short.MAX_VALUE)
-        );
-
-        statusPanel.add(emptyStatusPanel, "default");
 
         mainStatusPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
         mainStatusPanel.add(statusLabel);
-
-        statusPanel.add(mainStatusPanel, "main");
 
         statusProgressBar.setIndeterminate(true);
         statusProgressBar.setMinimumSize(new java.awt.Dimension(10, 10));
@@ -146,8 +109,6 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
             .addComponent(statusProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        statusPanel.add(progressStatusPanel, "progress");
-
         busyStatusPanel.setLayout(new java.awt.BorderLayout());
 
         busyProgressBar.setIndeterminate(true);
@@ -155,8 +116,27 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         busyProgressBar.setStringPainted(true);
         busyStatusPanel.add(busyProgressBar, java.awt.BorderLayout.CENTER);
 
-        statusPanel.add(busyStatusPanel, "busy");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
+        toolBar.setFloatable(false);
+        toolBar.setRollover(true);
+        toolBar.setFocusable(false);
+        getContentPane().add(toolBar, java.awt.BorderLayout.NORTH);
+
+        statusBar.setLayout(new java.awt.BorderLayout());
+        statusBar.add(statusPanelSeparator, java.awt.BorderLayout.NORTH);
+
+        statusPanel.setPreferredSize(new java.awt.Dimension(649, 26));
+        statusPanel.setRequestFocusEnabled(false);
+        statusPanel.setLayout(new java.awt.BorderLayout());
         statusBar.add(statusPanel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
@@ -182,7 +162,6 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar busyProgressBar;
     private javax.swing.JPanel busyStatusPanel;
-    private javax.swing.JPanel emptyStatusPanel;
     private javax.swing.JPanel mainStatusPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JPanel progressStatusPanel;
@@ -263,13 +242,17 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         menuModule.buildToolBar(toolBar, GuiFrameModule.MAIN_TOOL_BAR_ID);
     }
 
-    public void addStatusBar(JPanel panel, String statusBarId) {
-        statusPanel.add(panel, statusBarId);
-    }
+    public void switchStatusBar(JPanel panel) {
+        if (currentStatusBarPanel != null) {
+            statusPanel.remove(currentStatusBarPanel);
+        }
 
-    public void switchStatusBar(String statusBarId) {
-        CardLayout layout = (CardLayout) statusPanel.getLayout();
-        layout.show(statusPanel, statusBarId);
+        if (panel != null) {
+            statusPanel.add(panel);
+        }
+        statusPanel.invalidate();
+
+        currentStatusBarPanel = panel;
     }
 
     @Override
