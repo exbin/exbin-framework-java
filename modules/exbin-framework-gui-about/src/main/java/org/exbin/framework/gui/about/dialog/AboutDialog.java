@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.about;
+package org.exbin.framework.gui.about.dialog;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -42,7 +42,7 @@ import org.exbin.xbup.plugin.XBModuleRecord;
 /**
  * Basic about dialog.
  *
- * @version 0.2.0 2016/07/03
+ * @version 0.2.0 2016/07/13
  * @author ExBin Project (http://exbin.org)
  */
 public class AboutDialog extends javax.swing.JDialog implements HyperlinkListener {
@@ -206,7 +206,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
 
         linkPopupMenu.setName("linkPopupMenu"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/about/resources/AboutDialog"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/about/dialog/resources/AboutDialog"); // NOI18N
         copyLinkMenuItem.setText(bundle.getString("copyLinkMenuItem.text")); // NOI18N
         copyLinkMenuItem.setName("copyLinkMenuItem"); // NOI18N
         copyLinkMenuItem.addActionListener(new java.awt.event.ActionListener() {

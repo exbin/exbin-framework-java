@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.update;
+package org.exbin.framework.gui.update.dialog;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.update.VersionNumbers;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -30,7 +31,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Check updates dialog.
  *
- * @version 0.2.0 2016/07/08
+ * @version 0.2.0 2016/07/10
  * @author ExBin Project (http://exbin.org)
  */
 public class CheckUpdatesDialog extends javax.swing.JDialog implements HyperlinkListener {
@@ -40,6 +41,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
     private final ResourceBundle bundle = ActionUtils.getResourceBundleByClass(CheckUpdatesDialog.class);
     private String updateWebsite;
     private VersionNumbers versionNumbers;
+    private CheckUpdatesHandler checkUpdatesHandler = null;
 
     public CheckUpdatesDialog(java.awt.Frame parent, boolean modal, XBApplication application) {
         super(parent, modal);
@@ -276,5 +278,68 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
     public void setVersionNumbers(VersionNumbers versionNumbers) {
         this.versionNumbers = versionNumbers;
         currentVersionTextField.setText(versionNumbers.versionAsString());
+    }
+
+    public void setCheckUpdatesHandler(CheckUpdatesHandler checkUpdatesHandler) {
+        this.checkUpdatesHandler = checkUpdatesHandler;
+        if (checkUpdatesHandler != null) {
+            CheckUpdatesResult result = checkUpdatesHandler.checkForUpdates();
+            setCheckUpdatesResult(result);
+        }
+    }
+
+    private void setCheckUpdatesResult(CheckUpdatesResult result) {
+        if (result == null) {
+
+            return;
+        }
+        switch (result) {
+            case NO_CONNECTION: {
+                break;
+            }
+            case CONNECTION_ISSUE: {
+                break;
+            }
+            case NOT_FOUND: {
+                break;
+            }
+            case NO_UPDATE: {
+                break;
+            }
+            case UPDATE_FOUND: {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Handler for updates checking.
+     */
+    public static interface CheckUpdatesHandler {
+
+        /**
+         * Performs check for updates.
+         *
+         * @return check for updates result
+         */
+        CheckUpdatesResult checkForUpdates();
+
+        /**
+         * Returns version of update if available.
+         *
+         * @return version of update
+         */
+        VersionNumbers getUpdateVersion();
+    }
+
+    /**
+     * Enumeration of result types.
+     */
+    public static enum CheckUpdatesResult {
+        NO_CONNECTION,
+        CONNECTION_ISSUE,
+        NOT_FOUND,
+        NO_UPDATE,
+        UPDATE_FOUND
     }
 }

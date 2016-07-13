@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.about;
 
+import org.exbin.framework.gui.about.dialog.AboutDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;

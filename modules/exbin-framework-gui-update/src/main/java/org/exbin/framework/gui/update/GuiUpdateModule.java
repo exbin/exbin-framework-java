@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.update;
 
+import org.exbin.framework.gui.update.dialog.CheckUpdatesDialog;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
