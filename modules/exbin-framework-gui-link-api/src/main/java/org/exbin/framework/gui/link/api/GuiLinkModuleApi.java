@@ -14,31 +14,39 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.help.api;
+package org.exbin.framework.gui.link.api;
 
+import java.net.URL;
 import javax.swing.Action;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
 
 /**
- * Interface for XBUP framework help module.
+ * Interface for XBUP framework link support module.
  *
  * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
-public interface GuiHelpModuleApi extends XBApplicationModule {
+public interface GuiLinkModuleApi extends XBApplicationModule {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiHelpModuleApi.class);
+    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiLinkModuleApi.class);
 
     /**
-     * Registers help action to main frame menu.
+     * Registers online help action to main frame menu.
      */
-    void registerMainMenu();
+    void registerOnlineHelpMenu();
 
     /**
-     * Returns help action.
+     * Returns online help action.
      *
-     * @return help action
+     * @return online help action
      */
-    Action getHelpAction();
+    Action getOnlineHelpAction();
+
+    /**
+     * Sets online help URL.
+     *
+     * @param onlineHelpUrl url
+     */
+    void setOnlineHelpUrl(URL onlineHelpUrl);
 }

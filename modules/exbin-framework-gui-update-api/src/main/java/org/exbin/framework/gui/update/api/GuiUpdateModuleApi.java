@@ -24,7 +24,7 @@ import org.exbin.framework.api.XBApplicationModule;
 /**
  * Interface of the XBUP framework update checking module.
  *
- * @version 0.2.0 2016/07/08
+ * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public interface GuiUpdateModuleApi extends XBApplicationModule {
@@ -38,6 +38,9 @@ public interface GuiUpdateModuleApi extends XBApplicationModule {
      */
     public Action getCheckUpdateAction();
 
+    /**
+     * Registers default menu item.
+     */
     public void registerDefaultMenuItem();
     
     /**
@@ -46,4 +49,11 @@ public interface GuiUpdateModuleApi extends XBApplicationModule {
      * @param updateUrl update URL
      */
     public void setUpdateUrl(URL updateUrl);
+
+    /**
+     * Sets URL of download website for updated application.
+     * 
+     * @param downloadUrl download URL
+     */
+    public void setUpdateDownloadUrl(URL downloadUrl);
 }

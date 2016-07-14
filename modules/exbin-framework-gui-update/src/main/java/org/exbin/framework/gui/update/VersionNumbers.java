@@ -19,7 +19,7 @@ package org.exbin.framework.gui.update;
 /**
  * Simple structure for application version.
  *
- * @version 0.2.0 2016/07/08
+ * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class VersionNumbers {
@@ -50,6 +50,10 @@ public class VersionNumbers {
     }
 
     public String versionAsString() {
+        if (format == null) {
+            return null;
+        }
+
         switch (format) {
             case MAJOR_MINOR_PATCH: {
                 return major + "." + minor + "." + patch;
@@ -92,6 +96,71 @@ public class VersionNumbers {
 
     public void setPatch(int patch) {
         this.patch = patch;
+    }
+
+    public boolean isGreaterThan(VersionNumbers updateVersion) {
+        if (major > updateVersion.major) {
+            return true;
+        }
+        if (major == updateVersion.major && minor > updateVersion.minor) {
+            return true;
+        }
+        if (minor == updateVersion.minor) {
+            switch (format) {
+                case MAJOR_MINOR_PATCH: {
+                    switch (updateVersion.format) {
+                        case MAJOR_MINOR_PATCH: {
+                            if (patch > updateVersion.patch) {
+                                return true;
+                            }
+                            break;
+                        }
+
+                        case MAJOR_MINOR_RELEASE_PATCH: {
+                            if (updateVersion.release == 0 && patch > updateVersion.patch) {
+                                return true;
+                            }
+                            break;
+                        }
+                        default:
+                            throw new IllegalStateException("Unpexpected format type " + updateVersion.format.name());
+                    }
+
+                    break;
+                }
+                case MAJOR_MINOR_RELEASE_PATCH: {
+                    switch (updateVersion.format) {
+                        case MAJOR_MINOR_PATCH: {
+                            if (release > 0) {
+                                return true;
+                            }
+                            if (release == 0 && patch > updateVersion.patch) {
+                                return true;
+                            }
+                            break;
+                        }
+
+                        case MAJOR_MINOR_RELEASE_PATCH: {
+                            if (release > updateVersion.release) {
+                                return true;
+                            }
+                            if (release == updateVersion.release && patch > updateVersion.patch) {
+                                return true;
+                            }
+                            break;
+                        }
+                        default:
+                            throw new IllegalStateException("Unpexpected format type " + updateVersion.format.name());
+                    }
+
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Unpexpected format type " + format.name());
+            }
+        }
+
+        return false;
     }
 
     public static enum VersionNumbersFormat {

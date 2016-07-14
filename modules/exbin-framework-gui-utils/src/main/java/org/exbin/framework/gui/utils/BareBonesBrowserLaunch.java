@@ -8,10 +8,15 @@
 //     BareBonesBrowserLaunch.openURL(url);            //
 //  Public Domain Software -- Free to Use as You Like  //
 /////////////////////////////////////////////////////////
-
 package org.exbin.framework.gui.utils;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class BareBonesBrowserLaunch {
@@ -19,7 +24,7 @@ public class BareBonesBrowserLaunch {
     private BareBonesBrowserLaunch() {
     }
 
-    private static final String errMsg = "Error attempting to launch web browser";
+    private static final String ERROR_MESSAGE = "Error attempting to launch web browser";
 
     @SuppressWarnings("unchecked")
     public static void openURL(String url) {
@@ -46,7 +51,51 @@ public class BareBonesBrowserLaunch {
                 }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, errMsg + ":\n" + e.getLocalizedMessage());
+            JOptionPane.showMessageDialog(null, ERROR_MESSAGE + ":\n" + e.getLocalizedMessage());
+        }
+    }
+
+    public static void openDesktopURL(String url) {
+        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+
+        if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
+            try {
+                java.net.URI uri = new java.net.URI(url);
+                desktop.browse(uri);
+            } catch (IOException | URISyntaxException ex) {
+                Logger.getLogger(BareBonesBrowserLaunch.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            BareBonesBrowserLaunch.openURL(url);
+        }
+    }
+
+    public static void openDesktopURL(URI uri) {
+        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+
+        if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(uri);
+            } catch (IOException ex) {
+                Logger.getLogger(BareBonesBrowserLaunch.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            BareBonesBrowserLaunch.openURL(uri.toString());
+        }
+    }
+
+    public static void openDesktopURL(URL url) {
+        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+
+        if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
+            try {
+                java.net.URI uri = url.toURI();
+                desktop.browse(uri);
+            } catch (IOException | URISyntaxException ex) {
+                Logger.getLogger(BareBonesBrowserLaunch.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            BareBonesBrowserLaunch.openURL(url.toString());
         }
     }
 }

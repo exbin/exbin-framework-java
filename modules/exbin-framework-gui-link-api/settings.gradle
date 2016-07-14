@@ -1,4 +1,4 @@
-rootProject.name = 'exbin-framework-gui-help-api'
+rootProject.name = 'exbin-framework-gui-link-api'
 
 include ":modules:exbin-framework"
 include ":modules:exbin-framework-gui-menu-api"

@@ -1,6 +1,6 @@
 group = 'org.exbin.framework'
-ext.libraryName = 'ExBin Framework Help Support Library'
-ext.libraryDescription = 'Library for help support in ExBin Framework'
+ext.libraryName = 'ExBin Framework Link Support Library'
+ext.libraryDescription = 'Library for link support in ExBin Framework'
 
 apply from: '../modules.gradle'
 

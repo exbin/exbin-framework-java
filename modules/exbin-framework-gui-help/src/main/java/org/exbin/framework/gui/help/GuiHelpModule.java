@@ -37,13 +37,12 @@ import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework help module.
  *
- * @version 0.2.0 2016/02/07
+ * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiHelpModule implements GuiHelpModuleApi {
@@ -53,10 +52,8 @@ public class GuiHelpModule implements GuiHelpModuleApi {
     private HelpSet helpSet;
     private HelpBroker helpBroker;
     private ActionListener helpActionLisneter;
-    private URL helpUrl;
 
     private Action helpAction;
-    private Action onlineHelpAction;
 
     public GuiHelpModule() {
     }
@@ -103,31 +100,9 @@ public class GuiHelpModule implements GuiHelpModuleApi {
     }
 
     @Override
-    public Action getOnlineHelpAction() {
-        if (onlineHelpAction == null) {
-            onlineHelpAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    BareBonesBrowserLaunch.openURL(helpUrl.toExternalForm());
-                }
-            };
-            ActionUtils.setupAction(onlineHelpAction, bundle, "onlineHelpAction");
-            onlineHelpAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-        }
-
-        return onlineHelpAction;
-    }
-
-    @Override
     public void registerMainMenu() {
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getHelpAction(), new MenuPosition(PositionMode.TOP));
-    }
-
-    @Override
-    public void registerOnlineHelpMenu() {
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getOnlineHelpAction(), new MenuPosition(PositionMode.TOP));
     }
 
     /**
@@ -151,10 +126,5 @@ public class GuiHelpModule implements GuiHelpModuleApi {
             System.out.println("HelpSet: " + helpsetfile + " not found");
         }
         return hs;
-    }
-
-    @Override
-    public void setHelpUrl(URL helpUrl) {
-        this.helpUrl = helpUrl;
     }
 }

@@ -18,6 +18,11 @@ package org.exbin.framework.gui.update;
 
 import org.exbin.framework.gui.update.dialog.CheckUpdatesDialog;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -34,7 +39,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of XBUP framework check updates module.
  *
- * @version 0.2.0 2016/07/08
+ * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiUpdateModule implements GuiUpdateModuleApi {
@@ -42,7 +47,9 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     private XBApplication application;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GuiUpdateModule.class);
     private Action checkUpdateAction;
-    private URL updateUrl;
+    private URL checkUpdateUrl;
+    private VersionNumbers updateVersion;
+    private URL downloadUrl;
 
     public GuiUpdateModule() {
     }
@@ -66,6 +73,18 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                     CheckUpdatesDialog checkUpdatesDialog = new CheckUpdatesDialog(frameModule.getFrame(), true, application);
                     checkUpdatesDialog.setProjectResourceBundle(application.getAppBundle());
                     checkUpdatesDialog.setVersionNumbers(getVersionNumbers());
+                    checkUpdatesDialog.setUpdateDownloadUrl(downloadUrl);
+                    checkUpdatesDialog.setCheckUpdatesHandler(new CheckUpdatesDialog.CheckUpdatesHandler() {
+                        @Override
+                        public CheckUpdatesResult checkForUpdates() {
+                            return GuiUpdateModule.this.checkForUpdates();
+                        }
+
+                        @Override
+                        public VersionNumbers getUpdateVersion() {
+                            return GuiUpdateModule.this.getUpdateVersion();
+                        }
+                    });
                     checkUpdatesDialog.setVisible(true);
                 }
             };
@@ -92,6 +111,59 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
 
     @Override
     public void setUpdateUrl(URL updateUrl) {
-        this.updateUrl = updateUrl;
+        this.checkUpdateUrl = updateUrl;
+    }
+
+    public CheckUpdatesResult checkForUpdates() {
+        if (checkUpdateUrl == null) {
+            return CheckUpdatesResult.UPDATE_URL_NOT_SET;
+        }
+        
+        try {
+            InputStream checkUpdateStream = checkUpdateUrl.openStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(checkUpdateStream));
+            String line = reader.readLine();
+            if (line == null) {
+                return CheckUpdatesResult.NOT_FOUND;
+            }
+            updateVersion = new VersionNumbers();
+            updateVersion.versionFromString(line);
+            reader.close();
+            checkUpdateStream.close();
+            
+            // Compare versions
+            if (updateVersion.isGreaterThan(getVersionNumbers())) {
+                return CheckUpdatesResult.UPDATE_FOUND;
+            }
+            
+            return CheckUpdatesResult.NO_UPDATE_AVAILABLE;
+        } catch (FileNotFoundException ex) {
+            return CheckUpdatesResult.NOT_FOUND;
+        } catch (IOException ex) {
+            return CheckUpdatesResult.CONNECTION_ISSUE;
+        } catch (Exception ex) {
+            return CheckUpdatesResult.CONNECTION_ISSUE;
+        }
+    }
+
+    public VersionNumbers getUpdateVersion() {
+        return updateVersion;
+    }
+
+    @Override
+    public void setUpdateDownloadUrl(URL downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
+    /**
+     * Enumeration of result types.
+     */
+    public static enum CheckUpdatesResult {
+        UPDATE_URL_NOT_SET,
+        NO_CONNECTION,
+        CONNECTION_ISSUE,
+        NOT_FOUND,
+        NO_UPDATE_AVAILABLE,
+        UPDATE_FOUND
     }
 }

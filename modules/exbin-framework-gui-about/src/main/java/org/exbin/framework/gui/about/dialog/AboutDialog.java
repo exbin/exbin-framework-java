@@ -42,7 +42,7 @@ import org.exbin.xbup.plugin.XBModuleRecord;
 /**
  * Basic about dialog.
  *
- * @version 0.2.0 2016/07/13
+ * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class AboutDialog extends javax.swing.JDialog implements HyperlinkListener {
@@ -179,13 +179,15 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         productTabbedPane = new javax.swing.JTabbedPane();
         applicationPanel = new javax.swing.JPanel();
         javax.swing.JLabel nameLabel = new javax.swing.JLabel();
-        javax.swing.JLabel vendorLabel = new javax.swing.JLabel();
-        javax.swing.JLabel homepageLabel = new javax.swing.JLabel();
-        appHomepageLabel = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
+        javax.swing.JLabel versionLabel = new javax.swing.JLabel();
+        versionTextField = new javax.swing.JTextField();
+        javax.swing.JLabel vendorLabel = new javax.swing.JLabel();
         vendorTextField = new javax.swing.JTextField();
         javax.swing.JLabel appLicenseLabel = new javax.swing.JLabel();
         licenseTextField = new javax.swing.JTextField();
+        javax.swing.JLabel homepageLabel = new javax.swing.JLabel();
+        appHomepageLabel = new javax.swing.JLabel();
         authorsPanel = new javax.swing.JPanel();
         authorsScrollPane = new javax.swing.JScrollPane();
         authorsTextArea = new javax.swing.JTextArea();
@@ -237,9 +239,41 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         nameLabel.setText(bundle.getString("nameLabel.text")); // NOI18N
         nameLabel.setName("nameLabel"); // NOI18N
 
+        nameTextField.setEditable(false);
+        nameTextField.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        nameTextField.setText(appBundle.getString("Application.name"));
+        nameTextField.setBorder(null);
+        nameTextField.setName("nameTextField"); // NOI18N
+
+        versionLabel.setFont(versionLabel.getFont().deriveFont(versionLabel.getFont().getStyle() | java.awt.Font.BOLD));
+        versionLabel.setText(bundle.getString("versionLabel.text")); // NOI18N
+        versionLabel.setName("versionLabel"); // NOI18N
+
+        versionTextField.setEditable(false);
+        versionTextField.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        versionTextField.setText(appBundle.getString("Application.version"));
+        versionTextField.setBorder(null);
+        versionTextField.setName("versionTextField"); // NOI18N
+
         vendorLabel.setFont(vendorLabel.getFont().deriveFont(vendorLabel.getFont().getStyle() | java.awt.Font.BOLD));
         vendorLabel.setText(bundle.getString("vendorLabel.text")); // NOI18N
         vendorLabel.setName("vendorLabel"); // NOI18N
+
+        vendorTextField.setEditable(false);
+        vendorTextField.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        vendorTextField.setText(appBundle.getString("Application.vendor"));
+        vendorTextField.setBorder(null);
+        vendorTextField.setName("vendorTextField"); // NOI18N
+
+        appLicenseLabel.setFont(appLicenseLabel.getFont().deriveFont(appLicenseLabel.getFont().getStyle() | java.awt.Font.BOLD));
+        appLicenseLabel.setText(bundle.getString("appLicenseLabel.text")); // NOI18N
+        appLicenseLabel.setName("appLicenseLabel"); // NOI18N
+
+        licenseTextField.setEditable(false);
+        licenseTextField.setFont(new java.awt.Font("Dialog 12", 1, 12)); // NOI18N
+        licenseTextField.setText(appBundle.getString("Application.license"));
+        licenseTextField.setBorder(null);
+        licenseTextField.setName("licenseTextField"); // NOI18N
 
         homepageLabel.setFont(homepageLabel.getFont().deriveFont(homepageLabel.getFont().getStyle() | java.awt.Font.BOLD));
         homepageLabel.setText(bundle.getString("homepageLabel.text")); // NOI18N
@@ -259,28 +293,6 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
             }
         });
 
-        nameTextField.setEditable(false);
-        nameTextField.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        nameTextField.setText(appBundle.getString("Application.product"));
-        nameTextField.setBorder(null);
-        nameTextField.setName("nameTextField"); // NOI18N
-
-        vendorTextField.setEditable(false);
-        vendorTextField.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        vendorTextField.setText(appBundle.getString("Application.vendor"));
-        vendorTextField.setBorder(null);
-        vendorTextField.setName("vendorTextField"); // NOI18N
-
-        appLicenseLabel.setFont(appLicenseLabel.getFont().deriveFont(appLicenseLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        appLicenseLabel.setText(bundle.getString("appLicenseLabel.text")); // NOI18N
-        appLicenseLabel.setName("appLicenseLabel"); // NOI18N
-
-        licenseTextField.setEditable(false);
-        licenseTextField.setFont(new java.awt.Font("Dialog 12", 1, 12)); // NOI18N
-        licenseTextField.setText(appBundle.getString("Application.license"));
-        licenseTextField.setBorder(null);
-        licenseTextField.setName("licenseTextField"); // NOI18N
-
         javax.swing.GroupLayout applicationPanelLayout = new javax.swing.GroupLayout(applicationPanel);
         applicationPanel.setLayout(applicationPanelLayout);
         applicationPanelLayout.setHorizontalGroup(
@@ -288,20 +300,18 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
             .addGroup(applicationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(applicationPanelLayout.createSequentialGroup()
-                        .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameLabel)
-                            .addComponent(vendorLabel)
-                            .addComponent(homepageLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
-                            .addComponent(vendorTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
-                            .addComponent(licenseTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
-                            .addComponent(appHomepageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)))
-                    .addGroup(applicationPanelLayout.createSequentialGroup()
-                        .addComponent(appLicenseLabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(vendorLabel)
+                    .addComponent(homepageLabel)
+                    .addComponent(appLicenseLabel)
+                    .addComponent(versionLabel)
+                    .addComponent(nameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nameTextField)
+                    .addComponent(vendorTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                    .addComponent(licenseTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                    .addComponent(appHomepageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                    .addComponent(versionTextField))
                 .addContainerGap())
         );
         applicationPanelLayout.setVerticalGroup(
@@ -311,6 +321,10 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
                 .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLabel)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(versionLabel)
+                    .addComponent(versionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(vendorLabel)
@@ -323,7 +337,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
                 .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(homepageLabel)
                     .addComponent(appHomepageLabel))
-                .addContainerGap(235, Short.MAX_VALUE))
+                .addContainerGap(220, Short.MAX_VALUE))
         );
 
         productTabbedPane.addTab(bundle.getString("applicationPanel.TabConstraints.tabTitle"), applicationPanel); // NOI18N
@@ -437,7 +451,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         imageLabel.setOpaque(true);
 
         appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
-        appTitleLabel.setText(appBundle.getString("Application.name"));
+        appTitleLabel.setText(appBundle.getString("Application.title"));
         appTitleLabel.setName("appTitleLabel"); // NOI18N
 
         appDescLabel.setText(appBundle.getString("Application.description"));
@@ -502,18 +516,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
     private void appHomepageLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_appHomepageLabelMouseClicked
         if (!evt.isPopupTrigger()) {
             String targetURL = ((JLabel) evt.getSource()).getText();
-            java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-
-            if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
-                try {
-                    java.net.URI uri = new java.net.URI(targetURL);
-                    desktop.browse(uri);
-                } catch (IOException | URISyntaxException ex) {
-                    Logger.getLogger(AboutDialog.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                BareBonesBrowserLaunch.openURL(targetURL);
-            }
+            BareBonesBrowserLaunch.openDesktopURL(targetURL);
         }
     }//GEN-LAST:event_appHomepageLabelMouseClicked
 
@@ -558,6 +561,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTabbedPane productTabbedPane;
     private javax.swing.JTextField vendorTextField;
+    private javax.swing.JTextField versionTextField;
     // End of variables declaration//GEN-END:variables
 
     public ResourceBundle getProjectResourceBundle() {

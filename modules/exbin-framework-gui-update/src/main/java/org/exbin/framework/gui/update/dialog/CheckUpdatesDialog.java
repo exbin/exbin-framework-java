@@ -19,10 +19,12 @@ package org.exbin.framework.gui.update.dialog;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.net.URL;
 import java.util.ResourceBundle;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.update.GuiUpdateModule;
 import org.exbin.framework.gui.update.VersionNumbers;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
@@ -31,7 +33,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Check updates dialog.
  *
- * @version 0.2.0 2016/07/10
+ * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class CheckUpdatesDialog extends javax.swing.JDialog implements HyperlinkListener {
@@ -42,6 +44,8 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
     private String updateWebsite;
     private VersionNumbers versionNumbers;
     private CheckUpdatesHandler checkUpdatesHandler = null;
+    private Thread checkingThread = null;
+    private URL downloadUrl;
 
     public CheckUpdatesDialog(java.awt.Frame parent, boolean modal, XBApplication application) {
         super(parent, modal);
@@ -96,12 +100,13 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         availableVersionLabel = new javax.swing.JLabel();
         availableVersionTextField = new javax.swing.JTextField();
         recheckButton = new javax.swing.JButton();
+        downloadButton = new javax.swing.JButton();
         controlPanel = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
 
         linkPopupMenu.setName("linkPopupMenu"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/update/resources/CheckUpdatesDialog"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog"); // NOI18N
         copyLinkMenuItem.setText(bundle.getString("copyLinkMenuItem.text")); // NOI18N
         copyLinkMenuItem.setName("copyLinkMenuItem"); // NOI18N
         copyLinkMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -134,8 +139,8 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusIconLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(statusTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         statusPanelLayout.setVerticalGroup(
@@ -163,7 +168,22 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         availableVersionTextField.setName("availableVersionTextField"); // NOI18N
 
         recheckButton.setText("Recheck");
+        recheckButton.setEnabled(false);
         recheckButton.setName("recheckButton"); // NOI18N
+        recheckButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recheckButtonActionPerformed(evt);
+            }
+        });
+
+        downloadButton.setText("Download");
+        downloadButton.setEnabled(false);
+        downloadButton.setName("downloadButton"); // NOI18N
+        downloadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downloadButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -179,7 +199,10 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(currentVersionLabel)
                             .addComponent(availableVersionLabel)
-                            .addComponent(recheckButton))
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addComponent(downloadButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(recheckButton)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -197,7 +220,9 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(availableVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recheckButton)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(recheckButton)
+                    .addComponent(downloadButton))
                 .addContainerGap(93, Short.MAX_VALUE))
         );
 
@@ -244,6 +269,17 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         WindowUtils.closeWindow(this);
     }//GEN-LAST:event_closeButtonActionPerformed
 
+    private void recheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recheckButtonActionPerformed
+        recheckButton.setEnabled(false);
+        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/apps/internet-web-browser-7.png"))); // NOI18N
+        statusTextLabel.setText("Checking for available updates...");
+        performCheckForUpdates();
+    }//GEN-LAST:event_recheckButtonActionPerformed
+
+    private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
+        BareBonesBrowserLaunch.openDesktopURL(downloadUrl);
+    }//GEN-LAST:event_downloadButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -259,6 +295,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
     private javax.swing.JMenuItem copyLinkMenuItem;
     private javax.swing.JLabel currentVersionLabel;
     private javax.swing.JTextField currentVersionTextField;
+    private javax.swing.JButton downloadButton;
     private javax.swing.JPopupMenu linkPopupMenu;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton recheckButton;
@@ -283,33 +320,78 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
     public void setCheckUpdatesHandler(CheckUpdatesHandler checkUpdatesHandler) {
         this.checkUpdatesHandler = checkUpdatesHandler;
         if (checkUpdatesHandler != null) {
-            CheckUpdatesResult result = checkUpdatesHandler.checkForUpdates();
-            setCheckUpdatesResult(result);
+            performCheckForUpdates();
         }
     }
 
-    private void setCheckUpdatesResult(CheckUpdatesResult result) {
+    private void performCheckForUpdates() {
+        if (checkingThread != null) {
+            checkingThread.interrupt();
+        }
+        checkingThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                GuiUpdateModule.CheckUpdatesResult result = checkUpdatesHandler.checkForUpdates();
+                VersionNumbers updateVersion = checkUpdatesHandler.getUpdateVersion();
+                if (updateVersion == null) {
+                    availableVersionTextField.setText("unknown");
+                } else {
+                    availableVersionTextField.setText(updateVersion.versionAsString());
+                }
+                setCheckUpdatesResult(result);
+                recheckButton.setEnabled(true);
+            }
+        });
+        checkingThread.start();
+    }
+
+    private void setCheckUpdatesResult(GuiUpdateModule.CheckUpdatesResult result) {
         if (result == null) {
 
             return;
         }
         switch (result) {
+            case UPDATE_URL_NOT_SET: {
+                statusTextLabel.setText("URL for updates was not set!");
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-no.png"))); // NOI18N
+                break;
+            }
             case NO_CONNECTION: {
+                statusTextLabel.setText("Unable to connect!");
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-no.png"))); // NOI18N
                 break;
             }
             case CONNECTION_ISSUE: {
+                statusTextLabel.setText("Connection issue during attemt to connect!");
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-no.png"))); // NOI18N
                 break;
             }
             case NOT_FOUND: {
+                statusTextLabel.setText("No update information on update website!");
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-no.png"))); // NOI18N
                 break;
             }
-            case NO_UPDATE: {
+            case NO_UPDATE_AVAILABLE: {
+                statusTextLabel.setText("No newer update available.");
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-ok-5.png"))); // NOI18N
                 break;
             }
             case UPDATE_FOUND: {
+                statusTextLabel.setText("Newer version is available!");
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/upgrade_misc.png"))); // NOI18N
+                break;
+            }
+            default: {
+                statusTextLabel.setText("Unexpected result state " + result.name() + "!");
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/upgrade_misc.png"))); // NOI18N
                 break;
             }
         }
+    }
+
+    public void setUpdateDownloadUrl(URL downloadUrl) {
+        this.downloadUrl = downloadUrl;
+        downloadButton.setEnabled(downloadUrl != null);
     }
 
     /**
@@ -322,7 +404,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
          *
          * @return check for updates result
          */
-        CheckUpdatesResult checkForUpdates();
+        GuiUpdateModule.CheckUpdatesResult checkForUpdates();
 
         /**
          * Returns version of update if available.
@@ -330,16 +412,5 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
          * @return version of update
          */
         VersionNumbers getUpdateVersion();
-    }
-
-    /**
-     * Enumeration of result types.
-     */
-    public static enum CheckUpdatesResult {
-        NO_CONNECTION,
-        CONNECTION_ISSUE,
-        NOT_FOUND,
-        NO_UPDATE,
-        UPDATE_FOUND
     }
 }

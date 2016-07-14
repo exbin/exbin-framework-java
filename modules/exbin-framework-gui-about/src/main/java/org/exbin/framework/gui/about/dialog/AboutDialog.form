@@ -118,24 +118,19 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="nameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="vendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="homepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="nameTextField" alignment="0" pref="465" max="32767" attributes="2"/>
-                                  <Component id="vendorTextField" alignment="0" pref="465" max="32767" attributes="2"/>
-                                  <Component id="licenseTextField" alignment="0" pref="465" max="32767" attributes="2"/>
-                                  <Component id="appHomepageLabel" alignment="0" pref="465" max="32767" attributes="2"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="appLicenseLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="vendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="homepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="appLicenseLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="versionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="nameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="nameTextField" max="32767" attributes="2"/>
+                          <Component id="vendorTextField" alignment="0" pref="465" max="32767" attributes="2"/>
+                          <Component id="licenseTextField" alignment="0" pref="465" max="32767" attributes="2"/>
+                          <Component id="appHomepageLabel" alignment="0" pref="465" max="32767" attributes="2"/>
+                          <Component id="versionTextField" alignment="0" max="32767" attributes="2"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -149,7 +144,12 @@
                           <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="nameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="versionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="versionTextField" alignment="3" min="-2" pref="15" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="vendorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="vendorTextField" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -164,7 +164,7 @@
                           <Component id="homepageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="appHomepageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="235" max="32767" attributes="0"/>
+                      <EmptySpace pref="220" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -187,6 +187,53 @@
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
               </AuxValues>
             </Component>
+            <Component class="javax.swing.JTextField" name="nameTextField">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="appBundle.getString(&quot;Application.name&quot;)" type="code"/>
+                </Property>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="null"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="nameTextField" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="versionLabel">
+              <Properties>
+                <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
+                  <FontInfo relative="true">
+                    <Font bold="true" component="versionLabel" property="font" relativeSize="true" size="0"/>
+                  </FontInfo>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/exbin/framework/gui/about/dialog/resources/AboutDialog.properties" key="versionLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="versionLabel" noResource="true"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JTextField" name="versionTextField">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="appBundle.getString(&quot;Application.version&quot;)" type="code"/>
+                </Property>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="null"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="versionTextField" noResource="true"/>
+              </Properties>
+            </Component>
             <Component class="javax.swing.JLabel" name="vendorLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
@@ -203,61 +250,6 @@
                 <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
               </AuxValues>
-            </Component>
-            <Component class="javax.swing.JLabel" name="homepageLabel">
-              <Properties>
-                <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
-                  <FontInfo relative="true">
-                    <Font bold="true" component="homepageLabel" property="font" relativeSize="true" size="0"/>
-                  </FontInfo>
-                </Property>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/gui/about/dialog/resources/AboutDialog.properties" key="homepageLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-                <Property name="name" type="java.lang.String" value="homepageLabel" noResource="true"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
-                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
-              </AuxValues>
-            </Component>
-            <Component class="javax.swing.JLabel" name="appHomepageLabel">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-                </Property>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="appBundle.getString(&quot;Application.homepage&quot;)" type="code"/>
-                </Property>
-                <Property name="componentPopupMenu" type="javax.swing.JPopupMenu" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="linkPopupMenu"/>
-                </Property>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Hand Cursor"/>
-                </Property>
-                <Property name="name" type="java.lang.String" value="appHomepageLabel" noResource="true"/>
-              </Properties>
-              <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="appHomepageLabelMouseClicked"/>
-              </Events>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="HashMap&lt;TextAttribute, Object&gt; attribs = new HashMap&lt;TextAttribute, Object&gt;();&#xa;attribs.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);&#xa;appHomepageLabel.setFont(appHomepageLabel.getFont().deriveFont(attribs));"/>
-              </AuxValues>
-            </Component>
-            <Component class="javax.swing.JTextField" name="nameTextField">
-              <Properties>
-                <Property name="editable" type="boolean" value="false"/>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Dialog" size="12" style="1"/>
-                </Property>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="appBundle.getString(&quot;Application.product&quot;)" type="code"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
-                <Property name="name" type="java.lang.String" value="nameTextField" noResource="true"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="vendorTextField">
               <Properties>
@@ -305,6 +297,46 @@
                 </Property>
                 <Property name="name" type="java.lang.String" value="licenseTextField" noResource="true"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="homepageLabel">
+              <Properties>
+                <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
+                  <FontInfo relative="true">
+                    <Font bold="true" component="homepageLabel" property="font" relativeSize="true" size="0"/>
+                  </FontInfo>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/exbin/framework/gui/about/dialog/resources/AboutDialog.properties" key="homepageLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="homepageLabel" noResource="true"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="appHomepageLabel">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="appBundle.getString(&quot;Application.homepage&quot;)" type="code"/>
+                </Property>
+                <Property name="componentPopupMenu" type="javax.swing.JPopupMenu" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                  <ComponentRef name="linkPopupMenu"/>
+                </Property>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="appHomepageLabel" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="appHomepageLabelMouseClicked"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="HashMap&lt;TextAttribute, Object&gt; attribs = new HashMap&lt;TextAttribute, Object&gt;();&#xa;attribs.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);&#xa;appHomepageLabel.setFont(appHomepageLabel.getFont().deriveFont(attribs));"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
@@ -572,7 +604,7 @@
               </FontInfo>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="appBundle.getString(&quot;Application.name&quot;)" type="code"/>
+              <Connection code="appBundle.getString(&quot;Application.title&quot;)" type="code"/>
             </Property>
             <Property name="name" type="java.lang.String" value="appTitleLabel" noResource="true"/>
           </Properties>
