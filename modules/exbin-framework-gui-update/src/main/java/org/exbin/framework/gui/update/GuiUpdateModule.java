@@ -32,14 +32,17 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
+import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
+import org.exbin.framework.gui.update.panel.ApplicationUpdateOptionsPanel;
+import org.exbin.framework.gui.update.panel.ApplicationUpdateOptionsPanelApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework check updates module.
  *
- * @version 0.2.0 2016/07/14
+ * @version 0.2.0 2016/07/16
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiUpdateModule implements GuiUpdateModuleApi {
@@ -101,6 +104,24 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
         menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
     }
 
+    @Override
+    public void registerOptionsPanels() {
+        GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
+        ApplicationUpdateOptionsPanelApi panelApi;
+        panelApi = new ApplicationUpdateOptionsPanelApi() {
+            @Override
+            public boolean getCheckForUpdatesOnStart() {
+                return false;
+            }
+
+            @Override
+            public void setCheckForUpdatesOnStart(boolean flag) {
+            }
+        };
+
+        optionsModule.addOptionsPanel(new ApplicationUpdateOptionsPanel(panelApi));
+    }
+
     public VersionNumbers getVersionNumbers() {
         ResourceBundle appBundle = application.getAppBundle();
         String releaseString = appBundle.getString("Application.release");
@@ -118,24 +139,22 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
         if (checkUpdateUrl == null) {
             return CheckUpdatesResult.UPDATE_URL_NOT_SET;
         }
-        
+
         try {
-            InputStream checkUpdateStream = checkUpdateUrl.openStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(checkUpdateStream));
-            String line = reader.readLine();
-            if (line == null) {
-                return CheckUpdatesResult.NOT_FOUND;
+            try (InputStream checkUpdateStream = checkUpdateUrl.openStream(); BufferedReader reader = new BufferedReader(new InputStreamReader(checkUpdateStream))) {
+                String line = reader.readLine();
+                if (line == null) {
+                    return CheckUpdatesResult.NOT_FOUND;
+                }
+                updateVersion = new VersionNumbers();
+                updateVersion.versionFromString(line);
             }
-            updateVersion = new VersionNumbers();
-            updateVersion.versionFromString(line);
-            reader.close();
-            checkUpdateStream.close();
-            
+
             // Compare versions
             if (updateVersion.isGreaterThan(getVersionNumbers())) {
                 return CheckUpdatesResult.UPDATE_FOUND;
             }
-            
+
             return CheckUpdatesResult.NO_UPDATE_AVAILABLE;
         } catch (FileNotFoundException ex) {
             return CheckUpdatesResult.NOT_FOUND;

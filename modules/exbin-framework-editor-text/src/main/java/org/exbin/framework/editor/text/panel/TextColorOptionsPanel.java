@@ -116,8 +116,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
 
     @Override
     public List<OptionsPanel.PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<OptionsPanel.PathItem>();
-        path.add(new PathItem("apperance", ""));
+        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
         path.add(new PathItem("colors", resourceBundle.getString("options.Path.0")));
         return path;
     }

@@ -17,12 +17,12 @@
 package org.exbin.framework.editor.text.panel;
 
 /**
- * XB Word Wrapping Interface.
+ * Word wrapping options interface.
  *
  * @version 0.2.0 2016/01/23
  * @author ExBin Project (http://exbin.org)
  */
-public interface TextAppearancePanelFrame {
+public interface TextAppearanceOptionsPanelApi {
 
     /**
      * Returns text word wrapping mode.

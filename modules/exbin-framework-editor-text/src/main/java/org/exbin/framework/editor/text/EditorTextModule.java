@@ -26,7 +26,6 @@ import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanel;
-import org.exbin.framework.editor.text.panel.TextAppearancePanelFrame;
 import org.exbin.framework.editor.text.panel.TextColorOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextColorPanelApi;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
@@ -49,6 +48,7 @@ import org.exbin.framework.gui.menu.api.ToolBarPosition;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanelApi;
 
 /**
  * XBUP text editor module.
@@ -165,7 +165,7 @@ public class EditorTextModule implements XBApplicationModule {
 
         optionsModule.addOptionsPanel(new TextFontOptionsPanel(textFontPanelFrame));
 
-        TextEncodingPanelApi textEncodingPanelFrame = new TextEncodingPanelApi() {
+        TextEncodingPanelApi textEncodingPanelApi = new TextEncodingPanelApi() {
             @Override
             public List<String> getEncodings() {
                 return getEncodingsHandler().getEncodings();
@@ -190,8 +190,8 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        TextAppearancePanelFrame textAppearancePanelFrame;
-        textAppearancePanelFrame = new TextAppearancePanelFrame() {
+        TextAppearanceOptionsPanelApi textAppearanceOptionsPanelApi;
+        textAppearanceOptionsPanelApi = new TextAppearanceOptionsPanelApi() {
             @Override
             public boolean getWordWrapMode() {
                 return ((TextPanel) getEditorProvider()).getWordWrapMode();
@@ -203,9 +203,8 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        optionsModule.addOptionsPanel(new TextEncodingOptionsPanel(textEncodingPanelFrame));
-        optionsModule.extendAppearanceOptionsPanel(new TextAppearanceOptionsPanel(textAppearancePanelFrame));
-
+        optionsModule.addOptionsPanel(new TextEncodingOptionsPanel(textEncodingPanelApi));
+        optionsModule.extendAppearanceOptionsPanel(new TextAppearanceOptionsPanel(textAppearanceOptionsPanelApi));
     }
 
     public void registerWordWrapping() {
