@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.update;
 
+import java.awt.Frame;
 import org.exbin.framework.gui.update.dialog.CheckUpdatesDialog;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
@@ -35,14 +36,13 @@ import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
 import org.exbin.framework.gui.update.panel.ApplicationUpdateOptionsPanel;
-import org.exbin.framework.gui.update.panel.ApplicationUpdateOptionsPanelApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework check updates module.
  *
- * @version 0.2.0 2016/07/16
+ * @version 0.2.0 2016/07/17
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiUpdateModule implements GuiUpdateModuleApi {
@@ -72,7 +72,9 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
             checkUpdateAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+
                     CheckUpdatesDialog checkUpdatesDialog = new CheckUpdatesDialog(frameModule.getFrame(), true, application);
                     checkUpdatesDialog.setProjectResourceBundle(application.getAppBundle());
                     checkUpdatesDialog.setVersionNumbers(getVersionNumbers());
@@ -107,19 +109,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     @Override
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
-        ApplicationUpdateOptionsPanelApi panelApi;
-        panelApi = new ApplicationUpdateOptionsPanelApi() {
-            @Override
-            public boolean getCheckForUpdatesOnStart() {
-                return false;
-            }
-
-            @Override
-            public void setCheckForUpdatesOnStart(boolean flag) {
-            }
-        };
-
-        optionsModule.addOptionsPanel(new ApplicationUpdateOptionsPanel(panelApi));
+        optionsModule.addOptionsPanel(new ApplicationUpdateOptionsPanel());
     }
 
     public VersionNumbers getVersionNumbers() {
@@ -172,6 +162,40 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     @Override
     public void setUpdateDownloadUrl(URL downloadUrl) {
         this.downloadUrl = downloadUrl;
+    }
+
+    @Override
+    public void checkOnStart(Frame frame) {
+        boolean checkOnStart = application.getAppPreferences().getBoolean(ApplicationUpdateOptionsPanel.PREFERENCES_CHECK_FOR_UPDATE_ON_START, true);
+
+        if (!checkOnStart) {
+            return;
+        }
+
+        final CheckUpdatesResult checkForUpdates = checkForUpdates();
+        if (checkForUpdates == CheckUpdatesResult.UPDATE_FOUND) {
+            CheckUpdatesDialog checkUpdatesDialog = new CheckUpdatesDialog(frame, true, application);
+            checkUpdatesDialog.setProjectResourceBundle(application.getAppBundle());
+            checkUpdatesDialog.setVersionNumbers(getVersionNumbers());
+            checkUpdatesDialog.setUpdateDownloadUrl(downloadUrl);
+            checkUpdatesDialog.setCheckUpdatesHandler(new CheckUpdatesDialog.CheckUpdatesHandler() {
+                boolean first = true;
+
+                @Override
+                public CheckUpdatesResult checkForUpdates() {
+                    if (first) {
+                        return checkForUpdates;
+                    }
+                    return GuiUpdateModule.this.checkForUpdates();
+                }
+
+                @Override
+                public VersionNumbers getUpdateVersion() {
+                    return GuiUpdateModule.this.getUpdateVersion();
+                }
+            });
+            checkUpdatesDialog.setVisible(true);
+        }
     }
 
     /**

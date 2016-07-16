@@ -38,9 +38,9 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     public static final String PREFERENCES_TEXT_COLOR_DEFAULT = "textColor.default";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
-    private TextColorPanelApi frame;
-    private TextColorPanel colorPanel;
+    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
+    private final TextColorPanelApi frame;
+    private final TextColorPanel colorPanel;
 
     public TextColorOptionsPanel(TextColorPanelApi frame) {
         this.frame = frame;
@@ -48,7 +48,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
 
         colorPanel = new TextColorPanel(frame);
         colorPanel.setEnabled(false);
-        add(colorPanel, BorderLayout.CENTER);
+        super.add(colorPanel, BorderLayout.CENTER);
     }
 
     /** This method is called from within the constructor to
@@ -117,13 +117,14 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     @Override
     public List<OptionsPanel.PathItem> getPath() {
         ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
+        path.add(new PathItem("apperance", ""));
         path.add(new PathItem("colors", resourceBundle.getString("options.Path.0")));
         return path;
     }
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        Boolean defaultColor = Boolean.valueOf(preferences.get(PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(true)));
+        Boolean defaultColor = Boolean.valueOf(preferences.get(PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.TRUE.toString()));
         defaultColorCheckBox.setSelected(defaultColor);
         colorPanel.setEnabled(!defaultColor);
         colorPanel.loadFromPreferences(preferences);

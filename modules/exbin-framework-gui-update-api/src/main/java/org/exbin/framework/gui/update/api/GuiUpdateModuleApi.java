@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.update.api;
 
+import java.awt.Frame;
 import java.net.URL;
 import javax.swing.Action;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -58,4 +59,11 @@ public interface GuiUpdateModuleApi extends XBApplicationModule {
      * @param downloadUrl download URL
      */
     void setUpdateDownloadUrl(URL downloadUrl);
+
+    /**
+     * Performs check for update on application start.
+     *
+     * @param frame frame
+     */
+    void checkOnStart(Frame frame);
 }

@@ -27,7 +27,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Application update options panel.
  *
- * @version 0.2.0 2016/07/16
+ * @version 0.2.0 2016/07/17
  * @author ExBin Project (http://exbin.org)
  */
 public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -36,11 +36,8 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
 
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ApplicationUpdateOptionsPanel.class);
-    private final ApplicationUpdateOptionsPanelApi frame;
 
-    public ApplicationUpdateOptionsPanel(ApplicationUpdateOptionsPanelApi frame) {
-        this.frame = frame;
-
+    public ApplicationUpdateOptionsPanel() {
         initComponents();
     }
 
@@ -96,14 +93,13 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
     @Override
     public List<OptionsPanel.PathItem> getPath() {
         ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
-        path.add(new PathItem("apperance", ""));
         path.add(new PathItem("start", resourceBundle.getString("options.Path.0")));
         return path;
     }
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        checkForUpdatesOnStartCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_CHECK_FOR_UPDATE_ON_START, Boolean.FALSE.toString())));
+        checkForUpdatesOnStartCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_CHECK_FOR_UPDATE_ON_START, Boolean.TRUE.toString())));
     }
 
     @Override
@@ -113,7 +109,6 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
 
     @Override
     public void applyPreferencesChanges() {
-        frame.setCheckForUpdatesOnStart(checkForUpdatesOnStartCheckBox.isSelected());
     }
 
     private void setModified(boolean b) {
