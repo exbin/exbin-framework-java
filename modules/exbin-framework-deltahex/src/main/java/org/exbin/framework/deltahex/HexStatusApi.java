@@ -15,13 +15,15 @@
  */
 package org.exbin.framework.deltahex;
 
+import org.exbin.deltahex.CodeArea;
+
 /**
  * Hexadecimal editor status interface.
  *
- * @version 0.2.0 2016/05/18
+ * @version 0.2.0 2016/07/17
  * @author ExBin Project (http://exbin.org)
  */
-public interface HexPositionStatusApi {
+public interface HexStatusApi {
 
     /**
      * Reports cursor position.
@@ -31,10 +33,23 @@ public interface HexPositionStatusApi {
     void setCursorPosition(String cursorPosition);
 
     /**
-     * Reports selection position.
+     * Reports currently active editation mode.
      *
-     * @param startPosition start position
-     * @param endPosition end position
+     * @param editationMode editation mode
      */
-    void setSelectionPosition(String startPosition, String endPosition);
+    void setEditationMode(CodeArea.EditationMode editationMode);
+
+    /**
+     * Sets control handler for status operations.
+     *
+     * @param statusControlHandler status control handler
+     */
+    void setControlHandler(StatusControlHandler statusControlHandler);
+
+    public static interface StatusControlHandler {
+
+        void changeEditationMode(CodeArea.EditationMode editationMode);
+
+        void changeCursorPosition();
+    }
 }

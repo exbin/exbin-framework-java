@@ -15,16 +15,21 @@
  */
 package org.exbin.framework.deltahex.panel;
 
-import org.exbin.framework.deltahex.HexPositionStatusApi;
+import java.awt.event.MouseEvent;
+import org.exbin.deltahex.CodeArea;
+import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 
 /**
  * Hexadecimal editor status panel.
  *
- * @version 0.1.0 2016/04/22
+ * @version 0.1.0 2016/07/17
  * @author ExBin Project (http://exbin.org)
  */
-public class HexStatusPanel extends javax.swing.JPanel implements HexPositionStatusApi, TextEncodingStatusApi {
+public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, TextEncodingStatusApi {
+
+    private CodeArea.EditationMode editationMode;
+    private StatusControlHandler editationModeChange;
 
     public HexStatusPanel() {
         initComponents();
@@ -39,114 +44,104 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexPositionSta
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        editationModeLabel = new javax.swing.JLabel();
         positionLabel = new javax.swing.JLabel();
-        positionTextField = new javax.swing.JTextField();
-        selectionLabel = new javax.swing.JLabel();
-        selectionStartPositionTextField = new javax.swing.JTextField();
-        dashLabel = new javax.swing.JLabel();
-        selectionEndPositionTextField = new javax.swing.JTextField();
         encodingLabel = new javax.swing.JLabel();
-        documentEncodingTextField = new javax.swing.JTextField();
 
         setName("Form"); // NOI18N
 
+        editationModeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexStatusPanel"); // NOI18N
-        positionLabel.setText(bundle.getString("HexStatusPanel.positionLabel.text")); // NOI18N
+        editationModeLabel.setText(bundle.getString("HexStatusPanel.editationModeLabel.text")); // NOI18N
+        editationModeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        editationModeLabel.setName("editationModeLabel"); // NOI18N
+        editationModeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                editationModeLabelMouseClicked(evt);
+            }
+        });
+
+        positionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        positionLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         positionLabel.setName("positionLabel"); // NOI18N
 
-        positionTextField.setEditable(false);
-        positionTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        positionTextField.setText("0"); // NOI18N
-        positionTextField.setToolTipText(bundle.getString("HexStatusPanel.positionTextField.toolTipText_1")); // NOI18N
-        positionTextField.setName("positionTextField"); // NOI18N
-
-        selectionLabel.setText(bundle.getString("HexStatusPanel.selectionLabel.text_1")); // NOI18N
-        selectionLabel.setName("selectionLabel"); // NOI18N
-
-        selectionStartPositionTextField.setEditable(false);
-        selectionStartPositionTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        selectionStartPositionTextField.setToolTipText(bundle.getString("HexStatusPanel.selectionStartPositionTextField.toolTipText_1")); // NOI18N
-        selectionStartPositionTextField.setName("selectionStartPositionTextField"); // NOI18N
-
-        dashLabel.setText(bundle.getString("HexStatusPanel.dashLabel.text_1")); // NOI18N
-        dashLabel.setName("dashLabel"); // NOI18N
-
-        selectionEndPositionTextField.setEditable(false);
-        selectionEndPositionTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        selectionEndPositionTextField.setToolTipText(bundle.getString("HexStatusPanel.selectionEndPositionTextField.toolTipText")); // NOI18N
-        selectionEndPositionTextField.setName("selectionEndPositionTextField"); // NOI18N
-
-        encodingLabel.setText(bundle.getString("HexStatusPanel.encodingLabel.text")); // NOI18N
+        encodingLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        encodingLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         encodingLabel.setName("encodingLabel"); // NOI18N
-
-        documentEncodingTextField.setEditable(false);
-        documentEncodingTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        documentEncodingTextField.setText("UTF-8"); // NOI18N
-        documentEncodingTextField.setToolTipText(bundle.getString("HexStatusPanel.documentEncodingTextField.toolTipText")); // NOI18N
-        documentEncodingTextField.setName("documentEncodingTextField"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(positionLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(positionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectionLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectionStartPositionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dashLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectionEndPositionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                .addComponent(encodingLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(documentEncodingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 41, Short.MAX_VALUE)
+                .addComponent(encodingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(positionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(editationModeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(selectionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(positionTextField)
-                .addComponent(selectionStartPositionTextField)
-                .addComponent(dashLabel)
-                .addComponent(selectionEndPositionTextField)
-                .addComponent(positionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(documentEncodingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(encodingLabel))
+            .addComponent(editationModeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(positionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(encodingLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void editationModeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editationModeLabelMouseClicked
+        if (editationModeChange != null && evt.getButton() == MouseEvent.BUTTON1) {
+            if (editationMode == CodeArea.EditationMode.INSERT) {
+                editationModeChange.changeEditationMode(CodeArea.EditationMode.OVERWRITE);
+            } else if (editationMode == CodeArea.EditationMode.OVERWRITE) {
+                editationModeChange.changeEditationMode(CodeArea.EditationMode.INSERT);
+            }
+        }
+    }//GEN-LAST:event_editationModeLabelMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel dashLabel;
-    private javax.swing.JTextField documentEncodingTextField;
+    private javax.swing.JLabel editationModeLabel;
     private javax.swing.JLabel encodingLabel;
     private javax.swing.JLabel positionLabel;
-    private javax.swing.JTextField positionTextField;
-    private javax.swing.JTextField selectionEndPositionTextField;
-    private javax.swing.JLabel selectionLabel;
-    private javax.swing.JTextField selectionStartPositionTextField;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void setCursorPosition(String cursorPosition) {
-        positionTextField.setText(cursorPosition);
-    }
-
-    @Override
-    public void setSelectionPosition(String startPosition, String endPosition) {
-        selectionStartPositionTextField.setText(startPosition);
-        selectionEndPositionTextField.setText(endPosition);
+        if (cursorPosition == null || cursorPosition.isEmpty()) {
+            positionLabel.setText("-");
+        } else {
+            positionLabel.setText(cursorPosition);
+        }
     }
 
     @Override
     public void setEncoding(String encodingName) {
-        documentEncodingTextField.setText(encodingName);
+        encodingLabel.setText(encodingName);
+    }
+
+    @Override
+    public void setEditationMode(CodeArea.EditationMode editationMode) {
+        this.editationMode = editationMode;
+        switch (editationMode) {
+            case INSERT: {
+                editationModeLabel.setText("INS");
+                break;
+            }
+            case OVERWRITE: {
+                editationModeLabel.setText("OVR");
+                break;
+            }
+            case READ_ONLY: {
+                editationModeLabel.setText("RO");
+                break;
+            }
+            default:
+                throw new IllegalStateException("Unexpected editation mode " + editationMode.name());
+        }
+    }
+
+    @Override
+    public void setControlHandler(StatusControlHandler editationModeChange) {
+        this.editationModeChange = editationModeChange;
     }
 }

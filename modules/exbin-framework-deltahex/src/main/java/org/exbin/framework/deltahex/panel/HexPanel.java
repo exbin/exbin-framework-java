@@ -57,6 +57,7 @@ import org.exbin.deltahex.delta.list.DefaultDoublyLinkedList;
 import org.exbin.deltahex.highlight.HighlightCodeAreaPainter;
 import org.exbin.deltahex.operation.CodeAreaUndoHandler;
 import org.exbin.deltahex.operation.CodeCommandHandler;
+import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.gui.editor.api.XBEditorProvider;
@@ -73,7 +74,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/06/27
+ * @version 0.1.0 2016/07/17
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -638,8 +639,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         codeArea.addCaretMovedListener(listener);
     }
 
-    public void attachSelectionListener(CodeArea.SelectionChangedListener listener) {
-        codeArea.addSelectionChangedListener(listener);
+    public void attachEditationModeChangedListener(CodeArea.EditationModeChangedListener listener) {
+        codeArea.addEditationModeChangedListener(listener);
     }
 
     @Override
@@ -707,23 +708,29 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             }
         });
 
-        attachSelectionListener(new CodeArea.SelectionChangedListener() {
+        attachEditationModeChangedListener(new CodeArea.EditationModeChangedListener() {
             @Override
-            public void selectionChanged(CodeArea.SelectionRange selection) {
-                if (selection == null) {
-                    statusPanel.setSelectionPosition("", "");
-                } else {
-                    String start = String.valueOf(selection.getFirst());
-                    String end = String.valueOf(selection.getLast());
-                    statusPanel.setSelectionPosition(start, end);
-                }
+            public void editationModeChanged(CodeArea.EditationMode mode) {
+                statusPanel.setEditationMode(mode);
             }
         });
+        statusPanel.setEditationMode(codeArea.getEditationMode());
 
         setCharsetChangeListener(new HexPanel.CharsetChangeListener() {
             @Override
             public void charsetChanged() {
                 statusPanel.setEncoding(getCharset().name());
+            }
+        });
+        statusPanel.setControlHandler(new HexStatusApi.StatusControlHandler() {
+            @Override
+            public void changeEditationMode(CodeArea.EditationMode editationMode) {
+                codeArea.setEditationMode(editationMode);
+            }
+
+            @Override
+            public void changeCursorPosition() {
+                throw new UnsupportedOperationException("Not supported yet.");
             }
         });
     }
