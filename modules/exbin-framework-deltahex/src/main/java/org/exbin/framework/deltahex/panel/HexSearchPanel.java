@@ -206,7 +206,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
         findPanel.setName("findPanel"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexStatusPanel"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexSearchPanel"); // NOI18N
         findLabel.setText(bundle.getString("HexSearchPanel.findLabel.text")); // NOI18N
         findLabel.setName("findLabel"); // NOI18N
 

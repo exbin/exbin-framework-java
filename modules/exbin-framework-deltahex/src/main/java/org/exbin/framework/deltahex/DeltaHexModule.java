@@ -16,6 +16,7 @@
 package org.exbin.framework.deltahex;
 
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +93,18 @@ public class DeltaHexModule implements XBApplicationModule {
         if (editorProvider == null) {
             editorProvider = new HexPanel();
             ((HexPanel) editorProvider).setPopupMenu(createPopupMenu());
+            ((HexPanel) editorProvider).setGoToLineAction(getGoToLineHandler().getGoToLineAction());
+            ((HexPanel) editorProvider).setEncodingStatusHandler(new EncodingStatusHandler() {
+                @Override
+                public void cycleEncodings() {
+                    encodingsHandler.cycleEncodings();
+                }
+
+                @Override
+                public void popupEncodingsMenu(MouseEvent mouseEvent) {
+                    encodingsHandler.popupEncodingsMenu(mouseEvent);
+                }
+            });
         }
 
         return editorProvider;
@@ -321,5 +334,12 @@ public class DeltaHexModule implements XBApplicationModule {
 
     public void loadFromPreferences(Preferences preferences) {
         encodingsHandler.loadFromPreferences(preferences);
+    }
+
+    public static interface EncodingStatusHandler {
+
+        void cycleEncodings();
+
+        void popupEncodingsMenu(MouseEvent mouseEvent);
     }
 }

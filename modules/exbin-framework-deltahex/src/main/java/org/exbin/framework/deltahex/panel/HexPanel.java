@@ -23,6 +23,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
+import java.awt.event.MouseEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -43,20 +44,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import org.exbin.deltahex.CaretPosition;
 import org.exbin.deltahex.CodeArea;
-import org.exbin.deltahex.delta.BinaryDataSegment;
-import org.exbin.deltahex.delta.DataSegment;
-import org.exbin.deltahex.delta.DeltaHexadecimalData;
-import org.exbin.deltahex.delta.DocumentSegment;
 import org.exbin.deltahex.delta.MemoryPagedData;
-import org.exbin.deltahex.delta.list.DefaultDoublyLinkedList;
 import org.exbin.deltahex.highlight.HighlightCodeAreaPainter;
 import org.exbin.deltahex.operation.CodeAreaUndoHandler;
 import org.exbin.deltahex.operation.CodeCommandHandler;
+import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
@@ -74,7 +72,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/07/17
+ * @version 0.1.0 2016/07/18
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -91,6 +89,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
     private HexSearchPanel findTextPanel;
     private boolean findTextPanelVisible = false;
+    private Action goToLineAction = null;
+    private DeltaHexModule.EncodingStatusHandler encodingStatusHandler;
 
     public HexPanel() {
         undoHandler = new CodeAreaUndoHandler(codeArea);
@@ -414,7 +414,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void goToPosition(long position) {
-        codeArea.getCaret().setCaretPosition(position);
+        codeArea.setCaretPosition(position);
         codeArea.revealCursor();
     }
 
@@ -506,56 +506,13 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        debugPanel = new javax.swing.JPanel();
-        debugButton = new javax.swing.JButton();
-
-        debugPanel.setName("debugPanel"); // NOI18N
-
-        debugButton.setText("I");
-        debugButton.setName("debugButton"); // NOI18N
-        debugButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                debugButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout debugPanelLayout = new javax.swing.GroupLayout(debugPanel);
-        debugPanel.setLayout(debugPanelLayout);
-        debugPanelLayout.setHorizontalGroup(
-            debugPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(debugButton)
-        );
-        debugPanelLayout.setVerticalGroup(
-            debugPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(debugPanelLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(debugButton))
-        );
-
         setInheritsPopupMenu(true);
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
-    private void debugButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugButtonActionPerformed
-        DefaultDoublyLinkedList<DataSegment> segments = ((DeltaHexadecimalData) codeArea.getData()).getSegments();
-        DataSegment segment = segments.first();
-        System.out.println("Segments list: " + ((DeltaHexadecimalData) codeArea.getData()).getDataSize());
-        while (segment != null) {
-            if (segment instanceof DocumentSegment) {
-                System.out.println("FILE: " + ((DocumentSegment) segment).getStartPosition() + ", " + ((DocumentSegment) segment).getLength());
-            } else {
-                System.out.println("DATA: " + ((BinaryDataSegment) segment).getLength());
-            }
-            segment = segment.getNext();
-        }
-        System.out.println();
-    }//GEN-LAST:event_debugButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton debugButton;
-    private javax.swing.JPanel debugPanel;
     // End of variables declaration//GEN-END:variables
     @Override
     public boolean isModified() {
@@ -730,7 +687,23 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
             @Override
             public void changeCursorPosition() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                if (goToLineAction != null) {
+                    goToLineAction.actionPerformed(null);
+                }
+            }
+
+            @Override
+            public void cycleEncodings() {
+                if (encodingStatusHandler != null) {
+                    encodingStatusHandler.cycleEncodings();
+                }
+            }
+
+            @Override
+            public void popupEncodingsMenu(MouseEvent mouseEvent) {
+                if (encodingStatusHandler != null) {
+                    encodingStatusHandler.popupEncodingsMenu(mouseEvent);
+                }
             }
         });
     }
@@ -771,6 +744,14 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     public void clearMatches() {
         HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
         painter.clearMatches();
+    }
+
+    public void setGoToLineAction(Action goToLineAction) {
+        this.goToLineAction = goToLineAction;
+    }
+
+    public void setEncodingStatusHandler(DeltaHexModule.EncodingStatusHandler encodingStatusHandler) {
+        this.encodingStatusHandler = encodingStatusHandler;
     }
 
     public static interface CharsetChangeListener {

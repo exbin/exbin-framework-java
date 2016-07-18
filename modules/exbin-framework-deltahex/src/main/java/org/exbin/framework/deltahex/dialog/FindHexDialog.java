@@ -157,8 +157,7 @@ public class FindHexDialog extends javax.swing.JDialog {
 
         findModeGroup.add(textModeRadioButton);
         textModeRadioButton.setSelected(true);
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/Bundle"); // NOI18N
-        textModeRadioButton.setText(bundle1.getString("FindHexDialog.textModeRadioButton.text")); // NOI18N
+        textModeRadioButton.setText(bundle.getString("FindHexDialog.textModeRadioButton.text")); // NOI18N
         textModeRadioButton.setName("textModeRadioButton"); // NOI18N
         textModeRadioButton.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -170,13 +169,13 @@ public class FindHexDialog extends javax.swing.JDialog {
         findTextComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         findTextComboBox.setName("findTextComboBox"); // NOI18N
 
-        findTextMultilineButton.setText(bundle1.getString("FindHexDialog.findTextMultilineButton.text")); // NOI18N
-        findTextMultilineButton.setToolTipText(bundle1.getString("FindHexDialog.findTextMultilineButton.toolTipText")); // NOI18N
+        findTextMultilineButton.setText(bundle.getString("FindHexDialog.findTextMultilineButton.text")); // NOI18N
+        findTextMultilineButton.setToolTipText(bundle.getString("FindHexDialog.findTextMultilineButton.toolTipText")); // NOI18N
         findTextMultilineButton.setEnabled(false);
         findTextMultilineButton.setName("findTextMultilineButton"); // NOI18N
 
         findModeGroup.add(hexModeRadioButton);
-        hexModeRadioButton.setText(bundle1.getString("FindHexDialog.hexModeRadioButton.text")); // NOI18N
+        hexModeRadioButton.setText(bundle.getString("FindHexDialog.hexModeRadioButton.text")); // NOI18N
         hexModeRadioButton.setName("hexModeRadioButton"); // NOI18N
         hexModeRadioButton.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -187,8 +186,8 @@ public class FindHexDialog extends javax.swing.JDialog {
         findHexComboBox.setEditable(true);
         findHexComboBox.setName("findHexComboBox"); // NOI18N
 
-        findHexMultilineButton.setText(bundle1.getString("FindHexDialog.findHexMultilineButton.text")); // NOI18N
-        findHexMultilineButton.setToolTipText(bundle1.getString("FindHexDialog.findHexMultilineButton.toolTipText")); // NOI18N
+        findHexMultilineButton.setText(bundle.getString("FindHexDialog.findHexMultilineButton.text")); // NOI18N
+        findHexMultilineButton.setToolTipText(bundle.getString("FindHexDialog.findHexMultilineButton.toolTipText")); // NOI18N
         findHexMultilineButton.setEnabled(false);
         findHexMultilineButton.setName("findHexMultilineButton"); // NOI18N
 
@@ -200,7 +199,7 @@ public class FindHexDialog extends javax.swing.JDialog {
         matchCaseCheckBox.setName("matchCaseCheckBox"); // NOI18N
 
         multipleMatchesCheckBox.setSelected(true);
-        multipleMatchesCheckBox.setText(bundle1.getString("FindHexDialog.multipleMatchesCheckBox.text")); // NOI18N
+        multipleMatchesCheckBox.setText(bundle.getString("FindHexDialog.multipleMatchesCheckBox.text")); // NOI18N
         multipleMatchesCheckBox.setName("multipleMatchesCheckBox"); // NOI18N
 
         javax.swing.GroupLayout findPanelLayout = new javax.swing.GroupLayout(findPanel);

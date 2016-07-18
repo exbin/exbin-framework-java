@@ -51,8 +51,9 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
         setName("Form"); // NOI18N
 
         editationModeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        editationModeLabel.setText("OVR");
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexStatusPanel"); // NOI18N
-        editationModeLabel.setText(bundle.getString("HexStatusPanel.editationModeLabel.text")); // NOI18N
+        editationModeLabel.setToolTipText(bundle.getString("HexStatusPanel.editationModeLabel.toolTipText")); // NOI18N
         editationModeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         editationModeLabel.setName("editationModeLabel"); // NOI18N
         editationModeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -62,12 +63,32 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
         });
 
         positionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        positionLabel.setText("0:0");
+        positionLabel.setToolTipText(bundle.getString("HexStatusPanel.positionLabel.toolTipText")); // NOI18N
         positionLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         positionLabel.setName("positionLabel"); // NOI18N
+        positionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                positionLabelMouseClicked(evt);
+            }
+        });
 
         encodingLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        encodingLabel.setText("UTF-8");
+        encodingLabel.setToolTipText(bundle.getString("HexStatusPanel.encodingLabel.toolTipText")); // NOI18N
         encodingLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         encodingLabel.setName("encodingLabel"); // NOI18N
+        encodingLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                encodingLabelMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                encodingLabelMouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                encodingLabelMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -98,6 +119,34 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
             }
         }
     }//GEN-LAST:event_editationModeLabelMouseClicked
+
+    private void positionLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_positionLabelMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() > 1) {
+            editationModeChange.changeCursorPosition();
+        }
+    }//GEN-LAST:event_positionLabelMouseClicked
+
+    private void encodingLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodingLabelMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            editationModeChange.cycleEncodings();
+        } else {
+            handleEncodingPopup(evt);
+        }
+    }//GEN-LAST:event_encodingLabelMouseClicked
+
+    private void encodingLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodingLabelMouseReleased
+        handleEncodingPopup(evt);
+    }//GEN-LAST:event_encodingLabelMouseReleased
+
+    private void encodingLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodingLabelMousePressed
+        handleEncodingPopup(evt);
+    }//GEN-LAST:event_encodingLabelMousePressed
+
+    private void handleEncodingPopup(java.awt.event.MouseEvent evt) {
+        if (evt.isPopupTrigger()) {
+            editationModeChange.popupEncodingsMenu(evt);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel editationModeLabel;

@@ -15,12 +15,13 @@
  */
 package org.exbin.framework.deltahex;
 
+import java.awt.event.MouseEvent;
 import org.exbin.deltahex.CodeArea;
 
 /**
  * Hexadecimal editor status interface.
  *
- * @version 0.2.0 2016/07/17
+ * @version 0.2.0 2016/07/18
  * @author ExBin Project (http://exbin.org)
  */
 public interface HexStatusApi {
@@ -48,8 +49,28 @@ public interface HexStatusApi {
 
     public static interface StatusControlHandler {
 
+        /**
+         * Requests change of editation mode from given mode.
+         *
+         * @param editationMode editation mode
+         */
         void changeEditationMode(CodeArea.EditationMode editationMode);
 
+        /**
+         * Requests change of cursor position using go-to dialog.
+         */
         void changeCursorPosition();
+
+        /**
+         * Switches to next encoding in defined list.
+         */
+        void cycleEncodings();
+
+        /**
+         * Handles encodings popup menu.
+         *
+         * @param mouseEvent mouse event
+         */
+        void popupEncodingsMenu(MouseEvent mouseEvent);
     }
 }

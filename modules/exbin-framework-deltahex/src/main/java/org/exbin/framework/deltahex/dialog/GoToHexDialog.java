@@ -130,8 +130,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
 
         positionTypeButtonGroup.add(absoluteRadioButton);
         absoluteRadioButton.setSelected(true);
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/Bundle"); // NOI18N
-        absoluteRadioButton.setText(bundle1.getString("GoToHexDialog.absoluteRadioButton.text")); // NOI18N
+        absoluteRadioButton.setText(bundle.getString("GoToHexDialog.absoluteRadioButton.text")); // NOI18N
         absoluteRadioButton.setName("absoluteRadioButton"); // NOI18N
         absoluteRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +139,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
         });
 
         positionTypeButtonGroup.add(relativeRadioButton);
-        relativeRadioButton.setText(bundle1.getString("GoToHexDialog.relativeRadioButton.text")); // NOI18N
+        relativeRadioButton.setText(bundle.getString("GoToHexDialog.relativeRadioButton.text")); // NOI18N
         relativeRadioButton.setName("relativeRadioButton"); // NOI18N
         relativeRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -156,7 +155,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
         positionSpinner.setName("positionSpinner"); // NOI18N
 
         hexadecimalPositionLabel1.setLabelFor(positionSpinner);
-        hexadecimalPositionLabel1.setText(bundle1.getString("GoToHexDialog.hexadecimalPositionLabel1.text")); // NOI18N
+        hexadecimalPositionLabel1.setText(bundle.getString("GoToHexDialog.hexadecimalPositionLabel1.text")); // NOI18N
         hexadecimalPositionLabel1.setName("hexadecimalPositionLabel1"); // NOI18N
 
         hexPositionSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 0, 1));
