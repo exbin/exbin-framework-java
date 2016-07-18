@@ -57,6 +57,10 @@ public class DeltaHexModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(DeltaHexModule.class);
     public static final String HEX_POPUP_MENU_ID = MODULE_ID + ".hexPopupMenu";
+    public static final String VIEW_MODE_SUBMENU_ID = MODULE_ID + ".viewModeSubMenu";
+    public static final String CODE_TYPE_SUBMENU_ID = MODULE_ID + ".codeTypeSubMenu";
+    public static final String POSITION_CODE_TYPE_SUBMENU_ID = MODULE_ID + ".positionCodeTypeSubMenu";
+    public static final String HEX_CHARACTERS_CASE_SUBMENU_ID = MODULE_ID + ".hexCharactersCaseSubMenu";
 
     private static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
     private static final String VIEW_NONPRINTABLES_MENU_GROUP_ID = MODULE_ID + ".viewNonprintablesMenuGroup";
@@ -76,6 +80,10 @@ public class DeltaHexModule implements XBApplicationModule {
     private GoToPositionHandler goToLineHandler;
     private PropertiesHandler propertiesHandler;
     private PrintHandler printHandler;
+    private ViewModeHandler viewModeHandler;
+    private CodeTypeHandler codeTypeHandler;
+    private PositionCodeTypeHandler positionCodeTypeHandler;
+    private HexCharactersCaseHandler hexCharactersCaseHandler;
 
     public DeltaHexModule() {
     }
@@ -280,6 +288,42 @@ public class DeltaHexModule implements XBApplicationModule {
         return printHandler;
     }
 
+    private ViewModeHandler getViewModeHandler() {
+        if (viewModeHandler == null) {
+            viewModeHandler = new ViewModeHandler(application, (HexPanel) getEditorProvider());
+            viewModeHandler.init();
+        }
+
+        return viewModeHandler;
+    }
+
+    private CodeTypeHandler getCodeTypeHandler() {
+        if (codeTypeHandler == null) {
+            codeTypeHandler = new CodeTypeHandler(application, (HexPanel) getEditorProvider());
+            codeTypeHandler.init();
+        }
+
+        return codeTypeHandler;
+    }
+
+    private PositionCodeTypeHandler getPositionCodeTypeHandler() {
+        if (positionCodeTypeHandler == null) {
+            positionCodeTypeHandler = new PositionCodeTypeHandler(application, (HexPanel) getEditorProvider());
+            positionCodeTypeHandler.init();
+        }
+
+        return positionCodeTypeHandler;
+    }
+    
+    private HexCharactersCaseHandler getHexCharactersCaseHandler() {
+        if (hexCharactersCaseHandler == null) {
+            hexCharactersCaseHandler = new HexCharactersCaseHandler(application, (HexPanel) getEditorProvider());
+            hexCharactersCaseHandler.init();
+        }
+
+        return hexCharactersCaseHandler;
+    }
+
     public void registerEditFindMenuActions() {
         getFindReplaceHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
@@ -320,6 +364,46 @@ public class DeltaHexModule implements XBApplicationModule {
         getPrintHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, printHandler.getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
+    }
+
+    public void registerViewModeMenu() {
+        getViewModeHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, VIEW_MODE_SUBMENU_ID, "View Mode", new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenu(VIEW_MODE_SUBMENU_ID, MODULE_ID);
+        menuModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getDualModeAction(), new MenuPosition(PositionMode.TOP));
+        menuModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getCodeMatrixModeAction(), new MenuPosition(PositionMode.TOP));
+        menuModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getTextPreviewModeAction(), new MenuPosition(PositionMode.TOP));
+    }
+
+    public void registerCodeTypeMenu() {
+        getCodeTypeHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, CODE_TYPE_SUBMENU_ID, "Code Type", new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenu(CODE_TYPE_SUBMENU_ID, MODULE_ID);
+        menuModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getBinaryCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        menuModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getOctalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        menuModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getDecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        menuModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getHexadecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+    }
+
+    public void registerPositionCodeTypeMenu() {
+        getPositionCodeTypeHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, POSITION_CODE_TYPE_SUBMENU_ID, "Position Code Type", new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenu(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID);
+        menuModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeHandler.getOctalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        menuModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeHandler.getDecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        menuModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeHandler.getHexadecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+    }
+
+    public void registerHexCharactersCaseHandlerMenu() {
+        getHexCharactersCaseHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, HEX_CHARACTERS_CASE_SUBMENU_ID, "Hex Characters Case", new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenu(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID);
+        menuModule.registerMenuItem(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID, hexCharactersCaseHandler.getUpperHexCharsAction(), new MenuPosition(PositionMode.TOP));
+        menuModule.registerMenuItem(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID, hexCharactersCaseHandler.getLowerHexCharsAction(), new MenuPosition(PositionMode.TOP));
     }
 
     private JPopupMenu createPopupMenu() {
