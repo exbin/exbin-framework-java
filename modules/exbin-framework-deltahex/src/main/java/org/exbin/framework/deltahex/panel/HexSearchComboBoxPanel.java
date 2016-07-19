@@ -31,7 +31,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Combo box panel supporting both binary and text values.
  *
- * @version 0.1.0 2016/06/28
+ * @version 0.1.0 2016/07/19
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchComboBoxPanel extends JPanel {
@@ -42,7 +42,7 @@ public class HexSearchComboBoxPanel extends JPanel {
     private final JTextField textField;
     private final CodeArea hexadecimalEditor = new CodeArea();
 
-    private SearchCondition item;
+    private final SearchCondition item = new SearchCondition();
 
     private ValueChangedListener valueChangedListener = null;
 
@@ -103,15 +103,23 @@ public class HexSearchComboBoxPanel extends JPanel {
     }
 
     public void setItem(SearchCondition item) {
-        this.item = item;
+        this.item.setSearchMode(item.getSearchMode());
         switch (item.getSearchMode()) {
             case TEXT: {
+                this.item.setSearchText(item.getSearchText());
+                this.item.setBinaryData(null);
                 CardLayout layout = (CardLayout) getLayout();
                 layout.show(this, TEXT_MODE);
                 revalidate();
                 break;
             }
             case BINARY: {
+                this.item.setSearchText("");
+                ByteArrayEditableData data = new ByteArrayEditableData();
+                if (item.getBinaryData() != null) {
+                    data.insert(0, item.getBinaryData());
+                }
+                this.item.setBinaryData(data);
                 CardLayout layout = (CardLayout) getLayout();
                 layout.show(this, BINARY_MODE);
                 revalidate();

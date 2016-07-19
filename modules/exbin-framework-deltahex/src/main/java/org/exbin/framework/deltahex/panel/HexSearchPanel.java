@@ -37,7 +37,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/06/27
+ * @version 0.1.0 2016/07/18
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
@@ -109,8 +109,6 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
         comboBoxEditor = new ComboBoxEditor() {
 
-            private SearchCondition item;
-
             @Override
             public Component getEditorComponent() {
                 return comboBoxEditorComponent;
@@ -118,21 +116,22 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
             @Override
             public void setItem(Object item) {
+                SearchCondition condition;
                 if (item == null || item instanceof String) {
-                    this.item = new SearchCondition();
-                    this.item.setSearchMode(SearchCondition.SearchMode.TEXT);
+                    condition = new SearchCondition();
+                    condition.setSearchMode(SearchCondition.SearchMode.TEXT);
                     if (item != null) {
-                        this.item.setSearchText((String) item);
+                        condition.setSearchText((String) item);
                     }
                 } else {
-                    this.item = (SearchCondition) item;
+                    condition = (SearchCondition) item;
                 }
-                comboBoxEditorComponent.setItem(this.item);
+                comboBoxEditorComponent.setItem(condition);
             }
 
             @Override
             public Object getItem() {
-                return this.item;
+                return comboBoxEditorComponent.getItem();
             }
 
             @Override
@@ -506,7 +505,9 @@ public class HexSearchPanel extends javax.swing.JPanel {
                     return;
                 }
 
-                condition.setBinaryData(searchData);
+                ByteArrayEditableData data = new ByteArrayEditableData();
+                data.insert(0, searchData);
+                condition.setBinaryData(data);
                 break;
             }
         }
@@ -546,12 +547,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
     }
 
     private void clearSearch() {
-        SearchCondition condition = searchParameters.getCondition();
-        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
-            findComboBox.getEditor().setItem("");
-        } else {
-            findComboBox.getEditor().setItem("");
-        }
+        findComboBox.getEditor().setItem(new SearchCondition());
     }
 
     public void setRequestFocus() {

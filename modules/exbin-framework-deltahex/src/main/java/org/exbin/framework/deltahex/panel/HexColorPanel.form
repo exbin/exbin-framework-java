@@ -59,6 +59,9 @@
         <Container class="javax.swing.JPanel" name="previewPanel">
           <Properties>
             <Property name="name" type="java.lang.String" value="previewPanel" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[300, 27]"/>
+            </Property>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
@@ -83,7 +86,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewLabel" pref="644" max="32767" attributes="0"/>
+                          <Component id="previewLabel" pref="361" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>

@@ -63,10 +63,10 @@ public class HexColorDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainPanel = new javax.swing.JPanel();
         controlPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
+        mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/resources/HexColorDialog"); // NOI18N
@@ -74,10 +74,6 @@ public class HexColorDialog extends javax.swing.JDialog {
         setLocationByPlatform(true);
         setModal(true);
         setName("Form"); // NOI18N
-
-        mainPanel.setName("mainPanel"); // NOI18N
-        mainPanel.setLayout(new java.awt.GridLayout(1, 0));
-        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
         controlPanel.setName("controlPanel"); // NOI18N
 
@@ -119,6 +115,11 @@ public class HexColorDialog extends javax.swing.JDialog {
         );
 
         getContentPane().add(controlPanel, java.awt.BorderLayout.PAGE_END);
+
+        mainPanel.setName("mainPanel"); // NOI18N
+        mainPanel.setPreferredSize(new java.awt.Dimension(600, 400));
+        mainPanel.setLayout(new java.awt.GridLayout(1, 0));
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed

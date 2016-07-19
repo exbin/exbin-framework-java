@@ -145,6 +145,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         splitPane.setLeftComponent(colorsScrollPane);
 
         previewPanel.setName("previewPanel"); // NOI18N
+        previewPanel.setPreferredSize(new java.awt.Dimension(300, 27));
         previewPanel.setLayout(new java.awt.BorderLayout());
 
         previewHeaderPanel.setName("previewHeaderPanel"); // NOI18N
@@ -159,7 +160,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
             previewHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(previewHeaderPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(previewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
+                .addComponent(previewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                 .addContainerGap())
         );
         previewHeaderPanelLayout.setVerticalGroup(
