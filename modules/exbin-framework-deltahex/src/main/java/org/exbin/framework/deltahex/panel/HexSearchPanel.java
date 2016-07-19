@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -26,6 +27,7 @@ import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
@@ -37,7 +39,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/07/18
+ * @version 0.1.0 2016/07/19
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
@@ -88,7 +90,6 @@ public class HexSearchPanel extends javax.swing.JPanel {
                         closePanel();
                     }
                 }
-                super.keyPressed(e);
             }
         };
 
@@ -101,7 +102,16 @@ public class HexSearchPanel extends javax.swing.JPanel {
                     return listCellRenderer.getListCellRendererComponent(list, value.getSearchText(), index, isSelected, cellHasFocus);
                 } else {
                     hexadecimalRenderer.setData(value.getBinaryData());
-                    hexadecimalRenderer.setMinimumSize(new Dimension(200, 30));
+                    hexadecimalRenderer.setPreferredSize(new Dimension(200, 20));
+                    Color backgroundColor;
+                    if (isSelected) {
+                        backgroundColor = list.getSelectionBackground();
+                    } else {
+                        backgroundColor = list.getBackground();
+                    }
+                    CodeArea.ColorsGroup mainColors = hexadecimalRenderer.getMainColors();
+                    mainColors.setBothBackgroundColors(backgroundColor);
+                    hexadecimalRenderer.setMainColors(mainColors);
                     return hexadecimalRenderer;
                 }
             }
@@ -126,6 +136,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
                 } else {
                     condition = (SearchCondition) item;
                 }
+                updateFindStatus();
                 comboBoxEditorComponent.setItem(condition);
             }
 
@@ -157,15 +168,6 @@ public class HexSearchPanel extends javax.swing.JPanel {
         });
         comboBoxEditorComponent.addValueKeyListener(editorKeyListener);
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
-
-        // TODO remove
-        SearchCondition binarySearchCondition = new SearchCondition();
-        binarySearchCondition.setSearchMode(SearchCondition.SearchMode.BINARY);
-        binarySearchCondition.setBinaryData(new ByteArrayEditableData(new byte[]{1, 2}));
-        searchHistory.add(binarySearchCondition);
-        SearchCondition testSearchCondition = new SearchCondition();
-        testSearchCondition.setSearchText("test");
-        searchHistory.add(testSearchCondition);
     }
 
     /**
@@ -430,22 +432,26 @@ public class HexSearchPanel extends javax.swing.JPanel {
         SearchCondition condition = searchParameters.getCondition();
         if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
             condition.setSearchMode(SearchCondition.SearchMode.BINARY);
-            matchCaseToggleButton.setEnabled(false);
-            comboBoxEditor.setItem(condition);
-            findComboBox.setEditor(comboBoxEditor);
-            findComboBox.repaint();
-            searchTypeButton.setText("B");
-            performSearch();
         } else {
             condition.setSearchMode(SearchCondition.SearchMode.TEXT);
-            matchCaseToggleButton.setEnabled(true);
-            comboBoxEditor.setItem(condition);
-            findComboBox.setEditor(comboBoxEditor);
-            findComboBox.repaint();
-            searchTypeButton.setText("T");
-            performSearch();
         }
+
+        comboBoxEditor.setItem(condition);
+        findComboBox.setEditor(comboBoxEditor);
+        findComboBox.repaint();
+        performSearch();
     }//GEN-LAST:event_searchTypeButtonActionPerformed
+
+    private void updateFindStatus() {
+        SearchCondition condition = searchParameters.getCondition();
+        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            searchTypeButton.setText("T");
+            matchCaseToggleButton.setEnabled(true);
+        } else {
+            searchTypeButton.setText("B");
+            matchCaseToggleButton.setEnabled(false);
+        }
+    }
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         closePanel();
@@ -562,6 +568,9 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     public void performFind() {
         hexPanel.findText(searchParameters);
+        comboBoxEditorComponent.setRunningUpdate(true);
+        ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(searchParameters.getCondition());
+        comboBoxEditorComponent.setRunningUpdate(false);
     }
 
     public void updatePosition(long position, long dataSize) {
@@ -653,6 +662,13 @@ public class HexSearchPanel extends javax.swing.JPanel {
         return true;
     }
 
+    public void setCodeAreaPopupMenu(JPopupMenu menu) {
+        comboBoxEditorComponent.setCodeAreaPopupMenu(menu);
+    }
+
+//    public void setCodeAreaPopupMenu(JPopupMenu menu) {
+//        hexadecimalRenderer.setComponentPopupMenu(menu);
+//    }
     /**
      * Listener for panel closing.
      */

@@ -20,6 +20,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
@@ -44,6 +45,7 @@ public class HexSearchComboBoxPanel extends JPanel {
 
     private final SearchCondition item = new SearchCondition();
 
+    private boolean runningUpdate = false;
     private ValueChangedListener valueChangedListener = null;
 
     public HexSearchComboBoxPanel() {
@@ -103,11 +105,17 @@ public class HexSearchComboBoxPanel extends JPanel {
     }
 
     public void setItem(SearchCondition item) {
+        if (item == null) {
+            item = new SearchCondition();
+        }
         this.item.setSearchMode(item.getSearchMode());
         switch (item.getSearchMode()) {
             case TEXT: {
                 this.item.setSearchText(item.getSearchText());
                 this.item.setBinaryData(null);
+                runningUpdate = true;
+                textField.setText(item.getSearchText());
+                runningUpdate = false;
                 CardLayout layout = (CardLayout) getLayout();
                 layout.show(this, TEXT_MODE);
                 revalidate();
@@ -120,6 +128,9 @@ public class HexSearchComboBoxPanel extends JPanel {
                     data.insert(0, item.getBinaryData());
                 }
                 this.item.setBinaryData(data);
+                runningUpdate = true;
+                hexadecimalEditor.setData(data);
+                runningUpdate = false;
                 CardLayout layout = (CardLayout) getLayout();
                 layout.show(this, BINARY_MODE);
                 revalidate();
@@ -142,7 +153,7 @@ public class HexSearchComboBoxPanel extends JPanel {
     }
 
     private void comboBoxValueChanged() {
-        if (valueChangedListener != null) {
+        if (valueChangedListener != null && !runningUpdate) {
             valueChangedListener.valueChanged();
         }
     }
@@ -154,6 +165,14 @@ public class HexSearchComboBoxPanel extends JPanel {
 
     public void setValueChangedListener(ValueChangedListener valueChangedListener) {
         this.valueChangedListener = valueChangedListener;
+    }
+
+    public void setRunningUpdate(boolean runningUpdate) {
+        this.runningUpdate = runningUpdate;
+    }
+
+    public void setCodeAreaPopupMenu(JPopupMenu menu) {
+        hexadecimalEditor.setComponentPopupMenu(menu);
     }
 
     /**

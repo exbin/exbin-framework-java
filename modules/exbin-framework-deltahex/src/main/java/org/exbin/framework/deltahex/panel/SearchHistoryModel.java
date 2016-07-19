@@ -18,16 +18,18 @@ package org.exbin.framework.deltahex.panel;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ComboBoxModel;
+import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 /**
  * Search condition history model.
  *
- * @version 0.1.0 2016/04/21
+ * @version 0.1.0 2016/07/19
  * @author ExBin Project (http://exbin.org)
  */
 public class SearchHistoryModel implements ComboBoxModel<SearchCondition> {
 
+    public static final int HISTORY_LIMIT = 10;
     private final List<SearchCondition> searchHistory;
     private final List<ListDataListener> listDataListeners = new ArrayList<>();
     private SearchCondition selectedItem = null;
@@ -63,6 +65,34 @@ public class SearchHistoryModel implements ComboBoxModel<SearchCondition> {
 
     @Override
     public void removeListDataListener(ListDataListener listDataListener) {
-        listDataListeners.remove(listDataListeners);
+        listDataListeners.remove(listDataListener);
+    }
+
+    public void addSearchCondition(SearchCondition condition) {
+        if (condition.isEmpty()) {
+            return;
+        }
+
+        boolean replaced = false;
+        for (int i = 0; i < searchHistory.size(); i++) {
+            SearchCondition searchCondition = searchHistory.get(i);
+            if (searchCondition.equals(condition)) {
+                if (i == 0) {
+                    return;
+                }
+
+                searchHistory.remove(i);
+                replaced = true;
+            }
+        }
+        if (searchHistory.size() == HISTORY_LIMIT && !replaced) {
+            int removePosition = searchHistory.size() - 1;
+            searchHistory.remove(removePosition);
+        }
+
+        searchHistory.add(0, new SearchCondition(condition));
+        for (ListDataListener listDataListener : listDataListeners) {
+            listDataListener.contentsChanged(new ListDataEvent(this, ListDataEvent.INTERVAL_ADDED, 0, 0));
+        }
     }
 }

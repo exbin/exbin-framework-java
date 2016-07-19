@@ -17,14 +17,19 @@ package org.exbin.framework.deltahex.dialog;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ComboBoxEditor;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
-import javax.swing.border.LineBorder;
 import org.exbin.deltahex.CodeArea;
+import org.exbin.framework.deltahex.panel.HexSearchComboBoxPanel;
 import org.exbin.framework.deltahex.panel.SearchCondition;
+import org.exbin.framework.deltahex.panel.SearchHistoryModel;
 import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -33,15 +38,19 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Find text/hexadecimal data dialog.
  *
- * @version 0.1.0 2016/06/21
+ * @version 0.1.0 2016/07/19
  * @author ExBin Project (http://exbin.org)
  */
 public class FindHexDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(FindHexDialog.class);
+
+    private final SearchCondition condition = new SearchCondition();
     private final CodeArea hexadecimalRenderer = new CodeArea();
-    private final CodeArea hexadecimalEditor = new CodeArea();
+    private HexSearchComboBoxPanel comboBoxEditorComponent;
+    private final List<SearchCondition> searchHistory = new ArrayList<>();
+    private ComboBoxEditor comboBoxEditor;
 
     public FindHexDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -60,41 +69,54 @@ public class FindHexDialog extends javax.swing.JDialog {
         hexadecimalRenderer.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
         hexadecimalRenderer.setVerticalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
-        hexadecimalRenderer.setData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
+        hexadecimalRenderer.setData(new ByteArrayEditableData());
 
-        hexadecimalEditor.setShowHeader(false);
-        hexadecimalEditor.setShowLineNumbers(false);
-        hexadecimalEditor.setWrapMode(true);
-        hexadecimalEditor.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
-        hexadecimalEditor.setVerticalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setData(new ByteArrayEditableData());
-        hexadecimalEditor.setBorder(new LineBorder(Color.LIGHT_GRAY));
+        comboBoxEditorComponent = new HexSearchComboBoxPanel();
 
-        findHexComboBox.setRenderer(new ListCellRenderer<String>() {
+        findComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
+            private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
+
             @Override
-            public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-                return hexadecimalRenderer;
+            public Component getListCellRendererComponent(JList<? extends SearchCondition> list, SearchCondition value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+                    return listCellRenderer.getListCellRendererComponent(list, value.getSearchText(), index, isSelected, cellHasFocus);
+                } else {
+                    hexadecimalRenderer.setData(value.getBinaryData());
+                    hexadecimalRenderer.setPreferredSize(new Dimension(200, 20));
+                    Color backgroundColor;
+                    if (isSelected) {
+                        backgroundColor = list.getSelectionBackground();
+                    } else {
+                        backgroundColor = list.getBackground();
+                    }
+                    CodeArea.ColorsGroup mainColors = hexadecimalRenderer.getMainColors();
+                    mainColors.setBothBackgroundColors(backgroundColor);
+                    hexadecimalRenderer.setMainColors(mainColors);
+                    return hexadecimalRenderer;
+                }
             }
         });
-        findHexComboBox.setEditor(new ComboBoxEditor() {
+
+        comboBoxEditor = new ComboBoxEditor() {
+
             @Override
             public Component getEditorComponent() {
-                return hexadecimalEditor;
+                return comboBoxEditorComponent;
             }
 
             @Override
-            public void setItem(Object anObject) {
+            public void setItem(Object item) {
+                comboBoxEditorComponent.setItem((SearchCondition) item);
             }
 
             @Override
             public Object getItem() {
-                return null;
+                return comboBoxEditorComponent.getItem();
             }
 
             @Override
             public void selectAll() {
-                hexadecimalRenderer.selectAll();
+                comboBoxEditorComponent.selectAll();
             }
 
             @Override
@@ -104,15 +126,15 @@ public class FindHexDialog extends javax.swing.JDialog {
             @Override
             public void removeActionListener(ActionListener l) {
             }
-        });
-
-        updateRadioStates();
+        };
+        findComboBox.setEditor(comboBoxEditor);
+        findComboBox.setModel(new SearchHistoryModel(searchHistory));
         pack();
     }
 
     public void setSelected() {
-        findTextComboBox.requestFocusInWindow();
-        findTextComboBox.getEditor().selectAll();
+        findComboBox.requestFocusInWindow();
+        findComboBox.getEditor().selectAll();
     }
 
     /**
@@ -124,18 +146,15 @@ public class FindHexDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        findModeGroup = new javax.swing.ButtonGroup();
         mainPanel = new javax.swing.JPanel();
         findPanel = new javax.swing.JPanel();
-        textModeRadioButton = new javax.swing.JRadioButton();
-        findTextComboBox = new javax.swing.JComboBox<>();
         findTextMultilineButton = new javax.swing.JButton();
-        hexModeRadioButton = new javax.swing.JRadioButton();
-        findHexComboBox = new javax.swing.JComboBox<>();
-        findHexMultilineButton = new javax.swing.JButton();
+        findComboBox = new javax.swing.JComboBox<>();
         searchFromCursorCheckBox = new javax.swing.JCheckBox();
         matchCaseCheckBox = new javax.swing.JCheckBox();
         multipleMatchesCheckBox = new javax.swing.JCheckBox();
+        findLabel = new javax.swing.JLabel();
+        searchTypeButton = new javax.swing.JButton();
         replacePanel = new javax.swing.JPanel();
         performReplaceCheckBox = new javax.swing.JCheckBox();
         textToReplaceLabel = new javax.swing.JLabel();
@@ -151,45 +170,24 @@ public class FindHexDialog extends javax.swing.JDialog {
         setName("Form"); // NOI18N
 
         mainPanel.setName("mainPanel"); // NOI18N
+        mainPanel.setLayout(new java.awt.BorderLayout());
 
         findPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("findPanel.border.title"))); // NOI18N
         findPanel.setName("findPanel"); // NOI18N
 
-        findModeGroup.add(textModeRadioButton);
-        textModeRadioButton.setSelected(true);
-        textModeRadioButton.setText(bundle.getString("FindHexDialog.textModeRadioButton.text")); // NOI18N
-        textModeRadioButton.setName("textModeRadioButton"); // NOI18N
-        textModeRadioButton.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                textModeRadioButtonStateChanged(evt);
-            }
-        });
-
-        findTextComboBox.setEditable(true);
-        findTextComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        findTextComboBox.setName("findTextComboBox"); // NOI18N
-
         findTextMultilineButton.setText(bundle.getString("FindHexDialog.findTextMultilineButton.text")); // NOI18N
         findTextMultilineButton.setToolTipText(bundle.getString("FindHexDialog.findTextMultilineButton.toolTipText")); // NOI18N
-        findTextMultilineButton.setEnabled(false);
         findTextMultilineButton.setName("findTextMultilineButton"); // NOI18N
-
-        findModeGroup.add(hexModeRadioButton);
-        hexModeRadioButton.setText(bundle.getString("FindHexDialog.hexModeRadioButton.text")); // NOI18N
-        hexModeRadioButton.setName("hexModeRadioButton"); // NOI18N
-        hexModeRadioButton.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                hexModeRadioButtonStateChanged(evt);
+        findTextMultilineButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findTextMultilineButtonActionPerformed(evt);
             }
         });
 
-        findHexComboBox.setEditable(true);
-        findHexComboBox.setName("findHexComboBox"); // NOI18N
-
-        findHexMultilineButton.setText(bundle.getString("FindHexDialog.findHexMultilineButton.text")); // NOI18N
-        findHexMultilineButton.setToolTipText(bundle.getString("FindHexDialog.findHexMultilineButton.toolTipText")); // NOI18N
-        findHexMultilineButton.setEnabled(false);
-        findHexMultilineButton.setName("findHexMultilineButton"); // NOI18N
+        findComboBox.setEditable(true);
+        findComboBox.setMinimumSize(new java.awt.Dimension(136, 30));
+        findComboBox.setName("findComboBox"); // NOI18N
+        findComboBox.setPreferredSize(new java.awt.Dimension(136, 30));
 
         searchFromCursorCheckBox.setSelected(true);
         searchFromCursorCheckBox.setText(bundle.getString("searchFromCursorCheckBox.text")); // NOI18N
@@ -202,6 +200,23 @@ public class FindHexDialog extends javax.swing.JDialog {
         multipleMatchesCheckBox.setText(bundle.getString("FindHexDialog.multipleMatchesCheckBox.text")); // NOI18N
         multipleMatchesCheckBox.setName("multipleMatchesCheckBox"); // NOI18N
 
+        findLabel.setText(bundle.getString("FindHexDialog.findLabel.text")); // NOI18N
+        findLabel.setName("findLabel"); // NOI18N
+
+        searchTypeButton.setText(bundle.getString("FindHexDialog.searchTypeButton.text")); // NOI18N
+        searchTypeButton.setToolTipText(bundle.getString("FindHexDialog.searchTypeButton.toolTipText")); // NOI18N
+        searchTypeButton.setFocusable(false);
+        searchTypeButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        searchTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));
+        searchTypeButton.setMinimumSize(new java.awt.Dimension(27, 27));
+        searchTypeButton.setName("searchTypeButton"); // NOI18N
+        searchTypeButton.setPreferredSize(new java.awt.Dimension(27, 27));
+        searchTypeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchTypeButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout findPanelLayout = new javax.swing.GroupLayout(findPanel);
         findPanel.setLayout(findPanelLayout);
         findPanelLayout.setHorizontalGroup(
@@ -209,56 +224,46 @@ public class FindHexDialog extends javax.swing.JDialog {
             .addGroup(findPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(matchCaseCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
-                    .addComponent(searchFromCursorCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+                    .addComponent(matchCaseCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(searchFromCursorCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(findPanelLayout.createSequentialGroup()
-                        .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textModeRadioButton)
-                            .addComponent(hexModeRadioButton))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(searchTypeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(findComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(findTextMultilineButton))
+                    .addComponent(multipleMatchesCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
                     .addGroup(findPanelLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, findPanelLayout.createSequentialGroup()
-                                .addComponent(findTextComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(findTextMultilineButton))
-                            .addGroup(findPanelLayout.createSequentialGroup()
-                                .addComponent(findHexComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(findHexMultilineButton))))
-                    .addComponent(multipleMatchesCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE))
+                        .addComponent(findLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         findPanelLayout.setVerticalGroup(
             findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(findPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(textModeRadioButton)
+                .addComponent(findLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(findTextComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(findTextMultilineButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(hexModeRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(findHexMultilineButton)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, findPanelLayout.createSequentialGroup()
-                        .addComponent(findHexComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(3, 3, 3)))
+                    .addComponent(findComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(findTextMultilineButton)
+                    .addComponent(searchTypeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(searchFromCursorCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(matchCaseCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(multipleMatchesCheckBox)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        mainPanel.add(findPanel, java.awt.BorderLayout.PAGE_START);
 
         replacePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("replacePanel.border.title"))); // NOI18N
         replacePanel.setName("replacePanel"); // NOI18N
 
         performReplaceCheckBox.setText(bundle.getString("performReplaceCheckBox.text")); // NOI18N
+        performReplaceCheckBox.setEnabled(false);
         performReplaceCheckBox.setName("performReplaceCheckBox"); // NOI18N
         performReplaceCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -283,10 +288,10 @@ public class FindHexDialog extends javax.swing.JDialog {
             .addGroup(replacePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(performReplaceCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+                    .addComponent(performReplaceCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
                     .addComponent(textToReplaceLabel)
-                    .addComponent(textToReplaceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
-                    .addComponent(replaceAllMatchesCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE))
+                    .addComponent(textToReplaceTextField)
+                    .addComponent(replaceAllMatchesCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         replacePanelLayout.setVerticalGroup(
@@ -299,35 +304,10 @@ public class FindHexDialog extends javax.swing.JDialog {
                 .addComponent(textToReplaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(replaceAllMatchesCheckBox)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(replacePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(findPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
-        );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addContainerGap(300, Short.MAX_VALUE)
-                .addComponent(replacePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(findPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(162, Short.MAX_VALUE)))
-        );
+        mainPanel.add(replacePanel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
@@ -354,7 +334,7 @@ public class FindHexDialog extends javax.swing.JDialog {
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(447, Short.MAX_VALUE)
+                .addContainerGap(395, Short.MAX_VALUE)
                 .addComponent(findButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelButton)
@@ -388,20 +368,29 @@ public class FindHexDialog extends javax.swing.JDialog {
         textToReplaceLabel.setEnabled(performReplaceCheckBox.isSelected());
     }//GEN-LAST:event_performReplaceCheckBoxActionPerformed
 
-    private void textModeRadioButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_textModeRadioButtonStateChanged
-        updateRadioStates();
-    }//GEN-LAST:event_textModeRadioButtonStateChanged
+    private void findTextMultilineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextMultilineButtonActionPerformed
+        HexMultilineDialog multilineDialog = new HexMultilineDialog(WindowUtils.getFrame(this), true);
+        multilineDialog.setMultiline("");
+        multilineDialog.setVisible(true);
+    }//GEN-LAST:event_findTextMultilineButtonActionPerformed
 
-    private void hexModeRadioButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_hexModeRadioButtonStateChanged
-        updateRadioStates();
-    }//GEN-LAST:event_hexModeRadioButtonStateChanged
-
-    private void updateRadioStates() {
-        boolean mode = textModeRadioButton.isSelected();
-        findTextComboBox.setEnabled(mode);
-        findHexComboBox.setEnabled(!mode);
-        matchCaseCheckBox.setEnabled(mode);
-    }
+    private void searchTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTypeButtonActionPerformed
+        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            condition.setSearchMode(SearchCondition.SearchMode.BINARY);
+            matchCaseCheckBox.setEnabled(false);
+            comboBoxEditor.setItem(condition);
+            findComboBox.setEditor(comboBoxEditor);
+            findComboBox.repaint();
+            searchTypeButton.setText("B");
+        } else {
+            condition.setSearchMode(SearchCondition.SearchMode.TEXT);
+            matchCaseCheckBox.setEnabled(true);
+            comboBoxEditor.setItem(condition);
+            findComboBox.setEditor(comboBoxEditor);
+            findComboBox.repaint();
+            searchTypeButton.setText("T");
+        }
+    }//GEN-LAST:event_searchTypeButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -414,13 +403,10 @@ public class FindHexDialog extends javax.swing.JDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel controlPanel;
     private javax.swing.JButton findButton;
-    private javax.swing.JComboBox<String> findHexComboBox;
-    private javax.swing.JButton findHexMultilineButton;
-    private javax.swing.ButtonGroup findModeGroup;
+    private javax.swing.JComboBox<SearchCondition> findComboBox;
+    private javax.swing.JLabel findLabel;
     private javax.swing.JPanel findPanel;
-    private javax.swing.JComboBox<String> findTextComboBox;
     private javax.swing.JButton findTextMultilineButton;
-    private javax.swing.JRadioButton hexModeRadioButton;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JCheckBox matchCaseCheckBox;
     private javax.swing.JCheckBox multipleMatchesCheckBox;
@@ -428,7 +414,7 @@ public class FindHexDialog extends javax.swing.JDialog {
     private javax.swing.JCheckBox replaceAllMatchesCheckBox;
     private javax.swing.JPanel replacePanel;
     private javax.swing.JCheckBox searchFromCursorCheckBox;
-    private javax.swing.JRadioButton textModeRadioButton;
+    private javax.swing.JButton searchTypeButton;
     private javax.swing.JLabel textToReplaceLabel;
     private javax.swing.JTextField textToReplaceTextField;
     // End of variables declaration//GEN-END:variables
@@ -438,7 +424,7 @@ public class FindHexDialog extends javax.swing.JDialog {
     }
 
     public String getFindText() {
-        return (String) findTextComboBox.getEditor().getItem();
+        return (String) findComboBox.getEditor().getItem();
     }
 
     public boolean getShallReplace() {
@@ -456,8 +442,8 @@ public class FindHexDialog extends javax.swing.JDialog {
 
     public SearchParameters getSearchParameters() {
         SearchParameters result = new SearchParameters();
-        SearchCondition condition = result.getCondition();
-        condition.setSearchText((String) findTextComboBox.getEditor().getItem());
+        SearchCondition newCondition = result.getCondition();
+        newCondition.setSearchText((String) findComboBox.getEditor().getItem());
         result.setSearchFromCursor(searchFromCursorCheckBox.isSelected());
         return result;
     }

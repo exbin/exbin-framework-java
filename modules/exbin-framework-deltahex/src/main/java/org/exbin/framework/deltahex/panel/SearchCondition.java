@@ -15,13 +15,15 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import java.util.Objects;
 import org.exbin.utils.binary_data.BinaryData;
+import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 
 /**
  * Parameters for action to search for occurences of text or data.
  *
- * @version 0.1.0 2016/06/20
+ * @version 0.1.0 2016/07/18
  * @author ExBin Project (http://exbin.org)
  */
 public class SearchCondition {
@@ -31,6 +33,20 @@ public class SearchCondition {
     private EditableBinaryData binaryData;
 
     public SearchCondition() {
+    }
+
+    /**
+     * This is copy constructor.
+     *
+     * @param source source condition
+     */
+    public SearchCondition(SearchCondition source) {
+        searchMode = source.getSearchMode();
+        searchText = source.getSearchText();
+        binaryData = new ByteArrayEditableData();
+        if (source.getBinaryData() != null) {
+            binaryData.insert(0, source.getBinaryData());
+        }
     }
 
     public SearchMode getSearchMode() {
@@ -67,6 +83,34 @@ public class SearchCondition {
             }
             default:
                 throw new IllegalStateException("Unexpected search mode " + searchMode.name());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SearchCondition other = (SearchCondition) obj;
+        if (this.searchMode != other.searchMode) {
+            return false;
+        }
+        if (searchMode == SearchMode.TEXT) {
+            return Objects.equals(this.searchText, other.searchText);
+        } else {
+            return Objects.equals(this.binaryData, other.binaryData);
         }
     }
 

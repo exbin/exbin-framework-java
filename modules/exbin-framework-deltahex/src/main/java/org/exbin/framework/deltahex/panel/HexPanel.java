@@ -72,7 +72,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/07/18
+ * @version 0.1.0 2016/07/19
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -87,7 +87,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     private CharsetChangeListener charsetChangeListener = null;
     private HexStatusPanel statusPanel = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private HexSearchPanel findTextPanel;
+    private HexSearchPanel hexSearchPanel;
     private boolean findTextPanelVisible = false;
     private Action goToLineAction = null;
     private DeltaHexModule.EncodingStatusHandler encodingStatusHandler;
@@ -126,8 +126,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         codeArea.addDataChangedListener(new CodeArea.DataChangedListener() {
             @Override
             public void dataChanged() {
-                if (findTextPanel.isVisible()) {
-                    findTextPanel.dataChanged();
+                if (hexSearchPanel.isVisible()) {
+                    hexSearchPanel.dataChanged();
                 }
             }
         });
@@ -159,8 +159,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             }
         });
 
-        findTextPanel = new HexSearchPanel(this, false);
-        findTextPanel.setClosePanelListener(new HexSearchPanel.ClosePanelListener() {
+        hexSearchPanel = new HexSearchPanel(this, false);
+        hexSearchPanel.setClosePanelListener(new HexSearchPanel.ClosePanelListener() {
             @Override
             public void panelClosed() {
                 hideFindPanel();
@@ -170,8 +170,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     public void hideFindPanel() {
         if (findTextPanelVisible) {
-            findTextPanel.cancelSearch();
-            HexPanel.this.remove(findTextPanel);
+            hexSearchPanel.cancelSearch();
+            HexPanel.this.remove(hexSearchPanel);
             HexPanel.this.revalidate();
             findTextPanelVisible = false;
         }
@@ -203,17 +203,17 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     public void showFindPanel() {
         if (!findTextPanelVisible) {
-            add(findTextPanel, BorderLayout.SOUTH);
+            add(hexSearchPanel, BorderLayout.SOUTH);
             revalidate();
             findTextPanelVisible = true;
-            findTextPanel.setRequestFocus();
+            hexSearchPanel.setRequestFocus();
         }
     }
 
     public void findText(SearchParameters searchParameters) {
         HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
-        findTextPanel.clearStatus();
+        hexSearchPanel.clearStatus();
         if (condition.isEmpty()) {
             painter.clearMatches();
             codeArea.repaint();
@@ -307,7 +307,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             HighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
             codeArea.revealPosition(firstMatch.getPosition(), codeArea.getActiveSection());
         }
-        findTextPanel.setStatus(foundMatches.size(), 0);
+        hexSearchPanel.setStatus(foundMatches.size(), 0);
         codeArea.repaint();
     }
 
@@ -390,7 +390,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             HighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
             codeArea.revealPosition(firstMatch.getPosition(), codeArea.getActiveSection());
         }
-        findTextPanel.setStatus(foundMatches.size(), 0);
+        hexSearchPanel.setStatus(foundMatches.size(), 0);
         codeArea.repaint();
     }
 
@@ -531,6 +531,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     public void loadFromFile() {
         File file = new File(getFileName());
         try {
+            // TODO Support for delta mode
 //            DeltaDataSource dataSource = new DeltaDataSource(file);
 //            DeltaHexadecimalData deltaData = new DeltaHexadecimalData(dataSource);
 //            hexadecimal.setData(deltaData);
@@ -577,7 +578,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void setPopupMenu(JPopupMenu menu) {
-        codeArea.setComponentPopupMenu(menu);
+//        codeArea.setComponentPopupMenu(menu);
+        hexSearchPanel.setCodeAreaPopupMenu(menu);
     }
 
     public void loadFromStream(InputStream stream) throws IOException {
@@ -738,7 +740,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void updatePosition() {
-        findTextPanel.updatePosition(codeArea.getCaretPosition().getDataPosition(), codeArea.getData().getDataSize());
+        hexSearchPanel.updatePosition(codeArea.getCaretPosition().getDataPosition(), codeArea.getData().getDataSize());
     }
 
     public void clearMatches() {

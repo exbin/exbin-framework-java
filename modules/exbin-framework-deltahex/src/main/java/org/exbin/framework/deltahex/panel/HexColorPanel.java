@@ -304,4 +304,9 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
     public void setModifiedOptionListener(ModifiedOptionListener listener) {
         modifiedOptionListener = listener;
     }
+    
+    // TODO: Workaround for issue with divider position, replace color editors
+    public void fixLayout() {
+        splitPane.setDividerLocation(getWidth() / 2);
+    }
 }
