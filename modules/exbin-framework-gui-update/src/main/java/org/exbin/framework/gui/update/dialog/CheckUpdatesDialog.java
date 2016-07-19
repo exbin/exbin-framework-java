@@ -271,8 +271,8 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
     private void recheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recheckButtonActionPerformed
         recheckButton.setEnabled(false);
-        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/apps/internet-web-browser-7.png"))); // NOI18N
-        statusTextLabel.setText("Checking for available updates...");
+        statusTextLabel.setText(bundle.getString("status.checking.text"));
+        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.checking.icon"))));
         performCheckForUpdates();
     }//GEN-LAST:event_recheckButtonActionPerformed
 
@@ -334,7 +334,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                 GuiUpdateModule.CheckUpdatesResult result = checkUpdatesHandler.checkForUpdates();
                 VersionNumbers updateVersion = checkUpdatesHandler.getUpdateVersion();
                 if (updateVersion == null) {
-                    availableVersionTextField.setText("unknown");
+                    availableVersionTextField.setText(bundle.getString("unknown"));
                 } else {
                     availableVersionTextField.setText(updateVersion.versionAsString());
                 }
@@ -352,38 +352,38 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         }
         switch (result) {
             case UPDATE_URL_NOT_SET: {
-                statusTextLabel.setText("URL for updates was not set!");
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-no.png"))); // NOI18N
+                statusTextLabel.setText(bundle.getString("status.updateUrlNotSet.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.updateUrlNotSet.icon"))));
                 break;
             }
             case NO_CONNECTION: {
-                statusTextLabel.setText("Unable to connect!");
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-no.png"))); // NOI18N
+                statusTextLabel.setText(bundle.getString("status.noConnection.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.noConnection.icon"))));
                 break;
             }
             case CONNECTION_ISSUE: {
-                statusTextLabel.setText("Connection issue during attemt to connect!");
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-no.png"))); // NOI18N
+                statusTextLabel.setText(bundle.getString("status.connectionIssue.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.connectionIssue.icon"))));
                 break;
             }
             case NOT_FOUND: {
-                statusTextLabel.setText("No update information on update website!");
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-no.png"))); // NOI18N
+                statusTextLabel.setText(bundle.getString("status.notFound.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.notFound.icon"))));
                 break;
             }
             case NO_UPDATE_AVAILABLE: {
-                statusTextLabel.setText("No newer update available.");
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/dialog-ok-5.png"))); // NOI18N
+                statusTextLabel.setText(bundle.getString("status.noUpdateAvailable.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.noUpdateAvailable.icon"))));
                 break;
             }
             case UPDATE_FOUND: {
-                statusTextLabel.setText("Newer version is available!");
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/upgrade_misc.png"))); // NOI18N
+                statusTextLabel.setText(bundle.getString("status.updateFound.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.updateFound.icon"))));
                 break;
             }
             default: {
                 statusTextLabel.setText("Unexpected result state " + result.name() + "!");
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/actions/upgrade_misc.png"))); // NOI18N
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.misc.icon"))));
                 break;
             }
         }

@@ -215,7 +215,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         searchTypeToolBar.setFocusable(false);
         searchTypeToolBar.setName("searchTypeToolBar"); // NOI18N
 
-        searchTypeButton.setText(bundle.getString("HexSearchPanel.searchTypeButton.text")); // NOI18N
+        searchTypeButton.setText("T");
         searchTypeButton.setToolTipText(bundle.getString("HexSearchPanel.searchTypeButton.toolTipText")); // NOI18N
         searchTypeButton.setFocusable(false);
         searchTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));

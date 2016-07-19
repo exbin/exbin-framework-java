@@ -46,6 +46,7 @@ import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Hexadecimal editor module.
@@ -67,6 +68,8 @@ public class DeltaHexModule implements XBApplicationModule {
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
 
     public static final String HEX_STATUS_BAR_ID = "hexStatusBar";
+
+    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
 
     private XBApplication application;
     private XBEditorProvider editorProvider;
@@ -314,7 +317,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
         return positionCodeTypeHandler;
     }
-    
+
     private HexCharactersCaseHandler getHexCharactersCaseHandler() {
         if (hexCharactersCaseHandler == null) {
             hexCharactersCaseHandler = new HexCharactersCaseHandler(application, (HexPanel) getEditorProvider());
@@ -369,7 +372,7 @@ public class DeltaHexModule implements XBApplicationModule {
     public void registerViewModeMenu() {
         getViewModeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, VIEW_MODE_SUBMENU_ID, "View Mode", new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, VIEW_MODE_SUBMENU_ID, bundle.getString("viewModeSubMenu.text"), new MenuPosition(PositionMode.BOTTOM));
         menuModule.registerMenu(VIEW_MODE_SUBMENU_ID, MODULE_ID);
         menuModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getDualModeAction(), new MenuPosition(PositionMode.TOP));
         menuModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getCodeMatrixModeAction(), new MenuPosition(PositionMode.TOP));
@@ -379,7 +382,7 @@ public class DeltaHexModule implements XBApplicationModule {
     public void registerCodeTypeMenu() {
         getCodeTypeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, CODE_TYPE_SUBMENU_ID, "Code Type", new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, CODE_TYPE_SUBMENU_ID, bundle.getString("codeTypeSubMenu.text"), new MenuPosition(PositionMode.BOTTOM));
         menuModule.registerMenu(CODE_TYPE_SUBMENU_ID, MODULE_ID);
         menuModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getBinaryCodeTypeAction(), new MenuPosition(PositionMode.TOP));
         menuModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getOctalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
@@ -390,7 +393,7 @@ public class DeltaHexModule implements XBApplicationModule {
     public void registerPositionCodeTypeMenu() {
         getPositionCodeTypeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, POSITION_CODE_TYPE_SUBMENU_ID, "Position Code Type", new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, POSITION_CODE_TYPE_SUBMENU_ID, bundle.getString("positionCodeTypeSubMenu.text"), new MenuPosition(PositionMode.BOTTOM));
         menuModule.registerMenu(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID);
         menuModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeHandler.getOctalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
         menuModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeHandler.getDecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
@@ -400,7 +403,7 @@ public class DeltaHexModule implements XBApplicationModule {
     public void registerHexCharactersCaseHandlerMenu() {
         getHexCharactersCaseHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, HEX_CHARACTERS_CASE_SUBMENU_ID, "Hex Characters Case", new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, HEX_CHARACTERS_CASE_SUBMENU_ID, bundle.getString("hexCharsCaseSubMenu.text"), new MenuPosition(PositionMode.BOTTOM));
         menuModule.registerMenu(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID);
         menuModule.registerMenuItem(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID, hexCharactersCaseHandler.getUpperHexCharsAction(), new MenuPosition(PositionMode.TOP));
         menuModule.registerMenuItem(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID, hexCharactersCaseHandler.getLowerHexCharsAction(), new MenuPosition(PositionMode.TOP));
