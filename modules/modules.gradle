@@ -8,8 +8,8 @@ version = '0.2.0-SNAPSHOT'
 def repositoryName = "xbup-framework-java"
 def libraryUrl = 'http://framework.exbin.org'
 ext.xbupVersion = '0.2.0-SNAPSHOT'
-ext.exbinUtilsVersion = '0.1.0-SNAPSHOT'
-ext.deltahexVersion = '0.1.0-SNAPSHOT'
+ext.exbinUtilsVersion = '0.1.1-SNAPSHOT'
+ext.deltahexVersion = '0.1.1-SNAPSHOT'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -54,7 +54,7 @@ publishing {
         maven(MavenPublication) {
             from components.java
             artifact sourceJar {
-                classifier "sources"
+                classifier 'sources'
             }
             artifact (javadocJar) {
                 classifier = 'javadoc'
