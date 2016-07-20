@@ -39,7 +39,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/07/19
+ * @version 0.1.0 2016/07/20
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
@@ -136,8 +136,12 @@ public class HexSearchPanel extends javax.swing.JPanel {
                 } else {
                     condition = (SearchCondition) item;
                 }
-                updateFindStatus();
-                comboBoxEditorComponent.setItem(condition);
+                searchParameters.setCondition(new SearchCondition(condition));
+                SearchCondition currentItem = comboBoxEditorComponent.getItem();
+                if (item != currentItem) {
+                    comboBoxEditorComponent.setItem(condition);
+                    updateFindStatus();
+                }
             }
 
             @Override
@@ -399,9 +403,15 @@ public class HexSearchPanel extends javax.swing.JPanel {
         findDialog.setShallReplace(false);
         findDialog.setSelected();
         findDialog.setLocationRelativeTo(findDialog.getParent());
+        findDialog.setSearchHistory(searchHistory);
+        findDialog.setSearchParameters(searchParameters);
         findDialog.setVisible(true);
         if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
             SearchParameters findParameters = findDialog.getSearchParameters();
+            ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(findParameters.getCondition());
+            searchParameters.setFromParameters(findParameters);
+            comboBoxEditorComponent.setItem(findParameters.getCondition());
+            updateFindStatus();
             hexPanel.findText(findParameters);
         }
     }//GEN-LAST:event_optionsButtonActionPerformed
@@ -552,12 +562,18 @@ public class HexSearchPanel extends javax.swing.JPanel {
         searchStartThread.start();
     }
 
-    private void clearSearch() {
-        findComboBox.getEditor().setItem(new SearchCondition());
+    public void clearSearch() {
+        SearchCondition condition = searchParameters.getCondition();
+        if (!condition.isEmpty()) {
+            condition.clear();
+            findComboBox.getEditor().setItem(new SearchCondition());
+            performSearch();
+        }
     }
 
-    public void setRequestFocus() {
+    public void requestSearchFocus() {
         findComboBox.requestFocus();
+        comboBoxEditorComponent.requestFocus();
     }
 
     public void cancelSearch() {
@@ -626,10 +642,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     public void closePanel() {
         if (closePanelListener != null) {
-            SearchCondition condition = searchParameters.getCondition();
-            if (!condition.isEmpty()) {
-                clearSearch();
-            }
+            clearSearch();
             closePanelListener.panelClosed();
         }
     }

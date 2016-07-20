@@ -15,20 +15,31 @@
  */
 package org.exbin.framework.deltahex.dialog;
 
+import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import org.exbin.deltahex.CodeArea;
+import org.exbin.framework.deltahex.panel.SearchCondition;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.utils.binary_data.EditableBinaryData;
 
 /**
- * Multiline text dialog.
+ * Multiline search condition editor dialog.
  *
- * @version 0.1.0 2016/07/19
+ * @version 0.1.0 2016/07/20
  * @author ExBin Project (http://exbin.org)
  */
 public class HexMultilineDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(HexMultilineDialog.class);
+    private SearchCondition condition;
+
+    private JTextArea textArea;
+    private JScrollPane scrollPane;
+    private CodeArea codeArea;
 
     public HexMultilineDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -40,7 +51,6 @@ public class HexMultilineDialog extends javax.swing.JDialog {
         WindowUtils.initWindow(this);
         WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, setButton, cancelButton);
-        pack();
     }
 
     /**
@@ -55,9 +65,6 @@ public class HexMultilineDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainPanel = new javax.swing.JPanel();
-        scrollPane = new javax.swing.JScrollPane();
-        textArea = new javax.swing.JTextArea();
         controlPanel = new javax.swing.JPanel();
         setButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
@@ -66,34 +73,6 @@ public class HexMultilineDialog extends javax.swing.JDialog {
         setTitle(bundle.getString("Form.title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N
-
-        mainPanel.setName("mainPanel"); // NOI18N
-
-        scrollPane.setName("scrollPane"); // NOI18N
-
-        textArea.setColumns(20);
-        textArea.setRows(5);
-        textArea.setName("textArea"); // NOI18N
-        scrollPane.setViewportView(textArea);
-
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
         controlPanel.setName("controlPanel"); // NOI18N
 
@@ -118,7 +97,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(367, Short.MAX_VALUE)
+                .addContainerGap(284, Short.MAX_VALUE)
                 .addComponent(setButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
@@ -136,7 +115,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
 
         getContentPane().add(controlPanel, java.awt.BorderLayout.PAGE_END);
 
-        pack();
+        setSize(new java.awt.Dimension(437, 373));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -160,10 +139,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel controlPanel;
-    private javax.swing.JPanel mainPanel;
-    private javax.swing.JScrollPane scrollPane;
     private javax.swing.JButton setButton;
-    private javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
 
     public int getDialogOption() {
@@ -174,7 +150,34 @@ public class HexMultilineDialog extends javax.swing.JDialog {
         return textArea.getText();
     }
 
-    void setMultiline(String text) {
-        textArea.setText(text);
+    public SearchCondition getCondition() {
+        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            condition.setSearchText(textArea.getText());
+        } else {
+            condition.setBinaryData((EditableBinaryData) codeArea.getData());
+        }
+
+        return condition;
+    }
+
+    public void setCondition(SearchCondition condition) {
+        this.condition = condition;
+        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            scrollPane = new javax.swing.JScrollPane();
+            textArea = new javax.swing.JTextArea();
+            textArea.setColumns(20);
+            textArea.setRows(5);
+            textArea.setName("textArea"); // NOI18N
+            scrollPane.setViewportView(textArea);
+
+            textArea.setText(condition.getSearchText());
+            add(scrollPane, BorderLayout.CENTER);
+            WindowUtils.assignGlobalKeyListener(scrollPane, setButton, cancelButton);
+        } else {
+            codeArea = new CodeArea();
+            codeArea.setData(condition.getBinaryData());
+            add(codeArea, BorderLayout.CENTER);
+            WindowUtils.assignGlobalKeyListener(codeArea, setButton, cancelButton);
+        }
     }
 }

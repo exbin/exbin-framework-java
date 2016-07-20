@@ -51,13 +51,14 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.1.0 2016/06/23
+ * @version 0.1.0 2016/07/20
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(DeltaHexModule.class);
     public static final String HEX_POPUP_MENU_ID = MODULE_ID + ".hexPopupMenu";
+    public static final String SEARCH_HEX_POPUP_MENU_ID = MODULE_ID + ".searchHexPopupMenu";
     public static final String VIEW_MODE_SUBMENU_ID = MODULE_ID + ".viewModeSubMenu";
     public static final String CODE_TYPE_SUBMENU_ID = MODULE_ID + ".codeTypeSubMenu";
     public static final String POSITION_CODE_TYPE_SUBMENU_ID = MODULE_ID + ".positionCodeTypeSubMenu";
@@ -104,6 +105,8 @@ public class DeltaHexModule implements XBApplicationModule {
         if (editorProvider == null) {
             editorProvider = new HexPanel();
             ((HexPanel) editorProvider).setPopupMenu(createPopupMenu());
+            // TODO
+            // ((HexPanel) editorProvider).setSearchPopupMenu(createSearchPopupMenu());
             ((HexPanel) editorProvider).setGoToLineAction(getGoToLineHandler().getGoToLineAction());
             ((HexPanel) editorProvider).setEncodingStatusHandler(new EncodingStatusHandler() {
                 @Override
@@ -416,6 +419,16 @@ public class DeltaHexModule implements XBApplicationModule {
 
         JPopupMenu popupMenu = new JPopupMenu();
         menuModule.buildMenu(popupMenu, HEX_POPUP_MENU_ID);
+        return popupMenu;
+    }
+
+    private JPopupMenu createSearchPopupMenu() {
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerMenu(SEARCH_HEX_POPUP_MENU_ID, MODULE_ID);
+        menuModule.registerClipboardMenuItems(SEARCH_HEX_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
+
+        JPopupMenu popupMenu = new JPopupMenu();
+        menuModule.buildMenu(popupMenu, SEARCH_HEX_POPUP_MENU_ID);
         return popupMenu;
     }
 

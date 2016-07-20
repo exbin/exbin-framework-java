@@ -36,9 +36,9 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 
 /**
- * Find text/hexadecimal data dialog.
+ * Find text/hexadecimal options dialog.
  *
- * @version 0.1.0 2016/07/19
+ * @version 0.1.0 2016/07/20
  * @author ExBin Project (http://exbin.org)
  */
 public class FindHexDialog extends javax.swing.JDialog {
@@ -46,10 +46,9 @@ public class FindHexDialog extends javax.swing.JDialog {
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(FindHexDialog.class);
 
-    private final SearchCondition condition = new SearchCondition();
     private final CodeArea hexadecimalRenderer = new CodeArea();
     private HexSearchComboBoxPanel comboBoxEditorComponent;
-    private final List<SearchCondition> searchHistory = new ArrayList<>();
+    private List<SearchCondition> searchHistory = new ArrayList<>();
     private ComboBoxEditor comboBoxEditor;
 
     public FindHexDialog(java.awt.Frame parent, boolean modal) {
@@ -61,7 +60,6 @@ public class FindHexDialog extends javax.swing.JDialog {
     private void init() {
         WindowUtils.initWindow(this);
         WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
-        WindowUtils.assignGlobalKeyListener(this, findButton, cancelButton);
 
         hexadecimalRenderer.setShowHeader(false);
         hexadecimalRenderer.setShowLineNumbers(false);
@@ -107,6 +105,7 @@ public class FindHexDialog extends javax.swing.JDialog {
             @Override
             public void setItem(Object item) {
                 comboBoxEditorComponent.setItem((SearchCondition) item);
+                updateFindStatus();
             }
 
             @Override
@@ -129,6 +128,8 @@ public class FindHexDialog extends javax.swing.JDialog {
         };
         findComboBox.setEditor(comboBoxEditor);
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
+
+        WindowUtils.assignGlobalKeyListener(this, findButton, cancelButton);
         pack();
     }
 
@@ -369,28 +370,39 @@ public class FindHexDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_performReplaceCheckBoxActionPerformed
 
     private void findTextMultilineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextMultilineButtonActionPerformed
+        SearchCondition condition = (SearchCondition) comboBoxEditor.getItem();
         HexMultilineDialog multilineDialog = new HexMultilineDialog(WindowUtils.getFrame(this), true);
-        multilineDialog.setMultiline("");
+        multilineDialog.setCondition(condition);
         multilineDialog.setVisible(true);
+        if (multilineDialog.getDialogOption() == JOptionPane.OK_OPTION) {
+            comboBoxEditorComponent.setItem(multilineDialog.getCondition());
+            updateFindStatus();
+        }
     }//GEN-LAST:event_findTextMultilineButtonActionPerformed
 
     private void searchTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTypeButtonActionPerformed
+        SearchCondition condition = (SearchCondition) comboBoxEditor.getItem();
         if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
             condition.setSearchMode(SearchCondition.SearchMode.BINARY);
-            matchCaseCheckBox.setEnabled(false);
-            comboBoxEditor.setItem(condition);
-            findComboBox.setEditor(comboBoxEditor);
-            findComboBox.repaint();
-            searchTypeButton.setText("B");
         } else {
             condition.setSearchMode(SearchCondition.SearchMode.TEXT);
-            matchCaseCheckBox.setEnabled(true);
-            comboBoxEditor.setItem(condition);
-            findComboBox.setEditor(comboBoxEditor);
-            findComboBox.repaint();
-            searchTypeButton.setText("T");
         }
+        comboBoxEditor.setItem(condition);
+        findComboBox.setEditor(comboBoxEditor);
+        updateFindStatus();
+        findComboBox.repaint();
     }//GEN-LAST:event_searchTypeButtonActionPerformed
+
+    private void updateFindStatus() {
+        SearchCondition condition = (SearchCondition) comboBoxEditor.getItem();
+        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            searchTypeButton.setText("T");
+            matchCaseCheckBox.setEnabled(true);
+        } else {
+            searchTypeButton.setText("B");
+            matchCaseCheckBox.setEnabled(false);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -432,8 +444,9 @@ public class FindHexDialog extends javax.swing.JDialog {
     }
 
     public void setShallReplace(boolean shallReplace) {
-        performReplaceCheckBox.setSelected(shallReplace);
-        performReplaceCheckBoxActionPerformed(null);
+        // TODO support for replace
+//        performReplaceCheckBox.setSelected(shallReplace);
+//        performReplaceCheckBoxActionPerformed(null);
     }
 
     public String getReplaceText() {
@@ -442,9 +455,25 @@ public class FindHexDialog extends javax.swing.JDialog {
 
     public SearchParameters getSearchParameters() {
         SearchParameters result = new SearchParameters();
-        SearchCondition newCondition = result.getCondition();
-        newCondition.setSearchText((String) findComboBox.getEditor().getItem());
+        result.setCondition((SearchCondition) findComboBox.getEditor().getItem());
         result.setSearchFromCursor(searchFromCursorCheckBox.isSelected());
+        result.setMatchCase(matchCaseCheckBox.isSelected());
+        result.setMultipleMatches(multipleMatchesCheckBox.isSelected());
         return result;
+    }
+
+    public void setSearchParameters(SearchParameters parameters) {
+        searchFromCursorCheckBox.setSelected(parameters.isSearchFromCursor());
+        matchCaseCheckBox.setSelected(parameters.isMatchCase());
+        multipleMatchesCheckBox.setSelected(parameters.isMultipleMatches());
+        comboBoxEditorComponent.setItem(parameters.getCondition());
+        findComboBox.setEditor(comboBoxEditor);
+        findComboBox.repaint();
+        updateFindStatus();
+    }
+
+    public void setSearchHistory(List<SearchCondition> searchHistory) {
+        this.searchHistory = searchHistory;
+        findComboBox.setModel(new SearchHistoryModel(searchHistory));
     }
 }

@@ -175,6 +175,21 @@ public class HexSearchComboBoxPanel extends JPanel {
         hexadecimalEditor.setComponentPopupMenu(menu);
     }
 
+    @Override
+    public void requestFocus() {
+        super.requestFocus();
+        switch (item.getSearchMode()) {
+            case TEXT: {
+                textField.requestFocus();
+                break;
+            }
+            case BINARY: {
+                hexadecimalEditor.requestFocus();
+                break;
+            }
+        }
+    }
+    
     /**
      * Listener for value change.
      */

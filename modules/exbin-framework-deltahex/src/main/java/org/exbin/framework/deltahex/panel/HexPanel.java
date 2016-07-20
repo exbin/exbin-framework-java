@@ -171,6 +171,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     public void hideFindPanel() {
         if (findTextPanelVisible) {
             hexSearchPanel.cancelSearch();
+            hexSearchPanel.clearSearch();
             HexPanel.this.remove(hexSearchPanel);
             HexPanel.this.revalidate();
             findTextPanelVisible = false;
@@ -206,7 +207,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
             add(hexSearchPanel, BorderLayout.SOUTH);
             revalidate();
             findTextPanelVisible = true;
-            hexSearchPanel.setRequestFocus();
+            hexSearchPanel.requestSearchFocus();
         }
     }
 
@@ -578,7 +579,10 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void setPopupMenu(JPopupMenu menu) {
-//        codeArea.setComponentPopupMenu(menu);
+        codeArea.setComponentPopupMenu(menu);
+    }
+
+    public void setSearchPopupMenu(JPopupMenu menu) {
         hexSearchPanel.setCodeAreaPopupMenu(menu);
     }
 
