@@ -21,10 +21,10 @@ import javax.swing.Action;
 /**
  * Interface for clipboard action set.
  *
- * @version 0.2.0 2016/03/16
+ * @version 0.2.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
-public interface ClipboardActions {
+public interface ClipboardActions extends ClipboardActionsApi {
 
     /**
      * Updates state of these actions according to clipboard handler.
@@ -44,32 +44,4 @@ public interface ClipboardActions {
      * @return cut action
      */
     Action getCutAction();
-
-    /**
-     * Returns copy to clipboard action.
-     *
-     * @return copy action
-     */
-    Action getCopyAction();
-
-    /**
-     * Returns paste to clipboard action.
-     *
-     * @return paste action
-     */
-    Action getPasteAction();
-
-    /**
-     * Returns delete action.
-     *
-     * @return delete action
-     */
-    Action getDeleteAction();
-
-    /**
-     * Returns select all action.
-     *
-     * @return select all action
-     */
-    Action getSelectAllAction();
 }

@@ -32,13 +32,14 @@ import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
 import org.exbin.framework.gui.menu.api.ClipboardActions;
+import org.exbin.framework.gui.menu.api.ClipboardActionsApi;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework menu module.
  *
- * @version 0.2.0 2016/03/16
+ * @version 0.2.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiMenuModule implements GuiMenuModuleApi {
@@ -134,12 +135,17 @@ public class GuiMenuModule implements GuiMenuModuleApi {
     @Override
     public void registerClipboardMenuItems(String menuId, String moduleId, SeparationMode separationMode) {
         getClipboardActions();
+        registerClipboardMenuItems(clipboardActions, menuId, moduleId, separationMode);
+    }
+
+    @Override
+    public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMode separationMode) {
         registerMenuGroup(menuId, new MenuGroup(CLIPBOARD_ACTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), separationMode));
-        registerMenuItem(menuId, moduleId, clipboardActions.getCutAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        registerMenuItem(menuId, moduleId, clipboardActions.getCopyAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        registerMenuItem(menuId, moduleId, clipboardActions.getPasteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        registerMenuItem(menuId, moduleId, clipboardActions.getDeleteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        registerMenuItem(menuId, moduleId, clipboardActions.getSelectAllAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.getCutAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.getCopyAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.getPasteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.getDeleteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.getSelectAllAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
 
     @Override
@@ -181,7 +187,7 @@ public class GuiMenuModule implements GuiMenuModuleApi {
     public void registerClipboardHandler(ClipboardActionsHandler clipboardHandler) {
         getClipboardActions().setClipboardHandler(clipboardHandler);
     }
-    
+
     @Override
     public boolean menuGroupExists(String menuId, String groupId) {
         return menuHandler.menuGroupExists(menuId, groupId);
@@ -190,5 +196,10 @@ public class GuiMenuModule implements GuiMenuModuleApi {
     @Override
     public ClipboardActions createClipboardActions(ClipboardActionsHandler clipboardActionsHandler) {
         return new BasicClipboardActions(clipboardActionsHandler);
+    }
+
+    @Override
+    public void unregisterMenu(String menuId) {
+        getMenuHandler().unregisterMenu(menuId);
     }
 }

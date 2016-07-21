@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import org.exbin.deltahex.CodeArea;
+import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.panel.SearchCondition;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -28,10 +29,12 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Multiline search condition editor dialog.
  *
- * @version 0.1.0 2016/07/20
+ * @version 0.1.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class HexMultilineDialog extends javax.swing.JDialog {
+
+    private static final String POPUP_MENU_POSTFIX = ".hexMultilineDialog";
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(HexMultilineDialog.class);
@@ -40,6 +43,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
     private JTextArea textArea;
     private JScrollPane scrollPane;
     private CodeArea codeArea;
+    private DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler;
 
     public HexMultilineDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -177,7 +181,20 @@ public class HexMultilineDialog extends javax.swing.JDialog {
             codeArea = new CodeArea();
             codeArea.setData(condition.getBinaryData());
             add(codeArea, BorderLayout.CENTER);
+            if (hexCodePopupMenuHandler != null) {
+                codeArea.setComponentPopupMenu(hexCodePopupMenuHandler.createPopupMenu(codeArea, POPUP_MENU_POSTFIX));
+            }
             WindowUtils.assignGlobalKeyListener(codeArea, setButton, cancelButton);
+        }
+    }
+
+    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler) {
+        this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
+    }
+
+    public void detachMenu() {
+        if (condition.getSearchMode() == SearchCondition.SearchMode.BINARY) {
+            hexCodePopupMenuHandler.dropPopupMenu(POPUP_MENU_POSTFIX);
         }
     }
 }

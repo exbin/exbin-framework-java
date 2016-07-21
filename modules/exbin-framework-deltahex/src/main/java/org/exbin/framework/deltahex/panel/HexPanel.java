@@ -424,6 +424,10 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         codeArea.copy();
     }
 
+    public void performCopyAsCode() {
+        codeArea.copyAsCode();
+    }
+
     @Override
     public void performCut() {
         codeArea.cut();
@@ -437,6 +441,10 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     @Override
     public void performPaste() {
         codeArea.paste();
+    }
+
+    public void performPasteFromCode() {
+        codeArea.pasteFromCode();
     }
 
     @Override
@@ -580,10 +588,6 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     public void setPopupMenu(JPopupMenu menu) {
         codeArea.setComponentPopupMenu(menu);
-    }
-
-    public void setSearchPopupMenu(JPopupMenu menu) {
-        hexSearchPanel.setCodeAreaPopupMenu(menu);
     }
 
     public void loadFromStream(InputStream stream) throws IOException {
@@ -758,6 +762,10 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     public void setEncodingStatusHandler(DeltaHexModule.EncodingStatusHandler encodingStatusHandler) {
         this.encodingStatusHandler = encodingStatusHandler;
+    }
+
+    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler) {
+        hexSearchPanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
     }
 
     public static interface CharsetChangeListener {

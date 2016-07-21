@@ -27,6 +27,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import org.exbin.deltahex.CodeArea;
+import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.panel.HexSearchComboBoxPanel;
 import org.exbin.framework.deltahex.panel.SearchCondition;
 import org.exbin.framework.deltahex.panel.SearchHistoryModel;
@@ -38,7 +39,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Find text/hexadecimal options dialog.
  *
- * @version 0.1.0 2016/07/20
+ * @version 0.1.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class FindHexDialog extends javax.swing.JDialog {
@@ -50,6 +51,7 @@ public class FindHexDialog extends javax.swing.JDialog {
     private HexSearchComboBoxPanel comboBoxEditorComponent;
     private List<SearchCondition> searchHistory = new ArrayList<>();
     private ComboBoxEditor comboBoxEditor;
+    private DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler;
 
     public FindHexDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -372,12 +374,14 @@ public class FindHexDialog extends javax.swing.JDialog {
     private void findTextMultilineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextMultilineButtonActionPerformed
         SearchCondition condition = (SearchCondition) comboBoxEditor.getItem();
         HexMultilineDialog multilineDialog = new HexMultilineDialog(WindowUtils.getFrame(this), true);
+        multilineDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
         multilineDialog.setCondition(condition);
         multilineDialog.setVisible(true);
         if (multilineDialog.getDialogOption() == JOptionPane.OK_OPTION) {
             comboBoxEditorComponent.setItem(multilineDialog.getCondition());
             updateFindStatus();
         }
+        multilineDialog.detachMenu();
     }//GEN-LAST:event_findTextMultilineButtonActionPerformed
 
     private void searchTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTypeButtonActionPerformed
@@ -475,5 +479,14 @@ public class FindHexDialog extends javax.swing.JDialog {
     public void setSearchHistory(List<SearchCondition> searchHistory) {
         this.searchHistory = searchHistory;
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
+    }
+
+    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler) {
+        this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
+        comboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "FindHexDialog");
+    }
+
+    public void detachMenu() {
+        hexCodePopupMenuHandler.dropPopupMenu(".searchFindHexDialog");
     }
 }

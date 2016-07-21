@@ -44,7 +44,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Menu handler.
  *
- * @version 0.2.0 2016/02/20
+ * @version 0.2.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class MenuHandler {
@@ -380,8 +380,26 @@ public class MenuHandler {
                 return true;
             }
         }
-        
+
         return false;
+    }
+
+    public void unregisterMenu(String menuId) {
+        MenuDefinition definition = menus.get(menuId);
+        if (definition != null) {
+            // TODO clear pointers to improve garbage collection performance?
+//            List<MenuContribution> contributions = definition.getContributions();
+//            for (MenuContribution contribution : contributions) {
+//                contribution.
+//            }
+            for (Map.Entry<String, String> usage : pluginsUsage.entrySet()) {
+                if (menuId.equals(usage.getValue())) {
+                    pluginsUsage.remove(usage.getKey());
+                    break;
+                }
+            }
+            menus.remove(menuId);
+        }
     }
 
     private static abstract class ProcessedContribution {

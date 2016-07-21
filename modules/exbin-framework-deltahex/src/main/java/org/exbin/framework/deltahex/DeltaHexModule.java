@@ -21,7 +21,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
+import javax.swing.Action;
 import javax.swing.JPopupMenu;
+import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.deltahex.panel.HexAppearanceOptionsPanel;
@@ -46,19 +48,23 @@ import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
+import org.exbin.framework.gui.menu.api.ClipboardActions;
+import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.menu.api.NextToMode;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Hexadecimal editor module.
  *
- * @version 0.1.0 2016/07/20
+ * @version 0.1.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(DeltaHexModule.class);
     public static final String HEX_POPUP_MENU_ID = MODULE_ID + ".hexPopupMenu";
-    public static final String SEARCH_HEX_POPUP_MENU_ID = MODULE_ID + ".searchHexPopupMenu";
+    public static final String CODE_AREA_POPUP_MENU_ID = MODULE_ID + ".codeAreaPopupMenu";
     public static final String VIEW_MODE_SUBMENU_ID = MODULE_ID + ".viewModeSubMenu";
     public static final String CODE_TYPE_SUBMENU_ID = MODULE_ID + ".codeTypeSubMenu";
     public static final String POSITION_CODE_TYPE_SUBMENU_ID = MODULE_ID + ".positionCodeTypeSubMenu";
@@ -88,6 +94,7 @@ public class DeltaHexModule implements XBApplicationModule {
     private CodeTypeHandler codeTypeHandler;
     private PositionCodeTypeHandler positionCodeTypeHandler;
     private HexCharactersCaseHandler hexCharactersCaseHandler;
+    private ClipboardCodeHandler clipboardCodeHandler;
 
     public DeltaHexModule() {
     }
@@ -105,8 +112,17 @@ public class DeltaHexModule implements XBApplicationModule {
         if (editorProvider == null) {
             editorProvider = new HexPanel();
             ((HexPanel) editorProvider).setPopupMenu(createPopupMenu());
-            // TODO
-            // ((HexPanel) editorProvider).setSearchPopupMenu(createSearchPopupMenu());
+            ((HexPanel) editorProvider).setHexCodePopupMenuHandler(new HexCodePopupMenuHandler() {
+                @Override
+                public JPopupMenu createPopupMenu(CodeArea codeArea, String menuPostfix) {
+                    return createCodeAreaPopupMenu(codeArea, menuPostfix);
+                }
+
+                @Override
+                public void dropPopupMenu(String menuPostfix) {
+                    dropCodeAreaPopupMenu(menuPostfix);
+                }
+            });
             ((HexPanel) editorProvider).setGoToLineAction(getGoToLineHandler().getGoToLineAction());
             ((HexPanel) editorProvider).setEncodingStatusHandler(new EncodingStatusHandler() {
                 @Override
@@ -330,6 +346,15 @@ public class DeltaHexModule implements XBApplicationModule {
         return hexCharactersCaseHandler;
     }
 
+    private ClipboardCodeHandler getClipboardCodeHandler() {
+        if (clipboardCodeHandler == null) {
+            clipboardCodeHandler = new ClipboardCodeHandler(application, (HexPanel) getEditorProvider());
+            clipboardCodeHandler.init();
+        }
+
+        return clipboardCodeHandler;
+    }
+
     public void registerEditFindMenuActions() {
         getFindReplaceHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
@@ -413,23 +438,91 @@ public class DeltaHexModule implements XBApplicationModule {
     }
 
     private JPopupMenu createPopupMenu() {
+        getClipboardCodeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenu(HEX_POPUP_MENU_ID, MODULE_ID);
         menuModule.registerClipboardMenuItems(HEX_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
+        menuModule.registerMenuItem(HEX_POPUP_MENU_ID, MODULE_ID, clipboardCodeHandler.getCopyAsCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getCopyAction().getValue(Action.NAME)));
+        menuModule.registerMenuItem(HEX_POPUP_MENU_ID, MODULE_ID, clipboardCodeHandler.getPasteFromCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getPasteAction().getValue(Action.NAME)));
 
         JPopupMenu popupMenu = new JPopupMenu();
         menuModule.buildMenu(popupMenu, HEX_POPUP_MENU_ID);
         return popupMenu;
     }
 
-    private JPopupMenu createSearchPopupMenu() {
+    private JPopupMenu createCodeAreaPopupMenu(final CodeArea codeArea, String menuPostfix) {
+        getClipboardCodeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenu(SEARCH_HEX_POPUP_MENU_ID, MODULE_ID);
-        menuModule.registerClipboardMenuItems(SEARCH_HEX_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
+        menuModule.registerMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID);
+        ClipboardActions clipboardActions = menuModule.createClipboardActions(new ClipboardActionsHandler() {
+            @Override
+            public void performCut() {
+                codeArea.cut();
+            }
+
+            @Override
+            public void performCopy() {
+                codeArea.copy();
+            }
+
+            @Override
+            public void performPaste() {
+                codeArea.paste();
+            }
+
+            @Override
+            public void performDelete() {
+                codeArea.delete();
+            }
+
+            @Override
+            public void performSelectAll() {
+                codeArea.selectAll();
+            }
+
+            @Override
+            public boolean isSelection() {
+                return codeArea.hasSelection();
+            }
+
+            @Override
+            public boolean isEditable() {
+                return codeArea.isEditable();
+            }
+
+            @Override
+            public boolean canSelectAll() {
+                return true;
+            }
+
+            @Override
+            public boolean canPaste() {
+                return codeArea.canPaste();
+            }
+
+            @Override
+            public void setUpdateListener(final ClipboardActionsUpdateListener updateListener) {
+                codeArea.addSelectionChangedListener(new CodeArea.SelectionChangedListener() {
+                    @Override
+                    public void selectionChanged(CodeArea.SelectionRange sr) {
+                        updateListener.stateChanged();
+                    }
+                });
+                updateListener.stateChanged();
+            }
+        });
+        menuModule.registerClipboardMenuItems(clipboardActions, CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, SeparationMode.AROUND);
+        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, clipboardCodeHandler.createCopyAsCodeAction(codeArea), new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getCopyAction().getValue(Action.NAME)));
+        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, clipboardCodeHandler.createPasteFromCodeAction(codeArea), new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getPasteAction().getValue(Action.NAME)));
 
         JPopupMenu popupMenu = new JPopupMenu();
-        menuModule.buildMenu(popupMenu, SEARCH_HEX_POPUP_MENU_ID);
+        menuModule.buildMenu(popupMenu, CODE_AREA_POPUP_MENU_ID + menuPostfix);
         return popupMenu;
+    }
+
+    private void dropCodeAreaPopupMenu(String menuPostfix) {
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.unregisterMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix);
     }
 
     public void loadFromPreferences(Preferences preferences) {
@@ -441,5 +534,12 @@ public class DeltaHexModule implements XBApplicationModule {
         void cycleEncodings();
 
         void popupEncodingsMenu(MouseEvent mouseEvent);
+    }
+
+    public static interface HexCodePopupMenuHandler {
+
+        JPopupMenu createPopupMenu(CodeArea codeArea, String menuPostfix);
+
+        void dropPopupMenu(String menuPostfix);
     }
 }

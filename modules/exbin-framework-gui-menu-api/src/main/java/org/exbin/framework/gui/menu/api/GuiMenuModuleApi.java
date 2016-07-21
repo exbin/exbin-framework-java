@@ -180,12 +180,21 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
 
     void registerClipboardMenuItems(String menuId, String moduleId, SeparationMode separationMode);
 
+    void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMode separationMode);
+
     /**
      * Registers clipboard handler for main clipboard actions.
      *
      * @param clipboardHandler clipboard handler
      */
     void registerClipboardHandler(ClipboardActionsHandler clipboardHandler);
+
+    /**
+     * Unregisters menu and all it's items.
+     *
+     * @param menuId menu id
+     */
+    void unregisterMenu(String menuId);
 
     /**
      * Returns true if given menu group exists.

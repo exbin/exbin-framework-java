@@ -40,9 +40,9 @@ public class MenuPosition {
         this.nextToMode = null;
     }
 
-    public MenuPosition(NextToMode nextToMode, String groupId) {
+    public MenuPosition(NextToMode nextToMode, String menuItemId) {
         this.basicMode = null;
-        this.groupId = groupId;
+        this.groupId = menuItemId;
         this.nextToMode = nextToMode;
     }
 

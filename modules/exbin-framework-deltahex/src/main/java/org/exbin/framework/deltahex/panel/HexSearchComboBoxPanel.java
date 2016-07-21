@@ -20,19 +20,19 @@ import java.awt.event.KeyListener;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.exbin.deltahex.CodeArea;
+import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 
 /**
  * Combo box panel supporting both binary and text values.
  *
- * @version 0.1.0 2016/07/19
+ * @version 0.1.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchComboBoxPanel extends JPanel {
@@ -171,10 +171,6 @@ public class HexSearchComboBoxPanel extends JPanel {
         this.runningUpdate = runningUpdate;
     }
 
-    public void setCodeAreaPopupMenu(JPopupMenu menu) {
-        hexadecimalEditor.setComponentPopupMenu(menu);
-    }
-
     @Override
     public void requestFocus() {
         super.requestFocus();
@@ -189,7 +185,11 @@ public class HexSearchComboBoxPanel extends JPanel {
             }
         }
     }
-    
+
+    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler, String postfix) {
+        hexadecimalEditor.setComponentPopupMenu(hexCodePopupMenuHandler.createPopupMenu(hexadecimalEditor, ".search" + postfix));
+    }
+
     /**
      * Listener for value change.
      */

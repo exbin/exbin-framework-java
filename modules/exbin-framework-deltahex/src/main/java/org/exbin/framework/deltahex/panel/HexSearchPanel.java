@@ -27,9 +27,9 @@ import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import org.exbin.deltahex.CodeArea;
+import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.BinaryData;
@@ -39,7 +39,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/07/20
+ * @version 0.1.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
@@ -56,6 +56,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
     private final List<SearchCondition> searchHistory = new ArrayList<>();
 
     private ClosePanelListener closePanelListener = null;
+    private DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler;
 
     public HexSearchPanel(HexPanel hexPanel, boolean replaceMode) {
         initComponents();
@@ -405,6 +406,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         findDialog.setLocationRelativeTo(findDialog.getParent());
         findDialog.setSearchHistory(searchHistory);
         findDialog.setSearchParameters(searchParameters);
+        findDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
         findDialog.setVisible(true);
         if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
             SearchParameters findParameters = findDialog.getSearchParameters();
@@ -414,6 +416,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
             updateFindStatus();
             hexPanel.findText(findParameters);
         }
+        findDialog.detachMenu();
     }//GEN-LAST:event_optionsButtonActionPerformed
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
@@ -675,13 +678,11 @@ public class HexSearchPanel extends javax.swing.JPanel {
         return true;
     }
 
-    public void setCodeAreaPopupMenu(JPopupMenu menu) {
-        comboBoxEditorComponent.setCodeAreaPopupMenu(menu);
+    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler) {
+        this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
+        comboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "");
     }
 
-//    public void setCodeAreaPopupMenu(JPopupMenu menu) {
-//        hexadecimalRenderer.setComponentPopupMenu(menu);
-//    }
     /**
      * Listener for panel closing.
      */
