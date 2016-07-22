@@ -186,7 +186,7 @@ public class HexSearchComboBoxPanel extends JPanel {
         }
     }
 
-    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler, String postfix) {
+    public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler, String postfix) {
         hexadecimalEditor.setComponentPopupMenu(hexCodePopupMenuHandler.createPopupMenu(hexadecimalEditor, ".search" + postfix));
     }
 

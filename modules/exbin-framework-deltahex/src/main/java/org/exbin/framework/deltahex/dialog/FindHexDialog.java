@@ -51,7 +51,7 @@ public class FindHexDialog extends javax.swing.JDialog {
     private HexSearchComboBoxPanel comboBoxEditorComponent;
     private List<SearchCondition> searchHistory = new ArrayList<>();
     private ComboBoxEditor comboBoxEditor;
-    private DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler;
+    private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
 
     public FindHexDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -481,7 +481,7 @@ public class FindHexDialog extends javax.swing.JDialog {
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
     }
 
-    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler) {
+    public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
         comboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "FindHexDialog");
     }

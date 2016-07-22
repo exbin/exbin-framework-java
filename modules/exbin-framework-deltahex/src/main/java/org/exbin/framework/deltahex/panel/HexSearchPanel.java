@@ -56,7 +56,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
     private final List<SearchCondition> searchHistory = new ArrayList<>();
 
     private ClosePanelListener closePanelListener = null;
-    private DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler;
+    private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
 
     public HexSearchPanel(HexPanel hexPanel, boolean replaceMode) {
         initComponents();
@@ -678,7 +678,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         return true;
     }
 
-    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler) {
+    public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
         comboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "");
     }

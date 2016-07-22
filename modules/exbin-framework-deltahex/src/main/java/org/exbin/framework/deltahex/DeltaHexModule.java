@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.deltahex;
 
+import java.awt.AWTEvent;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -51,13 +54,14 @@ import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.gui.menu.api.ClipboardActions;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.gui.menu.api.NextToMode;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Hexadecimal editor module.
  *
- * @version 0.1.0 2016/07/21
+ * @version 0.1.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -95,6 +99,7 @@ public class DeltaHexModule implements XBApplicationModule {
     private PositionCodeTypeHandler positionCodeTypeHandler;
     private HexCharactersCaseHandler hexCharactersCaseHandler;
     private ClipboardCodeHandler clipboardCodeHandler;
+    private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
 
     public DeltaHexModule() {
     }
@@ -112,17 +117,7 @@ public class DeltaHexModule implements XBApplicationModule {
         if (editorProvider == null) {
             editorProvider = new HexPanel();
             ((HexPanel) editorProvider).setPopupMenu(createPopupMenu());
-            ((HexPanel) editorProvider).setHexCodePopupMenuHandler(new HexCodePopupMenuHandler() {
-                @Override
-                public JPopupMenu createPopupMenu(CodeArea codeArea, String menuPostfix) {
-                    return createCodeAreaPopupMenu(codeArea, menuPostfix);
-                }
-
-                @Override
-                public void dropPopupMenu(String menuPostfix) {
-                    dropCodeAreaPopupMenu(menuPostfix);
-                }
-            });
+            ((HexPanel) editorProvider).setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
             ((HexPanel) editorProvider).setGoToLineAction(getGoToLineHandler().getGoToLineAction());
             ((HexPanel) editorProvider).setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
             ((HexPanel) editorProvider).setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
@@ -542,6 +537,53 @@ public class DeltaHexModule implements XBApplicationModule {
         encodingsHandler.loadFromPreferences(preferences);
     }
 
+    public CodeAreaPopupMenuHandler getCodeAreaPopupMenuHandler() {
+        if (codeAreaPopupMenuHandler == null) {
+            codeAreaPopupMenuHandler = new CodeAreaPopupMenuHandler() {
+                @Override
+                public JPopupMenu createPopupMenu(CodeArea codeArea, String menuPostfix) {
+                    return createCodeAreaPopupMenu(codeArea, menuPostfix);
+                }
+
+                @Override
+                public void dropPopupMenu(String menuPostfix) {
+                    dropCodeAreaPopupMenu(menuPostfix);
+                }
+            };
+        }
+        return codeAreaPopupMenuHandler;
+    }
+
+    public void registerCodeAreaPopupEventDispatcher() {
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.addComponentPopupEventDispatcher(new ComponentPopupEventDispatcher() {
+
+            private static final String DEFAULT_MENU_POSTFIX = ".default";
+            private JPopupMenu popupMenu = null;
+
+            @Override
+            public void dispatchEvent(AWTEvent event) {
+                MouseEvent e = (MouseEvent) event;
+                Component c = getSource(e);
+                if (c instanceof CodeArea) {
+                    if (((CodeArea) c).getComponentPopupMenu() == null) {
+                        CodeAreaPopupMenuHandler handler = getCodeAreaPopupMenuHandler();
+                        if (popupMenu != null) {
+                            handler.dropPopupMenu(DEFAULT_MENU_POSTFIX);
+                        }
+
+                        popupMenu = handler.createPopupMenu((CodeArea) c, DEFAULT_MENU_POSTFIX);
+                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            }
+
+            private Component getSource(MouseEvent e) {
+                return SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+    }
+
     public static interface EncodingStatusHandler {
 
         void cycleEncodings();
@@ -549,7 +591,7 @@ public class DeltaHexModule implements XBApplicationModule {
         void popupEncodingsMenu(MouseEvent mouseEvent);
     }
 
-    public static interface HexCodePopupMenuHandler {
+    public static interface CodeAreaPopupMenuHandler {
 
         JPopupMenu createPopupMenu(CodeArea codeArea, String menuPostfix);
 

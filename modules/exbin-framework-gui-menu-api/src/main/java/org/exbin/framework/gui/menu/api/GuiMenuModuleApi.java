@@ -28,7 +28,7 @@ import org.exbin.framework.api.XBApplicationModule;
 /**
  * Interface for XBUP framework menu module.
  *
- * @version 0.2.0 2016/01/24
+ * @version 0.2.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public interface GuiMenuModuleApi extends XBApplicationModule {
@@ -204,4 +204,18 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
      * @return true if group exists
      */
     public boolean menuGroupExists(String menuId, String groupId);
+
+    /**
+     * Adds component popup menu event dispatcher.
+     *
+     * @param dispatcher event dispatcher
+     */
+    void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher);
+
+    /**
+     * Removes component popup menu event dispatcher.
+     *
+     * @param dispatcher event dispatcher
+     */
+    void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher);
 }

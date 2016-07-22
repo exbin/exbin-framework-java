@@ -43,7 +43,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
     private JTextArea textArea;
     private JScrollPane scrollPane;
     private CodeArea codeArea;
-    private DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler;
+    private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
 
     public HexMultilineDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -188,7 +188,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
         }
     }
 
-    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler) {
+    public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
     }
 

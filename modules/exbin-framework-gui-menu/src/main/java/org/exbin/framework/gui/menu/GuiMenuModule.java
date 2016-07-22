@@ -34,12 +34,13 @@ import org.exbin.framework.gui.menu.api.ToolBarPosition;
 import org.exbin.framework.gui.menu.api.ClipboardActions;
 import org.exbin.framework.gui.menu.api.ClipboardActionsApi;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework menu module.
  *
- * @version 0.2.0 2016/07/21
+ * @version 0.2.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiMenuModule implements GuiMenuModuleApi {
@@ -69,6 +70,16 @@ public class GuiMenuModule implements GuiMenuModuleApi {
         }
 
         return clipboardActions;
+    }
+
+    @Override
+    public void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
+        getClipboardActions().addClipboardEventDispatcher(dispatcher);
+    }
+
+    @Override
+    public void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
+        getClipboardActions().removeClipboardEventDispatcher(dispatcher);
     }
 
     @Override

@@ -779,7 +779,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         this.encodingStatusHandler = encodingStatusHandler;
     }
 
-    public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler) {
+    public void setCodeAreaPopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         hexSearchPanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
     }
 

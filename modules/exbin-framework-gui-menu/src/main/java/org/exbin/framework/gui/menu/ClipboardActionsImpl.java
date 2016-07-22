@@ -31,6 +31,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -56,11 +57,12 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsApi;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
 
 /**
  * Clipboard operations.
  *
- * @version 0.2.0 2016/03/16
+ * @version 0.2.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public class ClipboardActionsImpl implements ClipboardActionsApi {
@@ -93,6 +95,8 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
     private DefaultPopupClipboardAction defaultDeleteAction;
     private DefaultPopupClipboardAction defaultSelectAllAction;
     private DefaultPopupClipboardAction[] defaultTextActions;
+
+    private final List<ComponentPopupEventDispatcher> clipboardEventDispatchers = new ArrayList<>();
 
     public ClipboardActionsImpl() {
     }
@@ -169,9 +173,9 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
 
         return defaultPopupMenu;
     }
-    
+
     public void fillPopupMenu(JPopupMenu popupMenu, int position) {
-        
+
         JMenuItem basicPopupCutMenuItem = new javax.swing.JMenuItem();
         JMenuItem basicPopupCopyMenuItem = new javax.swing.JMenuItem();
         JMenuItem basicPopupPasteMenuItem = new javax.swing.JMenuItem();
@@ -522,51 +526,65 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
         }
     }
 
+    public void addClipboardEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
+        clipboardEventDispatchers.add(dispatcher);
+    }
+
+    public void removeClipboardEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
+        clipboardEventDispatchers.remove(dispatcher);
+    }
+
     public class PopupEventQueue extends EventQueue {
 
         @Override
         protected void dispatchEvent(AWTEvent event) {
-            if (event.getID() == MouseEvent.MOUSE_RELEASED) {
+            if (event.getID() == MouseEvent.MOUSE_PRESSED || event.getID() == MouseEvent.MOUSE_RELEASED) {
                 MouseEvent e = (MouseEvent) event;
                 Component c = getSource(e);
 
-                if (c instanceof JViewport) {
-                    c = ((JViewport) c).getView();
-                }
-
-                if (c instanceof JTextComponent) {
-                    if ((SwingUtilities.isRightMouseButton(e)) && (((JTextComponent) c).getComponentPopupMenu() == null)) {
-                        TextComponentClipboardHandler clipboardHandler = new TextComponentClipboardHandler((JTextComponent) c);
-                        for (Object action : defaultTextActions) {
-                            ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
-                        }
-
-                        defaultPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+                if (e.isPopupTrigger()) {
+                    if (c instanceof JViewport) {
+                        c = ((JViewport) c).getView();
                     }
-                } else if (c instanceof JList) {
-                    if ((SwingUtilities.isRightMouseButton(e)) && (((JList) c).getComponentPopupMenu() == null)) {
-                        ListClipboardHandler clipboardHandler = new ListClipboardHandler((JList) c);
-                        for (Object action : defaultTextActions) {
-                            ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
-                        }
 
-                        defaultPopupMenu.show(e.getComponent(), e.getX(), e.getY());
-                    }
-                } else if (c instanceof JTable) {
-                    if ((SwingUtilities.isRightMouseButton(e)) && (((JTable) c).getComponentPopupMenu() == null)) {
-                        TableClipboardHandler clipboardHandler = new TableClipboardHandler((JTable) c);
-                        for (Object action : defaultTextActions) {
-                            ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
-                        }
+                    if (c instanceof JTextComponent) {
+                        if (((JTextComponent) c).getComponentPopupMenu() == null) {
+                            TextComponentClipboardHandler clipboardHandler = new TextComponentClipboardHandler((JTextComponent) c);
+                            for (Object action : defaultTextActions) {
+                                ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
+                            }
 
-                        defaultPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+                            defaultPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+                        }
+                    } else if (c instanceof JList) {
+                        if (((JList) c).getComponentPopupMenu() == null) {
+                            ListClipboardHandler clipboardHandler = new ListClipboardHandler((JList) c);
+                            for (Object action : defaultTextActions) {
+                                ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
+                            }
+
+                            defaultPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+                        }
+                    } else if (c instanceof JTable) {
+                        if (((JTable) c).getComponentPopupMenu() == null) {
+                            TableClipboardHandler clipboardHandler = new TableClipboardHandler((JTable) c);
+                            for (Object action : defaultTextActions) {
+                                ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
+                            }
+
+                            defaultPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+                        }
+                    } else {
+                        for (ComponentPopupEventDispatcher dispatcher : clipboardEventDispatchers) {
+                            dispatcher.dispatchEvent(event);
+                        }
                     }
                 }
             }
 
             super.dispatchEvent(event);
         }
-
+        
         private Component getSource(MouseEvent e) {
             return SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
         }

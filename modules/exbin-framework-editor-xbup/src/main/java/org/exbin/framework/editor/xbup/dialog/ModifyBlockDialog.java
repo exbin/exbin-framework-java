@@ -31,6 +31,7 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -85,7 +86,7 @@ import org.exbin.xbup.plugin.XBCatalogPlugin;
 /**
  * Dialog for modifying item attributes or data.
  *
- * @version 0.2.0 2016/05/29
+ * @version 0.2.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public class ModifyBlockDialog extends javax.swing.JDialog {
@@ -593,25 +594,43 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_attributesTablePropertyChange
 
     private void loadFromButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFromButtonActionPerformed
-        throw new UnsupportedOperationException("Not supported yet.");
-//        hexPanel.openFile(null);
-//        hexPanel.repaint();
+        JFileChooser loadFileChooser = new JFileChooser();
+        loadFileChooser.setAcceptAllFileFilterUsed(true);
+        if (loadFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
+            hexPanel.setFileName(loadFileChooser.getSelectedFile().getAbsolutePath());
+            hexPanel.loadFromFile();
+            hexPanel.repaint();
+        }
     }//GEN-LAST:event_loadFromButtonActionPerformed
 
     private void saveAsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsButtonActionPerformed
-        throw new UnsupportedOperationException("Not supported yet.");
-//        hexPanel.saveFile();
+        JFileChooser saveFileChooser = new JFileChooser();
+        saveFileChooser.setAcceptAllFileFilterUsed(true);
+        if (saveFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
+            hexPanel.setFileName(saveFileChooser.getSelectedFile().getAbsolutePath());
+            hexPanel.saveToFile();
+            hexPanel.repaint();
+        }
     }//GEN-LAST:event_saveAsButtonActionPerformed
 
     private void extLoadFromButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extLoadFromButtonActionPerformed
-        throw new UnsupportedOperationException("Not supported yet.");
-//        extAreaHexPanel.openFile(null);
-//        extendedAreaPanel.repaint();
+        JFileChooser loadFileChooser = new JFileChooser();
+        loadFileChooser.setAcceptAllFileFilterUsed(true);
+        if (loadFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
+            extAreaHexPanel.setFileName(loadFileChooser.getSelectedFile().getAbsolutePath());
+            extAreaHexPanel.loadFromFile();
+            extAreaHexPanel.repaint();
+        }
     }//GEN-LAST:event_extLoadFromButtonActionPerformed
 
     private void extSaveFromButtoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extSaveFromButtoActionPerformed
-        throw new UnsupportedOperationException("Not supported yet.");
-//        extAreaHexPanel.saveFile();
+        JFileChooser saveFileChooser = new JFileChooser();
+        saveFileChooser.setAcceptAllFileFilterUsed(true);
+        if (saveFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
+            extAreaHexPanel.setFileName(saveFileChooser.getSelectedFile().getAbsolutePath());
+            extAreaHexPanel.saveToFile();
+            extAreaHexPanel.repaint();
+        }
     }//GEN-LAST:event_extSaveFromButtoActionPerformed
 
     public XBTTreeNode runDialog(XBTTreeNode srcNode, XBTTreeDocument doc) {
