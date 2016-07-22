@@ -72,7 +72,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/07/19
+ * @version 0.1.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -90,6 +90,8 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     private HexSearchPanel hexSearchPanel;
     private boolean findTextPanelVisible = false;
     private Action goToLineAction = null;
+    private Action copyAsCode = null;
+    private Action pasteFromCode = null;
     private DeltaHexModule.EncodingStatusHandler encodingStatusHandler;
 
     public HexPanel() {
@@ -116,9 +118,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         codeArea.addSelectionChangedListener(new CodeArea.SelectionChangedListener() {
             @Override
             public void selectionChanged(CodeArea.SelectionRange selection) {
-                if (clipboardActionsUpdateListener != null) {
-                    clipboardActionsUpdateListener.stateChanged();
-                }
+                updateClipboardActionsStatus();
             }
         });
         CodeCommandHandler commandHandler = new CodeCommandHandler(codeArea, undoHandler);
@@ -136,9 +136,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         clipboard.addFlavorListener(new FlavorListener() {
             @Override
             public void flavorsChanged(FlavorEvent e) {
-                if (clipboardActionsUpdateListener != null) {
-                    clipboardActionsUpdateListener.stateChanged();
-                }
+                updateClipboardActionsStatus();
             }
         });
 
@@ -253,6 +251,19 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
                 throw new IllegalStateException("Unexpected search mode " + condition.getSearchMode().name());
         }
 
+    }
+
+    private void updateClipboardActionsStatus() {
+        if (clipboardActionsUpdateListener != null) {
+            clipboardActionsUpdateListener.stateChanged();
+        }
+        
+        if (copyAsCode != null) {
+            copyAsCode.setEnabled(codeArea.hasSelection());
+        }
+        if (pasteFromCode != null) {
+            pasteFromCode.setEnabled(codeArea.canPaste());
+        }
     }
 
     /**
@@ -444,7 +455,11 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     }
 
     public void performPasteFromCode() {
-        codeArea.pasteFromCode();
+        try {
+            codeArea.pasteFromCode();
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Unable to Paste Code", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -721,7 +736,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         clipboardActionsUpdateListener = updateListener;
-        clipboardActionsUpdateListener.stateChanged();
+        updateClipboardActionsStatus();
     }
 
     @Override
@@ -766,6 +781,14 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
 
     public void setHexCodePopupMenuHandler(DeltaHexModule.HexCodePopupMenuHandler hexCodePopupMenuHandler) {
         hexSearchPanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
+    }
+
+    public void setCopyAsCode(Action copyAsCode) {
+        this.copyAsCode = copyAsCode;
+    }
+
+    public void setPasteFromCode(Action pasteFromCode) {
+        this.pasteFromCode = pasteFromCode;
     }
 
     public static interface CharsetChangeListener {

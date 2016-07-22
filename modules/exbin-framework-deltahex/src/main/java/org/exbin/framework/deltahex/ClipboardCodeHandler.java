@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
@@ -28,7 +29,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Clipboard code handling.
  *
- * @version 0.1.0 2016/07/21
+ * @version 0.1.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public class ClipboardCodeHandler {
@@ -85,26 +86,30 @@ public class ClipboardCodeHandler {
     }
 
     public Action createCopyAsCodeAction(final CodeArea codeArea) {
-        copyAsCodeAction = new AbstractAction() {
+        Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 codeArea.copyAsCode();
             }
         };
-        ActionUtils.setupAction(copyAsCodeAction, resourceBundle, "copyAsCodeAction");
-        copyAsCodeAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-        return copyAsCodeAction;
+        ActionUtils.setupAction(action, resourceBundle, "copyAsCodeAction");
+        action.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        return action;
     }
 
     public Action createPasteFromCodeAction(final CodeArea codeArea) {
-        pasteFromCodeAction = new AbstractAction() {
+        Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                codeArea.pasteFromCode();
+                try {
+                    codeArea.pasteFromCode();
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(codeArea, ex.getMessage(), "Unable to Paste Code", JOptionPane.ERROR_MESSAGE);
+                }
             }
         };
-        ActionUtils.setupAction(pasteFromCodeAction, resourceBundle, "pasteFromCodeAction");
-        pasteFromCodeAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-        return pasteFromCodeAction;
+        ActionUtils.setupAction(action, resourceBundle, "pasteFromCodeAction");
+        action.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        return action;
     }
 }

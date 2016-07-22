@@ -124,6 +124,8 @@ public class DeltaHexModule implements XBApplicationModule {
                 }
             });
             ((HexPanel) editorProvider).setGoToLineAction(getGoToLineHandler().getGoToLineAction());
+            ((HexPanel) editorProvider).setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
+            ((HexPanel) editorProvider).setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
             ((HexPanel) editorProvider).setEncodingStatusHandler(new EncodingStatusHandler() {
                 @Override
                 public void cycleEncodings() {
@@ -385,6 +387,13 @@ public class DeltaHexModule implements XBApplicationModule {
         menuModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, toolsOptionsHandler.getToolsSetColorAction(), new MenuPosition(PositionMode.TOP));
     }
 
+    public void registerClipboardCodeActions() {
+        getClipboardCodeHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, clipboardCodeHandler.getCopyAsCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getCopyAction().getValue(Action.NAME)));
+        menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, clipboardCodeHandler.getPasteFromCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getPasteAction().getValue(Action.NAME)));
+    }
+
     public void registerPropertiesMenu() {
         getPropertiesHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
@@ -454,6 +463,8 @@ public class DeltaHexModule implements XBApplicationModule {
         getClipboardCodeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID);
+        final Action copyAsCodeAction = clipboardCodeHandler.createCopyAsCodeAction(codeArea);
+        final Action pasteFromCodeAction = clipboardCodeHandler.createPasteFromCodeAction(codeArea);
         ClipboardActions clipboardActions = menuModule.createClipboardActions(new ClipboardActionsHandler() {
             @Override
             public void performCut() {
@@ -506,14 +517,16 @@ public class DeltaHexModule implements XBApplicationModule {
                     @Override
                     public void selectionChanged(CodeArea.SelectionRange sr) {
                         updateListener.stateChanged();
+                        copyAsCodeAction.setEnabled(codeArea.hasSelection());
+                        pasteFromCodeAction.setEnabled(codeArea.canPaste());
                     }
                 });
                 updateListener.stateChanged();
             }
         });
         menuModule.registerClipboardMenuItems(clipboardActions, CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, SeparationMode.AROUND);
-        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, clipboardCodeHandler.createCopyAsCodeAction(codeArea), new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getCopyAction().getValue(Action.NAME)));
-        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, clipboardCodeHandler.createPasteFromCodeAction(codeArea), new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getPasteAction().getValue(Action.NAME)));
+        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, copyAsCodeAction, new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getCopyAction().getValue(Action.NAME)));
+        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, pasteFromCodeAction, new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getPasteAction().getValue(Action.NAME)));
 
         JPopupMenu popupMenu = new JPopupMenu();
         menuModule.buildMenu(popupMenu, CODE_AREA_POPUP_MENU_ID + menuPostfix);

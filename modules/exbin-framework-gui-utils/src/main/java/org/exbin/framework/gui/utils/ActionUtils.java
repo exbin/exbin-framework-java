@@ -22,7 +22,7 @@ import javax.swing.Action;
 /**
  * Some simple static methods usable for actions, menus and toolbars.
  *
- * @version 0.2.0 2016/01/10
+ * @version 0.2.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public class ActionUtils {
@@ -46,25 +46,32 @@ public class ActionUtils {
      */
     public static final String ACTION_DIALOG_MODE = "dialogMode";
 
+    public static final String ACTION_ID = "actionId";
+    public static final String ACTION_NAME_POSTFIX = ".text";
+    public static final String ACTION_SHORT_DESCRIPTION_POSTFIX = ".shortDescription";
+    public static final String ACTION_SMALL_ICON_POSTFIX = ".smallIcon";
+    public static final String ACTION_SMALL_LARGE_POSTFIX = ".largeIcon";
+
     /**
      * Sets action values according to values specified by resource bundle.
      *
      * @param action modified action
      * @param bundle source bundle
-     * @param actionName bundle key prefix
+     * @param actionId action identifier and bundle key prefix
      */
-    public static void setupAction(Action action, ResourceBundle bundle, String actionName) {
-        action.putValue(Action.NAME, bundle.getString(actionName + ".text"));
+    public static void setupAction(Action action, ResourceBundle bundle, String actionId) {
+        action.putValue(Action.NAME, bundle.getString(actionId + ACTION_NAME_POSTFIX));
+        action.putValue(ACTION_ID, actionId);
 
         // TODO keystroke from string with meta mask translation
-        if (bundle.containsKey(actionName + ".shortDescription")) {
-            action.putValue(Action.SHORT_DESCRIPTION, bundle.getString(actionName + ".shortDescription"));
+        if (bundle.containsKey(actionId + ACTION_SHORT_DESCRIPTION_POSTFIX)) {
+            action.putValue(Action.SHORT_DESCRIPTION, bundle.getString(actionId + ACTION_SHORT_DESCRIPTION_POSTFIX));
         }
-        if (bundle.containsKey(actionName + ".smallIcon")) {
-            action.putValue(Action.SMALL_ICON, new javax.swing.ImageIcon(action.getClass().getResource(bundle.getString(actionName + ".smallIcon"))));
+        if (bundle.containsKey(actionId + ACTION_SMALL_ICON_POSTFIX)) {
+            action.putValue(Action.SMALL_ICON, new javax.swing.ImageIcon(action.getClass().getResource(bundle.getString(actionId + ACTION_SMALL_ICON_POSTFIX))));
         }
-        if (bundle.containsKey(actionName + ".largeIcon")) {
-            action.putValue(Action.LARGE_ICON_KEY, new javax.swing.ImageIcon(action.getClass().getResource(bundle.getString(actionName + ".largeIcon"))));
+        if (bundle.containsKey(actionId + ACTION_SMALL_LARGE_POSTFIX)) {
+            action.putValue(Action.LARGE_ICON_KEY, new javax.swing.ImageIcon(action.getClass().getResource(bundle.getString(actionId + ACTION_SMALL_LARGE_POSTFIX))));
         }
     }
 
