@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.gui.frame;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -33,18 +32,20 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
+import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 
 /**
  * Basic appplication frame.
  *
- * @version 0.2.0 2016/07/10
+ * @version 0.2.0 2016/07/23
  * @author ExBin Project (http://exbin.org)
  */
-public class XBApplicationFrame extends javax.swing.JFrame implements ApplicationFrameHandler {
+public class XBApplicationFrame extends javax.swing.JFrame implements ApplicationFrameHandler, WindowHeaderPanel.WindowHeaderDecorationProvider {
 
     private XBApplication application;
     private ApplicationExitHandler exitHandler;
     private JPanel currentStatusBarPanel = null;
+    private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
 
     public XBApplicationFrame() {
         initComponents();
@@ -270,7 +271,19 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         setLocationRelativeTo(null);
     }
 
-    void setApplicationExitHandler(ApplicationExitHandler exitHandler) {
+    public void setApplicationExitHandler(ApplicationExitHandler exitHandler) {
         this.exitHandler = exitHandler;
+    }
+
+    @Override
+    public void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider) {
+        this.windowHeaderDecorationProvider = windowHeaderDecorationProvider;
+    }
+    
+    @Override
+    public void setHeaderDecoration(WindowHeaderPanel windowHeaderPanel) {
+        if (windowHeaderDecorationProvider != null) {
+            windowHeaderDecorationProvider.setHeaderDecoration(windowHeaderPanel);
+        }
     }
 }

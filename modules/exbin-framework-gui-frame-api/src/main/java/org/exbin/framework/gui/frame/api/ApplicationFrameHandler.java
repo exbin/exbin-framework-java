@@ -20,11 +20,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 
 /**
  * Interface for application frame.
  *
- * @version 0.2.0 2016/03/25
+ * @version 0.2.0 2016/07/23
  * @author ExBin Project (http://exbin.org)
  */
 public interface ApplicationFrameHandler {
@@ -96,4 +97,11 @@ public interface ApplicationFrameHandler {
      * @param windowSize window size
      */
     void setDefaultSize(Dimension windowSize);
+
+    /**
+     * Sets window header decoration provider.
+     *
+     * @param windowHeaderDecorationProvider window header decoration provider
+     */
+    void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider);
 }

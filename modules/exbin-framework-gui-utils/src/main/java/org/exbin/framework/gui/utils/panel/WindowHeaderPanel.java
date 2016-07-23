@@ -16,16 +16,31 @@
  */
 package org.exbin.framework.gui.utils.panel;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.ImageObserver;
 import javax.swing.Icon;
 
 /**
  * Simple header panel.
  *
- * @version 0.1.25 2015/04/10
+ * @version 0.2.0 2016/07/23
  * @author ExBin Project (http://exbin.org)
  */
 public class WindowHeaderPanel extends javax.swing.JPanel {
+
+    private BackgroundDecorationMode decorationMode = BackgroundDecorationMode.COLOR_BOTTOM_RIGHT_TRANSITION;
+    private Color transitionColor = new Color(220, 220, 230);
+    private Image decorationImage = null;
+
+    private final ImageObserver imageObserver = new ImageObserver() {
+        @Override
+        public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+            return true;
+        }
+    };
 
     public WindowHeaderPanel() {
         initComponents();
@@ -40,7 +55,7 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSeparator1 = new javax.swing.JSeparator();
+        separator = new javax.swing.JSeparator();
         textPanel = new javax.swing.JPanel();
         descriptionTextArea = new javax.swing.JTextArea();
         titleLabel = new javax.swing.JLabel();
@@ -48,7 +63,7 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
-        add(jSeparator1, java.awt.BorderLayout.SOUTH);
+        add(separator, java.awt.BorderLayout.SOUTH);
 
         textPanel.setMinimumSize(new java.awt.Dimension(16, 64));
         textPanel.setOpaque(false);
@@ -57,6 +72,7 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setText("Line 1\nLine 2");
         descriptionTextArea.setBorder(null);
+        descriptionTextArea.setOpaque(false);
 
         titleLabel.setText("Title");
         titleLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
@@ -95,7 +111,7 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JLabel iconLabel;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator separator;
     private javax.swing.JPanel textPanel;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
@@ -123,5 +139,88 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
     public void setIcon(Icon icon) {
         iconLabel.setIcon(icon);
         iconLabel.setPreferredSize(new Dimension(icon == null ? 0 : 64, 64));
+    }
+
+    public BackgroundDecorationMode getDecorationMode() {
+        return decorationMode;
+    }
+
+    public void setDecorationMode(BackgroundDecorationMode decorationMode) {
+        this.decorationMode = decorationMode;
+        repaint();
+    }
+
+    public Color getTransitionColor() {
+        return transitionColor;
+    }
+
+    public void setTransitionColor(Color transitionColor) {
+        this.transitionColor = transitionColor;
+        repaint();
+    }
+
+    public Image getDecorationImage() {
+        return decorationImage;
+    }
+
+    public void setDecorationImage(Image decorationImage) {
+        this.decorationImage = decorationImage;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        switch (decorationMode) {
+            case COLOR_RIGHT_HORIZONTAL_TRANSITION:
+            case COLOR_TOP_RIGHT_TRANSITION:
+            case COLOR_BOTTOM_RIGHT_TRANSITION: {
+                Dimension size = getSize();
+                int topOffset = decorationMode == BackgroundDecorationMode.COLOR_BOTTOM_RIGHT_TRANSITION ? size.height : 0;
+                int bottomOffset = decorationMode == BackgroundDecorationMode.COLOR_TOP_RIGHT_TRANSITION ? size.height : 0;
+                Color backgroundColor = getBackground();
+                int redChange = transitionColor.getRed() - backgroundColor.getRed();
+                int greenChange = transitionColor.getGreen() - backgroundColor.getGreen();
+                int blueChange = transitionColor.getBlue() - backgroundColor.getBlue();
+                for (int i = 0; i < 96; i++) {
+                    Color color = new Color(
+                            transitionColor.getRed() - redChange * i / 95,
+                            transitionColor.getGreen() - greenChange * i / 95,
+                            transitionColor.getBlue() - blueChange * i / 95);
+                    g.setColor(color);
+                    g.drawLine(size.width - i + topOffset, 0, size.width - i + bottomOffset, size.height);
+                }
+                break;
+            }
+            case TOP_RIGHT_IMAGE: {
+                if (decorationImage != null) {
+                    Dimension size = getSize();
+                    int imageWidth = decorationImage.getWidth(imageObserver);
+                    g.drawImage(decorationImage, size.width - imageWidth, 0, imageObserver);
+                }
+                break;
+            }
+        }
+    }
+
+    public static enum BackgroundDecorationMode {
+        PLAIN,
+        COLOR_RIGHT_HORIZONTAL_TRANSITION,
+        COLOR_TOP_RIGHT_TRANSITION,
+        COLOR_BOTTOM_RIGHT_TRANSITION,
+        TOP_RIGHT_IMAGE
+    }
+
+    /**
+     * Interface for decoration provider.
+     */
+    public static interface WindowHeaderDecorationProvider {
+
+        /**
+         * Configures provided instance of header panel.
+         *
+         * @param windowHeaderPanel window header panel
+         */
+        void setHeaderDecoration(WindowHeaderPanel windowHeaderPanel);
     }
 }

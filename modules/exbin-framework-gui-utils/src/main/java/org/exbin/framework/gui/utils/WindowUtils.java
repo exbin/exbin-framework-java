@@ -39,7 +39,7 @@ import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 /**
  * Some simple static methods usable for windows and dialogs.
  *
- * @version 0.2.0 2016/03/25
+ * @version 0.2.0 2016/07/23
  * @author ExBin Project (http://exbin.org)
  */
 public class WindowUtils {
@@ -53,6 +53,14 @@ public class WindowUtils {
         headerPanel.setDescription(headerDescription);
         if (!headerIcon.isEmpty()) {
             headerPanel.setIcon(new ImageIcon(dialog.getClass().getResource(headerIcon)));
+        }
+        if (dialog instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
+            ((WindowHeaderPanel.WindowHeaderDecorationProvider) dialog).setHeaderDecoration(headerPanel);
+        } else {
+            Frame frame = getFrame(dialog);
+            if (frame instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
+                ((WindowHeaderPanel.WindowHeaderDecorationProvider) frame).setHeaderDecoration(headerPanel);
+            }
         }
         dialog.getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
     }
