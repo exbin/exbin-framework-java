@@ -2,7 +2,7 @@ group = 'org.exbin.framework'
 ext.libraryName = 'ExBin Framework Core Library'
 ext.libraryDescription = 'Library for core functionality in ExBin Framework'
 
-apply from: '../modules.gradle'
+apply from: '../exbin-framework-java-modules.gradle'
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = ''
@@ -17,19 +17,19 @@ repositories {
 }
 
 dependencies {
-    compile "org.exbin.xbup:xbup-core:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-catalog:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-operation:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-client:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-plugin:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-parser-tree:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-parser-command:${xbupVersion}"
-    compile "org.exbin.xbup.data:xbup-data-visual:${xbupVersion}"
-    compile "org.exbin.utils:simplyhtml:${exbinUtilsVersion}"
-    compile(project(":modules:exbin-framework-api"))
-    compile(project(":modules:exbin-framework-gui-frame-api"))
-    compile(project(":modules:exbin-framework-gui-editor-api"))
-    compile(project(":modules:exbin-framework-gui-utils"))
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-catalog')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-operation')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-client')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-tree')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-command')
+    compile moduleDep('XbupDataJava', 'org.exbin.xbup.data', 'xbup-data-visual')
+    compile moduleDep('ExbinUtilsJava', 'org.exbin.utils', 'simplyhtml')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
     compile 'javax.persistence:persistence-api:1.0.2'
     compile 'org.swinglabs:swing-layout:1.0.3'
     runtime 'org.eclipse.persistence:javax.persistence:2.1.0'

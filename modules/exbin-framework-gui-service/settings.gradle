@@ -1,3 +1,3 @@
 rootProject.name = 'exbin-framework-gui-service'
 
-apply from: '../modules-settings.gradle'
+apply from: '../exbin-framework-java-modules-settings.gradle'

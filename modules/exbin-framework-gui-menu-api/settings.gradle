@@ -1,5 +1,3 @@
 rootProject.name = 'exbin-framework-gui-menu-api'
 
-include ":modules:exbin-framework"
-
-apply from: '../modules-settings.gradle'
+apply from: '../exbin-framework-java-modules-settings.gradle'

@@ -1,9 +1,4 @@
-rootProject.name = 'exbin-framework-gui-component-api'
-
-include ":modules:xbup-core"
-include ":modules:exbin-framework"
-include ":modules:exbin-framework-api"
-include ":modules:exbin-framework-gui-menu-api"
+// Shared modules build settings
 
 def modifyPath(project) {
     def rootProjectDir = rootProject.projectDir.parentFile.parent

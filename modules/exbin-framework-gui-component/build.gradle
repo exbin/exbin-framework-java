@@ -2,7 +2,7 @@ group = 'org.exbin.framework'
 ext.libraryName = 'ExBin Framework Core Library'
 ext.libraryDescription = 'Library for core functionality in ExBin Framework'
 
-apply from: '../modules.gradle'
+apply from: '../exbin-framework-java-modules.gradle'
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = ''
@@ -17,18 +17,18 @@ repositories {
 }
 
 dependencies {
-    compile "org.exbin.xbup:xbup-core:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-client:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-catalog:${xbupVersion}"
-    compile(project(':modules:exbin-framework'))
-    compile(project(':modules:exbin-framework-api'))
-    compile(project(':modules:exbin-framework-gui-component-api'))
-    compile(project(':modules:exbin-framework-gui-menu-api'))
-    compile(project(':modules:exbin-framework-gui-undo-api'))
-    compile(project(':modules:exbin-framework-gui-frame-api'))
-    compile(project(':modules:exbin-framework-gui-utils'))
-    compile(project(':modules:exbin-framework-gui-menu'))
-    compile(project(':modules:exbin-framework-gui-undo'))
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-client')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-catalog')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-component-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-menu-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-undo-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-menu')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-undo')
 
     runtime 'org.apache.derby:derbyclient:10.12.1.1'
     runtime 'org.apache.derby:derby:10.12.1.1'

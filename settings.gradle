@@ -1,5 +1,7 @@
 rootProject.name = 'exbin-framework-java'
 
+include ":deps"
+
 include ":modules:exbin-framework-client"
 include ":modules:exbin-framework-client-api"
 include ":modules:exbin-framework"
@@ -37,3 +39,19 @@ include ":modules:exbin-framework-editor-picture"
 include ":modules:exbin-framework-editor-xbup"
 include ":modules:exbin-framework-service-data"
 include ":modules:exbin-framework-preferences"
+
+File placeholder = file("deps/_placeholder")
+if (placeholder.exists()) {
+    placeholder.delete()
+}
+
+if (!gradle.startParameter.taskNames.contains("clean") || gradle.startParameter.projectProperties.containsKey("moduleDep")) {
+    File depsDir = file("deps")
+    // Include all downloaded dependency modules
+    depsDir.listFiles().each() { childFile ->
+        if (childFile.isDirectory()) {
+            include ':deps:' + childFile.name
+        }
+    }
+}
+

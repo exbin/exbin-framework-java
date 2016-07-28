@@ -2,7 +2,7 @@ group = 'org.exbin.framework'
 ext.libraryName = 'ExBin Framework Core Library'
 ext.libraryDescription = 'Library for core functionality in ExBin Framework'
 
-apply from: '../modules.gradle'
+apply from: '../exbin-framework-java-modules.gradle'
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = ''
@@ -14,14 +14,14 @@ repositories {
 }
 
 dependencies {
-    compile "org.exbin.xbup:xbup-core:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-catalog:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-client:${xbupVersion}"
-    compile "org.exbin.xbup:xbup-plugin:${xbupVersion}"
-    compile(project(':modules:exbin-framework-client-api'))
-    compile(project(':modules:exbin-framework'))
-    compile(project(':modules:exbin-framework-api'))
-    compile(project(':modules:exbin-framework-gui-utils'))
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-catalog')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-client')
+    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-client-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
+    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
     runtime 'org.apache.derby:derby:10.12.1.1'
 
     testCompile group : 'junit', name: 'junit', version: '4.10'
