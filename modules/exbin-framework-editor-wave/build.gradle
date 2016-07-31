@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
-    compile moduleDep('XbupDataJava', 'org.exbin.xbup', 'xbup-data-audio')
+    compile moduleDep('XbupDataJava', 'org.exbin.xbup.data', 'xbup-data-audio')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-api')
