@@ -180,10 +180,6 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
                 editationModeLabel.setText("OVR");
                 break;
             }
-            case READ_ONLY: {
-                editationModeLabel.setText("RO");
-                break;
-            }
             default:
                 throw new IllegalStateException("Unexpected editation mode " + editationMode.name());
         }
