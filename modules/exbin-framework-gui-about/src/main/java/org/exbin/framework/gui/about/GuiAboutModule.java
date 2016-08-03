@@ -20,6 +20,7 @@ import org.exbin.framework.gui.about.dialog.AboutDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.about.api.GuiAboutModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -32,7 +33,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of XBUP framework about module.
  *
- * @version 0.2.0 2016/02/07
+ * @version 0.2.0 2016/03/08
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiAboutModule implements GuiAboutModuleApi {
@@ -40,6 +41,7 @@ public class GuiAboutModule implements GuiAboutModuleApi {
     private XBApplication application;
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GuiAboutModule.class);
     private Action aboutAction;
+    private JComponent sideComponent = null;
 
     public GuiAboutModule() {
     }
@@ -62,6 +64,7 @@ public class GuiAboutModule implements GuiAboutModuleApi {
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     AboutDialog aboutDialog = new AboutDialog(frameModule.getFrame(), true, application);
                     aboutDialog.setProjectResourceBundle(application.getAppBundle());
+                    aboutDialog.setSideComponent(sideComponent);
                     aboutDialog.setVisible(true);
                 }
             };
@@ -76,5 +79,10 @@ public class GuiAboutModule implements GuiAboutModuleApi {
     public void registerDefaultMenuItem() {
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(PositionMode.BOTTOM_LAST));
+    }
+
+    @Override
+    public void setAboutDialogSideComponent(JComponent sideComponent) {
+        this.sideComponent = sideComponent;
     }
 }

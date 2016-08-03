@@ -17,13 +17,14 @@
 package org.exbin.framework.gui.about.api;
 
 import javax.swing.Action;
+import javax.swing.JComponent;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
 
 /**
  * Interface of the XBUP framework about module.
  *
- * @version 0.2.0 2016/01/01
+ * @version 0.2.0 2016/08/03
  * @author ExBin Project (http://exbin.org)
  */
 public interface GuiAboutModuleApi extends XBApplicationModule {
@@ -35,7 +36,14 @@ public interface GuiAboutModuleApi extends XBApplicationModule {
      *
      * @return action
      */
-    public Action getAboutAction();
+    Action getAboutAction();
 
-    public void registerDefaultMenuItem();
+    void registerDefaultMenuItem();
+
+    /**
+     * Sets single side component for about dialog.
+     *
+     * @param sideComponent component
+     */
+    void setAboutDialogSideComponent(JComponent sideComponent);
 }
