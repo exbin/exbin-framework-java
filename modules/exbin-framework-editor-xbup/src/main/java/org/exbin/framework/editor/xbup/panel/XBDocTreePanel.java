@@ -77,8 +77,8 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     private final List<ActionListener> updateEventList;
     private boolean editEnabled;
     private boolean addEnabled;
-    private Clipboard clipboard;
-    private static final DataFlavor xbFlavor = new DataFlavor(XBHead.MIME_XBUP, "XBUP Document");
+    private final Clipboard clipboard;
+    private static final DataFlavor XB_DATA_FLAVOR = new DataFlavor(XBHead.MIME_XBUP, "XBUP Document");
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
     private Component lastFocusedComponent = null;
@@ -255,7 +255,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     }
 
     public boolean isPasteEnabled() {
-        return addEnabled && clipboard.isDataFlavorAvailable(xbFlavor);
+        return addEnabled && clipboard.isDataFlavorAvailable(XB_DATA_FLAVOR);
     }
 
     public void addUpdateListener(ActionListener tml) {
@@ -295,9 +295,9 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     }
 
     public void performPaste() {
-        if (clipboard.isDataFlavorAvailable(xbFlavor)) {
+        if (clipboard.isDataFlavorAvailable(XB_DATA_FLAVOR)) {
             try {
-                ByteArrayOutputStream stream = (ByteArrayOutputStream) clipboard.getData(xbFlavor);
+                ByteArrayOutputStream stream = (ByteArrayOutputStream) clipboard.getData(XB_DATA_FLAVOR);
                 XBTTreeNode node = getSelectedItem();
                 XBTTreeNode newNode = new XBTTreeNode(node);
                 try {
@@ -512,18 +512,18 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         public DataFlavor[] getTransferDataFlavors() {
             // TODO: Later also as text
             DataFlavor[] result = new DataFlavor[1];
-            result[0] = xbFlavor;
+            result[0] = XB_DATA_FLAVOR;
             return result;
         }
 
         @Override
         public boolean isDataFlavorSupported(DataFlavor flavor) {
-            return flavor.equals(xbFlavor);
+            return flavor.equals(XB_DATA_FLAVOR);
         }
 
         @Override
         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-            if (flavor.equals(xbFlavor)) {
+            if (flavor.equals(XB_DATA_FLAVOR)) {
                 return data;
             }
             return null;
@@ -575,7 +575,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         @Override
         public boolean canImport(TransferSupport supp) {
             // Check for String flavor
-            if (!supp.isDataFlavorSupported(xbFlavor)) {
+            if (!supp.isDataFlavorSupported(XB_DATA_FLAVOR)) {
                 return false;
             }
 
@@ -639,7 +639,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
             // Insert the data at this location
             try {
-                ByteArrayOutputStream stream = (ByteArrayOutputStream) t.getTransferData(xbFlavor);
+                ByteArrayOutputStream stream = (ByteArrayOutputStream) t.getTransferData(XB_DATA_FLAVOR);
                 XBTTreeNode newNode = new XBTTreeNode(node);
                 try {
                     newNode.fromStreamUB(new ByteArrayInputStream(stream.toByteArray()));

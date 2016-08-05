@@ -29,7 +29,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Dialog for showing information about document block.
  *
- * @version 0.2.0 2016/02/10
+ * @version 0.2.0 2016/04/08
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditorDialog extends javax.swing.JDialog implements CatalogManagerPanelable {
@@ -52,7 +52,6 @@ public class CatalogEditorDialog extends javax.swing.JDialog implements CatalogM
 
     private void init() {
         getContentPane().add(catalogAvailabilityPanel, BorderLayout.CENTER);
-        setSize(900, 600);
         WindowUtils.initWindow(this);
     }
 
@@ -68,6 +67,7 @@ public class CatalogEditorDialog extends javax.swing.JDialog implements CatalogM
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/CatalogEditorDialog"); // NOI18N
         setTitle(bundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
+        setPreferredSize(new java.awt.Dimension(900, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

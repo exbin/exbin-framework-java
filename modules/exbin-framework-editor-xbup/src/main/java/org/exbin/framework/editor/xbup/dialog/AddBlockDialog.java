@@ -250,7 +250,7 @@ public class AddBlockDialog extends javax.swing.JDialog {
                 .add(generateDeclarationCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(prefillCheckBox)
-                .addContainerGap(147, Short.MAX_VALUE))
+                .addContainerGap(187, Short.MAX_VALUE))
         );
 
         mainPanel.add(conditionsPanel, "cond");

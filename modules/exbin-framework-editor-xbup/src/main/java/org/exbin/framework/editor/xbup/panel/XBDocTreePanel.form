@@ -30,7 +30,6 @@
               <Connection code="mainDocModel" type="code"/>
             </Property>
             <Property name="autoscrolls" type="boolean" value="true"/>
-            <Property name="showsRootHandles" type="boolean" value="true"/>
           </Properties>
           <Events>
             <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="mainTreeMouseReleased"/>

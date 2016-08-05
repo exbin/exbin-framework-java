@@ -27,23 +27,22 @@ import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Catalog browser handler.
  *
- * @version 0.2.0 2016/02/15
+ * @version 0.2.0 2016/08/04
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogBrowserHandler {
 
     private final XBEditorProvider editorProvider;
     private final XBApplication application;
-    private ResourceBundle resourceBundle;
+    private final ResourceBundle resourceBundle;
     private XBACatalog catalog;
 
     private int metaMask;
-
-    private CatalogEditorDialog catalogEditorDialog = null;
 
     private Action catalogBrowserAction;
 
@@ -61,13 +60,11 @@ public class CatalogBrowserHandler {
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
-                catalogEditorDialog = new CatalogEditorDialog(frameModule.getFrame(), true);
+                CatalogEditorDialog catalogEditorDialog = new CatalogEditorDialog(frameModule.getFrame(), true);
                 catalogEditorDialog.setMenuManagement(managerModule.getDefaultMenuManagement());
 //                catalogEditorDialog.setMainFrameManagement(mainFrameManagement);
                 catalogEditorDialog.setCatalog(catalog);
                 catalogEditorDialog.setVisible(true);
-
-                catalogEditorDialog = null;
             }
         };
         ActionUtils.setupAction(catalogBrowserAction, resourceBundle, "catalogBrowserAction");
@@ -80,13 +77,5 @@ public class CatalogBrowserHandler {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-    }
-    
-    public void initCatalogBrowserDialog() {
-        if (catalogEditorDialog == null) {
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            catalogEditorDialog = new CatalogEditorDialog(frameModule.getFrame(), true);
-            catalogEditorDialog.setIconImage(application.getApplicationIcon());
-        }
     }
 }

@@ -32,7 +32,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Panel for properties of the actual panel.
  *
- * @version 0.1.24 2014/12/20
+ * @version 0.2.0 2016/08/05
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyPanel extends javax.swing.JPanel {
@@ -172,8 +172,9 @@ public class XBPropertyPanel extends javax.swing.JPanel {
                     .addComponent(nameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(itemInfoHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(descTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)))
+                    .addComponent(descTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                    .addComponent(nameTextField))
+                .addContainerGap())
         );
         itemInfoHeaderPanelLayout.setVerticalGroup(
             itemInfoHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

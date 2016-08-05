@@ -19,7 +19,6 @@ package org.exbin.framework.gui.service.catalog.panel;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.text.DefaultEditorKit;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.XBEXDesc;
@@ -41,8 +39,6 @@ import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
-import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.ServiceManagerHandler;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
@@ -51,10 +47,10 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Catalog Specification Panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.0 2016/08/04
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogBrowserPanel extends javax.swing.JPanel implements XBEditorProvider {
+public class CatalogBrowserPanel extends javax.swing.JPanel {
 
     private XBCItem currentItem;
 
@@ -348,55 +344,5 @@ public class CatalogBrowserPanel extends javax.swing.JPanel implements XBEditorP
 
     private void updateItem() {
         popupEditMenuItem.setEnabled(currentItem != null);
-    }
-
-    @Override
-    public JPanel getPanel() {
-        return this;
-    }
-
-    @Override
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getWindowTitle(String frameTitle) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void loadFromFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void saveToFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getFileName() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setFileName(String string) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setFileType(FileType ft) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void newFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isModified() {
-        return false;
     }
 }
