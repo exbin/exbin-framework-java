@@ -25,15 +25,17 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.about.api.GuiAboutModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
+import org.exbin.framework.gui.menu.api.MenuGroup;
 import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
+import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework about module.
  *
- * @version 0.2.0 2016/03/08
+ * @version 0.2.0 2016/08/06
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiAboutModule implements GuiAboutModuleApi {
@@ -78,7 +80,8 @@ public class GuiAboutModule implements GuiAboutModuleApi {
     @Override
     public void registerDefaultMenuItem() {
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(PositionMode.BOTTOM_LAST));
+        menuModule.registerMenuGroup(GuiFrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.ABOVE));
+        menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));
     }
 
     @Override

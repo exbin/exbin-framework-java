@@ -24,12 +24,13 @@ import org.exbin.framework.api.XBApplicationModule;
 /**
  * Interface of the XBUP framework about module.
  *
- * @version 0.2.0 2016/08/03
+ * @version 0.2.0 2016/08/06
  * @author ExBin Project (http://exbin.org)
  */
 public interface GuiAboutModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiAboutModuleApi.class);
+    public static final String HELP_ABOUT_MENU_GROUP_ID = MODULE_ID + ".helpAboutMenuGroup";
 
     /**
      * Returns about application action.
