@@ -16,12 +16,13 @@
  */
 package org.exbin.framework.gui.menu.api;
 
-import java.awt.AWTEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 /**
  * Interface for popup event trigger dispatcher.
  *
- * @version 0.2.0 2016/07/22
+ * @version 0.2.0 2016/08/09
  * @author ExBin Project (http://exbin.org)
  */
 public interface ComponentPopupEventDispatcher {
@@ -29,7 +30,16 @@ public interface ComponentPopupEventDispatcher {
     /**
      * Processes event for popup trigger actions.
      *
-     * @param event AWT event
+     * @param mouseEvent mouse event
+     * @return true if event was processed
      */
-    void dispatchEvent(AWTEvent event);
+    boolean dispatchMouseEvent(MouseEvent mouseEvent);
+
+    /**
+     * Processes event for popup trigger actions.
+     *
+     * @param keyEvent key event
+     * @return true if event was processed
+     */
+    boolean dispatchKeyEvent(KeyEvent keyEvent);
 }

@@ -394,8 +394,8 @@ public class MenuHandler {
 //            }
 
             for (Map.Entry<String, List<MenuGroup>> usage : menuGroups.entrySet()) {
-                if (menuId.equals(usage.getValue())) {
-                    pluginsUsage.remove(usage.getKey());
+                if (menuId.equals(usage.getKey())) {
+                    menuGroups.remove(usage.getKey());
                     break;
                 }
             }

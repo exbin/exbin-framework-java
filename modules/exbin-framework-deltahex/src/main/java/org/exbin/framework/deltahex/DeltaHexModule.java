@@ -18,6 +18,9 @@ package org.exbin.framework.deltahex;
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.KeyboardFocusManager;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -61,7 +64,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.1.0 2016/07/22
+ * @version 0.2.0 2016/08/09
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -562,20 +565,50 @@ public class DeltaHexModule implements XBApplicationModule {
             private JPopupMenu popupMenu = null;
 
             @Override
-            public void dispatchEvent(AWTEvent event) {
-                MouseEvent e = (MouseEvent) event;
-                Component c = getSource(e);
-                if (c instanceof CodeArea) {
-                    if (((CodeArea) c).getComponentPopupMenu() == null) {
+            public boolean dispatchMouseEvent(MouseEvent mouseEvent) {
+                Component component = getSource(mouseEvent);
+                if (component instanceof CodeArea) {
+                    if (((CodeArea) component).getComponentPopupMenu() == null) {
                         CodeAreaPopupMenuHandler handler = getCodeAreaPopupMenuHandler();
                         if (popupMenu != null) {
                             handler.dropPopupMenu(DEFAULT_MENU_POSTFIX);
                         }
 
-                        popupMenu = handler.createPopupMenu((CodeArea) c, DEFAULT_MENU_POSTFIX);
-                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                        popupMenu = handler.createPopupMenu((CodeArea) component, DEFAULT_MENU_POSTFIX);
+
+                        Point point = component.getMousePosition();
+                        if (point != null) {
+                            popupMenu.show(component, (int) point.getX(), (int) point.getY());
+                        } else {
+                            popupMenu.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+                        }
+                        return true;
                     }
                 }
+
+                return false;
+            }
+
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent keyEvent) {
+                Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+
+                if (component instanceof CodeArea) {
+                    if (((CodeArea) component).getComponentPopupMenu() == null) {
+                        CodeAreaPopupMenuHandler handler = getCodeAreaPopupMenuHandler();
+                        if (popupMenu != null) {
+                            handler.dropPopupMenu(DEFAULT_MENU_POSTFIX);
+                        }
+
+                        popupMenu = handler.createPopupMenu((CodeArea) component, DEFAULT_MENU_POSTFIX);
+
+                        Point point = new Point(component.getWidth() / 2, component.getHeight() / 2);
+                        popupMenu.show(component, (int) point.getX(), (int) point.getY());
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             private Component getSource(MouseEvent e) {
