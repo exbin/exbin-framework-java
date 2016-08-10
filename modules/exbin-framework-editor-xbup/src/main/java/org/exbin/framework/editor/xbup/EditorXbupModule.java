@@ -103,6 +103,7 @@ public class EditorXbupModule implements XBApplicationModule {
                     if (docEditingHandler != null) {
                         docEditingHandler.setAddEnabled(docPanel.isAddEnabled());
                         docEditingHandler.setEditEnabled(docPanel.isEditEnabled());
+                        propertiesHandler.setEditEnabled(docPanel.isEditEnabled());
                     }
                 }
             });

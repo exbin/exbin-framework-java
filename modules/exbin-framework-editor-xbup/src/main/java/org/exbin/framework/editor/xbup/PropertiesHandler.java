@@ -31,7 +31,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Properties handler.
  *
- * @version 0.2.0 2016/03/01
+ * @version 0.2.0 2016/08/10
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesHandler {
@@ -86,6 +86,7 @@ public class PropertiesHandler {
         };
         ActionUtils.setupAction(itemPropertiesAction, resourceBundle, "itemPropertiesAction");
         itemPropertiesAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        itemPropertiesAction.setEnabled(false);
     }
 
     public Action getPropertiesAction() {
@@ -98,5 +99,9 @@ public class PropertiesHandler {
 
     void setDevMode(boolean devMode) {
         this.devMode = devMode;
+    }
+
+    void setEditEnabled(boolean editEnabled) {
+        itemPropertiesAction.setEnabled(editEnabled);
     }
 }
