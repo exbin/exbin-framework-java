@@ -22,6 +22,7 @@ import java.awt.EventQueue;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -629,12 +630,10 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
                 ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
             }
 
-            Point point = component.getMousePosition();
-            if (point != null) {
-                defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
-            } else {
-                defaultPopupMenu.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
-            }
+            Point point = mouseEvent.getLocationOnScreen();
+            Point locationOnScreen = component.getLocationOnScreen();
+            point.translate(-locationOnScreen.x, -locationOnScreen.y);
+            defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
         }
 
         private void activateKeyPopup(Component component, Point point, ClipboardActionsHandler clipboardHandler) {
@@ -643,8 +642,12 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
             }
 
             if (point == null) {
-                // TODO Fix for JEditorPane
-                point = new Point(component.getWidth() / 2, component.getHeight() / 2);
+                if (component.getParent() instanceof ScrollPane) {
+                    // TODO
+                    point = new Point(component.getWidth() / 2, component.getHeight() / 2);
+                } else {
+                    point = new Point(component.getWidth() / 2, component.getHeight() / 2);
+                }
             }
             defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
         }
