@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.gui.frame;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -227,7 +226,6 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
 
     @Override
     public void setMainPanel(Component component) {
-        component.setBackground(Color.RED);
         getContentPane().add(component, java.awt.BorderLayout.CENTER);
     }
 
@@ -279,7 +277,7 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     public void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider) {
         this.windowHeaderDecorationProvider = windowHeaderDecorationProvider;
     }
-    
+
     @Override
     public void setHeaderDecoration(WindowHeaderPanel windowHeaderPanel) {
         if (windowHeaderDecorationProvider != null) {
