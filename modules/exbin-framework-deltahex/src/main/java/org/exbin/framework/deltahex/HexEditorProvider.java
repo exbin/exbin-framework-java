@@ -15,7 +15,14 @@
  */
 package org.exbin.framework.deltahex;
 
+import java.awt.Color;
+import java.nio.charset.Charset;
+import java.util.Map;
+import org.exbin.framework.deltahex.panel.HexColorType;
+import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.HexStatusPanel;
+import org.exbin.framework.deltahex.panel.SearchParameters;
+import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
@@ -32,4 +39,30 @@ public interface HexEditorProvider extends EditorProvider {
      * @param hexStatusPanel hex status panel
      */
     void registerTextStatus(HexStatusPanel hexStatusPanel);
+
+    public Map<HexColorType, Color> getCurrentColors();
+
+    public Map<HexColorType, Color> getDefaultColors();
+
+    public void setCurrentColors(Map<HexColorType, Color> colors);
+
+    public boolean isWordWrapMode();
+
+    public void setWordWrapMode(boolean mode);
+
+    public Charset getCharset();
+
+    public void setCharset(Charset forName);
+
+    public void findText(SearchParameters searchParameters);
+
+    public boolean changeShowNonprintables();
+
+    public void showFontDialog(TextFontDialog dialog);
+
+    public boolean changeLineWrap();
+
+    public HexPanel getDocument();
+
+    public void printFile();
 }

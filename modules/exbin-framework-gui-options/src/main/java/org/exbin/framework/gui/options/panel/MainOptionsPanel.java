@@ -37,9 +37,9 @@ import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
- * Tool Bar Apperance Options panel.
+ * Main options panel.
  *
- * @version 0.2.0 2016/03/25
+ * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
 public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -55,7 +55,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
 
     private List<String> themes;
     private List<String> themeNames;
-    private List<Locale> languages;
+    private List<Locale> languageLocales = null;
 
     public MainOptionsPanel(ApplicationFrameHandler frame) {
         this.frame = frame;
@@ -287,12 +287,10 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
             themesComboBoxModel.addElement(themeName);
         }
 
-        languages = new ArrayList<>();
-        // TODO: List all available resource locales
-        languages.add(Locale.ROOT);
-        languages.add(new Locale("en", "US"));
-        languages.add(new Locale("cs", "CZ"));
-        for (Locale language : languages) {
+        languageLocales = new ArrayList<>();
+        languageLocales.add(Locale.ROOT);
+        languageLocales.add(new Locale("en", "US"));
+        for (Locale language : languageLocales) {
             languageComboBoxModel.addElement(language);
         }
     }
@@ -304,5 +302,10 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         extendedPanel = panel;
         add((Component) panel, BorderLayout.CENTER);
         extendedPanel.setModifiedOptionListener(modifiedOptionListener);
+    }
+
+    public void setLanguageLocales(List<Locale> locales) {
+        languageLocales.clear();
+        languageLocales.addAll(locales);
     }
 }

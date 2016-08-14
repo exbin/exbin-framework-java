@@ -21,6 +21,7 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,7 +54,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class OptionsDialog extends javax.swing.JDialog {
 
     private Preferences preferences = null;
-    private java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(OptionsDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(OptionsDialog.class);
     private Map<String, JPanel> optionPanels;
     private JPanel currentOptionsPanel = null;
     private ModifiedOptionListener modifiedOptionListener;
@@ -413,6 +414,10 @@ public class OptionsDialog extends javax.swing.JDialog {
     public void setAppEditor(XBApplication appEditor) {
         this.appEditor = appEditor;
         setIconImage(appEditor.getApplicationIcon());
+    }
+
+    public void setLanguageLocales(List<Locale> locales) {
+        mainOptionsPanel.setLanguageLocales(locales);
     }
 
     private class OptionsMutableTreeNode extends DefaultMutableTreeNode {

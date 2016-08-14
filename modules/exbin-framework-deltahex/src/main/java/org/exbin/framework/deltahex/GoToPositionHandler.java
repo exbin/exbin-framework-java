@@ -25,17 +25,16 @@ import org.exbin.framework.deltahex.dialog.GoToHexDialog;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Go to line handler.
  *
- * @version 0.1.0 2016/06/13
+ * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToPositionHandler {
 
-    private final EditorProvider editorProvider;
+    private final HexEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -45,7 +44,7 @@ public class GoToPositionHandler {
 
     private Action goToLineAction;
 
-    public GoToPositionHandler(XBApplication application, EditorProvider editorProvider) {
+    public GoToPositionHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
@@ -58,6 +57,7 @@ public class GoToPositionHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexPanel) {
+                    // TODO
                     HexPanel activePanel = (HexPanel) editorProvider;
                     initGotoDialog();
                     goToDialog.setCursorPosition(activePanel.getCodeArea().getCaretPosition().getDataPosition());

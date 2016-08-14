@@ -16,13 +16,14 @@
  */
 package org.exbin.framework.gui.options.api;
 
+import java.util.Locale;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
 
 /**
- * Interface for XBUP framework file module.
+ * Interface for XBUP framework options module.
  *
  * @version 0.2.0 2016/01/12
  * @author ExBin Project (http://exbin.org)
@@ -65,5 +66,12 @@ public interface GuiOptionsModuleApi extends XBApplicationModule {
     /**
      * Registers options menu action in default position.
      */
-    public void registerMenuAction();
+    void registerMenuAction();
+
+    /**
+     * Adds language locale.
+     *
+     * @param locale locale
+     */
+    void addLanguageLocale(Locale locale);
 }

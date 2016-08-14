@@ -22,7 +22,6 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Print handler.
@@ -32,7 +31,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
  */
 public class PrintHandler {
 
-    private final EditorProvider editorProvider;
+    private final HexEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -40,7 +39,7 @@ public class PrintHandler {
 
     private Action printAction;
 
-    public PrintHandler(XBApplication application, EditorProvider editorProvider) {
+    public PrintHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
@@ -52,10 +51,7 @@ public class PrintHandler {
         printAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
-                    HexPanel activePanel = (HexPanel) editorProvider;
-                    activePanel.printFile();
-                }
+                editorProvider.printFile();
             }
         };
         ActionUtils.setupAction(printAction, resourceBundle, "printAction");

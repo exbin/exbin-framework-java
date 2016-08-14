@@ -127,6 +127,16 @@ public class TestApplication implements XBApplication {
             public void addModulesFrom(URI moduleJarFileUri) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
+
+            @Override
+            public void addModulesFromPath(URI uri) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void addModulesFromPath(URL url) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
         };
     }
 

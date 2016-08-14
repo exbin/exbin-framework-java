@@ -25,17 +25,16 @@ import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Find/replace handler.
  *
- * @version 0.1.0 2016/06/11
+ * @version 0.2.0 2016/06/14
  * @author ExBin Project (http://exbin.org)
  */
 public class FindReplaceHandler {
 
-    private final EditorProvider editorProvider;
+    private final HexEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -47,7 +46,7 @@ public class FindReplaceHandler {
     private Action editFindAgainAction;
     private Action editReplaceAction;
 
-    public FindReplaceHandler(XBApplication application, EditorProvider editorProvider) {
+    public FindReplaceHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
@@ -73,9 +72,7 @@ public class FindReplaceHandler {
             public void actionPerformed(ActionEvent e) {
                 initFindDialog();
                 findDialog.setShallReplace(false);
-                if (editorProvider instanceof HexPanel) {
-                    ((HexPanel) editorProvider).findText(findDialog.getSearchParameters());
-                }
+                editorProvider.findText(findDialog.getSearchParameters());
             }
         };
         ActionUtils.setupAction(editFindAgainAction, resourceBundle, "editFindAgainAction");
@@ -90,9 +87,7 @@ public class FindReplaceHandler {
                 findDialog.setLocationRelativeTo(findDialog.getParent());
                 findDialog.setVisible(true);
                 if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                    if (editorProvider instanceof HexPanel) {
-                        ((HexPanel) editorProvider).findText(findDialog.getSearchParameters());
-                    }
+                    editorProvider.findText(findDialog.getSearchParameters());
                 }
             }
         };

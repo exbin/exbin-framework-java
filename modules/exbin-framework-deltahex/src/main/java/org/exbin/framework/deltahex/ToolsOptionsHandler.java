@@ -23,18 +23,16 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.dialog.HexColorDialog;
-import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
 import org.exbin.framework.deltahex.panel.HexColorType;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Tools options action handler.
  *
- * @version 0.1.0 2016/04/03
+ * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolsOptionsHandler {
@@ -45,10 +43,10 @@ public class ToolsOptionsHandler {
     private Action toolsSetFontAction;
     private Action toolsSetColorAction;
 
-    private final EditorProvider editorProvider;
+    private final HexEditorProvider editorProvider;
     private final XBApplication application;
 
-    public ToolsOptionsHandler(XBApplication application, EditorProvider editorProvider) {
+    public ToolsOptionsHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
@@ -62,9 +60,7 @@ public class ToolsOptionsHandler {
                 TextFontDialog dialog = new TextFontDialog(frameModule.getFrame(), true);
                 dialog.setIconImage(application.getApplicationIcon());
                 dialog.setLocationRelativeTo(dialog.getParent());
-                if (editorProvider instanceof HexPanel) {
-                    ((HexPanel) editorProvider).showFontDialog(dialog);
-                }
+                editorProvider.showFontDialog(dialog);
             }
         };
         ActionUtils.setupAction(toolsSetFontAction, resourceBundle, "toolsSetFontAction");
@@ -77,17 +73,17 @@ public class ToolsOptionsHandler {
                 HexColorPanelApi textColorPanelFrame = new HexColorPanelApi() {
                     @Override
                     public Map<HexColorType, Color> getCurrentTextColors() {
-                        return ((HexPanel) editorProvider).getCurrentColors();
+                        return editorProvider.getCurrentColors();
                     }
 
                     @Override
                     public Map<HexColorType, Color> getDefaultTextColors() {
-                        return ((HexPanel) editorProvider).getDefaultColors();
+                        return editorProvider.getDefaultColors();
                     }
 
                     @Override
                     public void setCurrentTextColors(Map<HexColorType, Color> colors) {
-                        ((HexPanel) editorProvider).setCurrentColors(colors);
+                        editorProvider.setCurrentColors(colors);
                     }
                 };
                 HexColorDialog dialog = new HexColorDialog(frameModule.getFrame(), textColorPanelFrame, true);

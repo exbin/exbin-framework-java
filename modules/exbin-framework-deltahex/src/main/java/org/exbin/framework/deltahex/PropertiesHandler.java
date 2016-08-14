@@ -21,20 +21,18 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.dialog.PropertiesDialog;
-import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Properties handler.
  *
- * @version 0.1.0 2016/04/03
+ * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesHandler {
 
-    private final EditorProvider editorProvider;
+    private final HexEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -42,7 +40,7 @@ public class PropertiesHandler {
 
     private Action propertiesAction;
 
-    public PropertiesHandler(XBApplication application, EditorProvider editorProvider) {
+    public PropertiesHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
@@ -54,15 +52,12 @@ public class PropertiesHandler {
         propertiesAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
-                    HexPanel activePanel = (HexPanel) editorProvider;
-                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    PropertiesDialog dialog = new PropertiesDialog(frameModule.getFrame(), true);
-                    dialog.setIconImage(application.getApplicationIcon());
-                    dialog.setDocument(activePanel);
-                    dialog.setLocationRelativeTo(dialog.getParent());
-                    dialog.setVisible(true);
-                }
+                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                PropertiesDialog dialog = new PropertiesDialog(frameModule.getFrame(), true);
+                dialog.setIconImage(application.getApplicationIcon());
+                dialog.setDocument(editorProvider.getDocument());
+                dialog.setLocationRelativeTo(dialog.getParent());
+                dialog.setVisible(true);
             }
         };
         ActionUtils.setupAction(propertiesAction, resourceBundle, "propertiesAction");

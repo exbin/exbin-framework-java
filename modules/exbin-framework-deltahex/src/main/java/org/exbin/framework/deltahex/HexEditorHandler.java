@@ -15,12 +15,18 @@
  */
 package org.exbin.framework.deltahex;
 
+import java.awt.Color;
 import java.beans.PropertyChangeListener;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JPanel;
+import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.HexStatusPanel;
+import org.exbin.framework.deltahex.panel.SearchParameters;
+import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.file.api.FileType;
 
@@ -44,45 +50,17 @@ public class HexEditorHandler implements HexEditorProvider {
 
     @Override
     public JPanel getPanel() {
-        switch (editorMode) {
-            case SINGLE:
-                return panels.get(0).getPanel();
-            case MULTI: {
-                return activePanel.getPanel();
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+        return activePanel.getPanel();
     }
 
     @Override
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        switch (editorMode) {
-            case SINGLE: {
-                panels.get(0).setPropertyChangeListener(propertyChangeListener);
-                break;
-            }
-            case MULTI: {
-                activePanel.setPropertyChangeListener(propertyChangeListener);
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+        activePanel.setPropertyChangeListener(propertyChangeListener);
     }
 
     @Override
     public String getWindowTitle(String frameTitle) {
-        switch (editorMode) {
-            case SINGLE: {
-                return panels.get(0).getWindowTitle(frameTitle);
-            }
-            case MULTI: {
-                return activePanel.getWindowTitle(frameTitle);
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+        return activePanel.getWindowTitle(frameTitle);
     }
 
     @Override
@@ -149,18 +127,7 @@ public class HexEditorHandler implements HexEditorProvider {
 
     @Override
     public void setFileType(FileType fileType) {
-        switch (editorMode) {
-            case SINGLE: {
-                panels.get(0).setFileType(fileType);
-                break;
-            }
-            case MULTI: {
-                activePanel.setFileType(fileType);
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+        activePanel.setFileType(fileType);
     }
 
     @Override
@@ -182,16 +149,7 @@ public class HexEditorHandler implements HexEditorProvider {
 
     @Override
     public boolean isModified() {
-        switch (editorMode) {
-            case SINGLE: {
-                return panels.get(0).isModified();
-            }
-            case MULTI: {
-                return activePanel.isModified();
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+        return activePanel.isModified();
     }
 
     @Override
@@ -218,7 +176,7 @@ public class HexEditorHandler implements HexEditorProvider {
             hexPanelInit.init(panel);
         }
         editorViewHandling.addEditorView(panel);
-        
+
         return panel;
     }
 
@@ -249,6 +207,71 @@ public class HexEditorHandler implements HexEditorProvider {
 
     public void setEditorViewHandling(EditorViewHandling editorViewHandling) {
         this.editorViewHandling = editorViewHandling;
+    }
+
+    @Override
+    public Map<HexColorType, Color> getCurrentColors() {
+        return activePanel.getCurrentColors();
+    }
+
+    @Override
+    public Map<HexColorType, Color> getDefaultColors() {
+        return activePanel.getDefaultColors();
+    }
+
+    @Override
+    public void setCurrentColors(Map<HexColorType, Color> colors) {
+        activePanel.setCurrentColors(colors);
+    }
+
+    @Override
+    public boolean isWordWrapMode() {
+        return activePanel.getCodeArea().isWrapMode();
+    }
+
+    @Override
+    public void setWordWrapMode(boolean mode) {
+        activePanel.getCodeArea().setWrapMode(mode);
+    }
+
+    @Override
+    public Charset getCharset() {
+        return activePanel.getCharset();
+    }
+
+    @Override
+    public void setCharset(Charset charset) {
+        activePanel.setCharset(charset);
+    }
+
+    @Override
+    public void findText(SearchParameters searchParameters) {
+        activePanel.findText(searchParameters);
+    }
+
+    @Override
+    public boolean changeShowNonprintables() {
+        return activePanel.changeShowNonprintables();
+    }
+
+    @Override
+    public void showFontDialog(TextFontDialog dialog) {
+        activePanel.showFontDialog(dialog);
+    }
+
+    @Override
+    public boolean changeLineWrap() {
+        return activePanel.changeLineWrap();
+    }
+
+    @Override
+    public HexPanel getDocument() {
+        return activePanel;
+    }
+
+    @Override
+    public void printFile() {
+        activePanel.printFile();
     }
 
     /**

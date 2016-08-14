@@ -17,6 +17,9 @@
 package org.exbin.framework.gui.options;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
@@ -35,9 +38,9 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework file module.
+ * Implementation of XBUP framework options module.
  *
- * @version 0.2.0 2016/01/22
+ * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiOptionsModule implements GuiOptionsModuleApi {
@@ -47,6 +50,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
 
     private Action optionsAction;
     private OptionsDialog optionsDialog;
+    private final List<Locale> locales = new ArrayList<>();
 
     public GuiOptionsModule() {
     }
@@ -55,6 +59,8 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
         resourceBundle = ActionUtils.getResourceBundleByClass(GuiOptionsModule.class);
+        locales.add(Locale.ROOT);
+        locales.add(new Locale("en", "US"));
     }
 
     @Override
@@ -65,6 +71,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         if (optionsDialog == null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             optionsDialog = new OptionsDialog(frameModule.getFrame(), true, frameModule.getFrameHandler());
+            optionsDialog.setLanguageLocales(locales);
         }
 
         return optionsDialog;
@@ -116,5 +123,10 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         menuModule.registerMenuGroup(GuiFrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.AROUND));
         getOptionsAction();
         menuModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
+    }
+
+    @Override
+    public void addLanguageLocale(Locale locale) {
+        locales.add(locale);
     }
 }

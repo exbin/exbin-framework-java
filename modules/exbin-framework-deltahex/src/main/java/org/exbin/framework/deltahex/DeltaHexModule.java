@@ -59,7 +59,6 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.gui.menu.api.NextToMode;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 
@@ -88,7 +87,7 @@ public class DeltaHexModule implements XBApplicationModule {
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
 
     private XBApplication application;
-    private EditorProvider editorProvider;
+    private HexEditorProvider editorProvider;
     private HexStatusPanel textStatusPanel;
 
     private FindReplaceHandler findReplaceHandler;
@@ -118,7 +117,7 @@ public class DeltaHexModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    public EditorProvider getEditorProvider() {
+    public HexEditorProvider getEditorProvider() {
         if (editorProvider == null) {
             GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new HexEditorHandler();
@@ -158,7 +157,7 @@ public class DeltaHexModule implements XBApplicationModule {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, HEX_STATUS_BAR_ID, textStatusPanel);
         frameModule.switchStatusBar(HEX_STATUS_BAR_ID);
-        ((HexEditorProvider) getEditorProvider()).registerTextStatus(textStatusPanel);
+        getEditorProvider().registerTextStatus(textStatusPanel);
         if (encodingsHandler != null) {
             encodingsHandler.setTextEncodingStatus(textStatusPanel);
         }
@@ -177,17 +176,17 @@ public class DeltaHexModule implements XBApplicationModule {
         HexColorPanelApi textColorPanelFrame = new HexColorPanelApi() {
             @Override
             public Map<HexColorType, Color> getCurrentTextColors() {
-                return ((HexPanel) getEditorProvider()).getCurrentColors();
+                return getEditorProvider().getCurrentColors();
             }
 
             @Override
             public Map<HexColorType, Color> getDefaultTextColors() {
-                return ((HexPanel) getEditorProvider()).getDefaultColors();
+                return getEditorProvider().getDefaultColors();
             }
 
             @Override
             public void setCurrentTextColors(Map<HexColorType, Color> colors) {
-                ((HexPanel) getEditorProvider()).setCurrentColors(colors);
+                getEditorProvider().setCurrentColors(colors);
             }
         };
 
@@ -197,12 +196,12 @@ public class DeltaHexModule implements XBApplicationModule {
         textAppearancePanelFrame = new HexAppearancePanelFrame() {
             @Override
             public boolean getWordWrapMode() {
-                return ((HexPanel) getEditorProvider()).getWordWrapMode();
+                return getEditorProvider().isWordWrapMode();
             }
 
             @Override
             public void setWordWrapMode(boolean mode) {
-                ((HexPanel) getEditorProvider()).setWordWrapMode(mode);
+                getEditorProvider().setWordWrapMode(mode);
             }
         };
 
@@ -216,7 +215,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
             @Override
             public String getSelectedEncoding() {
-                return ((HexPanel) getEditorProvider()).getCharset().name();
+                return getEditorProvider().getCharset().name();
             }
 
             @Override
@@ -228,7 +227,7 @@ public class DeltaHexModule implements XBApplicationModule {
             @Override
             public void setSelectedEncoding(String encoding) {
                 if (encoding != null) {
-                    ((HexPanel) getEditorProvider()).setCharset(Charset.forName(encoding));
+                    getEditorProvider().setCharset(Charset.forName(encoding));
                 }
             }
         };

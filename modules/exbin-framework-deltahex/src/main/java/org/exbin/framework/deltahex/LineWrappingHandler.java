@@ -20,25 +20,23 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Line wrapping handler.
  *
- * @version 0.1.0 2016/05/26
+ * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
 public class LineWrappingHandler {
 
-    private final EditorProvider editorProvider;
+    private final HexEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
     private Action viewLineWrapAction;
 
-    public LineWrappingHandler(XBApplication application, EditorProvider editorProvider) {
+    public LineWrappingHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
@@ -48,10 +46,8 @@ public class LineWrappingHandler {
         viewLineWrapAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
-                    boolean lineWraping = ((HexPanel) editorProvider).changeLineWrap();
-                    viewLineWrapAction.putValue(Action.SELECTED_KEY, lineWraping);
-                }
+                boolean lineWraping = editorProvider.changeLineWrap();
+                viewLineWrapAction.putValue(Action.SELECTED_KEY, lineWraping);
             }
         };
         ActionUtils.setupAction(viewLineWrapAction, resourceBundle, "viewLineWrapAction");
