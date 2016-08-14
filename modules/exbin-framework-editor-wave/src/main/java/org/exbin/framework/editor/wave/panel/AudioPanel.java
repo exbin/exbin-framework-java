@@ -76,7 +76,7 @@ import org.exbin.framework.editor.wave.panel.command.WaveCutCommand;
 import org.exbin.framework.editor.wave.panel.command.WaveDeleteCommand;
 import org.exbin.framework.editor.wave.panel.command.WavePasteCommand;
 import org.exbin.framework.editor.wave.panel.command.WaveReverseCommand;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
@@ -88,7 +88,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
  * @version 0.2.0 2016/01/24
  * @author ExBin Project (http://exbin.org)
  */
-public class AudioPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler {
+public class AudioPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
 
     private XBUndoHandler undoHandler;
     private String fileName;

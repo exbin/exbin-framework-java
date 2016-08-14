@@ -39,10 +39,10 @@ import org.exbin.framework.editor.text.dialog.ManageEncodingsDialog;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Encodings handler.
@@ -52,7 +52,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class EncodingsHandler implements TextEncodingPanelApi {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private TextEncodingStatusApi textEncodingStatus;
     private final ResourceBundle resourceBundle;
@@ -69,7 +69,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
 
     private Action manageEncodingsAction;
 
-    public EncodingsHandler(XBApplication application, XBEditorProvider editorProvider, TextEncodingStatusApi textStatus) {
+    public EncodingsHandler(XBApplication application, EditorProvider editorProvider, TextEncodingStatusApi textStatus) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.textEncodingStatus = textStatus;

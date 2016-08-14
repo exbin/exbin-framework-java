@@ -26,9 +26,9 @@ import org.exbin.framework.editor.text.dialog.TextColorDialog;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.editor.text.panel.TextColorPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Tools options action handler.
@@ -44,10 +44,10 @@ public class ToolsOptionsHandler {
     private Action toolsSetFontAction;
     private Action toolsSetColorAction;
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
 
-    public ToolsOptionsHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public ToolsOptionsHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorTextModule.class);

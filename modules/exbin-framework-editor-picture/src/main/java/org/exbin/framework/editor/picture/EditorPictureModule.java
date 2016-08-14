@@ -27,7 +27,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.editor.picture.panel.ImagePanel;
 import org.exbin.framework.editor.picture.panel.ImageStatusPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -58,7 +58,7 @@ public class EditorPictureModule implements XBApplicationModule {
     public static final String IMAGE_STATUS_BAR_ID = "imageStatusBar";
 
     private XBApplication application;
-    private XBEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private ImageStatusPanel imageStatusPanel;
 
     private ToolsOptionsHandler toolsOptionsHandler;
@@ -79,7 +79,7 @@ public class EditorPictureModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    public XBEditorProvider getEditorProvider() {
+    public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
             ImagePanel imagePanel = new ImagePanel();
 

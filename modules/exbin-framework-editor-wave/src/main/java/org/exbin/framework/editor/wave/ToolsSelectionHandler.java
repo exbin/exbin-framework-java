@@ -23,7 +23,7 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
@@ -36,7 +36,7 @@ public class ToolsSelectionHandler {
 
     public static String TOOLS_SELECTION_RADIO_GROUP_ID = "toolsSelectionRadioGroup";
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -45,7 +45,7 @@ public class ToolsSelectionHandler {
 
     private XBWavePanel.ToolMode toolMode = XBWavePanel.ToolMode.SELECTION;
 
-    public ToolsSelectionHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public ToolsSelectionHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorWaveModule.class);

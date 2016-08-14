@@ -24,9 +24,9 @@ import javax.swing.JOptionPane;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.dialog.GotoDialog;
 import org.exbin.framework.editor.text.panel.TextPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Go to line handler.
@@ -36,7 +36,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class GoToLineHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -46,7 +46,7 @@ public class GoToLineHandler {
 
     private Action goToLineAction;
 
-    public GoToLineHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public GoToLineHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorTextModule.class);

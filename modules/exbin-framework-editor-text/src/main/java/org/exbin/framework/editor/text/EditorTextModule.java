@@ -34,7 +34,6 @@ import org.exbin.framework.editor.text.panel.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.text.panel.TextStatusPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -49,6 +48,7 @@ import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanelApi;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * XBUP text editor module.
@@ -69,7 +69,7 @@ public class EditorTextModule implements XBApplicationModule {
     public static final String TEXT_STATUS_BAR_ID = "textStatusBar";
 
     private XBApplication application;
-    private XBEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private TextStatusPanel textStatusPanel;
 
     private FindReplaceHandler findReplaceHandler;
@@ -92,7 +92,7 @@ public class EditorTextModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    public XBEditorProvider getEditorProvider() {
+    public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
             editorProvider = new TextPanel();
         }

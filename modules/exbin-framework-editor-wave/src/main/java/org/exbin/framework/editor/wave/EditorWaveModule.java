@@ -29,7 +29,7 @@ import org.exbin.framework.editor.wave.panel.AudioPanel;
 import org.exbin.framework.editor.wave.panel.AudioStatusPanel;
 import org.exbin.framework.editor.wave.panel.WaveColorOptionsPanel;
 import org.exbin.framework.editor.wave.panel.WaveColorPanelApi;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -65,7 +65,7 @@ public class EditorWaveModule implements XBApplicationModule {
     public static final String WAVE_STATUS_BAR_ID = "waveStatusBar";
 
     private XBApplication application;
-    private XBEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private AudioStatusPanel audioStatusPanel;
     private boolean playing = false;
 
@@ -89,7 +89,7 @@ public class EditorWaveModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    public XBEditorProvider getEditorProvider() {
+    public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
             AudioPanel audioPanel = new AudioPanel();
 

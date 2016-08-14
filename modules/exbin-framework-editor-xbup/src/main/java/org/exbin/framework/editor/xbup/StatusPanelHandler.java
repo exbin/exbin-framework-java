@@ -23,9 +23,9 @@ import org.exbin.framework.client.api.ClientConnectionListener;
 import static org.exbin.framework.editor.xbup.EditorXbupModule.DOC_STATUS_BAR_ID;
 import static org.exbin.framework.editor.xbup.EditorXbupModule.MODULE_ID;
 import org.exbin.framework.editor.xbup.panel.XBDocStatusPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Status panel handler.
@@ -35,13 +35,13 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class StatusPanelHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
     private XBDocStatusPanel docStatusPanel;
 
-    public StatusPanelHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public StatusPanelHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorXbupModule.class);

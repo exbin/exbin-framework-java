@@ -32,7 +32,9 @@ import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
 import java.awt.Component;
 import java.util.ResourceBundle;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
@@ -99,6 +101,38 @@ public class GuiDockingModule implements GuiDockingModuleApi {
 
         grid.add(0, 0, 1, 1, view);
         area.deploy(grid);
+    }
+
+    @Override
+    public EditorViewHandling getEditorViewHandling() {
+        return new EditorViewHandling() {
+            @Override
+            public void addEditorView(EditorProvider editorProvider) {
+                CContentArea area = control.getContentArea();
+
+                DefaultCDockable view = new DefaultCDockable();
+                view.add((Component) editorProvider);
+                view.setTitleText("Test");
+                view.setTitleShown(false);
+                view.setSingleTabShown(true);
+                view.addAction(new CCloseAction(control));
+                view.putAction(CDockable.ACTION_KEY_CLOSE, new CustomCloseAction(control));
+                view.setLocation(CLocation.maximized());
+                view.setCloseable(true);
+                CStation<?> station = view.asStation();
+                if (station instanceof StackDockStation) {
+                    ((StackDockStation) station).setTabPlacement(TabPlacement.TOP_OF_DOCKABLE);
+                }
+
+                grid.add(0, 0, 1, 1, view);
+                area.deploy(grid);
+            }
+
+            @Override
+            public void removeEditorView() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
     }
 
     @TabDockAction

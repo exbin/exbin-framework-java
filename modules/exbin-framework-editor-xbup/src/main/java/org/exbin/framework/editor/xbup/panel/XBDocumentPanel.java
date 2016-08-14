@@ -56,7 +56,6 @@ import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
 import org.exbin.framework.editor.xbup.dialog.ModifyBlockDialog;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -74,6 +73,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Panel with XBUP document visualization.
@@ -81,7 +81,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
  * @version 0.2.0 2016/02/29
  * @author ExBin Project (http://exbin.org)
  */
-public class XBDocumentPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler {
+public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
 
     private final TreeDocument mainDoc;
     private FileType fileType;

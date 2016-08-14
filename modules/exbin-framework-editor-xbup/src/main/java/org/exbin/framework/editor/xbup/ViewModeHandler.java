@@ -22,8 +22,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * View mode handler.
@@ -35,7 +35,7 @@ public class ViewModeHandler {
 
     public static String VIEW_MODE_RADIO_GROUP_ID = "viewModeRadioGroup";
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -47,7 +47,7 @@ public class ViewModeHandler {
 
     private XBDocumentPanel.PanelMode viewMode = XBDocumentPanel.PanelMode.TREE;
 
-    public ViewModeHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public ViewModeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorXbupModule.class);

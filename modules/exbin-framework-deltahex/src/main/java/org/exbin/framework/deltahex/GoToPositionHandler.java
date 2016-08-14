@@ -23,9 +23,9 @@ import javax.swing.JOptionPane;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.dialog.GoToHexDialog;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Go to line handler.
@@ -35,7 +35,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class GoToPositionHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -45,7 +45,7 @@ public class GoToPositionHandler {
 
     private Action goToLineAction;
 
-    public GoToPositionHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public GoToPositionHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);

@@ -21,8 +21,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * View nonprintables handler.
@@ -32,7 +32,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class ViewNonprintablesHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -40,7 +40,7 @@ public class ViewNonprintablesHandler {
 
     private Action viewNonprintablesAction;
 
-    public ViewNonprintablesHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public ViewNonprintablesHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);

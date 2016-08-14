@@ -25,7 +25,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.picture.dialog.ToolColorDialog;
 import org.exbin.framework.editor.picture.panel.ImagePanel;
 import org.exbin.framework.editor.picture.panel.ToolColorPanelApi;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 
@@ -42,10 +42,10 @@ public class ToolsOptionsHandler {
 
     private Action toolsSetColorAction;
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
 
-    public ToolsOptionsHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public ToolsOptionsHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorPictureModule.class);

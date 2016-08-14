@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.panel.SingleEditorPanel;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -47,10 +47,10 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 public class GuiEditorModule implements GuiEditorModuleApi {
 
     private XBApplication application;
-    private final List<XBEditorProvider> editors = new ArrayList<>();
-    private final Map<String, List<XBEditorProvider>> pluginEditorsMap = new HashMap<>();
+    private final List<EditorProvider> editors = new ArrayList<>();
+    private final Map<String, List<EditorProvider>> pluginEditorsMap = new HashMap<>();
     private SingleEditorPanel editorPanel;
-    private XBEditorProvider activeEditor = null;
+    private EditorProvider activeEditor = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener = null;
 
     public GuiEditorModule() {
@@ -142,9 +142,9 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
     @Override
     public void unregisterModule(String moduleId) {
-        List<XBEditorProvider> pluginEditors = pluginEditorsMap.get(moduleId);
+        List<EditorProvider> pluginEditors = pluginEditorsMap.get(moduleId);
         if (pluginEditors != null) {
-            for (XBEditorProvider editor : pluginEditors) {
+            for (EditorProvider editor : pluginEditors) {
                 editors.remove(editor);
             }
             pluginEditorsMap.remove(moduleId);
@@ -152,7 +152,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     }
 
     @Override
-    public void registerEditor(String pluginId, final XBEditorProvider editorProvider) {
+    public void registerEditor(String pluginId, final EditorProvider editorProvider) {
         if (editorProvider instanceof UndoActionsHandler) {
             ((UndoActionsHandler) editorProvider).setUndoUpdateListener(new UndoUpdateListener() {
                 @Override
@@ -173,7 +173,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
             });
         }
         editors.add(editorProvider);
-        List<XBEditorProvider> pluginEditors = pluginEditorsMap.get(pluginId);
+        List<EditorProvider> pluginEditors = pluginEditorsMap.get(pluginId);
         if (pluginEditors == null) {
             pluginEditors = new ArrayList<>();
             pluginEditorsMap.put(pluginId, pluginEditors);

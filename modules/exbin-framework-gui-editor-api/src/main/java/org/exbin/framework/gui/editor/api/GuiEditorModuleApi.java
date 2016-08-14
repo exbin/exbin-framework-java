@@ -36,7 +36,7 @@ public interface GuiEditorModuleApi extends XBApplicationModule {
      * @param pluginId plugin identifier
      * @param editorProvider editor provider
      */
-    public void registerEditor(String pluginId, XBEditorProvider editorProvider);
+    public void registerEditor(String pluginId, EditorProvider editorProvider);
 
     /**
      * Returns main component for editors handling.

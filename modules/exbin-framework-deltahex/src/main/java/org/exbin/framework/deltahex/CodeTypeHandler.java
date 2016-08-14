@@ -23,8 +23,8 @@ import javax.swing.Action;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Code type handler.
@@ -36,7 +36,7 @@ public class CodeTypeHandler {
 
     public static String CODE_TYPE_RADIO_GROUP_ID = "codeTypeRadioGroup";
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -49,7 +49,7 @@ public class CodeTypeHandler {
 
     private CodeArea.CodeType codeType = CodeArea.CodeType.HEXADECIMAL;
 
-    public CodeTypeHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public CodeTypeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);

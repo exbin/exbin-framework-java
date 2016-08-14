@@ -23,9 +23,9 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.dialog.PropertiesDialog;
 import org.exbin.framework.editor.text.panel.TextPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Properties handler.
@@ -35,7 +35,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class PropertiesHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -43,7 +43,7 @@ public class PropertiesHandler {
 
     private Action propertiesAction;
 
-    public PropertiesHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public PropertiesHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorTextModule.class);

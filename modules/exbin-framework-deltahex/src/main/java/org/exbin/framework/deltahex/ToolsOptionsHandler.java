@@ -25,11 +25,11 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.dialog.HexColorDialog;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
 import org.exbin.framework.deltahex.panel.HexColorType;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Tools options action handler.
@@ -45,10 +45,10 @@ public class ToolsOptionsHandler {
     private Action toolsSetFontAction;
     private Action toolsSetColorAction;
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
 
-    public ToolsOptionsHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public ToolsOptionsHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);

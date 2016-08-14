@@ -68,12 +68,12 @@ import org.exbin.framework.editor.text.EditorTextModule;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.dialog.FindTextDialog;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.undo.api.UndoUpdateListener;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Text editor panel.
@@ -81,7 +81,7 @@ import org.exbin.framework.gui.undo.api.UndoActionsHandler;
  * @version 0.2.0 2016/05/18
  * @author ExBin Project (http://exbin.org)
  */
-public class TextPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, UndoActionsHandler, TextCharsetApi {
+public class TextPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler, UndoActionsHandler, TextCharsetApi {
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
     private UndoUpdateListener undoUpdateListener = null;

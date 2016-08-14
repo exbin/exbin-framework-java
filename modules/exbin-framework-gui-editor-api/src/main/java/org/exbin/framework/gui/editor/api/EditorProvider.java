@@ -14,40 +14,39 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.docking.api;
+package org.exbin.framework.gui.editor.api;
 
-import java.awt.Component;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
-import org.exbin.framework.api.XBApplicationModule;
+import java.beans.PropertyChangeListener;
+import javax.swing.JPanel;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
- * Interface for XBUP framework docking module.
+ * XBUP framework editor interface.
  *
  * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
-public interface GuiDockingModuleApi extends XBApplicationModule {
-
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiDockingModuleApi.class);
+public interface EditorProvider extends FileHandlerApi {
 
     /**
-     * Returns docking viewport panel.
+     * Returns currently active panel.
      *
-     * @return panel component
+     * @return panel
      */
-    Component getDockingPanel();
+    public JPanel getPanel();
 
     /**
-     * Adds new view for given component.
+     * Changes passing listener.
      *
-     * @param component component
+     * @param propertyChangeListener Change listener.
      */
-    void addDockingView(Component component);
+    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener);
 
     /**
-     * Returns editor view handling.
+     * Gets window title related to last opened or saved file.
      *
-     * @return editor view handling
+     * @param frameTitle title of frame
+     * @return title related to last opened file
      */
-    EditorViewHandling getEditorViewHandling();
+    public String getWindowTitle(String frameTitle);
 }

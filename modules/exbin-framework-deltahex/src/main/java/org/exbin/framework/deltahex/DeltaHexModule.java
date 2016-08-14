@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.deltahex;
 
-import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
@@ -36,7 +35,6 @@ import org.exbin.framework.deltahex.panel.HexAppearanceOptionsPanel;
 import org.exbin.framework.deltahex.panel.HexColorOptionsPanel;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.HexStatusPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuGroup;
@@ -54,17 +52,21 @@ import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
+import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.menu.api.ClipboardActions;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.gui.menu.api.NextToMode;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
+import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2016/08/09
+ * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -86,7 +88,7 @@ public class DeltaHexModule implements XBApplicationModule {
     private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
 
     private XBApplication application;
-    private XBEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private HexStatusPanel textStatusPanel;
 
     private FindReplaceHandler findReplaceHandler;
@@ -116,25 +118,36 @@ public class DeltaHexModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    public XBEditorProvider getEditorProvider() {
+    public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            editorProvider = new HexPanel();
-            ((HexPanel) editorProvider).setPopupMenu(createPopupMenu());
-            ((HexPanel) editorProvider).setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
-            ((HexPanel) editorProvider).setGoToLineAction(getGoToLineHandler().getGoToLineAction());
-            ((HexPanel) editorProvider).setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
-            ((HexPanel) editorProvider).setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
-            ((HexPanel) editorProvider).setEncodingStatusHandler(new EncodingStatusHandler() {
+            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
+            editorProvider = new HexEditorHandler();
+            ((HexEditorHandler) editorProvider).setHexPanelInit(new HexEditorHandler.HexPanelInit() {
                 @Override
-                public void cycleEncodings() {
-                    encodingsHandler.cycleEncodings();
-                }
+                public void init(HexPanel panel) {
+                    panel.setPopupMenu(createPopupMenu(panel.getId()));
+//                    panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
+                    panel.setGoToLineAction(getGoToLineHandler().getGoToLineAction());
+                    panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
+                    panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
+                    panel.setEncodingStatusHandler(new EncodingStatusHandler() {
+                        @Override
+                        public void cycleEncodings() {
+                            encodingsHandler.cycleEncodings();
+                        }
 
-                @Override
-                public void popupEncodingsMenu(MouseEvent mouseEvent) {
-                    encodingsHandler.popupEncodingsMenu(mouseEvent);
+                        @Override
+                        public void popupEncodingsMenu(MouseEvent mouseEvent) {
+                            encodingsHandler.popupEncodingsMenu(mouseEvent);
+                        }
+                    });
                 }
             });
+            ((HexEditorHandler) editorProvider).setEditorViewHandling(dockingModule.getEditorViewHandling());
+            ((HexEditorHandler) editorProvider).init();
+            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
+            fileHandlingActions.setFileHandler(editorProvider);
         }
 
         return editorProvider;
@@ -145,7 +158,7 @@ public class DeltaHexModule implements XBApplicationModule {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, HEX_STATUS_BAR_ID, textStatusPanel);
         frameModule.switchStatusBar(HEX_STATUS_BAR_ID);
-        ((HexPanel) getEditorProvider()).registerTextStatus(textStatusPanel);
+        ((HexEditorProvider) getEditorProvider()).registerTextStatus(textStatusPanel);
         if (encodingsHandler != null) {
             encodingsHandler.setTextEncodingStatus(textStatusPanel);
         }
@@ -240,7 +253,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private FindReplaceHandler getFindReplaceHandler() {
         if (findReplaceHandler == null) {
-            findReplaceHandler = new FindReplaceHandler(application, (HexPanel) getEditorProvider());
+            findReplaceHandler = new FindReplaceHandler(application, getEditorProvider());
             findReplaceHandler.init();
         }
 
@@ -249,7 +262,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private ViewNonprintablesHandler getViewNonprintablesHandler() {
         if (viewNonprintablesHandler == null) {
-            viewNonprintablesHandler = new ViewNonprintablesHandler(application, (HexPanel) getEditorProvider());
+            viewNonprintablesHandler = new ViewNonprintablesHandler(application, getEditorProvider());
             viewNonprintablesHandler.init();
         }
 
@@ -258,7 +271,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private ToolsOptionsHandler getToolsOptionsHandler() {
         if (toolsOptionsHandler == null) {
-            toolsOptionsHandler = new ToolsOptionsHandler(application, (HexPanel) getEditorProvider());
+            toolsOptionsHandler = new ToolsOptionsHandler(application, getEditorProvider());
             toolsOptionsHandler.init();
         }
 
@@ -267,7 +280,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private LineWrappingHandler getWordWrappingHandler() {
         if (wordWrappingHandler == null) {
-            wordWrappingHandler = new LineWrappingHandler(application, (HexPanel) getEditorProvider());
+            wordWrappingHandler = new LineWrappingHandler(application, getEditorProvider());
             wordWrappingHandler.init();
         }
 
@@ -276,7 +289,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private GoToPositionHandler getGoToLineHandler() {
         if (goToLineHandler == null) {
-            goToLineHandler = new GoToPositionHandler(application, (HexPanel) getEditorProvider());
+            goToLineHandler = new GoToPositionHandler(application, getEditorProvider());
             goToLineHandler.init();
         }
 
@@ -285,7 +298,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private PropertiesHandler getPropertiesHandler() {
         if (propertiesHandler == null) {
-            propertiesHandler = new PropertiesHandler(application, (HexPanel) getEditorProvider());
+            propertiesHandler = new PropertiesHandler(application, getEditorProvider());
             propertiesHandler.init();
         }
 
@@ -294,7 +307,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler(application, (HexPanel) getEditorProvider(), getTextStatusPanel());
+            encodingsHandler = new EncodingsHandler(application, getEditorProvider(), getTextStatusPanel());
             encodingsHandler.init();
         }
 
@@ -303,7 +316,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private PrintHandler getPrintHandler() {
         if (printHandler == null) {
-            printHandler = new PrintHandler(application, (HexPanel) getEditorProvider());
+            printHandler = new PrintHandler(application, getEditorProvider());
             printHandler.init();
         }
 
@@ -312,7 +325,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private ViewModeHandler getViewModeHandler() {
         if (viewModeHandler == null) {
-            viewModeHandler = new ViewModeHandler(application, (HexPanel) getEditorProvider());
+            viewModeHandler = new ViewModeHandler(application, getEditorProvider());
             viewModeHandler.init();
         }
 
@@ -321,7 +334,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private CodeTypeHandler getCodeTypeHandler() {
         if (codeTypeHandler == null) {
-            codeTypeHandler = new CodeTypeHandler(application, (HexPanel) getEditorProvider());
+            codeTypeHandler = new CodeTypeHandler(application, getEditorProvider());
             codeTypeHandler.init();
         }
 
@@ -330,7 +343,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private PositionCodeTypeHandler getPositionCodeTypeHandler() {
         if (positionCodeTypeHandler == null) {
-            positionCodeTypeHandler = new PositionCodeTypeHandler(application, (HexPanel) getEditorProvider());
+            positionCodeTypeHandler = new PositionCodeTypeHandler(application, getEditorProvider());
             positionCodeTypeHandler.init();
         }
 
@@ -339,7 +352,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private HexCharactersCaseHandler getHexCharactersCaseHandler() {
         if (hexCharactersCaseHandler == null) {
-            hexCharactersCaseHandler = new HexCharactersCaseHandler(application, (HexPanel) getEditorProvider());
+            hexCharactersCaseHandler = new HexCharactersCaseHandler(application, getEditorProvider());
             hexCharactersCaseHandler.init();
         }
 
@@ -348,7 +361,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private ClipboardCodeHandler getClipboardCodeHandler() {
         if (clipboardCodeHandler == null) {
-            clipboardCodeHandler = new ClipboardCodeHandler(application, (HexPanel) getEditorProvider());
+            clipboardCodeHandler = new ClipboardCodeHandler(application, getEditorProvider());
             clipboardCodeHandler.init();
         }
 
@@ -444,16 +457,17 @@ public class DeltaHexModule implements XBApplicationModule {
         menuModule.registerMenuItem(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID, hexCharactersCaseHandler.getLowerHexCharsAction(), new MenuPosition(PositionMode.TOP));
     }
 
-    private JPopupMenu createPopupMenu() {
+    private JPopupMenu createPopupMenu(int postfix) {
         getClipboardCodeHandler();
+        String popupMenuId = HEX_POPUP_MENU_ID + "." + postfix;
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenu(HEX_POPUP_MENU_ID, MODULE_ID);
-        menuModule.registerClipboardMenuItems(HEX_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
-        menuModule.registerMenuItem(HEX_POPUP_MENU_ID, MODULE_ID, clipboardCodeHandler.getCopyAsCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getCopyAction().getValue(Action.NAME)));
-        menuModule.registerMenuItem(HEX_POPUP_MENU_ID, MODULE_ID, clipboardCodeHandler.getPasteFromCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getPasteAction().getValue(Action.NAME)));
+        menuModule.registerMenu(popupMenuId, MODULE_ID);
+        menuModule.registerClipboardMenuItems(popupMenuId, MODULE_ID, SeparationMode.AROUND);
+        menuModule.registerMenuItem(popupMenuId, MODULE_ID, clipboardCodeHandler.getCopyAsCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getCopyAction().getValue(Action.NAME)));
+        menuModule.registerMenuItem(popupMenuId, MODULE_ID, clipboardCodeHandler.getPasteFromCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getPasteAction().getValue(Action.NAME)));
 
         JPopupMenu popupMenu = new JPopupMenu();
-        menuModule.buildMenu(popupMenu, HEX_POPUP_MENU_ID);
+        menuModule.buildMenu(popupMenu, popupMenuId);
         return popupMenu;
     }
 

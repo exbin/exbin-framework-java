@@ -23,10 +23,10 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.editor.xbup.dialog.CatalogEditorDialog;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Catalog browser handler.
@@ -36,7 +36,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class CatalogBrowserHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
     private XBACatalog catalog;
@@ -45,7 +45,7 @@ public class CatalogBrowserHandler {
 
     private Action catalogBrowserAction;
 
-    public CatalogBrowserHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public CatalogBrowserHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorXbupModule.class);

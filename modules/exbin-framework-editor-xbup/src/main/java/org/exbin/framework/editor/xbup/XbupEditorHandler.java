@@ -18,8 +18,8 @@ package org.exbin.framework.editor.xbup;
 
 import java.beans.PropertyChangeListener;
 import javax.swing.JPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * XBUP editor module.
@@ -27,7 +27,7 @@ import org.exbin.framework.gui.file.api.FileType;
  * @version 0.2.0 2015/12/20
  * @author ExBin Project (http://exbin.org)
  */
-public class XbupEditorHandler implements XBEditorProvider {
+public class XbupEditorHandler implements EditorProvider {
 
     @Override
     public JPanel getPanel() {

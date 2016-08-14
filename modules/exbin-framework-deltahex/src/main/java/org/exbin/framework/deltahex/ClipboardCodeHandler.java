@@ -23,8 +23,8 @@ import javax.swing.JOptionPane;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Clipboard code handling.
@@ -34,7 +34,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class ClipboardCodeHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -43,7 +43,7 @@ public class ClipboardCodeHandler {
     private Action copyAsCodeAction;
     private Action pasteFromCodeAction;
 
-    public ClipboardCodeHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public ClipboardCodeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);

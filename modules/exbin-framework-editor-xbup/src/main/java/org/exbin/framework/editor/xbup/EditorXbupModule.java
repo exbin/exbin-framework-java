@@ -26,7 +26,6 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.client.api.ClientConnectionListener;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -43,6 +42,7 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * XBUP editor module.
@@ -63,7 +63,7 @@ public class EditorXbupModule implements XBApplicationModule {
     public static final String SAMPLE_FILE_SUBMENU_ID = MODULE_ID + ".sampleFileSubMenu";
 
     private XBApplication application;
-    private XBEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBACatalog catalog;
     private XBUndoHandler undoHandler;
 
@@ -90,7 +90,7 @@ public class EditorXbupModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    public XBEditorProvider getEditorProvider() {
+    public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
             editorProvider = new XBDocumentPanel(catalog, undoHandler);
 

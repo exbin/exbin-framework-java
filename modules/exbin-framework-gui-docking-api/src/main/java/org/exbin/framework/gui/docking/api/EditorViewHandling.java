@@ -14,39 +14,27 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.editor.api;
+package org.exbin.framework.gui.docking.api;
 
-import java.beans.PropertyChangeListener;
-import javax.swing.JPanel;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
- * XBUP framework editor api module.
+ * Interface for editor view handling.
  *
- * @version 0.2.0 2016/01/09
+ * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
-public interface XBEditorProvider extends FileHandlerApi {
+public interface EditorViewHandling {
 
     /**
-     * Returns currently active panel.
+     * Adds new editor view.
      *
-     * @return panel
+     * @param editorProvider editor provider
      */
-    public JPanel getPanel();
+    void addEditorView(EditorProvider editorProvider);
 
     /**
-     * Changes passing listener.
-     *
-     * @param propertyChangeListener Change listener.
+     * Removes and drops editor view.
      */
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener);
-
-    /**
-     * Gets window title related to last opened or saved file.
-     *
-     * @param frameTitle title of frame
-     * @return title related to last opened file
-     */
-    public String getWindowTitle(String frameTitle);
+    void removeEditorView();
 }

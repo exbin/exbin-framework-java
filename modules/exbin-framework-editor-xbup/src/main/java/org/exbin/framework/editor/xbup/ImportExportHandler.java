@@ -22,8 +22,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Import / export handler.
@@ -33,7 +33,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class ImportExportHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -42,7 +42,7 @@ public class ImportExportHandler {
     private Action importItemAction;
     private Action exportItemAction;
 
-    public ImportExportHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public ImportExportHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorXbupModule.class);

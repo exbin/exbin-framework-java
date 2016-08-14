@@ -23,8 +23,8 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Property panel control handler.
@@ -34,7 +34,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class PropertyPanelHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -42,7 +42,7 @@ public class PropertyPanelHandler {
 
     private Action viewPropertyPanelAction;
 
-    public PropertyPanelHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public PropertyPanelHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorXbupModule.class);

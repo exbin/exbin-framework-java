@@ -23,8 +23,8 @@ import javax.swing.Action;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Position code type handler.
@@ -36,7 +36,7 @@ public class PositionCodeTypeHandler {
 
     public static String POSITION_CODE_TYPE_RADIO_GROUP_ID = "positionCodeTypeRadioGroup";
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -48,7 +48,7 @@ public class PositionCodeTypeHandler {
 
     private CodeArea.PositionCodeType positionCodeType = CodeArea.PositionCodeType.HEXADECIMAL;
 
-    public PositionCodeTypeHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public PositionCodeTypeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);

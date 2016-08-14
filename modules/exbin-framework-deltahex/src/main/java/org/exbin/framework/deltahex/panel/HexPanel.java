@@ -58,7 +58,6 @@ import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
@@ -68,15 +67,17 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/07/22
+ * @version 0.1.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
-public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, ClipboardActionsHandler, TextCharsetApi {
+public class HexPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler, TextCharsetApi {
 
+    private int id = 0;
     private CodeArea codeArea;
     private CodeAreaUndoHandler undoHandler;
     private String fileName;
@@ -108,6 +109,11 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         });
         initComponents();
         init();
+    }
+
+    public HexPanel(int id) {
+        this();
+        this.id = id;
     }
 
     private void init() {
@@ -257,7 +263,7 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
         if (clipboardActionsUpdateListener != null) {
             clipboardActionsUpdateListener.stateChanged();
         }
-        
+
         if (copyAsCode != null) {
             copyAsCode.setEnabled(codeArea.hasSelection());
         }
@@ -470,6 +476,10 @@ public class HexPanel extends javax.swing.JPanel implements XBEditorProvider, Cl
     @Override
     public boolean isSelection() {
         return codeArea.hasSelection();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void printFile() {

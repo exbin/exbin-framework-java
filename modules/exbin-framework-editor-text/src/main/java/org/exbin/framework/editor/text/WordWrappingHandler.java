@@ -22,8 +22,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.panel.TextPanel;
-import org.exbin.framework.gui.editor.api.XBEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Word wrapping handler.
@@ -33,13 +33,13 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class WordWrappingHandler {
 
-    private final XBEditorProvider editorProvider;
+    private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
     private Action viewWordWrapAction;
 
-    public WordWrappingHandler(XBApplication application, XBEditorProvider editorProvider) {
+    public WordWrappingHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = ActionUtils.getResourceBundleByClass(EditorTextModule.class);
