@@ -20,49 +20,56 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.deltahex.panel.HexStatusPanel;
 import org.exbin.framework.deltahex.panel.SearchParameters;
+import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Hexadecimal editor provider interface.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public interface HexEditorProvider extends EditorProvider {
 
     /**
-     * Registers text status method.
+     * Registers hex status method.
      *
-     * @param hexStatusPanel hex status panel
+     * @param hexStatus hex status
      */
-    void registerTextStatus(HexStatusPanel hexStatusPanel);
+    void registerHexStatus(HexStatusApi hexStatus);
 
-    public Map<HexColorType, Color> getCurrentColors();
+    /**
+     * Registers encoding status method.
+     *
+     * @param encodingStatus hex status
+     */
+    void registerEncodingStatus(TextEncodingStatusApi encodingStatus);
 
-    public Map<HexColorType, Color> getDefaultColors();
+    Map<HexColorType, Color> getCurrentColors();
 
-    public void setCurrentColors(Map<HexColorType, Color> colors);
+    Map<HexColorType, Color> getDefaultColors();
 
-    public boolean isWordWrapMode();
+    void setCurrentColors(Map<HexColorType, Color> colors);
 
-    public void setWordWrapMode(boolean mode);
+    boolean isWordWrapMode();
 
-    public Charset getCharset();
+    void setWordWrapMode(boolean mode);
 
-    public void setCharset(Charset forName);
+    Charset getCharset();
 
-    public void findText(SearchParameters searchParameters);
+    void setCharset(Charset forName);
 
-    public boolean changeShowNonprintables();
+    void findText(SearchParameters searchParameters);
 
-    public void showFontDialog(TextFontDialog dialog);
+    boolean changeShowNonprintables();
 
-    public boolean changeLineWrap();
+    void showFontDialog(TextFontDialog dialog);
 
-    public HexPanel getDocument();
+    boolean changeLineWrap();
 
-    public void printFile();
+    HexPanel getDocument();
+
+    void printFile();
 }

@@ -17,6 +17,7 @@
 package org.exbin.framework.editor.xbup;
 
 import java.beans.PropertyChangeListener;
+import java.net.URI;
 import javax.swing.JPanel;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -45,22 +46,27 @@ public class XbupEditorHandler implements EditorProvider {
     }
 
     @Override
-    public void loadFromFile() {
+    public void loadFromFile(URI fileUri, FileType fileType) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void saveToFile() {
+    public void saveToFile(URI fileUri, FileType fileType) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public String getFileName() {
+    public URI getFileUri() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void setFileName(String string) {
+    public String getName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public FileType getFileType() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

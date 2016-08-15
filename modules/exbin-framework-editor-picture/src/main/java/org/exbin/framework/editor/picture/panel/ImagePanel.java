@@ -48,6 +48,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -88,7 +90,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 /**
  * Image panel for XBPEditor.
  *
- * @version 0.2.0 2016/02/06
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public class ImagePanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -96,9 +98,9 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     private static final String DEFAULT_PICTURE_FILE_EXT = "PNG";
 
     private final UndoManager undo;
-    private String fileName;
-    private String ext;
-    private FileType fileType;
+    private URI fileUri = null;
+    private String ext = null;
+    private FileType fileType = null;
     private final boolean modified = false;
     private Image image;
     private Graphics graphics;
@@ -117,7 +119,7 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     public ImagePanel() {
         initComponents();
         imageArea = new ImageAreaPanel();
-        
+
         imageArea.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -130,12 +132,11 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
                 imageAreaMouseDragged(evt);
             }
         });
-        
+
         scrollPane.setViewportView(imageArea);
         scaleRatio = 1;
         toolMode = ToolMode.DOTTER;
         undo = new UndoManager();
-        fileName = "";
         highlight = null;
         toolColor = Color.BLACK;
         selectionColor = Color.YELLOW;
@@ -220,7 +221,7 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         });
     }
 
-    private void imageAreaMouseDragged(java.awt.event.MouseEvent evt) {                                       
+    private void imageAreaMouseDragged(java.awt.event.MouseEvent evt) {
         if (null != toolMode) {
             switch (toolMode) {
                 case DOTTER:
@@ -242,9 +243,9 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
                     break;
             }
         }
-    }                                      
+    }
 
-    private void imageAreaMouseClicked(java.awt.event.MouseEvent evt) {                                       
+    private void imageAreaMouseClicked(java.awt.event.MouseEvent evt) {
         if (evt.getButton() == java.awt.event.MouseEvent.BUTTON1) {
             if (null != toolMode) {
                 switch (toolMode) {
@@ -268,7 +269,7 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
                 }
             }
         }
-    }                                      
+    }
 
     @Override
     public void performCopy() {
@@ -397,7 +398,8 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
-    public void loadFromFile() {
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
         if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
             try {
                 if (image == null) {
@@ -410,15 +412,20 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
                 XBBufferedImage bufferedImage = new XBBufferedImage(toBufferedImage(image));
                 XBDeclaration declaration = new XBDeclaration(formatDecl, bufferedImage);
                 XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
-                typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(getFileName()))));
+                typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
                 XBPSerialReader reader = new XBPSerialReader(typeProcessing);
                 reader.read(declaration);
                 image = bufferedImage.getImage();
+                this.fileUri = fileUri;
             } catch (XBProcessingException | IOException ex) {
                 Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            image = toBufferedImage(Toolkit.getDefaultToolkit().getImage(getFileName()));
+            try {
+                image = toBufferedImage(Toolkit.getDefaultToolkit().getImage(fileUri.toURL()));
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         graphics = image.getGraphics();
         graphics.setColor(toolColor);
@@ -426,8 +433,8 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
-    public void saveToFile() {
-        File file = new File(getFileName());
+    public void saveToFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
         if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
             try {
                 FileOutputStream output = new FileOutputStream(file);
@@ -455,6 +462,16 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
                 Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @Override
+    public URI getFileUri() {
+        return fileUri;
+    }
+
+    @Override
+    public FileType getFileType() {
+        return fileType;
     }
 
     /**
@@ -507,16 +524,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         graphics.fillRect(0, 0, 100, 100);
         graphics.setColor(toolColor);
         setModified(false);
-    }
-
-    @Override
-    public String getFileName() {
-        return fileName;
-    }
-
-    @Override
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
     }
 
     public UndoManager getUndo() {
@@ -680,14 +687,13 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
 
     @Override
     public String getWindowTitle(String frameTitle) {
-        if (!"".equals(fileName)) {
-            int pos;
-            int newpos = 0;
-            do {
-                pos = newpos;
-                newpos = fileName.indexOf(File.separatorChar, pos) + 1;
-            } while (newpos > 0);
-            return fileName.substring(pos) + " - " + frameTitle;
+        if (fileUri != null) {
+            String path = fileUri.getPath();
+            int lastIndexOf = path.lastIndexOf("/");
+            if (lastIndexOf < 0) {
+                return path + " - " + frameTitle;
+            }
+            return path.substring(lastIndexOf + 1) + " - " + frameTitle;
         }
 
         return frameTitle;
@@ -732,15 +738,15 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         PENCIL,
         LINE
     }
-    
+
     private class ImageAreaPanel extends JPanel {
-        
+
         private int width;
         private int height;
 
         public ImageAreaPanel() {
         }
-        
+
         private final ImageObserver imageObserver = new ImageObserver() {
             @Override
             public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
@@ -760,7 +766,7 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
             int srcHeigth = (int) (clipBounds.height * scaleRatio);
             g.drawImage(image, clipBounds.x, clipBounds.y, clipBounds.x + clipBounds.width, clipBounds.y + clipBounds.height, srcX, srcY, srcX + srcWidth, srcY + srcHeigth, imageObserver);
         }
-        
+
         public void updateSize() {
             width = image.getWidth(imageObserver);
             height = image.getHeight(imageObserver);

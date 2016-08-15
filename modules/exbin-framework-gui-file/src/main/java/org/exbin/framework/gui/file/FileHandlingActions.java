@@ -19,6 +19,8 @@ package org.exbin.framework.gui.file;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +50,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * File handling operations.
  *
- * @version 0.2.0 2016/06/27
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public class FileHandlingActions implements FileHandlingActionsApi {
@@ -248,8 +250,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
             if (openFileChooser.showOpenDialog(frameModule.getFrame()) == JFileChooser.APPROVE_OPTION) {
 //                ((CardLayout) statusPanel.getLayout()).show(statusPanel, "busy");
 //                statusPanel.repaint();
-                String fileName = openFileChooser.getSelectedFile().getAbsolutePath();
-                fileHandler.setFileName(fileName);
+                URI fileUri = openFileChooser.getSelectedFile().toURI();
 
                 FileType fileType = null;
                 FileFilter fileFilter = openFileChooser.getFileFilter();
@@ -259,21 +260,20 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                 if (fileType == null) {
                     fileType = fileTypes.get("XBTextEditor.TXTFileType"); // ALL_FILES_FILTER
                 }
-                fileHandler.setFileType(fileType);
-                fileHandler.loadFromFile();
+                fileHandler.loadFromFile(fileUri, fileType);
 
                 if (recentFiles != null) {
                     // Update recent files list
                     int i = 0;
                     while (i < recentFiles.size()) {
                         RecentItem recentItem = recentFiles.get(i);
-                        if (recentItem.getFileName().equals(fileName)) {
+                        if (recentItem.getFileName().equals(fileUri.toString())) {
                             recentFiles.remove(i);
                         }
                         i++;
                     }
 
-                    recentFiles.add(0, new RecentItem(fileName, "", ((FileType) openFileChooser.getFileFilter()).getFileTypeId()));
+                    recentFiles.add(0, new RecentItem(fileUri.toString(), "", ((FileType) openFileChooser.getFileFilter()).getFileTypeId()));
                     if (recentFiles.size() > 15) {
                         recentFiles.remove(15);
                     }
@@ -285,10 +285,11 @@ public class FileHandlingActions implements FileHandlingActionsApi {
 
     public void actionFileSave() {
         if (fileHandler != null) {
-            if (("".equals(fileHandler.getFileName())) || (fileHandler.getFileName() == null)) {
+            URI fileUri = fileHandler.getFileUri();
+            if (fileUri == null) {
                 actionFileSaveAs();
             } else {
-                fileHandler.saveToFile();
+                fileHandler.saveToFile(fileUri, fileHandler.getFileType());
             }
         }
     }
@@ -304,9 +305,8 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                 }
 
                 try {
-                    fileHandler.setFileName(saveFileChooser.getSelectedFile().getAbsolutePath());
-                    fileHandler.setFileType((FileType) saveFileChooser.getFileFilter());
-                    actionFileSave();
+                    URI fileUri = saveFileChooser.getSelectedFile().toURI();
+                    fileHandler.saveToFile(fileUri, (FileType) saveFileChooser.getFileFilter());
                 } catch (Exception ex) {
                     Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
                     String errorMessage = ex.getLocalizedMessage();
@@ -331,9 +331,9 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         }
     }
 
-    void loadFromFile(String filename) {
-        fileHandler.setFileName(filename);
-        fileHandler.loadFromFile();
+    void loadFromFile(String filename) throws URISyntaxException {
+        URI fileUri = new URI(filename);
+        fileHandler.loadFromFile(fileUri, null);
     }
 
     public JMenu getOpenRecentMenu() {
@@ -406,15 +406,19 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                                     }
                                 }
 
-                                fileHandler.setFileType(fileType);
-                                fileHandler.setFileName(recentItem.getFileName());
-                                fileHandler.loadFromFile();
+                                URI fileUri;
+                                try {
+                                    fileUri = new URI(recentItem.getFileName());
+                                    fileHandler.loadFromFile(fileUri, fileType);
 
-                                if (itemIndex > 0) {
-                                    // Move recent item on top
-                                    recentFiles.remove(itemIndex);
-                                    recentFiles.add(0, recentItem);
-                                    rebuildRecentFilesMenu();
+                                    if (itemIndex > 0) {
+                                        // Move recent item on top
+                                        recentFiles.remove(itemIndex);
+                                        recentFiles.add(0, recentItem);
+                                        rebuildRecentFilesMenu();
+                                    }
+                                } catch (URISyntaxException ex) {
+                                    Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
                         }
@@ -427,16 +431,10 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         fileOpenRecentMenu.setEnabled(recentFiles.size() > 0);
     }
 
-    /**
-     * @return the preferences
-     */
     public Preferences getPreferences() {
         return preferences;
     }
 
-    /**
-     * @param preferences the preferences to set
-     */
     public void setPreferences(Preferences preferences) {
         this.preferences = preferences;
     }

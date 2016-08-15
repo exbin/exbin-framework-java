@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,15 +79,15 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 /**
  * Text editor panel.
  *
- * @version 0.2.0 2016/05/18
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public class TextPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler, UndoActionsHandler, TextCharsetApi {
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
     private UndoUpdateListener undoUpdateListener = null;
-    private String fileName;
-    private FileType fileType;
+    private URI fileUri = null;
+    private FileType fileType = null;
     private boolean modified = false;
     private Object highlight;
     private Color foundTextBackgroundColor;
@@ -104,7 +105,6 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     }
 
     private void init() {
-        fileName = "";
         highlight = null;
         foundTextBackgroundColor = Color.YELLOW;
         charset = Charset.forName(TextEncodingPanel.ENCODING_UTF8);
@@ -381,8 +381,8 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     }
 
     @Override
-    public void loadFromFile() {
-        File file = new File(getFileName());
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
         switch (fileType.getFileTypeId()) {
             case EditorTextModule.XBT_FILE_TYPE: {
                 try {
@@ -392,11 +392,12 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
                     XBEncodingText encodingText = new XBEncodingText();
                     XBDeclaration declaration = new XBDeclaration(formatDecl, encodingText);
                     XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
-                    typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(getFileName()))));
+                    typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
                     XBPSerialReader reader = new XBPSerialReader(typeProcessing);
                     reader.read(declaration);
                     changeCharset(encodingText.getCharset());
                     textArea.setText(encodingText.getValue());
+                    this.fileUri = fileUri;
                 } catch (XBProcessingException | IOException ex) {
                     Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -413,6 +414,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
                         data.append(buffer, 0, gotChars);
                     }
                     textArea.setText(data.toString());
+                    this.fileUri = fileUri;
                 } catch (IOException ex) {
                     Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -424,8 +426,8 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     }
 
     @Override
-    public void saveToFile() {
-        File file = new File(getFileName());
+    public void saveToFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
         switch (fileType.getFileTypeId()) {
             case EditorTextModule.XBT_FILE_TYPE: {
                 try {
@@ -443,6 +445,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
                         typeProcessing.attachXBTListener(new XBTEventListenerToListener(new XBTToXBEventConvertor(new XBEventWriter(output))));
                         XBPSerialWriter writer = new XBPSerialWriter(new XBTListenerToEventListener(typeProcessing));
                         writer.write(declaration);
+                        this.fileUri = fileUri;
                     }
                 } catch (XBProcessingException | IOException ex) {
                     Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -462,6 +465,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
                                 writer.write(text, offset, length);
                                 offset += length;
                             }
+                            this.fileUri = fileUri;
                         }
                     }
                 } catch (IOException ex) {
@@ -472,6 +476,16 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         }
 
         setModified(false);
+    }
+
+    @Override
+    public URI getFileUri() {
+        return fileUri;
+    }
+
+    @Override
+    public FileType getFileType() {
+        return fileType;
     }
 
     /**
@@ -512,16 +526,6 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     public void newFile() {
         textArea.setText("");
         setModified(false);
-    }
-
-    @Override
-    public String getFileName() {
-        return fileName;
-    }
-
-    @Override
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
     }
 
     public UndoableEdit getUndo() {
@@ -604,14 +608,13 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
 
     @Override
     public String getWindowTitle(String frameTitle) {
-        if (!"".equals(fileName)) {
-            int pos;
-            int newpos = 0;
-            do {
-                pos = newpos;
-                newpos = fileName.indexOf(File.separatorChar, pos) + 1;
-            } while (newpos > 0);
-            return fileName.substring(pos) + " - " + frameTitle;
+        if (fileUri != null) {
+            String path = fileUri.getPath();
+            int lastIndexOf = path.lastIndexOf("/");
+            if (lastIndexOf < 0) {
+                return path + " - " + frameTitle;
+            }
+            return path.substring(lastIndexOf + 1) + " - " + frameTitle;
         }
 
         return frameTitle;

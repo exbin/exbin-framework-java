@@ -16,6 +16,9 @@
  */
 package org.exbin.framework.gui.file;
 
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenu;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileType;
@@ -118,6 +121,10 @@ public class GuiFileModule implements GuiFileModuleApi {
 
     @Override
     public void loadFromFile(String filename) {
-        getFileHandlingActions().loadFromFile(filename);
+        try {
+            getFileHandlingActions().loadFromFile(filename);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(GuiFileModule.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

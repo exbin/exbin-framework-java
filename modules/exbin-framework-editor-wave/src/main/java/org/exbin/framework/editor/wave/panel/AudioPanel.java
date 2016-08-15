@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -85,16 +86,16 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 /**
  * Audio panel for XBSEditor.
  *
- * @version 0.2.0 2016/01/24
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public class AudioPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
 
     private XBUndoHandler undoHandler;
-    private String fileName;
+    private URI fileUri = null;
+    private FileType fileType = null;
     private String ext;
     private javax.sound.sampled.AudioFileFormat.Type audioFormatType;
-    private FileType fileType;
     private boolean wavePlayed = false;
     private int drawPosition = -1;
     private int wavePosition = -1;
@@ -120,7 +121,6 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     private void init() {
-        fileName = "";
         audioFormatType = null;
 
         wavePanel = new XBWavePanel();
@@ -417,7 +417,8 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
-    public void loadFromFile() {
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
         if (EditorWaveModule.XBS_FILE_TYPE.equals(fileType.getFileTypeId())) {
             try {
                 XBPCatalog catalog = new XBPCatalog();
@@ -426,19 +427,21 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
                 XBWave wave = new XBWave();
                 XBDeclaration declaration = new XBDeclaration(formatDecl, wave);
                 XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
-                typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(getFileName()))));
+                typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
                 XBPSerialReader reader = new XBPSerialReader(typeProcessing);
                 reader.read(declaration);
                 wavePanel.setWave(wave);
                 scrollBar.setMaximum(wavePanel.getWaveWidth());
+                this.fileUri = fileUri;
             } catch (XBProcessingException | IOException ex) {
                 Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             XBWave wave = new XBWave();
-            wave.loadFromFile(new File(getFileName()));
+            wave.loadFromFile(file);
             wavePanel.setWave(wave);
             scrollBar.setMaximum(wavePanel.getWaveWidth());
+            this.fileUri = fileUri;
         }
 
         targetFormat = wavePanel.getWave().getAudioFormat();
@@ -474,8 +477,8 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
-    public void saveToFile() {
-        File file = new File(getFileName());
+    public void saveToFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
         if (EditorWaveModule.XBS_FILE_TYPE.equals(fileType.getFileTypeId())) {
             try {
                 FileOutputStream output = new FileOutputStream(file);
@@ -492,10 +495,10 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
             } catch (XBProcessingException | IOException ex) {
                 Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (getFileType() == null) {
+        } else if (getBuildInFileType() == null) {
             wavePanel.getWave().saveToFile(file);
         } else {
-            wavePanel.getWave().saveToFile(file, getFileType());
+            wavePanel.getWave().saveToFile(file, getBuildInFileType());
         }
         undoHandler.setSyncPoint();
     }
@@ -538,13 +541,13 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
-    public String getFileName() {
-        return fileName;
+    public URI getFileUri() {
+        return fileUri;
     }
 
     @Override
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public FileType getFileType() {
+        return fileType;
     }
 
     public void setUndoHandler(XBUndoHandler undoHandler) {
@@ -614,7 +617,7 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
         return getTimeForTicks(position, wavePanel.getWave());
     }
 
-    public javax.sound.sampled.AudioFileFormat.Type getFileType() {
+    public javax.sound.sampled.AudioFileFormat.Type getBuildInFileType() {
         return audioFormatType;
     }
 
@@ -637,14 +640,13 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
 
     @Override
     public String getWindowTitle(String frameTitle) {
-        if (!"".equals(fileName)) {
-            int pos;
-            int newpos = 0;
-            do {
-                pos = newpos;
-                newpos = fileName.indexOf(File.separatorChar, pos) + 1;
-            } while (newpos > 0);
-            return fileName.substring(pos) + " - " + frameTitle;
+        if (fileUri != null) {
+            String path = fileUri.getPath();
+            int lastIndexOf = path.lastIndexOf("/");
+            if (lastIndexOf < 0) {
+                return path + " - " + frameTitle;
+            }
+            return path.substring(lastIndexOf + 1) + " - " + frameTitle;
         }
 
         return frameTitle;

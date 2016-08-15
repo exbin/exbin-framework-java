@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.editor.xbup.dialog;
 
+import java.net.URI;
+import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
 import org.exbin.xbup.core.block.XBTEditableDocument;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -24,7 +26,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 /**
  * Dialog for document properties showing various information about file.
  *
- * @version 0.2.0 2016/03/09
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public class DocPropertiesDialog extends javax.swing.JDialog {
@@ -167,9 +169,10 @@ public class DocPropertiesDialog extends javax.swing.JDialog {
         WindowUtils.closeWindow(this);
     }//GEN-LAST:event_closeButtonActionPerformed
 
-    public void runDialog(XBTEditableDocument doc, String fileName) {
-        this.doc = doc;
-        fileNameTextField.setText(fileName);
+    public void runDialog(XBDocumentPanel documentPanel) {
+        this.doc = documentPanel.getDoc();
+        URI fileUri = documentPanel.getFileUri();
+        fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
         if (doc instanceof XBTTreeDocument) {
             fileSizeTextField.setText(Long.toString(((XBTTreeDocument) doc).getDocumentSize()));
         } else {

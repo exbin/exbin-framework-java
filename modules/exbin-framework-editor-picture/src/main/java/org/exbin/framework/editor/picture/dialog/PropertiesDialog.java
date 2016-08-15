@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.picture.dialog;
 
+import java.net.URI;
 import org.exbin.framework.editor.picture.panel.ImagePanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -142,7 +143,8 @@ public class PropertiesDialog extends javax.swing.JDialog {
     }
 
     public void setDocument(ImagePanel panel) {
-        fileNameTextField.setText(panel.getFileName());
+        URI fileUri = panel.getFileUri();
+        fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

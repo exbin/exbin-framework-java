@@ -36,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ import org.exbin.deltahex.highlight.HighlightCodeAreaPainter;
 import org.exbin.deltahex.operation.CodeAreaUndoHandler;
 import org.exbin.deltahex.operation.CodeCommandHandler;
 import org.exbin.framework.deltahex.DeltaHexModule;
+import org.exbin.framework.deltahex.HexEditorProvider;
 import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
@@ -62,38 +64,41 @@ import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.editor.text.TextCharsetApi;
+import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/08/14
+ * @version 0.1.1 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
-public class HexPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler, TextCharsetApi {
+public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi {
 
     private int id = 0;
     private CodeArea codeArea;
     private CodeAreaUndoHandler undoHandler;
-    private String fileName;
+    private URI fileUri = null;
     private Color foundTextBackgroundColor;
     private Font defaultFont;
     private Map<HexColorType, Color> defaultColors;
-    private PropertyChangeListener propertyChangeListener;
-    private CharsetChangeListener charsetChangeListener = null;
-    private HexStatusPanel statusPanel = null;
-    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
+    private HexStatusApi hexStatus = null;
+    private TextEncodingStatusApi encodingStatus = null;
+
     private HexSearchPanel hexSearchPanel;
     private boolean findTextPanelVisible = false;
     private Action goToLineAction = null;
     private Action copyAsCode = null;
     private Action pasteFromCode = null;
     private DeltaHexModule.EncodingStatusHandler encodingStatusHandler;
+
+    private PropertyChangeListener propertyChangeListener;
+    private CharsetChangeListener charsetChangeListener = null;
+    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
     public HexPanel() {
         undoHandler = new CodeAreaUndoHandler(codeArea);
@@ -147,7 +152,6 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
         });
 
         add(codeArea);
-        fileName = "";
         foundTextBackgroundColor = Color.YELLOW;
         codeArea.setCharset(Charset.forName(TextEncodingPanel.ENCODING_UTF8));
         defaultFont = codeArea.getFont();
@@ -186,20 +190,24 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
         return codeArea;
     }
 
+    @Override
     public boolean changeLineWrap() {
         codeArea.setWrapMode(!codeArea.isWrapMode());
         return codeArea.isWrapMode();
     }
 
+    @Override
     public boolean changeShowNonprintables() {
         codeArea.setShowUnprintableCharacters(!codeArea.isShowUnprintableCharacters());
         return codeArea.isShowUnprintableCharacters();
     }
 
-    public boolean getWordWrapMode() {
+    @Override
+    public boolean isWordWrapMode() {
         return codeArea.isWrapMode();
     }
 
+    @Override
     public void setWordWrapMode(boolean mode) {
         if (codeArea.isWrapMode() != mode) {
             changeLineWrap();
@@ -215,6 +223,7 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
         }
     }
 
+    @Override
     public void findText(SearchParameters searchParameters) {
         HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
@@ -412,6 +421,7 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
         codeArea.repaint();
     }
 
+    @Override
     public Map<HexColorType, Color> getCurrentColors() {
         Map<HexColorType, Color> colors = new HashMap<>();
         for (HexColorType colorType : HexColorType.values()) {
@@ -421,10 +431,12 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
         return colors;
     }
 
+    @Override
     public Map<HexColorType, Color> getDefaultColors() {
         return defaultColors;
     }
 
+    @Override
     public void setCurrentColors(Map<HexColorType, Color> colors) {
         for (Map.Entry<HexColorType, Color> entry : colors.entrySet()) {
             entry.getKey().setColorToCodeArea(codeArea, entry.getValue());
@@ -482,6 +494,7 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
         return id;
     }
 
+    @Override
     public void printFile() {
         PrinterJob job = PrinterJob.getPrinterJob();
         if (job.printDialog()) {
@@ -515,6 +528,7 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
         return codeArea.getFont();
     }
 
+    @Override
     public void showFontDialog(TextFontDialog dlg) {
         dlg.setStoredFont(codeArea.getFont());
         dlg.setVisible(true);
@@ -562,8 +576,8 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
     }
 
     @Override
-    public void loadFromFile() {
-        File file = new File(getFileName());
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
         try {
             // TODO Support for delta mode
 //            DeltaDataSource dataSource = new DeltaDataSource(file);
@@ -573,6 +587,7 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
                 BinaryData data = codeArea.getData();
                 ((EditableBinaryData) data).loadFromStream(fileStream);
                 codeArea.setData(data);
+                this.fileUri = fileUri;
             }
         } catch (IOException ex) {
             Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -582,15 +597,21 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
     }
 
     @Override
-    public void saveToFile() {
-        File file = new File(getFileName());
+    public void saveToFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
         try {
             codeArea.getData().saveToStream(new FileOutputStream(file));
         } catch (IOException ex) {
             Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        this.fileUri = fileUri;
         undoHandler.setSyncPoint();
+    }
+
+    @Override
+    public URI getFileUri() {
+        return fileUri;
     }
 
     @Override
@@ -602,13 +623,8 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
     }
 
     @Override
-    public String getFileName() {
-        return fileName;
-    }
-
-    @Override
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public FileType getFileType() {
+        return null;
     }
 
     public void setPopupMenu(JPopupMenu menu) {
@@ -660,14 +676,13 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
 
     @Override
     public String getWindowTitle(String frameTitle) {
-        if (!"".equals(fileName)) {
-            int pos;
-            int newpos = 0;
-            do {
-                pos = newpos;
-                newpos = fileName.indexOf(File.separatorChar, pos) + 1;
-            } while (newpos > 0);
-            return fileName.substring(pos) + " - " + frameTitle;
+        if (fileUri != null) {
+            String path = fileUri.getPath();
+            int lastIndexOf = path.lastIndexOf("/");
+            if (lastIndexOf < 0) {
+                return path + " - " + frameTitle;
+            }
+            return path.substring(lastIndexOf + 1) + " - " + frameTitle;
         }
 
         return frameTitle;
@@ -689,32 +704,27 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
         return this;
     }
 
-    public void registerTextStatus(HexStatusPanel hexStatusPanel) {
-        this.statusPanel = hexStatusPanel;
+    @Override
+    public void registerHexStatus(HexStatusApi hexStatusApi) {
+        this.hexStatus = hexStatusApi;
         attachCaretListener(new CodeArea.CaretMovedListener() {
             @Override
             public void caretMoved(CaretPosition caretPosition, CodeArea.Section section) {
                 String position = String.valueOf(caretPosition.getDataPosition());
                 position += ":" + caretPosition.getCodeOffset();
-                statusPanel.setCursorPosition(position);
+                hexStatus.setCursorPosition(position);
             }
         });
 
         attachEditationModeChangedListener(new CodeArea.EditationModeChangedListener() {
             @Override
             public void editationModeChanged(CodeArea.EditationMode mode) {
-                statusPanel.setEditationMode(mode);
+                hexStatus.setEditationMode(mode);
             }
         });
-        statusPanel.setEditationMode(codeArea.getEditationMode());
+        hexStatus.setEditationMode(codeArea.getEditationMode());
 
-        setCharsetChangeListener(new HexPanel.CharsetChangeListener() {
-            @Override
-            public void charsetChanged() {
-                statusPanel.setEncoding(getCharset().name());
-            }
-        });
-        statusPanel.setControlHandler(new HexStatusApi.StatusControlHandler() {
+        hexStatus.setControlHandler(new HexStatusApi.StatusControlHandler() {
             @Override
             public void changeEditationMode(CodeArea.EditationMode editationMode) {
                 codeArea.setEditationMode(editationMode);
@@ -739,6 +749,17 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
                 if (encodingStatusHandler != null) {
                     encodingStatusHandler.popupEncodingsMenu(mouseEvent);
                 }
+            }
+        });
+    }
+
+    @Override
+    public void registerEncodingStatus(TextEncodingStatusApi encodingStatusApi) {
+        this.encodingStatus = encodingStatusApi;
+        setCharsetChangeListener(new HexPanel.CharsetChangeListener() {
+            @Override
+            public void charsetChanged() {
+                encodingStatus.setEncoding(getCharset().name());
             }
         });
     }
@@ -799,6 +820,30 @@ public class HexPanel extends javax.swing.JPanel implements EditorProvider, Clip
 
     public void setPasteFromCode(Action pasteFromCode) {
         this.pasteFromCode = pasteFromCode;
+    }
+
+    @Override
+    public HexPanel getDocument() {
+        return this;
+    }
+
+    /**
+     * Helper method for notifying listeners, that HexPanel tab was switched.
+     */
+    public void notifyListeners() {
+        if (charsetChangeListener != null) {
+            charsetChangeListener.charsetChanged();
+        }
+        if (clipboardActionsUpdateListener != null) {
+            clipboardActionsUpdateListener.stateChanged();
+        }
+
+        hexStatus.setEditationMode(codeArea.getEditationMode());
+        CaretPosition caretPosition = codeArea.getCaretPosition();
+        String position = String.valueOf(caretPosition.getDataPosition());
+        position += ":" + caretPosition.getCodeOffset();
+        hexStatus.setCursorPosition(position);
+        encodingStatus.setEncoding(codeArea.getCharset().name());
     }
 
     public static interface CharsetChangeListener {

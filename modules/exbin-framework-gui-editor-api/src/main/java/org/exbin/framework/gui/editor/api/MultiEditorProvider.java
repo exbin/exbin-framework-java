@@ -14,29 +14,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.docking.api;
-
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.editor.api.MultiEditorProvider;
+package org.exbin.framework.gui.editor.api;
 
 /**
- * Interface for editor view handling.
+ * XBUP framework multitab editor interface.
  *
  * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
-public interface EditorViewHandling {
+public interface MultiEditorProvider extends EditorProvider {
 
     /**
-     * Adds new editor view.
+     * Sets currently active editor provider.
      *
      * @param editorProvider editor provider
-     * @param multiEditorProvider multi editor provider
      */
-    void addEditorView(EditorProvider editorProvider, MultiEditorProvider multiEditorProvider);
-
-    /**
-     * Removes and drops editor view.
-     */
-    void removeEditorView();
+    void setActiveEditor(EditorProvider editorProvider);
 }

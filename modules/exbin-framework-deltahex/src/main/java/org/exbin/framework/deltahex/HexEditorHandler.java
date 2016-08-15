@@ -17,6 +17,7 @@ package org.exbin.framework.deltahex;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,26 +25,29 @@ import java.util.Map;
 import javax.swing.JPanel;
 import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.deltahex.panel.HexStatusPanel;
 import org.exbin.framework.deltahex.panel.SearchParameters;
+import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
+import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 
 /**
  * Hexadecimal editor provider.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
-public class HexEditorHandler implements HexEditorProvider {
+public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider {
 
-    private EditorMode editorMode = EditorMode.MULTI;
     private HexPanelInit hexPanelInit = null;
     private final List<HexPanel> panels = new ArrayList<>();
     private EditorViewHandling editorViewHandling = null;
     private HexPanel activePanel = null;
     private int lastIndex = 0;
+    private HexStatusApi hexStatus = null;
+    private TextEncodingStatusApi encodingStatus;
 
     public HexEditorHandler() {
     }
@@ -64,65 +68,31 @@ public class HexEditorHandler implements HexEditorProvider {
     }
 
     @Override
-    public void loadFromFile() {
-        switch (editorMode) {
-            case SINGLE: {
-                panels.get(0).loadFromFile();
-                break;
-            }
-            case MULTI: {
-                activePanel.loadFromFile();
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        HexPanel panel = createNewPanel();
+        panel.newFile();
+        panel.loadFromFile(fileUri, fileType);
+        activePanel = panel;
     }
 
     @Override
-    public void saveToFile() {
-        switch (editorMode) {
-            case SINGLE: {
-                panels.get(0).saveToFile();
-                break;
-            }
-            case MULTI: {
-                activePanel.saveToFile();
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+    public void saveToFile(URI fileUri, FileType fileType) {
+        activePanel.saveToFile(fileUri, fileType);
     }
 
     @Override
-    public String getFileName() {
-        switch (editorMode) {
-            case SINGLE: {
-                return panels.get(0).getFileName();
-            }
-            case MULTI: {
-                return activePanel.getFileName();
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+    public URI getFileUri() {
+        return activePanel.getFileUri();
     }
 
     @Override
-    public void setFileName(String fileName) {
-        switch (editorMode) {
-            case SINGLE: {
-                panels.get(0).setFileName(fileName);
-                break;
-            }
-            case MULTI: {
-                activePanel.setFileName(fileName);
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+    public String getName() {
+        return activePanel.getName();
+    }
+
+    @Override
+    public FileType getFileType() {
+        return activePanel.getFileType();
     }
 
     @Override
@@ -132,19 +102,9 @@ public class HexEditorHandler implements HexEditorProvider {
 
     @Override
     public void newFile() {
-        switch (editorMode) {
-            case SINGLE: {
-                panels.get(0).newFile();
-                break;
-            }
-            case MULTI: {
-                HexPanel panel = createNewPanel();
-                panel.newFile();
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
-        }
+        HexPanel panel = createNewPanel();
+        panel.newFile();
+        activePanel = panel;
     }
 
     @Override
@@ -153,18 +113,22 @@ public class HexEditorHandler implements HexEditorProvider {
     }
 
     @Override
-    public void registerTextStatus(HexStatusPanel hexStatusPanel) {
-        switch (editorMode) {
-            case SINGLE: {
-                panels.get(0).registerTextStatus(hexStatusPanel);
-                break;
+    public void registerHexStatus(HexStatusApi hexStatusApi) {
+        this.hexStatus = hexStatusApi;
+        if (!panels.isEmpty()) {
+            for (HexPanel panel : panels) {
+                panel.registerHexStatus(hexStatusApi);
             }
-            case MULTI: {
-                // TODO
-                break;
+        }
+    }
+
+    @Override
+    public void registerEncodingStatus(TextEncodingStatusApi encodingStatusApi) {
+        this.encodingStatus = encodingStatusApi;
+        if (!panels.isEmpty()) {
+            for (HexPanel panel : panels) {
+                panel.registerEncodingStatus(encodingStatusApi);
             }
-            default:
-                throw new IllegalStateException("Unexpected editor mode " + editorMode.name());
         }
     }
 
@@ -175,7 +139,11 @@ public class HexEditorHandler implements HexEditorProvider {
         if (hexPanelInit != null) {
             hexPanelInit.init(panel);
         }
-        editorViewHandling.addEditorView(panel);
+        if (hexStatus != null) {
+            panel.registerHexStatus(hexStatus);
+            panel.registerEncodingStatus(encodingStatus);
+        }
+        editorViewHandling.addEditorView(panel, this);
 
         return panel;
     }
@@ -183,14 +151,6 @@ public class HexEditorHandler implements HexEditorProvider {
     public void init() {
         activePanel = createNewPanel();
         activePanel.newFile();
-    }
-
-    public EditorMode getEditorMode() {
-        return editorMode;
-    }
-
-    public void setEditorMode(EditorMode editorMode) {
-        this.editorMode = editorMode;
     }
 
     public HexPanelInit getHexPanelInit() {
@@ -274,15 +234,20 @@ public class HexEditorHandler implements HexEditorProvider {
         activePanel.printFile();
     }
 
+    @Override
+    public void setActiveEditor(EditorProvider editorProvider) {
+        if (editorProvider instanceof HexPanel) {
+            HexPanel hexPanel = (HexPanel) editorProvider;
+            activePanel = hexPanel;
+            hexPanel.notifyListeners();
+        }
+    }
+
     /**
      * Method for initialization of new hexadecimal panel.
      */
     public static interface HexPanelInit {
 
         void init(HexPanel panel);
-    }
-
-    public static enum EditorMode {
-        SINGLE, MULTI
     }
 }

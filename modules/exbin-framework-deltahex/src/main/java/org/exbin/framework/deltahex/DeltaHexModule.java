@@ -65,7 +65,7 @@ import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -88,7 +88,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private XBApplication application;
     private HexEditorProvider editorProvider;
-    private HexStatusPanel textStatusPanel;
+    private HexStatusPanel hexStatusPanel;
 
     private FindReplaceHandler findReplaceHandler;
     private ViewNonprintablesHandler viewNonprintablesHandler;
@@ -118,6 +118,32 @@ public class DeltaHexModule implements XBApplicationModule {
     }
 
     public HexEditorProvider getEditorProvider() {
+        if (editorProvider == null) {
+            HexPanel panel = new HexPanel();
+            editorProvider = panel;
+
+            panel.setPopupMenu(createPopupMenu(panel.getId()));
+            panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
+            panel.setGoToLineAction(getGoToLineHandler().getGoToLineAction());
+            panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
+            panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
+            panel.setEncodingStatusHandler(new EncodingStatusHandler() {
+                @Override
+                public void cycleEncodings() {
+                    encodingsHandler.cycleEncodings();
+                }
+
+                @Override
+                public void popupEncodingsMenu(MouseEvent mouseEvent) {
+                    encodingsHandler.popupEncodingsMenu(mouseEvent);
+                }
+            });
+        }
+
+        return editorProvider;
+    }
+
+    public HexEditorProvider getMultiEditorProvider() {
         if (editorProvider == null) {
             GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new HexEditorHandler();
@@ -153,13 +179,14 @@ public class DeltaHexModule implements XBApplicationModule {
     }
 
     public void registerStatusBar() {
-        textStatusPanel = new HexStatusPanel();
+        hexStatusPanel = new HexStatusPanel();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        frameModule.registerStatusBar(MODULE_ID, HEX_STATUS_BAR_ID, textStatusPanel);
+        frameModule.registerStatusBar(MODULE_ID, HEX_STATUS_BAR_ID, hexStatusPanel);
         frameModule.switchStatusBar(HEX_STATUS_BAR_ID);
-        getEditorProvider().registerTextStatus(textStatusPanel);
+        getEditorProvider().registerHexStatus(hexStatusPanel);
+        getEditorProvider().registerEncodingStatus(hexStatusPanel);
         if (encodingsHandler != null) {
-            encodingsHandler.setTextEncodingStatus(textStatusPanel);
+            encodingsHandler.setTextEncodingStatus(hexStatusPanel);
         }
     }
 
@@ -247,7 +274,7 @@ public class DeltaHexModule implements XBApplicationModule {
     }
 
     public HexStatusPanel getTextStatusPanel() {
-        return textStatusPanel;
+        return hexStatusPanel;
     }
 
     private FindReplaceHandler getFindReplaceHandler() {

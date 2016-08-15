@@ -16,54 +16,71 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import java.net.URI;
+
 /**
  * Interface for file handling actions.
  *
- * @version 0.2.0 2016/01/09
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public interface FileHandlerApi {
 
     /**
      * Loads file from given filename.
+     *
+     * @param fileUri file Uri
+     * @param fileType file type
      */
-    public void loadFromFile();
+    void loadFromFile(URI fileUri, FileType fileType);
 
     /**
      * Saves file to given filename.
+     *
+     * @param fileUri file Uri
+     * @param fileType file type
      */
-    public void saveToFile();
+    void saveToFile(URI fileUri, FileType fileType);
 
     /**
-     * Gets current filename.
+     * Returns currect file URI.
+     *
+     * @return URI
+     */
+    URI getFileUri();
+
+    /**
+     * Returns current filename.
+     *
+     * Typically file name with extension is returned.
      *
      * @return filename
      */
-    public String getFileName();
+    String getName();
 
     /**
-     * Sets current filename.
+     * Returns currently used filetype.
      *
-     * @param fileName filename
+     * @return fileType file type
      */
-    public void setFileName(String fileName);
+    FileType getFileType();
 
     /**
-     * Sets current filetype.
+     * Sets current used filetype.
      *
      * @param fileType file type
      */
-    public void setFileType(FileType fileType);
+    void setFileType(FileType fileType);
 
     /**
      * Creates new file.
      */
-    public void newFile();
+    void newFile();
 
     /**
      * Returns flag if file in this panel was modified since last saving.
      *
      * @return true if file was modified
      */
-    public boolean isModified();
+    boolean isModified();
 }

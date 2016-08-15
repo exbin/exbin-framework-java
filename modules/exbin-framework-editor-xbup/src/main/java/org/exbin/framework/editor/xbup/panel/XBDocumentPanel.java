@@ -27,8 +27,11 @@ import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,13 +81,14 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.0 2016/02/29
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
 
     private final TreeDocument mainDoc;
-    private FileType fileType;
+    private URI fileUri = null;
+    private FileType fileType = null;
     private XBACatalog catalog;
     private boolean splitMode = false;
 
@@ -581,13 +585,15 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     @Override
-    public void loadFromFile() {
-        try {
-            getDoc().fromFileUB();
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
+        try (FileInputStream fileStream = new FileInputStream(file)) {
+            getDoc().fromStreamUB(fileStream);
             getDoc().processSpec();
             reportStructureChange((XBTTreeNode) getDoc().getRootBlock());
             performSelectAll();
             getUndoHandler().clear();
+            this.fileUri = fileUri;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -622,16 +628,6 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     @Override
-    public String getFileName() {
-        return getDoc().getFileName();
-    }
-
-    @Override
-    public void setFileName(String fileName) {
-        getDoc().setFileName(fileName);
-    }
-
-    @Override
     public boolean isModified() {
         return getDoc().wasModified();
     }
@@ -645,14 +641,26 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     @Override
-    public void saveToFile() {
-        try {
-            getDoc().toFileUB();
+    public void saveToFile(URI fileUri, FileType fileType) {
+        File file = new File(fileUri);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            getDoc().toStreamUB(fileOutputStream);
             getUndoHandler().setSyncPoint();
             getDoc().setModified(false);
+            this.fileUri = fileUri;
         } catch (IOException ex) {
             Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public URI getFileUri() {
+        return fileUri;
+    }
+
+    @Override
+    public FileType getFileType() {
+        return fileType;
     }
 
     @Override

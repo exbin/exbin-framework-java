@@ -44,7 +44,7 @@ public interface GuiFileModuleApi extends XBApplicationModule {
     void registerToolBarFileHandlingActions();
 
     /**
-     * Register close listener.
+     * Registers close listener.
      */
     void registerCloseListener();
 

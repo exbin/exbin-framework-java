@@ -24,17 +24,21 @@ import bibliothek.gui.dock.common.CGrid;
 import bibliothek.gui.dock.common.CLocation;
 import bibliothek.gui.dock.common.CStation;
 import bibliothek.gui.dock.common.action.predefined.CCloseAction;
+import bibliothek.gui.dock.common.event.CFocusListener;
 import bibliothek.gui.dock.common.intern.CDockable;
 import bibliothek.gui.dock.common.intern.DefaultCDockable;
 import bibliothek.gui.dock.common.theme.ThemeMap;
 import bibliothek.gui.dock.station.stack.action.TabDockAction;
 import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
 import java.awt.Component;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
@@ -106,26 +110,41 @@ public class GuiDockingModule implements GuiDockingModuleApi {
     @Override
     public EditorViewHandling getEditorViewHandling() {
         return new EditorViewHandling() {
+
+            private final Map<CDockable, EditorProvider> viewMap = new HashMap<>();
+
             @Override
-            public void addEditorView(EditorProvider editorProvider) {
+            public void addEditorView(final EditorProvider editorProvider, final MultiEditorProvider multiEditorProvider) {
                 CContentArea area = control.getContentArea();
 
-                DefaultCDockable view = new DefaultCDockable();
+                final DefaultCDockable view = new DefaultCDockable();
                 view.add((Component) editorProvider);
                 view.setTitleText("Test");
                 view.setTitleShown(false);
                 view.setSingleTabShown(true);
+                view.setStickySwitchable(false);
+                view.setMinimizable(false);
                 view.addAction(new CCloseAction(control));
                 view.putAction(CDockable.ACTION_KEY_CLOSE, new CustomCloseAction(control));
                 view.setLocation(CLocation.maximized());
                 view.setCloseable(true);
-                CStation<?> station = view.asStation();
-                if (station instanceof StackDockStation) {
-                    ((StackDockStation) station).setTabPlacement(TabPlacement.TOP_OF_DOCKABLE);
-                }
+                control.addFocusListener(new CFocusListener() {
+                    @Override
+                    public void focusGained(CDockable dockable) {
+                        EditorProvider editor = viewMap.get(dockable);
+                        if (editor != null) {
+                            multiEditorProvider.setActiveEditor(editor);
+                        }
+                    }
+
+                    @Override
+                    public void focusLost(CDockable dockable) {
+                    }
+                });
 
                 grid.add(0, 0, 1, 1, view);
                 area.deploy(grid);
+                viewMap.put(view, editorProvider);
             }
 
             @Override

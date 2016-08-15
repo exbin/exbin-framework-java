@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.text.dialog;
 
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -227,7 +228,8 @@ public class PropertiesDialog extends javax.swing.JDialog {
     }
 
     public void setDocument(TextPanel panel) {
-        fileNameTextField.setText(panel.getFileName());
+        URI fileUri = panel.getFileUri();
+        fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
         Document document = panel.getDocument();
         linesCountTextField.setText(Integer.toString(panel.getLineCount()));
         charCountTextField.setText(Integer.toString(document.getLength()));

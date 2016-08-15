@@ -33,7 +33,7 @@ public interface FileTypeManagement {
      *
      * @param fileType file type
      */
-    public void addFileType(FileType fileType);
+    void addFileType(FileType fileType);
 
     /**
      * Opens file from given fileChooser with the respect to used file type.
@@ -41,7 +41,7 @@ public interface FileTypeManagement {
      * @param fileChooser file chooser
      * @return true if file opened successfuly
      */
-    public boolean openFile(JFileChooser fileChooser);
+    boolean openFile(JFileChooser fileChooser);
 
     /**
      * Opens file from given properties.
@@ -50,12 +50,12 @@ public interface FileTypeManagement {
      * @param fileTypeId file type ID
      * @return true if file opened successfuly
      */
-    public boolean openFile(String path, String fileTypeId);
+    boolean openFile(String path, String fileTypeId);
 
     /**
      * Finishes last file operation.
      */
-    public void finish();
+    void finish();
 
     /**
      * Saves file using given file chooser.
@@ -63,25 +63,24 @@ public interface FileTypeManagement {
      * @param saveFC file chooser
      * @return true if file saved successfuly
      */
-    public boolean saveFile(JFileChooser saveFC);
+    boolean saveFile(JFileChooser saveFC);
 
     /**
      * Saves file using last used filename.
      *
      * @return true if file saved successfuly
      */
-    public boolean saveFile();
+    boolean saveFile();
 
     /**
      * Creates new file.
      */
-    public void newFile();
+    void newFile();
 
     /**
      * Gets window title.
      *
      * @return window title
      */
-    public String getWindowTitle();
-
+    String getWindowTitle();
 }

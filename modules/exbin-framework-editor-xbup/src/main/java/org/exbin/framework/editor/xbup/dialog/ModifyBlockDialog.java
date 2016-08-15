@@ -86,7 +86,7 @@ import org.exbin.xbup.plugin.XBCatalogPlugin;
 /**
  * Dialog for modifying item attributes or data.
  *
- * @version 0.2.0 2016/07/22
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public class ModifyBlockDialog extends javax.swing.JDialog {
@@ -597,8 +597,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser loadFileChooser = new JFileChooser();
         loadFileChooser.setAcceptAllFileFilterUsed(true);
         if (loadFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            hexPanel.setFileName(loadFileChooser.getSelectedFile().getAbsolutePath());
-            hexPanel.loadFromFile();
+            hexPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
             hexPanel.repaint();
         }
     }//GEN-LAST:event_loadFromButtonActionPerformed
@@ -607,8 +606,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setAcceptAllFileFilterUsed(true);
         if (saveFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            hexPanel.setFileName(saveFileChooser.getSelectedFile().getAbsolutePath());
-            hexPanel.saveToFile();
+            hexPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
             hexPanel.repaint();
         }
     }//GEN-LAST:event_saveAsButtonActionPerformed
@@ -617,8 +615,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser loadFileChooser = new JFileChooser();
         loadFileChooser.setAcceptAllFileFilterUsed(true);
         if (loadFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            extAreaHexPanel.setFileName(loadFileChooser.getSelectedFile().getAbsolutePath());
-            extAreaHexPanel.loadFromFile();
+            extAreaHexPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
             extAreaHexPanel.repaint();
         }
     }//GEN-LAST:event_extLoadFromButtonActionPerformed
@@ -627,8 +624,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setAcceptAllFileFilterUsed(true);
         if (saveFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            extAreaHexPanel.setFileName(saveFileChooser.getSelectedFile().getAbsolutePath());
-            extAreaHexPanel.saveToFile();
+            extAreaHexPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
             extAreaHexPanel.repaint();
         }
     }//GEN-LAST:event_extSaveFromButtoActionPerformed

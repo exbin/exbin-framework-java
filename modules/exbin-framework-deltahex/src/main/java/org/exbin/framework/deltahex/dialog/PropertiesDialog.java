@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.deltahex.dialog;
 
+import java.net.URI;
 import javax.swing.DefaultListModel;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.deltahex.delta.BinaryDataSegment;
@@ -194,7 +195,8 @@ public class PropertiesDialog extends javax.swing.JDialog {
     }
 
     public void setDocument(HexPanel panel) {
-        fileNameTextField.setText(panel.getFileName());
+        URI fileUri = panel.getFileUri();
+        fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
         CodeArea codeArea = panel.getCodeArea();
         fileSizeTextField.setText(Long.toString(codeArea.getData().getDataSize()));
 

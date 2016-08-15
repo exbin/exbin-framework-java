@@ -31,7 +31,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 /**
  * Properties handler.
  *
- * @version 0.2.0 2016/08/10
+ * @version 0.2.0 2016/08/15
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesHandler {
@@ -64,7 +64,7 @@ public class PropertiesHandler {
                     DocPropertiesDialog dialog = new DocPropertiesDialog(frameModule.getFrame(), true);
                     dialog.setIconImage(application.getApplicationIcon());
                     dialog.setLocationRelativeTo(dialog.getParent());
-                    dialog.runDialog(activePanel.getDoc(), activePanel.getFileName());
+                    dialog.runDialog(activePanel);
                 }
             }
         };
