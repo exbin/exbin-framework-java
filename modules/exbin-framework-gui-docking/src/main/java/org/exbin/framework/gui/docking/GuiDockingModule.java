@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.gui.docking;
 
-import bibliothek.extension.gui.dock.theme.eclipse.EclipseTabDockAction;
 import bibliothek.gui.dock.StackDockStation;
 import bibliothek.gui.dock.common.CContentArea;
 import bibliothek.gui.dock.common.CControl;
@@ -25,10 +24,11 @@ import bibliothek.gui.dock.common.CLocation;
 import bibliothek.gui.dock.common.CStation;
 import bibliothek.gui.dock.common.action.predefined.CCloseAction;
 import bibliothek.gui.dock.common.event.CFocusListener;
+import bibliothek.gui.dock.common.event.CVetoClosingEvent;
+import bibliothek.gui.dock.common.event.CVetoClosingListener;
 import bibliothek.gui.dock.common.intern.CDockable;
 import bibliothek.gui.dock.common.intern.DefaultCDockable;
 import bibliothek.gui.dock.common.theme.ThemeMap;
-import bibliothek.gui.dock.station.stack.action.TabDockAction;
 import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
 import java.awt.Component;
 import java.util.HashMap;
@@ -45,18 +45,24 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of XBUP framework docking module.
  *
- * @version 0.2.0 2016/08/13
+ * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiDockingModule implements GuiDockingModuleApi {
 
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";
     public static final String VIEW_BARS_GROUP_ID = MODULE_ID + ".view";
+    public static final String EDITOR_FACTORY_ID = "editor";
 
     private XBApplication application;
     private ResourceBundle resourceBundle;
     private CControl control = null;
     private CGrid grid = null;
+
+    private EditorFactory factory = null;
+    private CLocation editorLocation = null;
+    private MultiEditorProvider multiEditorProvider = null;
+    private final Map<EditorProvider, EditorCDockable> editorMap = new HashMap<>();
 
     public GuiDockingModule() {
     }
@@ -78,6 +84,7 @@ public class GuiDockingModule implements GuiDockingModuleApi {
             control = new CControl();
             control.setTheme(ThemeMap.KEY_SMOOTH_THEME);
             control.putProperty(StackDockStation.TAB_PLACEMENT, TabPlacement.TOP_OF_DOCKABLE);
+
             grid = new CGrid(control);
         }
 
@@ -95,7 +102,7 @@ public class GuiDockingModule implements GuiDockingModuleApi {
         view.setTitleShown(false);
         view.setSingleTabShown(true);
         view.addAction(new CCloseAction(control));
-        view.putAction(CDockable.ACTION_KEY_CLOSE, new CustomCloseAction(control));
+//        view.putAction(CDockable.ACTION_KEY_CLOSE, new CustomCloseAction(control));
         view.setLocation(CLocation.maximized());
         view.setCloseable(true);
         CStation<?> station = view.asStation();
@@ -103,6 +110,7 @@ public class GuiDockingModule implements GuiDockingModuleApi {
             ((StackDockStation) station).setTabPlacement(TabPlacement.TOP_OF_DOCKABLE);
         }
 
+        grid = new CGrid(control);
         grid.add(0, 0, 1, 1, view);
         area.deploy(grid);
     }
@@ -111,57 +119,102 @@ public class GuiDockingModule implements GuiDockingModuleApi {
     public EditorViewHandling getEditorViewHandling() {
         return new EditorViewHandling() {
 
-            private final Map<CDockable, EditorProvider> viewMap = new HashMap<>();
-
             @Override
-            public void addEditorView(final EditorProvider editorProvider, final MultiEditorProvider multiEditorProvider) {
+            public void addEditorView(final EditorProvider editorProvider) {
+                if (factory == null) {
+                    factory = new EditorFactory();
+                    control.addMultipleDockableFactory(EDITOR_FACTORY_ID, factory);
+                    editorLocation = CLocation.base();
+
+                    control.addFocusListener(new CFocusListener() {
+                        @Override
+                        public void focusGained(CDockable dockable) {
+                            EditorProvider editor = (EditorProvider) ((EditorCDockable) dockable).getContent();
+                            if (editor != null) {
+                                multiEditorProvider.setActiveEditor(editor);
+                            }
+                        }
+
+                        @Override
+                        public void focusLost(CDockable dockable) {
+                        }
+                    });
+                }
+
                 CContentArea area = control.getContentArea();
 
-                final DefaultCDockable view = new DefaultCDockable();
-                view.add((Component) editorProvider);
-                view.setTitleText("Test");
-                view.setTitleShown(false);
-                view.setSingleTabShown(true);
-                view.setStickySwitchable(false);
-                view.setMinimizable(false);
+                EditorCDockable view = new EditorCDockable(factory);
+                view.setContent((Component) editorProvider);
                 view.addAction(new CCloseAction(control));
-                view.putAction(CDockable.ACTION_KEY_CLOSE, new CustomCloseAction(control));
-                view.setLocation(CLocation.maximized());
-                view.setCloseable(true);
-                control.addFocusListener(new CFocusListener() {
+//                view.putAction(CDockable.ACTION_KEY_CLOSE, new CustomCloseAction(control));
+                view.setLocation(editorLocation);
+                view.addVetoClosingListener(new CVetoClosingListener() {
                     @Override
-                    public void focusGained(CDockable dockable) {
-                        EditorProvider editor = viewMap.get(dockable);
-                        if (editor != null) {
-                            multiEditorProvider.setActiveEditor(editor);
-                        }
+                    public void closing(CVetoClosingEvent event) {
+                        // TODO attempt to release file
+                        // event.event.cancel();
                     }
 
                     @Override
-                    public void focusLost(CDockable dockable) {
+                    public void closed(CVetoClosingEvent event) {
+                        for (int i = 0; i < event.getDockableCount(); i++) {
+                            CDockable dockable = event.getDockable(i);
+                            if (dockable instanceof EditorCDockable) {
+                                EditorProvider editor = (EditorProvider) ((EditorCDockable) dockable).getContent();
+                                multiEditorProvider.closeFile(editor);
+                                removeEditorView(editorProvider);
+                            }
+                        }
                     }
                 });
 
-                grid.add(0, 0, 1, 1, view);
-                area.deploy(grid);
-                viewMap.put(view, editorProvider);
+                view.setLocation(area.getCenterArea().asStation().getDropLocation());
+                control.addDockable(view);
+                view.setVisible(true);
+                editorMap.put(editorProvider, view);
             }
 
             @Override
-            public void removeEditorView() {
-                throw new UnsupportedOperationException("Not supported yet.");
+            public void removeEditorView(final EditorProvider editorProvider) {
+                EditorCDockable dockable = editorMap.remove(editorProvider);
+                if (dockable != null) {
+                    dockable.setVisible(false);
+                    control.removeDockable(dockable);
+                    // TODO remove and release stuff
+                }
+            }
+
+            @Override
+            public void setMultiEditorProvider(MultiEditorProvider multiEditor) {
+                multiEditorProvider = multiEditor;
+            }
+
+            @Override
+            public void updateEditorView(EditorProvider editorProvider) {
+                EditorCDockable dockable = editorMap.get(editorProvider);
+                if (dockable != null) {
+                    dockable.update();
+                }
             }
         };
     }
 
-    @TabDockAction
-    @EclipseTabDockAction
-    private static class CustomCloseAction extends CCloseAction {
-
-        public CustomCloseAction(CControl control) {
-            super(control);
-            CDockable focusedView = control.getFocusedCDockable();
-            // TODO
-        }
-    }
+//    @TabDockAction
+//    @EclipseTabDockAction
+//    private class CustomCloseAction extends CCloseAction {
+//
+//        public CustomCloseAction(CControl control) {
+//            super(control);
+//        }
+//
+//        @Override
+//        public void close(CDockable dockable) {
+//            super.close(dockable);
+//            CDockable focusedView = control.getFocusedCDockable();
+//            if (focusedView != null) {
+//                EditorProvider editor = editorMap.get(focusedView);
+//                multiEditorProvider.closeFile(editor);
+//            }
+//        }
+//    }
 }

@@ -546,6 +546,17 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
+    public String getFileName() {
+        if (fileUri != null) {
+            String path = fileUri.getPath();
+            int lastSegment = path.lastIndexOf("/");
+            return lastSegment < 0 ? path : path.substring(lastSegment + 1);
+        }
+        
+        return null;
+    }
+
+    @Override
     public FileType getFileType() {
         return fileType;
     }
@@ -720,6 +731,11 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
 
     public boolean isEmpty() {
         return wavePanel.getWave() == null;
+    }
+
+    @Override
+    public void setModificationListener(EditorModificationListener editorModificationListener) {
+        // TODO
     }
 
     class PlayThread extends Thread {

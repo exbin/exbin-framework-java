@@ -21,7 +21,7 @@ import java.net.URI;
 /**
  * Interface for file handling actions.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public interface FileHandlerApi {
@@ -56,7 +56,7 @@ public interface FileHandlerApi {
      *
      * @return filename
      */
-    String getName();
+    String getFileName();
 
     /**
      * Returns currently used filetype.

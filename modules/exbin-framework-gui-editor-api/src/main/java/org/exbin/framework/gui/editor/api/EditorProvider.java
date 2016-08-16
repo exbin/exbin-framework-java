@@ -38,9 +38,16 @@ public interface EditorProvider extends FileHandlerApi {
     /**
      * Changes passing listener.
      *
-     * @param propertyChangeListener Change listener.
+     * @param propertyChangeListener change listener
      */
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener);
+
+    /**
+     * Sets modification listener.
+     *
+     * @param editorModificationListener editor modification listener
+     */
+    public void setModificationListener(EditorModificationListener editorModificationListener);
 
     /**
      * Gets window title related to last opened or saved file.
@@ -49,4 +56,12 @@ public interface EditorProvider extends FileHandlerApi {
      * @return title related to last opened file
      */
     public String getWindowTitle(String frameTitle);
+
+    /**
+     * Interface for editor modifications listener.
+     */
+    public static interface EditorModificationListener {
+
+        void modified();
+    }
 }

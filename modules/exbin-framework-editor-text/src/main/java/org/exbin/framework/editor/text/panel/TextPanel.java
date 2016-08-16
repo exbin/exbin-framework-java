@@ -484,6 +484,17 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     }
 
     @Override
+    public String getFileName() {
+        if (fileUri != null) {
+            String path = fileUri.getPath();
+            int lastSegment = path.lastIndexOf("/");
+            return lastSegment < 0 ? path : path.substring(lastSegment + 1);
+        }
+        
+        return null;
+    }
+
+    @Override
     public FileType getFileType() {
         return fileType;
     }
@@ -674,6 +685,11 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     public boolean canPaste() {
         // TODO
         return true;
+    }
+
+    @Override
+    public void setModificationListener(EditorModificationListener editorModificationListener) {
+        // TODO
     }
 
     public interface CharsetChangeListener {

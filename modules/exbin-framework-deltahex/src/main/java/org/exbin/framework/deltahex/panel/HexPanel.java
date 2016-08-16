@@ -74,7 +74,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.1 2016/08/15
+ * @version 0.1.1 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -623,6 +623,17 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     @Override
+    public String getFileName() {
+        if (fileUri != null) {
+            String path = fileUri.getPath();
+            int lastSegment = path.lastIndexOf("/");
+            return lastSegment < 0 ? path : path.substring(lastSegment + 1);
+        }
+
+        return null;
+    }
+
+    @Override
     public FileType getFileType() {
         return null;
     }
@@ -844,6 +855,16 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         position += ":" + caretPosition.getCodeOffset();
         hexStatus.setCursorPosition(position);
         encodingStatus.setEncoding(codeArea.getCharset().name());
+    }
+
+    @Override
+    public void setModificationListener(final EditorModificationListener editorModificationListener) {
+        codeArea.addDataChangedListener(new CodeArea.DataChangedListener() {
+            @Override
+            public void dataChanged() {
+                editorModificationListener.modified();
+            }
+        });
     }
 
     public static interface CharsetChangeListener {

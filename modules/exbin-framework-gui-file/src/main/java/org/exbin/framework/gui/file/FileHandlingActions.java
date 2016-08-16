@@ -42,6 +42,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.file.api.MultiFileHandlerApi;
 import org.exbin.framework.gui.frame.api.ApplicationExitListener;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -50,7 +51,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * File handling operations.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public class FileHandlingActions implements FileHandlingActionsApi {
@@ -69,6 +70,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     private Action openFileAction;
     private Action saveFileAction;
     private Action saveAsFileAction;
+    private Action closeFileAction;
 
     private JMenu fileOpenRecentMenu = null;
     private List<RecentItem> recentFiles = null;
@@ -131,6 +133,17 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         ActionUtils.setupAction(saveAsFileAction, resourceBundle, "fileSaveAsAction");
         saveAsFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, metaMask));
         saveAsFileAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+
+        closeFileAction = new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionFileClose();
+            }
+        };
+        ActionUtils.setupAction(closeFileAction, resourceBundle, "fileCloseAction");
+        closeFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, metaMask));
+        closeFileAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
 
         AllFilesFilter filesFilter = new AllFilesFilter();
         addFileType(filesFilter);
@@ -234,15 +247,17 @@ public class FileHandlingActions implements FileHandlingActionsApi {
 
     public void actionFileNew() {
         if (fileHandler != null) {
-            if (releaseFile()) {
-                fileHandler.newFile();
+            if (!(fileHandler instanceof MultiFileHandlerApi) && !releaseFile()) {
+                return;
             }
+
+            fileHandler.newFile();
         }
     }
 
     public void actionFileOpen() {
         if (fileHandler != null) {
-            if (!releaseFile()) {
+            if (!(fileHandler instanceof MultiFileHandlerApi) && !releaseFile()) {
                 return;
             }
 
@@ -313,6 +328,12 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                     JOptionPane.showMessageDialog(frameModule.getFrame(), "Unable to save file: " + ex.getClass().getCanonicalName() + (errorMessage == null || errorMessage.isEmpty() ? "" : errorMessage), "Unable to save file", JOptionPane.ERROR_MESSAGE);
                 }
             }
+        }
+    }
+
+    public void actionFileClose() {
+        if (releaseFile()) {
+            ((MultiFileHandlerApi) fileHandler).closeFile();
         }
     }
 

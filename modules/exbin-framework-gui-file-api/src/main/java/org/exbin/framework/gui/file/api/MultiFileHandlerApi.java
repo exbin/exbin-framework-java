@@ -14,22 +14,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.editor.api;
-
-import org.exbin.framework.gui.file.api.MultiFileHandlerApi;
+package org.exbin.framework.gui.file.api;
 
 /**
- * XBUP framework multitab editor interface.
+ * Interface for file handling actions with support for multiple files.
  *
  * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
-public interface MultiEditorProvider extends EditorProvider, MultiFileHandlerApi {
+public interface MultiFileHandlerApi extends FileHandlerApi {
 
     /**
-     * Sets currently active editor provider.
-     *
-     * @param editorProvider editor provider
+     * Closes active file.
      */
-    void setActiveEditor(EditorProvider editorProvider);
+    void closeFile();
+
+    /**
+     * Closes specified file.
+     *
+     * @param file file handler
+     */
+    void closeFile(FileHandlerApi file);
 }

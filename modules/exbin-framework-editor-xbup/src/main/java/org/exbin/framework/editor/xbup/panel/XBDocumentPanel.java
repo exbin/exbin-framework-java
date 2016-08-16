@@ -81,7 +81,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -654,6 +654,17 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     @Override
+    public String getFileName() {
+        if (fileUri != null) {
+            String path = fileUri.getPath();
+            int lastSegment = path.lastIndexOf("/");
+            return lastSegment < 0 ? path : path.substring(lastSegment + 1);
+        }
+
+        return null;
+    }
+
+    @Override
     public URI getFileUri() {
         return fileUri;
     }
@@ -953,6 +964,11 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         clipboardActionsUpdateListener = updateListener;
         treePanel.setUpdateListener(updateListener);
         textPanel.setUpdateListener(updateListener);
+    }
+
+    @Override
+    public void setModificationListener(EditorModificationListener editorModificationListener) {
+        // TODO
     }
 
     public enum PanelMode {

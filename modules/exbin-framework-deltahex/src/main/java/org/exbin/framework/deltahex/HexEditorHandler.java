@@ -16,6 +16,7 @@
 package org.exbin.framework.deltahex;
 
 import java.awt.Color;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -31,12 +32,13 @@ import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 
 /**
  * Hexadecimal editor provider.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider {
@@ -48,8 +50,21 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
     private int lastIndex = 0;
     private HexStatusApi hexStatus = null;
     private TextEncodingStatusApi encodingStatus;
+    private EditorModificationListener editorModificationListener = null;
+    private final EditorModificationListener multiModificationListener;
 
     public HexEditorHandler() {
+        multiModificationListener = new EditorModificationListener() {
+            @Override
+            public void modified() {
+                if (editorModificationListener != null) {
+                    editorModificationListener.modified();
+                }
+                if (editorViewHandling != null) {
+                    editorViewHandling.updateEditorView(activePanel);
+                }
+            }
+        };
     }
 
     @Override
@@ -58,8 +73,14 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
     }
 
     @Override
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        activePanel.setPropertyChangeListener(propertyChangeListener);
+    public void setPropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
+        activePanel.setPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                editorViewHandling.addEditorView(activePanel);
+                propertyChangeListener.propertyChange(evt);
+            }
+        });
     }
 
     @Override
@@ -72,12 +93,14 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
         HexPanel panel = createNewPanel();
         panel.newFile();
         panel.loadFromFile(fileUri, fileType);
+        editorViewHandling.updateEditorView(panel);
         activePanel = panel;
     }
 
     @Override
     public void saveToFile(URI fileUri, FileType fileType) {
         activePanel.saveToFile(fileUri, fileType);
+        editorViewHandling.updateEditorView(activePanel);
     }
 
     @Override
@@ -86,7 +109,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
     }
 
     @Override
-    public String getName() {
+    public String getFileName() {
         return activePanel.getName();
     }
 
@@ -143,7 +166,8 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
             panel.registerHexStatus(hexStatus);
             panel.registerEncodingStatus(encodingStatus);
         }
-        editorViewHandling.addEditorView(panel, this);
+        editorViewHandling.addEditorView(panel);
+        panel.setModificationListener(multiModificationListener);
 
         return panel;
     }
@@ -167,6 +191,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
 
     public void setEditorViewHandling(EditorViewHandling editorViewHandling) {
         this.editorViewHandling = editorViewHandling;
+        editorViewHandling.setMultiEditorProvider(this);
     }
 
     @Override
@@ -241,6 +266,22 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
             activePanel = hexPanel;
             hexPanel.notifyListeners();
         }
+    }
+
+    @Override
+    public void closeFile() {
+        closeFile(activePanel);
+    }
+
+    @Override
+    public void closeFile(FileHandlerApi panel) {
+        panels.remove((HexPanel) panel);
+        editorViewHandling.removeEditorView((EditorProvider) panel);
+    }
+
+    @Override
+    public void setModificationListener(EditorModificationListener editorModificationListener) {
+        this.editorModificationListener = editorModificationListener;
     }
 
     /**

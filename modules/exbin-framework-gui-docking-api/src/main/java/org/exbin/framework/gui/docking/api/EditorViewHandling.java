@@ -22,7 +22,7 @@ import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 /**
  * Interface for editor view handling.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public interface EditorViewHandling {
@@ -31,12 +31,27 @@ public interface EditorViewHandling {
      * Adds new editor view.
      *
      * @param editorProvider editor provider
-     * @param multiEditorProvider multi editor provider
      */
-    void addEditorView(EditorProvider editorProvider, MultiEditorProvider multiEditorProvider);
+    void addEditorView(EditorProvider editorProvider);
 
     /**
      * Removes and drops editor view.
+     *
+     * @param editorProvider editor provider
      */
-    void removeEditorView();
+    void removeEditorView(EditorProvider editorProvider);
+
+    /**
+     * Updates editor view. Specificaly name and modified state.
+     *
+     * @param editorProvider editor provider
+     */
+    void updateEditorView(EditorProvider editorProvider);
+
+    /**
+     * Sets multiple tabs editor handler.
+     *
+     * @param multiEditor multi editor provider
+     */
+    void setMultiEditorProvider(MultiEditorProvider multiEditor);
 }

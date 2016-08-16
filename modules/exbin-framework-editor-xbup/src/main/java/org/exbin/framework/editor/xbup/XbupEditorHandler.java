@@ -61,7 +61,7 @@ public class XbupEditorHandler implements EditorProvider {
     }
 
     @Override
-    public String getName() {
+    public String getFileName() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -85,4 +85,8 @@ public class XbupEditorHandler implements EditorProvider {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    public void setModificationListener(EditorModificationListener editorModificationListener) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
