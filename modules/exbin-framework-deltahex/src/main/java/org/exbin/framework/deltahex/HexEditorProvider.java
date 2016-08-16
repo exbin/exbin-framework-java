@@ -24,11 +24,12 @@ import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Hexadecimal editor provider interface.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public interface HexEditorProvider extends EditorProvider {
@@ -72,4 +73,6 @@ public interface HexEditorProvider extends EditorProvider {
     HexPanel getDocument();
 
     void printFile();
+    
+    XBUndoHandler getHexUndoHandler();
 }

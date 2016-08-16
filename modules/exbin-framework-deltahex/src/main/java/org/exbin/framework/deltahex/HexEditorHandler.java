@@ -34,6 +34,11 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
+import org.exbin.xbup.operation.Command;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 
 /**
  * Hexadecimal editor provider.
@@ -41,7 +46,7 @@ import org.exbin.framework.gui.file.api.FileType;
  * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
-public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider {
+public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
 
     private HexPanelInit hexPanelInit = null;
     private final List<HexPanel> panels = new ArrayList<>();
@@ -52,6 +57,10 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
     private TextEncodingStatusApi encodingStatus;
     private EditorModificationListener editorModificationListener = null;
     private final EditorModificationListener multiModificationListener;
+    private final List<XBUndoUpdateListener> undoListeners = new ArrayList<>();
+    private final XBUndoUpdateListener multiUndoUpdateListener;
+    private ClipboardActionsUpdateListener clipboardUpdateListener = null;
+    private final ClipboardActionsUpdateListener multiClipboardUpdateListener;
 
     public HexEditorHandler() {
         multiModificationListener = new EditorModificationListener() {
@@ -63,6 +72,27 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
                 if (editorViewHandling != null) {
                     editorViewHandling.updateEditorView(activePanel);
                 }
+            }
+        };
+
+        multiUndoUpdateListener = new XBUndoUpdateListener() {
+            @Override
+            public void undoCommandPositionChanged() {
+                notifyUndoChanged();
+            }
+
+            @Override
+            public void undoCommandAdded(Command cmnd) {
+                for (XBUndoUpdateListener listener : undoListeners) {
+                    listener.undoCommandAdded(cmnd);
+                }
+            }
+        };
+
+        multiClipboardUpdateListener = new ClipboardActionsUpdateListener() {
+            @Override
+            public void stateChanged() {
+                notifyClipboardStateChanged();
             }
         };
     }
@@ -168,6 +198,8 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
         }
         editorViewHandling.addEditorView(panel);
         panel.setModificationListener(multiModificationListener);
+        panel.getHexUndoHandler().addUndoUpdateListener(multiUndoUpdateListener);
+        panel.setUpdateListener(multiClipboardUpdateListener);
 
         return panel;
     }
@@ -265,6 +297,8 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
             HexPanel hexPanel = (HexPanel) editorProvider;
             activePanel = hexPanel;
             hexPanel.notifyListeners();
+            notifyUndoChanged();
+            notifyClipboardStateChanged();
         }
     }
 
@@ -282,6 +316,181 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider 
     @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
         this.editorModificationListener = editorModificationListener;
+    }
+
+    @Override
+    public XBUndoHandler getHexUndoHandler() {
+        return new XBUndoHandler() {
+            @Override
+            public boolean canRedo() {
+                return activePanel.getHexUndoHandler().canRedo();
+            }
+
+            @Override
+            public boolean canUndo() {
+                return activePanel.getHexUndoHandler().canUndo();
+            }
+
+            @Override
+            public void clear() {
+                activePanel.getHexUndoHandler().clear();
+            }
+
+            @Override
+            public void doSync() throws Exception {
+                activePanel.getHexUndoHandler().doSync();
+            }
+
+            @Override
+            public void execute(Command cmnd) throws Exception {
+                activePanel.getHexUndoHandler().execute(cmnd);
+            }
+
+            @Override
+            public void addCommand(Command cmnd) {
+                activePanel.getHexUndoHandler().addCommand(cmnd);
+            }
+
+            @Override
+            public List<Command> getCommandList() {
+                return activePanel.getHexUndoHandler().getCommandList();
+            }
+
+            @Override
+            public long getCommandPosition() {
+                return activePanel.getHexUndoHandler().getCommandPosition();
+            }
+
+            @Override
+            public long getMaximumUndo() {
+                return activePanel.getHexUndoHandler().getMaximumUndo();
+            }
+
+            @Override
+            public long getSyncPoint() {
+                return activePanel.getHexUndoHandler().getSyncPoint();
+            }
+
+            @Override
+            public long getUndoMaximumSize() {
+                return activePanel.getHexUndoHandler().getUndoMaximumSize();
+            }
+
+            @Override
+            public long getUsedSize() {
+                return activePanel.getHexUndoHandler().getUsedSize();
+            }
+
+            @Override
+            public void performRedo() throws Exception {
+                activePanel.getHexUndoHandler().performRedo();
+            }
+
+            @Override
+            public void performRedo(int i) throws Exception {
+                activePanel.getHexUndoHandler().performRedo(i);
+            }
+
+            @Override
+            public void performUndo() throws Exception {
+                activePanel.getHexUndoHandler().performUndo();
+            }
+
+            @Override
+            public void performUndo(int i) throws Exception {
+                activePanel.getHexUndoHandler().performUndo(i);
+            }
+
+            @Override
+            public void setCommandPosition(long l) throws Exception {
+                activePanel.getHexUndoHandler().setCommandPosition(l);
+            }
+
+            @Override
+            public void setSyncPoint(long l) {
+                activePanel.getHexUndoHandler().setSyncPoint(l);
+            }
+
+            @Override
+            public void setSyncPoint() {
+                activePanel.getHexUndoHandler().setSyncPoint();
+            }
+
+            @Override
+            public void addUndoUpdateListener(XBUndoUpdateListener xl) {
+                undoListeners.add(xl);
+            }
+
+            @Override
+            public void removeUndoUpdateListener(XBUndoUpdateListener xl) {
+                undoListeners.remove(xl);
+            }
+        };
+    }
+
+    private void notifyUndoChanged() {
+        for (XBUndoUpdateListener listener : undoListeners) {
+            listener.undoCommandPositionChanged();
+        }
+        if (editorViewHandling != null) {
+            editorViewHandling.updateEditorView(activePanel);
+        }
+    }
+
+    private void notifyClipboardStateChanged() {
+        if (clipboardUpdateListener != null) {
+            clipboardUpdateListener.stateChanged();
+        }
+    }
+
+    @Override
+    public void performCut() {
+        activePanel.performCut();
+    }
+
+    @Override
+    public void performCopy() {
+        activePanel.performCopy();
+    }
+
+    @Override
+    public void performPaste() {
+        activePanel.performPaste();
+    }
+
+    @Override
+    public void performDelete() {
+        activePanel.performDelete();
+    }
+
+    @Override
+    public void performSelectAll() {
+        activePanel.performSelectAll();
+    }
+
+    @Override
+    public boolean isSelection() {
+        return activePanel.isSelection();
+    }
+
+    @Override
+    public boolean isEditable() {
+        return activePanel.isEditable();
+    }
+
+    @Override
+    public boolean canSelectAll() {
+        return activePanel.canSelectAll();
+    }
+
+    @Override
+    public boolean canPaste() {
+        return activePanel.canPaste();
+    }
+
+    @Override
+    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+        this.clipboardUpdateListener = updateListener;
     }
 
     /**

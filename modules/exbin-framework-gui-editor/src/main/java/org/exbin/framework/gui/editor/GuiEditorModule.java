@@ -24,6 +24,7 @@ import java.util.Map;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.panel.SingleEditorPanel;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -41,7 +42,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * XBUP framework editor module.
  *
- * @version 0.2.0 2016/01/23
+ * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiEditorModule implements GuiEditorModuleApi {
@@ -149,6 +150,12 @@ public class GuiEditorModule implements GuiEditorModuleApi {
             }
             pluginEditorsMap.remove(moduleId);
         }
+    }
+
+    @Override
+    public void registerMultiEditor(String pluginId, final MultiEditorProvider editorProvider) {
+        registerEditor(pluginId, editorProvider);
+        activeEditor = editorProvider;
     }
 
     @Override

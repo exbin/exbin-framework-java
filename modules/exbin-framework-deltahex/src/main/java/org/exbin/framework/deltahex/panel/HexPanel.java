@@ -567,6 +567,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();
     }
 
+    @Override
     public CodeAreaUndoHandler getHexUndoHandler() {
         return undoHandler;
     }

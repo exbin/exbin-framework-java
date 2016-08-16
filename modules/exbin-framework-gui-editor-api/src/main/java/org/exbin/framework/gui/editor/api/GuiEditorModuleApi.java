@@ -23,7 +23,7 @@ import org.exbin.framework.api.XBApplicationModule;
 /**
  * XBUP framework editor module api interface.
  *
- * @version 0.2.0 2016/01/23
+ * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
 public interface GuiEditorModuleApi extends XBApplicationModule {
@@ -36,17 +36,25 @@ public interface GuiEditorModuleApi extends XBApplicationModule {
      * @param pluginId plugin identifier
      * @param editorProvider editor provider
      */
-    public void registerEditor(String pluginId, EditorProvider editorProvider);
+    void registerEditor(String pluginId, EditorProvider editorProvider);
+
+    /**
+     * Registers multitab editor.
+     *
+     * @param pluginId plugin identifier
+     * @param editorProvider editor provider
+     */
+    void registerMultiEditor(String pluginId, final MultiEditorProvider editorProvider);
 
     /**
      * Returns main component for editors handling.
      *
      * @return panel component
      */
-    public Component getEditorPanel();
-    
+    Component getEditorPanel();
+
     /**
      * Registers undo handler for undo management to editor.
      */
-    public void registerUndoHandler();
+    void registerUndoHandler();
 }
