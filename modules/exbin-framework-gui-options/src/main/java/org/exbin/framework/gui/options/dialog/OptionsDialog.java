@@ -203,7 +203,7 @@ public class OptionsDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/options/dialog/resources/OptionsDialog"); // NOI18N
-        setTitle(bundle.getString("OptionsDialog.title")); // NOI18N
+        setTitle(resourceBundle.getString("OptionsDialog.title")); // NOI18N
         setLocationByPlatform(true);
 
         optionsSplitPane.setDividerLocation(130);
@@ -228,7 +228,7 @@ public class OptionsDialog extends javax.swing.JDialog {
 
         optionsAreaTitleLabel.setBackground(javax.swing.UIManager.getDefaults().getColor("EditorPane.selectionBackground"));
         optionsAreaTitleLabel.setForeground(javax.swing.UIManager.getDefaults().getColor("EditorPane.background"));
-        optionsAreaTitleLabel.setText(bundle.getString("options_options")); // NOI18N
+        optionsAreaTitleLabel.setText(resourceBundle.getString("options_options")); // NOI18N
         optionsAreaTitleLabel.setName("optionsAreaTitleLabel"); // NOI18N
         optionsAreaTitleLabel.setOpaque(true);
         optionsAreaTitleLabel.setVerifyInputWhenFocusTarget(false);
@@ -240,7 +240,7 @@ public class OptionsDialog extends javax.swing.JDialog {
 
         jSeparator1.setName("jSeparator1"); // NOI18N
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -248,7 +248,7 @@ public class OptionsDialog extends javax.swing.JDialog {
             }
         });
 
-        applyButton.setText(bundle.getString("applyButton.text")); // NOI18N
+        applyButton.setText(resourceBundle.getString("applyButton.text")); // NOI18N
         applyButton.setName("applyButton"); // NOI18N
         applyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -256,7 +256,7 @@ public class OptionsDialog extends javax.swing.JDialog {
             }
         });
 
-        saveButton.setText(bundle.getString("saveButton.text")); // NOI18N
+        saveButton.setText(resourceBundle.getString("saveButton.text")); // NOI18N
         saveButton.setName("saveButton"); // NOI18N
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

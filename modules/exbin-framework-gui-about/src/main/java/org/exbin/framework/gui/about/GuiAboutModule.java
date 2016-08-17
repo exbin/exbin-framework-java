@@ -41,7 +41,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 public class GuiAboutModule implements GuiAboutModuleApi {
 
     private XBApplication application;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GuiAboutModule.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(GuiAboutModule.class);
     private Action aboutAction;
     private JComponent sideComponent = null;
 
@@ -70,7 +70,7 @@ public class GuiAboutModule implements GuiAboutModuleApi {
                     aboutDialog.setVisible(true);
                 }
             };
-            ActionUtils.setupAction(aboutAction, bundle, "aboutAction");
+            ActionUtils.setupAction(aboutAction, resourceBundle, "aboutAction");
             aboutAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         }
 

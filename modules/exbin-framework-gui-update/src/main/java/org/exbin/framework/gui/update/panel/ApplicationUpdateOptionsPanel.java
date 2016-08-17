@@ -56,7 +56,7 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
 
         checkForUpdatesOnStartCheckBox.setSelected(true);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/update/panel/resources/ApplicationUpdateOptionsPanel"); // NOI18N
-        checkForUpdatesOnStartCheckBox.setText(bundle.getString("checkForUpdatesOnStartCheckBox.text")); // NOI18N
+        checkForUpdatesOnStartCheckBox.setText(resourceBundle.getString("checkForUpdatesOnStartCheckBox.text")); // NOI18N
         checkForUpdatesOnStartCheckBox.setName("checkForUpdatesOnStartCheckBox"); // NOI18N
         checkForUpdatesOnStartCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

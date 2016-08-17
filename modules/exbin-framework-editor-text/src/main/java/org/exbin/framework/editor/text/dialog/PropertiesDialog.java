@@ -37,7 +37,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  */
 public class PropertiesDialog extends javax.swing.JDialog {
 
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(PropertiesDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(PropertiesDialog.class);
 
     public PropertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -47,7 +47,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, closeButton);
         pack();
     }
@@ -78,41 +78,41 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/PropertiesDialog"); // NOI18N
-        setTitle(bundle.getString("PropertiesDialog.title")); // NOI18N
+        setTitle(resourceBundle.getString("PropertiesDialog.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
         setName("Form"); // NOI18N
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        fileNameLabel.setText(bundle.getString("fileNameLabel.text")); // NOI18N
+        fileNameLabel.setText(resourceBundle.getString("fileNameLabel.text")); // NOI18N
         fileNameLabel.setName("fileNameLabel"); // NOI18N
 
         fileNameTextField.setEditable(false);
         fileNameTextField.setName("fileNameTextField"); // NOI18N
 
-        documentSizePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("documentSizePanel.border.title"))); // NOI18N
+        documentSizePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("documentSizePanel.border.title"))); // NOI18N
         documentSizePanel.setName("documentSizePanel"); // NOI18N
 
-        linesCountLabel.setText(bundle.getString("linesCountLabel.text")); // NOI18N
+        linesCountLabel.setText(resourceBundle.getString("linesCountLabel.text")); // NOI18N
         linesCountLabel.setName("linesCountLabel"); // NOI18N
 
         linesCountTextField.setEditable(false);
         linesCountTextField.setName("linesCountTextField"); // NOI18N
 
-        charCountLabel.setText(bundle.getString("charCountLabel.text")); // NOI18N
+        charCountLabel.setText(resourceBundle.getString("charCountLabel.text")); // NOI18N
         charCountLabel.setName("charCountLabel"); // NOI18N
 
         charCountTextField.setEditable(false);
         charCountTextField.setName("charCountTextField"); // NOI18N
 
-        fileSizeLabel.setText(bundle.getString("fileSizeLabel.text")); // NOI18N
+        fileSizeLabel.setText(resourceBundle.getString("fileSizeLabel.text")); // NOI18N
         fileSizeLabel.setName("fileSizeLabel"); // NOI18N
 
         fileSizeTextField.setEditable(false);
         fileSizeTextField.setName("fileSizeTextField"); // NOI18N
 
-        wordsCountLabel.setText(bundle.getString("wordsCountLabel.text")); // NOI18N
+        wordsCountLabel.setText(resourceBundle.getString("wordsCountLabel.text")); // NOI18N
         wordsCountLabel.setName("wordsCountLabel"); // NOI18N
 
         wordsCountTextField.setEditable(false);
@@ -188,7 +188,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        closeButton.setText(bundle.getString("closeButton.text")); // NOI18N
+        closeButton.setText(resourceBundle.getString("closeButton.text")); // NOI18N
         closeButton.setName("closeButton"); // NOI18N
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -45,6 +45,7 @@ import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.parser_tree.XBATreeParamExtractor;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
@@ -72,6 +73,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     private Thread propertyThread;
     private final Semaphore valueFillingSemaphore;
     private XBTTreeNode node;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(XBPropertyTablePanel.class);
 
     public XBPropertyTablePanel(XBACatalog catalog) {
         this.catalog = catalog;
@@ -148,20 +150,20 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         propertyPopupMenu.setName("propertyPopupMenu"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/panel/resources/XBPropertyTablePanel"); // NOI18N
-        popupItemOpenMenuItem.setText(bundle.getString("popupItemOpenMenuItem.text")); // NOI18N
-        popupItemOpenMenuItem.setToolTipText(bundle.getString("popupItemOpenMenuItem.toolTipText")); // NOI18N
+        popupItemOpenMenuItem.setText(resourceBundle.getString("popupItemOpenMenuItem.text")); // NOI18N
+        popupItemOpenMenuItem.setToolTipText(resourceBundle.getString("popupItemOpenMenuItem.toolTipText")); // NOI18N
         popupItemOpenMenuItem.setEnabled(false);
         popupItemOpenMenuItem.setName("popupItemOpenMenuItem"); // NOI18N
         propertyPopupMenu.add(popupItemOpenMenuItem);
 
-        popupItemAddMenuItem.setText(bundle.getString("popupItemAddMenuItem.text")); // NOI18N
-        popupItemAddMenuItem.setToolTipText(bundle.getString("popupItemAddMenuItem.toolTipText")); // NOI18N
+        popupItemAddMenuItem.setText(resourceBundle.getString("popupItemAddMenuItem.text")); // NOI18N
+        popupItemAddMenuItem.setToolTipText(resourceBundle.getString("popupItemAddMenuItem.toolTipText")); // NOI18N
         popupItemAddMenuItem.setEnabled(false);
         popupItemAddMenuItem.setName("popupItemAddMenuItem"); // NOI18N
         propertyPopupMenu.add(popupItemAddMenuItem);
 
-        popupItemModifyMenuItem.setText(bundle.getString("popupItemModifyMenuItem.text")); // NOI18N
-        popupItemModifyMenuItem.setToolTipText(bundle.getString("popupItemModifyMenuItem.toolTipText")); // NOI18N
+        popupItemModifyMenuItem.setText(resourceBundle.getString("popupItemModifyMenuItem.text")); // NOI18N
+        popupItemModifyMenuItem.setToolTipText(resourceBundle.getString("popupItemModifyMenuItem.toolTipText")); // NOI18N
         popupItemModifyMenuItem.setEnabled(false);
         popupItemModifyMenuItem.setName("popupItemModifyMenuItem"); // NOI18N
         propertyPopupMenu.add(popupItemModifyMenuItem);
@@ -170,14 +172,14 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         propertyPopupMenu.add(jSeparator14);
 
         popupUndoMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
-        popupUndoMenuItem.setText(bundle.getString("popupUndoMenuItem.text")); // NOI18N
-        popupUndoMenuItem.setToolTipText(bundle.getString("popupUndoMenuItem.toolTipText")); // NOI18N
+        popupUndoMenuItem.setText(resourceBundle.getString("popupUndoMenuItem.text")); // NOI18N
+        popupUndoMenuItem.setToolTipText(resourceBundle.getString("popupUndoMenuItem.toolTipText")); // NOI18N
         popupUndoMenuItem.setEnabled(false);
         popupUndoMenuItem.setName("popupUndoMenuItem"); // NOI18N
         propertyPopupMenu.add(popupUndoMenuItem);
 
-        popupRedoMenuItem.setText(bundle.getString("popupRedoMenuItem.text")); // NOI18N
-        popupRedoMenuItem.setToolTipText(bundle.getString("popupRedoMenuItem.toolTipText")); // NOI18N
+        popupRedoMenuItem.setText(resourceBundle.getString("popupRedoMenuItem.text")); // NOI18N
+        popupRedoMenuItem.setToolTipText(resourceBundle.getString("popupRedoMenuItem.toolTipText")); // NOI18N
         popupRedoMenuItem.setEnabled(false);
         popupRedoMenuItem.setName("popupRedoMenuItem"); // NOI18N
         propertyPopupMenu.add(popupRedoMenuItem);
@@ -208,8 +210,8 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         jSeparator7.setName("jSeparator7"); // NOI18N
         propertyPopupMenu.add(jSeparator7);
 
-        popupSelectAllMenuItem.setText(bundle.getString("popupSelectAllMenuItem.text")); // NOI18N
-        popupSelectAllMenuItem.setToolTipText(bundle.getString("popupSelectAllMenuItem.toolTipText")); // NOI18N
+        popupSelectAllMenuItem.setText(resourceBundle.getString("popupSelectAllMenuItem.text")); // NOI18N
+        popupSelectAllMenuItem.setToolTipText(resourceBundle.getString("popupSelectAllMenuItem.toolTipText")); // NOI18N
         popupSelectAllMenuItem.setEnabled(false);
         popupSelectAllMenuItem.setName("popupSelectAllMenuItem"); // NOI18N
         propertyPopupMenu.add(popupSelectAllMenuItem);
@@ -217,8 +219,8 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         jSeparator16.setName("jSeparator16"); // NOI18N
         propertyPopupMenu.add(jSeparator16);
 
-        popupItemPropertiesMenuItem.setText(bundle.getString("popupItemPropertiesMenuItem.text")); // NOI18N
-        popupItemPropertiesMenuItem.setToolTipText(bundle.getString("popupItemPropertiesMenuItem.toolTipText")); // NOI18N
+        popupItemPropertiesMenuItem.setText(resourceBundle.getString("popupItemPropertiesMenuItem.text")); // NOI18N
+        popupItemPropertiesMenuItem.setToolTipText(resourceBundle.getString("popupItemPropertiesMenuItem.toolTipText")); // NOI18N
         popupItemPropertiesMenuItem.setEnabled(false);
         popupItemPropertiesMenuItem.setName("popupItemPropertiesMenuItem"); // NOI18N
         propertyPopupMenu.add(popupItemPropertiesMenuItem);

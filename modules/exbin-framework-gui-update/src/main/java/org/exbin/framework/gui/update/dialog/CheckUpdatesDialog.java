@@ -40,7 +40,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
     private final XBApplication application;
     private ResourceBundle appBundle;
-    private final ResourceBundle bundle = ActionUtils.getResourceBundleByClass(CheckUpdatesDialog.class);
+    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CheckUpdatesDialog.class);
     private String updateWebsite;
     private VersionNumbers versionNumbers;
     private CheckUpdatesHandler checkUpdatesHandler = null;
@@ -54,7 +54,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         if (application != null) {
             appBundle = application.getAppBundle();
         } else {
-            appBundle = bundle;
+            appBundle = resourceBundle;
         }
 
         init();
@@ -64,7 +64,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         initComponents();
 
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, closeButton);
     }
 
@@ -107,7 +107,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         linkPopupMenu.setName("linkPopupMenu"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog"); // NOI18N
-        copyLinkMenuItem.setText(bundle.getString("copyLinkMenuItem.text")); // NOI18N
+        copyLinkMenuItem.setText(resourceBundle.getString("copyLinkMenuItem.text")); // NOI18N
         copyLinkMenuItem.setName("copyLinkMenuItem"); // NOI18N
         copyLinkMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -116,7 +116,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         });
         linkPopupMenu.add(copyLinkMenuItem);
 
-        setTitle(bundle.getString("checkUpdaBox.title")); // NOI18N
+        setTitle(resourceBundle.getString("checkUpdaBox.title")); // NOI18N
         setLocationByPlatform(true);
 
         mainPanel.setName("mainPanel"); // NOI18N
@@ -153,14 +153,14 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        currentVersionLabel.setText(bundle.getString("currentVersionLabel.text")); // NOI18N
+        currentVersionLabel.setText(resourceBundle.getString("currentVersionLabel.text")); // NOI18N
         currentVersionLabel.setName("currentVersionLabel"); // NOI18N
 
         currentVersionTextField.setEditable(false);
         currentVersionTextField.setText("unknown");
         currentVersionTextField.setName("currentVersionTextField"); // NOI18N
 
-        availableVersionLabel.setText(bundle.getString("availableVersionLabel.text")); // NOI18N
+        availableVersionLabel.setText(resourceBundle.getString("availableVersionLabel.text")); // NOI18N
         availableVersionLabel.setName("availableVersionLabel"); // NOI18N
 
         availableVersionTextField.setEditable(false);
@@ -230,7 +230,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        closeButton.setText(bundle.getString("closeButton.text")); // NOI18N
+        closeButton.setText(resourceBundle.getString("closeButton.text")); // NOI18N
         closeButton.setName("closeButton"); // NOI18N
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -271,8 +271,8 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
     private void recheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recheckButtonActionPerformed
         recheckButton.setEnabled(false);
-        statusTextLabel.setText(bundle.getString("status.checking.text"));
-        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.checking.icon"))));
+        statusTextLabel.setText(resourceBundle.getString("status.checking.text"));
+        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.checking.icon"))));
         performCheckForUpdates();
     }//GEN-LAST:event_recheckButtonActionPerformed
 
@@ -334,7 +334,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                 GuiUpdateModule.CheckUpdatesResult result = checkUpdatesHandler.checkForUpdates();
                 VersionNumbers updateVersion = checkUpdatesHandler.getUpdateVersion();
                 if (updateVersion == null) {
-                    availableVersionTextField.setText(bundle.getString("unknown"));
+                    availableVersionTextField.setText(resourceBundle.getString("unknown"));
                 } else {
                     availableVersionTextField.setText(updateVersion.versionAsString());
                 }
@@ -352,38 +352,38 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         }
         switch (result) {
             case UPDATE_URL_NOT_SET: {
-                statusTextLabel.setText(bundle.getString("status.updateUrlNotSet.text"));
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.updateUrlNotSet.icon"))));
+                statusTextLabel.setText(resourceBundle.getString("status.updateUrlNotSet.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.updateUrlNotSet.icon"))));
                 break;
             }
             case NO_CONNECTION: {
-                statusTextLabel.setText(bundle.getString("status.noConnection.text"));
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.noConnection.icon"))));
+                statusTextLabel.setText(resourceBundle.getString("status.noConnection.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.noConnection.icon"))));
                 break;
             }
             case CONNECTION_ISSUE: {
-                statusTextLabel.setText(bundle.getString("status.connectionIssue.text"));
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.connectionIssue.icon"))));
+                statusTextLabel.setText(resourceBundle.getString("status.connectionIssue.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.connectionIssue.icon"))));
                 break;
             }
             case NOT_FOUND: {
-                statusTextLabel.setText(bundle.getString("status.notFound.text"));
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.notFound.icon"))));
+                statusTextLabel.setText(resourceBundle.getString("status.notFound.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.notFound.icon"))));
                 break;
             }
             case NO_UPDATE_AVAILABLE: {
-                statusTextLabel.setText(bundle.getString("status.noUpdateAvailable.text"));
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.noUpdateAvailable.icon"))));
+                statusTextLabel.setText(resourceBundle.getString("status.noUpdateAvailable.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.noUpdateAvailable.icon"))));
                 break;
             }
             case UPDATE_FOUND: {
-                statusTextLabel.setText(bundle.getString("status.updateFound.text"));
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.updateFound.icon"))));
+                statusTextLabel.setText(resourceBundle.getString("status.updateFound.text"));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.updateFound.icon"))));
                 break;
             }
             default: {
                 statusTextLabel.setText("Unexpected result state " + result.name() + "!");
-                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(bundle.getString("status.misc.icon"))));
+                statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.misc.icon"))));
                 break;
             }
         }

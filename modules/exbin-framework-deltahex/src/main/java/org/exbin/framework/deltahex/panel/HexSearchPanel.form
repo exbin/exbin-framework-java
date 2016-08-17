@@ -74,7 +74,7 @@
         <Component class="javax.swing.JLabel" name="findLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexSearchPanel.properties" key="HexSearchPanel.findLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexSearchPanel.properties" key="HexSearchPanel.findLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="findLabel" noResource="true"/>
           </Properties>
@@ -96,7 +96,7 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="T"/>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexSearchPanel.properties" key="HexSearchPanel.searchTypeButton.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexSearchPanel.properties" key="HexSearchPanel.searchTypeButton.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -209,7 +209,7 @@
             <Component class="javax.swing.JButton" name="optionsButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexSearchPanel.properties" key="HexSearchPanel.optionsButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexSearchPanel.properties" key="HexSearchPanel.optionsButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -298,7 +298,7 @@
         <Component class="javax.swing.JLabel" name="replaceLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexSearchPanel.properties" key="HexSearchPanel.replaceLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexSearchPanel.properties" key="HexSearchPanel.replaceLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="replaceLabel" noResource="true"/>
           </Properties>

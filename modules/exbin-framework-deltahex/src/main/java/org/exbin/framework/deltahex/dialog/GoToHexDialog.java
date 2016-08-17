@@ -34,7 +34,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class GoToHexDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GoToHexDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(GoToHexDialog.class);
 
     private long cursorPosition;
     private long maxPosition;
@@ -66,7 +66,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, jumpButton, cancelButton);
         pack();
     }
@@ -121,7 +121,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/resources/GoToHexDialog"); // NOI18N
-        setTitle(bundle.getString("Form.title")); // NOI18N
+        setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
         setName("Form"); // NOI18N
@@ -130,7 +130,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
 
         positionTypeButtonGroup.add(absoluteRadioButton);
         absoluteRadioButton.setSelected(true);
-        absoluteRadioButton.setText(bundle.getString("GoToHexDialog.absoluteRadioButton.text")); // NOI18N
+        absoluteRadioButton.setText(resourceBundle.getString("GoToHexDialog.absoluteRadioButton.text")); // NOI18N
         absoluteRadioButton.setName("absoluteRadioButton"); // NOI18N
         absoluteRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,7 +139,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
         });
 
         positionTypeButtonGroup.add(relativeRadioButton);
-        relativeRadioButton.setText(bundle.getString("GoToHexDialog.relativeRadioButton.text")); // NOI18N
+        relativeRadioButton.setText(resourceBundle.getString("GoToHexDialog.relativeRadioButton.text")); // NOI18N
         relativeRadioButton.setName("relativeRadioButton"); // NOI18N
         relativeRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -148,14 +148,14 @@ public class GoToHexDialog extends javax.swing.JDialog {
         });
 
         decimalPositionLabel.setLabelFor(positionSpinner);
-        decimalPositionLabel.setText(bundle.getString("jumpLineLabel.text")); // NOI18N
+        decimalPositionLabel.setText(resourceBundle.getString("jumpLineLabel.text")); // NOI18N
         decimalPositionLabel.setName("decimalPositionLabel"); // NOI18N
 
         positionSpinner.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), Long.valueOf(0L), Long.valueOf(1L)));
         positionSpinner.setName("positionSpinner"); // NOI18N
 
         hexadecimalPositionLabel1.setLabelFor(positionSpinner);
-        hexadecimalPositionLabel1.setText(bundle.getString("GoToHexDialog.hexadecimalPositionLabel1.text")); // NOI18N
+        hexadecimalPositionLabel1.setText(resourceBundle.getString("GoToHexDialog.hexadecimalPositionLabel1.text")); // NOI18N
         hexadecimalPositionLabel1.setName("hexadecimalPositionLabel1"); // NOI18N
 
         hexPositionSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 0, 1));
@@ -202,7 +202,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        jumpButton.setText(bundle.getString("jumpButton.text")); // NOI18N
+        jumpButton.setText(resourceBundle.getString("jumpButton.text")); // NOI18N
         jumpButton.setName("jumpButton"); // NOI18N
         jumpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -210,7 +210,7 @@ public class GoToHexDialog extends javax.swing.JDialog {
             }
         });
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

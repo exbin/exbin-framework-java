@@ -25,6 +25,7 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.exbin.framework.gui.service.dialog.EditConnectionDialog;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -34,6 +35,8 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @author ExBin Project (http://exbin.org)
  */
 public class ConnectionsManagerPanel extends javax.swing.JPanel {
+
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ConnectionsManagerPanel.class);
 
     public ConnectionsManagerPanel() {
         initComponents();
@@ -107,8 +110,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
 
         connectionsControlPanel.setName("connectionsControlPanel"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/panel/resources/ConnectionPanel"); // NOI18N
-        upButton.setText(bundle.getString("upButton.text")); // NOI18N
+        upButton.setText(resourceBundle.getString("upButton.text")); // NOI18N
         upButton.setEnabled(false);
         upButton.setName("upButton"); // NOI18N
         upButton.addActionListener(new java.awt.event.ActionListener() {
@@ -117,7 +119,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             }
         });
 
-        downButton.setText(bundle.getString("downButton.text")); // NOI18N
+        downButton.setText(resourceBundle.getString("downButton.text")); // NOI18N
         downButton.setEnabled(false);
         downButton.setName("downButton"); // NOI18N
         downButton.addActionListener(new java.awt.event.ActionListener() {
@@ -126,8 +128,8 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             }
         });
 
-        addButton.setText(bundle.getString("addButton.text")); // NOI18N
-        addButton.setToolTipText(bundle.getString("addButton.toolTipText")); // NOI18N
+        addButton.setText(resourceBundle.getString("addButton.text")); // NOI18N
+        addButton.setToolTipText(resourceBundle.getString("addButton.toolTipText")); // NOI18N
         addButton.setName("addButton"); // NOI18N
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,7 +137,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             }
         });
 
-        removeButton.setText(bundle.getString("removeButton.text")); // NOI18N
+        removeButton.setText(resourceBundle.getString("removeButton.text")); // NOI18N
         removeButton.setEnabled(false);
         removeButton.setName("removeButton"); // NOI18N
         removeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -144,7 +146,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             }
         });
 
-        selectAllButton.setText(bundle.getString("selectAllButton.text")); // NOI18N
+        selectAllButton.setText(resourceBundle.getString("selectAllButton.text")); // NOI18N
         selectAllButton.setEnabled(false);
         selectAllButton.setName("selectAllButton"); // NOI18N
         selectAllButton.addActionListener(new java.awt.event.ActionListener() {
@@ -153,7 +155,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             }
         });
 
-        modifyButton.setText(bundle.getString("modifyButton.text")); // NOI18N
+        modifyButton.setText(resourceBundle.getString("modifyButton.text")); // NOI18N
         modifyButton.setEnabled(false);
         modifyButton.setName("modifyButton"); // NOI18N
         modifyButton.addActionListener(new java.awt.event.ActionListener() {
@@ -174,7 +176,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
                     .addComponent(removeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
                     .addComponent(selectAllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
                     .addComponent(downButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(upButton, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE))
+                    .addComponent(upButton, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
                 .addContainerGap())
         );
         connectionsControlPanelLayout.setVerticalGroup(

@@ -151,7 +151,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         previewHeaderPanel.setName("previewHeaderPanel"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexColorPanel"); // NOI18N
-        previewLabel.setText(bundle.getString("HexColorPanel.previewLabel.text")); // NOI18N
+        previewLabel.setText(resourceBundle.getString("HexColorPanel.previewLabel.text")); // NOI18N
         previewLabel.setName("previewLabel"); // NOI18N
 
         javax.swing.GroupLayout previewHeaderPanelLayout = new javax.swing.GroupLayout(previewHeaderPanel);
@@ -179,7 +179,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
         controlButtonsPanel.setName("controlButtonsPanel"); // NOI18N
 
-        fillCurrentButton.setText(bundle.getString("HexColorPanel.fillCurrentButton.text")); // NOI18N
+        fillCurrentButton.setText(resourceBundle.getString("HexColorPanel.fillCurrentButton.text")); // NOI18N
         fillCurrentButton.setName("fillCurrentButton"); // NOI18N
         fillCurrentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,7 +187,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
             }
         });
 
-        fillDefaultButton.setText(bundle.getString("HexColorPanel.fillDefaultButton.text")); // NOI18N
+        fillDefaultButton.setText(resourceBundle.getString("HexColorPanel.fillDefaultButton.text")); // NOI18N
         fillDefaultButton.setName("fillDefaultButton"); // NOI18N
         fillDefaultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

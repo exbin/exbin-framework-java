@@ -31,6 +31,7 @@ import javax.swing.ListCellRenderer;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
@@ -57,6 +58,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     private ClosePanelListener closePanelListener = null;
     private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexSearchPanel.class);
 
     public HexSearchPanel(HexPanel hexPanel, boolean replaceMode) {
         initComponents();
@@ -213,7 +215,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         findPanel.setName("findPanel"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexSearchPanel"); // NOI18N
-        findLabel.setText(bundle.getString("HexSearchPanel.findLabel.text")); // NOI18N
+        findLabel.setText(resourceBundle.getString("HexSearchPanel.findLabel.text")); // NOI18N
         findLabel.setName("findLabel"); // NOI18N
 
         searchTypeToolBar.setBorder(null);
@@ -223,7 +225,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         searchTypeToolBar.setName("searchTypeToolBar"); // NOI18N
 
         searchTypeButton.setText("T");
-        searchTypeButton.setToolTipText(bundle.getString("HexSearchPanel.searchTypeButton.toolTipText")); // NOI18N
+        searchTypeButton.setToolTipText(resourceBundle.getString("HexSearchPanel.searchTypeButton.toolTipText")); // NOI18N
         searchTypeButton.setFocusable(false);
         searchTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));
         searchTypeButton.setMinimumSize(new java.awt.Dimension(27, 27));
@@ -301,7 +303,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         separator1.setName("separator1"); // NOI18N
         findToolBar.add(separator1);
 
-        optionsButton.setText(bundle.getString("HexSearchPanel.optionsButton.text")); // NOI18N
+        optionsButton.setText(resourceBundle.getString("HexSearchPanel.optionsButton.text")); // NOI18N
         optionsButton.setFocusable(false);
         optionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         optionsButton.setName("optionsButton"); // NOI18N
@@ -365,7 +367,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
         replacePanel.setName("replacePanel"); // NOI18N
 
-        replaceLabel.setText(bundle.getString("HexSearchPanel.replaceLabel.text")); // NOI18N
+        replaceLabel.setText(resourceBundle.getString("HexSearchPanel.replaceLabel.text")); // NOI18N
         replaceLabel.setName("replaceLabel"); // NOI18N
 
         replaceComboBox.setEditable(true);

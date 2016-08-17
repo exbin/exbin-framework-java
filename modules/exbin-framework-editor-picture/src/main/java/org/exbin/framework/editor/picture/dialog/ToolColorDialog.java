@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  */
 public class ToolColorDialog extends javax.swing.JDialog {
 
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(ToolColorDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ToolColorDialog.class);
 
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
     private final ToolColorPanel toolColorPanel = new ToolColorPanel();
@@ -47,7 +47,7 @@ public class ToolColorDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, okButton, cancelButton);
         pack();
     }
@@ -76,7 +76,7 @@ public class ToolColorDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/picture/dialog/resources/ToolColorDialog"); // NOI18N
-        setTitle(bundle.getString("title")); // NOI18N
+        setTitle(resourceBundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
         setName("Form"); // NOI18N
@@ -87,7 +87,7 @@ public class ToolColorDialog extends javax.swing.JDialog {
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,7 +95,7 @@ public class ToolColorDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText(bundle.getString("okButton.text")); // NOI18N
+        okButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         okButton.setName("okButton"); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

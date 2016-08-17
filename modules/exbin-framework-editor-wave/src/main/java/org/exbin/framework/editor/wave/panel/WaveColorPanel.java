@@ -33,7 +33,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Wave editor color selection panel.
  *
- * @version 0.2.0 2016/01/29
+ * @version 0.2.0 2016/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -47,11 +47,10 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     private ModifiedOptionListener modifiedOptionListener;
     private final WaveColorPanelApi panelColorApi;
-    private final ResourceBundle resourceBundle;
+    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(WaveColorPanel.class);
 
     public WaveColorPanel(WaveColorPanelApi panelColorApi) {
         this.panelColorApi = panelColorApi;
-        resourceBundle = ActionUtils.getResourceBundleByClass(WaveColorPanel.class);
         initComponents();
     }
 
@@ -155,8 +154,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
         setName("Form"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/panel/resources/WaveColorPanel"); // NOI18N
-        waveSelectionColorButton.setText(bundle.getString("WaveColorPanel.selectButton.text")); // NOI18N
+        waveSelectionColorButton.setText(resourceBundle.getString("WaveColorPanel.selectButton.text")); // NOI18N
         waveSelectionColorButton.setName("waveSelectionColorButton"); // NOI18N
         waveSelectionColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,7 +162,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             }
         });
 
-        waveColorLabel.setText(bundle.getString("WaveColorPanel.waveColorLabel.text")); // NOI18N
+        waveColorLabel.setText(resourceBundle.getString("WaveColorPanel.waveColorLabel.text")); // NOI18N
         waveColorLabel.setName("waveColorLabel"); // NOI18N
 
         waveColorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -181,7 +179,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        waveColorButton.setText(bundle.getString("WaveColorPanel.selectButton.text")); // NOI18N
+        waveColorButton.setText(resourceBundle.getString("WaveColorPanel.selectButton.text")); // NOI18N
         waveColorButton.setName("waveColorButton"); // NOI18N
         waveColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -189,16 +187,16 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             }
         });
 
-        waveSelectionColorLabel.setText(bundle.getString("WaveColorPanel.waveSelectionColorLabel.text")); // NOI18N
+        waveSelectionColorLabel.setText(resourceBundle.getString("WaveColorPanel.waveSelectionColorLabel.text")); // NOI18N
         waveSelectionColorLabel.setName("waveSelectionColorLabel"); // NOI18N
 
-        waveBackgroundColorLabel.setText(bundle.getString("WaveColorPanel.waveBackgroundColorLabel.text")); // NOI18N
+        waveBackgroundColorLabel.setText(resourceBundle.getString("WaveColorPanel.waveBackgroundColorLabel.text")); // NOI18N
         waveBackgroundColorLabel.setName("waveBackgroundColorLabel"); // NOI18N
 
-        waveCursorColorLabel.setText(bundle.getString("WaveColorPanel.waveCursorColorLabel.text")); // NOI18N
+        waveCursorColorLabel.setText(resourceBundle.getString("WaveColorPanel.waveCursorColorLabel.text")); // NOI18N
         waveCursorColorLabel.setName("waveCursorColorLabel"); // NOI18N
 
-        fillDefaultButton.setText(bundle.getString("WaveColorPanel.fillDefaultButton.text")); // NOI18N
+        fillDefaultButton.setText(resourceBundle.getString("WaveColorPanel.fillDefaultButton.text")); // NOI18N
         fillDefaultButton.setName("fillDefaultButton"); // NOI18N
         fillDefaultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -206,7 +204,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             }
         });
 
-        fillCurrentButton.setText(bundle.getString("WaveColorPanel.fillCurrentButton.text")); // NOI18N
+        fillCurrentButton.setText(resourceBundle.getString("WaveColorPanel.fillCurrentButton.text")); // NOI18N
         fillCurrentButton.setName("fillCurrentButton"); // NOI18N
         fillCurrentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -228,7 +226,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        waveCursorColorButton.setText(bundle.getString("WaveColorPanel.selectButton.text")); // NOI18N
+        waveCursorColorButton.setText(resourceBundle.getString("WaveColorPanel.selectButton.text")); // NOI18N
         waveCursorColorButton.setName("waveCursorColorButton"); // NOI18N
         waveCursorColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -264,7 +262,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        waveBackgroundColorButton.setText(bundle.getString("WaveColorPanel.selectButton.text")); // NOI18N
+        waveBackgroundColorButton.setText(resourceBundle.getString("WaveColorPanel.selectButton.text")); // NOI18N
         waveBackgroundColorButton.setName("waveBackgroundColorButton"); // NOI18N
         waveBackgroundColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,8 +270,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             }
         });
 
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/panel/Bundle"); // NOI18N
-        waveFillColorLabel.setText(bundle1.getString("WaveColorPanel.waveFillColorLabel.text")); // NOI18N
+        waveFillColorLabel.setText(resourceBundle.getString("WaveColorPanel.waveFillColorLabel.text")); // NOI18N
         waveFillColorLabel.setName("waveFillColorLabel"); // NOI18N
 
         waveFillColorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -290,7 +287,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        waveFillColorButton.setText(bundle1.getString("WaveColorPanel.waveFillColorButton.text")); // NOI18N
+        waveFillColorButton.setText(resourceBundle.getString("WaveColorPanel.waveFillColorButton.text")); // NOI18N
         waveFillColorButton.setName("waveFillColorButton"); // NOI18N
         waveFillColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -298,7 +295,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             }
         });
 
-        waveCursorWaveColorLabel.setText(bundle1.getString("WaveColorPanel.waveCursorWaveColorLabel.text")); // NOI18N
+        waveCursorWaveColorLabel.setText(resourceBundle.getString("WaveColorPanel.waveCursorWaveColorLabel.text")); // NOI18N
         waveCursorWaveColorLabel.setName("waveCursorWaveColorLabel"); // NOI18N
 
         waveCursorWaveColorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -315,7 +312,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        waveCursorWaveColorButton.setText(bundle1.getString("WaveColorPanel.waveCursorWaveColorButton.text")); // NOI18N
+        waveCursorWaveColorButton.setText(resourceBundle.getString("WaveColorPanel.waveCursorWaveColorButton.text")); // NOI18N
         waveCursorWaveColorButton.setName("waveCursorWaveColorButton"); // NOI18N
         waveCursorWaveColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -363,7 +360,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
                                 .addComponent(fillDefaultButton))
                             .addComponent(waveCursorColorLabel)
                             .addComponent(waveCursorWaveColorLabel))
-                        .addGap(0, 155, Short.MAX_VALUE))
+                        .addGap(0, 308, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(waveCursorWaveColorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

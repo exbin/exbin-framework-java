@@ -45,7 +45,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 public class FindHexDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(FindHexDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(FindHexDialog.class);
 
     private final CodeArea hexadecimalRenderer = new CodeArea();
     private HexSearchComboBoxPanel comboBoxEditorComponent;
@@ -61,7 +61,7 @@ public class FindHexDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
 
         hexadecimalRenderer.setShowHeader(false);
         hexadecimalRenderer.setShowLineNumbers(false);
@@ -168,18 +168,18 @@ public class FindHexDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/resources/FindHexDialog"); // NOI18N
-        setTitle(bundle.getString("Form.title")); // NOI18N
+        setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N
 
         mainPanel.setName("mainPanel"); // NOI18N
         mainPanel.setLayout(new java.awt.BorderLayout());
 
-        findPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("findPanel.border.title"))); // NOI18N
+        findPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("findPanel.border.title"))); // NOI18N
         findPanel.setName("findPanel"); // NOI18N
 
-        findTextMultilineButton.setText(bundle.getString("FindHexDialog.findTextMultilineButton.text")); // NOI18N
-        findTextMultilineButton.setToolTipText(bundle.getString("FindHexDialog.findTextMultilineButton.toolTipText")); // NOI18N
+        findTextMultilineButton.setText(resourceBundle.getString("FindHexDialog.findTextMultilineButton.text")); // NOI18N
+        findTextMultilineButton.setToolTipText(resourceBundle.getString("FindHexDialog.findTextMultilineButton.toolTipText")); // NOI18N
         findTextMultilineButton.setName("findTextMultilineButton"); // NOI18N
         findTextMultilineButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,21 +193,21 @@ public class FindHexDialog extends javax.swing.JDialog {
         findComboBox.setPreferredSize(new java.awt.Dimension(136, 30));
 
         searchFromCursorCheckBox.setSelected(true);
-        searchFromCursorCheckBox.setText(bundle.getString("searchFromCursorCheckBox.text")); // NOI18N
+        searchFromCursorCheckBox.setText(resourceBundle.getString("searchFromCursorCheckBox.text")); // NOI18N
         searchFromCursorCheckBox.setName("searchFromCursorCheckBox"); // NOI18N
 
-        matchCaseCheckBox.setText(bundle.getString("matchCaseCheckBox.text")); // NOI18N
+        matchCaseCheckBox.setText(resourceBundle.getString("matchCaseCheckBox.text")); // NOI18N
         matchCaseCheckBox.setName("matchCaseCheckBox"); // NOI18N
 
         multipleMatchesCheckBox.setSelected(true);
-        multipleMatchesCheckBox.setText(bundle.getString("FindHexDialog.multipleMatchesCheckBox.text")); // NOI18N
+        multipleMatchesCheckBox.setText(resourceBundle.getString("FindHexDialog.multipleMatchesCheckBox.text")); // NOI18N
         multipleMatchesCheckBox.setName("multipleMatchesCheckBox"); // NOI18N
 
-        findLabel.setText(bundle.getString("FindHexDialog.findLabel.text")); // NOI18N
+        findLabel.setText(resourceBundle.getString("FindHexDialog.findLabel.text")); // NOI18N
         findLabel.setName("findLabel"); // NOI18N
 
-        searchTypeButton.setText(bundle.getString("FindHexDialog.searchTypeButton.text")); // NOI18N
-        searchTypeButton.setToolTipText(bundle.getString("FindHexDialog.searchTypeButton.toolTipText")); // NOI18N
+        searchTypeButton.setText(resourceBundle.getString("FindHexDialog.searchTypeButton.text")); // NOI18N
+        searchTypeButton.setToolTipText(resourceBundle.getString("FindHexDialog.searchTypeButton.toolTipText")); // NOI18N
         searchTypeButton.setFocusable(false);
         searchTypeButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
         searchTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));
@@ -262,10 +262,10 @@ public class FindHexDialog extends javax.swing.JDialog {
 
         mainPanel.add(findPanel, java.awt.BorderLayout.PAGE_START);
 
-        replacePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("replacePanel.border.title"))); // NOI18N
+        replacePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("replacePanel.border.title"))); // NOI18N
         replacePanel.setName("replacePanel"); // NOI18N
 
-        performReplaceCheckBox.setText(bundle.getString("performReplaceCheckBox.text")); // NOI18N
+        performReplaceCheckBox.setText(resourceBundle.getString("performReplaceCheckBox.text")); // NOI18N
         performReplaceCheckBox.setEnabled(false);
         performReplaceCheckBox.setName("performReplaceCheckBox"); // NOI18N
         performReplaceCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -274,13 +274,13 @@ public class FindHexDialog extends javax.swing.JDialog {
             }
         });
 
-        textToReplaceLabel.setText(bundle.getString("textToReplaceLabel.text")); // NOI18N
+        textToReplaceLabel.setText(resourceBundle.getString("textToReplaceLabel.text")); // NOI18N
         textToReplaceLabel.setName("textToReplaceLabel"); // NOI18N
 
         textToReplaceTextField.setEnabled(false);
         textToReplaceTextField.setName("textToReplaceTextField"); // NOI18N
 
-        replaceAllMatchesCheckBox.setText(bundle.getString("replaceAllMatchesCheckBox.text")); // NOI18N
+        replaceAllMatchesCheckBox.setText(resourceBundle.getString("replaceAllMatchesCheckBox.text")); // NOI18N
         replaceAllMatchesCheckBox.setEnabled(false);
         replaceAllMatchesCheckBox.setName("replaceAllMatchesCheckBox"); // NOI18N
 
@@ -316,7 +316,7 @@ public class FindHexDialog extends javax.swing.JDialog {
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        findButton.setText(bundle.getString("findButton.text")); // NOI18N
+        findButton.setText(resourceBundle.getString("findButton.text")); // NOI18N
         findButton.setName("findButton"); // NOI18N
         findButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -324,7 +324,7 @@ public class FindHexDialog extends javax.swing.JDialog {
             }
         });
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

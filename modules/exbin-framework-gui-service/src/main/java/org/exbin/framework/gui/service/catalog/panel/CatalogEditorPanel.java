@@ -83,6 +83,7 @@ import org.exbin.framework.gui.service.catalog.dialog.CatalogAddItemDialog;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
 import org.exbin.framework.gui.service.catalog.panel.CatalogNodesTreeModel.CatalogNodesTreeItem;
 import org.exbin.framework.gui.service.panel.CatalogManagerPanelable;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -112,6 +113,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
 
     private Map<String, ActionListener> actionListenerMap = new HashMap<>();
     private MenuManagement menuManagement;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogEditorPanel.class);
 
     public CatalogEditorPanel() {
         nodesModel = new CatalogNodesTreeModel();
@@ -225,9 +227,8 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
 
         catalogTreePopupMenu.setName("catalogTreePopupMenu"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/catalog/panel/resources/CatalogItemsTreePanel"); // NOI18N
-        popupAddMenuItem.setText(bundle.getString("addMenuItem.text")); // NOI18N
-        popupAddMenuItem.setToolTipText(bundle.getString("addMenuItem.toolTipText")); // NOI18N
+        popupAddMenuItem.setText(resourceBundle.getString("addMenuItem.text")); // NOI18N
+        popupAddMenuItem.setToolTipText(resourceBundle.getString("addMenuItem.toolTipText")); // NOI18N
         popupAddMenuItem.setName("popupAddMenuItem"); // NOI18N
         popupAddMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -236,8 +237,8 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         });
         catalogTreePopupMenu.add(popupAddMenuItem);
 
-        popupEditMenuItem.setText(bundle.getString("editMenuItem.text")); // NOI18N
-        popupEditMenuItem.setToolTipText(bundle.getString("editMenuItem,toolTipText")); // NOI18N
+        popupEditMenuItem.setText(resourceBundle.getString("editMenuItem.text")); // NOI18N
+        popupEditMenuItem.setToolTipText(resourceBundle.getString("editMenuItem.toolTipText")); // NOI18N
         popupEditMenuItem.setName("popupEditMenuItem"); // NOI18N
         popupEditMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -246,8 +247,8 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         });
         catalogTreePopupMenu.add(popupEditMenuItem);
 
-        popupRefreshMenuItem.setText(bundle.getString("refreshMenuItem,text")); // NOI18N
-        popupRefreshMenuItem.setToolTipText(bundle.getString("refreshMenuItem,toolTipText")); // NOI18N
+        popupRefreshMenuItem.setText(resourceBundle.getString("refreshMenuItem.text")); // NOI18N
+        popupRefreshMenuItem.setToolTipText(resourceBundle.getString("refreshMenuItem.toolTipText")); // NOI18N
         popupRefreshMenuItem.setName("popupRefreshMenuItem"); // NOI18N
         popupRefreshMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -262,8 +263,8 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         jSeparator2.setName("jSeparator2"); // NOI18N
         catalogTreePopupMenu.add(jSeparator2);
 
-        popupImportItemMenuItem.setText(bundle.getString("importItemMenuItem,text")); // NOI18N
-        popupImportItemMenuItem.setToolTipText(bundle.getString("importItemMenuItem,toolTipText")); // NOI18N
+        popupImportItemMenuItem.setText(resourceBundle.getString("importItemMenuItem.text")); // NOI18N
+        popupImportItemMenuItem.setToolTipText(resourceBundle.getString("importItemMenuItem.toolTipText")); // NOI18N
         popupImportItemMenuItem.setName("popupImportItemMenuItem"); // NOI18N
         popupImportItemMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,8 +273,8 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         });
         catalogTreePopupMenu.add(popupImportItemMenuItem);
 
-        popupExportItemMenuItem.setText(bundle.getString("exportItemMenuItem,text")); // NOI18N
-        popupExportItemMenuItem.setToolTipText(bundle.getString("exportItemMenuItem,toolTipText")); // NOI18N
+        popupExportItemMenuItem.setText(resourceBundle.getString("exportItemMenuItem.text")); // NOI18N
+        popupExportItemMenuItem.setToolTipText(resourceBundle.getString("exportItemMenuItem.toolTipText")); // NOI18N
         popupExportItemMenuItem.setName("popupExportItemMenuItem"); // NOI18N
         popupExportItemMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -29,7 +29,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class FindTextDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(FindTextDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(FindTextDialog.class);
 
     public FindTextDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -39,7 +39,7 @@ public class FindTextDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, findButton, cancelButton);
         pack();
     }
@@ -78,25 +78,25 @@ public class FindTextDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/FindTextDialog"); // NOI18N
-        setTitle(bundle.getString("Form.title")); // NOI18N
+        setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        findPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("findPanel.border.title"))); // NOI18N
+        findPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("findPanel.border.title"))); // NOI18N
         findPanel.setName("findPanel"); // NOI18N
 
-        textToFindLabel.setText(bundle.getString("textToFindLabel.text")); // NOI18N
+        textToFindLabel.setText(resourceBundle.getString("textToFindLabel.text")); // NOI18N
         textToFindLabel.setName("textToFindLabel"); // NOI18N
 
         textToFindjTextField.setName("textToFindjTextField"); // NOI18N
 
         searchFromCursorCheckBox.setSelected(true);
-        searchFromCursorCheckBox.setText(bundle.getString("searchFromCursorCheckBox.text")); // NOI18N
+        searchFromCursorCheckBox.setText(resourceBundle.getString("searchFromCursorCheckBox.text")); // NOI18N
         searchFromCursorCheckBox.setName("searchFromCursorCheckBox"); // NOI18N
 
-        matchCaseCheckBox.setText(bundle.getString("matchCaseCheckBox.text")); // NOI18N
+        matchCaseCheckBox.setText(resourceBundle.getString("matchCaseCheckBox.text")); // NOI18N
         matchCaseCheckBox.setEnabled(false);
         matchCaseCheckBox.setName("matchCaseCheckBox"); // NOI18N
 
@@ -126,10 +126,10 @@ public class FindTextDialog extends javax.swing.JDialog {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        replacePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("replacePanel.border.title"))); // NOI18N
+        replacePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("replacePanel.border.title"))); // NOI18N
         replacePanel.setName("replacePanel"); // NOI18N
 
-        performReplaceCheckBox.setText(bundle.getString("performReplaceCheckBox.text")); // NOI18N
+        performReplaceCheckBox.setText(resourceBundle.getString("performReplaceCheckBox.text")); // NOI18N
         performReplaceCheckBox.setName("performReplaceCheckBox"); // NOI18N
         performReplaceCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -137,13 +137,13 @@ public class FindTextDialog extends javax.swing.JDialog {
             }
         });
 
-        textToReplaceLabel.setText(bundle.getString("textToReplaceLabel.text")); // NOI18N
+        textToReplaceLabel.setText(resourceBundle.getString("textToReplaceLabel.text")); // NOI18N
         textToReplaceLabel.setName("textToReplaceLabel"); // NOI18N
 
         textToReplaceTextField.setEnabled(false);
         textToReplaceTextField.setName("textToReplaceTextField"); // NOI18N
 
-        replaceAllMatchesCheckBox.setText(bundle.getString("replaceAllMatchesCheckBox.text")); // NOI18N
+        replaceAllMatchesCheckBox.setText(resourceBundle.getString("replaceAllMatchesCheckBox.text")); // NOI18N
         replaceAllMatchesCheckBox.setEnabled(false);
         replaceAllMatchesCheckBox.setName("replaceAllMatchesCheckBox"); // NOI18N
 
@@ -202,7 +202,7 @@ public class FindTextDialog extends javax.swing.JDialog {
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        findButton.setText(bundle.getString("findButton.text")); // NOI18N
+        findButton.setText(resourceBundle.getString("findButton.text")); // NOI18N
         findButton.setName("findButton"); // NOI18N
         findButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -210,7 +210,7 @@ public class FindTextDialog extends javax.swing.JDialog {
             }
         });
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

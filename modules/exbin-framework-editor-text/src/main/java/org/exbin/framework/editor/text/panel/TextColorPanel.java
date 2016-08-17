@@ -165,7 +165,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
         );
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextColorPanel"); // NOI18N
-        selectTextColorButton.setText(bundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectTextColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
         selectTextColorButton.setName("selectTextColorButton"); // NOI18N
         selectTextColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,7 +187,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        selectTextBackgroundColorButton.setText(bundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectTextBackgroundColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
         selectTextBackgroundColorButton.setName("selectTextBackgroundColorButton"); // NOI18N
         selectTextBackgroundColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,7 +209,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        selectSelectionTextColorButton.setText(bundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectSelectionTextColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
         selectSelectionTextColorButton.setName("selectSelectionTextColorButton"); // NOI18N
         selectSelectionTextColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -231,7 +231,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        selectSelectionBackgroundColorButton.setText(bundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectSelectionBackgroundColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
         selectSelectionBackgroundColorButton.setName("selectSelectionBackgroundColorButton"); // NOI18N
         selectSelectionBackgroundColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -253,7 +253,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        selectFoundBackgroundColorButton.setText(bundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectFoundBackgroundColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
         selectFoundBackgroundColorButton.setName("selectFoundBackgroundColorButton"); // NOI18N
         selectFoundBackgroundColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -261,19 +261,19 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
             }
         });
 
-        textColorLabel.setText(bundle.getString("TextColorPanel.textColorLabel.text")); // NOI18N
+        textColorLabel.setText(resourceBundle.getString("TextColorPanel.textColorLabel.text")); // NOI18N
         textColorLabel.setName("textColorLabel"); // NOI18N
 
-        textBackgroundColorLabel.setText(bundle.getString("TextColorPanel.textBackgroundColorLabel.text")); // NOI18N
+        textBackgroundColorLabel.setText(resourceBundle.getString("TextColorPanel.textBackgroundColorLabel.text")); // NOI18N
         textBackgroundColorLabel.setName("textBackgroundColorLabel"); // NOI18N
 
-        selectionTextColorLabel.setText(bundle.getString("TextColorPanel.selectionTextColorLabel.text")); // NOI18N
+        selectionTextColorLabel.setText(resourceBundle.getString("TextColorPanel.selectionTextColorLabel.text")); // NOI18N
         selectionTextColorLabel.setName("selectionTextColorLabel"); // NOI18N
 
-        selectionBackgroundColorLabel.setText(bundle.getString("TextColorPanel.selectionBackgroundColorLabel.text")); // NOI18N
+        selectionBackgroundColorLabel.setText(resourceBundle.getString("TextColorPanel.selectionBackgroundColorLabel.text")); // NOI18N
         selectionBackgroundColorLabel.setName("selectionBackgroundColorLabel"); // NOI18N
 
-        foundBackgroundColorLabel.setText(bundle.getString("TextColorPanel.foundBackgroundColorLabel.text")); // NOI18N
+        foundBackgroundColorLabel.setText(resourceBundle.getString("TextColorPanel.foundBackgroundColorLabel.text")); // NOI18N
         foundBackgroundColorLabel.setName("foundBackgroundColorLabel"); // NOI18N
 
         textColorsPreviewPanel.setName("textColorsPreviewPanel"); // NOI18N
@@ -281,7 +281,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
         normalTextLabel.setBackground(new java.awt.Color(255, 255, 255));
         normalTextLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        normalTextLabel.setText(bundle.getString("TextColorPanel.normalTextLabel.text")); // NOI18N
+        normalTextLabel.setText(resourceBundle.getString("TextColorPanel.normalTextLabel.text")); // NOI18N
         normalTextLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         normalTextLabel.setName("normalTextLabel"); // NOI18N
         normalTextLabel.setOpaque(true);
@@ -289,7 +289,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
         selectedTextLabel.setBackground(new java.awt.Color(255, 255, 255));
         selectedTextLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        selectedTextLabel.setText(bundle.getString("TextColorPanel.selectedTextLabel.text")); // NOI18N
+        selectedTextLabel.setText(resourceBundle.getString("TextColorPanel.selectedTextLabel.text")); // NOI18N
         selectedTextLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         selectedTextLabel.setName("selectedTextLabel"); // NOI18N
         selectedTextLabel.setOpaque(true);
@@ -297,7 +297,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
         foundTextLabel.setBackground(new java.awt.Color(255, 255, 255));
         foundTextLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        foundTextLabel.setText(bundle.getString("TextColorPanel.foundTextLabel.text")); // NOI18N
+        foundTextLabel.setText(resourceBundle.getString("TextColorPanel.foundTextLabel.text")); // NOI18N
         foundTextLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         foundTextLabel.setName("foundTextLabel"); // NOI18N
         foundTextLabel.setOpaque(true);
@@ -305,7 +305,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
         controlButtonsPanel.setName("controlButtonsPanel"); // NOI18N
 
-        fillCurrentButton.setText(bundle.getString("TextColorPanel.fillCurrentButton.text")); // NOI18N
+        fillCurrentButton.setText(resourceBundle.getString("TextColorPanel.fillCurrentButton.text")); // NOI18N
         fillCurrentButton.setName("fillCurrentButton"); // NOI18N
         fillCurrentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -313,7 +313,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
             }
         });
 
-        fillDefaultButton.setText(bundle.getString("TextColorPanel.fillDefaultButton.text")); // NOI18N
+        fillDefaultButton.setText(resourceBundle.getString("TextColorPanel.fillDefaultButton.text")); // NOI18N
         fillDefaultButton.setName("fillDefaultButton"); // NOI18N
         fillDefaultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -101,7 +101,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         setLayout(new java.awt.BorderLayout());
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/options/panel/resources/MainOptionsPanel"); // NOI18N
-        visualThemeLabel.setText(bundle.getString("MainOptionsPanel.visualThemeLabel.text")); // NOI18N
+        visualThemeLabel.setText(resourceBundle.getString("MainOptionsPanel.visualThemeLabel.text")); // NOI18N
 
         themeComboBox.setModel(themesComboBoxModel);
         themeComboBox.addItemListener(new java.awt.event.ItemListener() {
@@ -118,7 +118,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
             }
         });
 
-        languageLabel.setText(bundle.getString("MainOptionsPanel.languageLabel.text")); // NOI18N
+        languageLabel.setText(resourceBundle.getString("MainOptionsPanel.languageLabel.text")); // NOI18N
 
         javax.swing.GroupLayout mainOptionsBasicPanelLayout = new javax.swing.GroupLayout(mainOptionsBasicPanel);
         mainOptionsBasicPanel.setLayout(mainOptionsBasicPanelLayout);
@@ -149,7 +149,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
 
         add(mainOptionsBasicPanel, java.awt.BorderLayout.NORTH);
 
-        requireRestartLabel.setText(bundle.getString("MainOptionsPanel.requireRestartLabel.text")); // NOI18N
+        requireRestartLabel.setText(resourceBundle.getString("MainOptionsPanel.requireRestartLabel.text")); // NOI18N
 
         javax.swing.GroupLayout mainOptionsNotePanelLayout = new javax.swing.GroupLayout(mainOptionsNotePanel);
         mainOptionsNotePanel.setLayout(mainOptionsNotePanelLayout);
@@ -306,6 +306,12 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
 
     public void setLanguageLocales(List<Locale> locales) {
         languageLocales.clear();
+        languageLocales.add(Locale.ROOT);
         languageLocales.addAll(locales);
+        languageComboBoxModel.removeAllElements();
+        for (Locale language : languageLocales) {
+            languageComboBoxModel.addElement(language);
+        }
+        languageComboBox.revalidate();
     }
 }

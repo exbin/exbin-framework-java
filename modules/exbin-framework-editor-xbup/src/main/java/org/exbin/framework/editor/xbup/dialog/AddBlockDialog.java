@@ -60,7 +60,7 @@ public class AddBlockDialog extends javax.swing.JDialog {
     private XBBlockType contextBlockType = null;
     private XBBlockType catalogBlockType = null;
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(AddBlockDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(AddBlockDialog.class);
 
     public AddBlockDialog(java.awt.Frame parent, boolean modal, XBACatalog catalog) {
         super(parent, modal);
@@ -76,7 +76,7 @@ public class AddBlockDialog extends javax.swing.JDialog {
         ((CardLayout) mainPanel.getLayout()).show(mainPanel, "type");
 
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, okButton, cancelButton);
         pack();
     }
@@ -112,20 +112,20 @@ public class AddBlockDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/AddBlockDialog"); // NOI18N
-        setTitle(bundle.getString("title")); // NOI18N
+        setTitle(resourceBundle.getString("title")); // NOI18N
         setModal(true);
 
         mainPanel.setLayout(new java.awt.CardLayout());
 
-        typePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("typePanel.border.title"))); // NOI18N
+        typePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("typePanel.border.title"))); // NOI18N
 
         blockTypeButtonGroup.add(dataRadioButton);
-        dataRadioButton.setText(bundle.getString("dataRadioButton.text")); // NOI18N
+        dataRadioButton.setText(resourceBundle.getString("dataRadioButton.text")); // NOI18N
         dataRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         blockTypeButtonGroup.add(basicTypeRadioButton);
         basicTypeRadioButton.setSelected(true);
-        basicTypeRadioButton.setText(bundle.getString("basicTypeRadioButton.text")); // NOI18N
+        basicTypeRadioButton.setText(resourceBundle.getString("basicTypeRadioButton.text")); // NOI18N
         basicTypeRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         basicTypeRadioButton.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -134,7 +134,7 @@ public class AddBlockDialog extends javax.swing.JDialog {
         });
 
         blockTypeButtonGroup.add(contextTypeRadioButton);
-        contextTypeRadioButton.setText(bundle.getString("contextTypeRadioButton.text")); // NOI18N
+        contextTypeRadioButton.setText(resourceBundle.getString("contextTypeRadioButton.text")); // NOI18N
         contextTypeRadioButton.setEnabled(false);
         contextTypeRadioButton.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -142,7 +142,7 @@ public class AddBlockDialog extends javax.swing.JDialog {
             }
         });
 
-        contextTypeSelectButton.setText(bundle.getString("contextTypeSelectButton.text")); // NOI18N
+        contextTypeSelectButton.setText(resourceBundle.getString("contextTypeSelectButton.text")); // NOI18N
         contextTypeSelectButton.setEnabled(false);
         contextTypeSelectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,7 +153,7 @@ public class AddBlockDialog extends javax.swing.JDialog {
         contextTypeTextField.setEditable(false);
 
         blockTypeButtonGroup.add(catalogTypeRadioButton);
-        catalogTypeRadioButton.setText(bundle.getString("catalogTypeRadioButton.text")); // NOI18N
+        catalogTypeRadioButton.setText(resourceBundle.getString("catalogTypeRadioButton.text")); // NOI18N
         catalogTypeRadioButton.setEnabled(false);
         catalogTypeRadioButton.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -161,7 +161,7 @@ public class AddBlockDialog extends javax.swing.JDialog {
             }
         });
 
-        catalogTypeSelectButton.setText(bundle.getString("catalogTypeSelectButton.text")); // NOI18N
+        catalogTypeSelectButton.setText(resourceBundle.getString("catalogTypeSelectButton.text")); // NOI18N
         catalogTypeSelectButton.setEnabled(false);
         catalogTypeSelectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -225,9 +225,9 @@ public class AddBlockDialog extends javax.swing.JDialog {
         mainPanel.add(typePanel, "type");
 
         generateDeclarationCheckBox.setSelected(true);
-        generateDeclarationCheckBox.setText(bundle.getString("generateDeclarationCheckBox.text")); // NOI18N
+        generateDeclarationCheckBox.setText(resourceBundle.getString("generateDeclarationCheckBox.text")); // NOI18N
 
-        prefillCheckBox.setText(bundle.getString("prefillCheckBox.text")); // NOI18N
+        prefillCheckBox.setText(resourceBundle.getString("prefillCheckBox.text")); // NOI18N
         prefillCheckBox.setEnabled(false);
 
         org.jdesktop.layout.GroupLayout conditionsPanelLayout = new org.jdesktop.layout.GroupLayout(conditionsPanel);
@@ -257,21 +257,21 @@ public class AddBlockDialog extends javax.swing.JDialog {
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        okButton.setText(bundle.getString("okButton.text")); // NOI18N
+        okButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
-        nextButton.setText(bundle.getString("nextButton.text")); // NOI18N
+        nextButton.setText(resourceBundle.getString("nextButton.text")); // NOI18N
         nextButton.setEnabled(false);
         nextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -279,7 +279,7 @@ public class AddBlockDialog extends javax.swing.JDialog {
             }
         });
 
-        prevButton.setText(bundle.getString("prevButton.text")); // NOI18N
+        prevButton.setText(resourceBundle.getString("prevButton.text")); // NOI18N
         prevButton.setEnabled(false);
         prevButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

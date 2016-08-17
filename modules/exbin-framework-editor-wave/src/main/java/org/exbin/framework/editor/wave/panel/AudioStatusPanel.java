@@ -18,6 +18,7 @@ package org.exbin.framework.editor.wave.panel;
 
 import javax.swing.ImageIcon;
 import org.exbin.framework.editor.wave.AudioControlApi;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Audio editor status panel.
@@ -28,6 +29,7 @@ import org.exbin.framework.editor.wave.AudioControlApi;
 public class AudioStatusPanel extends javax.swing.JPanel {
 
     private final AudioControlApi playControl;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(AudioStatusPanel.class);
 
     public AudioStatusPanel(AudioControlApi playControl) {
         this.playControl = playControl;
@@ -53,12 +55,11 @@ public class AudioStatusPanel extends javax.swing.JPanel {
         currentTimeTextField.setEditable(false);
         currentTimeTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         currentTimeTextField.setText("0:00.00"); // NOI18N
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/panel/Bundle"); // NOI18N
-        currentTimeTextField.setToolTipText(bundle.getString("AudioStatusPanel.currentTimeTextField.toolTipText")); // NOI18N
+        currentTimeTextField.setToolTipText(resourceBundle.getString("AudioStatusPanel.currentTimeTextField.toolTipText")); // NOI18N
         currentTimeTextField.setName("currentTimeTextField"); // NOI18N
 
         playButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/editor/wave/resources/images/actions/play16.png"))); // NOI18N
-        playButton.setToolTipText(bundle.getString("AudioStatusPanel.playButton.toolTipText")); // NOI18N
+        playButton.setToolTipText(resourceBundle.getString("AudioStatusPanel.playButton.toolTipText")); // NOI18N
         playButton.setFocusable(false);
         playButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         playButton.setName("playButton"); // NOI18N
@@ -69,7 +70,7 @@ public class AudioStatusPanel extends javax.swing.JPanel {
             }
         });
 
-        volumeSlider.setToolTipText(bundle.getString("AudioStatusPanel.volumeSlider.toolTipText")); // NOI18N
+        volumeSlider.setToolTipText(resourceBundle.getString("AudioStatusPanel.volumeSlider.toolTipText")); // NOI18N
         volumeSlider.setValue(100);
         volumeSlider.setFocusable(false);
         volumeSlider.setName("volumeSlider"); // NOI18N
@@ -80,7 +81,7 @@ public class AudioStatusPanel extends javax.swing.JPanel {
         });
 
         stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/editor/wave/resources/images/actions/stop16.png"))); // NOI18N
-        stopButton.setToolTipText(bundle.getString("AudioStatusPanel.stopButton.toolTipText")); // NOI18N
+        stopButton.setToolTipText(resourceBundle.getString("AudioStatusPanel.stopButton.toolTipText")); // NOI18N
         stopButton.setFocusable(false);
         stopButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         stopButton.setName("stopButton"); // NOI18N

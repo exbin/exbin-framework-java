@@ -58,7 +58,7 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
     private XBACatalog catalog;
     private final CatalogItemInfoPanel catalogItemPanel;
     private boolean devMode = false;
-    private final ResourceBundle bundle = ActionUtils.getResourceBundleByClass(BlockPropertiesDialog.class);
+    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(BlockPropertiesDialog.class);
 
     public BlockPropertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -71,7 +71,7 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, closeButton);
     }
 
@@ -108,7 +108,7 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
         closeButton = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/BlockPropertiesDialog"); // NOI18N
-        copyLinkMenuItem.setText(bundle.getString("copyLinkMenuItem.text")); // NOI18N
+        copyLinkMenuItem.setText(resourceBundle.getString("copyLinkMenuItem.text")); // NOI18N
         copyLinkMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 copyLinkMenuItemActionPerformed(evt);
@@ -117,40 +117,40 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
         linkPopupMenu.add(copyLinkMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("title")); // NOI18N
+        setTitle(resourceBundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
 
-        nodeTypeLabel.setText(bundle.getString("nodeTypeLabel.text")); // NOI18N
+        nodeTypeLabel.setText(resourceBundle.getString("nodeTypeLabel.text")); // NOI18N
 
         nodeTypeTextField.setEditable(false);
 
-        dataModeLabel.setText(bundle.getString("dataModeLabel.text")); // NOI18N
+        dataModeLabel.setText(resourceBundle.getString("dataModeLabel.text")); // NOI18N
 
         dataModeTextField.setEditable(false);
 
-        terminationModeLabel.setText(bundle.getString("terminationModeLabel.text")); // NOI18N
+        terminationModeLabel.setText(resourceBundle.getString("terminationModeLabel.text")); // NOI18N
 
         terminationModeTextField.setEditable(false);
 
-        nodeSizeLabel.setText(bundle.getString("nodeSizeLabel.text")); // NOI18N
+        nodeSizeLabel.setText(resourceBundle.getString("nodeSizeLabel.text")); // NOI18N
 
         nodeSizeTextField.setEditable(false);
 
-        attributesCountLabel.setText(bundle.getString("attributesCountLabel.text")); // NOI18N
+        attributesCountLabel.setText(resourceBundle.getString("attributesCountLabel.text")); // NOI18N
 
         attributesCountTextField.setEditable(false);
 
-        childrenCountLabel.setText(bundle.getString("childrenCountLabel.text")); // NOI18N
+        childrenCountLabel.setText(resourceBundle.getString("childrenCountLabel.text")); // NOI18N
 
         childrenCountTextField.setEditable(false);
 
-        webCatalogLabel.setText(bundle.getString("webCatalogLabell.text")); // NOI18N
+        webCatalogLabel.setText(resourceBundle.getString("webCatalogLabell.text")); // NOI18N
 
         webCatalogLinkScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         webCatalogLinkScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         webCatalogLinkLabel.setForeground(java.awt.Color.blue);
-        webCatalogLinkLabel.setText(bundle.getString("webCatalogLabel.text")); // NOI18N
+        webCatalogLinkLabel.setText(resourceBundle.getString("webCatalogLabel.text")); // NOI18N
         webCatalogLinkLabel.setComponentPopupMenu(linkPopupMenu);
         HashMap<TextAttribute, Object> attribs = new HashMap<TextAttribute, Object>();
         attribs.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);
@@ -221,14 +221,14 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
                 .addContainerGap(82, Short.MAX_VALUE))
         );
 
-        tabbedPane.addTab(bundle.getString("generalPanel.tabTitle"), generalPanel); // NOI18N
+        tabbedPane.addTab(resourceBundle.getString("generalPanel.tabTitle"), generalPanel); // NOI18N
 
         typePanel.setLayout(new java.awt.BorderLayout());
-        tabbedPane.addTab(bundle.getString("typePanel.tabTitle"), typePanel); // NOI18N
+        tabbedPane.addTab(resourceBundle.getString("typePanel.tabTitle"), typePanel); // NOI18N
 
         getContentPane().add(tabbedPane, java.awt.BorderLayout.CENTER);
 
-        closeButton.setText(bundle.getString("okButton.text")); // NOI18N
+        closeButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeButtonActionPerformed(evt);
@@ -364,7 +364,7 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
 
     private String getCaption(XBTBlock node) {
         if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
-            return bundle.getString("node_caption_data");
+            return resourceBundle.getString("node_caption_data");
         }
 
         XBBlockType blockType = node.getBlockType();
@@ -373,15 +373,15 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
 
             XBCBlockDecl blockDecl = node instanceof XBTTreeNode ? (XBCBlockDecl) ((XBTTreeNode) node).getBlockDecl() : null;
             if (blockDecl == null) {
-                return bundle.getString("node_caption_undefined");
+                return resourceBundle.getString("node_caption_undefined");
             }
             XBCBlockSpec blockSpec = blockDecl.getBlockSpecRev().getParent();
             return nameService.getDefaultText(blockSpec);
         }
         if (blockType == null) {
-            return bundle.getString("node_caption_unknown");
+            return resourceBundle.getString("node_caption_unknown");
         }
 
-        return bundle.getString("node_caption_unknown") + " (" + Integer.toString(((XBFBlockType) blockType).getGroupID().getInt()) + ", " + Integer.toString(((XBFBlockType) blockType).getBlockID().getInt()) + ")";
+        return resourceBundle.getString("node_caption_unknown") + " (" + Integer.toString(((XBFBlockType) blockType).getGroupID().getInt()) + ", " + Integer.toString(((XBFBlockType) blockType).getBlockID().getInt()) + ")";
     }
 }

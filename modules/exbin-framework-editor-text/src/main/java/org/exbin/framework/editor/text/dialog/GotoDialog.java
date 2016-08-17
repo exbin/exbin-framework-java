@@ -35,7 +35,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class GotoDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GotoDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(GotoDialog.class);
 
     public GotoDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -63,7 +63,7 @@ public class GotoDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, jumpButton, cancelButton);
         pack();
     }
@@ -111,7 +111,7 @@ public class GotoDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/GotoDialog"); // NOI18N
-        setTitle(bundle.getString("Form.title")); // NOI18N
+        setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
         setName("Form"); // NOI18N
@@ -119,14 +119,14 @@ public class GotoDialog extends javax.swing.JDialog {
         mainPanel.setName("mainPanel"); // NOI18N
 
         jumpLineLabel.setLabelFor(jumpLineSpinner);
-        jumpLineLabel.setText(bundle.getString("jumpLineLabel.text")); // NOI18N
+        jumpLineLabel.setText(resourceBundle.getString("jumpLineLabel.text")); // NOI18N
         jumpLineLabel.setName("jumpLineLabel"); // NOI18N
 
         jumpLineSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 1, 1));
         jumpLineSpinner.setName("jumpLineSpinner"); // NOI18N
 
         posLineLabel.setLabelFor(posLineSpinner);
-        posLineLabel.setText(bundle.getString("posLineLabel.text")); // NOI18N
+        posLineLabel.setText(resourceBundle.getString("posLineLabel.text")); // NOI18N
         posLineLabel.setName("posLineLabel"); // NOI18N
 
         posLineSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
@@ -170,7 +170,7 @@ public class GotoDialog extends javax.swing.JDialog {
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        jumpButton.setText(bundle.getString("jumpButton.text")); // NOI18N
+        jumpButton.setText(resourceBundle.getString("jumpButton.text")); // NOI18N
         jumpButton.setName("jumpButton"); // NOI18N
         jumpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -178,7 +178,7 @@ public class GotoDialog extends javax.swing.JDialog {
             }
         });
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

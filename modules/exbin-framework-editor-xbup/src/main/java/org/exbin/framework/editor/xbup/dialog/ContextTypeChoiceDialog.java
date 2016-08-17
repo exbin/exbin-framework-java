@@ -18,6 +18,7 @@ package org.exbin.framework.editor.xbup.dialog;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.XBContext;
@@ -42,6 +43,7 @@ public class ContextTypeChoiceDialog extends javax.swing.JDialog {
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private int selectedGroup;
     private final XBCXNameService nameService;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ContextTypeChoiceDialog.class);
 
     public ContextTypeChoiceDialog(java.awt.Frame parent, boolean modal, XBACatalog catalog, XBTTreeNode parentNode) {
         super(parent, modal);
@@ -86,10 +88,10 @@ public class ContextTypeChoiceDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/ContextTypeChoiceDialog"); // NOI18N
-        setTitle(bundle.getString("title")); // NOI18N
+        setTitle(resourceBundle.getString("title")); // NOI18N
         setModal(true);
 
-        okButton.setText(bundle.getString("okButton.text")); // NOI18N
+        okButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         okButton.setEnabled(false);
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,7 +99,7 @@ public class ContextTypeChoiceDialog extends javax.swing.JDialog {
             }
         });
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);

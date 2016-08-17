@@ -57,7 +57,7 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
 
         wordWrapCheckBox.setSelected(true);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextAppearanceOptionsPanel"); // NOI18N
-        wordWrapCheckBox.setText(bundle.getString("TextAppearanceOptionsPanel.wordWrapCheckBox.text")); // NOI18N
+        wordWrapCheckBox.setText(resourceBundle.getString("TextAppearanceOptionsPanel.wordWrapCheckBox.text")); // NOI18N
         wordWrapCheckBox.setName("wordWrapCheckBox"); // NOI18N
         wordWrapCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

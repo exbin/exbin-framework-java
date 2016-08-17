@@ -42,6 +42,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.ServiceManagerHandler;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -66,6 +67,7 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
 
     private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
     private MenuManagement menuManagement;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogBrowserPanel.class);
 
     public CatalogBrowserPanel() {
         initComponents();
@@ -122,9 +124,8 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
 
         catalogTreePopupMenu.setName("catalogTreePopupMenu"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/catalog/panel/resources/CatalogItemsTreePanel"); // NOI18N
-        popupEditMenuItem.setText(bundle.getString("editMenuItem.text")); // NOI18N
-        popupEditMenuItem.setToolTipText(bundle.getString("editMenuItem,toolTipText")); // NOI18N
+        popupEditMenuItem.setText(resourceBundle.getString("editMenuItem.text")); // NOI18N
+        popupEditMenuItem.setToolTipText(resourceBundle.getString("editMenuItem.toolTipText")); // NOI18N
         popupEditMenuItem.setName("popupEditMenuItem"); // NOI18N
         popupEditMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -133,8 +134,8 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
         });
         catalogTreePopupMenu.add(popupEditMenuItem);
 
-        popupRefreshMenuItem.setText(bundle.getString("refreshMenuItem,text")); // NOI18N
-        popupRefreshMenuItem.setToolTipText(bundle.getString("refreshMenuItem,toolTipText")); // NOI18N
+        popupRefreshMenuItem.setText(resourceBundle.getString("refreshMenuItem.text")); // NOI18N
+        popupRefreshMenuItem.setToolTipText(resourceBundle.getString("refreshMenuItem.toolTipText")); // NOI18N
         popupRefreshMenuItem.setName("popupRefreshMenuItem"); // NOI18N
         popupRefreshMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

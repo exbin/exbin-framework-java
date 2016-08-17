@@ -48,6 +48,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.YamlFileType;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -75,6 +76,7 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
 
     private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
     private MenuManagement menuManagement;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogSearchPanel.class);
 
     public CatalogSearchPanel() {
         searchPanel = new CatalogItemsSearchPanel();
@@ -144,9 +146,8 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
 
         catalogTreePopupMenu.setName("catalogTreePopupMenu"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/catalog/panel/resources/CatalogItemsTreePanel"); // NOI18N
-        popupRefreshMenuItem.setText(bundle.getString("refreshMenuItem,text")); // NOI18N
-        popupRefreshMenuItem.setToolTipText(bundle.getString("refreshMenuItem,toolTipText")); // NOI18N
+        popupRefreshMenuItem.setText(resourceBundle.getString("refreshMenuItem.text")); // NOI18N
+        popupRefreshMenuItem.setToolTipText(resourceBundle.getString("refreshMenuItem.toolTipText")); // NOI18N
         popupRefreshMenuItem.setName("popupRefreshMenuItem"); // NOI18N
         popupRefreshMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -161,8 +162,8 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
         jSeparator2.setName("jSeparator2"); // NOI18N
         catalogTreePopupMenu.add(jSeparator2);
 
-        popupExportItemMenuItem.setText(bundle.getString("exportItemMenuItem,text")); // NOI18N
-        popupExportItemMenuItem.setToolTipText(bundle.getString("exportItemMenuItem,toolTipText")); // NOI18N
+        popupExportItemMenuItem.setText(resourceBundle.getString("exportItemMenuItem.text")); // NOI18N
+        popupExportItemMenuItem.setToolTipText(resourceBundle.getString("exportItemMenuItem.toolTipText")); // NOI18N
         popupExportItemMenuItem.setName("popupExportItemMenuItem"); // NOI18N
         popupExportItemMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -17,6 +17,7 @@
 package org.exbin.framework.editor.wave.dialog;
 
 import javax.swing.JOptionPane;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -28,6 +29,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class WaveResizeDialog extends javax.swing.JDialog {
 
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(WaveResizeDialog.class);
 
     public WaveResizeDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -64,7 +66,7 @@ public class WaveResizeDialog extends javax.swing.JDialog {
         setName("Form"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/dialog/resources/WaveResizeDialog"); // NOI18N
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -72,7 +74,7 @@ public class WaveResizeDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText(bundle.getString("okButton.text")); // NOI18N
+        okButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         okButton.setName("okButton"); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,7 +85,7 @@ public class WaveResizeDialog extends javax.swing.JDialog {
         mainPanel.setName("mainPanel"); // NOI18N
         mainPanel.setLayout(new java.awt.GridLayout(1, 0));
 
-        resizePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("resizePanel.border.title"))); // NOI18N
+        resizePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("resizePanel.border.title"))); // NOI18N
         resizePanel.setName("resizePanel"); // NOI18N
 
         javax.swing.GroupLayout resizePanelLayout = new javax.swing.GroupLayout(resizePanel);

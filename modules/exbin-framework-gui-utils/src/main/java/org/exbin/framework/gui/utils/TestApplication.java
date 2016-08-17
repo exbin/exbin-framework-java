@@ -129,7 +129,7 @@ public class TestApplication implements XBApplication {
             }
 
             @Override
-            public void addModulesFromPath(URI uri) {
+            public void loadModulesFromPath(URI uri) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 

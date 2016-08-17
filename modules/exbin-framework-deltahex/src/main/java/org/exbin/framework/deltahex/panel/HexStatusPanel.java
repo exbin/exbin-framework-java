@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Hexadecimal editor status panel.
@@ -30,6 +31,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
     private CodeArea.EditationMode editationMode;
     private StatusControlHandler editationModeChange;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexStatusPanel.class);
 
     public HexStatusPanel() {
         initComponents();
@@ -53,7 +55,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
         editationModeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         editationModeLabel.setText("OVR");
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexStatusPanel"); // NOI18N
-        editationModeLabel.setToolTipText(bundle.getString("HexStatusPanel.editationModeLabel.toolTipText")); // NOI18N
+        editationModeLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.editationModeLabel.toolTipText")); // NOI18N
         editationModeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         editationModeLabel.setName("editationModeLabel"); // NOI18N
         editationModeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -64,7 +66,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
         positionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         positionLabel.setText("0:0");
-        positionLabel.setToolTipText(bundle.getString("HexStatusPanel.positionLabel.toolTipText")); // NOI18N
+        positionLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.positionLabel.toolTipText")); // NOI18N
         positionLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         positionLabel.setName("positionLabel"); // NOI18N
         positionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -75,7 +77,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
         encodingLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         encodingLabel.setText("UTF-8");
-        encodingLabel.setToolTipText(bundle.getString("HexStatusPanel.encodingLabel.toolTipText")); // NOI18N
+        encodingLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.encodingLabel.toolTipText")); // NOI18N
         encodingLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         encodingLabel.setName("encodingLabel"); // NOI18N
         encodingLabel.addMouseListener(new java.awt.event.MouseAdapter() {

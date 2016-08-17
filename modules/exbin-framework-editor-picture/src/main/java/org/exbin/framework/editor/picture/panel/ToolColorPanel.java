@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * XBPEditor Color Selection panel.
@@ -29,6 +30,8 @@ import javax.swing.JDialog;
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolColorPanel extends javax.swing.JPanel {
+
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ToolColorPanel.class);
 
     public ToolColorPanel() {
         initComponents();
@@ -79,7 +82,7 @@ public class ToolColorPanel extends javax.swing.JPanel {
         setName("Form"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/picture/panel/resources/ToolColorPanel"); // NOI18N
-        penColorLabel.setText(bundle.getString("ToolColorPanel.penColorLabel.text")); // NOI18N
+        penColorLabel.setText(resourceBundle.getString("ToolColorPanel.penColorLabel.text")); // NOI18N
         penColorLabel.setName("penColorLabel"); // NOI18N
 
         toolColorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -96,7 +99,7 @@ public class ToolColorPanel extends javax.swing.JPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        penColorSelectButton.setText(bundle.getString("ToolColorPanel.penColorSelectButton")); // NOI18N
+        penColorSelectButton.setText(resourceBundle.getString("ToolColorPanel.penColorSelectButton")); // NOI18N
         penColorSelectButton.setName("penColorSelectButton"); // NOI18N
         penColorSelectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -104,7 +107,7 @@ public class ToolColorPanel extends javax.swing.JPanel {
             }
         });
 
-        fillcolorLabel.setText(bundle.getString("ToolColorPanel.fillColorLabel")); // NOI18N
+        fillcolorLabel.setText(resourceBundle.getString("ToolColorPanel.fillColorLabel")); // NOI18N
         fillcolorLabel.setName("fillcolorLabel"); // NOI18N
 
         selectionColorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -121,7 +124,7 @@ public class ToolColorPanel extends javax.swing.JPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        fillColorSelectButton.setText(bundle.getString("ToolColorPanel.fillColorSelectButton")); // NOI18N
+        fillColorSelectButton.setText(resourceBundle.getString("ToolColorPanel.fillColorSelectButton")); // NOI18N
         fillColorSelectButton.setName("fillColorSelectButton"); // NOI18N
         fillColorSelectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

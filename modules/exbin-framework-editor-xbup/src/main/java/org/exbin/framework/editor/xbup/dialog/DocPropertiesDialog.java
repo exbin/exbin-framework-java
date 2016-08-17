@@ -32,7 +32,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 public class DocPropertiesDialog extends javax.swing.JDialog {
 
     private XBTEditableDocument doc;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(DocPropertiesDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(DocPropertiesDialog.class);
 
     public DocPropertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -44,7 +44,7 @@ public class DocPropertiesDialog extends javax.swing.JDialog {
     private void init() {
         WindowUtils.initWindow(this);
         propertiesTabbedPane.setEnabledAt(1, false);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, closeButton);
         pack();
     }
@@ -71,20 +71,20 @@ public class DocPropertiesDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/DocPropertiesDialog"); // NOI18N
-        setTitle(bundle.getString("title")); // NOI18N
+        setTitle(resourceBundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
 
-        fileNameLabel.setText(bundle.getString("fileNameLabel.text")); // NOI18N
+        fileNameLabel.setText(resourceBundle.getString("fileNameLabel.text")); // NOI18N
 
         fileNameTextField.setEditable(false);
 
         fileSizeTextField.setEditable(false);
 
-        fileTypeLabel.setText(bundle.getString("fileTypeLabel.text")); // NOI18N
+        fileTypeLabel.setText(resourceBundle.getString("fileTypeLabel.text")); // NOI18N
 
         fileTypeTextField.setEditable(false);
 
-        fileSizeLabel.setText(bundle.getString("fileSizeLabel.text")); // NOI18N
+        fileSizeLabel.setText(resourceBundle.getString("fileSizeLabel.text")); // NOI18N
 
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
         generalPanel.setLayout(generalPanelLayout);
@@ -121,7 +121,7 @@ public class DocPropertiesDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        propertiesTabbedPane.addTab(bundle.getString("generalPanel.tabTitle"), generalPanel); // NOI18N
+        propertiesTabbedPane.addTab(resourceBundle.getString("generalPanel.tabTitle"), generalPanel); // NOI18N
 
         javax.swing.GroupLayout documentTypePanelLayout = new javax.swing.GroupLayout(documentTypePanel);
         documentTypePanel.setLayout(documentTypePanelLayout);
@@ -134,11 +134,11 @@ public class DocPropertiesDialog extends javax.swing.JDialog {
             .addGap(0, 90, Short.MAX_VALUE)
         );
 
-        propertiesTabbedPane.addTab(bundle.getString("documentTypePanel.tabTitle"), documentTypePanel); // NOI18N
+        propertiesTabbedPane.addTab(resourceBundle.getString("documentTypePanel.tabTitle"), documentTypePanel); // NOI18N
 
         getContentPane().add(propertiesTabbedPane, java.awt.BorderLayout.CENTER);
 
-        closeButton.setText(bundle.getString("okButton.text")); // NOI18N
+        closeButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeButtonActionPerformed(evt);

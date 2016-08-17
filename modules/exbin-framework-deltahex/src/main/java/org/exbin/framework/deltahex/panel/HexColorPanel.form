@@ -105,7 +105,7 @@
                 <Component class="javax.swing.JLabel" name="previewLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="HexColorPanel.previewLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="HexColorPanel.previewLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="name" type="java.lang.String" value="previewLabel" noResource="true"/>
                   </Properties>
@@ -155,7 +155,7 @@
         <Component class="javax.swing.JButton" name="fillCurrentButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="HexColorPanel.fillCurrentButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="HexColorPanel.fillCurrentButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="fillCurrentButton" noResource="true"/>
           </Properties>
@@ -166,7 +166,7 @@
         <Component class="javax.swing.JButton" name="fillDefaultButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="HexColorPanel.fillDefaultButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="HexColorPanel.fillDefaultButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="fillDefaultButton" noResource="true"/>
           </Properties>

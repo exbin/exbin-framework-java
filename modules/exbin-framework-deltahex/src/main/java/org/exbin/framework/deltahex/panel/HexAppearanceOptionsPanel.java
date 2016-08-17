@@ -57,7 +57,7 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
 
         lineWrapCheckBox.setSelected(true);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexAppearanceOptionsPanel"); // NOI18N
-        lineWrapCheckBox.setText(bundle.getString("HexAppearanceOptionsPanel.lineWrapCheckBox.text")); // NOI18N
+        lineWrapCheckBox.setText(resourceBundle.getString("HexAppearanceOptionsPanel.lineWrapCheckBox.text")); // NOI18N
         lineWrapCheckBox.setName("lineWrapCheckBox"); // NOI18N
         lineWrapCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

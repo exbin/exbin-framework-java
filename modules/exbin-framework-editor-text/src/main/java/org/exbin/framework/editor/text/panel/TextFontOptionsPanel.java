@@ -92,7 +92,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
 
         defaultFontCheckBox.setSelected(true);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextFontOptionsPanel"); // NOI18N
-        defaultFontCheckBox.setText(bundle.getString("TextFontOptionsPanel.defaultFontCheckBox.text")); // NOI18N
+        defaultFontCheckBox.setText(resourceBundle.getString("TextFontOptionsPanel.defaultFontCheckBox.text")); // NOI18N
         defaultFontCheckBox.setName("defaultFontCheckBox"); // NOI18N
         defaultFontCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -100,7 +100,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
             }
         });
 
-        fillDefaultFontButton.setText(bundle.getString("TextFontOptionsPanel.fillDefaultFontButton.text")); // NOI18N
+        fillDefaultFontButton.setText(resourceBundle.getString("TextFontOptionsPanel.fillDefaultFontButton.text")); // NOI18N
         fillDefaultFontButton.setEnabled(false);
         fillDefaultFontButton.setName("fillDefaultFontButton"); // NOI18N
         fillDefaultFontButton.addActionListener(new java.awt.event.ActionListener() {
@@ -109,7 +109,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
             }
         });
 
-        changeFontButton.setText(bundle.getString("TextFontOptionsPanel.changeFontButton.text")); // NOI18N
+        changeFontButton.setText(resourceBundle.getString("TextFontOptionsPanel.changeFontButton.text")); // NOI18N
         changeFontButton.setEnabled(false);
         changeFontButton.setName("changeFontButton"); // NOI18N
         changeFontButton.addActionListener(new java.awt.event.ActionListener() {
@@ -120,13 +120,13 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
 
         fontPreviewLabel.setBackground(java.awt.Color.white);
         fontPreviewLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        fontPreviewLabel.setText(bundle.getString("TextFontOptionsPanel.fontPreviewLabel.text")); // NOI18N
+        fontPreviewLabel.setText(resourceBundle.getString("TextFontOptionsPanel.fontPreviewLabel.text")); // NOI18N
         fontPreviewLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         fontPreviewLabel.setEnabled(false);
         fontPreviewLabel.setName("fontPreviewLabel"); // NOI18N
         fontPreviewLabel.setOpaque(true);
 
-        fillCurrentFontButton.setText(bundle.getString("TextFontOptionsPanel.fillCurrentFontButton.text")); // NOI18N
+        fillCurrentFontButton.setText(resourceBundle.getString("TextFontOptionsPanel.fillCurrentFontButton.text")); // NOI18N
         fillCurrentFontButton.setEnabled(false);
         fillCurrentFontButton.setName("fillCurrentFontButton"); // NOI18N
         fillCurrentFontButton.addActionListener(new java.awt.event.ActionListener() {

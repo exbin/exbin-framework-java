@@ -37,7 +37,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
     private static final String POPUP_MENU_POSTFIX = ".hexMultilineDialog";
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(HexMultilineDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexMultilineDialog.class);
     private SearchCondition condition;
 
     private JTextArea textArea;
@@ -53,7 +53,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, setButton, cancelButton);
     }
 
@@ -74,13 +74,13 @@ public class HexMultilineDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/resources/HexMultilineDialog"); // NOI18N
-        setTitle(bundle.getString("Form.title")); // NOI18N
+        setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        setButton.setText(bundle.getString("setButton.text")); // NOI18N
+        setButton.setText(resourceBundle.getString("setButton.text")); // NOI18N
         setButton.setName("setButton"); // NOI18N
         setButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,7 +88,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
             }
         });
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

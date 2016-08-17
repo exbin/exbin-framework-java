@@ -33,6 +33,7 @@ import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCXFile;
 import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -48,6 +49,7 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
     private final CatalogFilesTableModel filesModel;
     private int currentItem;
     private XBCNode currentNode;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogItemEditFilesPanel.class);
 
     public CatalogItemEditFilesPanel() {
         filesModel = new CatalogFilesTableModel();
@@ -91,8 +93,8 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
 
         filePopupMenu.setName("filePopupMenu"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/catalog/panel/resources/CatalogItemsTreePanel"); // NOI18N
-        popupAddFileMenuItem.setText(bundle.getString("addFileMenuItem.text")); // NOI18N
+        popupAddFileMenuItem.setText(resourceBundle.getString("addFileMenuItem.text")); // NOI18N
+        popupAddFileMenuItem.setToolTipText(resourceBundle.getString("addMenuItem.toolTipText")); // NOI18N
         popupAddFileMenuItem.setName("popupAddFileMenuItem"); // NOI18N
         popupAddFileMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -101,7 +103,8 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
         });
         filePopupMenu.add(popupAddFileMenuItem);
 
-        popupImportItemMenuItem.setText("Import...");
+        popupImportItemMenuItem.setText(resourceBundle.getString("importItemMenuItem.text")); // NOI18N
+        popupImportItemMenuItem.setToolTipText(resourceBundle.getString("importItemMenuItem.toolTipText")); // NOI18N
         popupImportItemMenuItem.setEnabled(false);
         popupImportItemMenuItem.setName("popupImportItemMenuItem"); // NOI18N
         popupImportItemMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -111,7 +114,8 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
         });
         filePopupMenu.add(popupImportItemMenuItem);
 
-        popupExportItemMenuItem.setText("Export...");
+        popupExportItemMenuItem.setText(resourceBundle.getString("exportItemMenuItem.text")); // NOI18N
+        popupExportItemMenuItem.setToolTipText(resourceBundle.getString("exportItemMenuItem.toolTipText")); // NOI18N
         popupExportItemMenuItem.setEnabled(false);
         popupExportItemMenuItem.setName("popupExportItemMenuItem"); // NOI18N
         popupExportItemMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -127,7 +131,7 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
         jSeparator2.setName("jSeparator2"); // NOI18N
         filePopupMenu.add(jSeparator2);
 
-        popupPropertiesMenuItem.setText(bundle.getString("propertiesMenuItem.text")); // NOI18N
+        popupPropertiesMenuItem.setText(resourceBundle.getString("propertiesMenuItem.text")); // NOI18N
         popupPropertiesMenuItem.setEnabled(false);
         popupPropertiesMenuItem.setName("popupPropertiesMenuItem"); // NOI18N
         popupPropertiesMenuItem.addActionListener(new java.awt.event.ActionListener() {

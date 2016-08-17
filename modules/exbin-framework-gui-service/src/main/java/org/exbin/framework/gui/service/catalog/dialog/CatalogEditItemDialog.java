@@ -47,7 +47,7 @@ public class CatalogEditItemDialog extends javax.swing.JDialog {
     private CatalogItemEditDefinitionPanel definitionPanel;
     private CatalogItemEditFilesPanel filesPanel;
     private MenuManagement menuManagement;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(CatalogEditItemDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogEditItemDialog.class);
 
     public CatalogEditItemDialog(java.awt.Frame frame, boolean modal) {
         super(frame, modal);
@@ -58,7 +58,7 @@ public class CatalogEditItemDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         initComponent(this);
     }
 
@@ -86,7 +86,7 @@ public class CatalogEditItemDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/catalog/dialog/resources/CatalogEditItemDialog"); // NOI18N
-        setTitle(bundle.getString("title")); // NOI18N
+        setTitle(resourceBundle.getString("title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N
 
@@ -95,7 +95,7 @@ public class CatalogEditItemDialog extends javax.swing.JDialog {
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -103,7 +103,7 @@ public class CatalogEditItemDialog extends javax.swing.JDialog {
             }
         });
 
-        setButton.setText(bundle.getString("setButton.text")); // NOI18N
+        setButton.setText(resourceBundle.getString("setButton.text")); // NOI18N
         setButton.setName("setButton"); // NOI18N
         setButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

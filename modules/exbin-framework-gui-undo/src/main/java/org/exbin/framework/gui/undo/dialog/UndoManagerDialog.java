@@ -41,7 +41,7 @@ public class UndoManagerDialog extends javax.swing.JDialog {
     private int dialogOption = JOptionPane.CLOSED_OPTION;
 
     private final UndoManagerModel undoModel;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(UndoManagerDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(UndoManagerDialog.class);
 
     public UndoManagerDialog(java.awt.Frame parent, boolean modal, UndoManagerModel undoModel) {
         super(parent, modal);
@@ -52,7 +52,7 @@ public class UndoManagerDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, closeButton);
     }
 
@@ -89,7 +89,7 @@ public class UndoManagerDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/undo/dialog/resources/UndoManagerDialog"); // NOI18N
-        setTitle(bundle.getString("title")); // NOI18N
+        setTitle(resourceBundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
 
@@ -107,29 +107,29 @@ public class UndoManagerDialog extends javax.swing.JDialog {
 
         splitPane.setLeftComponent(undoListScrollPane);
 
-        undoDetailInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("undoDetailInfoPanel.border.title"))); // NOI18N
+        undoDetailInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("undoDetailInfoPanel.border.title"))); // NOI18N
 
-        commandCaptionLabel.setText(bundle.getString("commandCaptionLabel.text")); // NOI18N
+        commandCaptionLabel.setText(resourceBundle.getString("commandCaptionLabel.text")); // NOI18N
 
         commandCaptionTextField.setEditable(false);
 
-        commandTypeLabel.setText(bundle.getString("commandTypeLabel.text")); // NOI18N
+        commandTypeLabel.setText(resourceBundle.getString("commandTypeLabel.text")); // NOI18N
 
         commandTypeTextField.setEditable(false);
 
-        executionTimeLabel.setText(bundle.getString("executionTimeLabel.text")); // NOI18N
+        executionTimeLabel.setText(resourceBundle.getString("executionTimeLabel.text")); // NOI18N
 
         executionTimeTextField.setEditable(false);
 
-        operationCaptionLabel.setText(bundle.getString("operationCaptionLabel.text")); // NOI18N
+        operationCaptionLabel.setText(resourceBundle.getString("operationCaptionLabel.text")); // NOI18N
 
         operationCaptionTextField.setEditable(false);
 
-        operationTypeLabel.setText(bundle.getString("operationTypeLabel.text")); // NOI18N
+        operationTypeLabel.setText(resourceBundle.getString("operationTypeLabel.text")); // NOI18N
 
         operationTypeTextField.setEditable(false);
 
-        dataSizeLabel.setText(bundle.getString("dataSizeLabel.text")); // NOI18N
+        dataSizeLabel.setText(resourceBundle.getString("dataSizeLabel.text")); // NOI18N
 
         dataSizeTextField.setEditable(false);
 
@@ -195,7 +195,7 @@ public class UndoManagerDialog extends javax.swing.JDialog {
                 .addContainerGap(91, Short.MAX_VALUE))
         );
 
-        exportButton.setText(bundle.getString("exportButton.text")); // NOI18N
+        exportButton.setText(resourceBundle.getString("exportButton.text")); // NOI18N
         exportButton.setEnabled(false);
         exportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -244,14 +244,14 @@ public class UndoManagerDialog extends javax.swing.JDialog {
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
-        closeButton.setText(bundle.getString("closeButton.text")); // NOI18N
+        closeButton.setText(resourceBundle.getString("closeButton.text")); // NOI18N
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
 
-        revertButton.setText(bundle.getString("revertButton.text")); // NOI18N
+        revertButton.setText(resourceBundle.getString("revertButton.text")); // NOI18N
         revertButton.setEnabled(false);
         revertButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

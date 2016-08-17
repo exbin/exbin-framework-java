@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  */
 public class PropertiesDialog extends javax.swing.JDialog {
 
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(PropertiesDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(PropertiesDialog.class);
 
     public PropertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -40,7 +40,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, closeButton);
         pack();
     }
@@ -71,7 +71,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/dialog/resources/PropertiesDialog"); // NOI18N
-        setTitle(bundle.getString("Form.title")); // NOI18N
+        setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
         setName("Form"); // NOI18N
@@ -81,28 +81,28 @@ public class PropertiesDialog extends javax.swing.JDialog {
         fileNameTextField.setEditable(false);
         fileNameTextField.setName("fileNameTextField"); // NOI18N
 
-        documentPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("documentPanel.border.title"))); // NOI18N
+        documentPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("documentPanel.border.title"))); // NOI18N
         documentPanel.setName("documentPanel"); // NOI18N
 
-        waveLengthLabel.setText(bundle.getString("waveLengthLabel.text")); // NOI18N
+        waveLengthLabel.setText(resourceBundle.getString("waveLengthLabel.text")); // NOI18N
         waveLengthLabel.setName("waveLengthLabel"); // NOI18N
 
         waveLengthTextField.setEditable(false);
         waveLengthTextField.setName("waveLengthTextField"); // NOI18N
 
-        sampleRateLabel.setText(bundle.getString("sampleRateLabel.text")); // NOI18N
+        sampleRateLabel.setText(resourceBundle.getString("sampleRateLabel.text")); // NOI18N
         sampleRateLabel.setName("sampleRateLabel"); // NOI18N
 
         sampleRateTextField.setEditable(false);
         sampleRateTextField.setName("sampleRateTextField"); // NOI18N
 
-        channelsLabel.setText(bundle.getString("channelsLabel.text")); // NOI18N
+        channelsLabel.setText(resourceBundle.getString("channelsLabel.text")); // NOI18N
         channelsLabel.setName("channelsLabel"); // NOI18N
 
         channelsTextField.setEditable(false);
         channelsTextField.setName("channelsTextField"); // NOI18N
 
-        encodingLabel.setText(bundle.getString("encodingLabel.text")); // NOI18N
+        encodingLabel.setText(resourceBundle.getString("encodingLabel.text")); // NOI18N
         encodingLabel.setName("encodingLabel"); // NOI18N
 
         encodingTextField.setEditable(false);
@@ -146,7 +146,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        fileNameLabel.setText(bundle.getString("fileNameLabel.text")); // NOI18N
+        fileNameLabel.setText(resourceBundle.getString("fileNameLabel.text")); // NOI18N
         fileNameLabel.setName("fileNameLabel"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -181,7 +181,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        closeButton.setText(bundle.getString("closeButton.text")); // NOI18N
+        closeButton.setText(resourceBundle.getString("closeButton.text")); // NOI18N
         closeButton.setName("closeButton"); // NOI18N
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

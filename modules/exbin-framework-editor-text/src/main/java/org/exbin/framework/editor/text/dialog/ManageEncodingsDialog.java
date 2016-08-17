@@ -19,17 +19,19 @@ package org.exbin.framework.editor.text.dialog;
 import javax.swing.JOptionPane;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Text Editor Encoding Selection Dialog.
  *
- * @version 0.1.24 2014/11/08
+ * @version 0.2.0 2016/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class ManageEncodingsDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ManageEncodingsDialog.class);
 
     public ManageEncodingsDialog(java.awt.Frame parent, TextEncodingPanelApi frame, boolean modal) {
         super(parent, modal);
@@ -65,13 +67,12 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
         mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/EncodingDialog"); // NOI18N
-        setTitle(bundle.getString("Form.title")); // NOI18N
+        setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
         setName("Form"); // NOI18N
 
-        setButton.setText(bundle.getString("setButton.text")); // NOI18N
+        setButton.setText(resourceBundle.getString("setButton.text")); // NOI18N
         setButton.setName("setButton"); // NOI18N
         setButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -79,7 +80,7 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
             }
         });
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,7 +96,7 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(341, Short.MAX_VALUE)
+                .addContainerGap(540, Short.MAX_VALUE)
                 .addComponent(setButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelButton)

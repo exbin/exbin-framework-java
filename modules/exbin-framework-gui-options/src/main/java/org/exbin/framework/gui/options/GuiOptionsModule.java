@@ -40,7 +40,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of XBUP framework options module.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.0 2016/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiOptionsModule implements GuiOptionsModuleApi {
@@ -51,6 +51,9 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     private Action optionsAction;
     private OptionsDialog optionsDialog;
     private final List<Locale> locales = new ArrayList<>();
+    private final List<OptionsPanel> optionsPanels = new ArrayList<>();
+    private OptionsPanel mainOptionsExt = null;
+    private OptionsPanel appearanceOptionsExt = null;
 
     public GuiOptionsModule() {
     }
@@ -71,6 +74,15 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         if (optionsDialog == null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             optionsDialog = new OptionsDialog(frameModule.getFrame(), true, frameModule.getFrameHandler());
+            for (OptionsPanel optionsPanel : optionsPanels) {
+                optionsDialog.addOptionsPanel(optionsPanel);
+            }
+            if (mainOptionsExt != null) {
+                optionsDialog.extendMainOptionsPanel(mainOptionsExt);
+            }
+            if (appearanceOptionsExt != null) {
+                optionsDialog.extendAppearanceOptionsPanel(appearanceOptionsExt);
+            }
             optionsDialog.setLanguageLocales(locales);
         }
 
@@ -99,7 +111,10 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
 
     @Override
     public void addOptionsPanel(OptionsPanel optionsPanel) {
-        getOptionsDialog().addOptionsPanel(optionsPanel);
+        optionsPanels.add(optionsPanel);
+        if (optionsDialog != null) {
+            optionsDialog.addOptionsPanel(optionsPanel);
+        }
     }
 
     @Override
@@ -109,12 +124,18 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
 
     @Override
     public void extendMainOptionsPanel(OptionsPanel panel) {
-        getOptionsDialog().extendMainOptionsPanel(panel);
+        mainOptionsExt = panel;
+        if (optionsDialog != null) {
+            optionsDialog.extendMainOptionsPanel(panel);
+        }
     }
 
     @Override
     public void extendAppearanceOptionsPanel(OptionsPanel panel) {
-        getOptionsDialog().extendAppearanceOptionsPanel(panel);
+        appearanceOptionsExt = panel;
+        if (optionsDialog != null) {
+            optionsDialog.extendAppearanceOptionsPanel(panel);
+        }
     }
 
     @Override

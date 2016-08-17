@@ -36,6 +36,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogSpecDefEditorDialog;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -53,6 +54,7 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
     private final CatalogDefsDetailTableModel detailModel = new CatalogDefsDetailTableModel();
     private List<CatalogDefsTableItem> removeList;
     private List<CatalogDefsTableItem> updateList;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogItemEditDefinitionPanel.class);
 
     public CatalogItemEditDefinitionPanel() {
         initComponents();
@@ -95,7 +97,7 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
         itemDefinitionPropertyTable = new javax.swing.JTable();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/catalog/panel/resources/CatalogItemEditDefinitionPanel"); // NOI18N
-        setToolTipText(bundle.getString("toolTipText")); // NOI18N
+        setToolTipText(resourceBundle.getString("toolTipText")); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
         addButton.setText("Add...");

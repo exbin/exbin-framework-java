@@ -73,7 +73,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
 
         defaultColorCheckBox.setSelected(true);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextColorOptionsPanel"); // NOI18N
-        defaultColorCheckBox.setText(bundle.getString("TextColorOptionsPanel.defaultColorCheckBox.text")); // NOI18N
+        defaultColorCheckBox.setText(resourceBundle.getString("TextColorOptionsPanel.defaultColorCheckBox.text")); // NOI18N
         defaultColorCheckBox.setName("defaultColorCheckBox"); // NOI18N
         defaultColorCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

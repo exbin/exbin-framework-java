@@ -31,6 +31,7 @@ import org.exbin.framework.editor.text.dialog.AddEncodingDialog;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -45,13 +46,12 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
     public static final String PREFERENCES_TEXT_ENCODING_PREFIX = "textEncoding.";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle;
+    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextEncodingPanel.class);
     private final TextEncodingPanelApi frame;
     private Image iconImage;
 
     public TextEncodingPanel(TextEncodingPanelApi frame) {
         this.frame = frame;
-        resourceBundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextEncodingOptionsPanel");
         initComponents();
         encodingsList.getModel().addListDataListener(new ListDataListener() {
 
@@ -121,7 +121,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
         jPanel1.setName("jPanel1"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextEncodingPanel"); // NOI18N
-        upButton.setText(bundle.getString("upButton.text")); // NOI18N
+        upButton.setText(resourceBundle.getString("upButton.text")); // NOI18N
         upButton.setEnabled(false);
         upButton.setName("upButton"); // NOI18N
         upButton.addActionListener(new java.awt.event.ActionListener() {
@@ -130,7 +130,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
             }
         });
 
-        downButton.setText(bundle.getString("downButton.text")); // NOI18N
+        downButton.setText(resourceBundle.getString("downButton.text")); // NOI18N
         downButton.setEnabled(false);
         downButton.setName("downButton"); // NOI18N
         downButton.addActionListener(new java.awt.event.ActionListener() {
@@ -139,7 +139,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
             }
         });
 
-        addButton.setText(bundle.getString("addButton.text")); // NOI18N
+        addButton.setText(resourceBundle.getString("addButton.text")); // NOI18N
         addButton.setName("addButton"); // NOI18N
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,7 +147,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
             }
         });
 
-        removeButton.setText(bundle.getString("removeButton.text")); // NOI18N
+        removeButton.setText(resourceBundle.getString("removeButton.text")); // NOI18N
         removeButton.setEnabled(false);
         removeButton.setName("removeButton"); // NOI18N
         removeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -156,7 +156,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
             }
         });
 
-        selectAllButton.setText(bundle.getString("selectAllButton.text")); // NOI18N
+        selectAllButton.setText(resourceBundle.getString("selectAllButton.text")); // NOI18N
         selectAllButton.setEnabled(false);
         selectAllButton.setName("selectAllButton"); // NOI18N
         selectAllButton.addActionListener(new java.awt.event.ActionListener() {

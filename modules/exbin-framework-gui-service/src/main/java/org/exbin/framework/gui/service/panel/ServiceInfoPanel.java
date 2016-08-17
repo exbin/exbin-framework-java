@@ -18,6 +18,7 @@ package org.exbin.framework.gui.service.panel;
 
 import org.exbin.xbup.client.XBCatalogServiceClient;
 import org.exbin.framework.gui.service.XBDbServiceClient;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Panel for service information.
@@ -26,6 +27,8 @@ import org.exbin.framework.gui.service.XBDbServiceClient;
  * @author ExBin Project (http://exbin.org)
  */
 public class ServiceInfoPanel extends javax.swing.JPanel {
+
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ServiceInfoPanel.class);
 
     public ServiceInfoPanel() {
         initComponents();
@@ -75,11 +78,11 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         managerHardwareTextField = new javax.swing.JTextField();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/panel/resources/ServiceManagerPanel"); // NOI18N
-        connectionInfoBorderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("connectionInfoBorderPanel.border.title"))); // NOI18N
+        connectionInfoBorderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("connectionInfoBorderPanel.border.title"))); // NOI18N
 
         connectionInfoPanel.setLayout(new java.awt.GridLayout(3, 2, 5, 5));
 
-        connectionHostLabel.setText(bundle.getString("hostNameLabel.text")); // NOI18N
+        connectionHostLabel.setText(resourceBundle.getString("hostNameLabel.text")); // NOI18N
         connectionInfoPanel.add(connectionHostLabel);
 
         connectionHostTextField.setEditable(false);
@@ -87,7 +90,7 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         connectionHostTextField.setBorder(null);
         connectionInfoPanel.add(connectionHostTextField);
 
-        connectionPortLabel.setText(bundle.getString("connectionPortLabel.text")); // NOI18N
+        connectionPortLabel.setText(resourceBundle.getString("connectionPortLabel.text")); // NOI18N
         connectionInfoPanel.add(connectionPortLabel);
 
         connectionPortTextField.setEditable(false);
@@ -95,7 +98,7 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         connectionPortTextField.setBorder(null);
         connectionInfoPanel.add(connectionPortTextField);
 
-        connectionProtocolLabel.setText(bundle.getString("connectionProtocolLabel.text")); // NOI18N
+        connectionProtocolLabel.setText(resourceBundle.getString("connectionProtocolLabel.text")); // NOI18N
         connectionInfoPanel.add(connectionProtocolLabel);
 
         connectionProtocolTextField.setEditable(false);
@@ -119,11 +122,11 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        serviceInformationBorderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("serviceInfoBorderPanel.border.title"))); // NOI18N
+        serviceInformationBorderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("serviceInfoBorderPanel.border.title"))); // NOI18N
 
         serviceInformationPanel.setLayout(new java.awt.GridLayout(4, 2, 5, 5));
 
-        serviceNameLabel.setText(bundle.getString("serviceNameLabel.text")); // NOI18N
+        serviceNameLabel.setText(resourceBundle.getString("serviceNameLabel.text")); // NOI18N
         serviceInformationPanel.add(serviceNameLabel);
 
         serviceNameTextField.setEditable(false);
@@ -131,7 +134,7 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         serviceNameTextField.setBorder(null);
         serviceInformationPanel.add(serviceNameTextField);
 
-        serviceVersionLabel.setText(bundle.getString("serviceVersionLabel.text")); // NOI18N
+        serviceVersionLabel.setText(resourceBundle.getString("serviceVersionLabel.text")); // NOI18N
         serviceInformationPanel.add(serviceVersionLabel);
 
         serviceVersionTextField.setEditable(false);
@@ -171,11 +174,11 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        managerInfoBorderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("managerInfoBorderPanel.border.title"))); // NOI18N
+        managerInfoBorderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("managerInfoBorderPanel.border.title"))); // NOI18N
 
         managerInfoPanel.setLayout(new java.awt.GridLayout(6, 2, 5, 5));
 
-        managerNameLabel.setText(bundle.getString("managerNameLabel.text")); // NOI18N
+        managerNameLabel.setText(resourceBundle.getString("managerNameLabel.text")); // NOI18N
         managerInfoPanel.add(managerNameLabel);
 
         managerNameTextField.setEditable(false);
@@ -183,7 +186,7 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         managerNameTextField.setBorder(null);
         managerInfoPanel.add(managerNameTextField);
 
-        managerVersionLabel.setText(bundle.getString("managerVersionLabel.text")); // NOI18N
+        managerVersionLabel.setText(resourceBundle.getString("managerVersionLabel.text")); // NOI18N
         managerInfoPanel.add(managerVersionLabel);
 
         managerVersionTextField.setEditable(false);
@@ -191,7 +194,7 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         managerVersionTextField.setBorder(null);
         managerInfoPanel.add(managerVersionTextField);
 
-        managerNetworkNameLabel.setText(bundle.getString("managerNetworkNameLabel.text")); // NOI18N
+        managerNetworkNameLabel.setText(resourceBundle.getString("managerNetworkNameLabel.text")); // NOI18N
         managerInfoPanel.add(managerNetworkNameLabel);
 
         managerNetworkNameTextField.setEditable(false);
@@ -199,7 +202,7 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         managerNetworkNameTextField.setBorder(null);
         managerInfoPanel.add(managerNetworkNameTextField);
 
-        managerNetworkIPLabel.setText(bundle.getString("managerNetworkIPLabel.text")); // NOI18N
+        managerNetworkIPLabel.setText(resourceBundle.getString("managerNetworkIPLabel.text")); // NOI18N
         managerInfoPanel.add(managerNetworkIPLabel);
 
         managerNetworkIPTextField.setEditable(false);
@@ -207,7 +210,7 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         managerNetworkIPTextField.setBorder(null);
         managerInfoPanel.add(managerNetworkIPTextField);
 
-        managerSystemLabel.setText(bundle.getString("managerSystemLabel.text")); // NOI18N
+        managerSystemLabel.setText(resourceBundle.getString("managerSystemLabel.text")); // NOI18N
         managerInfoPanel.add(managerSystemLabel);
 
         managerSystemTextField.setEditable(false);
@@ -215,7 +218,7 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         managerSystemTextField.setBorder(null);
         managerInfoPanel.add(managerSystemTextField);
 
-        managerHardwareLabel.setText(bundle.getString("managerHardwareLabel.text")); // NOI18N
+        managerHardwareLabel.setText(resourceBundle.getString("managerHardwareLabel.text")); // NOI18N
         managerInfoPanel.add(managerHardwareLabel);
 
         managerHardwareTextField.setEditable(false);

@@ -27,6 +27,7 @@ import javax.swing.event.ListDataListener;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Text encoding options panel.
@@ -39,14 +40,13 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     public static final String PREFERENCES_TEXT_ENCODING_DEFAULT = "textEncoding.default";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle;
+    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
     private final TextEncodingPanelApi frame;
     private final TextEncodingPanel encodingPanel;
     private final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
 
     public TextEncodingOptionsPanel(TextEncodingPanelApi frame) {
         this.frame = frame;
-        resourceBundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextEncodingOptionsPanel");
 
         initComponents();
 
@@ -95,10 +95,10 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         });
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextEncodingOptionsPanel"); // NOI18N
-        defaultEncodingLabel.setText(bundle.getString("TextEncodingOptionsPanel.defaultEncodingLabel.text")); // NOI18N
+        defaultEncodingLabel.setText(resourceBundle.getString("TextEncodingOptionsPanel.defaultEncodingLabel.text")); // NOI18N
         defaultEncodingLabel.setName("defaultEncodingLabel"); // NOI18N
 
-        fillCurrentEncodingButton.setText(bundle.getString("TextEncodingOptionsPanel.fillCurrentEncodingButton.text")); // NOI18N
+        fillCurrentEncodingButton.setText(resourceBundle.getString("TextEncodingOptionsPanel.fillCurrentEncodingButton.text")); // NOI18N
         fillCurrentEncodingButton.setName("fillCurrentEncodingButton"); // NOI18N
         fillCurrentEncodingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,7 +135,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
 
         encodingsControlPanel.setName("encodingsControlPanel"); // NOI18N
 
-        fillCurrentEncodingsButton.setText(bundle.getString("TextEncodingOptionsPanel.fillCurrentEncodingsButton.text")); // NOI18N
+        fillCurrentEncodingsButton.setText(resourceBundle.getString("TextEncodingOptionsPanel.fillCurrentEncodingsButton.text")); // NOI18N
         fillCurrentEncodingsButton.setName("fillCurrentEncodingsButton"); // NOI18N
         fillCurrentEncodingsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

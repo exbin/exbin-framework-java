@@ -25,11 +25,12 @@ import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Tool Bar Apperance Options panel.
  *
- * @version 0.2.0 2015/11/05
+ * @version 0.2.0 2016/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -38,6 +39,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     public static final String PREFERENCES_TOOLBAR_CAPTIONS = "toolBar.captions";
     public static final String PREFERENCES_STATUSBAR_VISIBLE = "statusBar.visible";
 
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
     private ModifiedOptionListener modifiedOptionListener;
     private final ApplicationFrameHandler frame;
     private OptionsPanel extendedPanel = null;
@@ -65,7 +67,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
 
         showToolbarCheckBox.setSelected(true);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/options/panel/resources/AppearanceOptionsPanel"); // NOI18N
-        showToolbarCheckBox.setText(bundle.getString("AppearanceOptionsPanel.showToolbarCheckBox.text")); // NOI18N
+        showToolbarCheckBox.setText(resourceBundle.getString("AppearanceOptionsPanel.showToolbarCheckBox.text")); // NOI18N
         showToolbarCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 showToolbarCheckBoxjCheckBoxItemStateChanged(evt);
@@ -73,7 +75,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
         });
 
         showCaptionsCheckBox.setSelected(true);
-        showCaptionsCheckBox.setText(bundle.getString("AppearanceOptionsPanel.showCaptionsCheckBox.text")); // NOI18N
+        showCaptionsCheckBox.setText(resourceBundle.getString("AppearanceOptionsPanel.showCaptionsCheckBox.text")); // NOI18N
         showCaptionsCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 showCaptionsCheckBoxjCheckBoxItemStateChanged(evt);
@@ -81,7 +83,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
         });
 
         showStatusbarCheckBox.setSelected(true);
-        showStatusbarCheckBox.setText(bundle.getString("AppearanceOptionsPanel.showStatusbarCheckBox.text")); // NOI18N
+        showStatusbarCheckBox.setText(resourceBundle.getString("AppearanceOptionsPanel.showStatusbarCheckBox.text")); // NOI18N
         showStatusbarCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 showStatusbarCheckBoxjCheckBoxItemStateChanged(evt);

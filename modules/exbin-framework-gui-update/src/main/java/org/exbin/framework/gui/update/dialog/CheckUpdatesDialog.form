@@ -14,7 +14,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="copyLinkMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="copyLinkMenuItem.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="copyLinkMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="copyLinkMenuItem" noResource="true"/>
           </Properties>
@@ -27,7 +27,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="title" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-      <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="checkUpdaBox.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+      <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="checkUpdaBox.title" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
     </Property>
   </Properties>
   <SyntheticProperties>
@@ -171,7 +171,7 @@
         <Component class="javax.swing.JLabel" name="currentVersionLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="currentVersionLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="currentVersionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="currentVersionLabel" noResource="true"/>
           </Properties>
@@ -186,7 +186,7 @@
         <Component class="javax.swing.JLabel" name="availableVersionLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="availableVersionLabel.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="availableVersionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="availableVersionLabel" noResource="true"/>
           </Properties>
@@ -254,7 +254,7 @@
         <Component class="javax.swing.JButton" name="closeButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="closeButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog.properties" key="closeButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="closeButton" noResource="true"/>
           </Properties>

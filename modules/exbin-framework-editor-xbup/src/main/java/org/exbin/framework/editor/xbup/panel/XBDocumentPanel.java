@@ -77,6 +77,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Panel with XBUP document visualization.
@@ -102,6 +103,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private XBPluginRepository pluginRepository;
     private PropertyChangeListener propertyChangeListener;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(XBDocumentPanel.class);
 
     public XBDocumentPanel(XBACatalog catalog, XBUndoHandler undoHandler) {
         this.catalog = catalog;
@@ -192,8 +194,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         hexTabPanel1 = new javax.swing.JPanel();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/panel/resources/XBDocumentPanel"); // NOI18N
-        popupItemViewMenuItem.setText(bundle.getString("popupItemViewMenuItem.text")); // NOI18N
-        popupItemViewMenuItem.setToolTipText(bundle.getString("popupItemViewMenuItem.toolTipText")); // NOI18N
+        popupItemViewMenuItem.setText(resourceBundle.getString("popupItemViewMenuItem.text")); // NOI18N
+        popupItemViewMenuItem.setToolTipText(resourceBundle.getString("popupItemViewMenuItem.toolTipText")); // NOI18N
         popupItemViewMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 popupItemViewMenuItemActionPerformed(evt);
@@ -201,8 +203,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         });
         popupMenu.add(popupItemViewMenuItem);
 
-        popupItemCopyMenuItem.setText(bundle.getString("popupItemCopyMenuItem.text")); // NOI18N
-        popupItemCopyMenuItem.setToolTipText(bundle.getString("popupItemCopyMenuItem.toolTipText")); // NOI18N
+        popupItemCopyMenuItem.setText(resourceBundle.getString("popupItemCopyMenuItem.text")); // NOI18N
+        popupItemCopyMenuItem.setToolTipText(resourceBundle.getString("popupItemCopyMenuItem.toolTipText")); // NOI18N
         popupItemCopyMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 popupItemCopyMenuItemActionPerformed(evt);
@@ -212,8 +214,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         popupMenu.add(jSeparator1);
 
         popupItemPropertiesMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.ALT_MASK));
-        popupItemPropertiesMenuItem.setText(bundle.getString("popupItemPropertiesMenuItem.text")); // NOI18N
-        popupItemPropertiesMenuItem.setToolTipText(bundle.getString("popupItemPropertiesMenuItem.toolTipText")); // NOI18N
+        popupItemPropertiesMenuItem.setText(resourceBundle.getString("popupItemPropertiesMenuItem.text")); // NOI18N
+        popupItemPropertiesMenuItem.setToolTipText(resourceBundle.getString("popupItemPropertiesMenuItem.toolTipText")); // NOI18N
         popupItemPropertiesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 popupItemPropertiesMenuItemActionPerformed(evt);

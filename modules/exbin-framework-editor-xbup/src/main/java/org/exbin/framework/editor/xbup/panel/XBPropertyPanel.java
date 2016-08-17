@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.xbup.panel;
 
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.XBFBlockType;
@@ -39,6 +40,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
     private XBPropertyTablePanel propertiesPanel;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(XBPropertyPanel.class);
 
     public XBPropertyPanel(XBACatalog catalog) {
         this.catalog = catalog;
@@ -86,30 +88,30 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         propertyPopupMenu.setName("propertyPopupMenu"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/panel/resources/XBPropertyPanel"); // NOI18N
-        popupItemOpenMenuItem.setText(bundle.getString("actionItemOpen.text")); // NOI18N
+        popupItemOpenMenuItem.setText(resourceBundle.getString("actionItemOpen.text")); // NOI18N
         popupItemOpenMenuItem.setName("popupItemOpenMenuItem"); // NOI18N
         propertyPopupMenu.add(popupItemOpenMenuItem);
 
-        popupItemAddMenuItem.setText(bundle.getString("popupItemAddMenuItem.text")); // NOI18N
-        popupItemAddMenuItem.setToolTipText(bundle.getString("popupItemAddMenuItem.toolTipText")); // NOI18N
+        popupItemAddMenuItem.setText(resourceBundle.getString("popupItemAddMenuItem.text")); // NOI18N
+        popupItemAddMenuItem.setToolTipText(resourceBundle.getString("popupItemAddMenuItem.toolTipText")); // NOI18N
         popupItemAddMenuItem.setName("popupItemAddMenuItem"); // NOI18N
         propertyPopupMenu.add(popupItemAddMenuItem);
 
-        popupItemModifyMenuItem.setText(bundle.getString("popupItemModifyMenuItem.text")); // NOI18N
-        popupItemModifyMenuItem.setToolTipText(bundle.getString("popupItemModifyMenuItem.toolTipText")); // NOI18N
+        popupItemModifyMenuItem.setText(resourceBundle.getString("popupItemModifyMenuItem.text")); // NOI18N
+        popupItemModifyMenuItem.setToolTipText(resourceBundle.getString("popupItemModifyMenuItem.toolTipText")); // NOI18N
         popupItemModifyMenuItem.setName("popupItemModifyMenuItem"); // NOI18N
         propertyPopupMenu.add(popupItemModifyMenuItem);
 
         jSeparator14.setName("jSeparator14"); // NOI18N
         propertyPopupMenu.add(jSeparator14);
 
-        popupUndoMenuItem.setText(bundle.getString("popupUndoMenuItem.text")); // NOI18N
-        popupUndoMenuItem.setToolTipText(bundle.getString("popupUndoMenuItem.toolTipText")); // NOI18N
+        popupUndoMenuItem.setText(resourceBundle.getString("popupUndoMenuItem.text")); // NOI18N
+        popupUndoMenuItem.setToolTipText(resourceBundle.getString("popupUndoMenuItem.toolTipText")); // NOI18N
         popupUndoMenuItem.setName("popupUndoMenuItem"); // NOI18N
         propertyPopupMenu.add(popupUndoMenuItem);
 
-        popupRedoMenuItem.setText(bundle.getString("popupRedoMenuItem.text")); // NOI18N
-        popupRedoMenuItem.setToolTipText(bundle.getString("popupRedoMenuItem.toolTipText")); // NOI18N
+        popupRedoMenuItem.setText(resourceBundle.getString("popupRedoMenuItem.text")); // NOI18N
+        popupRedoMenuItem.setToolTipText(resourceBundle.getString("popupRedoMenuItem.toolTipText")); // NOI18N
         popupRedoMenuItem.setName("popupRedoMenuItem"); // NOI18N
         propertyPopupMenu.add(popupRedoMenuItem);
 
@@ -142,7 +144,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         jSeparator16.setName("jSeparator16"); // NOI18N
         propertyPopupMenu.add(jSeparator16);
 
-        popupItemPropertiesMenuItem.setText(bundle.getString("popupItemPropertiesMenuItem.text")); // NOI18N
+        popupItemPropertiesMenuItem.setText(resourceBundle.getString("popupItemPropertiesMenuItem.text")); // NOI18N
         popupItemPropertiesMenuItem.setName("popupItemPropertiesMenuItem"); // NOI18N
         propertyPopupMenu.add(popupItemPropertiesMenuItem);
 
@@ -151,9 +153,9 @@ public class XBPropertyPanel extends javax.swing.JPanel {
 
         itemInfoHeaderPanel.setName("itemInfoHeaderPanel"); // NOI18N
 
-        nameLabel.setText(bundle.getString("nameLabel.text")); // NOI18N
+        nameLabel.setText(resourceBundle.getString("nameLabel.text")); // NOI18N
 
-        descLabel.setText(bundle.getString("descLabel.text")); // NOI18N
+        descLabel.setText(resourceBundle.getString("descLabel.text")); // NOI18N
         descLabel.setName("descLabel"); // NOI18N
 
         descTextField.setEditable(false);

@@ -95,16 +95,16 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsPane
         setAutoscrolls(true);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/panel/resources/AudioDevicesPanel"); // NOI18N
-        audioOutputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("audioOutputPanel.border.title"))); // NOI18N
+        audioOutputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("audioOutputPanel.border.title"))); // NOI18N
         audioOutputPanel.setName("audioOutputPanel"); // NOI18N
 
-        outputSoundDeviceLabel.setText(bundle.getString("outputSoundDeviceLabel.text")); // NOI18N
+        outputSoundDeviceLabel.setText(resourceBundle.getString("outputSoundDeviceLabel.text")); // NOI18N
         outputSoundDeviceLabel.setName("outputSoundDeviceLabel"); // NOI18N
 
-        outputSampleRateLabel.setText(bundle.getString("outputSampleRateLabel.text")); // NOI18N
+        outputSampleRateLabel.setText(resourceBundle.getString("outputSampleRateLabel.text")); // NOI18N
         outputSampleRateLabel.setName("outputSampleRateLabel"); // NOI18N
 
-        outputBufferSizejLabel.setText(bundle.getString("outputBufferSizejLabel.text")); // NOI18N
+        outputBufferSizejLabel.setText(resourceBundle.getString("outputBufferSizejLabel.text")); // NOI18N
         outputBufferSizejLabel.setName("outputBufferSizejLabel"); // NOI18N
 
         outputSoundDeviceComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<default>" }));
@@ -116,7 +116,7 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsPane
         outputBufferSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<default>" }));
         outputBufferSizeComboBox.setName("outputBufferSizeComboBox"); // NOI18N
 
-        testAudioButton.setText(bundle.getString("testAudioButton.text")); // NOI18N
+        testAudioButton.setText(resourceBundle.getString("testAudioButton.text")); // NOI18N
         testAudioButton.setName("testAudioButton"); // NOI18N
 
         javax.swing.GroupLayout audioOutputPanelLayout = new javax.swing.GroupLayout(audioOutputPanel);

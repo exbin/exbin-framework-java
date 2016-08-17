@@ -29,7 +29,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  */
 public class ImageResizeDialog extends javax.swing.JDialog {
 
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(ImageResizeDialog.class);
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ImageResizeDialog.class);
 
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
 
@@ -41,7 +41,7 @@ public class ImageResizeDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, okButton, cancelButton);
         pack();
     }
@@ -71,7 +71,7 @@ public class ImageResizeDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/picture/dialog/resources/ImageResizeDialog"); // NOI18N
-        setTitle(bundle.getString("title")); // NOI18N
+        setTitle(resourceBundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
         setName("Form"); // NOI18N
@@ -79,15 +79,15 @@ public class ImageResizeDialog extends javax.swing.JDialog {
         resizeImagePanel.setName("resizeImagePanel"); // NOI18N
         resizeImagePanel.setLayout(new java.awt.GridLayout(1, 0));
 
-        imageSizePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("imageSizePanel.border.title"))); // NOI18N
+        imageSizePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("imageSizePanel.border.title"))); // NOI18N
         imageSizePanel.setName("imageSizePanel"); // NOI18N
 
-        widthLabel.setText(bundle.getString("widthLabel.text")); // NOI18N
+        widthLabel.setText(resourceBundle.getString("widthLabel.text")); // NOI18N
         widthLabel.setName("widthLabel"); // NOI18N
 
         widthTextField.setName("widthTextField"); // NOI18N
 
-        heightLabel.setText(bundle.getString("heightLabel.text")); // NOI18N
+        heightLabel.setText(resourceBundle.getString("heightLabel.text")); // NOI18N
         heightLabel.setName("heightLabel"); // NOI18N
 
         heightTextField.setName("heightTextField"); // NOI18N
@@ -125,7 +125,7 @@ public class ImageResizeDialog extends javax.swing.JDialog {
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -133,7 +133,7 @@ public class ImageResizeDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText(bundle.getString("okButton.text")); // NOI18N
+        okButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         okButton.setName("okButton"); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

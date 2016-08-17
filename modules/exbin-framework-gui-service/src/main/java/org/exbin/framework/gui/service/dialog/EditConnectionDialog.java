@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class EditConnectionDialog extends javax.swing.JDialog {
 
     private static final int DEFAULT_PORT = 22594;
-    private final ResourceBundle bundle = ActionUtils.getResourceBundleByClass(EditConnectionDialog.class);
+    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(EditConnectionDialog.class);
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
 
     public EditConnectionDialog(java.awt.Frame parent, boolean modal) {
@@ -67,20 +67,20 @@ public class EditConnectionDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/dialog/resources/EditConnectionDialog"); // NOI18N
-        setTitle(bundle.getString("Form.title")); // NOI18N
+        setTitle(resourceBundle.getString("Form.title")); // NOI18N
 
-        connectionHostLabel.setText(bundle.getString("connectionHostLabel.text")); // NOI18N
+        connectionHostLabel.setText(resourceBundle.getString("connectionHostLabel.text")); // NOI18N
 
-        connectionPortLabel.setText(bundle.getString("connectionPortLabel.text")); // NOI18N
+        connectionPortLabel.setText(resourceBundle.getString("connectionPortLabel.text")); // NOI18N
 
-        okButton.setText(bundle.getString("okButton.text")); // NOI18N
+        okButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -159,7 +159,7 @@ public class EditConnectionDialog extends javax.swing.JDialog {
         int colonPos = string.indexOf(":");
         connectionHostTextField.setText(string.substring(0, colonPos));
         connectionPortSpinner.setValue(Integer.valueOf(string.substring(colonPos + 1)));
-        setTitle(bundle.getString("setForm.title"));
-        okButton.setText(bundle.getString("setButton.text"));
+        setTitle(resourceBundle.getString("setForm.title"));
+        okButton.setText(resourceBundle.getString("setButton.text"));
     }
 }

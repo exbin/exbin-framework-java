@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import javax.swing.AbstractListModel;
 import javax.swing.JOptionPane;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -35,6 +36,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class AddEncodingDialog extends javax.swing.JDialog {
 
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
+    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(AddEncodingDialog.class);
 
     public AddEncodingDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -71,7 +73,7 @@ public class AddEncodingDialog extends javax.swing.JDialog {
         setName("Form"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/AddEncodingDialog"); // NOI18N
-        supportedEncodingsLabel.setText(bundle.getString("supportedEncodingsLabel.text")); // NOI18N
+        supportedEncodingsLabel.setText(resourceBundle.getString("supportedEncodingsLabel.text")); // NOI18N
         supportedEncodingsLabel.setName("supportedEncodingsLabel"); // NOI18N
 
         encodingsScrollPane.setName("encodingsScrollPane"); // NOI18N
@@ -80,7 +82,7 @@ public class AddEncodingDialog extends javax.swing.JDialog {
         encodingsList.setName("encodingsList"); // NOI18N
         encodingsScrollPane.setViewportView(encodingsList);
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,7 +90,7 @@ public class AddEncodingDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText(bundle.getString("okButton.text")); // NOI18N
+        okButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         okButton.setName("okButton"); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

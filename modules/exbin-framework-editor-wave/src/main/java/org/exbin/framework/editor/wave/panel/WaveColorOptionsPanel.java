@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Wave editor color selection panel.
  *
- * @version 0.2.0 2016/01/23
+ * @version 0.2.0 2016/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class WaveColorOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -38,14 +38,13 @@ public class WaveColorOptionsPanel extends javax.swing.JPanel implements Options
     public static final String PREFERENCES_WAVE_COLOR_DEFAULT = "waveColor.default";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private ResourceBundle resourceBundle;
-    private WaveColorPanelApi colorPanelApi;
-    private WaveColorPanel colorPanel;
+    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(WaveColorOptionsPanel.class);
+    private final WaveColorPanelApi colorPanelApi;
+    private final WaveColorPanel colorPanel;
 
     public WaveColorOptionsPanel(WaveColorPanelApi colorPanelApi) {
         this.colorPanelApi = colorPanelApi;
         initComponents();
-        resourceBundle = ActionUtils.getResourceBundleByClass(WaveColorOptionsPanel.class);
 
         colorPanel = new WaveColorPanel(colorPanelApi);
         colorPanel.setEnabled(false);
@@ -69,13 +68,12 @@ public class WaveColorOptionsPanel extends javax.swing.JPanel implements Options
 
         setName("Form"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/panel/resources/WaveColorOptionsPanel"); // NOI18N
-        customColorsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("WaveColorOptionsPanel.customColorsPanel.title"))); // NOI18N
+        customColorsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("WaveColorOptionsPanel.customColorsPanel.title"))); // NOI18N
         customColorsPanel.setName("customColorsPanel"); // NOI18N
         customColorsPanel.setLayout(new java.awt.BorderLayout());
 
         defaultColorCheckBox.setSelected(true);
-        defaultColorCheckBox.setText(bundle.getString("WaveColorOptionsPanel.defaultColorCheckBox.text")); // NOI18N
+        defaultColorCheckBox.setText(resourceBundle.getString("WaveColorOptionsPanel.defaultColorCheckBox.text")); // NOI18N
         defaultColorCheckBox.setName("defaultColorCheckBox"); // NOI18N
         defaultColorCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

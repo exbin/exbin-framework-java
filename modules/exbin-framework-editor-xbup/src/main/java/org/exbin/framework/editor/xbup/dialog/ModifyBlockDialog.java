@@ -105,7 +105,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
     private HexPanel extAreaHexPanel = null;
-    private java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(ModifyBlockDialog.class);
+    private java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ModifyBlockDialog.class);
 
     private final String attributesPanelTitle;
     private final String dataPanelTitle;
@@ -205,7 +205,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, bundle.getString("header.title"), bundle.getString("header.description"), bundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, okButton, cancelButton);
         WindowUtils.assignGlobalKeyListener(hexEditPanel, okButton, cancelButton);
         if (customPanel != null) {
@@ -268,7 +268,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/ModifyBlockDialog"); // NOI18N
-        setTitle(bundle.getString("title")); // NOI18N
+        setTitle(resourceBundle.getString("title")); // NOI18N
         setModal(true);
 
         terminationModeCheckBox.setText("Block size specified");
@@ -290,7 +290,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
                 .addContainerGap(352, Short.MAX_VALUE))
         );
 
-        mainTabbedPane.addTab(bundle.getString("basicPanel.title"), basicPanel); // NOI18N
+        mainTabbedPane.addTab(resourceBundle.getString("basicPanel.title"), basicPanel); // NOI18N
 
         parametersTable.setModel(parametersTableModel);
         parametersScrollPane.setViewportView(parametersTable);
@@ -312,7 +312,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        mainTabbedPane.addTab(bundle.getString("parametersPanel.title"), null, parametersPanel, bundle.getString("parametersPanel.toolTip")); // NOI18N
+        mainTabbedPane.addTab(resourceBundle.getString("parametersPanel.title"), null, parametersPanel, resourceBundle.getString("parametersPanel.toolTip")); // NOI18N
 
         attributesTable.setModel(attributesTableModel);
         attributesTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -323,14 +323,14 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         attributesScrollPane.setViewportView(attributesTable);
         attributesTable.getAccessibleContext().setAccessibleName("");
 
-        removeButton.setText(bundle.getString("removeButton.text")); // NOI18N
+        removeButton.setText(resourceBundle.getString("removeButton.text")); // NOI18N
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeButtonActionPerformed(evt);
             }
         });
 
-        addButton.setText(bundle.getString("addButton.text")); // NOI18N
+        addButton.setText(resourceBundle.getString("addButton.text")); // NOI18N
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addButtonActionPerformed(evt);
@@ -364,16 +364,16 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        mainTabbedPane.addTab(bundle.getString("attributesPanel.title"), null, attributesPanel, "List of attributes on level 0"); // NOI18N
+        mainTabbedPane.addTab(resourceBundle.getString("attributesPanel.title"), null, attributesPanel, "List of attributes on level 0"); // NOI18N
 
-        saveAsButton.setText(bundle.getString("saveAsButton.text")); // NOI18N
+        saveAsButton.setText(resourceBundle.getString("saveAsButton.text")); // NOI18N
         saveAsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveAsButtonActionPerformed(evt);
             }
         });
 
-        loadFromButton.setText(bundle.getString("loadFromButton.text")); // NOI18N
+        loadFromButton.setText(resourceBundle.getString("loadFromButton.text")); // NOI18N
         loadFromButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadFromButtonActionPerformed(evt);
@@ -410,16 +410,16 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        mainTabbedPane.addTab(bundle.getString("dataPanel.title"), dataPanel); // NOI18N
+        mainTabbedPane.addTab(resourceBundle.getString("dataPanel.title"), dataPanel); // NOI18N
 
-        extLoadFromButton.setText(bundle.getString("loadFromButton.text")); // NOI18N
+        extLoadFromButton.setText(resourceBundle.getString("loadFromButton.text")); // NOI18N
         extLoadFromButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 extLoadFromButtonActionPerformed(evt);
             }
         });
 
-        extSaveFromButto.setText(bundle.getString("saveAsButton.text")); // NOI18N
+        extSaveFromButto.setText(resourceBundle.getString("saveAsButton.text")); // NOI18N
         extSaveFromButto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 extSaveFromButtoActionPerformed(evt);
@@ -453,18 +453,18 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        mainTabbedPane.addTab(bundle.getString("extendedAreaPanel.tabTitle"), extendedAreaPanel); // NOI18N
+        mainTabbedPane.addTab(resourceBundle.getString("extendedAreaPanel.tabTitle"), extendedAreaPanel); // NOI18N
 
         getContentPane().add(mainTabbedPane, java.awt.BorderLayout.CENTER);
 
-        cancelButton.setText(bundle.getString("cancelButton.text")); // NOI18N
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        okButton.setText(bundle.getString("okButton.text")); // NOI18N
+        okButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);

@@ -50,7 +50,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
 
     private final XBApplication appEditor;
     private ResourceBundle appBundle;
-    private final ResourceBundle bundle = ActionUtils.getResourceBundleByClass(AboutDialog.class);
+    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(AboutDialog.class);
     private JComponent sideComponent = null;
 
     public AboutDialog(java.awt.Frame parent, boolean modal, XBApplication appEditor) {
@@ -60,7 +60,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         if (appEditor != null) {
             appBundle = appEditor.getAppBundle();
         } else {
-            appBundle = bundle;
+            appBundle = resourceBundle;
         }
 
         init();
@@ -76,7 +76,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         environmentTable.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    bundle.getString("environmentTable.propertyColumn"), bundle.getString("environmentTable.valueColumn")
+                    resourceBundle.getString("environmentTable.propertyColumn"), resourceBundle.getString("environmentTable.valueColumn")
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -103,7 +103,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         modulesTable.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    bundle.getString("modulesTable.moduleNameColumn"), bundle.getString("modulesTable.moduleDescriptionColumn")
+                    resourceBundle.getString("modulesTable.moduleNameColumn"), resourceBundle.getString("modulesTable.moduleDescriptionColumn")
                 }
         ) {
             Class[] types = new Class[]{
@@ -213,7 +213,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         linkPopupMenu.setName("linkPopupMenu"); // NOI18N
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/about/dialog/resources/AboutDialog"); // NOI18N
-        copyLinkMenuItem.setText(bundle.getString("copyLinkMenuItem.text")); // NOI18N
+        copyLinkMenuItem.setText(resourceBundle.getString("copyLinkMenuItem.text")); // NOI18N
         copyLinkMenuItem.setName("copyLinkMenuItem"); // NOI18N
         copyLinkMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -222,7 +222,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         });
         linkPopupMenu.add(copyLinkMenuItem);
 
-        setTitle(bundle.getString("aboutBox.title")); // NOI18N
+        setTitle(resourceBundle.getString("aboutBox.title")); // NOI18N
         setLocationByPlatform(true);
 
         mainPanel.setName("mainPanel"); // NOI18N
@@ -235,7 +235,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         applicationPanel.setName("applicationPanel"); // NOI18N
 
         nameLabel.setFont(nameLabel.getFont().deriveFont(nameLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        nameLabel.setText(bundle.getString("nameLabel.text")); // NOI18N
+        nameLabel.setText(resourceBundle.getString("nameLabel.text")); // NOI18N
         nameLabel.setName("nameLabel"); // NOI18N
 
         nameTextField.setEditable(false);
@@ -245,7 +245,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         nameTextField.setName("nameTextField"); // NOI18N
 
         versionLabel.setFont(versionLabel.getFont().deriveFont(versionLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        versionLabel.setText(bundle.getString("versionLabel.text")); // NOI18N
+        versionLabel.setText(resourceBundle.getString("versionLabel.text")); // NOI18N
         versionLabel.setName("versionLabel"); // NOI18N
 
         versionTextField.setEditable(false);
@@ -255,7 +255,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         versionTextField.setName("versionTextField"); // NOI18N
 
         vendorLabel.setFont(vendorLabel.getFont().deriveFont(vendorLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        vendorLabel.setText(bundle.getString("vendorLabel.text")); // NOI18N
+        vendorLabel.setText(resourceBundle.getString("vendorLabel.text")); // NOI18N
         vendorLabel.setName("vendorLabel"); // NOI18N
 
         vendorTextField.setEditable(false);
@@ -265,7 +265,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         vendorTextField.setName("vendorTextField"); // NOI18N
 
         appLicenseLabel.setFont(appLicenseLabel.getFont().deriveFont(appLicenseLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        appLicenseLabel.setText(bundle.getString("appLicenseLabel.text")); // NOI18N
+        appLicenseLabel.setText(resourceBundle.getString("appLicenseLabel.text")); // NOI18N
         appLicenseLabel.setName("appLicenseLabel"); // NOI18N
 
         licenseTextField.setEditable(false);
@@ -275,7 +275,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         licenseTextField.setName("licenseTextField"); // NOI18N
 
         homepageLabel.setFont(homepageLabel.getFont().deriveFont(homepageLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        homepageLabel.setText(bundle.getString("homepageLabel.text")); // NOI18N
+        homepageLabel.setText(resourceBundle.getString("homepageLabel.text")); // NOI18N
         homepageLabel.setName("homepageLabel"); // NOI18N
 
         appHomepageLabel.setForeground(java.awt.Color.blue);
@@ -339,7 +339,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
                 .addContainerGap(71, Short.MAX_VALUE))
         );
 
-        productTabbedPane.addTab(bundle.getString("applicationPanel.TabConstraints.tabTitle"), applicationPanel); // NOI18N
+        productTabbedPane.addTab(resourceBundle.getString("applicationPanel.TabConstraints.tabTitle"), applicationPanel); // NOI18N
 
         authorsPanel.setName("authorsPanel"); // NOI18N
 
@@ -361,7 +361,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
             .addComponent(authorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
         );
 
-        productTabbedPane.addTab(bundle.getString("authorsPanel.TabConstraints.tabTitle"), authorsPanel); // NOI18N
+        productTabbedPane.addTab(resourceBundle.getString("authorsPanel.TabConstraints.tabTitle"), authorsPanel); // NOI18N
 
         licensePanel.setName("licensePanel"); // NOI18N
 
@@ -384,7 +384,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
             .addComponent(licenseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
         );
 
-        productTabbedPane.addTab(bundle.getString("licensePanel.TabConstraints.tabTitle"), licensePanel); // NOI18N
+        productTabbedPane.addTab(resourceBundle.getString("licensePanel.TabConstraints.tabTitle"), licensePanel); // NOI18N
 
         modulesPanel.setEnabled(false);
         modulesPanel.setName("modulesPanel"); // NOI18N
@@ -403,7 +403,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
             .addComponent(modulesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
         );
 
-        productTabbedPane.addTab(bundle.getString("modulesPanel.TabConstraints.tabTitle"), modulesPanel); // NOI18N
+        productTabbedPane.addTab(resourceBundle.getString("modulesPanel.TabConstraints.tabTitle"), modulesPanel); // NOI18N
 
         environmentPanel.setName("environmentPanel"); // NOI18N
 
@@ -438,7 +438,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
             .addComponent(environmentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
         );
 
-        productTabbedPane.addTab(bundle.getString("environmentPanel.TabConstraints.tabTitle"), environmentPanel); // NOI18N
+        productTabbedPane.addTab(resourceBundle.getString("environmentPanel.TabConstraints.tabTitle"), environmentPanel); // NOI18N
 
         mainPanel.add(productTabbedPane, java.awt.BorderLayout.CENTER);
 
@@ -494,7 +494,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
 
         controlPanel.setName("controlPanel"); // NOI18N
 
-        closeButton.setText(bundle.getString("closeButton.text")); // NOI18N
+        closeButton.setText(resourceBundle.getString("closeButton.text")); // NOI18N
         closeButton.setName("closeButton"); // NOI18N
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
