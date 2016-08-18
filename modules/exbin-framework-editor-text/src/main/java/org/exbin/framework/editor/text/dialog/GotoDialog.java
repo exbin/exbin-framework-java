@@ -24,6 +24,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -35,7 +36,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class GotoDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(GotoDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GotoDialog.class);
 
     public GotoDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -110,7 +111,6 @@ public class GotoDialog extends javax.swing.JDialog {
         jumpButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/GotoDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);

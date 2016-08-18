@@ -18,6 +18,7 @@ package org.exbin.framework.gui.options.dialog;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +43,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.options.panel.AppearanceOptionsPanel;
 import org.exbin.framework.gui.options.panel.MainOptionsPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -54,7 +55,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class OptionsDialog extends javax.swing.JDialog {
 
     private Preferences preferences = null;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(OptionsDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsDialog.class);
     private Map<String, JPanel> optionPanels;
     private JPanel currentOptionsPanel = null;
     private ModifiedOptionListener modifiedOptionListener;
@@ -202,7 +203,6 @@ public class OptionsDialog extends javax.swing.JDialog {
         saveButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/options/dialog/resources/OptionsDialog"); // NOI18N
         setTitle(resourceBundle.getString("OptionsDialog.title")); // NOI18N
         setLocationByPlatform(true);
 
@@ -416,7 +416,7 @@ public class OptionsDialog extends javax.swing.JDialog {
         setIconImage(appEditor.getApplicationIcon());
     }
 
-    public void setLanguageLocales(List<Locale> locales) {
+    public void setLanguageLocales(Collection<Locale> locales) {
         mainOptionsPanel.setLanguageLocales(locales);
     }
 

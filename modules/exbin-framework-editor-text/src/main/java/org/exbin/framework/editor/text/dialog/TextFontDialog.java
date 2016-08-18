@@ -20,6 +20,7 @@ import java.awt.Font;
 import javax.swing.JOptionPane;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -32,7 +33,7 @@ public class TextFontDialog extends javax.swing.JDialog {
 
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
     private final TextFontPanel textFontPanel;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextFontDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextFontDialog.class);
 
     public TextFontDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -76,7 +77,6 @@ public class TextFontDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/TextFontDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);

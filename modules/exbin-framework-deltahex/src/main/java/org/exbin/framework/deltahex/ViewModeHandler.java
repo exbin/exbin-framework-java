@@ -24,6 +24,7 @@ import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * View mode handler.
@@ -50,7 +51,7 @@ public class ViewModeHandler {
     public ViewModeHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {
@@ -59,7 +60,7 @@ public class ViewModeHandler {
         dualModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setViewMode(CodeArea.ViewMode.DUAL);
                 }
             }
@@ -72,7 +73,7 @@ public class ViewModeHandler {
         codeMatrixModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setViewMode(CodeArea.ViewMode.CODE_MATRIX);
                 }
             }
@@ -85,7 +86,7 @@ public class ViewModeHandler {
         textPreviewModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setViewMode(CodeArea.ViewMode.TEXT_PREVIEW);
                 }
             }
@@ -98,7 +99,7 @@ public class ViewModeHandler {
 
     public void setViewMode(CodeArea.ViewMode viewMode) {
         this.viewMode = viewMode;
-        HexPanel activePanel = (HexPanel) editorProvider;
+        HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
         activePanel.getCodeArea().setViewMode(viewMode);
     }
 

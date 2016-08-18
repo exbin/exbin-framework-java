@@ -26,6 +26,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Tool Bar Apperance Options panel.
@@ -39,7 +40,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     public static final String PREFERENCES_TOOLBAR_CAPTIONS = "toolBar.captions";
     public static final String PREFERENCES_STATUSBAR_VISIBLE = "statusBar.visible";
 
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
     private ModifiedOptionListener modifiedOptionListener;
     private final ApplicationFrameHandler frame;
     private OptionsPanel extendedPanel = null;
@@ -66,7 +67,6 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
         setLayout(new java.awt.BorderLayout());
 
         showToolbarCheckBox.setSelected(true);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/options/panel/resources/AppearanceOptionsPanel"); // NOI18N
         showToolbarCheckBox.setText(resourceBundle.getString("AppearanceOptionsPanel.showToolbarCheckBox.text")); // NOI18N
         showToolbarCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

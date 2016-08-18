@@ -24,6 +24,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Word wrapping handler.
@@ -42,7 +43,7 @@ public class WordWrappingHandler {
     public WordWrappingHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(EditorTextModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorTextModule.class);
     }
 
     public void init() {

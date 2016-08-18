@@ -34,6 +34,7 @@ import org.exbin.xbup.core.catalog.base.XBCXFile;
 import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -49,7 +50,7 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
     private final CatalogFilesTableModel filesModel;
     private int currentItem;
     private XBCNode currentNode;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogItemEditFilesPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogItemEditFilesPanel.class);
 
     public CatalogItemEditFilesPanel() {
         filesModel = new CatalogFilesTableModel();

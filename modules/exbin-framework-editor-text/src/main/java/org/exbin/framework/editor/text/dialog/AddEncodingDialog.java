@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import javax.swing.AbstractListModel;
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -36,7 +37,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class AddEncodingDialog extends javax.swing.JDialog {
 
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(AddEncodingDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AddEncodingDialog.class);
 
     public AddEncodingDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -72,7 +73,6 @@ public class AddEncodingDialog extends javax.swing.JDialog {
         setTitle("Add Supported Encoding"); // NOI18N
         setName("Form"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/AddEncodingDialog"); // NOI18N
         supportedEncodingsLabel.setText(resourceBundle.getString("supportedEncodingsLabel.text")); // NOI18N
         supportedEncodingsLabel.setName("supportedEncodingsLabel"); // NOI18N
 

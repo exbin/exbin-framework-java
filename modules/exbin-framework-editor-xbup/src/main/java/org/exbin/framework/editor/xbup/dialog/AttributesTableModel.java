@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.xbup.core.parser.token.XBAttribute;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Attributes list table model for item editing.
@@ -42,7 +43,7 @@ public class AttributesTableModel extends AbstractTableModel {
     private final boolean[] columnsEditable = new boolean[]{false, true};
 
     public AttributesTableModel() {
-        resourceBundle = ActionUtils.getResourceBundleByClass(ModifyBlockDialog.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockDialog.class);
         columnNames = new String[]{resourceBundle.getString("attributesTableModel.itemOrder"), resourceBundle.getString("attributesTableModel.itemValue")};
         attributes = new ArrayList<>();
     }

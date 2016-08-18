@@ -28,6 +28,7 @@ import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
@@ -39,7 +40,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 public class GuiLinkModule implements GuiLinkModuleApi {
 
     private XBApplication application;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GuiLinkModule.class);
+    private final java.util.ResourceBundle bundle = LanguageUtils.getResourceBundleByClass(GuiLinkModule.class);
     private URL helpUrl;
 
     private Action onlineHelpAction;

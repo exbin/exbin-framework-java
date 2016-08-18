@@ -24,6 +24,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * View mode handler.
@@ -50,7 +51,7 @@ public class ViewModeHandler {
     public ViewModeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(EditorXbupModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorXbupModule.class);
     }
 
     public void init() {

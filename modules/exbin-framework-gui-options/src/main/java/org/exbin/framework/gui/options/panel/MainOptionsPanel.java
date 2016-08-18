@@ -19,6 +19,7 @@ package org.exbin.framework.gui.options.panel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -34,7 +35,7 @@ import org.exbin.framework.gui.options.OptionsManagement;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
-import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Main options panel.
@@ -44,7 +45,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
 
-    private java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(MainOptionsPanel.class);
+    private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
     private ModifiedOptionListener modifiedOptionListener;
     private final ApplicationFrameHandler frame;
     private OptionsPanel extendedPanel = null;
@@ -100,7 +101,6 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
 
         setLayout(new java.awt.BorderLayout());
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/options/panel/resources/MainOptionsPanel"); // NOI18N
         visualThemeLabel.setText(resourceBundle.getString("MainOptionsPanel.visualThemeLabel.text")); // NOI18N
 
         themeComboBox.setModel(themesComboBoxModel);
@@ -304,9 +304,10 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         extendedPanel.setModifiedOptionListener(modifiedOptionListener);
     }
 
-    public void setLanguageLocales(List<Locale> locales) {
+    public void setLanguageLocales(Collection<Locale> locales) {
         languageLocales.clear();
         languageLocales.add(Locale.ROOT);
+        languageLocales.add(new Locale("en", "US"));
         languageLocales.addAll(locales);
         languageComboBoxModel.removeAllElements();
         for (Locale language : languageLocales) {

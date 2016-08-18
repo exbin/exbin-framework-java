@@ -29,6 +29,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * XBTEditor Color Selection panel.
@@ -44,7 +45,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
     public static final String PREFERENCES_TEXT_COLOR_FOUND = "textColor.found";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextColorPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorPanel.class);
     private TextColorPanelApi frame;
 
     public TextColorPanel(TextColorPanelApi frame) {
@@ -164,7 +165,6 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextColorPanel"); // NOI18N
         selectTextColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
         selectTextColorButton.setName("selectTextColorButton"); // NOI18N
         selectTextColorButton.addActionListener(new java.awt.event.ActionListener() {

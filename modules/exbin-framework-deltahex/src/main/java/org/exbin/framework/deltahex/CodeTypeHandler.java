@@ -25,6 +25,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Code type handler.
@@ -52,7 +53,7 @@ public class CodeTypeHandler {
     public CodeTypeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {
@@ -61,7 +62,7 @@ public class CodeTypeHandler {
         binaryCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setCodeType(CodeArea.CodeType.BINARY);
                 }
             }
@@ -74,7 +75,7 @@ public class CodeTypeHandler {
         octalCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setCodeType(CodeArea.CodeType.OCTAL);
                 }
             }
@@ -87,7 +88,7 @@ public class CodeTypeHandler {
         decimalCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setCodeType(CodeArea.CodeType.DECIMAL);
                 }
             }
@@ -100,7 +101,7 @@ public class CodeTypeHandler {
         hexadecimalCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setCodeType(CodeArea.CodeType.HEXADECIMAL);
                 }
             }
@@ -114,7 +115,7 @@ public class CodeTypeHandler {
 
     public void setCodeType(CodeArea.CodeType codeType) {
         this.codeType = codeType;
-        HexPanel activePanel = (HexPanel) editorProvider;
+        HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
         activePanel.getCodeArea().setCodeType(codeType);
     }
 

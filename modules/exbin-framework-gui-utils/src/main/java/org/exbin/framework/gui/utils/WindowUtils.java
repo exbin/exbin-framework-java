@@ -37,7 +37,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 
 /**
- * Some simple static methods usable for windows and dialogs.
+ * Utility static methods usable for windows and dialogs.
  *
  * @version 0.2.0 2016/07/23
  * @author ExBin Project (http://exbin.org)

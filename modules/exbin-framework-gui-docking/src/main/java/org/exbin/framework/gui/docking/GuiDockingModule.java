@@ -40,6 +40,7 @@ import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
@@ -71,7 +72,7 @@ public class GuiDockingModule implements GuiDockingModuleApi {
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
 
-        resourceBundle = ActionUtils.getResourceBundleByClass(this.getClass());
+        resourceBundle = LanguageUtils.getResourceBundleByClass(this.getClass());
     }
 
     @Override

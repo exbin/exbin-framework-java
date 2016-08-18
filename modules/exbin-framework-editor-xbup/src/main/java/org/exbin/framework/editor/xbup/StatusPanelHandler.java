@@ -26,6 +26,7 @@ import org.exbin.framework.editor.xbup.panel.XBDocStatusPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Status panel handler.
@@ -44,7 +45,7 @@ public class StatusPanelHandler {
     public StatusPanelHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(EditorXbupModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorXbupModule.class);
     }
 
     void init() {

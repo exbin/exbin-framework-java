@@ -26,6 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCFormatSpec;
@@ -75,7 +76,7 @@ public class CatalogItemPanel extends javax.swing.JPanel {
     private XBCXIcon itemIcon;
     private JumpActionListener jumpActionListener = null;
     private XBACatalog catalog;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogItemPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogItemPanel.class);
 
     public CatalogItemPanel() {
         defsModel = new CatalogDefsTableModel();
@@ -180,7 +181,6 @@ public class CatalogItemPanel extends javax.swing.JPanel {
 
         jSeparator1.setName("jSeparator1"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/catalog/panel/resources/CatalogItemPanel"); // NOI18N
         itemNameLabel.setText(resourceBundle.getString("itemNameLabel.text")); // NOI18N
         itemNameLabel.setName("itemNameLabel"); // NOI18N
 

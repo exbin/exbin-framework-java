@@ -49,6 +49,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.YamlFileType;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -76,7 +77,7 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
 
     private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
     private MenuManagement menuManagement;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogSearchPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogSearchPanel.class);
 
     public CatalogSearchPanel() {
         searchPanel = new CatalogItemsSearchPanel();

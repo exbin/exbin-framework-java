@@ -18,6 +18,7 @@ package org.exbin.framework.editor.text.dialog;
 
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -29,7 +30,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class FindTextDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(FindTextDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(FindTextDialog.class);
 
     public FindTextDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -77,7 +78,6 @@ public class FindTextDialog extends javax.swing.JDialog {
         findButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/FindTextDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N

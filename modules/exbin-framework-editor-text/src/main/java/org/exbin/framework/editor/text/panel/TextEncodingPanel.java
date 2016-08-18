@@ -32,6 +32,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -46,7 +47,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
     public static final String PREFERENCES_TEXT_ENCODING_PREFIX = "textEncoding.";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextEncodingPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingPanel.class);
     private final TextEncodingPanelApi frame;
     private Image iconImage;
 
@@ -120,7 +121,6 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
 
         jPanel1.setName("jPanel1"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextEncodingPanel"); // NOI18N
         upButton.setText(resourceBundle.getString("upButton.text")); // NOI18N
         upButton.setEnabled(false);
         upButton.setName("upButton"); // NOI18N

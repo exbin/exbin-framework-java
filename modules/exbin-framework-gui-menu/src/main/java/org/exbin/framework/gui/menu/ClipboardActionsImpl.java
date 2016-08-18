@@ -62,6 +62,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Clipboard operations.
@@ -106,7 +107,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
     }
 
     public void init() {
-        resourceBundle = ActionUtils.getResourceBundleByClass(GuiMenuModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(GuiMenuModule.class);
         metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
         initializeClipboardActions();

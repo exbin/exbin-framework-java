@@ -43,6 +43,7 @@ import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.ServiceManagerHandler;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -67,7 +68,7 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
 
     private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
     private MenuManagement menuManagement;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogBrowserPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogBrowserPanel.class);
 
     public CatalogBrowserPanel() {
         initComponents();

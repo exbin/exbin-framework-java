@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JPopupMenu;
@@ -58,9 +59,9 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.gui.menu.api.NextToMode;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Hexadecimal editor module.
@@ -84,7 +85,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     public static final String HEX_STATUS_BAR_ID = "hexStatusBar";
 
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+    private java.util.ResourceBundle resourceBundle = null;
 
     private XBApplication application;
     private HexEditorProvider editorProvider;
@@ -115,6 +116,14 @@ public class DeltaHexModule implements XBApplicationModule {
 
     @Override
     public void unregisterModule(String moduleId) {
+    }
+
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
+        }
+
+        return resourceBundle;
     }
 
     public HexEditorProvider getEditorProvider() {
@@ -351,6 +360,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private ViewModeHandler getViewModeHandler() {
         if (viewModeHandler == null) {
+            getResourceBundle();
             viewModeHandler = new ViewModeHandler(application, getEditorProvider());
             viewModeHandler.init();
         }
@@ -360,6 +370,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private CodeTypeHandler getCodeTypeHandler() {
         if (codeTypeHandler == null) {
+            getResourceBundle();
             codeTypeHandler = new CodeTypeHandler(application, getEditorProvider());
             codeTypeHandler.init();
         }
@@ -369,6 +380,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private PositionCodeTypeHandler getPositionCodeTypeHandler() {
         if (positionCodeTypeHandler == null) {
+            getResourceBundle();
             positionCodeTypeHandler = new PositionCodeTypeHandler(application, getEditorProvider());
             positionCodeTypeHandler.init();
         }
@@ -378,6 +390,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private HexCharactersCaseHandler getHexCharactersCaseHandler() {
         if (hexCharactersCaseHandler == null) {
+            getResourceBundle();
             hexCharactersCaseHandler = new HexCharactersCaseHandler(application, getEditorProvider());
             hexCharactersCaseHandler.init();
         }
@@ -387,6 +400,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private ClipboardCodeHandler getClipboardCodeHandler() {
         if (clipboardCodeHandler == null) {
+            getResourceBundle();
             clipboardCodeHandler = new ClipboardCodeHandler(application, getEditorProvider());
             clipboardCodeHandler.init();
         }

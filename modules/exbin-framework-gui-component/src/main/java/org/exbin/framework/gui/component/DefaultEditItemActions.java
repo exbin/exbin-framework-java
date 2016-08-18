@@ -23,6 +23,7 @@ import javax.swing.Action;
 import org.exbin.framework.gui.component.api.EditItemActions;
 import org.exbin.framework.gui.component.api.EditItemActionsHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Item editation default action set.
@@ -32,7 +33,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class DefaultEditItemActions implements EditItemActions {
 
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(GuiComponentModule.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiComponentModule.class);
     private final int metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
     private EditItemActionsHandler actionsHandler = null;

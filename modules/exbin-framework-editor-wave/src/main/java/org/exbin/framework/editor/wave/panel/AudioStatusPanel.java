@@ -19,6 +19,7 @@ package org.exbin.framework.editor.wave.panel;
 import javax.swing.ImageIcon;
 import org.exbin.framework.editor.wave.AudioControlApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Audio editor status panel.
@@ -29,7 +30,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 public class AudioStatusPanel extends javax.swing.JPanel {
 
     private final AudioControlApi playControl;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(AudioStatusPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AudioStatusPanel.class);
 
     public AudioStatusPanel(AudioControlApi playControl) {
         this.playControl = playControl;

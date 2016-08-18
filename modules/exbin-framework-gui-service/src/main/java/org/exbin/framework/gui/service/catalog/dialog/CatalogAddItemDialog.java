@@ -19,6 +19,7 @@ package org.exbin.framework.gui.service.catalog.dialog;
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.service.catalog.panel.CatalogSpecItemType;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -30,7 +31,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class CatalogAddItemDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogAddItemDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogAddItemDialog.class);
 
     public CatalogAddItemDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -67,7 +68,6 @@ public class CatalogAddItemDialog extends javax.swing.JDialog {
         itemNameTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/catalog/dialog/resources/CatalogAddItemDialog"); // NOI18N
         setTitle(resourceBundle.getString("title")); // NOI18N
 
         cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N

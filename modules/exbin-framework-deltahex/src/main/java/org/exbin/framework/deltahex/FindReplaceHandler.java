@@ -25,6 +25,7 @@ import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Find/replace handler.
@@ -49,7 +50,7 @@ public class FindReplaceHandler {
     public FindReplaceHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {
@@ -58,8 +59,9 @@ public class FindReplaceHandler {
         editFindAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
-                    ((HexPanel) editorProvider).showFindPanel();
+                if (editorProvider instanceof HexEditorProvider) {
+                    HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+                    activePanel.showFindPanel();
                 }
             }
         };

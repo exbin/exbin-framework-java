@@ -22,9 +22,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -35,11 +38,12 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModuleRepository;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
- * Application interface class.
+ * Base application class.
  *
- * @version 0.2.0 2016/03/28
+ * @version 0.2.0 2016/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class XBBaseApplication implements XBApplication {
@@ -53,17 +57,20 @@ public class XBBaseApplication implements XBApplication {
     private Preferences appPreferences;
 
     private final XBDefaultApplicationModuleRepository moduleRepository;
-    private final List<URI> plugins;
+    private final List<URI> plugins = new ArrayList<>();
+    private final Map<Locale, ClassLoader> languagePlugins = new HashMap<>();
 
     public XBBaseApplication() {
-        plugins = new ArrayList<>();
         moduleRepository = new XBDefaultApplicationModuleRepository(this);
     }
 
-    /**
-     * Creates and shows the main frame of the application.
-     */
     public void init() {
+        // Setup language utility
+        Locale locale = Locale.getDefault();
+        ClassLoader languageClassLoader = languagePlugins.get(locale);
+        if (languageClassLoader != null) {
+            LanguageUtils.setLanguageClassLoader(languageClassLoader);
+        }
     }
 
     @Override
@@ -170,5 +177,15 @@ public class XBBaseApplication implements XBApplication {
     @Override
     public XBApplicationModuleRepository getModuleRepository() {
         return moduleRepository;
+    }
+
+    @Override
+    public void registerLanguagePlugin(Locale locale, ClassLoader classLoader) {
+        languagePlugins.put(locale, classLoader);
+    }
+
+    @Override
+    public Set<Locale> getLanguageLocales() {
+        return languagePlugins.keySet();
     }
 }

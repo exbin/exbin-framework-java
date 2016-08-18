@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -31,7 +32,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class ManageEncodingsDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ManageEncodingsDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ManageEncodingsDialog.class);
 
     public ManageEncodingsDialog(java.awt.Frame parent, TextEncodingPanelApi frame, boolean modal) {
         super(parent, modal);

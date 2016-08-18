@@ -25,6 +25,7 @@ import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Drawing mode control handler.
@@ -51,7 +52,7 @@ public class DrawingControlHandler {
     public DrawingControlHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(EditorWaveModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorWaveModule.class);
     }
 
     public void init() {

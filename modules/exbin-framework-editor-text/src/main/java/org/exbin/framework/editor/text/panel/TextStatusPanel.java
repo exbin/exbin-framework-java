@@ -19,6 +19,7 @@ package org.exbin.framework.editor.text.panel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextPositionStatusApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Text editor status panel.
@@ -28,7 +29,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class TextStatusPanel extends javax.swing.JPanel implements TextPositionStatusApi, TextEncodingStatusApi {
 
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextStatusPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextStatusPanel.class);
 
     public TextStatusPanel() {
         initComponents();
@@ -52,7 +53,6 @@ public class TextStatusPanel extends javax.swing.JPanel implements TextPositionS
         documentCursorPositionTextField.setEditable(false);
         documentCursorPositionTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         documentCursorPositionTextField.setText("1:1"); // NOI18N
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextStatusPanel"); // NOI18N
         documentCursorPositionTextField.setToolTipText(resourceBundle.getString("TextStatusPanel.documentCursorPositionTextField.toolTipText")); // NOI18N
         documentCursorPositionTextField.setName("documentCursorPositionTextField"); // NOI18N
 

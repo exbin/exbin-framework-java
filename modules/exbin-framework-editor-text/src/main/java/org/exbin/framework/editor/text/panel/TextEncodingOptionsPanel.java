@@ -28,6 +28,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Text encoding options panel.
@@ -40,7 +41,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     public static final String PREFERENCES_TEXT_ENCODING_DEFAULT = "textEncoding.default";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
     private final TextEncodingPanelApi frame;
     private final TextEncodingPanel encodingPanel;
     private final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
@@ -94,7 +95,6 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
             }
         });
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextEncodingOptionsPanel"); // NOI18N
         defaultEncodingLabel.setText(resourceBundle.getString("TextEncodingOptionsPanel.defaultEncodingLabel.text")); // NOI18N
         defaultEncodingLabel.setName("defaultEncodingLabel"); // NOI18N
 

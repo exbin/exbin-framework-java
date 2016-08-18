@@ -43,6 +43,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemInfoPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 
@@ -58,7 +59,7 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
     private XBACatalog catalog;
     private final CatalogItemInfoPanel catalogItemPanel;
     private boolean devMode = false;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(BlockPropertiesDialog.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BlockPropertiesDialog.class);
 
     public BlockPropertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -107,7 +108,6 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
         controlPanel = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/BlockPropertiesDialog"); // NOI18N
         copyLinkMenuItem.setText(resourceBundle.getString("copyLinkMenuItem.text")); // NOI18N
         copyLinkMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

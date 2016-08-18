@@ -24,6 +24,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Audio operation handler.
@@ -44,7 +45,7 @@ public class AudioOperationHandler {
     public AudioOperationHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(EditorWaveModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorWaveModule.class);
     }
 
     public void init() {

@@ -60,85 +60,91 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     @Override
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
+    }
 
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerClipboardHandler(new ClipboardActionsHandler() {
-            @Override
-            public void performCut() {
-                if (activeEditor instanceof ClipboardActionsHandler) {
-                    ((ClipboardActionsHandler) activeEditor).performCut();
-                }
-            }
-
-            @Override
-            public void performCopy() {
-                if (activeEditor instanceof ClipboardActionsHandler) {
-                    ((ClipboardActionsHandler) activeEditor).performCopy();
-                }
-            }
-
-            @Override
-            public void performPaste() {
-                if (activeEditor instanceof ClipboardActionsHandler) {
-                    ((ClipboardActionsHandler) activeEditor).performPaste();
-                }
-            }
-
-            @Override
-            public void performDelete() {
-                if (activeEditor instanceof ClipboardActionsHandler) {
-                    ((ClipboardActionsHandler) activeEditor).performDelete();
-                }
-            }
-
-            @Override
-            public void performSelectAll() {
-                if (activeEditor instanceof ClipboardActionsHandler) {
-                    ((ClipboardActionsHandler) activeEditor).performSelectAll();
-                }
-            }
-
-            @Override
-            public boolean isSelection() {
-                if (activeEditor instanceof ClipboardActionsHandler) {
-                    return ((ClipboardActionsHandler) activeEditor).isSelection();
+    private void setActiveEditor(EditorProvider editorProvider) {
+        if (activeEditor == null) {
+            GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+            menuModule.registerClipboardHandler(new ClipboardActionsHandler() {
+                @Override
+                public void performCut() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) activeEditor).performCut();
+                    }
                 }
 
-                return false;
-            }
-
-            @Override
-            public boolean isEditable() {
-                if (activeEditor instanceof ClipboardActionsHandler) {
-                    return ((ClipboardActionsHandler) activeEditor).isEditable();
+                @Override
+                public void performCopy() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) activeEditor).performCopy();
+                    }
                 }
 
-                return false;
-            }
-
-            @Override
-            public boolean canSelectAll() {
-                if (activeEditor instanceof ClipboardActionsHandler) {
-                    return ((ClipboardActionsHandler) activeEditor).canSelectAll();
+                @Override
+                public void performPaste() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) activeEditor).performPaste();
+                    }
                 }
 
-                return false;
-            }
-
-            @Override
-            public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-                clipboardActionsUpdateListener = updateListener;
-            }
-
-            @Override
-            public boolean canPaste() {
-                if (activeEditor instanceof ClipboardActionsHandler) {
-                    return ((ClipboardActionsHandler) activeEditor).canPaste();
+                @Override
+                public void performDelete() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) activeEditor).performDelete();
+                    }
                 }
 
-                return true;
-            }
-        });
+                @Override
+                public void performSelectAll() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) activeEditor).performSelectAll();
+                    }
+                }
+
+                @Override
+                public boolean isSelection() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) activeEditor).isSelection();
+                    }
+
+                    return false;
+                }
+
+                @Override
+                public boolean isEditable() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) activeEditor).isEditable();
+                    }
+
+                    return false;
+                }
+
+                @Override
+                public boolean canSelectAll() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) activeEditor).canSelectAll();
+                    }
+
+                    return false;
+                }
+
+                @Override
+                public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+                    clipboardActionsUpdateListener = updateListener;
+                }
+
+                @Override
+                public boolean canPaste() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) activeEditor).canPaste();
+                    }
+
+                    return true;
+                }
+            });
+        }
+
+        this.activeEditor = editorProvider;
     }
 
     @Override
@@ -155,7 +161,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     @Override
     public void registerMultiEditor(String pluginId, final MultiEditorProvider editorProvider) {
         registerEditor(pluginId, editorProvider);
-        activeEditor = editorProvider;
+        setActiveEditor(editorProvider);
     }
 
     @Override
@@ -192,7 +198,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     @Override
     public Component getEditorPanel() {
         if (editorPanel == null) {
-            activeEditor = editors.get(0);
+            setActiveEditor(editors.get(0));
             editorPanel = new SingleEditorPanel(activeEditor.getPanel());
             editorPanel.init();
         }
@@ -328,6 +334,5 @@ public class GuiEditorModule implements GuiEditorModuleApi {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         });
-
     }
 }

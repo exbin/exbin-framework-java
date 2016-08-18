@@ -18,6 +18,7 @@ package org.exbin.framework.gui.about;
 
 import org.exbin.framework.gui.about.dialog.AboutDialog;
 import java.awt.event.ActionEvent;
+import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -30,6 +31,7 @@ import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
@@ -41,7 +43,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 public class GuiAboutModule implements GuiAboutModuleApi {
 
     private XBApplication application;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(GuiAboutModule.class);
+    private java.util.ResourceBundle resourceBundle = null;
     private Action aboutAction;
     private JComponent sideComponent = null;
 
@@ -57,9 +59,18 @@ public class GuiAboutModule implements GuiAboutModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    private ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(GuiAboutModule.class);
+        }
+
+        return resourceBundle;
+    }
+
     @Override
     public Action getAboutAction() {
         if (aboutAction == null) {
+            getResourceBundle();
             aboutAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

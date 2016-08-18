@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import org.exbin.framework.client.api.ConnectionStatus;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Status panel for XB document editor.
@@ -30,7 +31,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class XBDocStatusPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(XBDocStatusPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBDocStatusPanel.class);
 
     public XBDocStatusPanel() {
         initComponents();

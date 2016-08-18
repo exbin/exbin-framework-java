@@ -28,6 +28,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.menu.api.ClipboardActions;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Basic clipboard action set.
@@ -37,7 +38,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
  */
 public class BasicClipboardActions implements ClipboardActions {
 
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(GuiMenuModule.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiMenuModule.class);
     private final int metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
     private ClipboardActionsHandler clipboardActionsHandler = null;

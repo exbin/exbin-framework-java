@@ -33,6 +33,7 @@ import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
@@ -59,10 +60,6 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     @Override
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
-
-        resourceBundle = ActionUtils.getResourceBundleByClass(this.getClass());
-        initMainMenu();
-        initMainToolBar();
     }
 
     private void initMainMenu() {
@@ -88,6 +85,13 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         menuModule.registerToolBar(MAIN_TOOL_BAR_ID, MODULE_ID);
     }
 
+    @Override
+    public void createMainMenu() {
+        resourceBundle = LanguageUtils.getResourceBundleByClass(GuiFrameModule.class);
+        initMainMenu();
+        initMainToolBar();
+    }
+    
     @Override
     public void unregisterModule(String moduleId) {
     }
@@ -159,10 +163,11 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     }
 
     private StatusBarHandler getStatusBarHandler() {
+        getFrameHandler();
         if (statusBarHandler == null) {
             statusBarHandler = new StatusBarHandler(frame);
         }
-        
+
         return statusBarHandler;
     }
 
@@ -170,7 +175,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     public void registerStatusBar(String moduleId, String statusBarId, JPanel panel) {
         getStatusBarHandler().registerStatusBar(moduleId, statusBarId, panel);
     }
-    
+
     @Override
     public void switchStatusBar(String statusBarId) {
         getStatusBarHandler().switchStatusBar(statusBarId);
@@ -248,7 +253,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         createViewBarsMenuGroup();
         menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, getViewStatusBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
     }
-    
+
     private void createViewBarsMenuGroup() {
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         if (!menuModule.menuGroupExists(GuiFrameModuleApi.VIEW_MENU_ID, VIEW_BARS_GROUP_ID)) {

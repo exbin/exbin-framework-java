@@ -25,6 +25,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Hexadecimal editor color selection panel.
@@ -37,7 +38,7 @@ public class HexColorOptionsPanel extends javax.swing.JPanel implements OptionsP
     public static final String PREFERENCES_TEXT_COLOR_DEFAULT = "textColor.default";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexColorOptionsPanel.class);
+    private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexColorOptionsPanel.class);
     private HexColorPanelApi frame;
     private HexColorPanel colorPanel;
 
@@ -71,7 +72,6 @@ public class HexColorOptionsPanel extends javax.swing.JPanel implements OptionsP
         defaultColorPanel.setName("defaultColorPanel"); // NOI18N
 
         defaultColorCheckBox.setSelected(true);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexColorOptionsPanel"); // NOI18N
         defaultColorCheckBox.setText(resourceBundle.getString("HexColorOptionsPanel.defaultColorCheckBox.text")); // NOI18N
         defaultColorCheckBox.setName("defaultColorCheckBox"); // NOI18N
         defaultColorCheckBox.addItemListener(new java.awt.event.ItemListener() {

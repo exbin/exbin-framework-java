@@ -20,6 +20,7 @@ import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Hexadecimal editor status panel.
@@ -31,7 +32,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
     private CodeArea.EditationMode editationMode;
     private StatusControlHandler editationModeChange;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexStatusPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexStatusPanel.class);
 
     public HexStatusPanel() {
         initComponents();
@@ -54,7 +55,6 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
         editationModeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         editationModeLabel.setText("OVR");
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexStatusPanel"); // NOI18N
         editationModeLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.editationModeLabel.toolTipText")); // NOI18N
         editationModeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         editationModeLabel.setName("editationModeLabel"); // NOI18N

@@ -21,6 +21,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * View nonprintables handler.
@@ -41,7 +42,7 @@ public class ViewNonprintablesHandler {
     public ViewNonprintablesHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {

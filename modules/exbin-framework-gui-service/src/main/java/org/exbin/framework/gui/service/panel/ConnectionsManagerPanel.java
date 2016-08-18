@@ -26,6 +26,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.exbin.framework.gui.service.dialog.EditConnectionDialog;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -36,7 +37,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  */
 public class ConnectionsManagerPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ConnectionsManagerPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ConnectionsManagerPanel.class);
 
     public ConnectionsManagerPanel() {
         initComponents();

@@ -19,6 +19,7 @@ package org.exbin.framework.gui.service.dialog;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -30,7 +31,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class EditConnectionDialog extends javax.swing.JDialog {
 
     private static final int DEFAULT_PORT = 22594;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(EditConnectionDialog.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditConnectionDialog.class);
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
 
     public EditConnectionDialog(java.awt.Frame parent, boolean modal) {
@@ -66,7 +67,6 @@ public class EditConnectionDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/dialog/resources/EditConnectionDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
 
         connectionHostLabel.setText(resourceBundle.getString("connectionHostLabel.text")); // NOI18N

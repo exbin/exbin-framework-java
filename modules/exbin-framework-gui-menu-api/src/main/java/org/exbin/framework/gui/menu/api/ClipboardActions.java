@@ -16,8 +16,6 @@
  */
 package org.exbin.framework.gui.menu.api;
 
-import javax.swing.Action;
-
 /**
  * Interface for clipboard action set.
  *
@@ -37,11 +35,4 @@ public interface ClipboardActions extends ClipboardActionsApi {
      * @param clipboardHandler clipboard handler
      */
     void setClipboardActionsHandler(ClipboardActionsHandler clipboardHandler);
-
-    /**
-     * Returns cut to clipboard action.
-     *
-     * @return cut action
-     */
-    Action getCutAction();
 }

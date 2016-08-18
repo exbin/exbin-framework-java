@@ -47,6 +47,7 @@ import org.exbin.framework.gui.frame.api.ApplicationExitListener;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * File handling operations.
@@ -83,7 +84,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     private XBApplication application;
 
     public FileHandlingActions() {
-        resourceBundle = ActionUtils.getResourceBundleByClass(GuiFileModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(GuiFileModule.class);
     }
 
     public void init(XBApplication application) {

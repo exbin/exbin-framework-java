@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import org.exbin.framework.editor.picture.panel.ToolColorPanel;
 import org.exbin.framework.editor.picture.panel.ToolColorPanelApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -30,7 +31,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  */
 public class ToolColorDialog extends javax.swing.JDialog {
 
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ToolColorDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ToolColorDialog.class);
 
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
     private final ToolColorPanel toolColorPanel = new ToolColorPanel();
@@ -75,7 +76,6 @@ public class ToolColorDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/picture/dialog/resources/ToolColorDialog"); // NOI18N
         setTitle(resourceBundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);

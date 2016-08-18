@@ -25,7 +25,7 @@ import org.exbin.framework.api.XBApplicationModule;
 /**
  * Interface for XBUP framework frame module.
  *
- * @version 0.2.0 2016/01/11
+ * @version 0.2.0 2016/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public interface GuiFrameModuleApi extends XBApplicationModule {
@@ -53,6 +53,11 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * @return frame handler
      */
     ApplicationFrameHandler getFrameHandler();
+
+    /**
+     * Creates and initializes main menu and toolbar.
+     */
+    void createMainMenu();
 
     /**
      * Returns frame instance.

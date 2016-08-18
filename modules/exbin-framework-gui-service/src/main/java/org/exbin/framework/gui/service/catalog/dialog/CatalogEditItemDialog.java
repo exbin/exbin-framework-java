@@ -28,6 +28,7 @@ import org.exbin.framework.gui.service.catalog.panel.CatalogItemEditFilesPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemEditPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemEditRevsPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -47,7 +48,7 @@ public class CatalogEditItemDialog extends javax.swing.JDialog {
     private CatalogItemEditDefinitionPanel definitionPanel;
     private CatalogItemEditFilesPanel filesPanel;
     private MenuManagement menuManagement;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogEditItemDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogEditItemDialog.class);
 
     public CatalogEditItemDialog(java.awt.Frame frame, boolean modal) {
         super(frame, modal);
@@ -85,7 +86,6 @@ public class CatalogEditItemDialog extends javax.swing.JDialog {
         setButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/catalog/dialog/resources/CatalogEditItemDialog"); // NOI18N
         setTitle(resourceBundle.getString("title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N

@@ -91,7 +91,6 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
         setName("Form"); // NOI18N
 
         defaultFontCheckBox.setSelected(true);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextFontOptionsPanel"); // NOI18N
         defaultFontCheckBox.setText(resourceBundle.getString("TextFontOptionsPanel.defaultFontCheckBox.text")); // NOI18N
         defaultFontCheckBox.setName("defaultFontCheckBox"); // NOI18N
         defaultFontCheckBox.addItemListener(new java.awt.event.ItemListener() {

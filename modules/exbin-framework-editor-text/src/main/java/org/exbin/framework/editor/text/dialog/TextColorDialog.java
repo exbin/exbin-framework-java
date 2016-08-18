@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import org.exbin.framework.editor.text.panel.TextColorPanel;
 import org.exbin.framework.editor.text.panel.TextColorPanelApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -33,7 +34,7 @@ public class TextColorDialog extends javax.swing.JDialog {
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
     private final TextColorPanelApi frame;
     private final TextColorPanel textColorPanel;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextColorDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorDialog.class);
 
     public TextColorDialog(java.awt.Frame parent, TextColorPanelApi frame, boolean modal) {
         super(parent, modal);
@@ -70,7 +71,6 @@ public class TextColorDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/dialog/resources/TextColorDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);

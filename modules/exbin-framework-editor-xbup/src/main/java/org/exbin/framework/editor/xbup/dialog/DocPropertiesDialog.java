@@ -20,6 +20,7 @@ import java.net.URI;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
 import org.exbin.xbup.core.block.XBTEditableDocument;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 
@@ -32,7 +33,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 public class DocPropertiesDialog extends javax.swing.JDialog {
 
     private XBTEditableDocument doc;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(DocPropertiesDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DocPropertiesDialog.class);
 
     public DocPropertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -70,7 +71,6 @@ public class DocPropertiesDialog extends javax.swing.JDialog {
         closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/DocPropertiesDialog"); // NOI18N
         setTitle(resourceBundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
 

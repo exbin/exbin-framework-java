@@ -25,8 +25,10 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -62,6 +64,16 @@ public class TestApplication implements XBApplication {
     @Override
     public Preferences getAppPreferences() {
         return Preferences.systemRoot();
+    }
+
+    @Override
+    public void registerLanguagePlugin(Locale locale, ClassLoader classLoader) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Set<Locale> getLanguageLocales() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

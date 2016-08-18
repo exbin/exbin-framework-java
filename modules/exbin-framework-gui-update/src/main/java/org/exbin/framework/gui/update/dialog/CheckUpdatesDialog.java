@@ -28,6 +28,7 @@ import org.exbin.framework.gui.update.GuiUpdateModule;
 import org.exbin.framework.gui.update.VersionNumbers;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -40,7 +41,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
     private final XBApplication application;
     private ResourceBundle appBundle;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CheckUpdatesDialog.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckUpdatesDialog.class);
     private String updateWebsite;
     private VersionNumbers versionNumbers;
     private CheckUpdatesHandler checkUpdatesHandler = null;
@@ -106,7 +107,6 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
 
         linkPopupMenu.setName("linkPopupMenu"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/update/dialog/resources/CheckUpdatesDialog"); // NOI18N
         copyLinkMenuItem.setText(resourceBundle.getString("copyLinkMenuItem.text")); // NOI18N
         copyLinkMenuItem.setName("copyLinkMenuItem"); // NOI18N
         copyLinkMenuItem.addActionListener(new java.awt.event.ActionListener() {

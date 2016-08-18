@@ -25,6 +25,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Position code type handler.
@@ -51,7 +52,7 @@ public class PositionCodeTypeHandler {
     public PositionCodeTypeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {
@@ -60,7 +61,7 @@ public class PositionCodeTypeHandler {
         octalPositionCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setCodeType(CodeArea.PositionCodeType.OCTAL);
                 }
             }
@@ -73,7 +74,7 @@ public class PositionCodeTypeHandler {
         decimalPositionCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setCodeType(CodeArea.PositionCodeType.DECIMAL);
                 }
             }
@@ -86,7 +87,7 @@ public class PositionCodeTypeHandler {
         hexadecimalPositionCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setCodeType(CodeArea.PositionCodeType.HEXADECIMAL);
                 }
             }
@@ -100,7 +101,7 @@ public class PositionCodeTypeHandler {
 
     public void setCodeType(CodeArea.PositionCodeType codeType) {
         this.positionCodeType = codeType;
-        HexPanel activePanel = (HexPanel) editorProvider;
+        HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
         activePanel.getCodeArea().setPositionCodeType(codeType);
     }
 

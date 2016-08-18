@@ -25,6 +25,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Clipboard code handling.
@@ -46,7 +47,7 @@ public class ClipboardCodeHandler {
     public ClipboardCodeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {
@@ -55,26 +56,24 @@ public class ClipboardCodeHandler {
         copyAsCodeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
-                    HexPanel activePanel = (HexPanel) editorProvider;
+                if (editorProvider instanceof HexEditorProvider) {
+                    HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
                     activePanel.performCopyAsCode();
                 }
             }
         };
         ActionUtils.setupAction(copyAsCodeAction, resourceBundle, "copyAsCodeAction");
-        copyAsCodeAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
 
         pasteFromCodeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
-                    HexPanel activePanel = (HexPanel) editorProvider;
+                if (editorProvider instanceof HexEditorProvider) {
+                    HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
                     activePanel.performPasteFromCode();
                 }
             }
         };
         ActionUtils.setupAction(pasteFromCodeAction, resourceBundle, "pasteFromCodeAction");
-        pasteFromCodeAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
     public Action getCopyAsCodeAction() {

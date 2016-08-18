@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.XBDocCommand;
@@ -41,7 +42,7 @@ public class UndoManagerDialog extends javax.swing.JDialog {
     private int dialogOption = JOptionPane.CLOSED_OPTION;
 
     private final UndoManagerModel undoModel;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(UndoManagerDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(UndoManagerDialog.class);
 
     public UndoManagerDialog(java.awt.Frame parent, boolean modal, UndoManagerModel undoModel) {
         super(parent, modal);
@@ -88,7 +89,6 @@ public class UndoManagerDialog extends javax.swing.JDialog {
         revertButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/undo/dialog/resources/UndoManagerDialog"); // NOI18N
         setTitle(resourceBundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);

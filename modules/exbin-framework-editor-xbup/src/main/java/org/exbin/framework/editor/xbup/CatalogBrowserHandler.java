@@ -27,6 +27,7 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Catalog browser handler.
@@ -48,7 +49,7 @@ public class CatalogBrowserHandler {
     public CatalogBrowserHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(EditorXbupModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorXbupModule.class);
     }
 
     public void init() {

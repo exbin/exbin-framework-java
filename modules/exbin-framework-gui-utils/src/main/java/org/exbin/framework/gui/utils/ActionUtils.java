@@ -22,7 +22,7 @@ import javax.swing.Action;
 /**
  * Some simple static methods usable for actions, menus and toolbars.
  *
- * @version 0.2.0 2016/07/22
+ * @version 0.2.0 2016/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class ActionUtils {
@@ -76,45 +76,21 @@ public class ActionUtils {
     }
 
     /**
-     * Returns resource bundle for properties file with path derived from class
-     * name.
-     *
-     * @param targetClass target class
-     * @return resource bundle
+     * Enumeration of action types.
      */
-    public static ResourceBundle getResourceBundleByClass(Class targetClass) {
-        return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass));
-    }
-
-    /**
-     * Returns resource bundle base name for properties file with path derived
-     * from class name.
-     *
-     * @param targetClass target class
-     * @return base name string
-     */
-    public static String getResourceBaseNameBundleByClass(Class targetClass) {
-        String classNamePath = getClassNamePath(targetClass);
-        int classNamePos = classNamePath.lastIndexOf("/");
-        return classNamePath.substring(0, classNamePos + 1) + "resources" + classNamePath.substring(classNamePos);
-    }
-
-    /**
-     * Returns class name path.
-     *
-     * Result is canonical name with dots replaced with slashes.
-     *
-     * @param targetClass target class
-     * @return name path
-     */
-    public static String getClassNamePath(Class targetClass) {
-        return targetClass.getCanonicalName().replace(".", "/");
-
-    }
-
     public enum ActionType {
+        /**
+         * Single click / activation action.
+         */
         PUSH,
+        /**
+         * Checkbox type action.
+         */
         CHECK,
+        /**
+         * Radion type checking, where only one item in radio group can be
+         * checked.
+         */
         RADIO
     }
 }

@@ -24,6 +24,7 @@ import org.exbin.framework.gui.service.catalog.panel.CatalogEditorPanel;
 import org.exbin.framework.gui.service.panel.CatalogAvailabilityPanel;
 import org.exbin.framework.gui.service.panel.CatalogManagerPanelable;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -37,7 +38,7 @@ public class CatalogEditorDialog extends javax.swing.JDialog implements CatalogM
     private final CatalogEditorPanel catalogEditorPanel;
     private final CatalogAvailabilityPanel catalogAvailabilityPanel;
     private XBACatalog catalog = null;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogEditorDialog.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogEditorDialog.class);
 
     public CatalogEditorDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -64,7 +65,6 @@ public class CatalogEditorDialog extends javax.swing.JDialog implements CatalogM
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/CatalogEditorDialog"); // NOI18N
         setTitle(resourceBundle.getString("title")); // NOI18N
         setLocationByPlatform(true);
         setPreferredSize(new java.awt.Dimension(900, 600));

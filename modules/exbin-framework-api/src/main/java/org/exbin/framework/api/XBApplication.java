@@ -17,7 +17,9 @@
 package org.exbin.framework.api;
 
 import java.awt.Image;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.prefs.Preferences;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
@@ -34,14 +36,14 @@ public interface XBApplication extends XBModuleHandler {
      *
      * @return the appBundle
      */
-    public ResourceBundle getAppBundle();
+    ResourceBundle getAppBundle();
 
     /**
      * Gets application preferences.
      *
      * @return the appPreferences
      */
-    public Preferences getAppPreferences();
+    Preferences getAppPreferences();
 
     /**
      * Gets modules repository.
@@ -49,21 +51,37 @@ public interface XBApplication extends XBModuleHandler {
      * @return the moduleRepository
      */
     @Override
-    public XBApplicationModuleRepository getModuleRepository();
+    XBApplicationModuleRepository getModuleRepository();
 
     /**
      * Gets preferences key value.
      *
      * @param key key
-     * @param def default value 
+     * @param def default value
      * @return value
      */
-    public String preferencesGet(String key, String def);
+    String preferencesGet(String key, String def);
 
     /**
      * Gets application icon.
      *
      * @return application icon image
      */
-    public Image getApplicationIcon();
+    Image getApplicationIcon();
+
+    /**
+     * Registers locale and class loader which should be used to load resources
+     * for it.
+     *
+     * @param locale language locale
+     * @param classLoader class loader
+     */
+    void registerLanguagePlugin(Locale locale, ClassLoader classLoader);
+
+    /**
+     * Returns set of registered locales.
+     *
+     * @return set of locales
+     */
+    Set<Locale> getLanguageLocales();
 }

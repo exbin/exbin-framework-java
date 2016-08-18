@@ -37,18 +37,19 @@ import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
 import org.exbin.framework.gui.update.panel.ApplicationUpdateOptionsPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework check updates module.
  *
- * @version 0.2.0 2016/07/17
+ * @version 0.2.0 2016/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiUpdateModule implements GuiUpdateModuleApi {
 
     private XBApplication application;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GuiUpdateModule.class);
+    private java.util.ResourceBundle resourceBundle = null;
     private Action checkUpdateAction;
     private URL checkUpdateUrl;
     private VersionNumbers updateVersion;
@@ -66,9 +67,18 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    private ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(GuiUpdateModule.class);
+        }
+
+        return resourceBundle;
+    }
+
     @Override
     public Action getCheckUpdateAction() {
         if (checkUpdateAction == null) {
+            getResourceBundle();
             checkUpdateAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -93,7 +103,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                     checkUpdatesDialog.setVisible(true);
                 }
             };
-            ActionUtils.setupAction(checkUpdateAction, bundle, "checkUpdateAction");
+            ActionUtils.setupAction(checkUpdateAction, resourceBundle, "checkUpdateAction");
             checkUpdateAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         }
 

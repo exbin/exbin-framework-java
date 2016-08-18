@@ -22,6 +22,7 @@ import java.util.prefs.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * XBTEditor Text Encoding Options panel.
@@ -33,7 +34,7 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
     public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
+    private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
     private TextAppearanceOptionsPanelApi frame;
 
     public TextAppearanceOptionsPanel(TextAppearanceOptionsPanelApi frame) {
@@ -56,7 +57,6 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
         setName("Form"); // NOI18N
 
         wordWrapCheckBox.setSelected(true);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextAppearanceOptionsPanel"); // NOI18N
         wordWrapCheckBox.setText(resourceBundle.getString("TextAppearanceOptionsPanel.wordWrapCheckBox.text")); // NOI18N
         wordWrapCheckBox.setName("wordWrapCheckBox"); // NOI18N
         wordWrapCheckBox.addItemListener(new java.awt.event.ItemListener() {

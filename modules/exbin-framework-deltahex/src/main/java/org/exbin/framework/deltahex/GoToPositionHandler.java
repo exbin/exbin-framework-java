@@ -25,6 +25,7 @@ import org.exbin.framework.deltahex.dialog.GoToHexDialog;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Go to line handler.
@@ -47,7 +48,7 @@ public class GoToPositionHandler {
     public GoToPositionHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {
@@ -56,9 +57,8 @@ public class GoToPositionHandler {
         goToLineAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
-                    // TODO
-                    HexPanel activePanel = (HexPanel) editorProvider;
+                if (editorProvider instanceof HexEditorProvider) {
+                    HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
                     initGotoDialog();
                     goToDialog.setCursorPosition(activePanel.getCodeArea().getCaretPosition().getDataPosition());
                     goToDialog.setMaxPosition(activePanel.getCodeArea().getData().getDataSize());

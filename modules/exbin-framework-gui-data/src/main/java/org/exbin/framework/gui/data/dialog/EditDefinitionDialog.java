@@ -27,6 +27,7 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.undo.GuiUndoModule;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -44,7 +45,7 @@ public class EditDefinitionDialog extends javax.swing.JDialog {
 
     private DefinitionEditorPanel definitionEditorPanel;
     private MenuManagement menuManagement;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(EditDefinitionDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditDefinitionDialog.class);
     private final XBApplication application;
 
     public EditDefinitionDialog(java.awt.Frame frame, boolean modal, XBApplication application) {
@@ -86,7 +87,6 @@ public class EditDefinitionDialog extends javax.swing.JDialog {
         setButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/data/dialog/resources/EditDefinitionDialog"); // NOI18N
         setTitle(resourceBundle.getString("title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N

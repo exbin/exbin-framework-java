@@ -29,6 +29,7 @@ import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Tools options action handler.
@@ -50,7 +51,7 @@ public class ToolsOptionsHandler {
     public ToolsOptionsHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(EditorTextModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorTextModule.class);
     }
 
     public void init() {

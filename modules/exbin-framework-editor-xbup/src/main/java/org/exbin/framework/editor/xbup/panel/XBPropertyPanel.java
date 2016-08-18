@@ -17,6 +17,7 @@
 package org.exbin.framework.editor.xbup.panel;
 
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.XBFBlockType;
@@ -40,7 +41,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
     private XBPropertyTablePanel propertiesPanel;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(XBPropertyPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBPropertyPanel.class);
 
     public XBPropertyPanel(XBACatalog catalog) {
         this.catalog = catalog;
@@ -87,7 +88,6 @@ public class XBPropertyPanel extends javax.swing.JPanel {
 
         propertyPopupMenu.setName("propertyPopupMenu"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/panel/resources/XBPropertyPanel"); // NOI18N
         popupItemOpenMenuItem.setText(resourceBundle.getString("actionItemOpen.text")); // NOI18N
         popupItemOpenMenuItem.setName("popupItemOpenMenuItem"); // NOI18N
         propertyPopupMenu.add(popupItemOpenMenuItem);

@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import org.exbin.framework.editor.wave.panel.WaveColorPanel;
 import org.exbin.framework.editor.wave.panel.WaveColorPanelApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -31,7 +32,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  */
 public class WaveColorDialog extends javax.swing.JDialog {
 
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(WaveColorDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(WaveColorDialog.class);
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
     private final WaveColorPanelApi colorPanelApi;
     private final WaveColorPanel waveColorPanel;
@@ -71,7 +72,6 @@ public class WaveColorDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/dialog/resources/WaveColorDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);

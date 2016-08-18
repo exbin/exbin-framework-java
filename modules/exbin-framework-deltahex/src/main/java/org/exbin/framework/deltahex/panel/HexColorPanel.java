@@ -31,6 +31,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 
 /**
@@ -42,7 +43,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexColorPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexColorPanel.class);
     private final HexColorPanelApi frame;
 
     private final CodeArea previewCodeArea = new CodeArea();
@@ -150,7 +151,6 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
         previewHeaderPanel.setName("previewHeaderPanel"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexColorPanel"); // NOI18N
         previewLabel.setText(resourceBundle.getString("HexColorPanel.previewLabel.text")); // NOI18N
         previewLabel.setName("previewLabel"); // NOI18N
 

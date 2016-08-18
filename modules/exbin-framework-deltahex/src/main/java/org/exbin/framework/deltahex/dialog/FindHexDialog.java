@@ -33,6 +33,7 @@ import org.exbin.framework.deltahex.panel.SearchCondition;
 import org.exbin.framework.deltahex.panel.SearchHistoryModel;
 import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 
@@ -45,7 +46,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 public class FindHexDialog extends javax.swing.JDialog {
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(FindHexDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(FindHexDialog.class);
 
     private final CodeArea hexadecimalRenderer = new CodeArea();
     private HexSearchComboBoxPanel comboBoxEditorComponent;
@@ -167,7 +168,6 @@ public class FindHexDialog extends javax.swing.JDialog {
         findButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/resources/FindHexDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N

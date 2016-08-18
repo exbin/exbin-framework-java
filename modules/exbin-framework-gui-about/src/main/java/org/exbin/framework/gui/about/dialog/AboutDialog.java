@@ -37,6 +37,7 @@ import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.plugin.XBModuleRecord;
 
@@ -50,7 +51,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
 
     private final XBApplication appEditor;
     private ResourceBundle appBundle;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(AboutDialog.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutDialog.class);
     private JComponent sideComponent = null;
 
     public AboutDialog(java.awt.Frame parent, boolean modal, XBApplication appEditor) {
@@ -212,7 +213,6 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
 
         linkPopupMenu.setName("linkPopupMenu"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/about/dialog/resources/AboutDialog"); // NOI18N
         copyLinkMenuItem.setText(resourceBundle.getString("copyLinkMenuItem.text")); // NOI18N
         copyLinkMenuItem.setName("copyLinkMenuItem"); // NOI18N
         copyLinkMenuItem.addActionListener(new java.awt.event.ActionListener() {

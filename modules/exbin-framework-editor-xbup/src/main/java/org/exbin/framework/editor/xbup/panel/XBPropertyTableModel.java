@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Parameters list table model for item editing.
@@ -30,7 +31,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class XBPropertyTableModel extends AbstractTableModel {
 
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(XBPropertyTablePanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBPropertyTablePanel.class);
     private List<XBPropertyTableItem> parameters;
 
     private final String[] columnNames;

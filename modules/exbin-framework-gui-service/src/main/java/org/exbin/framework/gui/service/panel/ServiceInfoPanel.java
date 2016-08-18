@@ -19,6 +19,7 @@ package org.exbin.framework.gui.service.panel;
 import org.exbin.xbup.client.XBCatalogServiceClient;
 import org.exbin.framework.gui.service.XBDbServiceClient;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Panel for service information.
@@ -28,7 +29,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class ServiceInfoPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ServiceInfoPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ServiceInfoPanel.class);
 
     public ServiceInfoPanel() {
         initComponents();
@@ -77,7 +78,6 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         managerHardwareLabel = new javax.swing.JLabel();
         managerHardwareTextField = new javax.swing.JTextField();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/panel/resources/ServiceManagerPanel"); // NOI18N
         connectionInfoBorderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("connectionInfoBorderPanel.border.title"))); // NOI18N
 
         connectionInfoPanel.setLayout(new java.awt.GridLayout(3, 2, 5, 5));

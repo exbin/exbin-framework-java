@@ -29,6 +29,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Wave editor color selection panel.
@@ -47,7 +48,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     private ModifiedOptionListener modifiedOptionListener;
     private final WaveColorPanelApi panelColorApi;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(WaveColorPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(WaveColorPanel.class);
 
     public WaveColorPanel(WaveColorPanelApi panelColorApi) {
         this.panelColorApi = panelColorApi;

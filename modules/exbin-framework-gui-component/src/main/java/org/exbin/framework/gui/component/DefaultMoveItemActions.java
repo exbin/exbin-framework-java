@@ -23,6 +23,7 @@ import javax.swing.Action;
 import org.exbin.framework.gui.component.api.MoveItemActions;
 import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Item movement default action set.
@@ -32,7 +33,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class DefaultMoveItemActions implements MoveItemActions {
 
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(GuiComponentModule.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiComponentModule.class);
     private final int metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
     private MoveItemActionsHandler actionsHandler = null;

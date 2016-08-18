@@ -23,6 +23,7 @@ import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.panel.SearchCondition;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.EditableBinaryData;
 
@@ -37,7 +38,7 @@ public class HexMultilineDialog extends javax.swing.JDialog {
     private static final String POPUP_MENU_POSTFIX = ".hexMultilineDialog";
 
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexMultilineDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexMultilineDialog.class);
     private SearchCondition condition;
 
     private JTextArea textArea;
@@ -73,7 +74,6 @@ public class HexMultilineDialog extends javax.swing.JDialog {
         setButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/resources/HexMultilineDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N

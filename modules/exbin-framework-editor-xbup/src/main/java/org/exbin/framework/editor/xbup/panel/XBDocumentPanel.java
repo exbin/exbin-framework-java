@@ -78,6 +78,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Panel with XBUP document visualization.
@@ -103,7 +104,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private XBPluginRepository pluginRepository;
     private PropertyChangeListener propertyChangeListener;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(XBDocumentPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBDocumentPanel.class);
 
     public XBDocumentPanel(XBACatalog catalog, XBUndoHandler undoHandler) {
         this.catalog = catalog;
@@ -193,7 +194,6 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         sourceTabPanel1 = new javax.swing.JPanel();
         hexTabPanel1 = new javax.swing.JPanel();
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/panel/resources/XBDocumentPanel"); // NOI18N
         popupItemViewMenuItem.setText(resourceBundle.getString("popupItemViewMenuItem.text")); // NOI18N
         popupItemViewMenuItem.setToolTipText(resourceBundle.getString("popupItemViewMenuItem.toolTipText")); // NOI18N
         popupItemViewMenuItem.addActionListener(new java.awt.event.ActionListener() {

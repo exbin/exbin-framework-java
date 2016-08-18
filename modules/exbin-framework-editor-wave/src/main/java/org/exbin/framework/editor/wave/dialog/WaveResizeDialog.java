@@ -18,6 +18,7 @@ package org.exbin.framework.editor.wave.dialog;
 
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -29,7 +30,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 public class WaveResizeDialog extends javax.swing.JDialog {
 
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(WaveResizeDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(WaveResizeDialog.class);
 
     public WaveResizeDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -65,7 +66,6 @@ public class WaveResizeDialog extends javax.swing.JDialog {
         setModal(true);
         setName("Form"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/dialog/resources/WaveResizeDialog"); // NOI18N
         cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {

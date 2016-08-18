@@ -73,6 +73,7 @@ import org.exbin.xbup.core.serial.XBSerializable;
 import org.exbin.xbup.core.ubnumber.UBNatural;
 import org.exbin.xbup.core.ubnumber.type.UBNat32;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.parser_tree.XBATreeParamExtractor;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
@@ -105,7 +106,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
     private HexPanel extAreaHexPanel = null;
-    private java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ModifyBlockDialog.class);
+    private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockDialog.class);
 
     private final String attributesPanelTitle;
     private final String dataPanelTitle;
@@ -267,7 +268,6 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/xbup/dialog/resources/ModifyBlockDialog"); // NOI18N
         setTitle(resourceBundle.getString("title")); // NOI18N
         setModal(true);
 

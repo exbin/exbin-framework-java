@@ -33,6 +33,7 @@ import org.exbin.xbup.client.XBCatalogNetServiceClient;
 import org.exbin.xbup.client.XBCatalogServiceClient;
 import org.exbin.framework.gui.service.XBDbServiceClient;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -46,7 +47,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
     private XBCatalogServiceClient service;
 
     private static final String PREFERENCES_PREFIX = "catalogConnection";
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ConnectionDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ConnectionDialog.class);
 
     public ConnectionDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -119,7 +120,6 @@ public class ConnectionDialog extends javax.swing.JDialog {
         statusTextLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/dialog/resources/ConnectionDialog"); // NOI18N
         setTitle(resourceBundle.getString("title")); // NOI18N
 
         connectionHeaderPanel.setBackground(new java.awt.Color(255, 255, 255));

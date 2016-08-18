@@ -32,6 +32,7 @@ import org.exbin.deltahex.CodeArea;
 import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
@@ -58,7 +59,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     private ClosePanelListener closePanelListener = null;
     private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexSearchPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexSearchPanel.class);
 
     public HexSearchPanel(HexPanel hexPanel, boolean replaceMode) {
         initComponents();
@@ -214,7 +215,6 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
         findPanel.setName("findPanel"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexSearchPanel"); // NOI18N
         findLabel.setText(resourceBundle.getString("HexSearchPanel.findLabel.text")); // NOI18N
         findLabel.setName("findLabel"); // NOI18N
 

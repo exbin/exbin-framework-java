@@ -28,6 +28,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Panel for choosing input and output audio devices.
@@ -41,7 +42,7 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsPane
 
     @SuppressWarnings("unchecked")
     public AudioDevicesPanel() {
-        resourceBundle = ActionUtils.getResourceBundleByClass(AudioDevicesPanel.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(AudioDevicesPanel.class);
         initComponents();
 
         // loop through all mixers, and all source and target lines within each mixer.
@@ -94,7 +95,6 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsPane
 
         setAutoscrolls(true);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/panel/resources/AudioDevicesPanel"); // NOI18N
         audioOutputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("audioOutputPanel.border.title"))); // NOI18N
         audioOutputPanel.setName("audioOutputPanel"); // NOI18N
 

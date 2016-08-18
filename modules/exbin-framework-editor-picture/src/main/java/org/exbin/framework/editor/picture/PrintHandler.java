@@ -24,6 +24,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.picture.panel.ImagePanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Print handler.
@@ -44,7 +45,7 @@ public class PrintHandler {
     public PrintHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(EditorPictureModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorPictureModule.class);
     }
 
     public void init() {

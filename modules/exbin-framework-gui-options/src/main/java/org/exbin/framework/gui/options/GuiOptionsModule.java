@@ -19,7 +19,6 @@ package org.exbin.framework.gui.options;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
@@ -35,6 +34,7 @@ import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.dialog.OptionsDialog;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
@@ -50,7 +50,6 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
 
     private Action optionsAction;
     private OptionsDialog optionsDialog;
-    private final List<Locale> locales = new ArrayList<>();
     private final List<OptionsPanel> optionsPanels = new ArrayList<>();
     private OptionsPanel mainOptionsExt = null;
     private OptionsPanel appearanceOptionsExt = null;
@@ -61,15 +60,19 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     @Override
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
-        resourceBundle = ActionUtils.getResourceBundleByClass(GuiOptionsModule.class);
-        locales.add(Locale.ROOT);
-        locales.add(new Locale("en", "US"));
     }
 
     @Override
     public void unregisterModule(String moduleId) {
     }
 
+    private ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(GuiOptionsModule.class);
+        }
+        
+        return resourceBundle;
+    }
     private OptionsDialog getOptionsDialog() {
         if (optionsDialog == null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
@@ -83,7 +86,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             if (appearanceOptionsExt != null) {
                 optionsDialog.extendAppearanceOptionsPanel(appearanceOptionsExt);
             }
-            optionsDialog.setLanguageLocales(locales);
+            optionsDialog.setLanguageLocales(application.getLanguageLocales());
         }
 
         return optionsDialog;
@@ -92,6 +95,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     @Override
     public Action getOptionsAction() {
         if (optionsAction == null) {
+            getResourceBundle();
             optionsAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -144,10 +148,5 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         menuModule.registerMenuGroup(GuiFrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.AROUND));
         getOptionsAction();
         menuModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
-    }
-
-    @Override
-    public void addLanguageLocale(Locale locale) {
-        locales.add(locale);
     }
 }

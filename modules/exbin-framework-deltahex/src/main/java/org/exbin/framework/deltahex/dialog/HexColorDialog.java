@@ -20,6 +20,7 @@ import org.exbin.framework.deltahex.panel.HexColorPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Text editor color selection dialog.
@@ -32,7 +33,7 @@ public class HexColorDialog extends javax.swing.JDialog {
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
     private final HexColorPanelApi frame;
     private final HexColorPanel textColorPanel;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexColorDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexColorDialog.class);
 
     public HexColorDialog(java.awt.Frame parent, HexColorPanelApi frame, boolean modal) {
         super(parent, modal);
@@ -70,7 +71,6 @@ public class HexColorDialog extends javax.swing.JDialog {
         mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/dialog/resources/HexColorDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);

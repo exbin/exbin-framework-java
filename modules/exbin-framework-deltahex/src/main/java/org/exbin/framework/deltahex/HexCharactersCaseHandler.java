@@ -25,6 +25,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Hex characters case handler.
@@ -50,7 +51,7 @@ public class HexCharactersCaseHandler {
     public HexCharactersCaseHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {
@@ -59,7 +60,7 @@ public class HexCharactersCaseHandler {
         upperHexCharsAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setHexCharactersCase(CodeArea.HexCharactersCase.UPPER);
                 }
             }
@@ -72,7 +73,7 @@ public class HexCharactersCaseHandler {
         lowerHexCharsAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexPanel) {
+                if (editorProvider instanceof HexEditorProvider) {
                     setHexCharactersCase(CodeArea.HexCharactersCase.LOWER);
                 }
             }
@@ -85,7 +86,7 @@ public class HexCharactersCaseHandler {
 
     public void setHexCharactersCase(CodeArea.HexCharactersCase hexCharactersCase) {
         this.hexCharactersCase = hexCharactersCase;
-        HexPanel activePanel = (HexPanel) editorProvider;
+        HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
         activePanel.getCodeArea().setHexCharactersCase(hexCharactersCase);
     }
 

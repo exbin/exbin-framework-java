@@ -20,6 +20,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.service.panel.ConnectionsManagerPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -32,7 +33,7 @@ public class ConnectionListDialog extends javax.swing.JDialog {
 
     private final ConnectionsManagerPanel connectionPanel;
     private int dialogOption = JOptionPane.CLOSED_OPTION;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ConnectionListDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ConnectionListDialog.class);
 
     public ConnectionListDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -70,7 +71,6 @@ public class ConnectionListDialog extends javax.swing.JDialog {
         mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/service/dialog/resources/ConnectionListDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
 
         setButton.setText(resourceBundle.getString("setButton.text")); // NOI18N

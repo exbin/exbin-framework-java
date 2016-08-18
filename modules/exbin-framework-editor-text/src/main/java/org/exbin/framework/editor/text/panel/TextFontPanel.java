@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * XBTEditor font selection panel.
@@ -34,7 +35,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  */
 public class TextFontPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(TextFontPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextFontPanel.class);
 
     private static String[] fontNames;
     private static String[] fontSizes;
@@ -179,7 +180,6 @@ public class TextFontPanel extends javax.swing.JPanel {
 
         fontFamilyPanel.setName("fontFamilyPanel"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/text/panel/resources/TextFontPanel"); // NOI18N
         fontFamilyLabel.setText(resourceBundle.getString("TextFontPanel.fontFamilyLabel.text")); // NOI18N
         fontFamilyLabel.setName("fontFamilyLabel"); // NOI18N
 

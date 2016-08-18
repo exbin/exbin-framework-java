@@ -21,6 +21,7 @@ import java.util.prefs.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Hexadecimal appearance options panel.
@@ -33,7 +34,7 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
     public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(HexAppearanceOptionsPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexAppearanceOptionsPanel.class);
     private final HexAppearancePanelFrame frame;
 
     public HexAppearanceOptionsPanel(HexAppearancePanelFrame frame) {
@@ -56,7 +57,6 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
         setName("Form"); // NOI18N
 
         lineWrapCheckBox.setSelected(true);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/deltahex/panel/resources/HexAppearanceOptionsPanel"); // NOI18N
         lineWrapCheckBox.setText(resourceBundle.getString("HexAppearanceOptionsPanel.lineWrapCheckBox.text")); // NOI18N
         lineWrapCheckBox.setName("lineWrapCheckBox"); // NOI18N
         lineWrapCheckBox.addItemListener(new java.awt.event.ItemListener() {

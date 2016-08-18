@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Parameters list table model for item editing.
@@ -40,7 +41,7 @@ public class ParametersTableModel extends AbstractTableModel {
     private final boolean[] columnsEditable = new boolean[]{false, false, false, true};
 
     public ParametersTableModel() {
-        resourceBundle = ActionUtils.getResourceBundleByClass(ModifyBlockDialog.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockDialog.class);
         columnNames = new String[]{resourceBundle.getString("parametersTableModel.itemOrder"), resourceBundle.getString("parametersTableModel.itemName"), resourceBundle.getString("parametersTableModel.itemType"), resourceBundle.getString("parametersTableModel.itemValue")};
         parameters = new ArrayList<>();
     }

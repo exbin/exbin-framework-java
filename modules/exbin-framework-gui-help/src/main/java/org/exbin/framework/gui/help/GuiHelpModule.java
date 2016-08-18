@@ -37,6 +37,7 @@ import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
@@ -48,7 +49,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 public class GuiHelpModule implements GuiHelpModuleApi {
 
     private XBApplication application;
-    private final java.util.ResourceBundle bundle = ActionUtils.getResourceBundleByClass(GuiHelpModule.class);
+    private final java.util.ResourceBundle bundle = LanguageUtils.getResourceBundleByClass(GuiHelpModule.class);
     private HelpSet helpSet;
     private HelpBroker helpBroker;
     private ActionListener helpActionLisneter;

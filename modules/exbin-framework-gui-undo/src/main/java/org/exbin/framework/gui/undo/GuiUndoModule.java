@@ -64,7 +64,6 @@ public class GuiUndoModule implements GuiUndoModuleApi {
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
 
-        defaultUndoActions = new BasicUndoActions();
         undoModel.addListDataListener(new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -104,7 +103,7 @@ public class GuiUndoModule implements GuiUndoModuleApi {
     @Override
     public void setUndoHandler(final XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
-        defaultUndoActions.setUndoActionsHandler(new UndoActionsHandler() {
+        getDefaultUndoActions().setUndoActionsHandler(new UndoActionsHandler() {
             @Override
             public Boolean canUndo() {
                 return undoHandler.canUndo();
@@ -150,11 +149,12 @@ public class GuiUndoModule implements GuiUndoModuleApi {
 
     @Override
     public void updateUndoStatus() {
-        defaultUndoActions.updateUndoActions();
+        getDefaultUndoActions().updateUndoActions();
     }
 
     @Override
     public void registerMainMenu() {
+        getDefaultUndoActions();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuGroup(GuiFrameModuleApi.EDIT_MENU_ID, new MenuGroup(UNDO_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.BELOW));
         menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, GuiUndoModuleApi.MODULE_ID, defaultUndoActions.getUndoAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
@@ -163,12 +163,14 @@ public class GuiUndoModule implements GuiUndoModuleApi {
 
     @Override
     public void registerUndoManagerInMainMenu() {
+        getDefaultUndoActions();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, GuiUndoModuleApi.MODULE_ID, defaultUndoActions.getUndoManagerAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
     }
 
     @Override
     public void registerMainToolBar() {
+        getDefaultUndoActions();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(UNDO_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP), SeparationMode.AROUND));
         menuModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, defaultUndoActions.getUndoAction(), new ToolBarPosition(UNDO_TOOL_BAR_GROUP_ID));
@@ -192,5 +194,13 @@ public class GuiUndoModule implements GuiUndoModuleApi {
         BasicUndoActions undoActions = new BasicUndoActions();
         undoActions.setUndoActionsHandler(undoActionsHandler);
         return undoActions;
+    }
+
+    public BasicUndoActions getDefaultUndoActions() {
+        if (defaultUndoActions == null) {
+            defaultUndoActions = new BasicUndoActions();
+        }
+
+        return defaultUndoActions;
     }
 }

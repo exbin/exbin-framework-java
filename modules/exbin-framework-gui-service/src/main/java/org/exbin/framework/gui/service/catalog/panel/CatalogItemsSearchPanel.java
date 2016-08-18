@@ -58,6 +58,7 @@ import org.exbin.framework.gui.service.YamlFileType;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
 import org.exbin.framework.gui.service.panel.CatalogManagerPanelable;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -87,7 +88,7 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
     private MenuManagement menuManagement;
     private CatalogSearchTableModel.CatalogSearchTableItem searchConditions = null;
     private SelectionListener selectionListener;
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(CatalogItemsSearchPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogItemsSearchPanel.class);
 
     public CatalogItemsSearchPanel() {
         itemsModel = new CatalogItemsTableModel();

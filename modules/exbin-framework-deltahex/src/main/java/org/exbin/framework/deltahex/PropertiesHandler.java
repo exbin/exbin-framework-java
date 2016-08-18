@@ -23,6 +23,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.dialog.PropertiesDialog;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Properties handler.
@@ -43,7 +44,7 @@ public class PropertiesHandler {
     public PropertiesHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {

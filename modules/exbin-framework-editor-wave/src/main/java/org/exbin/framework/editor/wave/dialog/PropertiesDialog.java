@@ -20,6 +20,7 @@ import java.net.URI;
 import javax.sound.sampled.AudioFormat;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -30,7 +31,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  */
 public class PropertiesDialog extends javax.swing.JDialog {
 
-    private final java.util.ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(PropertiesDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(PropertiesDialog.class);
 
     public PropertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -70,7 +71,6 @@ public class PropertiesDialog extends javax.swing.JDialog {
         closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/editor/wave/dialog/resources/PropertiesDialog"); // NOI18N
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);

@@ -23,6 +23,7 @@ import java.util.prefs.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Application update options panel.
@@ -35,7 +36,7 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
     public static final String PREFERENCES_CHECK_FOR_UPDATE_ON_START = "start.checkForUpdate";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle = ActionUtils.getResourceBundleByClass(ApplicationUpdateOptionsPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ApplicationUpdateOptionsPanel.class);
 
     public ApplicationUpdateOptionsPanel() {
         initComponents();
@@ -55,7 +56,6 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
         setName("Form"); // NOI18N
 
         checkForUpdatesOnStartCheckBox.setSelected(true);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/exbin/framework/gui/update/panel/resources/ApplicationUpdateOptionsPanel"); // NOI18N
         checkForUpdatesOnStartCheckBox.setText(resourceBundle.getString("checkForUpdatesOnStartCheckBox.text")); // NOI18N
         checkForUpdatesOnStartCheckBox.setName("checkForUpdatesOnStartCheckBox"); // NOI18N
         checkForUpdatesOnStartCheckBox.addItemListener(new java.awt.event.ItemListener() {

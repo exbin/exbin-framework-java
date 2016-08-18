@@ -28,6 +28,7 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
 import org.exbin.framework.deltahex.panel.HexColorType;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Tools options action handler.
@@ -49,7 +50,7 @@ public class ToolsOptionsHandler {
     public ToolsOptionsHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = ActionUtils.getResourceBundleByClass(DeltaHexModule.class);
+        resourceBundle = LanguageUtils.getResourceBundleByClass(DeltaHexModule.class);
     }
 
     public void init() {
