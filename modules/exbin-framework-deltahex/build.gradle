@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    compile moduleDep('DeltahexJava', 'org.exbin.deltahex', 'deltahex')
+    compile moduleDep('DeltahexJava', 'org.exbin.deltahex', 'deltahex-swing')
     compile moduleDep('DeltahexJava', 'org.exbin.deltahex', 'deltahex-delta')
     compile moduleDep('DeltahexJava', 'org.exbin.deltahex', 'deltahex-operation')
     compile moduleDep('DeltahexJava', 'org.exbin.deltahex', 'deltahex-highlight')
