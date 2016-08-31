@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.ViewMode;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -46,7 +46,7 @@ public class ViewModeHandler {
     private Action codeMatrixModeAction;
     private Action textPreviewModeAction;
 
-    private CodeArea.ViewMode viewMode = CodeArea.ViewMode.DUAL;
+    private ViewMode viewMode = ViewMode.DUAL;
 
     public ViewModeHandler(XBApplication application, HexEditorProvider editorProvider) {
         this.application = application;
@@ -61,43 +61,43 @@ public class ViewModeHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setViewMode(CodeArea.ViewMode.DUAL);
+                    setViewMode(ViewMode.DUAL);
                 }
             }
         };
         ActionUtils.setupAction(dualModeAction, resourceBundle, "dualViewModeAction");
         dualModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         dualModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        dualModeAction.putValue(Action.SELECTED_KEY, viewMode == CodeArea.ViewMode.DUAL);
+        dualModeAction.putValue(Action.SELECTED_KEY, viewMode == ViewMode.DUAL);
 
         codeMatrixModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setViewMode(CodeArea.ViewMode.CODE_MATRIX);
+                    setViewMode(ViewMode.CODE_MATRIX);
                 }
             }
         };
         ActionUtils.setupAction(codeMatrixModeAction, resourceBundle, "codeMatrixViewModeAction");
         codeMatrixModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         codeMatrixModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        codeMatrixModeAction.putValue(Action.SELECTED_KEY, viewMode == CodeArea.ViewMode.CODE_MATRIX);
+        codeMatrixModeAction.putValue(Action.SELECTED_KEY, viewMode == ViewMode.CODE_MATRIX);
 
         textPreviewModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setViewMode(CodeArea.ViewMode.TEXT_PREVIEW);
+                    setViewMode(ViewMode.TEXT_PREVIEW);
                 }
             }
         };
         ActionUtils.setupAction(textPreviewModeAction, resourceBundle, "textPreviewViewModeAction");
         textPreviewModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
         textPreviewModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        textPreviewModeAction.putValue(Action.SELECTED_KEY, viewMode == CodeArea.ViewMode.TEXT_PREVIEW);
+        textPreviewModeAction.putValue(Action.SELECTED_KEY, viewMode == ViewMode.TEXT_PREVIEW);
     }
 
-    public void setViewMode(CodeArea.ViewMode viewMode) {
+    public void setViewMode(ViewMode viewMode) {
         this.viewMode = viewMode;
         HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
         activePanel.getCodeArea().setViewMode(viewMode);

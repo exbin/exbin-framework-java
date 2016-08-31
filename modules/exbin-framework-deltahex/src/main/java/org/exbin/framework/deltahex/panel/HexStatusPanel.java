@@ -16,10 +16,10 @@
 package org.exbin.framework.deltahex.panel;
 
 import java.awt.event.MouseEvent;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.EditationMode;
+import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  */
 public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, TextEncodingStatusApi {
 
-    private CodeArea.EditationMode editationMode;
+    private EditationMode editationMode;
     private StatusControlHandler editationModeChange;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexStatusPanel.class);
 
@@ -114,10 +114,10 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
     private void editationModeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editationModeLabelMouseClicked
         if (editationModeChange != null && evt.getButton() == MouseEvent.BUTTON1) {
-            if (editationMode == CodeArea.EditationMode.INSERT) {
-                editationModeChange.changeEditationMode(CodeArea.EditationMode.OVERWRITE);
-            } else if (editationMode == CodeArea.EditationMode.OVERWRITE) {
-                editationModeChange.changeEditationMode(CodeArea.EditationMode.INSERT);
+            if (editationMode == EditationMode.INSERT) {
+                editationModeChange.changeEditationMode(EditationMode.OVERWRITE);
+            } else if (editationMode == EditationMode.OVERWRITE) {
+                editationModeChange.changeEditationMode(EditationMode.INSERT);
             }
         }
     }//GEN-LAST:event_editationModeLabelMouseClicked
@@ -171,7 +171,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
     }
 
     @Override
-    public void setEditationMode(CodeArea.EditationMode editationMode) {
+    public void setEditationMode(EditationMode editationMode) {
         this.editationMode = editationMode;
         switch (editationMode) {
             case INSERT: {

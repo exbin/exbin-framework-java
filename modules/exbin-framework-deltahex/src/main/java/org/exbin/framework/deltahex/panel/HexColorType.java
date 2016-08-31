@@ -16,12 +16,13 @@
 package org.exbin.framework.deltahex.panel;
 
 import java.awt.Color;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.ColorsGroup;
+import org.exbin.deltahex.swing.CodeArea;
 
 /**
  * Enumeration of hexadecimal editor color types.
  *
- * @version 0.1.0 2016/06/23
+ * @version 0.1.0 2016/08/31
  * @author ExBin Project (http://exbin.org)
  */
 public enum HexColorType {
@@ -123,97 +124,97 @@ public enum HexColorType {
                 break;
             }
             case MAIN_AREA_TEXT: {
-                CodeArea.ColorsGroup mainColors = codeArea.getMainColors();
+                ColorsGroup mainColors = codeArea.getMainColors();
                 mainColors.setTextColor(color);
                 codeArea.setMainColors(mainColors);
                 break;
             }
             case MAIN_AREA_BACKGROUND: {
-                CodeArea.ColorsGroup mainColors = codeArea.getMainColors();
+                ColorsGroup mainColors = codeArea.getMainColors();
                 mainColors.setBackgroundColor(color);
                 codeArea.setMainColors(mainColors);
                 break;
             }
             case MAIN_AREA_UNPRINTABLES: {
-                CodeArea.ColorsGroup mainColors = codeArea.getMainColors();
+                ColorsGroup mainColors = codeArea.getMainColors();
                 mainColors.setUnprintablesColor(color);
                 codeArea.setMainColors(mainColors);
                 break;
             }
             case MAIN_AREA_UNPRINTABLES_BACKGROUND: {
-                CodeArea.ColorsGroup mainColors = codeArea.getMainColors();
+                ColorsGroup mainColors = codeArea.getMainColors();
                 mainColors.setUnprintablesBackgroundColor(color);
                 codeArea.setMainColors(mainColors);
                 break;
             }
             case ALTERNATE_TEXT: {
-                CodeArea.ColorsGroup alternateColors = codeArea.getAlternateColors();
+                ColorsGroup alternateColors = codeArea.getAlternateColors();
                 alternateColors.setTextColor(color);
                 codeArea.setAlternateColors(alternateColors);
                 break;
             }
             case ALTERNATE_BACKGROUND: {
-                CodeArea.ColorsGroup alternateColors = codeArea.getAlternateColors();
+                ColorsGroup alternateColors = codeArea.getAlternateColors();
                 alternateColors.setBackgroundColor(color);
                 codeArea.setAlternateColors(alternateColors);
                 break;
             }
             case ALTERNATE_UNPRINTABLES: {
-                CodeArea.ColorsGroup alternateColors = codeArea.getAlternateColors();
+                ColorsGroup alternateColors = codeArea.getAlternateColors();
                 alternateColors.setUnprintablesColor(color);
                 codeArea.setAlternateColors(alternateColors);
                 break;
             }
             case ALTERNATE_UNPRINTABLES_BACKGROUND: {
-                CodeArea.ColorsGroup alternateColors = codeArea.getAlternateColors();
+                ColorsGroup alternateColors = codeArea.getAlternateColors();
                 alternateColors.setUnprintablesBackgroundColor(color);
                 codeArea.setAlternateColors(alternateColors);
                 break;
             }
             case SELECTION: {
-                CodeArea.ColorsGroup selectionColors = codeArea.getSelectionColors();
+                ColorsGroup selectionColors = codeArea.getSelectionColors();
                 selectionColors.setTextColor(color);
                 codeArea.setSelectionColors(selectionColors);
                 break;
             }
             case SELECTION_BACKGROUND: {
-                CodeArea.ColorsGroup selectionColors = codeArea.getSelectionColors();
+                ColorsGroup selectionColors = codeArea.getSelectionColors();
                 selectionColors.setBackgroundColor(color);
                 codeArea.setSelectionColors(selectionColors);
                 break;
             }
             case SELECTION_UNPRINTABLES: {
-                CodeArea.ColorsGroup selectionColors = codeArea.getSelectionColors();
+                ColorsGroup selectionColors = codeArea.getSelectionColors();
                 selectionColors.setUnprintablesColor(color);
                 codeArea.setSelectionColors(selectionColors);
                 break;
             }
             case SELECTION_UNPRINTABLES_BACKGROUND: {
-                CodeArea.ColorsGroup selectionColors = codeArea.getSelectionColors();
+                ColorsGroup selectionColors = codeArea.getSelectionColors();
                 selectionColors.setUnprintablesBackgroundColor(color);
                 codeArea.setSelectionColors(selectionColors);
                 break;
             }
             case MIRROR_SELECTION: {
-                CodeArea.ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
+                ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
                 selectionColors.setTextColor(color);
                 codeArea.setMirrorSelectionColors(selectionColors);
                 break;
             }
             case MIRROR_SELECTION_BACKGROUND: {
-                CodeArea.ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
+                ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
                 selectionColors.setBackgroundColor(color);
                 codeArea.setMirrorSelectionColors(selectionColors);
                 break;
             }
             case MIRROR_SELECTION_UNPRINTABLES: {
-                CodeArea.ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
+                ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
                 selectionColors.setUnprintablesColor(color);
                 codeArea.setMirrorSelectionColors(selectionColors);
                 break;
             }
             case MIRROR_SELECTION_UNPRINTABLES_BACKGROUND: {
-                CodeArea.ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
+                ColorsGroup selectionColors = codeArea.getMirrorSelectionColors();
                 selectionColors.setUnprintablesBackgroundColor(color);
                 codeArea.setMirrorSelectionColors(selectionColors);
                 break;

@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.HexCharactersCase;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -46,7 +46,7 @@ public class HexCharactersCaseHandler {
     private Action upperHexCharsAction;
     private Action lowerHexCharsAction;
 
-    private CodeArea.HexCharactersCase hexCharactersCase = CodeArea.HexCharactersCase.UPPER;
+    private HexCharactersCase hexCharactersCase = HexCharactersCase.UPPER;
 
     public HexCharactersCaseHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -61,30 +61,30 @@ public class HexCharactersCaseHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setHexCharactersCase(CodeArea.HexCharactersCase.UPPER);
+                    setHexCharactersCase(HexCharactersCase.UPPER);
                 }
             }
         };
         ActionUtils.setupAction(upperHexCharsAction, resourceBundle, "upperHexCharactersAction");
         upperHexCharsAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         upperHexCharsAction.putValue(ActionUtils.ACTION_RADIO_GROUP, HEX_CHARACTERS_CASE_RADIO_GROUP_ID);
-        upperHexCharsAction.putValue(Action.SELECTED_KEY, hexCharactersCase == CodeArea.HexCharactersCase.UPPER);
+        upperHexCharsAction.putValue(Action.SELECTED_KEY, hexCharactersCase == HexCharactersCase.UPPER);
 
         lowerHexCharsAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setHexCharactersCase(CodeArea.HexCharactersCase.LOWER);
+                    setHexCharactersCase(HexCharactersCase.LOWER);
                 }
             }
         };
         ActionUtils.setupAction(lowerHexCharsAction, resourceBundle, "lowerHexCharactersAction");
         lowerHexCharsAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         lowerHexCharsAction.putValue(ActionUtils.ACTION_RADIO_GROUP, HEX_CHARACTERS_CASE_RADIO_GROUP_ID);
-        lowerHexCharsAction.putValue(Action.SELECTED_KEY, hexCharactersCase == CodeArea.HexCharactersCase.LOWER);
+        lowerHexCharsAction.putValue(Action.SELECTED_KEY, hexCharactersCase == HexCharactersCase.LOWER);
     }
 
-    public void setHexCharactersCase(CodeArea.HexCharactersCase hexCharactersCase) {
+    public void setHexCharactersCase(HexCharactersCase hexCharactersCase) {
         this.hexCharactersCase = hexCharactersCase;
         HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
         activePanel.getCodeArea().setHexCharactersCase(hexCharactersCase);

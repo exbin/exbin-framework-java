@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.CodeType;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -48,7 +48,7 @@ public class CodeTypeHandler {
     private Action decimalCodeTypeAction;
     private Action hexadecimalCodeTypeAction;
 
-    private CodeArea.CodeType codeType = CodeArea.CodeType.HEXADECIMAL;
+    private CodeType codeType = CodeType.HEXADECIMAL;
 
     public CodeTypeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -63,57 +63,57 @@ public class CodeTypeHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setCodeType(CodeArea.CodeType.BINARY);
+                    setCodeType(CodeType.BINARY);
                 }
             }
         };
         ActionUtils.setupAction(binaryCodeTypeAction, resourceBundle, "binaryCodeTypeAction");
         binaryCodeTypeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         binaryCodeTypeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, CODE_TYPE_RADIO_GROUP_ID);
-        binaryCodeTypeAction.putValue(Action.SELECTED_KEY, codeType == CodeArea.CodeType.BINARY);
+        binaryCodeTypeAction.putValue(Action.SELECTED_KEY, codeType == CodeType.BINARY);
 
         octalCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setCodeType(CodeArea.CodeType.OCTAL);
+                    setCodeType(CodeType.OCTAL);
                 }
             }
         };
         ActionUtils.setupAction(octalCodeTypeAction, resourceBundle, "octalCodeTypeAction");
         octalCodeTypeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         octalCodeTypeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, CODE_TYPE_RADIO_GROUP_ID);
-        octalCodeTypeAction.putValue(Action.SELECTED_KEY, codeType == CodeArea.CodeType.OCTAL);
+        octalCodeTypeAction.putValue(Action.SELECTED_KEY, codeType == CodeType.OCTAL);
 
         decimalCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setCodeType(CodeArea.CodeType.DECIMAL);
+                    setCodeType(CodeType.DECIMAL);
                 }
             }
         };
         ActionUtils.setupAction(decimalCodeTypeAction, resourceBundle, "decimalCodeTypeAction");
         decimalCodeTypeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, CODE_TYPE_RADIO_GROUP_ID);
         decimalCodeTypeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        decimalCodeTypeAction.putValue(Action.SELECTED_KEY, codeType == CodeArea.CodeType.DECIMAL);
+        decimalCodeTypeAction.putValue(Action.SELECTED_KEY, codeType == CodeType.DECIMAL);
 
         hexadecimalCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setCodeType(CodeArea.CodeType.HEXADECIMAL);
+                    setCodeType(CodeType.HEXADECIMAL);
                 }
             }
         };
         ActionUtils.setupAction(hexadecimalCodeTypeAction, resourceBundle, "hexadecimalCodeTypeAction");
         hexadecimalCodeTypeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         hexadecimalCodeTypeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, CODE_TYPE_RADIO_GROUP_ID);
-        hexadecimalCodeTypeAction.putValue(Action.SELECTED_KEY, codeType == CodeArea.CodeType.HEXADECIMAL);
+        hexadecimalCodeTypeAction.putValue(Action.SELECTED_KEY, codeType == CodeType.HEXADECIMAL);
 
     }
 
-    public void setCodeType(CodeArea.CodeType codeType) {
+    public void setCodeType(CodeType codeType) {
         this.codeType = codeType;
         HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
         activePanel.getCodeArea().setCodeType(codeType);

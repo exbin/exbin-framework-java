@@ -28,10 +28,11 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.ColorsGroup;
+import org.exbin.deltahex.ScrollBarVisibility;
+import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.BinaryData;
@@ -76,8 +77,8 @@ public class HexSearchPanel extends javax.swing.JPanel {
         hexadecimalRenderer.setShowLineNumbers(false);
         hexadecimalRenderer.setWrapMode(true);
         hexadecimalRenderer.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
-        hexadecimalRenderer.setVerticalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
-        hexadecimalRenderer.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
+        hexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        hexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
 
         comboBoxEditorComponent = new HexSearchComboBoxPanel();
@@ -113,7 +114,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
                     } else {
                         backgroundColor = list.getBackground();
                     }
-                    CodeArea.ColorsGroup mainColors = hexadecimalRenderer.getMainColors();
+                    ColorsGroup mainColors = hexadecimalRenderer.getMainColors();
                     mainColors.setBothBackgroundColors(backgroundColor);
                     hexadecimalRenderer.setMainColors(mainColors);
                     return hexadecimalRenderer;

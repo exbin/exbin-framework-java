@@ -17,14 +17,13 @@ package org.exbin.framework.deltahex.dialog;
 
 import java.net.URI;
 import javax.swing.DefaultListModel;
-import org.exbin.deltahex.CodeArea;
 import org.exbin.deltahex.delta.BinaryDataSegment;
 import org.exbin.deltahex.delta.DataSegment;
 import org.exbin.deltahex.delta.DeltaHexadecimalData;
 import org.exbin.deltahex.delta.DocumentSegment;
 import org.exbin.deltahex.delta.list.DefaultDoublyLinkedList;
+import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -198,7 +197,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
         URI fileUri = panel.getFileUri();
         fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
         CodeArea codeArea = panel.getCodeArea();
-        fileSizeTextField.setText(Long.toString(codeArea.getData().getDataSize()));
+        fileSizeTextField.setText(Long.toString(codeArea.getDataSize()));
 
         if (codeArea.getData() instanceof DeltaHexadecimalData) {
             DefaultDoublyLinkedList<DataSegment> segments = ((DeltaHexadecimalData) codeArea.getData()).getSegments();

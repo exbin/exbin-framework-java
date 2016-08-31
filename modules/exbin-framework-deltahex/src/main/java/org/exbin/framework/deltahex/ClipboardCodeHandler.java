@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;

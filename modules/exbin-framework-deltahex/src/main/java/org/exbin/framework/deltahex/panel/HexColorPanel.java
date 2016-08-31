@@ -26,11 +26,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.SelectionRange;
+import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 
@@ -67,7 +67,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         previewCodeArea.setWrapMode(true);
         previewCodeArea.setEnabled(false);
         previewCodeArea.setShowUnprintableCharacters(true);
-        previewCodeArea.setSelection(new CodeArea.SelectionRange(200, 300));
+        previewCodeArea.setSelection(new SelectionRange(200, 300));
         previewPanel.add(previewCodeArea, BorderLayout.CENTER);
 
         for (final HexColorType colorType : HexColorType.values()) {
@@ -304,7 +304,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
     public void setModifiedOptionListener(ModifiedOptionListener listener) {
         modifiedOptionListener = listener;
     }
-    
+
     // TODO: Workaround for issue with divider position, replace color editors
     public void fixLayout() {
         splitPane.setDividerLocation(getWidth() / 2);

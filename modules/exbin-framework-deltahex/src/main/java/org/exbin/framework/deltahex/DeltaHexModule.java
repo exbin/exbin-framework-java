@@ -29,7 +29,9 @@ import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.SelectionChangedListener;
+import org.exbin.deltahex.SelectionRange;
+import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.deltahex.panel.HexAppearanceOptionsPanel;
@@ -565,9 +567,9 @@ public class DeltaHexModule implements XBApplicationModule {
 
             @Override
             public void setUpdateListener(final ClipboardActionsUpdateListener updateListener) {
-                codeArea.addSelectionChangedListener(new CodeArea.SelectionChangedListener() {
+                codeArea.addSelectionChangedListener(new SelectionChangedListener() {
                     @Override
-                    public void selectionChanged(CodeArea.SelectionRange sr) {
+                    public void selectionChanged(SelectionRange sr) {
                         updateListener.stateChanged();
                         copyAsCodeAction.setEnabled(codeArea.hasSelection());
                         pasteFromCodeAction.setEnabled(codeArea.canPaste());

@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.PositionCodeType;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -47,7 +47,7 @@ public class PositionCodeTypeHandler {
     private Action decimalPositionCodeTypeAction;
     private Action hexadecimalPositionCodeTypeAction;
 
-    private CodeArea.PositionCodeType positionCodeType = CodeArea.PositionCodeType.HEXADECIMAL;
+    private PositionCodeType positionCodeType = PositionCodeType.HEXADECIMAL;
 
     public PositionCodeTypeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -62,44 +62,44 @@ public class PositionCodeTypeHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setCodeType(CodeArea.PositionCodeType.OCTAL);
+                    setCodeType(PositionCodeType.OCTAL);
                 }
             }
         };
         ActionUtils.setupAction(octalPositionCodeTypeAction, resourceBundle, "octalPositionCodeTypeAction");
         octalPositionCodeTypeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         octalPositionCodeTypeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, POSITION_CODE_TYPE_RADIO_GROUP_ID);
-        octalPositionCodeTypeAction.putValue(Action.SELECTED_KEY, positionCodeType == CodeArea.PositionCodeType.OCTAL);
+        octalPositionCodeTypeAction.putValue(Action.SELECTED_KEY, positionCodeType == PositionCodeType.OCTAL);
 
         decimalPositionCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setCodeType(CodeArea.PositionCodeType.DECIMAL);
+                    setCodeType(PositionCodeType.DECIMAL);
                 }
             }
         };
         ActionUtils.setupAction(decimalPositionCodeTypeAction, resourceBundle, "decimalPositionCodeTypeAction");
         decimalPositionCodeTypeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, POSITION_CODE_TYPE_RADIO_GROUP_ID);
         decimalPositionCodeTypeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        decimalPositionCodeTypeAction.putValue(Action.SELECTED_KEY, positionCodeType == CodeArea.PositionCodeType.DECIMAL);
+        decimalPositionCodeTypeAction.putValue(Action.SELECTED_KEY, positionCodeType == PositionCodeType.DECIMAL);
 
         hexadecimalPositionCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
-                    setCodeType(CodeArea.PositionCodeType.HEXADECIMAL);
+                    setCodeType(PositionCodeType.HEXADECIMAL);
                 }
             }
         };
         ActionUtils.setupAction(hexadecimalPositionCodeTypeAction, resourceBundle, "hexadecimalPositionCodeTypeAction");
         hexadecimalPositionCodeTypeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         hexadecimalPositionCodeTypeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, POSITION_CODE_TYPE_RADIO_GROUP_ID);
-        hexadecimalPositionCodeTypeAction.putValue(Action.SELECTED_KEY, positionCodeType == CodeArea.PositionCodeType.HEXADECIMAL);
+        hexadecimalPositionCodeTypeAction.putValue(Action.SELECTED_KEY, positionCodeType == PositionCodeType.HEXADECIMAL);
 
     }
 
-    public void setCodeType(CodeArea.PositionCodeType codeType) {
+    public void setCodeType(PositionCodeType codeType) {
         this.positionCodeType = codeType;
         HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
         activePanel.getCodeArea().setPositionCodeType(codeType);

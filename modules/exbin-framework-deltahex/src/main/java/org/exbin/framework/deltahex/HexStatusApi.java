@@ -16,7 +16,7 @@
 package org.exbin.framework.deltahex;
 
 import java.awt.event.MouseEvent;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.EditationMode;
 
 /**
  * Hexadecimal editor status interface.
@@ -38,7 +38,7 @@ public interface HexStatusApi {
      *
      * @param editationMode editation mode
      */
-    void setEditationMode(CodeArea.EditationMode editationMode);
+    void setEditationMode(EditationMode editationMode);
 
     /**
      * Sets control handler for status operations.
@@ -54,7 +54,7 @@ public interface HexStatusApi {
          *
          * @param editationMode editation mode
          */
-        void changeEditationMode(CodeArea.EditationMode editationMode);
+        void changeEditationMode(EditationMode editationMode);
 
         /**
          * Requests change of cursor position using go-to dialog.

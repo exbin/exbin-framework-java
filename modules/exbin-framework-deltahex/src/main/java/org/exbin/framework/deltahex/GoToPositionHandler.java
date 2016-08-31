@@ -61,7 +61,7 @@ public class GoToPositionHandler {
                     HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
                     initGotoDialog();
                     goToDialog.setCursorPosition(activePanel.getCodeArea().getCaretPosition().getDataPosition());
-                    goToDialog.setMaxPosition(activePanel.getCodeArea().getData().getDataSize());
+                    goToDialog.setMaxPosition(activePanel.getCodeArea().getDataSize());
                     goToDialog.setLocationRelativeTo(goToDialog.getParent());
                     goToDialog.setVisible(true);
                     if (goToDialog.getDialogOption() == JOptionPane.OK_OPTION) {

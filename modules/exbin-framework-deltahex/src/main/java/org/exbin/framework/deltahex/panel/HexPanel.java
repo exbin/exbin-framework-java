@@ -49,8 +49,15 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import org.exbin.deltahex.CaretMovedListener;
 import org.exbin.deltahex.CaretPosition;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.DataChangedListener;
+import org.exbin.deltahex.EditationMode;
+import org.exbin.deltahex.EditationModeChangedListener;
+import org.exbin.deltahex.Section;
+import org.exbin.deltahex.SelectionChangedListener;
+import org.exbin.deltahex.SelectionRange;
+import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.deltahex.delta.MemoryPagedData;
 import org.exbin.deltahex.highlight.HighlightCodeAreaPainter;
 import org.exbin.deltahex.operation.CodeAreaUndoHandler;
@@ -126,15 +133,15 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         codeArea.setPainter(new HighlightCodeAreaPainter(codeArea));
         codeArea.setData(new MemoryPagedData(new XBData()));
         codeArea.setHandleClipboard(false);
-        codeArea.addSelectionChangedListener(new CodeArea.SelectionChangedListener() {
+        codeArea.addSelectionChangedListener(new SelectionChangedListener() {
             @Override
-            public void selectionChanged(CodeArea.SelectionRange selection) {
+            public void selectionChanged(SelectionRange selection) {
                 updateClipboardActionsStatus();
             }
         });
         CodeCommandHandler commandHandler = new CodeCommandHandler(codeArea, undoHandler);
         codeArea.setCommandHandler(commandHandler);
-        codeArea.addDataChangedListener(new CodeArea.DataChangedListener() {
+        codeArea.addDataChangedListener(new DataChangedListener() {
             @Override
             public void dataChanged() {
                 if (hexSearchPanel.isVisible()) {
@@ -244,7 +251,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                     break;
                 }
                 case BACKWARD: {
-                    position = codeArea.getData().getDataSize() - 1;
+                    position = codeArea.getDataSize() - 1;
                     break;
                 }
                 default:
@@ -655,11 +662,11 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         codeArea.getData().saveToStream(stream);
     }
 
-    public void attachCaretListener(CodeArea.CaretMovedListener listener) {
+    public void attachCaretListener(CaretMovedListener listener) {
         codeArea.addCaretMovedListener(listener);
     }
 
-    public void attachEditationModeChangedListener(CodeArea.EditationModeChangedListener listener) {
+    public void attachEditationModeChangedListener(EditationModeChangedListener listener) {
         codeArea.addEditationModeChangedListener(listener);
     }
 
@@ -719,18 +726,18 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     @Override
     public void registerHexStatus(HexStatusApi hexStatusApi) {
         this.hexStatus = hexStatusApi;
-        attachCaretListener(new CodeArea.CaretMovedListener() {
+        attachCaretListener(new CaretMovedListener() {
             @Override
-            public void caretMoved(CaretPosition caretPosition, CodeArea.Section section) {
+            public void caretMoved(CaretPosition caretPosition, Section section) {
                 String position = String.valueOf(caretPosition.getDataPosition());
                 position += ":" + caretPosition.getCodeOffset();
                 hexStatus.setCursorPosition(position);
             }
         });
 
-        attachEditationModeChangedListener(new CodeArea.EditationModeChangedListener() {
+        attachEditationModeChangedListener(new EditationModeChangedListener() {
             @Override
-            public void editationModeChanged(CodeArea.EditationMode mode) {
+            public void editationModeChanged(EditationMode mode) {
                 hexStatus.setEditationMode(mode);
             }
         });
@@ -738,7 +745,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
         hexStatus.setControlHandler(new HexStatusApi.StatusControlHandler() {
             @Override
-            public void changeEditationMode(CodeArea.EditationMode editationMode) {
+            public void changeEditationMode(EditationMode editationMode) {
                 codeArea.setEditationMode(editationMode);
             }
 
@@ -806,7 +813,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     public void updatePosition() {
-        hexSearchPanel.updatePosition(codeArea.getCaretPosition().getDataPosition(), codeArea.getData().getDataSize());
+        hexSearchPanel.updatePosition(codeArea.getCaretPosition().getDataPosition(), codeArea.getDataSize());
     }
 
     public void clearMatches() {
@@ -860,7 +867,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     @Override
     public void setModificationListener(final EditorModificationListener editorModificationListener) {
-        codeArea.addDataChangedListener(new CodeArea.DataChangedListener() {
+        codeArea.addDataChangedListener(new DataChangedListener() {
             @Override
             public void dataChanged() {
                 editorModificationListener.modified();

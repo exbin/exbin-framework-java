@@ -24,7 +24,9 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.exbin.deltahex.CodeArea;
+import org.exbin.deltahex.DataChangedListener;
+import org.exbin.deltahex.ScrollBarVisibility;
+import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
@@ -76,11 +78,11 @@ public class HexSearchComboBoxPanel extends JPanel {
         hexadecimalEditor.setShowLineNumbers(false);
         hexadecimalEditor.setWrapMode(true);
         hexadecimalEditor.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
-        hexadecimalEditor.setVerticalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setHorizontalScrollBarVisibility(CodeArea.ScrollBarVisibility.NEVER);
+        hexadecimalEditor.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        hexadecimalEditor.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalEditor.setData(new ByteArrayEditableData());
         hexadecimalEditor.setBorder(comboBoxBorder);
-        hexadecimalEditor.addDataChangedListener(new CodeArea.DataChangedListener() {
+        hexadecimalEditor.addDataChangedListener(new DataChangedListener() {
             @Override
             public void dataChanged() {
                 comboBoxValueChanged();
