@@ -16,8 +16,8 @@
 package org.exbin.framework.deltahex.panel;
 
 import java.awt.Color;
-import org.exbin.deltahex.ColorsGroup;
 import org.exbin.deltahex.swing.CodeArea;
+import org.exbin.deltahex.swing.ColorsGroup;
 
 /**
  * Enumeration of hexadecimal editor color types.
