@@ -17,10 +17,10 @@ package org.exbin.framework.deltahex.dialog;
 
 import java.net.URI;
 import javax.swing.DefaultListModel;
-import org.exbin.deltahex.delta.BinaryDataSegment;
 import org.exbin.deltahex.delta.DataSegment;
-import org.exbin.deltahex.delta.DeltaHexadecimalData;
-import org.exbin.deltahex.delta.DocumentSegment;
+import org.exbin.deltahex.delta.DeltaDocument;
+import org.exbin.deltahex.delta.FileSegment;
+import org.exbin.deltahex.delta.MemorySegment;
 import org.exbin.deltahex.delta.list.DefaultDoublyLinkedList;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.deltahex.panel.HexPanel;
@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * File properties dialog.
  *
- * @version 0.1.0 2016/07/18
+ * @version 0.1.0 2016/09/21
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesDialog extends javax.swing.JDialog {
@@ -95,6 +95,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
         structureScrollPane.setName("structureScrollPane"); // NOI18N
 
+        structureList.setModel(new DefaultListModel<String>());
         structureList.setName("structureList"); // NOI18N
         structureScrollPane.setViewportView(structureList);
 
@@ -199,15 +200,15 @@ public class PropertiesDialog extends javax.swing.JDialog {
         CodeArea codeArea = panel.getCodeArea();
         fileSizeTextField.setText(Long.toString(codeArea.getDataSize()));
 
-        if (codeArea.getData() instanceof DeltaHexadecimalData) {
-            DefaultDoublyLinkedList<DataSegment> segments = ((DeltaHexadecimalData) codeArea.getData()).getSegments();
+        if (codeArea.getData() instanceof DeltaDocument) {
+            DefaultDoublyLinkedList<DataSegment> segments = ((DeltaDocument) codeArea.getData()).getSegments();
             DataSegment segment = segments.first();
             DefaultListModel<String> listModel = (DefaultListModel<String>) structureList.getModel();
             while (segment != null) {
-                if (segment instanceof DocumentSegment) {
-                    listModel.addElement("FILE: " + ((DocumentSegment) segment).getStartPosition() + ", " + ((DocumentSegment) segment).getLength());
+                if (segment instanceof FileSegment) {
+                    listModel.addElement("FILE: " + ((FileSegment) segment).getStartPosition() + ", " + ((FileSegment) segment).getLength());
                 } else {
-                    listModel.addElement("DATA: " + ((BinaryDataSegment) segment).getLength());
+                    listModel.addElement("MEMORY: " + ((MemorySegment) segment).getStartPosition() + ", " + ((MemorySegment) segment).getLength());
                 }
                 segment = segment.getNext();
             }

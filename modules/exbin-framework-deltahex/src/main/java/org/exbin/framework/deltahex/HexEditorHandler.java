@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JPanel;
+import org.exbin.deltahex.delta.SegmentsRepository;
 import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.SearchParameters;
@@ -51,6 +52,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     private HexPanelInit hexPanelInit = null;
     private final List<HexPanel> panels = new ArrayList<>();
     private EditorViewHandling editorViewHandling = null;
+    private SegmentsRepository segmentsRepository;
     private HexPanel activePanel = null;
     private int lastIndex = 0;
     private HexStatusApi hexStatus = null;
@@ -186,7 +188,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     }
 
     private synchronized HexPanel createNewPanel() {
-        HexPanel panel = new HexPanel(lastIndex);
+        HexPanel panel = new HexPanel(segmentsRepository, lastIndex);
         lastIndex++;
         panels.add(panel);
         if (hexPanelInit != null) {

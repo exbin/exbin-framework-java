@@ -31,6 +31,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import org.exbin.deltahex.SelectionChangedListener;
 import org.exbin.deltahex.SelectionRange;
+import org.exbin.deltahex.delta.SegmentsRepository;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -130,7 +131,8 @@ public class DeltaHexModule implements XBApplicationModule {
 
     public HexEditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            HexPanel panel = new HexPanel();
+            SegmentsRepository segmentsRepository = new SegmentsRepository();
+            HexPanel panel = new HexPanel(segmentsRepository);
             editorProvider = panel;
 
             panel.setPopupMenu(createPopupMenu(panel.getId()));

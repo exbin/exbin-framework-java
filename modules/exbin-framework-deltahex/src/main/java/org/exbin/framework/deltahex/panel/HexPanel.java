@@ -57,8 +57,10 @@ import org.exbin.deltahex.EditationModeChangedListener;
 import org.exbin.deltahex.Section;
 import org.exbin.deltahex.SelectionChangedListener;
 import org.exbin.deltahex.SelectionRange;
+import org.exbin.deltahex.delta.DeltaDocument;
+import org.exbin.deltahex.delta.FileDataSource;
+import org.exbin.deltahex.delta.SegmentsRepository;
 import org.exbin.deltahex.swing.CodeArea;
-import org.exbin.deltahex.delta.MemoryPagedData;
 import org.exbin.deltahex.highlight.HighlightCodeAreaPainter;
 import org.exbin.deltahex.operation.CodeAreaUndoHandler;
 import org.exbin.deltahex.operation.CodeCommandHandler;
@@ -81,12 +83,13 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.1 2016/08/16
+ * @version 0.1.0 2016/09/21
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi {
 
     private int id = 0;
+    private SegmentsRepository segmentsRepository;
     private CodeArea codeArea;
     private CodeAreaUndoHandler undoHandler;
     private URI fileUri = null;
@@ -108,6 +111,11 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
     public HexPanel() {
+        this(null);
+    }
+
+    public HexPanel(SegmentsRepository segmentsRepository) {
+        this.segmentsRepository = segmentsRepository;
         undoHandler = new CodeAreaUndoHandler(codeArea);
         undoHandler.addUndoUpdateListener(new XBUndoUpdateListener() {
             @Override
@@ -124,14 +132,22 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     public HexPanel(int id) {
-        this();
+        this(null, id);
+    }
+
+    public HexPanel(SegmentsRepository segmentsRepository, int id) {
+        this.segmentsRepository = segmentsRepository;
         this.id = id;
     }
 
     private void init() {
         codeArea = new CodeArea();
         codeArea.setPainter(new HighlightCodeAreaPainter(codeArea));
-        codeArea.setData(new MemoryPagedData(new XBData()));
+        if (segmentsRepository != null) {
+            codeArea.setData(segmentsRepository.createDocument());
+        } else {
+            codeArea.setData(new XBData());
+        }
         codeArea.setHandleClipboard(false);
         codeArea.addSelectionChangedListener(new SelectionChangedListener() {
             @Override
@@ -588,15 +604,15 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         File file = new File(fileUri);
         try {
             // TODO Support for delta mode
-//            DeltaDataSource dataSource = new DeltaDataSource(file);
-//            DeltaHexadecimalData deltaData = new DeltaHexadecimalData(dataSource);
-//            hexadecimal.setData(deltaData);
-            try (FileInputStream fileStream = new FileInputStream(file)) {
-                BinaryData data = codeArea.getData();
-                ((EditableBinaryData) data).loadFromStream(fileStream);
-                codeArea.setData(data);
-                this.fileUri = fileUri;
-            }
+            FileDataSource openFileSource = segmentsRepository.openFileSource(file);
+            DeltaDocument document = segmentsRepository.createDocument(openFileSource);
+            codeArea.setData(document);
+//            try (FileInputStream fileStream = new FileInputStream(file)) {
+//                BinaryData data = codeArea.getData();
+//                ((EditableBinaryData) data).loadFromStream(fileStream);
+//                codeArea.setData(data);
+//                this.fileUri = fileUri;
+//            }
         } catch (IOException ex) {
             Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
