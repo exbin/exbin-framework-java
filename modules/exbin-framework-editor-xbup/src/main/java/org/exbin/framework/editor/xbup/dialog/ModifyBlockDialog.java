@@ -72,7 +72,6 @@ import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.serial.XBSerializable;
 import org.exbin.xbup.core.ubnumber.UBNatural;
 import org.exbin.xbup.core.ubnumber.type.UBNat32;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.parser_tree.XBATreeParamExtractor;
@@ -87,7 +86,7 @@ import org.exbin.xbup.plugin.XBCatalogPlugin;
 /**
  * Dialog for modifying item attributes or data.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.0 2016/09/25
  * @author ExBin Project (http://exbin.org)
  */
 public class ModifyBlockDialog extends javax.swing.JDialog {
@@ -105,7 +104,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     private XBPanelEditor customPanel;
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
-    private HexPanel extAreaHexPanel = null;
+    private HexPanel tailDataHexPanel = null;
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockDialog.class);
 
     private final String attributesPanelTitle;
@@ -128,7 +127,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         attributesPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(attributesPanel));
         dataPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(dataPanel));
         parametersPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(parametersPanel));
-        extAreaEditorPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(extendedAreaPanel));
+        extAreaEditorPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(tailDataPanel));
         basicPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(basicPanel));
 
         attributesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -194,8 +193,8 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
                     }
                     dataChanged = false;
                 } else if (extAreaEditorPanelTitle.equals(currentTitle)) {
-                    if (extAreaHexPanel == null) {
-                        reloadExtendedArea();
+                    if (tailDataHexPanel == null) {
+                        reloadTailData();
                     }
                 }
             }
@@ -259,7 +258,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         saveAsButton = new javax.swing.JButton();
         loadFromButton = new javax.swing.JButton();
         hexEditPanel = new javax.swing.JPanel();
-        extendedAreaPanel = new javax.swing.JPanel();
+        tailDataPanel = new javax.swing.JPanel();
         hexEditScrollPane = new javax.swing.JScrollPane();
         extLoadFromButton = new javax.swing.JButton();
         extSaveFromButto = new javax.swing.JButton();
@@ -426,34 +425,34 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
             }
         });
 
-        org.jdesktop.layout.GroupLayout extendedAreaPanelLayout = new org.jdesktop.layout.GroupLayout(extendedAreaPanel);
-        extendedAreaPanel.setLayout(extendedAreaPanelLayout);
-        extendedAreaPanelLayout.setHorizontalGroup(
-            extendedAreaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(extendedAreaPanelLayout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout tailDataPanelLayout = new org.jdesktop.layout.GroupLayout(tailDataPanel);
+        tailDataPanel.setLayout(tailDataPanelLayout);
+        tailDataPanelLayout.setHorizontalGroup(
+            tailDataPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(tailDataPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(extendedAreaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(tailDataPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, hexEditScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
-                    .add(extendedAreaPanelLayout.createSequentialGroup()
+                    .add(tailDataPanelLayout.createSequentialGroup()
                         .add(extLoadFromButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(extSaveFromButto)
                         .add(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        extendedAreaPanelLayout.setVerticalGroup(
-            extendedAreaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, extendedAreaPanelLayout.createSequentialGroup()
+        tailDataPanelLayout.setVerticalGroup(
+            tailDataPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, tailDataPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(hexEditScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(extendedAreaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(tailDataPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(extSaveFromButto)
                     .add(extLoadFromButton))
                 .addContainerGap())
         );
 
-        mainTabbedPane.addTab(resourceBundle.getString("extendedAreaPanel.tabTitle"), extendedAreaPanel); // NOI18N
+        mainTabbedPane.addTab(resourceBundle.getString("tailDataPanel.tabTitle"), tailDataPanel); // NOI18N
 
         getContentPane().add(mainTabbedPane, java.awt.BorderLayout.CENTER);
 
@@ -578,7 +577,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
                 Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            doc.setExtendedArea(new ByteArrayInputStream(buffer.toByteArray()));
+            doc.setTailData(new ByteArrayInputStream(buffer.toByteArray()));
         } */
         dialogOption = JOptionPane.OK_OPTION;
         WindowUtils.closeWindow(this);
@@ -615,8 +614,8 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser loadFileChooser = new JFileChooser();
         loadFileChooser.setAcceptAllFileFilterUsed(true);
         if (loadFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            extAreaHexPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
-            extAreaHexPanel.repaint();
+            tailDataHexPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
+            tailDataHexPanel.repaint();
         }
     }//GEN-LAST:event_extLoadFromButtonActionPerformed
 
@@ -624,8 +623,8 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setAcceptAllFileFilterUsed(true);
         if (saveFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            extAreaHexPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
-            extAreaHexPanel.repaint();
+            tailDataHexPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
+            tailDataHexPanel.repaint();
         }
     }//GEN-LAST:event_extSaveFromButtoActionPerformed
 
@@ -673,8 +672,8 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         }
 
         if (srcNode.getParent() == null) {
-            mainTabbedPane.addTab(extAreaEditorPanelTitle, extendedAreaPanel);
-            extAreaHexPanel = null;
+            mainTabbedPane.addTab(extAreaEditorPanelTitle, tailDataPanel);
+            tailDataHexPanel = null;
         }
 
         mainTabbedPane.setSelectedIndex(1);
@@ -700,7 +699,6 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     private javax.swing.JPanel dataPanel;
     private javax.swing.JButton extLoadFromButton;
     private javax.swing.JButton extSaveFromButto;
-    private javax.swing.JPanel extendedAreaPanel;
     private javax.swing.JPanel hexEditPanel;
     private javax.swing.JScrollPane hexEditScrollPane;
     private javax.swing.JButton loadFromButton;
@@ -711,6 +709,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     private javax.swing.JTable parametersTable;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton saveAsButton;
+    private javax.swing.JPanel tailDataPanel;
     private javax.swing.JCheckBox terminationModeCheckBox;
     // End of variables declaration//GEN-END:variables
 
@@ -738,10 +737,10 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         return dialogOption;
     }
 
-    public void saveExtendedArea(OutputStream stream) {
+    public void saveTailData(OutputStream stream) {
         try {
-            if (extAreaHexPanel != null) {
-                extAreaHexPanel.saveToStream(stream);
+            if (tailDataHexPanel != null) {
+                tailDataHexPanel.saveToStream(stream);
             }
         } catch (IOException ex) {
             Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -865,13 +864,13 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         }
     }
 
-    private void reloadExtendedArea() {
-        extAreaHexPanel = new HexPanel();
-        hexEditScrollPane.setViewportView(extAreaHexPanel);
+    private void reloadTailData() {
+        tailDataHexPanel = new HexPanel();
+        hexEditScrollPane.setViewportView(tailDataHexPanel);
 
-        if (doc != null && doc.getExtendedAreaSize() > 0) {
+        if (doc != null && doc.getTailDataSize() > 0) {
             try {
-                extAreaHexPanel.loadFromStream(doc.getExtendedArea(), doc.getExtendedAreaSize());
+                tailDataHexPanel.loadFromStream(doc.getTailData(), doc.getTailDataSize());
             } catch (IOException ex) {
                 Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
             }

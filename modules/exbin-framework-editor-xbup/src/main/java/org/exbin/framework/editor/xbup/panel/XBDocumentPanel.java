@@ -67,7 +67,7 @@ import org.exbin.xbup.operation.OperationEvent;
 import org.exbin.xbup.operation.OperationListener;
 import org.exbin.xbup.operation.XBTDocCommand;
 import org.exbin.xbup.operation.XBTDocOperation;
-import org.exbin.xbup.operation.basic.XBTExtAreaOperation;
+import org.exbin.xbup.operation.basic.XBTTailDataOperation;
 import org.exbin.xbup.operation.basic.XBTModifyBlockOperation;
 import org.exbin.xbup.operation.basic.command.XBTChangeBlockCommand;
 import org.exbin.xbup.operation.basic.command.XBTModifyBlockCommand;
@@ -77,13 +77,12 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.0 2016/08/16
+ * @version 0.2.0 2016/09/25
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -731,9 +730,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                     long position = node.getBlockIndex();
                     XBTModifyBlockOperation modifyOperation = new XBTModifyBlockOperation(mainDoc, position, newNode);
                     ((XBTChangeBlockCommand) undoStep).appendOperation(modifyOperation);
-                    XBData extendedArea = new XBData();
-                    dialog.saveExtendedArea(extendedArea.getDataOutputStream());
-                    XBTExtAreaOperation extOperation = new XBTExtAreaOperation(mainDoc, extendedArea);
+                    XBData tailData = new XBData();
+                    dialog.saveTailData(tailData.getDataOutputStream());
+                    XBTTailDataOperation extOperation = new XBTTailDataOperation(mainDoc, tailData);
                     ((XBTChangeBlockCommand) undoStep).appendOperation(extOperation);
                 } else {
                     undoStep = new XBTModifyBlockCommand(mainDoc, node, newNode);
