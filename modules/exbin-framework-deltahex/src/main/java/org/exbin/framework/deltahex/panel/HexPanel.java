@@ -31,7 +31,6 @@ import java.awt.print.PrinterJob;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,7 +82,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/09/21
+ * @version 0.1.0 2016/11/02
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -671,7 +670,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     public void loadFromStream(InputStream stream, long dataSize) throws IOException {
-        ((EditableBinaryData) codeArea.getData()).loadFromStream(stream, 0, dataSize);
+        ((EditableBinaryData) codeArea.getData()).clear();
+        ((EditableBinaryData) codeArea.getData()).insert(0, stream, dataSize);
     }
 
     public void saveToStream(OutputStream stream) throws IOException {
