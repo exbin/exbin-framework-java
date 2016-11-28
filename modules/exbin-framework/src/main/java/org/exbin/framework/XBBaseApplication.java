@@ -102,6 +102,18 @@ public class XBBaseApplication implements XBApplication {
         this.appBundle = appBundle;
     }
 
+    public Preferences createPreferences(Class clazz) {
+        Preferences preferences;
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.startsWith("win")) {
+            preferences = new FilePreferencesFactory().userNodeForPackage(clazz);
+        } else {
+            preferences = Preferences.userNodeForPackage(clazz);
+        }
+        setAppPreferences(preferences);
+        return preferences;
+    }
+
     @Override
     public Preferences getAppPreferences() {
         return appPreferences;

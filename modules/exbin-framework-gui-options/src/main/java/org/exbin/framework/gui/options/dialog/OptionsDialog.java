@@ -26,7 +26,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JPanel;
@@ -38,6 +37,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
+import org.exbin.framework.gui.options.StubPreferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -49,7 +49,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Dialog for application options and preferences setting.
  *
- * @version 0.2.0 2016/01/23
+ * @version 0.2.0 2016/11/28
  * @author ExBin Project (http://exbin.org)
  */
 public class OptionsDialog extends javax.swing.JDialog {
@@ -317,7 +317,7 @@ public class OptionsDialog extends javax.swing.JDialog {
      */
     public static void main(String args[]) {
         OptionsDialog optionsDialog = new OptionsDialog(new javax.swing.JFrame(), true, null);
-        optionsDialog.setPreferences(optionsDialog.new OptionsPreferences());
+        optionsDialog.setPreferences(new StubPreferences());
         WindowUtils.invokeWindow(optionsDialog);
     }
 
@@ -433,59 +433,6 @@ public class OptionsDialog extends javax.swing.JDialog {
             return name;
         }
     }
-
-    private class OptionsPreferences extends AbstractPreferences {
-
-        private final Map<String, String> spiValues;
-
-        public OptionsPreferences() {
-            super(null, "");
-            spiValues = new HashMap<>();
-        }
-
-        @Override
-        protected void putSpi(String key, String value) {
-            spiValues.put(key, value);
-        }
-
-        @Override
-        protected String getSpi(String key) {
-            return spiValues.get(key);
-        }
-
-        @Override
-        protected void removeSpi(String key) {
-            spiValues.remove(key);
-        }
-
-        @Override
-        protected void removeNodeSpi() throws BackingStoreException {
-            throw new UnsupportedOperationException("Can't remove the root!");
-        }
-
-        @Override
-        protected String[] keysSpi() throws BackingStoreException {
-            return (String[]) spiValues.keySet().toArray(new String[0]);
-        }
-
-        @Override
-        protected String[] childrenNamesSpi() throws BackingStoreException {
-            return new String[0];
-        }
-
-        @Override
-        protected AbstractPreferences childSpi(String name) {
-            return null;
-        }
-
-        @Override
-        protected void syncSpi() throws BackingStoreException {
-        }
-
-        @Override
-        protected void flushSpi() throws BackingStoreException {
-        }
-    };
 
     /**
      * Expands all nodes in a JTree.
