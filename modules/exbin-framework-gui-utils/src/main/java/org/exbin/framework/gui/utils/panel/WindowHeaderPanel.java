@@ -18,6 +18,7 @@ package org.exbin.framework.gui.utils.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
@@ -26,14 +27,15 @@ import javax.swing.Icon;
 /**
  * Simple header panel.
  *
- * @version 0.2.0 2016/07/23
+ * @version 0.2.0 2016/11/29
  * @author ExBin Project (http://exbin.org)
  */
 public class WindowHeaderPanel extends javax.swing.JPanel {
 
     private BackgroundDecorationMode decorationMode = BackgroundDecorationMode.COLOR_BOTTOM_RIGHT_TRANSITION;
-    private Color transitionColor = new Color(220, 220, 230);
+    private Color transitionColor = null;
     private Image decorationImage = null;
+    private boolean darkMode = false;
 
     private final ImageObserver imageObserver = new ImageObserver() {
         @Override
@@ -44,6 +46,18 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
 
     public WindowHeaderPanel() {
         initComponents();
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
+        Color backgroundColor = textPanel.getBackground();
+        int medium = (backgroundColor.getRed() + backgroundColor.getBlue() + backgroundColor.getGreen()) / 3;
+        darkMode = medium < 96;
+        if (darkMode) {
+            WindowHeaderPanel.this.setBackground(Color.BLACK);
+            titleLabel.setForeground(Color.WHITE);
+            descriptionTextArea.setForeground(Color.WHITE);
+            transitionColor = new Color(35, 35, 55);
+        } else {
+            transitionColor = new Color(220, 220, 230);
+        }
     }
 
     /**
@@ -70,10 +84,12 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
 
         descriptionTextArea.setEditable(false);
         descriptionTextArea.setColumns(20);
+        descriptionTextArea.setForeground(java.awt.Color.black);
         descriptionTextArea.setText("Line 1\nLine 2");
         descriptionTextArea.setBorder(null);
         descriptionTextArea.setOpaque(false);
 
+        titleLabel.setForeground(java.awt.Color.black);
         titleLabel.setText("Title");
         titleLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 

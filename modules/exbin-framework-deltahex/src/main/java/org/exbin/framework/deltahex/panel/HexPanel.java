@@ -31,6 +31,7 @@ import java.awt.print.PrinterJob;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -135,7 +136,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     public HexPanel(SegmentsRepository segmentsRepository, int id) {
-        this.segmentsRepository = segmentsRepository;
+        this(segmentsRepository);
         this.id = id;
     }
 
@@ -602,16 +603,21 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     public void loadFromFile(URI fileUri, FileType fileType) {
         File file = new File(fileUri);
         try {
-            // TODO Support for delta mode
-            FileDataSource openFileSource = segmentsRepository.openFileSource(file);
-            DeltaDocument document = segmentsRepository.createDocument(openFileSource);
-            codeArea.setData(document);
-//            try (FileInputStream fileStream = new FileInputStream(file)) {
-//                BinaryData data = codeArea.getData();
-//                ((EditableBinaryData) data).loadFromStream(fileStream);
-//                codeArea.setData(data);
-//                this.fileUri = fileUri;
-//            }
+            DeltaDocument document;
+            if (segmentsRepository != null) {
+                // TODO Support for delta mode
+                FileDataSource openFileSource = segmentsRepository.openFileSource(file);
+                document = segmentsRepository.createDocument(openFileSource);
+                codeArea.setData(document);
+            } else {
+                try (FileInputStream fileStream = new FileInputStream(file)) {
+                    BinaryData data = codeArea.getData();
+                    ((EditableBinaryData) data).loadFromStream(fileStream);
+                    codeArea.setData(data);
+                    this.fileUri = fileUri;
+                }
+            }
+
         } catch (IOException ex) {
             Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -623,7 +629,13 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     public void saveToFile(URI fileUri, FileType fileType) {
         File file = new File(fileUri);
         try {
-            codeArea.getData().saveToStream(new FileOutputStream(file));
+            if (segmentsRepository != null) {
+                // TODO support for delta mode
+                // TODO freeze window
+                segmentsRepository.saveDocument((DeltaDocument) codeArea.getData());
+            } else {
+                codeArea.getData().saveToStream(new FileOutputStream(file));
+            }
         } catch (IOException ex) {
             Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
         }

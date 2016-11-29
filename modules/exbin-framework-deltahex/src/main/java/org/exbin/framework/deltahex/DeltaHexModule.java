@@ -131,8 +131,9 @@ public class DeltaHexModule implements XBApplicationModule {
 
     public HexEditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            SegmentsRepository segmentsRepository = new SegmentsRepository();
-            HexPanel panel = new HexPanel(segmentsRepository);
+            // SegmentsRepository segmentsRepository = new SegmentsRepository();
+            // HexPanel panel = new HexPanel(segmentsRepository);
+            HexPanel panel = new HexPanel();
             editorProvider = panel;
 
             panel.setPopupMenu(createPopupMenu(panel.getId()));
