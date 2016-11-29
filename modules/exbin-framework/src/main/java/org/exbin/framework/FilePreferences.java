@@ -57,15 +57,15 @@ import org.xml.sax.SAXParseException;
 /**
  * File preferences class.
  *
- * @version 0.2.0 2016/11/28
+ * @version 0.2.0 2016/11/29
  * @author ExBin Project (http://exbin.org)
  */
 public class FilePreferences extends AbstractPreferences {
 
-    private static final String PREFS_DTD_URI = "http://java.sun.com/dtd/preferences.dtd";
-    private static final String MAP_XML_VERSION = "1.0";
-    // The actual DTD corresponding to the URI
-    private static final String PREFS_DTD
+    private static final String PRECERENCES_DTD_URI = "http://java.sun.com/dtd/preferences.dtd";
+    private static final String MAP_XML_VERSION_ATTRIBUTE = "MAP_XML_VERSION";
+    private static final String MAP_XML_VERSION_VALUE = "1.0";
+    private static final String PREFERENCES_DTD
             = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<!-- DTD for preferences -->"
             + "<!ELEMENT map (entry*) >"
@@ -76,10 +76,9 @@ public class FilePreferences extends AbstractPreferences {
             + "          key CDATA #REQUIRED"
             + "          value CDATA #REQUIRED >";
 
-    private File preferencesFile = null;
+    private final File preferencesFile;
     private final Map<String, String> spiValues;
     private Map<String, FilePreferences> children;
-    private boolean isRemoved = false;
 
     public FilePreferences() {
         this(null, "");
@@ -89,6 +88,8 @@ public class FilePreferences extends AbstractPreferences {
         super(parent, name);
         this.spiValues = new TreeMap<>();
         this.children = new TreeMap<>();
+        preferencesFile = FilePreferencesFactory.getPreferencesFile(absolutePath());
+
         try {
             sync();
         } catch (BackingStoreException ex) {
@@ -123,7 +124,7 @@ public class FilePreferences extends AbstractPreferences {
 
     @Override
     protected void removeNodeSpi() throws BackingStoreException {
-        isRemoved = true;
+        removeNode();
         flush();
     }
 
@@ -156,10 +157,6 @@ public class FilePreferences extends AbstractPreferences {
             return;
         }
 
-        if (preferencesFile == null) {
-            preferencesFile = FilePreferencesFactory.getPreferencesFile(this);
-        }
-
         if (!preferencesFile.exists()) {
             return;
         }
@@ -177,10 +174,6 @@ public class FilePreferences extends AbstractPreferences {
 
     @Override
     protected void flushSpi() throws BackingStoreException {
-        if (preferencesFile == null) {
-            preferencesFile = FilePreferencesFactory.getPreferencesFile(this);
-        }
-
         synchronized (preferencesFile) {
             if (!preferencesFile.exists()) {
                 try {
@@ -202,22 +195,25 @@ public class FilePreferences extends AbstractPreferences {
 
     static void exportToStream(OutputStream os, final FilePreferences p)
             throws IOException, BackingStoreException {
-        Document doc = createPrefsDoc("map");
+        Document doc = createPreferencesDoc("map");
         Element preferences = doc.getDocumentElement();
-        preferences.setAttribute("MAP_XML_VERSION", MAP_XML_VERSION);
+        preferences.setAttribute(MAP_XML_VERSION_ATTRIBUTE, MAP_XML_VERSION_VALUE);
         putPreferencesInXml(doc.getDocumentElement(), doc, p);
 
-        writeDoc(doc, os);
+        writeXmlDocument(doc, os);
     }
 
     /**
-     * Create a new prefs XML document.
+     * Creates preferences XML document with given root node qualified name.
+     *
+     * @param qname root node qualified name
+     * @return XML document
      */
-    private static Document createPrefsDoc(String qname) {
+    private static Document createPreferencesDoc(String qname) {
         try {
             DOMImplementation di = DocumentBuilderFactory.newInstance().
                     newDocumentBuilder().getDOMImplementation();
-            DocumentType dt = di.createDocumentType(qname, null, PREFS_DTD_URI);
+            DocumentType dt = di.createDocumentType(qname, null, PRECERENCES_DTD_URI);
             return di.createDocument(null, qname, dt);
         } catch (ParserConfigurationException e) {
             throw new AssertionError(e);
@@ -225,23 +221,16 @@ public class FilePreferences extends AbstractPreferences {
     }
 
     /**
-     * Put the preferences in the specified Preferences node into the specified
+     * Puts the preferences in the specified Preferences node into the specified
      * XML element which is assumed to represent a node in the specified XML
-     * document which is assumed to conform to PREFS_DTD. If subTree is true,
-     * create children of the specified XML node conforming to all of the
-     * children of the specified Preferences node and recurse.
+     * document which is assumed to conform to PREFERENCES_DTD.
      *
      * @throws BackingStoreException if it is not possible to read the
      * preferences or children out of the specified preferences node.
      */
     private static void putPreferencesInXml(Element map, Document doc,
             FilePreferences prefs) throws BackingStoreException {
-        Preferences[] kidsCopy = null;
-        String[] kidNames = null;
-
-        // Node is locked to export its contents and get a
-        // copy of children, then lock is released,
-        // and, if subTree = true, recursive calls are made on children
+        // Node is locked to export its contents
         synchronized (prefs.lock) {
             // Check if this node was concurrently removed. If yes
             // remove it from XML Document and return.
@@ -252,37 +241,39 @@ public class FilePreferences extends AbstractPreferences {
                 }
                 return;
             }
+
             // Put map in xml element
             String[] keys = prefs.keys();
-            for (int i = 0; i < keys.length; i++) {
+            for (String key : keys) {
                 Element entry = (Element) map.appendChild(doc.createElement("entry"));
-                entry.setAttribute("key", keys[i]);
+                entry.setAttribute("key", key);
                 // NEXT STATEMENT THROWS NULL PTR EXC INSTEAD OF ASSERT FAIL
-                entry.setAttribute("value", prefs.get(keys[i], null));
+                entry.setAttribute("value", prefs.get(key, null));
             }
             // release lock
         }
     }
 
     /**
-     * Write XML document to the specified output stream.
+     * Writes XML document to the specified output stream.
      */
-    private static final void writeDoc(Document doc, OutputStream out)
+    private static void writeXmlDocument(Document doc, OutputStream out)
             throws IOException {
         try {
             TransformerFactory tf = TransformerFactory.newInstance();
             try {
-                tf.setAttribute("indent-number", new Integer(2));
+                tf.setAttribute("indent-number", 2);
             } catch (IllegalArgumentException iae) {
-                //Ignore the IAE. Should not fail the writeout even the
-                //transformer provider does not support "indent-number".
+                // Ignore the IAE. Should not fail the writeout even the
+                // transformer provider does not support "indent-number".
             }
             Transformer t = tf.newTransformer();
             t.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doc.getDoctype().getSystemId());
             t.setOutputProperty(OutputKeys.INDENT, "yes");
-            //Transformer resets the "indent" info if the "result" is a StreamResult with
-            //an OutputStream object embedded, creating a Writer object on top of that
-            //OutputStream object however works.
+
+            // Transformer resets the "indent" info if the "result" is a StreamResult with
+            // an OutputStream object embedded, creating a Writer object on top of that
+            // OutputStream object however works.
             t.transform(new DOMSource(doc),
                     new StreamResult(new BufferedWriter(new OutputStreamWriter(out, "UTF-8"))));
         } catch (TransformerException e) {
@@ -291,6 +282,7 @@ public class FilePreferences extends AbstractPreferences {
     }
 
     private void importFromStream(FileInputStream fileStream, FilePreferences p) {
+        // Lock for complete import
         synchronized (p.lock) {
             try {
                 Document doc = loadPrefsDoc(fileStream);
@@ -302,8 +294,8 @@ public class FilePreferences extends AbstractPreferences {
     }
 
     /**
-     * Import the preferences described by the specified XML element (a map from
-     * a preferences document) into the specified preferences node.
+     * Imports the preferences described by the specified XML element (a map
+     * from a preferences document) into the specified preferences node.
      */
     private static void importPrefs(Preferences prefsNode, Element map) {
         NodeList entries = map.getChildNodes();
@@ -315,7 +307,7 @@ public class FilePreferences extends AbstractPreferences {
     }
 
     /**
-     * Load an XML document from specified input stream, which must have the
+     * Loads an XML document from specified input stream, which must have the
      * requisite DTD URI.
      */
     private static Document loadPrefsDoc(InputStream in)
@@ -328,7 +320,7 @@ public class FilePreferences extends AbstractPreferences {
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             db.setEntityResolver(new Resolver());
-            db.setErrorHandler(new DummyErrorHandler());
+            db.setErrorHandler(new RethrowErrorHandler());
             return db.parse(new InputSource(in));
         } catch (ParserConfigurationException e) {
             throw new AssertionError(e);
@@ -338,19 +330,18 @@ public class FilePreferences extends AbstractPreferences {
     private static class Resolver implements EntityResolver {
 
         @Override
-        public InputSource resolveEntity(String pid, String sid)
+        public InputSource resolveEntity(String publicId, String systemId)
                 throws SAXException {
-            if (sid.equals(PREFS_DTD_URI)) {
-                InputSource is;
-                is = new InputSource(new StringReader(PREFS_DTD));
-                is.setSystemId(PREFS_DTD_URI);
+            if (systemId.equals(PRECERENCES_DTD_URI)) {
+                InputSource is = new InputSource(new StringReader(PREFERENCES_DTD));
+                is.setSystemId(PRECERENCES_DTD_URI);
                 return is;
             }
-            throw new SAXException("Invalid system identifier: " + sid);
+            throw new SAXException("Invalid system identifier: " + systemId);
         }
     }
 
-    private static class DummyErrorHandler implements ErrorHandler {
+    private static class RethrowErrorHandler implements ErrorHandler {
 
         @Override
         public void error(SAXParseException ex) throws SAXException {

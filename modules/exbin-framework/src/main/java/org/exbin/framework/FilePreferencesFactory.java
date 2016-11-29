@@ -52,12 +52,12 @@ public class FilePreferencesFactory implements PreferencesFactory {
         return userPreferences;
     }
 
-    public static File getPreferencesFile(FilePreferences preferences) {
+    public static File getPreferencesFile(String absolutePath) {
         if (PREFERENCES_PATH == null) {
             PREFERENCES_PATH = System.getProperty("user.home") + File.separator + ".java" + File.separator + ".userPrefs";
         }
 
-        return new File(PREFERENCES_PATH + preferences.absolutePath().replace('/', File.separatorChar) + File.separator + PREFERENCE_FILENAME);
+        return new File(PREFERENCES_PATH + absolutePath.replace('/', File.separatorChar) + File.separator + PREFERENCE_FILENAME);
     }
     
     public FilePreferences userNodeForPackage(Class clazz) {
