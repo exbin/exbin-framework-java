@@ -17,6 +17,7 @@
 package org.exbin.framework.gui.about.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -35,7 +36,6 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -44,7 +44,7 @@ import org.exbin.xbup.plugin.XBModuleRecord;
 /**
  * Basic about dialog.
  *
- * @version 0.2.0 2016/08/03
+ * @version 0.2.0 2016/11/30
  * @author ExBin Project (http://exbin.org)
  */
 public class AboutDialog extends javax.swing.JDialog implements HyperlinkListener {
@@ -53,6 +53,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
     private ResourceBundle appBundle;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutDialog.class);
     private JComponent sideComponent = null;
+    private boolean darkMode = false;
 
     public AboutDialog(java.awt.Frame parent, boolean modal, XBApplication appEditor) {
         super(parent, modal);
@@ -69,6 +70,15 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
 
     private void init() {
         initComponents();
+        Color backgroundColor = mainPanel.getBackground();
+        int medium = (backgroundColor.getRed() + backgroundColor.getBlue() + backgroundColor.getGreen()) / 3;
+        darkMode = medium < 96;
+        if (darkMode) {
+            aboutHeaderPanel.setBackground(Color.BLACK);
+            appTitleLabel.setForeground(Color.WHITE);
+            appDescLabel.setForeground(Color.WHITE);
+        }
+
         getRootPane().setDefaultButton(closeButton);
         HashMap<TextAttribute, Object> attribs = new HashMap<>();
         attribs.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);
@@ -205,8 +215,8 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         environmentTable = new javax.swing.JTable();
         aboutHeaderPanel = new javax.swing.JPanel();
         javax.swing.JLabel imageLabel = new javax.swing.JLabel();
-        javax.swing.JLabel appTitleLabel = new javax.swing.JLabel();
-        javax.swing.JLabel appDescLabel = new javax.swing.JLabel();
+        appTitleLabel = new javax.swing.JLabel();
+        appDescLabel = new javax.swing.JLabel();
         headerSeparator = new javax.swing.JSeparator();
         controlPanel = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
@@ -445,16 +455,16 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         aboutHeaderPanel.setBackground(new java.awt.Color(255, 255, 255));
         aboutHeaderPanel.setName("aboutHeaderPanel"); // NOI18N
 
-        imageLabel.setBackground(new java.awt.Color(255, 255, 255));
         imageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(appBundle.getString("Application.aboutImage"))));
         imageLabel.setName("imageLabel"); // NOI18N
-        imageLabel.setOpaque(true);
 
         appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
+        appTitleLabel.setForeground(java.awt.Color.black);
         appTitleLabel.setText(appBundle.getString("Application.title"));
         appTitleLabel.setName("appTitleLabel"); // NOI18N
 
+        appDescLabel.setForeground(java.awt.Color.black);
         appDescLabel.setText(appBundle.getString("Application.description"));
         appDescLabel.setName("appDescLabel"); // NOI18N
 
@@ -550,7 +560,9 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel aboutHeaderPanel;
+    private javax.swing.JLabel appDescLabel;
     private javax.swing.JLabel appHomepageLabel;
+    private javax.swing.JLabel appTitleLabel;
     private javax.swing.JPanel applicationPanel;
     private javax.swing.JPanel authorsPanel;
     private javax.swing.JScrollPane authorsScrollPane;

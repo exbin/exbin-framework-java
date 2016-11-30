@@ -59,7 +59,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         previewCodeArea.setEditable(false);
         ByteArrayEditableData exampleData = new ByteArrayEditableData();
         try {
-            exampleData.loadFromStream(getClass().getResourceAsStream("/org/exbin/framework/deltahex/resources/lorem_1.txt"));
+            exampleData.loadFromStream(getClass().getResourceAsStream("/org/exbin/framework/deltahex/resources/preview/lorem.txt"));
         } catch (IOException ex) {
             Logger.getLogger(HexColorPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
