@@ -78,6 +78,7 @@ public class GuiAboutModule implements GuiAboutModuleApi {
                     AboutDialog aboutDialog = new AboutDialog(frameModule.getFrame(), true, application);
                     aboutDialog.setProjectResourceBundle(application.getAppBundle());
                     aboutDialog.setSideComponent(sideComponent);
+                    aboutDialog.setLocationRelativeTo(aboutDialog.getParent());
                     aboutDialog.setVisible(true);
                 }
             };

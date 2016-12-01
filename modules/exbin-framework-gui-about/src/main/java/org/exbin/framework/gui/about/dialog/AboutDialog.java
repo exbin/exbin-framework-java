@@ -163,6 +163,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
 
         WindowUtils.initWindow(this);
         WindowUtils.assignGlobalKeyListener(this, closeButton);
+        pack();
     }
 
     /**
@@ -530,8 +531,6 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
         );
 
         getContentPane().add(controlPanel, java.awt.BorderLayout.PAGE_END);
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void appHomepageLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_appHomepageLabelMouseClicked

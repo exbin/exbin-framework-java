@@ -26,7 +26,6 @@ import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.update.GuiUpdateModule;
 import org.exbin.framework.gui.update.VersionNumbers;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;

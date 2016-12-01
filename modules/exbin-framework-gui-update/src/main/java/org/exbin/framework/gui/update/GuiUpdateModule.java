@@ -100,6 +100,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                             return GuiUpdateModule.this.getUpdateVersion();
                         }
                     });
+                    checkUpdatesDialog.setLocationRelativeTo(checkUpdatesDialog.getParent());
                     checkUpdatesDialog.setVisible(true);
                 }
             };
@@ -204,6 +205,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                     return GuiUpdateModule.this.getUpdateVersion();
                 }
             });
+            checkUpdatesDialog.setLocationRelativeTo(checkUpdatesDialog.getParent());
             checkUpdatesDialog.setVisible(true);
         }
     }
