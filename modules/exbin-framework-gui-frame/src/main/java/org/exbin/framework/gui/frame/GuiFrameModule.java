@@ -34,18 +34,21 @@ import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowPosition;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework undo/redo module.
  *
- * @version 0.2.0 2016/01/10
+ * @version 0.2.0 2016/12/04
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiFrameModule implements GuiFrameModuleApi {
 
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";
     public static final String VIEW_BARS_GROUP_ID = MODULE_ID + ".view";
+    public static final String PREFERENCS_FRAME_PREFIX = "mainFrame.";
 
     private XBApplication application;
     private ResourceBundle resourceBundle;
@@ -91,7 +94,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         initMainMenu();
         initMainToolBar();
     }
-    
+
     @Override
     public void unregisterModule(String moduleId) {
     }
@@ -99,6 +102,22 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     @Override
     public Frame getFrame() {
         return getFrameHandler().getFrame();
+    }
+
+    @Override
+    public void loadFramePosition() {
+        getFrameHandler();
+        WindowPosition framePosition = new WindowPosition();
+        if (framePosition.preferencesExists(application.getAppPreferences(), PREFERENCS_FRAME_PREFIX)) {
+            framePosition.loadFromPreferences(application.getAppPreferences(), PREFERENCS_FRAME_PREFIX);
+            WindowUtils.setWindowPosition(frame, framePosition);
+        }
+    }
+
+    @Override
+    public void saveFramePosition() {
+        WindowPosition windowPosition = WindowUtils.getWindowPosition(frame);
+        windowPosition.saveToPreferences(application.getAppPreferences(), PREFERENCS_FRAME_PREFIX);
     }
 
     @Override

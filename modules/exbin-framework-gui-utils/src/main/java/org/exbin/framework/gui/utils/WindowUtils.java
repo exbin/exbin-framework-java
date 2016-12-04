@@ -19,6 +19,9 @@ package org.exbin.framework.gui.utils;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -29,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.LookAndFeel;
@@ -39,7 +43,7 @@ import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 /**
  * Utility static methods usable for windows and dialogs.
  *
- * @version 0.2.0 2016/07/23
+ * @version 0.2.0 2016/12/04
  * @author ExBin Project (http://exbin.org)
  */
 public class WindowUtils {
@@ -220,5 +224,72 @@ public class WindowUtils {
      */
     public static void doButtonClick(JButton button) {
         button.doClick(BUTTON_CLICK_TIME);
+    }
+
+    public static WindowPosition getWindowPosition(Window window) {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] screenDevices = ge.getScreenDevices();
+        int windowX = window.getX();
+        int windowY = window.getY();
+        int screenX = 0;
+        int screenY = 0;
+        int screenWidth = 0;
+        int screenHeight = 0;
+        int screenIndex = 0;
+        for (GraphicsDevice screen : screenDevices) {
+            Rectangle bounds = screen.getDefaultConfiguration().getBounds();
+            if (bounds.contains(windowX, windowY)) {
+                screenX = bounds.x;
+                screenY = bounds.y;
+                screenWidth = bounds.width;
+                screenHeight = bounds.height;
+                break;
+            }
+            screenIndex++;
+        }
+        WindowPosition position = new WindowPosition();
+        position.setScreenIndex(screenIndex);
+        position.setScreenWidth(screenWidth);
+        position.setScreenHeight(screenHeight);
+        position.setRelativeX(window.getX() - screenX);
+        position.setRelativeY(window.getY() - screenY);
+        position.setWidth(window.getWidth());
+        position.setHeight(window.getHeight());
+        position.setMaximized(window instanceof Frame ? (((Frame) window).getExtendedState() & JFrame.MAXIMIZED_BOTH) > 0 : false);
+        return position;
+    }
+
+    public static void setWindowPosition(Window window, WindowPosition position) {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] screenDevices = ge.getScreenDevices();
+        GraphicsDevice device;
+        if (screenDevices.length > position.getScreenIndex()) {
+            device = screenDevices[position.getScreenIndex()];
+        } else {
+            device = ge.getDefaultScreenDevice();
+        }
+        Rectangle screenBounds = device.getDefaultConfiguration().getBounds();
+        double absoluteX = position.getScreenWidth() > 0
+                ? screenBounds.x + position.getRelativeX() * screenBounds.width / position.getScreenWidth()
+                : screenBounds.x + position.getRelativeX();
+        double absoluteY = position.getScreenHeight() > 0
+                ? screenBounds.y + position.getRelativeY() * screenBounds.height / position.getScreenHeight()
+                : screenBounds.y + position.getRelativeY();
+        double widthX = position.getScreenWidth() > 0
+                ? position.getWidth() * screenBounds.width / position.getScreenWidth()
+                : position.getWidth();
+        double widthY = position.getScreenHeight() > 0
+                ? position.getHeight() * screenBounds.height / position.getScreenHeight()
+                : position.getHeight();
+        if (position.isMaximized()) {
+            window.setLocation((int) absoluteX, (int) absoluteY);
+            if (window instanceof Frame) {
+                ((Frame) window).setExtendedState(JFrame.MAXIMIZED_BOTH);
+            } else {
+                // TODO if (window instanceof JDialog) 
+            }
+        } else {
+            window.setBounds((int) absoluteX, (int) absoluteY, (int) widthX, (int) widthY);
+        }
     }
 }

@@ -34,6 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.ImageIcon;
+import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.api.XBApplication;
@@ -43,7 +44,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Base application class.
  *
- * @version 0.2.0 2016/08/18
+ * @version 0.2.0 2016/12/03
  * @author ExBin Project (http://exbin.org)
  */
 public class XBBaseApplication implements XBApplication {
@@ -59,6 +60,7 @@ public class XBBaseApplication implements XBApplication {
     private final XBDefaultApplicationModuleRepository moduleRepository;
     private final List<URI> plugins = new ArrayList<>();
     private final Map<Locale, ClassLoader> languagePlugins = new HashMap<>();
+    private LookAndFeel defaultLaf = null;
 
     public XBBaseApplication() {
         moduleRepository = new XBDefaultApplicationModuleRepository(this);
@@ -67,6 +69,7 @@ public class XBBaseApplication implements XBApplication {
     public void init() {
         // Setup language utility
         Locale locale = Locale.getDefault();
+        defaultLaf = UIManager.getLookAndFeel();
         ClassLoader languageClassLoader = languagePlugins.get(locale);
         if (languageClassLoader != null) {
             LanguageUtils.setLanguageClassLoader(languageClassLoader);
@@ -136,12 +139,18 @@ public class XBBaseApplication implements XBApplication {
         }
 
         String laf = preferencesGet(PREFERENCES_LOOK_AND_FEEL, "");
-        if (laf != null && !laf.isEmpty()) {
-            try {
-                UIManager.setLookAndFeel(laf);
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(XBBaseApplication.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            if (laf != null && !laf.isEmpty()) {
+                if ("SYSTEM".equals(laf)) {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } else {
+                    UIManager.setLookAndFeel(laf);
+                }
+            } else {
+                UIManager.setLookAndFeel(defaultLaf);
             }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(XBBaseApplication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

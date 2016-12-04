@@ -119,4 +119,8 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * @param statusBarId statusbar id
      */
     void switchStatusBar(String statusBarId);
+
+    void loadFramePosition();
+
+    void saveFramePosition();
 }
