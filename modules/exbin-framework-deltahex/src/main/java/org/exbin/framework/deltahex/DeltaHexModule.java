@@ -69,7 +69,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.0 2016/12/08
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -109,6 +109,8 @@ public class DeltaHexModule implements XBApplicationModule {
     private ClipboardCodeHandler clipboardCodeHandler;
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
 
+    private boolean deltaMode = false;
+
     public DeltaHexModule() {
     }
 
@@ -131,9 +133,13 @@ public class DeltaHexModule implements XBApplicationModule {
 
     public HexEditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            // SegmentsRepository segmentsRepository = new SegmentsRepository();
-            // HexPanel panel = new HexPanel(segmentsRepository);
-            HexPanel panel = new HexPanel();
+            HexPanel panel;
+            if (deltaMode) {
+                SegmentsRepository segmentsRepository = new SegmentsRepository();
+                panel = new HexPanel(segmentsRepository);
+            } else {
+                panel = new HexPanel();
+            }
             editorProvider = panel;
 
             panel.setPopupMenu(createPopupMenu(panel.getId()));
@@ -674,6 +680,10 @@ public class DeltaHexModule implements XBApplicationModule {
                 return SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
             }
         });
+    }
+
+    public void setDeltaMode(boolean deltaMode) {
+        this.deltaMode = deltaMode;
     }
 
     public static interface EncodingStatusHandler {
