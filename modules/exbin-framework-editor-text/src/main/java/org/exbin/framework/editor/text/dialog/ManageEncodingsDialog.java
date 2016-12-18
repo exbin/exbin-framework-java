@@ -19,14 +19,13 @@ package org.exbin.framework.editor.text.dialog;
 import javax.swing.JOptionPane;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Text Editor Encoding Selection Dialog.
  *
- * @version 0.2.0 2016/08/17
+ * @version 0.2.0 2016/12/18
  * @author ExBin Project (http://exbin.org)
  */
 public class ManageEncodingsDialog extends javax.swing.JDialog {
@@ -43,7 +42,9 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
+        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, setButton, cancelButton);
+        pack();
     }
 
     public int getDialogOption() {
@@ -63,15 +64,22 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mainPanel = new javax.swing.JPanel();
+        controlPanel = new javax.swing.JPanel();
         setButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
         setLocationByPlatform(true);
         setModal(true);
         setName("Form"); // NOI18N
+
+        mainPanel.setName("mainPanel"); // NOI18N
+        mainPanel.setLayout(new java.awt.GridLayout(1, 0));
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
+
+        controlPanel.setName("controlPanel"); // NOI18N
 
         setButton.setText(resourceBundle.getString("setButton.text")); // NOI18N
         setButton.setName("setButton"); // NOI18N
@@ -89,33 +97,28 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
             }
         });
 
-        mainPanel.setName("mainPanel"); // NOI18N
-        mainPanel.setLayout(new java.awt.GridLayout(1, 0));
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(540, Short.MAX_VALUE)
+        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
+        controlPanel.setLayout(controlPanelLayout);
+        controlPanelLayout.setHorizontalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
+                .addContainerGap(524, Short.MAX_VALUE)
                 .addComponent(setButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
                 .addContainerGap())
-            .addComponent(mainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        controlPanelLayout.setVerticalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(setButton))
                 .addContainerGap())
         );
 
-        pack();
+        getContentPane().add(controlPanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
     private void setButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setButtonActionPerformed
@@ -137,6 +140,7 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
+    private javax.swing.JPanel controlPanel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton setButton;
     // End of variables declaration//GEN-END:variables

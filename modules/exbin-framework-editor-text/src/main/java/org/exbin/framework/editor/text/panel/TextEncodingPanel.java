@@ -217,7 +217,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         AddEncodingDialog addEncodingDialog = new AddEncodingDialog(WindowUtils.getFrame(this), true);
-        addEncodingDialog.setEncodings(((EncodingsListModel) encodingsList.getModel()).getCharsets());
+        addEncodingDialog.setUsedEncodings(((EncodingsListModel) encodingsList.getModel()).getCharsets());
         addEncodingDialog.setLocationRelativeTo(addEncodingDialog.getParent());
         addEncodingDialog.setVisible(true);
         addEncodingDialog.setIconImage(iconImage);

@@ -16,28 +16,25 @@
  */
 package org.exbin.framework.editor.text.dialog;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map.Entry;
-import javax.swing.AbstractListModel;
 import javax.swing.JOptionPane;
-import org.exbin.framework.gui.utils.ActionUtils;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Encoding Selection Panel.
  *
- * @version 0.1.25 2015/04/11
+ * @version 0.2.0 2016/12/18
  * @author ExBin Project (http://exbin.org)
  */
 public class AddEncodingDialog extends javax.swing.JDialog {
 
     protected int dialogOption = JOptionPane.CLOSED_OPTION;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AddEncodingDialog.class);
+    private EncodingsTableModel tableModel = new EncodingsTableModel();
 
     public AddEncodingDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -47,7 +44,50 @@ public class AddEncodingDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.assignGlobalKeyListener(this, okButton, cancelButton);
+        WindowUtils.assignGlobalKeyListener(this, addButton, cancelButton);
+        encodingsTable.setModel(tableModel);
+        
+        nameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                nameTextChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                nameTextChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                nameTextChanged();
+            }
+            
+            private void nameTextChanged() {
+                tableModel.setNameFilter(nameTextField.getText());
+            }
+        });
+
+        countryTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                countryTextChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                countryTextChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                countryTextChanged();
+            }
+            
+            private void countryTextChanged() {
+                tableModel.setCountryFilter(countryTextField.getText());
+            }
+        });
     }
 
     public int getDialogOption() {
@@ -63,24 +103,131 @@ public class AddEncodingDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        filterPanel = new javax.swing.JPanel();
+        nameLabel = new javax.swing.JLabel();
+        countryLabel = new javax.swing.JLabel();
+        nameTextField = new javax.swing.JTextField();
+        clearButton = new javax.swing.JButton();
+        countryTextField = new javax.swing.JTextField();
+        mainPanel = new javax.swing.JPanel();
         supportedEncodingsLabel = new javax.swing.JLabel();
-        encodingsScrollPane = new javax.swing.JScrollPane();
-        encodingsList = new javax.swing.JList();
+        encodinsScrollPane = new javax.swing.JScrollPane();
+        encodingsTable = new javax.swing.JTable();
+        controlPanel = new javax.swing.JPanel();
+        addButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add Supported Encoding"); // NOI18N
         setName("Form"); // NOI18N
 
+        filterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("AddEncodingDialog.filterPanel.title"))); // NOI18N
+        filterPanel.setName("filterPanel"); // NOI18N
+
+        nameLabel.setText(resourceBundle.getString("AddEncodingDialog.nameLabel.text")); // NOI18N
+        nameLabel.setName("nameLabel"); // NOI18N
+
+        countryLabel.setText(resourceBundle.getString("AddEncodingDialog.countryLabel.text")); // NOI18N
+        countryLabel.setName("countryLabel"); // NOI18N
+
+        nameTextField.setName("nameTextField"); // NOI18N
+
+        clearButton.setText(resourceBundle.getString("AddEncodingDialog.clearButton.text")); // NOI18N
+        clearButton.setName("clearButton"); // NOI18N
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
+
+        countryTextField.setName("countryTextField"); // NOI18N
+
+        javax.swing.GroupLayout filterPanelLayout = new javax.swing.GroupLayout(filterPanel);
+        filterPanel.setLayout(filterPanelLayout);
+        filterPanelLayout.setHorizontalGroup(
+            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, filterPanelLayout.createSequentialGroup()
+                .addContainerGap(287, Short.MAX_VALUE)
+                .addComponent(countryLabel)
+                .addGap(132, 132, 132))
+            .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(filterPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(filterPanelLayout.createSequentialGroup()
+                            .addComponent(nameLabel)
+                            .addGap(0, 228, Short.MAX_VALUE))
+                        .addComponent(nameTextField))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
+        );
+        filterPanelLayout.setVerticalGroup(
+            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filterPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(countryLabel)
+                .addContainerGap(43, Short.MAX_VALUE))
+            .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(filterPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(nameLabel)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(clearButton))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        getContentPane().add(filterPanel, java.awt.BorderLayout.PAGE_START);
+
+        mainPanel.setName("mainPanel"); // NOI18N
+
         supportedEncodingsLabel.setText(resourceBundle.getString("supportedEncodingsLabel.text")); // NOI18N
         supportedEncodingsLabel.setName("supportedEncodingsLabel"); // NOI18N
 
-        encodingsScrollPane.setName("encodingsScrollPane"); // NOI18N
+        encodinsScrollPane.setName("encodinsScrollPane"); // NOI18N
 
-        encodingsList.setModel(new AvailableEncodingsListModel());
-        encodingsList.setName("encodingsList"); // NOI18N
-        encodingsScrollPane.setViewportView(encodingsList);
+        encodingsTable.setName("encodingsTable"); // NOI18N
+        encodinsScrollPane.setViewportView(encodingsTable);
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(encodinsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(supportedEncodingsLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(supportedEncodingsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(encodinsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
+
+        controlPanel.setName("controlPanel"); // NOI18N
+
+        addButton.setText(resourceBundle.getString("addButton.text")); // NOI18N
+        addButton.setName("addButton"); // NOI18N
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
@@ -90,42 +237,28 @@ public class AddEncodingDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText(resourceBundle.getString("okButton.text")); // NOI18N
-        okButton.setName("okButton"); // NOI18N
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(encodingsScrollPane)
-                    .addComponent(supportedEncodingsLabel)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(okButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cancelButton)))
+        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
+        controlPanel.setLayout(controlPanelLayout);
+        controlPanelLayout.setHorizontalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
+                .addContainerGap(373, Short.MAX_VALUE)
+                .addComponent(addButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cancelButton)
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(supportedEncodingsLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(encodingsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        controlPanelLayout.setVerticalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
-                    .addComponent(okButton))
+                    .addComponent(addButton))
                 .addContainerGap())
         );
+
+        getContentPane().add(controlPanel, java.awt.BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -135,10 +268,15 @@ public class AddEncodingDialog extends javax.swing.JDialog {
         WindowUtils.closeWindow(this);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         dialogOption = JOptionPane.OK_OPTION;
         WindowUtils.closeWindow(this);
-    }//GEN-LAST:event_okButtonActionPerformed
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        nameTextField.setText("");
+        countryTextField.setText("");
+    }//GEN-LAST:event_clearButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -147,64 +285,34 @@ public class AddEncodingDialog extends javax.swing.JDialog {
         WindowUtils.invokeWindow(new AddEncodingDialog(new javax.swing.JFrame(), true));
     }
 
-    public void setEncodings(List<String> encodings) {
-        LinkedHashSet<String> set = new LinkedHashSet<>();
-        for (Entry<String, Charset> entry : Charset.availableCharsets().entrySet()) {
-            if (!"UTF-8".equals(entry.getKey())) {
-                set.add(entry.getValue().name()); //displayName(Locale.getDefault()));
-            }
-        }
-        set.remove("UTF-8");
-        for (Iterator<String> it = encodings.iterator(); it.hasNext();) {
-            set.remove(it.next());
-        }
-        ArrayList<String> list = new ArrayList<>(set);
-        ((AvailableEncodingsListModel) encodingsList.getModel()).setCharsets(list);
+    public void setUsedEncodings(List<String> encodings) {
+        tableModel.setUsedEncodings(encodings);
     }
 
     public List<String> getEncodings() {
         ArrayList<String> result = new ArrayList<>();
-        List selectedValues = encodingsList.getSelectedValuesList();
-        for (Object value : selectedValues) {
-            if (value instanceof String) {
-                result.add((String) value);
-            }
+        int[] selectedValues = encodingsTable.getSelectedRows();
+        for (int rowIndex : selectedValues) {
+            String value = (String) tableModel.getValueAt(rowIndex, 0);
+            result.add((String) value);
         }
         return result;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JList encodingsList;
-    private javax.swing.JScrollPane encodingsScrollPane;
-    private javax.swing.JButton okButton;
+    private javax.swing.JButton clearButton;
+    private javax.swing.JPanel controlPanel;
+    private javax.swing.JLabel countryLabel;
+    private javax.swing.JTextField countryTextField;
+    private javax.swing.JTable encodingsTable;
+    private javax.swing.JScrollPane encodinsScrollPane;
+    private javax.swing.JPanel filterPanel;
+    private javax.swing.JPanel mainPanel;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nameTextField;
     private javax.swing.JLabel supportedEncodingsLabel;
     // End of variables declaration//GEN-END:variables
 
-    private class AvailableEncodingsListModel extends AbstractListModel {
-
-        private List<String> charsets = null;
-
-        @Override
-        public int getSize() {
-            if (charsets == null) {
-                return 0;
-            }
-            return charsets.size();
-        }
-
-        @Override
-        public Object getElementAt(int index) {
-            return charsets.get(index);
-        }
-
-        public List<String> getCharsets() {
-            return charsets;
-        }
-
-        public void setCharsets(List<String> charsets) {
-            this.charsets = charsets;
-            fireContentsChanged(this, 0, charsets.size());
-        }
-    }
 }
