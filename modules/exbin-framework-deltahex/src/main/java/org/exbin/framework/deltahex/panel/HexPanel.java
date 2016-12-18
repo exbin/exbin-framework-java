@@ -83,7 +83,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.1.0 2016/11/02
+ * @version 0.2.0 2016/12/19
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -105,6 +105,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private Action copyAsCode = null;
     private Action pasteFromCode = null;
     private DeltaHexModule.EncodingStatusHandler encodingStatusHandler;
+    private long documentOriginalSize;
 
     private PropertyChangeListener propertyChangeListener;
     private CharsetChangeListener charsetChangeListener = null;
@@ -163,6 +164,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 if (hexSearchPanel.isVisible()) {
                     hexSearchPanel.dataChanged();
                 }
+                updateCurrentDocumentSize();
             }
         });
         // TODO use listener in code area component instead
@@ -609,6 +611,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 FileDataSource openFileSource = segmentsRepository.openFileSource(file);
                 document = segmentsRepository.createDocument(openFileSource);
                 codeArea.setData(document);
+                documentOriginalSize = codeArea.getDataSize();
+                updateCurrentDocumentSize();
             } else {
                 try (FileInputStream fileStream = new FileInputStream(file)) {
                     BinaryData data = codeArea.getData();
@@ -636,6 +640,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             } else {
                 codeArea.getData().saveToStream(new FileOutputStream(file));
             }
+            documentOriginalSize = codeArea.getDataSize();
+            updateCurrentDocumentSize();
         } catch (IOException ex) {
             Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -842,6 +848,12 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     public void updatePosition() {
         hexSearchPanel.updatePosition(codeArea.getCaretPosition().getDataPosition(), codeArea.getDataSize());
+    }
+
+    private void updateCurrentDocumentSize() {
+        long dataSize = codeArea.getData().getDataSize();
+        long difference = dataSize - documentOriginalSize;
+        hexStatus.setCurrentDocumentSize(dataSize + " (" + (difference > 0 ? "+" + difference : difference) + ")");
     }
 
     public void clearMatches() {
