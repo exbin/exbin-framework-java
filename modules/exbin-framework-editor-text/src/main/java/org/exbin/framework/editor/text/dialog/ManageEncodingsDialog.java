@@ -16,25 +16,33 @@
  */
 package org.exbin.framework.editor.text.dialog;
 
+import java.awt.BorderLayout;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
+import org.exbin.framework.gui.component.api.DialogControlPanelHandler;
+import org.exbin.framework.gui.component.api.GuiComponentModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Text Editor Encoding Selection Dialog.
  *
- * @version 0.2.0 2016/12/18
+ * @version 0.2.0 2016/12/20
  * @author ExBin Project (http://exbin.org)
  */
 public class ManageEncodingsDialog extends javax.swing.JDialog {
 
+    private final XBApplication application;
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ManageEncodingsDialog.class);
 
-    public ManageEncodingsDialog(java.awt.Frame parent, TextEncodingPanelApi frame, boolean modal) {
+    public ManageEncodingsDialog(XBApplication application, java.awt.Frame parent, TextEncodingPanelApi frame, boolean modal) {
         super(parent, modal);
+        this.application = application;
         initComponents();
         mainPanel.add(new TextEncodingPanel(frame));
         init();
@@ -43,8 +51,37 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
     private void init() {
         WindowUtils.initWindow(this);
         WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
-        WindowUtils.assignGlobalKeyListener(this, setButton, cancelButton);
+
+        GuiComponentModuleApi componentModule = application.getModuleRepository().getModuleByInterface(GuiComponentModuleApi.class);
+        JPanel controlPanel = componentModule.createDialogControlPanel(new DialogControlPanelHandler() {
+            @Override
+            public void cancelAction() {
+                closeDialog(JOptionPane.CANCEL_OPTION);
+            }
+
+            @Override
+            public void setAction() {
+                closeDialog(JOptionPane.OK_OPTION);
+            }
+
+            @Override
+            public void saveAction() {
+                // TODO Save
+                closeDialog(JOptionPane.OK_OPTION);
+            }
+
+            @Override
+            public void okCancelButtons(JButton okButton, JButton cancelButton) {
+                WindowUtils.assignGlobalKeyListener(ManageEncodingsDialog.this, okButton, cancelButton);
+            }
+        });
+        add(controlPanel, BorderLayout.SOUTH);
         pack();
+    }
+
+    private void closeDialog(int dialogOption) {
+        this.dialogOption = dialogOption;
+        WindowUtils.closeWindow(this);
     }
 
     public int getDialogOption() {
@@ -65,9 +102,6 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
-        controlPanel = new javax.swing.JPanel();
-        setButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(resourceBundle.getString("Form.title")); // NOI18N
@@ -78,71 +112,17 @@ public class ManageEncodingsDialog extends javax.swing.JDialog {
         mainPanel.setName("mainPanel"); // NOI18N
         mainPanel.setLayout(new java.awt.GridLayout(1, 0));
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
-
-        controlPanel.setName("controlPanel"); // NOI18N
-
-        setButton.setText(resourceBundle.getString("setButton.text")); // NOI18N
-        setButton.setName("setButton"); // NOI18N
-        setButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setButtonActionPerformed(evt);
-            }
-        });
-
-        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
-        cancelButton.setName("cancelButton"); // NOI18N
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
-        controlPanel.setLayout(controlPanelLayout);
-        controlPanelLayout.setHorizontalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(524, Short.MAX_VALUE)
-                .addComponent(setButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cancelButton)
-                .addContainerGap())
-        );
-        controlPanelLayout.setVerticalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(setButton))
-                .addContainerGap())
-        );
-
-        getContentPane().add(controlPanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void setButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setButtonActionPerformed
-        dialogOption = JOptionPane.OK_OPTION;
-        WindowUtils.closeWindow(this);
-}//GEN-LAST:event_setButtonActionPerformed
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        dialogOption = JOptionPane.CANCEL_OPTION;
-        WindowUtils.closeWindow(this);
-}//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeWindow(new ManageEncodingsDialog(new javax.swing.JFrame(), null, true));
+        WindowUtils.invokeWindow(new ManageEncodingsDialog(null, new javax.swing.JFrame(), null, true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JPanel controlPanel;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JButton setButton;
     // End of variables declaration//GEN-END:variables
 
 }

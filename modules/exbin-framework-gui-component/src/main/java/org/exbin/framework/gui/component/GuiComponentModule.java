@@ -18,17 +18,19 @@ package org.exbin.framework.gui.component;
 
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.component.api.DialogControlPanelHandler;
 import org.exbin.framework.gui.component.api.EditItemActions;
 import org.exbin.framework.gui.component.api.EditItemActionsHandler;
 import org.exbin.framework.gui.component.api.GuiComponentModuleApi;
 import org.exbin.framework.gui.component.api.MoveItemActions;
 import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
+import org.exbin.framework.gui.component.panel.DialogControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework component module.
  *
- * @version 0.2.0 2016/03/21
+ * @version 0.2.0 2016/12/20
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiComponentModule implements GuiComponentModuleApi {
@@ -46,7 +48,7 @@ public class GuiComponentModule implements GuiComponentModuleApi {
     @Override
     public void unregisterModule(String moduleId) {
     }
-    
+
     @Override
     public JPanel getTableEditPanel() {
         // return new TableEditPanel();
@@ -65,5 +67,10 @@ public class GuiComponentModule implements GuiComponentModuleApi {
         DefaultMoveItemActions moveActions = new DefaultMoveItemActions();
         moveActions.setMoveItemActionsHandler(moveItemActionsHandler);
         return moveActions;
+    }
+
+    @Override
+    public JPanel createDialogControlPanel(DialogControlPanelHandler handler) {
+        return new DialogControlPanel(handler);
     }
 }

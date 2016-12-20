@@ -1,3 +1,10 @@
 rootProject.name = 'exbin-framework-deltahex'
 
+if (rootProject.path == ':') {
+    include ":modules:deltahex-core"
+    include ":modules:deltahex-operation"
+    include ":modules:deltahex-swing"
+    include ":modules:deltahex-delta"
+}
+
 apply from: '../exbin-framework-java-modules-settings.gradle'

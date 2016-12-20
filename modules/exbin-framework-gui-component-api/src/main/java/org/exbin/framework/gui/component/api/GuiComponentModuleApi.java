@@ -23,7 +23,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 /**
  * Interface for XBUP framework component module.
  *
- * @version 0.2.0 2016/03/22
+ * @version 0.2.0 2016/12/20
  * @author ExBin Project (http://exbin.org)
  */
 public interface GuiComponentModuleApi extends XBApplicationModule {
@@ -47,4 +47,12 @@ public interface GuiComponentModuleApi extends XBApplicationModule {
      * @return move item actions set
      */
     MoveItemActions createMoveItemActions(MoveItemActionsHandler moveItemActionsHandler);
+
+    /**
+     * Returns new instance of dialog control panel.
+     *
+     * @param handler dialog control panel handler
+     * @return dialog control panel
+     */
+    JPanel createDialogControlPanel(DialogControlPanelHandler handler);
 }
