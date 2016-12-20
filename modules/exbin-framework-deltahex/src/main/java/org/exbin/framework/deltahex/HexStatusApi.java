@@ -21,7 +21,7 @@ import org.exbin.deltahex.EditationMode;
 /**
  * Hexadecimal editor status interface.
  *
- * @version 0.2.0 2016/12/19
+ * @version 0.2.0 2016/12/20
  * @author ExBin Project (http://exbin.org)
  */
 public interface HexStatusApi {
@@ -46,11 +46,20 @@ public interface HexStatusApi {
      * @param statusControlHandler status control handler
      */
     void setControlHandler(StatusControlHandler statusControlHandler);
-    
+
     /**
      * Sets current document size.
+     *
+     * @param documentSize document size
      */
     void setCurrentDocumentSize(String documentSize);
+
+    /**
+     * Sets current memory mode.
+     *
+     * @param memoryMode memory mode
+     */
+    void setMemoryMode(String memoryMode);
 
     public static interface StatusControlHandler {
 

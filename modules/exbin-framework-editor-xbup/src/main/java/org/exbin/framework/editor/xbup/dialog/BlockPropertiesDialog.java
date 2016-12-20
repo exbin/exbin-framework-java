@@ -29,6 +29,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import org.exbin.framework.gui.service.catalog.panel.CatalogItemInfoPanel;
+import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockTerminationMode;
 import org.exbin.xbup.core.block.XBBlockType;
@@ -40,11 +44,6 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
-import org.exbin.framework.gui.service.catalog.panel.CatalogItemInfoPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**

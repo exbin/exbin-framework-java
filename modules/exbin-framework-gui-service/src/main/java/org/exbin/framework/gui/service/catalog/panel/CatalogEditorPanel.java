@@ -40,6 +40,15 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
+import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.framework.gui.service.XBFileType;
+import org.exbin.framework.gui.service.YamlFileType;
+import org.exbin.framework.gui.service.catalog.dialog.CatalogAddItemDialog;
+import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
+import org.exbin.framework.gui.service.catalog.panel.CatalogNodesTreeModel.CatalogNodesTreeItem;
+import org.exbin.framework.gui.service.panel.CatalogManagerPanelable;
+import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.XBEItem;
 import org.exbin.xbup.catalog.entity.XBENode;
@@ -76,16 +85,6 @@ import org.exbin.xbup.core.parser.token.event.convert.XBTListenerToEventListener
 import org.exbin.xbup.core.parser.token.event.convert.XBTToXBEventConvertor;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.serial.XBSerializable;
-import org.exbin.framework.gui.menu.api.MenuManagement;
-import org.exbin.framework.gui.service.XBFileType;
-import org.exbin.framework.gui.service.YamlFileType;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogAddItemDialog;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
-import org.exbin.framework.gui.service.catalog.panel.CatalogNodesTreeModel.CatalogNodesTreeItem;
-import org.exbin.framework.gui.service.panel.CatalogManagerPanelable;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Catalog editor panel.

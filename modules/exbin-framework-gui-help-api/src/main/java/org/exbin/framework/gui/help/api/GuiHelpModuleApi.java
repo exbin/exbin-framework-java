@@ -17,8 +17,8 @@
 package org.exbin.framework.gui.help.api;
 
 import javax.swing.Action;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * Interface for XBUP framework help module.

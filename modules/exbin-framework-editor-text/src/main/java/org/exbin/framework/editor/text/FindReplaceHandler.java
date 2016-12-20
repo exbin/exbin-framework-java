@@ -24,9 +24,9 @@ import javax.swing.JOptionPane;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.dialog.FindTextDialog;
 import org.exbin.framework.editor.text.panel.TextPanel;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**

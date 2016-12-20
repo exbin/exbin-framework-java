@@ -17,8 +17,8 @@
 package org.exbin.framework.gui.component.api;
 
 import javax.swing.JPanel;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * Interface for XBUP framework component module.

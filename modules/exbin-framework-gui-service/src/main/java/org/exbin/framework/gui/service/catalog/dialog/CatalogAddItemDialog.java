@@ -18,7 +18,6 @@ package org.exbin.framework.gui.service.catalog.dialog;
 
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.service.catalog.panel.CatalogSpecItemType;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 

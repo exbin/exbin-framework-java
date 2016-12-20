@@ -19,6 +19,10 @@ package org.exbin.framework.gui.service.catalog.dialog;
 import java.awt.Frame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import org.exbin.framework.gui.service.catalog.panel.CatalogDefOperationType;
+import org.exbin.framework.gui.service.catalog.panel.CatalogDefsTableItem;
+import org.exbin.framework.gui.service.catalog.panel.CatalogSpecItemType;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.definition.XBParamType;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
@@ -27,10 +31,6 @@ import org.exbin.xbup.core.catalog.base.XBCGroupSpec;
 import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.core.catalog.base.XBCSpec;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
-import org.exbin.framework.gui.service.catalog.panel.CatalogDefOperationType;
-import org.exbin.framework.gui.service.catalog.panel.CatalogDefsTableItem;
-import org.exbin.framework.gui.service.catalog.panel.CatalogSpecItemType;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * XBManager Catalog Specification Definition Editor Dialog.

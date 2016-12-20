@@ -25,8 +25,8 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.visual.xbplugins.XBPicturePanel;
 import static org.exbin.xbup.visual.xbplugins.XBPicturePanel.toBufferedImage;
 

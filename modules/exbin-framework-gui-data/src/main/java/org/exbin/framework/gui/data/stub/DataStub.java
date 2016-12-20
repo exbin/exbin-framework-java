@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.exbin.xbup.client.XBCatalogServiceClient;
 import org.exbin.framework.gui.data.TableDataRow;
 import org.exbin.framework.gui.data.TableDataSource;
 import org.exbin.framework.gui.data.TableDataSource.ColumnDefinition;
+import org.exbin.xbup.client.XBCatalogServiceClient;
 
 /**
  * RPC Stub for data operations.

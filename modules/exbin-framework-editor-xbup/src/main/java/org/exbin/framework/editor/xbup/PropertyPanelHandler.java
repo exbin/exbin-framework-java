@@ -23,8 +23,8 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**

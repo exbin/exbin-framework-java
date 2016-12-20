@@ -18,8 +18,8 @@ package org.exbin.framework.gui.about.api;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * Interface of the XBUP framework about module.

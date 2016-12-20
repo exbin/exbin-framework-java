@@ -17,7 +17,6 @@
 package org.exbin.framework.gui.update;
 
 import java.awt.Frame;
-import org.exbin.framework.gui.update.dialog.CheckUpdatesDialog;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -35,6 +34,7 @@ import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
+import org.exbin.framework.gui.update.dialog.CheckUpdatesDialog;
 import org.exbin.framework.gui.update.panel.ApplicationUpdateOptionsPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;

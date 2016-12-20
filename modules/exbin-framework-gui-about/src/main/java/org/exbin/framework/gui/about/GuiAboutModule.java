@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.gui.about;
 
-import org.exbin.framework.gui.about.dialog.AboutDialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -24,6 +23,7 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.about.api.GuiAboutModuleApi;
+import org.exbin.framework.gui.about.dialog.AboutDialog;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuGroup;

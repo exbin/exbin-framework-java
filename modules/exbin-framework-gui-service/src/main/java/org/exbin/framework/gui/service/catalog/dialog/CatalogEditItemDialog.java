@@ -18,18 +18,17 @@ package org.exbin.framework.gui.service.catalog.dialog;
 
 import java.awt.Container;
 import javax.swing.JOptionPane;
-import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.core.catalog.base.XBCItem;
-import org.exbin.xbup.core.catalog.base.XBCNode;
-import org.exbin.xbup.core.catalog.base.XBCSpec;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemEditDefinitionPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemEditFilesPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemEditPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemEditRevsPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCItem;
+import org.exbin.xbup.core.catalog.base.XBCNode;
+import org.exbin.xbup.core.catalog.base.XBCSpec;
 
 /**
  * XBManager catalog item editation dialog.

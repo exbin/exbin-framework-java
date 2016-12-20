@@ -21,13 +21,13 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.editor.xbup.dialog.CatalogEditorDialog;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * Catalog browser handler.

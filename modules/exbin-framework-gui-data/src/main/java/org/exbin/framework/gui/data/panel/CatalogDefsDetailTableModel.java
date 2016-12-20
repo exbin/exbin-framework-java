@@ -17,12 +17,6 @@
 package org.exbin.framework.gui.data.panel;
 
 import javax.swing.table.AbstractTableModel;
-import org.exbin.xbup.core.catalog.base.XBCBlockCons;
-import org.exbin.xbup.core.catalog.base.XBCBlockJoin;
-import org.exbin.xbup.core.catalog.base.XBCBlockListCons;
-import org.exbin.xbup.core.catalog.base.XBCBlockListJoin;
-import org.exbin.xbup.core.catalog.base.XBCConsDef;
-import org.exbin.xbup.core.catalog.base.XBCJoinDef;
 import org.exbin.xbup.core.catalog.base.XBCSpecDef;
 
 /**

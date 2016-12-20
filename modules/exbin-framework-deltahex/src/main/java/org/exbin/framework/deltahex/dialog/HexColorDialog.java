@@ -17,10 +17,9 @@ package org.exbin.framework.deltahex.dialog;
 
 import javax.swing.JOptionPane;
 import org.exbin.framework.deltahex.panel.HexColorPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Text editor color selection dialog.

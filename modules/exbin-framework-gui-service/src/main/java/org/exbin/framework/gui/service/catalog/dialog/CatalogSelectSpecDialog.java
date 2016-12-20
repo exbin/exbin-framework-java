@@ -20,15 +20,15 @@ import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import org.exbin.framework.gui.service.catalog.panel.CatalogItemsSearchPanel;
+import org.exbin.framework.gui.service.catalog.panel.CatalogRevsComboBoxModel;
+import org.exbin.framework.gui.service.catalog.panel.CatalogSpecItemType;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.core.catalog.base.XBCSpec;
 import org.exbin.xbup.core.catalog.base.service.XBCRevService;
-import org.exbin.framework.gui.service.catalog.panel.CatalogItemsSearchPanel;
-import org.exbin.framework.gui.service.catalog.panel.CatalogRevsComboBoxModel;
-import org.exbin.framework.gui.service.catalog.panel.CatalogSpecItemType;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * XBManager Catalog Specification Selection Dialog.

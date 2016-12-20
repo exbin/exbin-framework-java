@@ -19,7 +19,6 @@ package org.exbin.framework.gui.service.dialog;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.service.panel.ConnectionsManagerPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 

@@ -25,6 +25,10 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.JPanel;
 import org.exbin.deltahex.delta.SegmentsRepository;
+import org.exbin.deltahex.operation.BinaryDataCommand;
+import org.exbin.deltahex.operation.BinaryDataOperationException;
+import org.exbin.deltahex.operation.undo.BinaryDataUndoHandler;
+import org.exbin.deltahex.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.SearchParameters;
@@ -37,9 +41,6 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
-import org.exbin.xbup.operation.Command;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
-import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 
 /**
  * Hexadecimal editor provider.
@@ -59,8 +60,8 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     private TextEncodingStatusApi encodingStatus;
     private EditorModificationListener editorModificationListener = null;
     private final EditorModificationListener multiModificationListener;
-    private final List<XBUndoUpdateListener> undoListeners = new ArrayList<>();
-    private final XBUndoUpdateListener multiUndoUpdateListener;
+    private final List<BinaryDataUndoUpdateListener> undoListeners = new ArrayList<>();
+    private final BinaryDataUndoUpdateListener multiUndoUpdateListener;
     private ClipboardActionsUpdateListener clipboardUpdateListener = null;
     private final ClipboardActionsUpdateListener multiClipboardUpdateListener;
 
@@ -77,15 +78,15 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
             }
         };
 
-        multiUndoUpdateListener = new XBUndoUpdateListener() {
+        multiUndoUpdateListener = new BinaryDataUndoUpdateListener() {
             @Override
             public void undoCommandPositionChanged() {
                 notifyUndoChanged();
             }
 
             @Override
-            public void undoCommandAdded(Command cmnd) {
-                for (XBUndoUpdateListener listener : undoListeners) {
+            public void undoCommandAdded(BinaryDataCommand cmnd) {
+                for (BinaryDataUndoUpdateListener listener : undoListeners) {
                     listener.undoCommandAdded(cmnd);
                 }
             }
@@ -321,8 +322,8 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     }
 
     @Override
-    public XBUndoHandler getHexUndoHandler() {
-        return new XBUndoHandler() {
+    public BinaryDataUndoHandler getHexUndoHandler() {
+        return new BinaryDataUndoHandler() {
             @Override
             public boolean canRedo() {
                 return activePanel.getHexUndoHandler().canRedo();
@@ -339,22 +340,22 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
             }
 
             @Override
-            public void doSync() throws Exception {
+            public void doSync() throws BinaryDataOperationException {
                 activePanel.getHexUndoHandler().doSync();
             }
 
             @Override
-            public void execute(Command cmnd) throws Exception {
+            public void execute(BinaryDataCommand cmnd) throws BinaryDataOperationException {
                 activePanel.getHexUndoHandler().execute(cmnd);
             }
 
             @Override
-            public void addCommand(Command cmnd) {
+            public void addCommand(BinaryDataCommand cmnd) {
                 activePanel.getHexUndoHandler().addCommand(cmnd);
             }
 
             @Override
-            public List<Command> getCommandList() {
+            public List<BinaryDataCommand> getCommandList() {
                 return activePanel.getHexUndoHandler().getCommandList();
             }
 
@@ -384,27 +385,27 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
             }
 
             @Override
-            public void performRedo() throws Exception {
+            public void performRedo() throws BinaryDataOperationException {
                 activePanel.getHexUndoHandler().performRedo();
             }
 
             @Override
-            public void performRedo(int i) throws Exception {
+            public void performRedo(int i) throws BinaryDataOperationException {
                 activePanel.getHexUndoHandler().performRedo(i);
             }
 
             @Override
-            public void performUndo() throws Exception {
+            public void performUndo() throws BinaryDataOperationException {
                 activePanel.getHexUndoHandler().performUndo();
             }
 
             @Override
-            public void performUndo(int i) throws Exception {
+            public void performUndo(int i) throws BinaryDataOperationException {
                 activePanel.getHexUndoHandler().performUndo(i);
             }
 
             @Override
-            public void setCommandPosition(long l) throws Exception {
+            public void setCommandPosition(long l) throws BinaryDataOperationException {
                 activePanel.getHexUndoHandler().setCommandPosition(l);
             }
 
@@ -419,19 +420,19 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
             }
 
             @Override
-            public void addUndoUpdateListener(XBUndoUpdateListener xl) {
+            public void addUndoUpdateListener(BinaryDataUndoUpdateListener xl) {
                 undoListeners.add(xl);
             }
 
             @Override
-            public void removeUndoUpdateListener(XBUndoUpdateListener xl) {
+            public void removeUndoUpdateListener(BinaryDataUndoUpdateListener xl) {
                 undoListeners.remove(xl);
             }
         };
     }
 
     private void notifyUndoChanged() {
-        for (XBUndoUpdateListener listener : undoListeners) {
+        for (BinaryDataUndoUpdateListener listener : undoListeners) {
             listener.undoCommandPositionChanged();
         }
         if (editorViewHandling != null) {

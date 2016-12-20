@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.editor.picture.panel.ImagePanel;
 import org.exbin.framework.editor.picture.panel.ImageStatusPanel;
@@ -37,7 +38,6 @@ import org.exbin.framework.gui.menu.api.NextToMode;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
-import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**

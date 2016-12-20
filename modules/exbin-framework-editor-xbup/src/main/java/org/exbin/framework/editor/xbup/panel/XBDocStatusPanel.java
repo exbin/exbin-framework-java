@@ -20,7 +20,6 @@ import java.awt.CardLayout;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import org.exbin.framework.client.api.ConnectionStatus;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**

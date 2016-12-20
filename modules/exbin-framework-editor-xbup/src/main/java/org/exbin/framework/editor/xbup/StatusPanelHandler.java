@@ -23,9 +23,8 @@ import org.exbin.framework.client.api.ClientConnectionListener;
 import static org.exbin.framework.editor.xbup.EditorXbupModule.DOC_STATUS_BAR_ID;
 import static org.exbin.framework.editor.xbup.EditorXbupModule.MODULE_ID;
 import org.exbin.framework.editor.xbup.panel.XBDocStatusPanel;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**

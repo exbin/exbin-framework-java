@@ -23,13 +23,12 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.component.GuiComponentModule;
 import org.exbin.framework.gui.data.panel.DefinitionEditorPanel;
 import org.exbin.framework.gui.menu.GuiMenuModule;
-import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.undo.GuiUndoModule;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * XBManager catalog item editation dialog.

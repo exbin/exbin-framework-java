@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBApplicationModuleInfo;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.parser.token.XBAttributeToken;
 import org.exbin.xbup.core.parser.token.XBBeginToken;
@@ -43,8 +45,6 @@ import org.exbin.xbup.core.serial.param.XBSerializationMode;
 import org.exbin.xbup.core.serial.sequence.XBStringListConsistSerializable;
 import org.exbin.xbup.core.type.XBString;
 import org.exbin.xbup.core.ubnumber.type.UBNat32;
-import org.exbin.framework.api.XBApplicationModuleInfo;
-import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModule;
 
 /**

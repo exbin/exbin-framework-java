@@ -20,7 +20,6 @@ import java.awt.Frame;
 import javax.swing.JOptionPane;
 import org.exbin.framework.editor.wave.panel.WaveColorPanel;
 import org.exbin.framework.editor.wave.panel.WaveColorPanelApi;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 

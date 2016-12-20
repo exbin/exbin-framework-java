@@ -19,11 +19,11 @@ package org.exbin.framework.gui.service.catalog.panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+import org.exbin.framework.gui.service.catalog.dialog.CatalogEditIconDialog;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.service.XBCXIconService;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogEditIconDialog;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Catalog Big Icon Property Cell Panel.

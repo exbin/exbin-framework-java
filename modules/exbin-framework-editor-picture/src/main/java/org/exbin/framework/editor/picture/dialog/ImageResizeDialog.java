@@ -18,7 +18,6 @@ package org.exbin.framework.editor.picture.dialog;
 
 import java.awt.Point;
 import javax.swing.JOptionPane;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 

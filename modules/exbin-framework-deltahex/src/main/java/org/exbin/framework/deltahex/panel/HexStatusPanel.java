@@ -15,6 +15,9 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 import org.exbin.deltahex.EditationMode;
 import org.exbin.framework.deltahex.HexStatusApi;
@@ -24,7 +27,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Hexadecimal editor status panel.
  *
- * @version 0.2.0 2016/12/18
+ * @version 0.2.0 2016/12/20
  * @author ExBin Project (http://exbin.org)
  */
 public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, TextEncodingStatusApi {
@@ -46,40 +49,68 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        encodingLabel = new javax.swing.JLabel();
+        positionPopupMenu = new javax.swing.JPopupMenu();
+        positionCopyMenuItem = new javax.swing.JMenuItem();
+        positionGoToMenuItem = new javax.swing.JMenuItem();
+        documentSizePopupMenu = new javax.swing.JPopupMenu();
+        documentSizeCopyMenuItem = new javax.swing.JMenuItem();
+        memoryModeLabel = new javax.swing.JLabel();
         documentSizeLabel = new javax.swing.JLabel();
         positionLabel = new javax.swing.JLabel();
         editationModeLabel = new javax.swing.JLabel();
+        encodingLabel = new javax.swing.JLabel();
+
+        positionPopupMenu.setName("positionPopupMenu"); // NOI18N
+
+        positionCopyMenuItem.setText(resourceBundle.getString("HexStatusPanel.positionCopyMenuItem.text")); // NOI18N
+        positionCopyMenuItem.setName("positionCopyMenuItem"); // NOI18N
+        positionCopyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                positionCopyMenuItemActionPerformed(evt);
+            }
+        });
+        positionPopupMenu.add(positionCopyMenuItem);
+
+        positionGoToMenuItem.setText(resourceBundle.getString("HexStatusPanel.positionGoToMenuItem.text")); // NOI18N
+        positionGoToMenuItem.setName("positionGoToMenuItem"); // NOI18N
+        positionGoToMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                positionGoToMenuItemActionPerformed(evt);
+            }
+        });
+        positionPopupMenu.add(positionGoToMenuItem);
+
+        documentSizePopupMenu.setName("documentSizePopupMenu"); // NOI18N
+
+        documentSizeCopyMenuItem.setText(resourceBundle.getString("HexStatusPanel.documentSizeCopyMenuItem.text")); // NOI18N
+        documentSizeCopyMenuItem.setName("documentSizeCopyMenuItem"); // NOI18N
+        documentSizeCopyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                documentSizeCopyMenuItemActionPerformed(evt);
+            }
+        });
+        documentSizePopupMenu.add(documentSizeCopyMenuItem);
 
         setName("Form"); // NOI18N
 
-        encodingLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        encodingLabel.setText("UTF-8");
-        encodingLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.encodingLabel.toolTipText")); // NOI18N
-        encodingLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        encodingLabel.setName("encodingLabel"); // NOI18N
-        encodingLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                encodingLabelMousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                encodingLabelMouseReleased(evt);
-            }
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                encodingLabelMouseClicked(evt);
-            }
-        });
+        memoryModeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        memoryModeLabel.setText(resourceBundle.getString("HexStatusPanel.memoryModeLabel.text")); // NOI18N
+        memoryModeLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.memoryModeLabel.toolTipText")); // NOI18N
+        memoryModeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        memoryModeLabel.setName("memoryModeLabel"); // NOI18N
 
         documentSizeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         documentSizeLabel.setText("0 (0)");
         documentSizeLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.documentSizeLabel.toolTipText")); // NOI18N
         documentSizeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        documentSizeLabel.setComponentPopupMenu(documentSizePopupMenu);
         documentSizeLabel.setName("documentSizeLabel"); // NOI18N
 
         positionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         positionLabel.setText("0:0");
         positionLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.positionLabel.toolTipText")); // NOI18N
         positionLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        positionLabel.setComponentPopupMenu(positionPopupMenu);
         positionLabel.setName("positionLabel"); // NOI18N
         positionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -98,27 +129,46 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
             }
         });
 
+        encodingLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        encodingLabel.setText(resourceBundle.getString("HexStatusPanel.encodingLabel.text")); // NOI18N
+        encodingLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.encodingLabel.toolTipText")); // NOI18N
+        encodingLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        encodingLabel.setName("encodingLabel"); // NOI18N
+        encodingLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                encodingLabelMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                encodingLabelMouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                encodingLabelMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(211, Short.MAX_VALUE)
+                .addContainerGap(195, Short.MAX_VALUE)
                 .addComponent(encodingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(documentSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(positionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
+                .addComponent(memoryModeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(editationModeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(editationModeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(positionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(encodingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(documentSizeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(documentSizeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(memoryModeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(positionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(encodingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -138,6 +188,29 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
         }
     }//GEN-LAST:event_positionLabelMouseClicked
 
+    private void positionGoToMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_positionGoToMenuItemActionPerformed
+        editationModeChange.changeCursorPosition();
+    }//GEN-LAST:event_positionGoToMenuItemActionPerformed
+
+    private void positionCopyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_positionCopyMenuItemActionPerformed
+        try {
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(new StringSelection(positionLabel.getText()), null);
+        } catch (IllegalStateException ex) {
+            // ignore issues with clipboard
+        }
+    }//GEN-LAST:event_positionCopyMenuItemActionPerformed
+
+    private void documentSizeCopyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_documentSizeCopyMenuItemActionPerformed
+        try {
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(new StringSelection(documentSizeLabel.getText()), null);
+        } catch (IllegalStateException ex) {
+            // ignore issues with clipboard
+        }
+
+    }//GEN-LAST:event_documentSizeCopyMenuItemActionPerformed
+
     private void encodingLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodingLabelMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON1) {
             editationModeChange.cycleEncodings();
@@ -146,13 +219,13 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
         }
     }//GEN-LAST:event_encodingLabelMouseClicked
 
-    private void encodingLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodingLabelMouseReleased
-        handleEncodingPopup(evt);
-    }//GEN-LAST:event_encodingLabelMouseReleased
-
     private void encodingLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodingLabelMousePressed
         handleEncodingPopup(evt);
     }//GEN-LAST:event_encodingLabelMousePressed
+
+    private void encodingLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodingLabelMouseReleased
+        handleEncodingPopup(evt);
+    }//GEN-LAST:event_encodingLabelMouseReleased
 
     private void handleEncodingPopup(java.awt.event.MouseEvent evt) {
         if (evt.isPopupTrigger()) {
@@ -161,10 +234,16 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem documentSizeCopyMenuItem;
     private javax.swing.JLabel documentSizeLabel;
+    private javax.swing.JPopupMenu documentSizePopupMenu;
     private javax.swing.JLabel editationModeLabel;
     private javax.swing.JLabel encodingLabel;
+    private javax.swing.JLabel memoryModeLabel;
+    private javax.swing.JMenuItem positionCopyMenuItem;
+    private javax.swing.JMenuItem positionGoToMenuItem;
     private javax.swing.JLabel positionLabel;
+    private javax.swing.JPopupMenu positionPopupMenu;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -210,5 +289,10 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
     @Override
     public void setControlHandler(StatusControlHandler editationModeChange) {
         this.editationModeChange = editationModeChange;
+    }
+
+    @Override
+    public void setMemoryMode(String memoryMode) {
+        memoryModeLabel.setText(memoryMode);
     }
 }

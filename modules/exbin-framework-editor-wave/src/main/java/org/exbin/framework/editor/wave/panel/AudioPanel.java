@@ -53,6 +53,18 @@ import javax.sound.sampled.SourceDataLine;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import org.exbin.framework.editor.wave.EditorWaveModule;
+import org.exbin.framework.editor.wave.dialog.WaveResizeDialog;
+import org.exbin.framework.editor.wave.panel.command.WaveClipboardData;
+import org.exbin.framework.editor.wave.panel.command.WaveCopyCommand;
+import org.exbin.framework.editor.wave.panel.command.WaveCutCommand;
+import org.exbin.framework.editor.wave.panel.command.WaveDeleteCommand;
+import org.exbin.framework.editor.wave.panel.command.WavePasteCommand;
+import org.exbin.framework.editor.wave.panel.command.WaveReverseCommand;
+import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.audio.wave.XBWave;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
@@ -69,19 +81,7 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBTPullTypeDeclaringFilter;
 import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
-import org.exbin.framework.editor.wave.EditorWaveModule;
-import org.exbin.framework.editor.wave.dialog.WaveResizeDialog;
-import org.exbin.framework.editor.wave.panel.command.WaveClipboardData;
-import org.exbin.framework.editor.wave.panel.command.WaveCopyCommand;
-import org.exbin.framework.editor.wave.panel.command.WaveCutCommand;
-import org.exbin.framework.editor.wave.panel.command.WaveDeleteCommand;
-import org.exbin.framework.editor.wave.panel.command.WavePasteCommand;
-import org.exbin.framework.editor.wave.panel.command.WaveReverseCommand;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
-import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 
 /**
  * Audio panel for XBSEditor.

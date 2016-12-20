@@ -18,7 +18,6 @@ package org.exbin.framework.editor.wave.panel;
 
 import javax.swing.ImageIcon;
 import org.exbin.framework.editor.wave.AudioControlApi;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**

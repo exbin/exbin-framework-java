@@ -23,11 +23,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.dialog.HexColorDialog;
+import org.exbin.framework.deltahex.panel.HexColorPanelApi;
+import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.deltahex.panel.HexColorPanelApi;
-import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**

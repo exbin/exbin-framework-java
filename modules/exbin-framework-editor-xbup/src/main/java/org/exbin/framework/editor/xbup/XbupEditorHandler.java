@@ -19,8 +19,8 @@ package org.exbin.framework.editor.xbup;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
 import javax.swing.JPanel;
-import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileType;
 
 /**
  * XBUP editor module.

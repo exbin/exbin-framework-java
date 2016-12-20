@@ -18,8 +18,8 @@ package org.exbin.framework.editor.xbup.dialog;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.XBContext;
@@ -28,7 +28,6 @@ import org.exbin.xbup.core.block.declaration.XBGroup;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
-import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**

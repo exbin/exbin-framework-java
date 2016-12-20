@@ -19,7 +19,6 @@ package org.exbin.framework.editor.wave.dialog;
 import java.net.URI;
 import javax.sound.sampled.AudioFormat;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 

@@ -22,8 +22,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * Interface for XBUP framework menu module.

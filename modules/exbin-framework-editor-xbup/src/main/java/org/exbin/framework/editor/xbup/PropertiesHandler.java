@@ -24,9 +24,9 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
 import org.exbin.framework.editor.xbup.dialog.DocPropertiesDialog;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**

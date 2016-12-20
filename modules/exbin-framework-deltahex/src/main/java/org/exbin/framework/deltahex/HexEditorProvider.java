@@ -18,18 +18,18 @@ package org.exbin.framework.deltahex;
 import java.awt.Color;
 import java.nio.charset.Charset;
 import java.util.Map;
+import org.exbin.deltahex.operation.undo.BinaryDataUndoHandler;
 import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Hexadecimal editor provider interface.
  *
- * @version 0.2.0 2016/08/16
+ * @version 0.2.0 2016/12/20
  * @author ExBin Project (http://exbin.org)
  */
 public interface HexEditorProvider extends EditorProvider {
@@ -74,5 +74,5 @@ public interface HexEditorProvider extends EditorProvider {
 
     void printFile();
     
-    XBUndoHandler getHexUndoHandler();
+    BinaryDataUndoHandler getHexUndoHandler();
 }

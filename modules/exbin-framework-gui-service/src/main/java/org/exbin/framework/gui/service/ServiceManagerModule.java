@@ -22,6 +22,7 @@ import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuManagement;
@@ -29,7 +30,6 @@ import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.service.dialog.ConnectionDialog;
 import org.exbin.framework.gui.service.panel.ServiceManagerPanel;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**

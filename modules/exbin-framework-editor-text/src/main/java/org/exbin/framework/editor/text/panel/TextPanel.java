@@ -50,6 +50,16 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter.Highlight;
 import javax.swing.undo.UndoableEdit;
+import org.exbin.framework.editor.text.EditorTextModule;
+import org.exbin.framework.editor.text.TextCharsetApi;
+import org.exbin.framework.editor.text.dialog.FindTextDialog;
+import org.exbin.framework.editor.text.dialog.TextFontDialog;
+import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.undo.api.UndoActionsHandler;
+import org.exbin.framework.gui.undo.api.UndoUpdateListener;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
 import org.exbin.xbup.core.catalog.XBPCatalog;
@@ -65,16 +75,6 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
-import org.exbin.framework.editor.text.EditorTextModule;
-import org.exbin.framework.editor.text.TextCharsetApi;
-import org.exbin.framework.editor.text.dialog.FindTextDialog;
-import org.exbin.framework.editor.text.dialog.TextFontDialog;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
-import org.exbin.framework.gui.undo.api.UndoUpdateListener;
-import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
-import org.exbin.framework.gui.undo.api.UndoActionsHandler;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Text editor panel.

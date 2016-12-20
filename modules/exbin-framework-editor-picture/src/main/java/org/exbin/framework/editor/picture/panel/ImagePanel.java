@@ -62,6 +62,15 @@ import javax.swing.KeyStroke;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
+import org.exbin.framework.editor.picture.EditorPictureModule;
+import org.exbin.framework.editor.picture.PictureFileType;
+import org.exbin.framework.editor.picture.dialog.ImageResizeDialog;
+import org.exbin.framework.editor.picture.dialog.ToolColorDialog;
+import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
 import org.exbin.xbup.core.catalog.XBPCatalog;
@@ -76,16 +85,7 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBTPullTypeDeclaringFilter;
 import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
-import org.exbin.framework.editor.picture.EditorPictureModule;
-import org.exbin.framework.editor.picture.PictureFileType;
-import org.exbin.framework.editor.picture.dialog.ImageResizeDialog;
-import org.exbin.framework.editor.picture.dialog.ToolColorDialog;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
-import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.visual.picture.XBBufferedImage;
-import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 
 /**
  * Image panel for XBPEditor.

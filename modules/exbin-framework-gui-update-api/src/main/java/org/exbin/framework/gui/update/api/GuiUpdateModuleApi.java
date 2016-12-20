@@ -19,8 +19,8 @@ package org.exbin.framework.gui.update.api;
 import java.awt.Frame;
 import java.net.URL;
 import javax.swing.Action;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * Interface of the XBUP framework update checking module.

@@ -17,7 +17,6 @@
 package org.exbin.framework.editor.text.dialog;
 
 import javax.swing.JOptionPane;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 

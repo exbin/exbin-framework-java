@@ -17,8 +17,8 @@
 package org.exbin.framework.gui.editor.api;
 
 import java.awt.Component;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * XBUP framework editor module api interface.

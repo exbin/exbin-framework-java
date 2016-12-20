@@ -25,8 +25,8 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCFormatSpec;
@@ -48,7 +48,6 @@ import org.exbin.xbup.core.catalog.base.service.XBCXHDocService;
 import org.exbin.xbup.core.catalog.base.service.XBCXIconService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Panel for basic XBItem viewing/editation.

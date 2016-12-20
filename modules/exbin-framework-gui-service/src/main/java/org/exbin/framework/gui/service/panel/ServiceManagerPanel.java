@@ -29,6 +29,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.framework.gui.service.XBDbServiceClient;
+import org.exbin.framework.gui.service.catalog.panel.CatalogBrowserPanel;
+import org.exbin.framework.gui.service.catalog.panel.CatalogEditorPanel;
+import org.exbin.framework.gui.service.catalog.panel.CatalogSearchPanel;
+import org.exbin.framework.gui.service.catalog.panel.CatalogStatusPanel;
 import org.exbin.xbup.catalog.XBAECatalog;
 import org.exbin.xbup.catalog.entity.service.XBEXDescService;
 import org.exbin.xbup.catalog.entity.service.XBEXFileService;
@@ -63,12 +69,6 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
-import org.exbin.framework.gui.menu.api.MenuManagement;
-import org.exbin.framework.gui.service.XBDbServiceClient;
-import org.exbin.framework.gui.service.catalog.panel.CatalogBrowserPanel;
-import org.exbin.framework.gui.service.catalog.panel.CatalogEditorPanel;
-import org.exbin.framework.gui.service.catalog.panel.CatalogSearchPanel;
-import org.exbin.framework.gui.service.catalog.panel.CatalogStatusPanel;
 
 /**
  * XBManager service management panel.

@@ -18,8 +18,8 @@ package org.exbin.framework.gui.options.api;
 
 import java.util.prefs.Preferences;
 import javax.swing.Action;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * Interface for XBUP framework options module.

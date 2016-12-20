@@ -29,12 +29,11 @@ import java.util.prefs.Preferences;
 import javax.persistence.Persistence;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import org.exbin.xbup.client.XBCatalogNetServiceClient;
-import org.exbin.xbup.client.XBCatalogServiceClient;
 import org.exbin.framework.gui.service.XBDbServiceClient;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.xbup.client.XBCatalogNetServiceClient;
+import org.exbin.xbup.client.XBCatalogServiceClient;
 
 /**
  * XBManager connection / login dialog.

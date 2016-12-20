@@ -22,16 +22,16 @@ import javax.swing.JToolBar;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.menu.GuiMenuModule;
 import org.exbin.framework.gui.menu.api.ClipboardActions;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
-import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
-import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.undo.GuiUndoModule;
+import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.framework.gui.undo.api.UndoActions;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 import org.exbin.framework.gui.undo.api.UndoUpdateListener;
 import org.exbin.framework.gui.utils.TestApplication;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Panel with editation toolbar.

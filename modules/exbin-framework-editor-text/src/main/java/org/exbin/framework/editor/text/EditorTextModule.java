@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.prefs.Preferences;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanel;
+import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanelApi;
 import org.exbin.framework.editor.text.panel.TextColorOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextColorPanelApi;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
@@ -34,6 +36,7 @@ import org.exbin.framework.editor.text.panel.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.text.panel.TextStatusPanel;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -45,10 +48,7 @@ import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
-import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
-import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanelApi;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * XBUP text editor module.

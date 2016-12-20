@@ -16,8 +16,8 @@
  */
 package org.exbin.framework.gui.service.panel;
 
-import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * Interface for catalog management panels.

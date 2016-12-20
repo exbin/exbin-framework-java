@@ -16,8 +16,8 @@
  */
 package org.exbin.framework.gui.file.api;
 
-import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * Interface for XBUP framework file module.

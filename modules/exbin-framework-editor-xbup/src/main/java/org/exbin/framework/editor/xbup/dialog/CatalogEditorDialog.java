@@ -18,14 +18,13 @@ package org.exbin.framework.editor.xbup.dialog;
 
 import java.awt.BorderLayout;
 import java.util.ResourceBundle;
-import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.catalog.panel.CatalogEditorPanel;
 import org.exbin.framework.gui.service.panel.CatalogAvailabilityPanel;
 import org.exbin.framework.gui.service.panel.CatalogManagerPanelable;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * Dialog for showing information about document block.

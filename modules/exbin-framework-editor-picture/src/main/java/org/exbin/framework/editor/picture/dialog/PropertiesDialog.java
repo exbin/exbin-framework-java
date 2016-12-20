@@ -18,7 +18,6 @@ package org.exbin.framework.editor.picture.dialog;
 
 import java.net.URI;
 import org.exbin.framework.editor.picture.panel.ImagePanel;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 

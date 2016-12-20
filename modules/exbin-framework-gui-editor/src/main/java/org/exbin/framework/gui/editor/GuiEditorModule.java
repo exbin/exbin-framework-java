@@ -22,21 +22,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.panel.SingleEditorPanel;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
+import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
+import org.exbin.framework.gui.undo.api.UndoActionsHandler;
+import org.exbin.framework.gui.undo.api.UndoUpdateListener;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
-import org.exbin.framework.gui.undo.api.UndoUpdateListener;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
-import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
-import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**

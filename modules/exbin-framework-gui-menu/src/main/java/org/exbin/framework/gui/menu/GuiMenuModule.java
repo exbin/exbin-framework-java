@@ -24,6 +24,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.menu.api.ClipboardActions;
+import org.exbin.framework.gui.menu.api.ClipboardActionsApi;
+import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuGroup;
 import org.exbin.framework.gui.menu.api.MenuPosition;
@@ -31,10 +35,6 @@ import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
-import org.exbin.framework.gui.menu.api.ClipboardActions;
-import org.exbin.framework.gui.menu.api.ClipboardActionsApi;
-import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
-import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**

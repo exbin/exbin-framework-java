@@ -33,9 +33,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.api.XBApplicationModuleRepository;
-import org.exbin.framework.api.XBApplicationModuleInfo;
 import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.framework.api.XBApplicationModuleInfo;
+import org.exbin.framework.api.XBApplicationModuleRepository;
 import org.exbin.xbup.plugin.XBModule;
 import org.exbin.xbup.plugin.XBModuleRecord;
 

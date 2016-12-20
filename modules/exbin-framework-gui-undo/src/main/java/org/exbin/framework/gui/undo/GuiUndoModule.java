@@ -31,13 +31,13 @@ import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.framework.gui.undo.api.UndoActions;
+import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 import org.exbin.framework.gui.undo.api.UndoUpdateListener;
 import org.exbin.framework.gui.undo.dialog.UndoManagerDialog;
 import org.exbin.framework.gui.undo.dialog.UndoManagerModel;
+import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
-import org.exbin.framework.gui.undo.api.UndoActionsHandler;
-import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**

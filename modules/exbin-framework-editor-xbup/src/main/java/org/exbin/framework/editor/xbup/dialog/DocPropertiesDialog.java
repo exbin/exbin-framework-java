@@ -18,10 +18,9 @@ package org.exbin.framework.editor.xbup.dialog;
 
 import java.net.URI;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
-import org.exbin.xbup.core.block.XBTEditableDocument;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.xbup.core.block.XBTEditableDocument;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 
 /**

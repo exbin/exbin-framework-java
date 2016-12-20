@@ -32,8 +32,8 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
-import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * XBManager catalog specification selection dialog.

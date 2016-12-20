@@ -27,6 +27,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultEditorKit;
+import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.framework.gui.service.ServiceManagerHandler;
+import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
+import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.XBEXDesc;
 import org.exbin.xbup.catalog.entity.XBEXName;
@@ -39,12 +44,6 @@ import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
-import org.exbin.framework.gui.menu.api.MenuManagement;
-import org.exbin.framework.gui.service.ServiceManagerHandler;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Catalog Specification Panel.
