@@ -28,7 +28,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Goto position dialog for hexadecimal editor.
  *
- * @version 0.1.2 2016/12/20
+ * @version 0.1.2 2016/12/21
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToHexDialog extends javax.swing.JDialog {
@@ -68,6 +68,10 @@ public class GoToHexDialog extends javax.swing.JDialog {
         WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
         WindowUtils.assignGlobalKeyListener(this, jumpButton, cancelButton);
         pack();
+    }
+    
+    public void initFocus() {
+        ((JSpinner.DefaultEditor) positionSpinner.getEditor()).getTextField().requestFocusInWindow();
     }
 
     public long getGoToPosition() {

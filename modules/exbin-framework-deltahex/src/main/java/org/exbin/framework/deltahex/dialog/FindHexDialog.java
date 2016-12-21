@@ -31,6 +31,7 @@ import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.deltahex.swing.ColorsGroup;
 import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.panel.HexSearchComboBoxPanel;
+import org.exbin.framework.deltahex.panel.ReplaceParameters;
 import org.exbin.framework.deltahex.panel.SearchCondition;
 import org.exbin.framework.deltahex.panel.SearchHistoryModel;
 import org.exbin.framework.deltahex.panel.SearchParameters;
@@ -41,7 +42,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Find text/hexadecimal options dialog.
  *
- * @version 0.1.0 2016/07/21
+ * @version 0.2.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class FindHexDialog extends javax.swing.JDialog {
@@ -49,10 +50,16 @@ public class FindHexDialog extends javax.swing.JDialog {
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(FindHexDialog.class);
 
-    private final CodeArea hexadecimalRenderer = new CodeArea();
-    private HexSearchComboBoxPanel comboBoxEditorComponent;
+    private final CodeArea findHexadecimalRenderer = new CodeArea();
+    private HexSearchComboBoxPanel findComboBoxEditorComponent;
+    private ComboBoxEditor findComboBoxEditor;
     private List<SearchCondition> searchHistory = new ArrayList<>();
-    private ComboBoxEditor comboBoxEditor;
+
+    private final CodeArea replaceHexadecimalRenderer = new CodeArea();
+    private HexSearchComboBoxPanel replaceComboBoxEditorComponent;
+    private ComboBoxEditor replaceComboBoxEditor;
+    private List<SearchCondition> replaceHistory = new ArrayList<>();
+
     private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
 
     public FindHexDialog(java.awt.Frame parent, boolean modal) {
@@ -65,16 +72,15 @@ public class FindHexDialog extends javax.swing.JDialog {
         WindowUtils.initWindow(this);
         WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
 
-        hexadecimalRenderer.setShowHeader(false);
-        hexadecimalRenderer.setShowLineNumbers(false);
-        hexadecimalRenderer.setWrapMode(true);
-        hexadecimalRenderer.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
-        hexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
-        hexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
-        hexadecimalRenderer.setData(new ByteArrayEditableData());
+        findHexadecimalRenderer.setShowHeader(false);
+        findHexadecimalRenderer.setShowLineNumbers(false);
+        findHexadecimalRenderer.setWrapMode(true);
+        findHexadecimalRenderer.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
+        findHexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        findHexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        findHexadecimalRenderer.setData(new ByteArrayEditableData());
 
-        comboBoxEditorComponent = new HexSearchComboBoxPanel();
-
+        findComboBoxEditorComponent = new HexSearchComboBoxPanel();
         findComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
             private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
 
@@ -83,43 +89,42 @@ public class FindHexDialog extends javax.swing.JDialog {
                 if (value.getSearchMode() == SearchCondition.SearchMode.TEXT) {
                     return listCellRenderer.getListCellRendererComponent(list, value.getSearchText(), index, isSelected, cellHasFocus);
                 } else {
-                    hexadecimalRenderer.setData(value.getBinaryData());
-                    hexadecimalRenderer.setPreferredSize(new Dimension(200, 20));
+                    findHexadecimalRenderer.setData(value.getBinaryData());
+                    findHexadecimalRenderer.setPreferredSize(new Dimension(200, 20));
                     Color backgroundColor;
                     if (isSelected) {
                         backgroundColor = list.getSelectionBackground();
                     } else {
                         backgroundColor = list.getBackground();
                     }
-                    ColorsGroup mainColors = hexadecimalRenderer.getMainColors();
+                    ColorsGroup mainColors = findHexadecimalRenderer.getMainColors();
                     mainColors.setBothBackgroundColors(backgroundColor);
-                    hexadecimalRenderer.setMainColors(mainColors);
-                    return hexadecimalRenderer;
+                    findHexadecimalRenderer.setMainColors(mainColors);
+                    return findHexadecimalRenderer;
                 }
             }
         });
-
-        comboBoxEditor = new ComboBoxEditor() {
+        findComboBoxEditor = new ComboBoxEditor() {
 
             @Override
             public Component getEditorComponent() {
-                return comboBoxEditorComponent;
+                return findComboBoxEditorComponent;
             }
 
             @Override
             public void setItem(Object item) {
-                comboBoxEditorComponent.setItem((SearchCondition) item);
+                findComboBoxEditorComponent.setItem((SearchCondition) item);
                 updateFindStatus();
             }
 
             @Override
             public Object getItem() {
-                return comboBoxEditorComponent.getItem();
+                return findComboBoxEditorComponent.getItem();
             }
 
             @Override
             public void selectAll() {
-                comboBoxEditorComponent.selectAll();
+                findComboBoxEditorComponent.selectAll();
             }
 
             @Override
@@ -130,8 +135,74 @@ public class FindHexDialog extends javax.swing.JDialog {
             public void removeActionListener(ActionListener l) {
             }
         };
-        findComboBox.setEditor(comboBoxEditor);
+        findComboBox.setEditor(findComboBoxEditor);
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
+
+        replaceHexadecimalRenderer.setShowHeader(false);
+        replaceHexadecimalRenderer.setShowLineNumbers(false);
+        replaceHexadecimalRenderer.setWrapMode(true);
+        replaceHexadecimalRenderer.setBackgroundMode(CodeArea.BackgroundMode.PLAIN);
+        replaceHexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        replaceHexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        replaceHexadecimalRenderer.setData(new ByteArrayEditableData());
+
+        replaceComboBoxEditorComponent = new HexSearchComboBoxPanel();
+        replaceComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
+            private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
+
+            @Override
+            public Component getListCellRendererComponent(JList<? extends SearchCondition> list, SearchCondition value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+                    return listCellRenderer.getListCellRendererComponent(list, value.getSearchText(), index, isSelected, cellHasFocus);
+                } else {
+                    replaceHexadecimalRenderer.setData(value.getBinaryData());
+                    replaceHexadecimalRenderer.setPreferredSize(new Dimension(200, 20));
+                    Color backgroundColor;
+                    if (isSelected) {
+                        backgroundColor = list.getSelectionBackground();
+                    } else {
+                        backgroundColor = list.getBackground();
+                    }
+                    ColorsGroup mainColors = replaceHexadecimalRenderer.getMainColors();
+                    mainColors.setBothBackgroundColors(backgroundColor);
+                    replaceHexadecimalRenderer.setMainColors(mainColors);
+                    return replaceHexadecimalRenderer;
+                }
+            }
+        });
+        replaceComboBoxEditor = new ComboBoxEditor() {
+
+            @Override
+            public Component getEditorComponent() {
+                return replaceComboBoxEditorComponent;
+            }
+
+            @Override
+            public void setItem(Object item) {
+                replaceComboBoxEditorComponent.setItem((SearchCondition) item);
+                updateReplaceStatus();
+            }
+
+            @Override
+            public Object getItem() {
+                return replaceComboBoxEditorComponent.getItem();
+            }
+
+            @Override
+            public void selectAll() {
+                replaceComboBoxEditorComponent.selectAll();
+            }
+
+            @Override
+            public void addActionListener(ActionListener l) {
+            }
+
+            @Override
+            public void removeActionListener(ActionListener l) {
+            }
+        };
+        replaceComboBox.setEditor(replaceComboBoxEditor);
+        replaceComboBox.setModel(new SearchHistoryModel(replaceHistory));
 
         WindowUtils.assignGlobalKeyListener(this, findButton, cancelButton);
         pack();
@@ -153,7 +224,7 @@ public class FindHexDialog extends javax.swing.JDialog {
 
         mainPanel = new javax.swing.JPanel();
         findPanel = new javax.swing.JPanel();
-        findTextMultilineButton = new javax.swing.JButton();
+        findMultilineButton = new javax.swing.JButton();
         findComboBox = new javax.swing.JComboBox<>();
         searchFromCursorCheckBox = new javax.swing.JCheckBox();
         matchCaseCheckBox = new javax.swing.JCheckBox();
@@ -162,8 +233,10 @@ public class FindHexDialog extends javax.swing.JDialog {
         searchTypeButton = new javax.swing.JButton();
         replacePanel = new javax.swing.JPanel();
         performReplaceCheckBox = new javax.swing.JCheckBox();
-        textToReplaceLabel = new javax.swing.JLabel();
-        textToReplaceTextField = new javax.swing.JTextField();
+        replaceLabel = new javax.swing.JLabel();
+        replaceTypeButton = new javax.swing.JButton();
+        replaceComboBox = new javax.swing.JComboBox<>();
+        replaceMultilineButton = new javax.swing.JButton();
         replaceAllMatchesCheckBox = new javax.swing.JCheckBox();
         controlPanel = new javax.swing.JPanel();
         findButton = new javax.swing.JButton();
@@ -179,12 +252,12 @@ public class FindHexDialog extends javax.swing.JDialog {
         findPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("findPanel.border.title"))); // NOI18N
         findPanel.setName("findPanel"); // NOI18N
 
-        findTextMultilineButton.setText(resourceBundle.getString("FindHexDialog.findTextMultilineButton.text")); // NOI18N
-        findTextMultilineButton.setToolTipText(resourceBundle.getString("FindHexDialog.findTextMultilineButton.toolTipText")); // NOI18N
-        findTextMultilineButton.setName("findTextMultilineButton"); // NOI18N
-        findTextMultilineButton.addActionListener(new java.awt.event.ActionListener() {
+        findMultilineButton.setText(resourceBundle.getString("FindHexDialog.findMultilineButton.text")); // NOI18N
+        findMultilineButton.setToolTipText(resourceBundle.getString("FindHexDialog.findMultilineButton.toolTipText")); // NOI18N
+        findMultilineButton.setName("findMultilineButton"); // NOI18N
+        findMultilineButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                findTextMultilineButtonActionPerformed(evt);
+                findMultilineButtonActionPerformed(evt);
             }
         });
 
@@ -235,8 +308,8 @@ public class FindHexDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(findComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(findTextMultilineButton))
-                    .addComponent(multipleMatchesCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                        .addComponent(findMultilineButton))
+                    .addComponent(multipleMatchesCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
                     .addGroup(findPanelLayout.createSequentialGroup()
                         .addComponent(findLabel)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -250,7 +323,7 @@ public class FindHexDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(findPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(findComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(findTextMultilineButton)
+                    .addComponent(findMultilineButton)
                     .addComponent(searchTypeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(searchFromCursorCheckBox)
@@ -267,7 +340,6 @@ public class FindHexDialog extends javax.swing.JDialog {
         replacePanel.setName("replacePanel"); // NOI18N
 
         performReplaceCheckBox.setText(resourceBundle.getString("performReplaceCheckBox.text")); // NOI18N
-        performReplaceCheckBox.setEnabled(false);
         performReplaceCheckBox.setName("performReplaceCheckBox"); // NOI18N
         performReplaceCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -275,11 +347,40 @@ public class FindHexDialog extends javax.swing.JDialog {
             }
         });
 
-        textToReplaceLabel.setText(resourceBundle.getString("textToReplaceLabel.text")); // NOI18N
-        textToReplaceLabel.setName("textToReplaceLabel"); // NOI18N
+        replaceLabel.setText(resourceBundle.getString("textToReplaceLabel.text")); // NOI18N
+        replaceLabel.setEnabled(false);
+        replaceLabel.setName("replaceLabel"); // NOI18N
 
-        textToReplaceTextField.setEnabled(false);
-        textToReplaceTextField.setName("textToReplaceTextField"); // NOI18N
+        replaceTypeButton.setText(resourceBundle.getString("FindHexDialog.replaceTypeButton.text")); // NOI18N
+        replaceTypeButton.setToolTipText(resourceBundle.getString("FindHexDialog.replaceTypeButton.toolTipText")); // NOI18N
+        replaceTypeButton.setEnabled(false);
+        replaceTypeButton.setFocusable(false);
+        replaceTypeButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        replaceTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));
+        replaceTypeButton.setMinimumSize(new java.awt.Dimension(27, 27));
+        replaceTypeButton.setName("replaceTypeButton"); // NOI18N
+        replaceTypeButton.setPreferredSize(new java.awt.Dimension(27, 27));
+        replaceTypeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replaceTypeButtonActionPerformed(evt);
+            }
+        });
+
+        replaceComboBox.setEditable(true);
+        replaceComboBox.setEnabled(false);
+        replaceComboBox.setMinimumSize(new java.awt.Dimension(136, 30));
+        replaceComboBox.setName("replaceComboBox"); // NOI18N
+        replaceComboBox.setPreferredSize(new java.awt.Dimension(136, 30));
+
+        replaceMultilineButton.setText(resourceBundle.getString("FindHexDialog.replaceMultilineButton.text")); // NOI18N
+        replaceMultilineButton.setToolTipText(resourceBundle.getString("FindHexDialog.replaceMultilineButton.toolTipText")); // NOI18N
+        replaceMultilineButton.setEnabled(false);
+        replaceMultilineButton.setName("replaceMultilineButton"); // NOI18N
+        replaceMultilineButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replaceMultilineButtonActionPerformed(evt);
+            }
+        });
 
         replaceAllMatchesCheckBox.setText(resourceBundle.getString("replaceAllMatchesCheckBox.text")); // NOI18N
         replaceAllMatchesCheckBox.setEnabled(false);
@@ -292,9 +393,16 @@ public class FindHexDialog extends javax.swing.JDialog {
             .addGroup(replacePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(performReplaceCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-                    .addComponent(textToReplaceLabel)
-                    .addComponent(textToReplaceTextField)
+                    .addComponent(performReplaceCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                    .addGroup(replacePanelLayout.createSequentialGroup()
+                        .addComponent(replaceLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(replacePanelLayout.createSequentialGroup()
+                        .addComponent(replaceTypeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(replaceComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(replaceMultilineButton))
                     .addComponent(replaceAllMatchesCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -303,9 +411,12 @@ public class FindHexDialog extends javax.swing.JDialog {
             .addGroup(replacePanelLayout.createSequentialGroup()
                 .addComponent(performReplaceCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(textToReplaceLabel)
+                .addComponent(replaceLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(textToReplaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(replaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(replaceMultilineButton)
+                    .addComponent(replaceTypeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(replaceAllMatchesCheckBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -338,7 +449,7 @@ public class FindHexDialog extends javax.swing.JDialog {
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(395, Short.MAX_VALUE)
+                .addContainerGap(316, Short.MAX_VALUE)
                 .addComponent(findButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelButton)
@@ -368,44 +479,78 @@ public class FindHexDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void performReplaceCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_performReplaceCheckBoxActionPerformed
-        textToReplaceTextField.setEnabled(performReplaceCheckBox.isSelected());
-        textToReplaceLabel.setEnabled(performReplaceCheckBox.isSelected());
+        updateReplaceEnablement();
     }//GEN-LAST:event_performReplaceCheckBoxActionPerformed
 
-    private void findTextMultilineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextMultilineButtonActionPerformed
-        SearchCondition condition = (SearchCondition) comboBoxEditor.getItem();
+    private void findMultilineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findMultilineButtonActionPerformed
+        SearchCondition condition = (SearchCondition) findComboBoxEditor.getItem();
         HexMultilineDialog multilineDialog = new HexMultilineDialog(WindowUtils.getFrame(this), true);
         multilineDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
         multilineDialog.setCondition(condition);
         multilineDialog.setVisible(true);
         if (multilineDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            comboBoxEditorComponent.setItem(multilineDialog.getCondition());
+            findComboBoxEditorComponent.setItem(multilineDialog.getCondition());
             updateFindStatus();
         }
         multilineDialog.detachMenu();
-    }//GEN-LAST:event_findTextMultilineButtonActionPerformed
+    }//GEN-LAST:event_findMultilineButtonActionPerformed
 
     private void searchTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTypeButtonActionPerformed
-        SearchCondition condition = (SearchCondition) comboBoxEditor.getItem();
+        SearchCondition condition = (SearchCondition) findComboBoxEditor.getItem();
         if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
             condition.setSearchMode(SearchCondition.SearchMode.BINARY);
         } else {
             condition.setSearchMode(SearchCondition.SearchMode.TEXT);
         }
-        comboBoxEditor.setItem(condition);
-        findComboBox.setEditor(comboBoxEditor);
+        findComboBoxEditor.setItem(condition);
+        findComboBox.setEditor(findComboBoxEditor);
         updateFindStatus();
         findComboBox.repaint();
     }//GEN-LAST:event_searchTypeButtonActionPerformed
 
+    private void replaceTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceTypeButtonActionPerformed
+        SearchCondition condition = (SearchCondition) replaceComboBoxEditor.getItem();
+        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            condition.setSearchMode(SearchCondition.SearchMode.BINARY);
+        } else {
+            condition.setSearchMode(SearchCondition.SearchMode.TEXT);
+        }
+        replaceComboBoxEditor.setItem(condition);
+        replaceComboBox.setEditor(replaceComboBoxEditor);
+        updateReplaceStatus();
+        replaceComboBox.repaint();
+    }//GEN-LAST:event_replaceTypeButtonActionPerformed
+
+    private void replaceMultilineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceMultilineButtonActionPerformed
+        SearchCondition condition = (SearchCondition) replaceComboBoxEditor.getItem();
+        HexMultilineDialog multilineDialog = new HexMultilineDialog(WindowUtils.getFrame(this), true);
+        multilineDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
+        multilineDialog.setCondition(condition);
+        multilineDialog.setVisible(true);
+        if (multilineDialog.getDialogOption() == JOptionPane.OK_OPTION) {
+            replaceComboBoxEditorComponent.setItem(multilineDialog.getCondition());
+            updateFindStatus();
+        }
+        multilineDialog.detachMenu();
+    }//GEN-LAST:event_replaceMultilineButtonActionPerformed
+
     private void updateFindStatus() {
-        SearchCondition condition = (SearchCondition) comboBoxEditor.getItem();
+        SearchCondition condition = (SearchCondition) findComboBoxEditor.getItem();
         if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
             searchTypeButton.setText("T");
             matchCaseCheckBox.setEnabled(true);
         } else {
             searchTypeButton.setText("B");
             matchCaseCheckBox.setEnabled(false);
+        }
+    }
+
+    private void updateReplaceStatus() {
+        SearchCondition condition = (SearchCondition) replaceComboBoxEditor.getItem();
+        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            replaceTypeButton.setText("T");
+        } else {
+            replaceTypeButton.setText("B");
         }
     }
 
@@ -422,18 +567,20 @@ public class FindHexDialog extends javax.swing.JDialog {
     private javax.swing.JButton findButton;
     private javax.swing.JComboBox<SearchCondition> findComboBox;
     private javax.swing.JLabel findLabel;
+    private javax.swing.JButton findMultilineButton;
     private javax.swing.JPanel findPanel;
-    private javax.swing.JButton findTextMultilineButton;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JCheckBox matchCaseCheckBox;
     private javax.swing.JCheckBox multipleMatchesCheckBox;
     private javax.swing.JCheckBox performReplaceCheckBox;
     private javax.swing.JCheckBox replaceAllMatchesCheckBox;
+    private javax.swing.JComboBox<SearchCondition> replaceComboBox;
+    private javax.swing.JLabel replaceLabel;
+    private javax.swing.JButton replaceMultilineButton;
     private javax.swing.JPanel replacePanel;
+    private javax.swing.JButton replaceTypeButton;
     private javax.swing.JCheckBox searchFromCursorCheckBox;
     private javax.swing.JButton searchTypeButton;
-    private javax.swing.JLabel textToReplaceLabel;
-    private javax.swing.JTextField textToReplaceTextField;
     // End of variables declaration//GEN-END:variables
 
     public int getDialogOption() {
@@ -446,16 +593,6 @@ public class FindHexDialog extends javax.swing.JDialog {
 
     public boolean getShallReplace() {
         return performReplaceCheckBox.isSelected();
-    }
-
-    public void setShallReplace(boolean shallReplace) {
-        // TODO support for replace
-//        performReplaceCheckBox.setSelected(shallReplace);
-//        performReplaceCheckBoxActionPerformed(null);
-    }
-
-    public String getReplaceText() {
-        return textToReplaceTextField.getText();
     }
 
     public SearchParameters getSearchParameters() {
@@ -471,10 +608,28 @@ public class FindHexDialog extends javax.swing.JDialog {
         searchFromCursorCheckBox.setSelected(parameters.isSearchFromCursor());
         matchCaseCheckBox.setSelected(parameters.isMatchCase());
         multipleMatchesCheckBox.setSelected(parameters.isMultipleMatches());
-        comboBoxEditorComponent.setItem(parameters.getCondition());
-        findComboBox.setEditor(comboBoxEditor);
+        findComboBoxEditorComponent.setItem(parameters.getCondition());
+        findComboBox.setEditor(findComboBoxEditor);
         findComboBox.repaint();
         updateFindStatus();
+    }
+
+    public ReplaceParameters getReplaceParameters() {
+        ReplaceParameters result = new ReplaceParameters();
+        result.setCondition((SearchCondition) replaceComboBox.getEditor().getItem());
+        result.setPerformReplace(performReplaceCheckBox.isSelected());
+        result.setReplaceAll(replaceAllMatchesCheckBox.isSelected());
+        return result;
+    }
+
+    public void setReplaceParameters(ReplaceParameters parameters) {
+        performReplaceCheckBox.setSelected(parameters.isPerformReplace());
+        replaceAllMatchesCheckBox.setSelected(parameters.isReplaceAll());
+        replaceComboBoxEditorComponent.setItem(parameters.getCondition());
+        replaceComboBox.setEditor(replaceComboBoxEditor);
+        replaceComboBox.repaint();
+        updateReplaceStatus();
+        updateReplaceEnablement();
     }
 
     public void setSearchHistory(List<SearchCondition> searchHistory) {
@@ -484,10 +639,19 @@ public class FindHexDialog extends javax.swing.JDialog {
 
     public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
-        comboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "FindHexDialog");
+        findComboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "FindHexDialog");
     }
 
     public void detachMenu() {
         hexCodePopupMenuHandler.dropPopupMenu(".searchFindHexDialog");
+    }
+
+    private void updateReplaceEnablement() {
+        boolean replaceEnabled = performReplaceCheckBox.isSelected();
+        replaceTypeButton.setEnabled(replaceEnabled);
+        replaceComboBox.setEnabled(replaceEnabled);
+        replaceMultilineButton.setEnabled(replaceEnabled);
+        replaceAllMatchesCheckBox.setEnabled(replaceEnabled);
+        replaceLabel.setEnabled(replaceEnabled);
     }
 }

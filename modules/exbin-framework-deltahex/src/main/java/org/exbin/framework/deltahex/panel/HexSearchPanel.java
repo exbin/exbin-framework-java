@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -42,7 +43,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.1.0 2016/07/21
+ * @version 0.2.0 2016/12/21
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
@@ -50,25 +51,28 @@ public class HexSearchPanel extends javax.swing.JPanel {
     private Thread searchStartThread;
     private Thread searchThread;
     private final SearchParameters searchParameters = new SearchParameters();
+    private final ReplaceParameters replaceParameters = new ReplaceParameters();
     private final HexPanel hexPanel;
     private int matchesCount;
     private int matchPosition;
     private final CodeArea hexadecimalRenderer = new CodeArea();
-    private ComboBoxEditor comboBoxEditor;
-    private HexSearchComboBoxPanel comboBoxEditorComponent;
+
+    private boolean replaceMode = true;
+    private ComboBoxEditor findComboBoxEditor;
+    private HexSearchComboBoxPanel findComboBoxEditorComponent;
+    private ComboBoxEditor replaceComboBoxEditor;
+    private HexSearchComboBoxPanel replaceComboBoxEditorComponent;
+
     private final List<SearchCondition> searchHistory = new ArrayList<>();
+    private final List<SearchCondition> replaceHistory = new ArrayList<>();
 
     private ClosePanelListener closePanelListener = null;
     private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexSearchPanel.class);
 
-    public HexSearchPanel(HexPanel hexPanel, boolean replaceMode) {
+    public HexSearchPanel(HexPanel hexPanel) {
         initComponents();
         this.hexPanel = hexPanel;
-        if (!replaceMode) {
-            super.remove(replacePanel);
-        }
-
         init();
     }
 
@@ -80,8 +84,6 @@ public class HexSearchPanel extends javax.swing.JPanel {
         hexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
-
-        comboBoxEditorComponent = new HexSearchComboBoxPanel();
 
         final KeyAdapter editorKeyListener = new KeyAdapter() {
             @Override
@@ -98,6 +100,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
             }
         };
 
+        findComboBoxEditorComponent = new HexSearchComboBoxPanel();
         findComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
             private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
 
@@ -121,12 +124,11 @@ public class HexSearchPanel extends javax.swing.JPanel {
                 }
             }
         });
-
-        comboBoxEditor = new ComboBoxEditor() {
+        findComboBoxEditor = new ComboBoxEditor() {
 
             @Override
             public Component getEditorComponent() {
-                return comboBoxEditorComponent;
+                return findComboBoxEditorComponent;
             }
 
             @Override
@@ -142,21 +144,21 @@ public class HexSearchPanel extends javax.swing.JPanel {
                     condition = (SearchCondition) item;
                 }
                 searchParameters.setCondition(new SearchCondition(condition));
-                SearchCondition currentItem = comboBoxEditorComponent.getItem();
+                SearchCondition currentItem = findComboBoxEditorComponent.getItem();
                 if (item != currentItem) {
-                    comboBoxEditorComponent.setItem(condition);
+                    findComboBoxEditorComponent.setItem(condition);
                     updateFindStatus();
                 }
             }
 
             @Override
             public Object getItem() {
-                return comboBoxEditorComponent.getItem();
+                return findComboBoxEditorComponent.getItem();
             }
 
             @Override
             public void selectAll() {
-                comboBoxEditorComponent.selectAll();
+                findComboBoxEditorComponent.selectAll();
             }
 
             @Override
@@ -167,16 +169,102 @@ public class HexSearchPanel extends javax.swing.JPanel {
             public void removeActionListener(ActionListener l) {
             }
         };
-        findComboBox.setEditor(comboBoxEditor);
+        findComboBox.setEditor(findComboBoxEditor);
 
-        comboBoxEditorComponent.setValueChangedListener(new HexSearchComboBoxPanel.ValueChangedListener() {
+        findComboBoxEditorComponent.setValueChangedListener(new HexSearchComboBoxPanel.ValueChangedListener() {
             @Override
             public void valueChanged() {
                 comboBoxValueChanged();
             }
         });
-        comboBoxEditorComponent.addValueKeyListener(editorKeyListener);
+        findComboBoxEditorComponent.addValueKeyListener(editorKeyListener);
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
+
+        replaceComboBoxEditorComponent = new HexSearchComboBoxPanel();
+        replaceComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
+            private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
+
+            @Override
+            public Component getListCellRendererComponent(JList<? extends SearchCondition> list, SearchCondition value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+                    return listCellRenderer.getListCellRendererComponent(list, value.getSearchText(), index, isSelected, cellHasFocus);
+                } else {
+                    hexadecimalRenderer.setData(value.getBinaryData());
+                    hexadecimalRenderer.setPreferredSize(new Dimension(200, 20));
+                    Color backgroundColor;
+                    if (isSelected) {
+                        backgroundColor = list.getSelectionBackground();
+                    } else {
+                        backgroundColor = list.getBackground();
+                    }
+                    ColorsGroup mainColors = hexadecimalRenderer.getMainColors();
+                    mainColors.setBothBackgroundColors(backgroundColor);
+                    hexadecimalRenderer.setMainColors(mainColors);
+                    return hexadecimalRenderer;
+                }
+            }
+        });
+        replaceComboBoxEditor = new ComboBoxEditor() {
+
+            @Override
+            public Component getEditorComponent() {
+                return replaceComboBoxEditorComponent;
+            }
+
+            @Override
+            public void setItem(Object item) {
+                SearchCondition condition;
+                if (item == null || item instanceof String) {
+                    condition = new SearchCondition();
+                    condition.setSearchMode(SearchCondition.SearchMode.TEXT);
+                    if (item != null) {
+                        condition.setSearchText((String) item);
+                    }
+                } else {
+                    condition = (SearchCondition) item;
+                }
+                replaceParameters.setCondition(new SearchCondition(condition));
+                SearchCondition currentItem = replaceComboBoxEditorComponent.getItem();
+                if (item != currentItem) {
+                    replaceComboBoxEditorComponent.setItem(condition);
+                    updateReplaceStatus();
+                }
+            }
+
+            @Override
+            public Object getItem() {
+                return replaceComboBoxEditorComponent.getItem();
+            }
+
+            @Override
+            public void selectAll() {
+                replaceComboBoxEditorComponent.selectAll();
+            }
+
+            @Override
+            public void addActionListener(ActionListener l) {
+            }
+
+            @Override
+            public void removeActionListener(ActionListener l) {
+            }
+        };
+        replaceComboBox.setEditor(replaceComboBoxEditor);
+
+        replaceComboBoxEditorComponent.addValueKeyListener(editorKeyListener);
+        replaceComboBox.setModel(new SearchHistoryModel(replaceHistory));
+    }
+
+    public void switchReplaceMode(boolean replaceMode) {
+        if (this.replaceMode != replaceMode) {
+            this.replaceMode = replaceMode;
+            if (replaceMode) {
+                add(replacePanel, BorderLayout.SOUTH);
+            } else {
+                remove(replacePanel);
+            }
+            revalidate();
+        }
     }
 
     /**
@@ -191,8 +279,8 @@ public class HexSearchPanel extends javax.swing.JPanel {
         topSeparator = new javax.swing.JSeparator();
         findPanel = new javax.swing.JPanel();
         findLabel = new javax.swing.JLabel();
-        searchTypeToolBar = new javax.swing.JToolBar();
-        searchTypeButton = new javax.swing.JButton();
+        findTypeToolBar = new javax.swing.JToolBar();
+        findTypeButton = new javax.swing.JButton();
         findComboBox = new javax.swing.JComboBox<>();
         findToolBar = new javax.swing.JToolBar();
         prevButton = new javax.swing.JButton();
@@ -206,7 +294,12 @@ public class HexSearchPanel extends javax.swing.JPanel {
         closeButton = new javax.swing.JButton();
         replacePanel = new javax.swing.JPanel();
         replaceLabel = new javax.swing.JLabel();
+        replaceTypeToolBar = new javax.swing.JToolBar();
+        replaceTypeButton = new javax.swing.JButton();
         replaceComboBox = new javax.swing.JComboBox<>();
+        replaceToolBar = new javax.swing.JToolBar();
+        replaceButton = new javax.swing.JButton();
+        replaceAllButton = new javax.swing.JButton();
 
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
@@ -219,25 +312,25 @@ public class HexSearchPanel extends javax.swing.JPanel {
         findLabel.setText(resourceBundle.getString("HexSearchPanel.findLabel.text")); // NOI18N
         findLabel.setName("findLabel"); // NOI18N
 
-        searchTypeToolBar.setBorder(null);
-        searchTypeToolBar.setFloatable(false);
-        searchTypeToolBar.setRollover(true);
-        searchTypeToolBar.setFocusable(false);
-        searchTypeToolBar.setName("searchTypeToolBar"); // NOI18N
+        findTypeToolBar.setBorder(null);
+        findTypeToolBar.setFloatable(false);
+        findTypeToolBar.setRollover(true);
+        findTypeToolBar.setFocusable(false);
+        findTypeToolBar.setName("findTypeToolBar"); // NOI18N
 
-        searchTypeButton.setText("T");
-        searchTypeButton.setToolTipText(resourceBundle.getString("HexSearchPanel.searchTypeButton.toolTipText")); // NOI18N
-        searchTypeButton.setFocusable(false);
-        searchTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));
-        searchTypeButton.setMinimumSize(new java.awt.Dimension(27, 27));
-        searchTypeButton.setName("searchTypeButton"); // NOI18N
-        searchTypeButton.setPreferredSize(new java.awt.Dimension(27, 27));
-        searchTypeButton.addActionListener(new java.awt.event.ActionListener() {
+        findTypeButton.setText("T");
+        findTypeButton.setToolTipText(resourceBundle.getString("HexSearchPanel.findTypeButton.toolTipText")); // NOI18N
+        findTypeButton.setFocusable(false);
+        findTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));
+        findTypeButton.setMinimumSize(new java.awt.Dimension(27, 27));
+        findTypeButton.setName("findTypeButton"); // NOI18N
+        findTypeButton.setPreferredSize(new java.awt.Dimension(27, 27));
+        findTypeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchTypeButtonActionPerformed(evt);
+                findTypeButtonActionPerformed(evt);
             }
         });
-        searchTypeToolBar.add(searchTypeButton);
+        findTypeToolBar.add(findTypeButton);
 
         findComboBox.setEditable(true);
         findComboBox.setSelectedItem("");
@@ -344,7 +437,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(findLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchTypeToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(findTypeToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(findComboBox, 0, 519, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -359,43 +452,100 @@ public class HexSearchPanel extends javax.swing.JPanel {
             .addComponent(closeToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(findToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(searchTypeToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(findTypeToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(findLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(findComboBox)
         );
 
         add(findPanel, java.awt.BorderLayout.CENTER);
 
+        replacePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 0, 0, 0));
         replacePanel.setName("replacePanel"); // NOI18N
+        replacePanel.setPreferredSize(new java.awt.Dimension(1015, 28));
 
         replaceLabel.setText(resourceBundle.getString("HexSearchPanel.replaceLabel.text")); // NOI18N
         replaceLabel.setName("replaceLabel"); // NOI18N
 
+        replaceTypeToolBar.setBorder(null);
+        replaceTypeToolBar.setFloatable(false);
+        replaceTypeToolBar.setRollover(true);
+        replaceTypeToolBar.setFocusable(false);
+        replaceTypeToolBar.setName("replaceTypeToolBar"); // NOI18N
+
+        replaceTypeButton.setText(resourceBundle.getString("HexSearchPanel.replaceTypeButton.text")); // NOI18N
+        replaceTypeButton.setToolTipText(resourceBundle.getString("HexSearchPanel.replaceTypeButton.toolTipText")); // NOI18N
+        replaceTypeButton.setDefaultCapable(false);
+        replaceTypeButton.setFocusable(false);
+        replaceTypeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        replaceTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));
+        replaceTypeButton.setMinimumSize(new java.awt.Dimension(27, 27));
+        replaceTypeButton.setName("replaceTypeButton"); // NOI18N
+        replaceTypeButton.setPreferredSize(new java.awt.Dimension(27, 27));
+        replaceTypeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        replaceTypeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replaceTypeButtonActionPerformed(evt);
+            }
+        });
+        replaceTypeToolBar.add(replaceTypeButton);
+
         replaceComboBox.setEditable(true);
-        replaceComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         replaceComboBox.setSelectedItem("");
-        replaceComboBox.setMinimumSize(new java.awt.Dimension(137, 25));
         replaceComboBox.setName("replaceComboBox"); // NOI18N
+
+        replaceToolBar.setBorder(null);
+        replaceToolBar.setFloatable(false);
+        replaceToolBar.setRollover(true);
+        replaceToolBar.setFocusable(false);
+        replaceToolBar.setName("replaceToolBar"); // NOI18N
+
+        replaceButton.setText(resourceBundle.getString("replaceButton.text")); // NOI18N
+        replaceButton.setEnabled(false);
+        replaceButton.setFocusable(false);
+        replaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        replaceButton.setName("replaceButton"); // NOI18N
+        replaceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        replaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replaceButtonActionPerformed(evt);
+            }
+        });
+        replaceToolBar.add(replaceButton);
+
+        replaceAllButton.setText(resourceBundle.getString("replaceAllButton.text")); // NOI18N
+        replaceAllButton.setEnabled(false);
+        replaceAllButton.setFocusable(false);
+        replaceAllButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        replaceAllButton.setName("replaceAllButton"); // NOI18N
+        replaceAllButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        replaceAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replaceAllButtonActionPerformed(evt);
+            }
+        });
+        replaceToolBar.add(replaceAllButton);
 
         javax.swing.GroupLayout replacePanelLayout = new javax.swing.GroupLayout(replacePanel);
         replacePanel.setLayout(replacePanelLayout);
         replacePanelLayout.setHorizontalGroup(
             replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(replacePanelLayout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(replaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(600, Short.MAX_VALUE))
-            .addGroup(replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(replacePanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(replaceLabel)
-                    .addContainerGap(948, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addComponent(replaceLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(replaceTypeToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(replaceComboBox, 0, 734, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(replaceToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         replacePanelLayout.setVerticalGroup(
             replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(replaceComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(replacePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(replaceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+            .addComponent(replaceTypeToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(replaceComboBox)
+            .addComponent(replaceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(replaceToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         add(replacePanel, java.awt.BorderLayout.SOUTH);
@@ -404,20 +554,24 @@ public class HexSearchPanel extends javax.swing.JPanel {
     private void optionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optionsButtonActionPerformed
         cancelSearch();
         FindHexDialog findDialog = new FindHexDialog(WindowUtils.getFrame(this), true);
-        findDialog.setShallReplace(false);
         findDialog.setSelected();
         findDialog.setLocationRelativeTo(findDialog.getParent());
         findDialog.setSearchHistory(searchHistory);
         findDialog.setSearchParameters(searchParameters);
+        replaceParameters.setPerformReplace(replaceMode);
+        findDialog.setReplaceParameters(replaceParameters);
         findDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
         findDialog.setVisible(true);
         if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            SearchParameters findParameters = findDialog.getSearchParameters();
-            ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(findParameters.getCondition());
-            searchParameters.setFromParameters(findParameters);
-            comboBoxEditorComponent.setItem(findParameters.getCondition());
+            SearchParameters dialogSearchParameters = findDialog.getSearchParameters();
+            ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(dialogSearchParameters.getCondition());
+            dialogSearchParameters.setFromParameters(dialogSearchParameters);
+            findComboBoxEditorComponent.setItem(dialogSearchParameters.getCondition());
             updateFindStatus();
-            hexPanel.findText(findParameters);
+
+            ReplaceParameters dialogReplaceParameters = findDialog.getReplaceParameters();
+            switchReplaceMode(dialogReplaceParameters.isPerformReplace());
+            hexPanel.performFind(dialogSearchParameters);
         }
         findDialog.detachMenu();
     }//GEN-LAST:event_optionsButtonActionPerformed
@@ -444,7 +598,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         performSearch();
     }//GEN-LAST:event_matchCaseToggleButtonActionPerformed
 
-    private void searchTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTypeButtonActionPerformed
+    private void findTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTypeButtonActionPerformed
         SearchCondition condition = searchParameters.getCondition();
         if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
             condition.setSearchMode(SearchCondition.SearchMode.BINARY);
@@ -452,26 +606,56 @@ public class HexSearchPanel extends javax.swing.JPanel {
             condition.setSearchMode(SearchCondition.SearchMode.TEXT);
         }
 
-        comboBoxEditor.setItem(condition);
-        findComboBox.setEditor(comboBoxEditor);
+        findComboBoxEditor.setItem(condition);
+        findComboBox.setEditor(findComboBoxEditor);
         findComboBox.repaint();
         performSearch();
-    }//GEN-LAST:event_searchTypeButtonActionPerformed
+    }//GEN-LAST:event_findTypeButtonActionPerformed
 
     private void updateFindStatus() {
         SearchCondition condition = searchParameters.getCondition();
         if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
-            searchTypeButton.setText("T");
+            findTypeButton.setText("T");
             matchCaseToggleButton.setEnabled(true);
         } else {
-            searchTypeButton.setText("B");
+            findTypeButton.setText("B");
             matchCaseToggleButton.setEnabled(false);
+        }
+    }
+
+    private void updateReplaceStatus() {
+        SearchCondition condition = replaceParameters.getCondition();
+        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            replaceTypeButton.setText("T");
+        } else {
+            replaceTypeButton.setText("B");
         }
     }
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         closePanel();
     }//GEN-LAST:event_closeButtonActionPerformed
+
+    private void replaceTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceTypeButtonActionPerformed
+        SearchCondition condition = replaceParameters.getCondition();
+        if (condition.getSearchMode() == SearchCondition.SearchMode.TEXT) {
+            condition.setSearchMode(SearchCondition.SearchMode.BINARY);
+        } else {
+            condition.setSearchMode(SearchCondition.SearchMode.TEXT);
+        }
+
+        replaceComboBoxEditor.setItem(condition);
+        replaceComboBox.setEditor(replaceComboBoxEditor);
+        replaceComboBox.repaint();
+    }//GEN-LAST:event_replaceTypeButtonActionPerformed
+
+    private void replaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceButtonActionPerformed
+        performReplace();
+    }//GEN-LAST:event_replaceButtonActionPerformed
+
+    private void replaceAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceAllButtonActionPerformed
+        performReplaceAll();
+    }//GEN-LAST:event_replaceAllButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
@@ -480,17 +664,22 @@ public class HexSearchPanel extends javax.swing.JPanel {
     private javax.swing.JLabel findLabel;
     private javax.swing.JPanel findPanel;
     private javax.swing.JToolBar findToolBar;
+    private javax.swing.JButton findTypeButton;
+    private javax.swing.JToolBar findTypeToolBar;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JToggleButton matchCaseToggleButton;
     private javax.swing.JToggleButton multipleMatchesToggleButton;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton optionsButton;
     private javax.swing.JButton prevButton;
-    private javax.swing.JComboBox<String> replaceComboBox;
+    private javax.swing.JButton replaceAllButton;
+    private javax.swing.JButton replaceButton;
+    private javax.swing.JComboBox<SearchCondition> replaceComboBox;
     private javax.swing.JLabel replaceLabel;
     private javax.swing.JPanel replacePanel;
-    private javax.swing.JButton searchTypeButton;
-    private javax.swing.JToolBar searchTypeToolBar;
+    private javax.swing.JToolBar replaceToolBar;
+    private javax.swing.JButton replaceTypeButton;
+    private javax.swing.JToolBar replaceTypeToolBar;
     private javax.swing.JToolBar.Separator separator1;
     private javax.swing.JSeparator topSeparator;
     // End of variables declaration//GEN-END:variables
@@ -579,7 +768,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     public void requestSearchFocus() {
         findComboBox.requestFocus();
-        comboBoxEditorComponent.requestFocus();
+        findComboBoxEditorComponent.requestFocus();
     }
 
     public void cancelSearch() {
@@ -589,10 +778,20 @@ public class HexSearchPanel extends javax.swing.JPanel {
     }
 
     public void performFind() {
-        hexPanel.findText(searchParameters);
-        comboBoxEditorComponent.setRunningUpdate(true);
+        hexPanel.performFind(searchParameters);
+        findComboBoxEditorComponent.setRunningUpdate(true);
         ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(searchParameters.getCondition());
-        comboBoxEditorComponent.setRunningUpdate(false);
+        findComboBoxEditorComponent.setRunningUpdate(false);
+    }
+
+    public void performReplace() {
+        replaceParameters.setCondition(replaceComboBoxEditorComponent.getItem());
+        hexPanel.performReplace(searchParameters, replaceParameters);
+    }
+
+    public void performReplaceAll() {
+        // TODO
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void updatePosition(long position, long dataSize) {
@@ -628,17 +827,16 @@ public class HexSearchPanel extends javax.swing.JPanel {
                 break;
             default:
                 infoLabel.setText("Match " + (matchPosition + 1) + " of " + matchesCount);
-                updateTraverseButtons();
                 break;
         }
-        updateTraverseButtons();
+        updateMatchStatus();
     }
 
     public void clearStatus() {
         infoLabel.setText("");
         matchesCount = 0;
         matchPosition = -1;
-        updateTraverseButtons();
+        updateMatchStatus();
     }
 
     public void dataChanged() {
@@ -661,9 +859,11 @@ public class HexSearchPanel extends javax.swing.JPanel {
         this.closePanelListener = closePanelListener;
     }
 
-    private void updateTraverseButtons() {
+    private void updateMatchStatus() {
         prevButton.setEnabled(matchesCount > 1 && matchPosition > 0);
         nextButton.setEnabled(matchPosition < matchesCount - 1);
+        replaceButton.setEnabled(matchesCount > 0);
+        replaceAllButton.setEnabled(matchesCount > 0);
     }
 
     // TODO implement optimalized method
@@ -683,7 +883,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
-        comboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "");
+        findComboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "");
     }
 
     /**

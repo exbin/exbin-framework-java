@@ -195,7 +195,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             }
         });
 
-        hexSearchPanel = new HexSearchPanel(this, false);
+        hexSearchPanel = new HexSearchPanel(this);
         hexSearchPanel.setClosePanelListener(new HexSearchPanel.ClosePanelListener() {
             @Override
             public void panelClosed() {
@@ -242,17 +242,22 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         }
     }
 
-    public void showFindPanel() {
+    public void showFindPanel(boolean replace) {
         if (!findTextPanelVisible) {
             add(hexSearchPanel, BorderLayout.SOUTH);
             revalidate();
             findTextPanelVisible = true;
             hexSearchPanel.requestSearchFocus();
         }
+        hexSearchPanel.switchReplaceMode(replace);
+    }
+
+    public void findAgain() {
+        // TODO hexSearchPanel.f
     }
 
     @Override
-    public void findText(SearchParameters searchParameters) {
+    public void performFind(SearchParameters searchParameters) {
         HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
         hexSearchPanel.clearStatus();
@@ -294,6 +299,24 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 throw new IllegalStateException("Unexpected search mode " + condition.getSearchMode().name());
         }
 
+    }
+
+    @Override
+    public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters) {
+        SearchCondition replaceCondition = replaceParameters.getCondition();
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        if (currentMatch != null) {
+            EditableBinaryData editableData = ((EditableBinaryData) codeArea.getData());
+            editableData.remove(currentMatch.getPosition(), currentMatch.getLength());
+            if (replaceCondition.getSearchMode() == SearchCondition.SearchMode.BINARY) {
+                editableData.insert(currentMatch.getPosition(), replaceCondition.getBinaryData());
+            } else {
+                editableData.insert(currentMatch.getPosition(), replaceCondition.getSearchText().getBytes(codeArea.getCharset()));
+            }
+            painter.getMatches().remove(currentMatch);
+            codeArea.repaint();
+        }
     }
 
     private void updateClipboardActionsStatus() {
@@ -389,7 +412,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         int maxBytesPerChar = (int) encoder.maxBytesPerChar();
         byte[] charData = new byte[maxBytesPerChar];
         long dataSize = data.getDataSize();
-        while (position < dataSize - findText.length()) {
+        while (position <= dataSize - findText.length()) {
             int matchCharLength = 0;
             int matchLength = 0;
             while (matchCharLength < findText.length()) {

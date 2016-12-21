@@ -19,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JOptionPane;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.deltahex.panel.HexPanel;
@@ -30,7 +29,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Find/replace handler.
  *
- * @version 0.2.0 2016/06/14
+ * @version 0.2.0 2016/12/21
  * @author ExBin Project (http://exbin.org)
  */
 public class FindReplaceHandler {
@@ -61,7 +60,7 @@ public class FindReplaceHandler {
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
                     HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
-                    activePanel.showFindPanel();
+                    activePanel.showFindPanel(false);
                 }
             }
         };
@@ -72,9 +71,8 @@ public class FindReplaceHandler {
         editFindAgainAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                initFindDialog();
-                findDialog.setShallReplace(false);
-                editorProvider.findText(findDialog.getSearchParameters());
+                HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+                activePanel.findAgain();
             }
         };
         ActionUtils.setupAction(editFindAgainAction, resourceBundle, "editFindAgainAction");
@@ -83,13 +81,9 @@ public class FindReplaceHandler {
         editReplaceAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                initFindDialog();
-                findDialog.setShallReplace(true);
-                findDialog.setSelected();
-                findDialog.setLocationRelativeTo(findDialog.getParent());
-                findDialog.setVisible(true);
-                if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                    editorProvider.findText(findDialog.getSearchParameters());
+                if (editorProvider instanceof HexEditorProvider) {
+                    HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+                    activePanel.showFindPanel(true);
                 }
             }
         };

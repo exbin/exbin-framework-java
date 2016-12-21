@@ -31,6 +31,7 @@ import org.exbin.deltahex.operation.undo.BinaryDataUndoHandler;
 import org.exbin.deltahex.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.deltahex.panel.HexPanel;
+import org.exbin.framework.deltahex.panel.ReplaceParameters;
 import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
@@ -45,7 +46,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 /**
  * Hexadecimal editor provider.
  *
- * @version 0.2.0 2016/08/16
+ * @version 0.2.0 2016/12/21
  * @author ExBin Project (http://exbin.org)
  */
 public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
@@ -265,8 +266,13 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     }
 
     @Override
-    public void findText(SearchParameters searchParameters) {
-        activePanel.findText(searchParameters);
+    public void performFind(SearchParameters searchParameters) {
+        activePanel.performFind(searchParameters);
+    }
+
+    @Override
+    public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters) {
+        activePanel.performReplace(searchParameters, replaceParameters);
     }
 
     @Override

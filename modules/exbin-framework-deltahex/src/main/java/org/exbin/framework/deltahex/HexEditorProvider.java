@@ -21,6 +21,7 @@ import java.util.Map;
 import org.exbin.deltahex.operation.undo.BinaryDataUndoHandler;
 import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.deltahex.panel.HexPanel;
+import org.exbin.framework.deltahex.panel.ReplaceParameters;
 import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
@@ -29,7 +30,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 /**
  * Hexadecimal editor provider interface.
  *
- * @version 0.2.0 2016/12/20
+ * @version 0.2.0 2016/12/21
  * @author ExBin Project (http://exbin.org)
  */
 public interface HexEditorProvider extends EditorProvider {
@@ -62,7 +63,9 @@ public interface HexEditorProvider extends EditorProvider {
 
     void setCharset(Charset forName);
 
-    void findText(SearchParameters searchParameters);
+    void performFind(SearchParameters searchParameters);
+
+    void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters);
 
     boolean changeShowNonprintables();
 
@@ -73,6 +76,6 @@ public interface HexEditorProvider extends EditorProvider {
     HexPanel getDocument();
 
     void printFile();
-    
+
     BinaryDataUndoHandler getHexUndoHandler();
 }

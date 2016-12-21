@@ -84,6 +84,7 @@ public class GoToPositionHandler {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             goToDialog = new GoToHexDialog(frameModule.getFrame(), true);
             goToDialog.setIconImage(application.getApplicationIcon());
+            goToDialog.initFocus();
         }
     }
 }
