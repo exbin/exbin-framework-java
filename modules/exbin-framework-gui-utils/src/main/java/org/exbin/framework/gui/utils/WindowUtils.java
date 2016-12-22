@@ -18,6 +18,7 @@ package org.exbin.framework.gui.utils;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -43,7 +44,7 @@ import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 /**
  * Utility static methods usable for windows and dialogs.
  *
- * @version 0.2.0 2016/12/04
+ * @version 0.2.0 2016/12/22
  * @author ExBin Project (http://exbin.org)
  */
 public class WindowUtils {
@@ -97,6 +98,14 @@ public class WindowUtils {
                 window.setVisible(true);
             }
         });
+    }
+
+    public static void invokeDialog(final Component component) {
+        JDialog dialog = new JDialog();
+        Dimension size = component.getSize();
+        dialog.add(component);
+        dialog.setSize(size);
+        invokeWindow(dialog);
     }
 
     public static void initWindow(Window window) {
