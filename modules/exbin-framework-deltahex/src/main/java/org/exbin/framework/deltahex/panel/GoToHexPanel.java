@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.deltahex.panel;
 
-import javax.swing.JDialog;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -24,7 +23,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Go-to position panel for hexadecimal editor.
  *
- * @version 0.1.2 2016/12/22
+ * @version 0.2.0 2016/12/23
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToHexPanel extends javax.swing.JPanel {

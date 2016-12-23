@@ -41,7 +41,6 @@ import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -119,7 +118,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
         };
         ActionUtils.setupAction(manageEncodingsAction, resourceBundle, "manageEncodingsAction");
         manageEncodingsAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-        manageEncodingsAction.putValue(Action.NAME, manageEncodingsAction.getValue(Action.NAME) + GuiMenuModuleApi.DIALOG_MENUITEM_EXT);
+        manageEncodingsAction.putValue(Action.NAME, manageEncodingsAction.getValue(Action.NAME) + ActionUtils.DIALOG_MENUITEM_EXT);
 
         toolsEncodingMenu = new JMenu();
         toolsEncodingMenu.add(utfEncodingRadioButtonMenuItem);

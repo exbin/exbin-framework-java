@@ -22,10 +22,12 @@ import javax.swing.Action;
 /**
  * Some simple static methods usable for actions, menus and toolbars.
  *
- * @version 0.2.0 2016/08/18
+ * @version 0.2.0 2016/12/23
  * @author ExBin Project (http://exbin.org)
  */
 public class ActionUtils {
+
+    public static final String DIALOG_MENUITEM_EXT = "...";
 
     /**
      * Action type like or check, radio.

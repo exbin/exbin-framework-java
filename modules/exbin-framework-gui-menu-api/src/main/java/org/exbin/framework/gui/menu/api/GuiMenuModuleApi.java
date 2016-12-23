@@ -36,7 +36,6 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiMenuModuleApi.class);
     public static final String CLIPBOARD_ACTIONS_MENU_GROUP_ID = MODULE_ID + ".clipboardActionsMenuGroup";
     public static final String CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID = MODULE_ID + ".clipboardActionsToolBarGroup";
-    public static final String DIALOG_MENUITEM_EXT = "...";
 
     /**
      * Returns menu using given identificator.

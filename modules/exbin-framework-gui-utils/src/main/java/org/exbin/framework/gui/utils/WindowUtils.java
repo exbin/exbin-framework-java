@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.utils;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -34,6 +35,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.LookAndFeel;
@@ -133,10 +135,6 @@ public class WindowUtils {
         return dialog;
     }
 
-    public static TestApplication getDefaultAppEditor() {
-        return new TestApplication();
-    }
-
     /**
      * Find frame component for given component.
      *
@@ -169,6 +167,26 @@ public class WindowUtils {
      * @param cancelButton button which will be used for closing operation
      */
     public static void assignGlobalKeyListener(Container component, final JButton okButton, final JButton cancelButton) {
+        assignGlobalKeyListener(component, new OkCancelListener() {
+            @Override
+            public void okEvent() {
+                doButtonClick(okButton);
+            }
+
+            @Override
+            public void cancelEvent() {
+                doButtonClick(cancelButton);
+            }
+        });
+    }
+
+    /**
+     * Assign ESCAPE/ENTER key for all focusable components recursively.
+     *
+     * @param component target component
+     * @param listener ok and cancel event listener
+     */
+    public static void assignGlobalKeyListener(Container component, final OkCancelListener listener) {
         KeyListener keyListener = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -190,12 +208,12 @@ public class WindowUtils {
                         performOkAction = !((JEditorPane) evt.getSource()).isEditable();
                     }
 
-                    if (okButton != null && performOkAction) {
-                        okButton.doClick(BUTTON_CLICK_TIME);
+                    if (performOkAction && listener != null) {
+                        listener.okEvent();
                     }
 
-                } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    cancelButton.doClick(BUTTON_CLICK_TIME);
+                } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE && listener != null) {
+                    listener.cancelEvent();
                 }
             }
 
@@ -300,5 +318,26 @@ public class WindowUtils {
         } else {
             window.setBounds((int) absoluteX, (int) absoluteY, (int) widthX, (int) widthY);
         }
+    }
+
+    /**
+     * Creates panel for given main and control panel.
+     *
+     * @param mainPanel main panel
+     * @param controlPanel control panel
+     * @return panel
+     */
+    public static JPanel createDialogPanel(JPanel mainPanel, JPanel controlPanel) {
+        JPanel dialogPanel = new JPanel(new BorderLayout());
+        dialogPanel.add(mainPanel, BorderLayout.CENTER);
+        dialogPanel.add(controlPanel, BorderLayout.SOUTH);
+        return dialogPanel;
+    }
+
+    public static interface OkCancelListener {
+
+        void okEvent();
+
+        void cancelEvent();
     }
 }

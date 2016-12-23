@@ -32,7 +32,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import org.exbin.framework.gui.menu.api.ActionMenuContribution;
 import org.exbin.framework.gui.menu.api.DirectMenuContribution;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuContribution;
 import org.exbin.framework.gui.menu.api.MenuGroup;
 import org.exbin.framework.gui.menu.api.MenuPosition;
@@ -228,7 +227,7 @@ public class MenuHandler {
 
                                 Object dialogMode = action.getValue(ActionUtils.ACTION_DIALOG_MODE);
                                 if (dialogMode instanceof Boolean && ((Boolean) dialogMode)) {
-                                    menuItem.setText(menuItem.getText() + GuiMenuModuleApi.DIALOG_MENUITEM_EXT);
+                                    menuItem.setText(menuItem.getText() + ActionUtils.DIALOG_MENUITEM_EXT);
                                 }
                             }
 

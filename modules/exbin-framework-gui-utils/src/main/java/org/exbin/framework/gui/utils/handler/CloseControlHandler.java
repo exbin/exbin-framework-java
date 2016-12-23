@@ -17,21 +17,17 @@
 package org.exbin.framework.gui.utils.handler;
 
 /**
- * Handler for default control panel.
+ * Handler for close control panel.
  *
- * @version 0.2.0 2016/12/22
+ * @version 0.2.0 2016/12/23
  * @author ExBin Project (http://exbin.org)
  */
-public interface DefaultControlHandler {
+public interface CloseControlHandler {
 
-    void controlActionPerformed(ControlActionType actionType);
+    void controlActionPerformed();
 
-    public interface DefaultControlListener {
+    public interface CloseControlListener {
 
-        void performClick(ControlActionType actionType);
-    }
-
-    public static enum ControlActionType {
-        OK, CANCEL
+        void performCloseClick();
     }
 }

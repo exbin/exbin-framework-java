@@ -27,6 +27,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.update.GuiUpdateModule;
 import org.exbin.framework.gui.update.VersionNumbers;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -283,7 +284,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeWindow(new CheckUpdatesDialog(new javax.swing.JFrame(), true, WindowUtils.getDefaultAppEditor()));
+        WindowUtils.invokeWindow(new CheckUpdatesDialog(new javax.swing.JFrame(), true, GuiUtilsModule.getDefaultAppEditor()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

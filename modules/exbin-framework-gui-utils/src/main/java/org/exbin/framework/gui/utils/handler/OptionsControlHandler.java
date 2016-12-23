@@ -17,12 +17,12 @@
 package org.exbin.framework.gui.utils.handler;
 
 /**
- * Handler for default control panel.
+ * Handler for options control panel.
  *
- * @version 0.2.0 2016/12/22
+ * @version 0.2.0 2016/12/23
  * @author ExBin Project (http://exbin.org)
  */
-public interface DefaultControlHandler {
+public interface OptionsControlHandler {
 
     void controlActionPerformed(ControlActionType actionType);
 
@@ -32,6 +32,6 @@ public interface DefaultControlHandler {
     }
 
     public static enum ControlActionType {
-        OK, CANCEL
+        SAVE, SET, CANCEL
     }
 }

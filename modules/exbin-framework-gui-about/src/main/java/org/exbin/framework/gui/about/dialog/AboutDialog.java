@@ -37,6 +37,7 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.plugin.XBModuleRecord;
@@ -554,7 +555,7 @@ public class AboutDialog extends javax.swing.JDialog implements HyperlinkListene
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeWindow(new AboutDialog(new javax.swing.JFrame(), true, WindowUtils.getDefaultAppEditor()));
+        WindowUtils.invokeWindow(new AboutDialog(new javax.swing.JFrame(), true, GuiUtilsModule.getDefaultAppEditor()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

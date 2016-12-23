@@ -25,6 +25,7 @@ import org.exbin.framework.gui.data.panel.DefinitionEditorPanel;
 import org.exbin.framework.gui.menu.GuiMenuModule;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.undo.GuiUndoModule;
+import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -149,7 +150,7 @@ public class EditDefinitionDialog extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        TestApplication testApplication = WindowUtils.getDefaultAppEditor();
+        TestApplication testApplication = GuiUtilsModule.getDefaultAppEditor();
         testApplication.addModule(GuiUndoModule.MODULE_ID, new GuiUndoModule());
         testApplication.addModule(GuiMenuModule.MODULE_ID, new GuiMenuModule());
         testApplication.addModule(GuiComponentModule.MODULE_ID, new GuiComponentModule());

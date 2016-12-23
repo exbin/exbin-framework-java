@@ -28,6 +28,7 @@ import org.exbin.framework.gui.component.api.GuiComponentModuleApi;
 import org.exbin.framework.gui.component.api.MoveItemActions;
 import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
 import org.exbin.framework.gui.component.api.MoveItemActionsUpdateListener;
+import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -69,7 +70,7 @@ public class ToolBarSidePanel extends javax.swing.JPanel {
      */
     public static void main(String args[]) {
         JDialog dialog = WindowUtils.createBasicDialog();
-        TestApplication testApplication = WindowUtils.getDefaultAppEditor();
+        TestApplication testApplication = GuiUtilsModule.getDefaultAppEditor();
         testApplication.addModule(GuiComponentModule.MODULE_ID, new GuiComponentModule());
         ToolBarSidePanel toolBarSidePanel = new ToolBarSidePanel(testApplication);
         toolBarSidePanel.setEditItemsHandler(new EditItemActionsHandler() {

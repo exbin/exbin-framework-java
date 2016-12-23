@@ -21,9 +21,9 @@ import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework menu module.
+ * Implementation of XBUP framework GUI utilities module.
  *
- * @version 0.2.0 2015/12/10
+ * @version 0.2.0 2016/12/23
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiUtilsModule implements XBApplicationModule {
@@ -40,5 +40,9 @@ public class GuiUtilsModule implements XBApplicationModule {
 
     @Override
     public void unregisterModule(String moduleId) {
+    }
+
+    public static TestApplication getDefaultAppEditor() {
+        return new TestApplication();
     }
 }

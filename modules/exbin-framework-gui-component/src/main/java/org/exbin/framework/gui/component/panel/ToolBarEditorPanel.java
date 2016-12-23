@@ -30,6 +30,7 @@ import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.framework.gui.undo.api.UndoActions;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 import org.exbin.framework.gui.undo.api.UndoUpdateListener;
+import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -70,7 +71,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
      */
     public static void main(String args[]) {
         JDialog dialog = WindowUtils.createBasicDialog();
-        TestApplication testApplication = WindowUtils.getDefaultAppEditor();
+        TestApplication testApplication = GuiUtilsModule.getDefaultAppEditor();
         testApplication.addModule(GuiUndoModule.MODULE_ID, new GuiUndoModule());
         testApplication.addModule(GuiMenuModule.MODULE_ID, new GuiMenuModule());
         ToolBarEditorPanel toolBarPanel = new ToolBarEditorPanel(testApplication);
