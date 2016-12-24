@@ -28,6 +28,7 @@ import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -54,6 +55,10 @@ public class WindowUtils {
     private static final int BUTTON_CLICK_TIME = 150;
     private static LookAndFeel lookAndFeel = null;
 
+    public static void addHeaderPanel(JDialog dialog, ResourceBundle resourceBundle) {
+        addHeaderPanel(dialog, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
+    }
+
     public static void addHeaderPanel(JDialog dialog, String headerTitle, String headerDescription, String headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
@@ -69,7 +74,9 @@ public class WindowUtils {
                 ((WindowHeaderPanel.WindowHeaderDecorationProvider) frame).setHeaderDecoration(headerPanel);
             }
         }
+        int height = dialog.getHeight() + headerPanel.getPreferredSize().height;
         dialog.getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
+        dialog.setSize(dialog.getWidth(), height);
     }
 
     private WindowUtils() {
@@ -102,11 +109,16 @@ public class WindowUtils {
         });
     }
 
-    public static void invokeDialog(final Component component) {
+    public static JDialog createDialog(final Component component) {
         JDialog dialog = new JDialog();
-        Dimension size = component.getSize();
+        Dimension size = component.getPreferredSize();
         dialog.add(component);
-        dialog.setSize(size);
+        dialog.setSize(size.width + 8, size.height + 24);
+        return dialog;
+    }
+
+    public static void invokeDialog(final Component component) {
+        JDialog dialog = createDialog(component);
         invokeWindow(dialog);
     }
 

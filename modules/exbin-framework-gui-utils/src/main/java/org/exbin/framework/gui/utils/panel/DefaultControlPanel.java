@@ -39,8 +39,8 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
         initComponents();
     }
 
-    public void setHandler(DefaultControlHandler controlListener) {
-        this.handler = controlListener;
+    public void setHandler(DefaultControlHandler handler) {
+        this.handler = handler;
     }
 
     /**

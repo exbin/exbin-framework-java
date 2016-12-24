@@ -26,16 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JDialog;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import org.exbin.deltahex.ScrollBarVisibility;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.deltahex.swing.ColorsGroup;
 import org.exbin.framework.deltahex.DeltaHexModule;
-import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
@@ -43,7 +44,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.2.0 2016/12/21
+ * @version 0.2.0 2016/12/24
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
@@ -553,27 +554,36 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     private void optionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optionsButtonActionPerformed
         cancelSearch();
-        FindHexDialog findDialog = new FindHexDialog(WindowUtils.getFrame(this), true);
-        findDialog.setSelected();
-        findDialog.setLocationRelativeTo(findDialog.getParent());
-        findDialog.setSearchHistory(searchHistory);
-        findDialog.setSearchParameters(searchParameters);
+        final FindHexPanel findHexPanel = new FindHexPanel();
+        findHexPanel.setSelected();
+        findHexPanel.setSearchHistory(searchHistory);
+        findHexPanel.setSearchParameters(searchParameters);
         replaceParameters.setPerformReplace(replaceMode);
-        findDialog.setReplaceParameters(replaceParameters);
-        findDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
-        findDialog.setVisible(true);
-        if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            SearchParameters dialogSearchParameters = findDialog.getSearchParameters();
-            ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(dialogSearchParameters.getCondition());
-            dialogSearchParameters.setFromParameters(dialogSearchParameters);
-            findComboBoxEditorComponent.setItem(dialogSearchParameters.getCondition());
-            updateFindStatus();
+        findHexPanel.setReplaceParameters(replaceParameters);
+        findHexPanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
+        DefaultControlPanel controlPanel = new DefaultControlPanel(findHexPanel.getResourceBundle());
+        final JDialog dialog = WindowUtils.createDialog(WindowUtils.createDialogPanel(findHexPanel, controlPanel));
+        WindowUtils.addHeaderPanel(dialog, findHexPanel.getResourceBundle());
+        controlPanel.setHandler(new DefaultControlHandler() {
+            @Override
+            public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
+                if (actionType == ControlActionType.OK) {
+                    SearchParameters dialogSearchParameters = findHexPanel.getSearchParameters();
+                    ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(dialogSearchParameters.getCondition());
+                    dialogSearchParameters.setFromParameters(dialogSearchParameters);
+                    findComboBoxEditorComponent.setItem(dialogSearchParameters.getCondition());
+                    updateFindStatus();
 
-            ReplaceParameters dialogReplaceParameters = findDialog.getReplaceParameters();
-            switchReplaceMode(dialogReplaceParameters.isPerformReplace());
-            hexPanel.performFind(dialogSearchParameters);
-        }
-        findDialog.detachMenu();
+                    ReplaceParameters dialogReplaceParameters = findHexPanel.getReplaceParameters();
+                    switchReplaceMode(dialogReplaceParameters.isPerformReplace());
+                    hexPanel.performFind(dialogSearchParameters);
+                }
+                findHexPanel.detachMenu();
+                WindowUtils.closeWindow(dialog);
+            }
+        });
+        dialog.setLocationRelativeTo(findHexPanel.getParent());
+        dialog.setVisible(true);
     }//GEN-LAST:event_optionsButtonActionPerformed
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed

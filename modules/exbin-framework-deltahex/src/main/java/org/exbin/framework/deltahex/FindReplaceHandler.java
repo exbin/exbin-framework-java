@@ -22,14 +22,13 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.dialog.FindHexDialog;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Find/replace handler.
  *
- * @version 0.2.0 2016/12/21
+ * @version 0.2.0 2016/12/24
  * @author ExBin Project (http://exbin.org)
  */
 public class FindReplaceHandler {
@@ -102,13 +101,5 @@ public class FindReplaceHandler {
 
     public Action getEditReplaceAction() {
         return editReplaceAction;
-    }
-
-    public void initFindDialog() {
-        if (findDialog == null) {
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            findDialog = new FindHexDialog(frameModule.getFrame(), true);
-            findDialog.setIconImage(application.getApplicationIcon());
-        }
     }
 }
