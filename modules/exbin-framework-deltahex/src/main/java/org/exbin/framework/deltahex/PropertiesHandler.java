@@ -1,17 +1,18 @@
 /*
  * Copyright (C) ExBin Project
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This application or library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This application or library is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.exbin.framework.deltahex;
 
@@ -19,16 +20,21 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.deltahex.dialog.PropertiesDialog;
+import org.exbin.framework.deltahex.panel.PropertiesPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.CloseControlHandler;
+import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 
 /**
  * Properties handler.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.0 2016/12/27
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesHandler {
@@ -54,9 +60,20 @@ public class PropertiesHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                PropertiesDialog dialog = new PropertiesDialog(frameModule.getFrame(), true);
-                dialog.setIconImage(application.getApplicationIcon());
-                dialog.setDocument(editorProvider.getDocument());
+                PropertiesPanel propertiesPanel = new PropertiesPanel();
+                propertiesPanel.setDocument(editorProvider.getDocument());
+                CloseControlPanel controlPanel = new CloseControlPanel();
+                JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
+
+                final JDialog dialog = frameModule.createDialog(dialogPanel);
+                WindowUtils.addHeaderPanel(dialog, propertiesPanel.getResourceBundle());
+                controlPanel.setHandler(new CloseControlHandler() {
+                    @Override
+                    public void controlActionPerformed() {
+                        WindowUtils.closeWindow(dialog);
+                    }
+                });
+                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
                 dialog.setLocationRelativeTo(dialog.getParent());
                 dialog.setVisible(true);
             }

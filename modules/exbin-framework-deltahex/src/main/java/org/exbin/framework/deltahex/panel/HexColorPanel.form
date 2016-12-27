@@ -22,6 +22,7 @@
   <SubComponents>
     <Container class="javax.swing.JSplitPane" name="splitPane">
       <Properties>
+        <Property name="dividerLocation" type="int" value="420"/>
         <Property name="name" type="java.lang.String" value="splitPane" noResource="true"/>
       </Properties>
       <Constraints>
@@ -86,7 +87,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="previewLabel" pref="361" max="32767" attributes="0"/>
+                          <Component id="previewLabel" pref="245" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -105,7 +106,7 @@
                 <Component class="javax.swing.JLabel" name="previewLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="HexColorPanel.previewLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="previewLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="name" type="java.lang.String" value="previewLabel" noResource="true"/>
                   </Properties>
@@ -155,7 +156,7 @@
         <Component class="javax.swing.JButton" name="fillCurrentButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="HexColorPanel.fillCurrentButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="fillCurrentButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="fillCurrentButton" noResource="true"/>
           </Properties>
@@ -166,7 +167,7 @@
         <Component class="javax.swing.JButton" name="fillDefaultButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="HexColorPanel.fillDefaultButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexColorPanel.properties" key="fillDefaultButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="fillDefaultButton" noResource="true"/>
           </Properties>

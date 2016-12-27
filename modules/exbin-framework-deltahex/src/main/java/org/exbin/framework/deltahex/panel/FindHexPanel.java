@@ -1,17 +1,18 @@
 /*
  * Copyright (C) ExBin Project
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This application or library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This application or library is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.exbin.framework.deltahex.panel;
 
@@ -25,13 +26,11 @@ import java.util.ResourceBundle;
 import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import org.exbin.deltahex.ScrollBarVisibility;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.deltahex.swing.ColorsGroup;
 import org.exbin.framework.deltahex.DeltaHexModule;
-import org.exbin.framework.deltahex.dialog.HexMultilineDialog;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
@@ -39,7 +38,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Find text/hexadecimal data panel.
  *
- * @version 0.2.0 2016/12/24
+ * @version 0.2.0 2016/12/27
  * @author ExBin Project (http://exbin.org)
  */
 public class FindHexPanel extends javax.swing.JPanel {
@@ -58,6 +57,7 @@ public class FindHexPanel extends javax.swing.JPanel {
     private List<SearchCondition> replaceHistory = new ArrayList<>();
 
     private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
+    private MultilineEditorListener multilineEditorListener = null;
 
     public FindHexPanel() {
         initComponents();
@@ -392,16 +392,34 @@ public class FindHexPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void findMultilineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findMultilineButtonActionPerformed
-        SearchCondition condition = (SearchCondition) findComboBoxEditor.getItem();
-        HexMultilineDialog multilineDialog = new HexMultilineDialog(WindowUtils.getFrame(this), true);
-        multilineDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
-        multilineDialog.setCondition(condition);
-        multilineDialog.setVisible(true);
-        if (multilineDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            findComboBoxEditorComponent.setItem(multilineDialog.getCondition());
-            updateFindStatus();
+        if (multilineEditorListener != null) {
+            SearchCondition condition = multilineEditorListener.multilineEdit((SearchCondition) findComboBoxEditor.getItem());
+            if (condition != null) {
+                findComboBoxEditorComponent.setItem(condition);
+            }
         }
-        multilineDialog.detachMenu();
+//        SearchCondition condition = (SearchCondition) findComboBoxEditor.getItem();
+//        final HexMultilinePanel multilinePanel = new HexMultilinePanel();
+//        multilinePanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
+//        multilinePanel.setCondition(condition);
+//        DefaultControlPanel controlPanel = new DefaultControlPanel();
+//        JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
+//        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+//        final JDialog dialog = frameModule.createDialog(dialogPanel);
+//        WindowUtils.addHeaderPanel(dialog, multilinePanel.getResourceBundle());
+//        controlPanel.setHandler(new DefaultControlHandler() {
+//            @Override
+//            public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
+//                if (actionType == ControlActionType.OK) {
+//                    findComboBoxEditorComponent.setItem(multilinePanel.getCondition());
+//                    updateFindStatus();
+//                }
+//
+//                WindowUtils.closeWindow(dialog);
+//            }
+//        });
+//        multilinePanel.setVisible(true);
+//        multilinePanel.detachMenu();
     }//GEN-LAST:event_findMultilineButtonActionPerformed
 
     private void searchTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTypeButtonActionPerformed
@@ -435,16 +453,22 @@ public class FindHexPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_replaceTypeButtonActionPerformed
 
     private void replaceMultilineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceMultilineButtonActionPerformed
-        SearchCondition condition = (SearchCondition) replaceComboBoxEditor.getItem();
-        HexMultilineDialog multilineDialog = new HexMultilineDialog(WindowUtils.getFrame(this), true);
-        multilineDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
-        multilineDialog.setCondition(condition);
-        multilineDialog.setVisible(true);
-        if (multilineDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            replaceComboBoxEditorComponent.setItem(multilineDialog.getCondition());
-            updateFindStatus();
+        if (multilineEditorListener != null) {
+            SearchCondition condition = multilineEditorListener.multilineEdit((SearchCondition) replaceComboBoxEditor.getItem());
+            if (condition != null) {
+                replaceComboBoxEditorComponent.setItem(condition);
+            }
         }
-        multilineDialog.detachMenu();
+//        SearchCondition condition = (SearchCondition) replaceComboBoxEditor.getItem();
+//        HexMultilineDialog multilineDialog = new HexMultilineDialog(WindowUtils.getFrame(this), true);
+//        multilineDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
+//        multilineDialog.setCondition(condition);
+//        multilineDialog.setVisible(true);
+//        if (multilineDialog.getDialogOption() == JOptionPane.OK_OPTION) {
+//            replaceComboBoxEditorComponent.setItem(multilineDialog.getCondition());
+//            updateFindStatus();
+//        }
+//        multilineDialog.detachMenu();
     }//GEN-LAST:event_replaceMultilineButtonActionPerformed
 
     private void updateFindStatus() {
@@ -569,5 +593,14 @@ public class FindHexPanel extends javax.swing.JPanel {
         replaceMultilineButton.setEnabled(replaceEnabled);
         replaceAllMatchesCheckBox.setEnabled(replaceEnabled);
         replaceLabel.setEnabled(replaceEnabled);
+    }
+
+    public void setMultilineEditorListener(MultilineEditorListener multilineEditorListener) {
+        this.multilineEditorListener = multilineEditorListener;
+    }
+
+    public static interface MultilineEditorListener {
+
+        SearchCondition multilineEdit(SearchCondition condition);
     }
 }

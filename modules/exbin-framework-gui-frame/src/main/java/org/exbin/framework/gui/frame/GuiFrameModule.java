@@ -16,11 +16,14 @@
  */
 package org.exbin.framework.gui.frame;
 
+import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
@@ -41,7 +44,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of XBUP framework undo/redo module.
  *
- * @version 0.2.0 2016/12/04
+ * @version 0.2.0 2016/12/27
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiFrameModule implements GuiFrameModuleApi {
@@ -278,5 +281,27 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         if (!menuModule.menuGroupExists(GuiFrameModuleApi.VIEW_MENU_ID, VIEW_BARS_GROUP_ID)) {
             menuModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_BARS_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.BELOW));
         }
+    }
+
+    @Override
+    public JDialog createDialog() {
+        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL);
+    }
+
+    @Override
+    public JDialog createDialog(Window parentWindow, Dialog.ModalityType modalityType) {
+        return createDialog(parentWindow, modalityType, null);
+    }
+
+    @Override
+    public JDialog createDialog(JPanel panel) {
+        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, panel);
+    }
+
+    @Override
+    public JDialog createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel) {
+        JDialog dialog = WindowUtils.createDialog(panel, parentWindow, modalityType);
+        dialog.setIconImage(application.getApplicationIcon());
+        return dialog;
     }
 }

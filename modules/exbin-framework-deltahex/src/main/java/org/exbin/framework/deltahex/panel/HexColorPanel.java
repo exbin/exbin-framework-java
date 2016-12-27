@@ -1,17 +1,18 @@
 /*
  * Copyright (C) ExBin Project
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This application or library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This application or library is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.exbin.framework.deltahex.panel;
 
@@ -37,22 +38,25 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Hexadecimal code editor color selection panel.
  *
- * @version 0.1.0 2016/06/23
+ * @version 0.2.0 2016/12/27
  * @author ExBin Project (http://exbin.org)
  */
 public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexColorPanel.class);
-    private final HexColorPanelApi frame;
+    private HexColorPanelApi panelApi;
 
     private final CodeArea previewCodeArea = new CodeArea();
     private final Map<HexColorType, SelectableColor> selectableColors = new HashMap<>();
 
-    public HexColorPanel(HexColorPanelApi frame) {
-        this.frame = frame;
+    public HexColorPanel() {
         initComponents();
         init();
+    }
+
+    public void setPanelApi(HexColorPanelApi panelApi) {
+        this.panelApi = panelApi;
     }
 
     private void init() {
@@ -135,6 +139,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
+        splitPane.setDividerLocation(420);
         splitPane.setName("splitPane"); // NOI18N
 
         colorsScrollPane.setName("colorsScrollPane"); // NOI18N
@@ -151,7 +156,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
         previewHeaderPanel.setName("previewHeaderPanel"); // NOI18N
 
-        previewLabel.setText(resourceBundle.getString("HexColorPanel.previewLabel.text")); // NOI18N
+        previewLabel.setText(resourceBundle.getString("previewLabel.text")); // NOI18N
         previewLabel.setName("previewLabel"); // NOI18N
 
         javax.swing.GroupLayout previewHeaderPanelLayout = new javax.swing.GroupLayout(previewHeaderPanel);
@@ -160,7 +165,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
             previewHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(previewHeaderPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(previewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                .addComponent(previewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
                 .addContainerGap())
         );
         previewHeaderPanelLayout.setVerticalGroup(
@@ -179,7 +184,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
         controlButtonsPanel.setName("controlButtonsPanel"); // NOI18N
 
-        fillCurrentButton.setText(resourceBundle.getString("HexColorPanel.fillCurrentButton.text")); // NOI18N
+        fillCurrentButton.setText(resourceBundle.getString("fillCurrentButton.text")); // NOI18N
         fillCurrentButton.setName("fillCurrentButton"); // NOI18N
         fillCurrentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,7 +192,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
             }
         });
 
-        fillDefaultButton.setText(resourceBundle.getString("HexColorPanel.fillDefaultButton.text")); // NOI18N
+        fillDefaultButton.setText(resourceBundle.getString("fillDefaultButton.text")); // NOI18N
         fillDefaultButton.setName("fillDefaultButton"); // NOI18N
         fillDefaultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -220,13 +225,13 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void fillCurrentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentButtonActionPerformed
-        Map<HexColorType, Color> currentColors = frame.getCurrentTextColors();
+        Map<HexColorType, Color> currentColors = panelApi.getCurrentTextColors();
         setColorsFromMap(currentColors);
         setModified(true);
     }//GEN-LAST:event_fillCurrentButtonActionPerformed
 
     private void fillDefaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultButtonActionPerformed
-        Map<HexColorType, Color> defaultColors = frame.getDefaultTextColors();
+        Map<HexColorType, Color> defaultColors = panelApi.getDefaultTextColors();
         setColorsFromMap(defaultColors);
         setModified(true);
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
@@ -253,7 +258,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        setColorsFromMap(frame.getDefaultTextColors());
+        setColorsFromMap(panelApi.getDefaultTextColors());
         Integer rgb = null;
         for (HexColorType colorType : HexColorType.values()) {
             try {
@@ -276,7 +281,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     @Override
     public void applyPreferencesChanges() {
-        frame.setCurrentTextColors(getMapFromColors());
+        panelApi.setCurrentTextColors(getMapFromColors());
     }
 
     public void setColorsFromMap(Map<HexColorType, Color> colors) {
@@ -308,5 +313,9 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
     // TODO: Workaround for issue with divider position, replace color editors
     public void fixLayout() {
         splitPane.setDividerLocation(getWidth() / 2);
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 }

@@ -16,8 +16,11 @@
  */
 package org.exbin.framework.gui.frame.api;
 
+import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.Window;
 import javax.swing.Action;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -25,7 +28,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 /**
  * Interface for XBUP framework frame module.
  *
- * @version 0.2.0 2016/08/17
+ * @version 0.2.0 2016/12/27
  * @author ExBin Project (http://exbin.org)
  */
 public interface GuiFrameModuleApi extends XBApplicationModule {
@@ -58,6 +61,40 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * Creates and initializes main menu and toolbar.
      */
     void createMainMenu();
+
+    /**
+     * Creates basic dialog and sets it up.
+     *
+     * @return dialog
+     */
+    JDialog createDialog();
+
+    /**
+     * Creates basic dialog and sets it up.
+     *
+     * @param parentWindow parent window
+     * @param modalityType modality type
+     * @return dialog
+     */
+    JDialog createDialog(Window parentWindow, Dialog.ModalityType modalityType);
+
+    /**
+     * Creates basic dialog and sets it up.
+     *
+     * @param panel panel
+     * @return dialog
+     */
+    JDialog createDialog(JPanel panel);
+
+    /**
+     * Creates basic dialog and sets it up.
+     *
+     * @param parentWindow parent window
+     * @param modalityType modality type
+     * @param panel panel
+     * @return dialog
+     */
+    JDialog createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel);
 
     /**
      * Returns frame instance.

@@ -1,21 +1,23 @@
 /*
  * Copyright (C) ExBin Project
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This application or library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This application or library is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.deltahex.dialog;
+package org.exbin.framework.deltahex.panel;
 
 import java.net.URI;
+import java.util.ResourceBundle;
 import javax.swing.DefaultListModel;
 import org.exbin.deltahex.delta.DataSegment;
 import org.exbin.deltahex.delta.DeltaDocument;
@@ -23,31 +25,20 @@ import org.exbin.deltahex.delta.FileSegment;
 import org.exbin.deltahex.delta.MemorySegment;
 import org.exbin.deltahex.delta.list.DefaultDoublyLinkedList;
 import org.exbin.deltahex.swing.CodeArea;
-import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * File properties dialog.
  *
- * @version 0.1.0 2016/09/21
+ * @version 0.2.0 2016/12/27
  * @author ExBin Project (http://exbin.org)
  */
-public class PropertiesDialog extends javax.swing.JDialog {
+public class PropertiesPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(PropertiesDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(PropertiesPanel.class);
 
-    public PropertiesDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public PropertiesPanel() {
         initComponents();
-        init();
-    }
-
-    private void init() {
-        WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
-        WindowUtils.assignGlobalKeyListener(this, closeButton);
-        pack();
     }
 
     /**
@@ -59,7 +50,6 @@ public class PropertiesDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainPanel = new javax.swing.JPanel();
         fileNameLabel = new javax.swing.JLabel();
         fileNameTextField = new javax.swing.JTextField();
         fileSizeLabel = new javax.swing.JLabel();
@@ -67,36 +57,18 @@ public class PropertiesDialog extends javax.swing.JDialog {
         structurePanel = new javax.swing.JPanel();
         structureScrollPane = new javax.swing.JScrollPane();
         structureList = new javax.swing.JList<>();
-        controlPanel = new javax.swing.JPanel();
-        closeButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(resourceBundle.getString("PropertiesDialog.title")); // NOI18N
-        setLocationByPlatform(true);
-        setModal(true);
-        setName("Form"); // NOI18N
-
-        mainPanel.setName("mainPanel"); // NOI18N
 
         fileNameLabel.setText(resourceBundle.getString("fileNameLabel.text")); // NOI18N
-        fileNameLabel.setName("fileNameLabel"); // NOI18N
 
         fileNameTextField.setEditable(false);
-        fileNameTextField.setName("fileNameTextField"); // NOI18N
 
         fileSizeLabel.setText(resourceBundle.getString("fileSizeLabel.text")); // NOI18N
-        fileSizeLabel.setName("fileSizeLabel"); // NOI18N
 
         fileSizeTextField.setEditable(false);
-        fileSizeTextField.setName("fileSizeTextField"); // NOI18N
 
         structurePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("structurePanel.border.title"))); // NOI18N
-        structurePanel.setName("structurePanel"); // NOI18N
-
-        structureScrollPane.setName("structureScrollPane"); // NOI18N
 
         structureList.setModel(new DefaultListModel<String>());
-        structureList.setName("structureList"); // NOI18N
         structureScrollPane.setViewportView(structureList);
 
         javax.swing.GroupLayout structurePanelLayout = new javax.swing.GroupLayout(structurePanel);
@@ -111,33 +83,33 @@ public class PropertiesDialog extends javax.swing.JDialog {
         structurePanelLayout.setVerticalGroup(
             structurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(structurePanelLayout.createSequentialGroup()
-                .addComponent(structureScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                .addComponent(structureScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(fileNameLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(structurePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(fileSizeTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(fileSizeLabel)
-                                .addGap(0, 343, Short.MAX_VALUE))
+                                .addGap(0, 297, Short.MAX_VALUE))
                             .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING))
                         .addContainerGap())))
         );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(fileNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -150,49 +122,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
                 .addComponent(structurePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
-
-        controlPanel.setName("controlPanel"); // NOI18N
-
-        closeButton.setText(resourceBundle.getString("closeButton.text")); // NOI18N
-        closeButton.setName("closeButton"); // NOI18N
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
-        controlPanel.setLayout(controlPanelLayout);
-        controlPanelLayout.setHorizontalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(371, Short.MAX_VALUE)
-                .addComponent(closeButton)
-                .addContainerGap())
-        );
-        controlPanelLayout.setVerticalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(closeButton)
-                .addContainerGap())
-        );
-
-        getContentPane().add(controlPanel, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        WindowUtils.closeWindow(this);
-    }//GEN-LAST:event_closeButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        WindowUtils.invokeWindow(new PropertiesDialog(new javax.swing.JFrame(), true));
-    }
 
     public void setDocument(HexPanel panel) {
         URI fileUri = panel.getFileUri();
@@ -215,17 +145,17 @@ public class PropertiesDialog extends javax.swing.JDialog {
         }
     }
 
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton closeButton;
-    private javax.swing.JPanel controlPanel;
     private javax.swing.JLabel fileNameLabel;
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JLabel fileSizeLabel;
     private javax.swing.JTextField fileSizeTextField;
-    private javax.swing.JPanel mainPanel;
     private javax.swing.JList<String> structureList;
     private javax.swing.JPanel structurePanel;
     private javax.swing.JScrollPane structureScrollPane;
     // End of variables declaration//GEN-END:variables
-
 }

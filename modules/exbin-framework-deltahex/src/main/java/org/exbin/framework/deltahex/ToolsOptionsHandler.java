@@ -1,17 +1,18 @@
 /*
  * Copyright (C) ExBin Project
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This application or library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This application or library is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.exbin.framework.deltahex;
 
@@ -21,19 +22,25 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.deltahex.dialog.HexColorDialog;
+import org.exbin.framework.deltahex.panel.HexColorPanel;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
 import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
 /**
  * Tools options action handler.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.0 2016/12/27
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolsOptionsHandler {
@@ -71,7 +78,7 @@ public class ToolsOptionsHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                HexColorPanelApi textColorPanelFrame = new HexColorPanelApi() {
+                final HexColorPanelApi textColorPanelFrame = new HexColorPanelApi() {
                     @Override
                     public Map<HexColorType, Color> getCurrentTextColors() {
                         return editorProvider.getCurrentColors();
@@ -87,10 +94,27 @@ public class ToolsOptionsHandler {
                         editorProvider.setCurrentColors(colors);
                     }
                 };
-                HexColorDialog dialog = new HexColorDialog(frameModule.getFrame(), textColorPanelFrame, true);
-                dialog.setIconImage(application.getApplicationIcon());
+
+                final HexColorPanel hexColorPanel = new HexColorPanel();
+                hexColorPanel.setPanelApi(textColorPanelFrame);
+                DefaultControlPanel controlPanel = new DefaultControlPanel(hexColorPanel.getResourceBundle());
+                JPanel dialogPanel = WindowUtils.createDialogPanel(hexColorPanel, controlPanel);
+
+                final JDialog dialog = frameModule.createDialog(dialogPanel);
+                WindowUtils.addHeaderPanel(dialog, hexColorPanel.getResourceBundle());
+                controlPanel.setHandler(new DefaultControlHandler() {
+                    @Override
+                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
+                        if (actionType == ControlActionType.OK) {
+                            textColorPanelFrame.setCurrentTextColors(hexColorPanel.getMapFromColors());
+                        }
+
+                        WindowUtils.closeWindow(dialog);
+                    }
+                });
+                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
                 dialog.setLocationRelativeTo(dialog.getParent());
-                dialog.showDialog();
+                dialog.setVisible(true);
             }
         };
         ActionUtils.setupAction(toolsSetColorAction, resourceBundle, "toolsSetColorAction");

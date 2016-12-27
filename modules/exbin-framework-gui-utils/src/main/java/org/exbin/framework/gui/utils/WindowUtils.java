@@ -19,6 +19,7 @@ package org.exbin.framework.gui.utils;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
@@ -47,7 +48,7 @@ import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 /**
  * Utility static methods usable for windows and dialogs.
  *
- * @version 0.2.0 2016/12/22
+ * @version 0.2.0 2016/12/27
  * @author ExBin Project (http://exbin.org)
  */
 public class WindowUtils {
@@ -107,6 +108,14 @@ public class WindowUtils {
                 window.setVisible(true);
             }
         });
+    }
+
+    public static JDialog createDialog(final Component component, Window parent, Dialog.ModalityType modalityType) {
+        JDialog dialog = new JDialog(parent, modalityType);
+        Dimension size = component.getPreferredSize();
+        dialog.add(component);
+        dialog.setSize(size.width + 8, size.height + 24);
+        return dialog;
     }
 
     public static JDialog createDialog(final Component component) {
