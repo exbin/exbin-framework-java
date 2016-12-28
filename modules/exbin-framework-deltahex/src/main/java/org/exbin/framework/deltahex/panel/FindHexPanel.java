@@ -398,28 +398,6 @@ public class FindHexPanel extends javax.swing.JPanel {
                 findComboBoxEditorComponent.setItem(condition);
             }
         }
-//        SearchCondition condition = (SearchCondition) findComboBoxEditor.getItem();
-//        final HexMultilinePanel multilinePanel = new HexMultilinePanel();
-//        multilinePanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
-//        multilinePanel.setCondition(condition);
-//        DefaultControlPanel controlPanel = new DefaultControlPanel();
-//        JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
-//        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-//        final JDialog dialog = frameModule.createDialog(dialogPanel);
-//        WindowUtils.addHeaderPanel(dialog, multilinePanel.getResourceBundle());
-//        controlPanel.setHandler(new DefaultControlHandler() {
-//            @Override
-//            public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-//                if (actionType == ControlActionType.OK) {
-//                    findComboBoxEditorComponent.setItem(multilinePanel.getCondition());
-//                    updateFindStatus();
-//                }
-//
-//                WindowUtils.closeWindow(dialog);
-//            }
-//        });
-//        multilinePanel.setVisible(true);
-//        multilinePanel.detachMenu();
     }//GEN-LAST:event_findMultilineButtonActionPerformed
 
     private void searchTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTypeButtonActionPerformed
@@ -459,16 +437,6 @@ public class FindHexPanel extends javax.swing.JPanel {
                 replaceComboBoxEditorComponent.setItem(condition);
             }
         }
-//        SearchCondition condition = (SearchCondition) replaceComboBoxEditor.getItem();
-//        HexMultilineDialog multilineDialog = new HexMultilineDialog(WindowUtils.getFrame(this), true);
-//        multilineDialog.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
-//        multilineDialog.setCondition(condition);
-//        multilineDialog.setVisible(true);
-//        if (multilineDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-//            replaceComboBoxEditorComponent.setItem(multilineDialog.getCondition());
-//            updateFindStatus();
-//        }
-//        multilineDialog.detachMenu();
     }//GEN-LAST:event_replaceMultilineButtonActionPerformed
 
     private void updateFindStatus() {

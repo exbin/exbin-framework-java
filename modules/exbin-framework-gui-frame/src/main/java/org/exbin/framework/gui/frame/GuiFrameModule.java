@@ -44,7 +44,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of XBUP framework undo/redo module.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2016/12/28
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiFrameModule implements GuiFrameModuleApi {
@@ -303,5 +303,10 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         JDialog dialog = WindowUtils.createDialog(panel, parentWindow, modalityType);
         dialog.setIconImage(application.getApplicationIcon());
         return dialog;
+    }
+
+    @Override
+    public void setDialogTitle(JDialog dialog, ResourceBundle resourceBundle) {
+        dialog.setTitle(resourceBundle.getString("Form.title"));
     }
 }

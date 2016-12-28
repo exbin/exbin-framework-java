@@ -19,6 +19,7 @@ package org.exbin.framework.gui.frame.api;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Window;
+import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -160,4 +161,6 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
     void loadFramePosition();
 
     void saveFramePosition();
+
+    public void setDialogTitle(JDialog dialog, ResourceBundle resourceBundle);
 }

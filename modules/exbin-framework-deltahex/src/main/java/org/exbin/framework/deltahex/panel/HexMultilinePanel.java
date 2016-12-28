@@ -56,16 +56,8 @@ public class HexMultilinePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setPreferredSize(new java.awt.Dimension(400, 300));
+        setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -105,6 +97,7 @@ public class HexMultilinePanel extends javax.swing.JPanel {
                 codeArea.setComponentPopupMenu(hexCodePopupMenuHandler.createPopupMenu(codeArea, POPUP_MENU_POSTFIX));
             }
         }
+        revalidate();
     }
 
     public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {

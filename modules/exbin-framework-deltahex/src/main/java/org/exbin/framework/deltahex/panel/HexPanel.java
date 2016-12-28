@@ -68,6 +68,7 @@ import org.exbin.deltahex.operation.swing.CodeAreaUndoHandler;
 import org.exbin.deltahex.operation.swing.CodeCommandHandler;
 import org.exbin.deltahex.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.deltahex.swing.CodeArea;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.HexEditorProvider;
 import org.exbin.framework.deltahex.HexStatusApi;
@@ -85,7 +86,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2016/12/28
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi {
@@ -204,6 +205,10 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 hideFindPanel();
             }
         });
+    }
+
+    public void setApplication(XBApplication application) {
+        hexSearchPanel.setApplication(application);
     }
 
     public void hideFindPanel() {

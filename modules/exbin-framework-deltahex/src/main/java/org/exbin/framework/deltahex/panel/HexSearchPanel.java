@@ -19,6 +19,7 @@ package org.exbin.framework.deltahex.panel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -29,11 +30,14 @@ import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JDialog;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import org.exbin.deltahex.ScrollBarVisibility;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.deltahex.swing.ColorsGroup;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.DeltaHexModule;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
@@ -45,7 +49,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2016/12/28
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
@@ -71,6 +75,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
     private ClosePanelListener closePanelListener = null;
     private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexSearchPanel.class);
+    private XBApplication application;
 
     public HexSearchPanel(HexPanel hexPanel) {
         initComponents();
@@ -555,6 +560,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     private void optionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optionsButtonActionPerformed
         cancelSearch();
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         final FindHexPanel findHexPanel = new FindHexPanel();
         findHexPanel.setSelected();
         findHexPanel.setSearchHistory(searchHistory);
@@ -563,8 +569,45 @@ public class HexSearchPanel extends javax.swing.JPanel {
         findHexPanel.setReplaceParameters(replaceParameters);
         findHexPanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
         DefaultControlPanel controlPanel = new DefaultControlPanel(findHexPanel.getResourceBundle());
-        final JDialog dialog = WindowUtils.createDialog(WindowUtils.createDialogPanel(findHexPanel, controlPanel));
+        final JDialog dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findHexPanel, controlPanel));
+        frameModule.setDialogTitle(dialog, findHexPanel.getResourceBundle());
         WindowUtils.addHeaderPanel(dialog, findHexPanel.getResourceBundle());
+        findHexPanel.setMultilineEditorListener(new FindHexPanel.MultilineEditorListener() {
+            @Override
+            public SearchCondition multilineEdit(SearchCondition condition) {
+                final HexMultilinePanel multilinePanel = new HexMultilinePanel();
+                multilinePanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
+                multilinePanel.setCondition(condition);
+                DefaultControlPanel controlPanel = new DefaultControlPanel();
+                JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
+                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                final JDialog multilineDialog = frameModule.createDialog(dialog, Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
+                WindowUtils.addHeaderPanel(multilineDialog, multilinePanel.getResourceBundle());
+                frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
+                final SearchConditionResult result = new SearchConditionResult();
+                controlPanel.setHandler(new DefaultControlHandler() {
+                    @Override
+                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
+                        if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                            result.searchCondition = multilinePanel.getCondition();
+                            updateFindStatus();
+                        }
+
+                        WindowUtils.closeWindow(multilineDialog);
+                    }
+                });
+                WindowUtils.assignGlobalKeyListener(multilineDialog, controlPanel.createOkCancelListener());
+                multilineDialog.setLocationRelativeTo(dialog);
+                multilineDialog.setVisible(true);
+                multilinePanel.detachMenu();
+                return result.searchCondition;
+            }
+
+            class SearchConditionResult {
+
+                SearchCondition searchCondition = null;
+            }
+        });
         controlPanel.setHandler(new DefaultControlHandler() {
             @Override
             public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
@@ -584,7 +627,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
             }
         });
         WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-        dialog.setLocationRelativeTo(findHexPanel.getParent());
+        dialog.setLocationRelativeTo(frameModule.getFrame());
         dialog.setVisible(true);
     }//GEN-LAST:event_optionsButtonActionPerformed
 
@@ -736,6 +779,10 @@ public class HexSearchPanel extends javax.swing.JPanel {
         }
         hexPanel.updatePosition();
         performSearch(500);
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     private void performSearch() {

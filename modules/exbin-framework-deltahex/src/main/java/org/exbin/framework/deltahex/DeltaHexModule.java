@@ -70,7 +70,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2016/12/28
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -144,6 +144,7 @@ public class DeltaHexModule implements XBApplicationModule {
             editorProvider = panel;
 
             panel.setPopupMenu(createPopupMenu(panel.getId()));
+            panel.setApplication(application);
             panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
             panel.setGoToLineAction(getGoToLineHandler().getGoToLineAction());
             panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
