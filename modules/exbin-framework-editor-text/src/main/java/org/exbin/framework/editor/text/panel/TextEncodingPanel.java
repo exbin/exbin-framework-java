@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.editor.text.panel;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -48,7 +47,6 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingPanel.class);
     private final TextEncodingPanelApi frame;
-    private Image iconImage;
 
     public TextEncodingPanel(TextEncodingPanelApi frame) {
         this.frame = frame;
@@ -219,7 +217,6 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
         addEncodingDialog.setUsedEncodings(((EncodingsListModel) encodingsList.getModel()).getCharsets());
         addEncodingDialog.setLocationRelativeTo(addEncodingDialog.getParent());
         addEncodingDialog.setVisible(true);
-        addEncodingDialog.setIconImage(iconImage);
         if (addEncodingDialog.getDialogOption() == JOptionPane.OK_OPTION) {
             ((EncodingsListModel) encodingsList.getModel()).addAll(addEncodingDialog.getEncodings(), encodingsList.isSelectionEmpty() ? -1 : encodingsList.getSelectedIndex());
             wasModified();
@@ -343,13 +340,6 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
         if (modifiedOptionListener != null) {
             modifiedOptionListener.wasModified();
         }
-    }
-
-    /**
-     * @param imageIcon the imageIcon to set
-     */
-    public void setIconImage(Image imageIcon) {
-        this.iconImage = imageIcon;
     }
 
     private class EncodingsListModel extends AbstractListModel {

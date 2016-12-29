@@ -207,18 +207,22 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         }
 
         String selectedTheme = themes.get(themeComboBox.getSelectedIndex());
-        if (null != selectedTheme) {
-            switch (selectedTheme) {
-                case "":
-                    selectedTheme = null; //UIManager.getLookAndFeelDefaults().LookAndFeel().""; // TODO Get default lookAndFeel
-                    break;
-                case "SYSTEM":
-                    selectedTheme = UIManager.getSystemLookAndFeelClassName();
-                    break;
-            }
-        }
-
         if (selectedTheme != null) {
+            if (selectedTheme.isEmpty()) {
+                String osName = System.getProperty("os.name").toLowerCase();
+                if (!osName.startsWith("windows") && osName.startsWith("max")) {
+                    // Try "GTK+" on linux
+                    selectedTheme = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+                    try {
+                        UIManager.setLookAndFeel(selectedTheme);
+                        return;
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                        selectedTheme = UIManager.getSystemLookAndFeelClassName();
+                    }
+                }
+                selectedTheme = UIManager.getSystemLookAndFeelClassName();
+            }
+
             try {
                 UIManager.setLookAndFeel(selectedTheme);
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
@@ -261,7 +265,8 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
     private void init() {
         themes = new ArrayList<>();
         themes.add("");
-        if (!"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName())) {
+        boolean extraCrossPlatformLAF = !"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName());
+        if (extraCrossPlatformLAF) {
             themes.add(UIManager.getCrossPlatformLookAndFeelClassName());
         }
         themes.add("SYSTEM");
@@ -269,7 +274,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         themes.add("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
         themeNames = new ArrayList<>();
         themeNames.add(resourceBundle.getString("MainOptionsPanel.defaultTheme"));
-        if (!"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName())) {
+        if (extraCrossPlatformLAF) {
             themeNames.add(resourceBundle.getString("MainOptionsPanel.crossPlatformTheme"));
         }
         themeNames.add(resourceBundle.getString("MainOptionsPanel.systemTheme"));

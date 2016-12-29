@@ -63,7 +63,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
         positionPopupMenu.setName("positionPopupMenu"); // NOI18N
 
-        positionCopyMenuItem.setText(resourceBundle.getString("HexStatusPanel.positionCopyMenuItem.text")); // NOI18N
+        positionCopyMenuItem.setText(resourceBundle.getString("positionCopyMenuItem.text")); // NOI18N
         positionCopyMenuItem.setName("positionCopyMenuItem"); // NOI18N
         positionCopyMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -72,7 +72,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
         });
         positionPopupMenu.add(positionCopyMenuItem);
 
-        positionGoToMenuItem.setText(resourceBundle.getString("HexStatusPanel.positionGoToMenuItem.text")); // NOI18N
+        positionGoToMenuItem.setText(resourceBundle.getString("positionGoToMenuItem.text")); // NOI18N
         positionGoToMenuItem.setName("positionGoToMenuItem"); // NOI18N
         positionGoToMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,7 +83,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
         documentSizePopupMenu.setName("documentSizePopupMenu"); // NOI18N
 
-        documentSizeCopyMenuItem.setText(resourceBundle.getString("HexStatusPanel.documentSizeCopyMenuItem.text")); // NOI18N
+        documentSizeCopyMenuItem.setText(resourceBundle.getString("documentSizeCopyMenuItem.text")); // NOI18N
         documentSizeCopyMenuItem.setName("documentSizeCopyMenuItem"); // NOI18N
         documentSizeCopyMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,21 +95,21 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
         setName("Form"); // NOI18N
 
         memoryModeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        memoryModeLabel.setText(resourceBundle.getString("HexStatusPanel.memoryModeLabel.text")); // NOI18N
-        memoryModeLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.memoryModeLabel.toolTipText")); // NOI18N
+        memoryModeLabel.setText(resourceBundle.getString("memoryModeLabel.text")); // NOI18N
+        memoryModeLabel.setToolTipText(resourceBundle.getString("memoryModeLabel.toolTipText")); // NOI18N
         memoryModeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         memoryModeLabel.setName("memoryModeLabel"); // NOI18N
 
         documentSizeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         documentSizeLabel.setText("0 (0)");
-        documentSizeLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.documentSizeLabel.toolTipText")); // NOI18N
+        documentSizeLabel.setToolTipText(resourceBundle.getString("documentSizeLabel.toolTipText")); // NOI18N
         documentSizeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         documentSizeLabel.setComponentPopupMenu(documentSizePopupMenu);
         documentSizeLabel.setName("documentSizeLabel"); // NOI18N
 
         positionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         positionLabel.setText("0:0");
-        positionLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.positionLabel.toolTipText")); // NOI18N
+        positionLabel.setToolTipText(resourceBundle.getString("positionLabel.toolTipText")); // NOI18N
         positionLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         positionLabel.setComponentPopupMenu(positionPopupMenu);
         positionLabel.setName("positionLabel"); // NOI18N
@@ -121,7 +121,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
         editationModeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         editationModeLabel.setText("OVR");
-        editationModeLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.editationModeLabel.toolTipText")); // NOI18N
+        editationModeLabel.setToolTipText(resourceBundle.getString("editationModeLabel.toolTipText")); // NOI18N
         editationModeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         editationModeLabel.setName("editationModeLabel"); // NOI18N
         editationModeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -131,8 +131,8 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
         });
 
         encodingLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        encodingLabel.setText(resourceBundle.getString("HexStatusPanel.encodingLabel.text")); // NOI18N
-        encodingLabel.setToolTipText(resourceBundle.getString("HexStatusPanel.encodingLabel.toolTipText")); // NOI18N
+        encodingLabel.setText(resourceBundle.getString("encodingLabel.text")); // NOI18N
+        encodingLabel.setToolTipText(resourceBundle.getString("encodingLabel.toolTipText")); // NOI18N
         encodingLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         encodingLabel.setName("encodingLabel"); // NOI18N
         encodingLabel.addMouseListener(new java.awt.event.MouseAdapter() {

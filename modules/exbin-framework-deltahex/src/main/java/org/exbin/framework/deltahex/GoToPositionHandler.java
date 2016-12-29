@@ -35,7 +35,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 /**
  * Go to line handler.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2016/12/29
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToPositionHandler {
@@ -72,6 +72,7 @@ public class GoToPositionHandler {
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     final JDialog dialog = frameModule.createDialog(dialogPanel);
                     WindowUtils.addHeaderPanel(dialog, goToPanel.getResourceBundle());
+                    frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
                     controlPanel.setHandler(new DefaultControlHandler() {
                         @Override
                         public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {

@@ -42,16 +42,17 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework undo/redo module.
+ * Implementation of XBUP framework frame module.
  *
- * @version 0.2.0 2016/12/28
+ * @version 0.2.0 2016/12/29
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiFrameModule implements GuiFrameModuleApi {
 
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";
     public static final String VIEW_BARS_GROUP_ID = MODULE_ID + ".view";
-    public static final String PREFERENCS_FRAME_PREFIX = "mainFrame.";
+    public static final String PREFERENCES_FRAME_PREFIX = "mainFrame.";
+    public static final String PREFERENCES_DIALOG_TITLE = "Dialog.title";
 
     private XBApplication application;
     private ResourceBundle resourceBundle;
@@ -111,8 +112,8 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     public void loadFramePosition() {
         getFrameHandler();
         WindowPosition framePosition = new WindowPosition();
-        if (framePosition.preferencesExists(application.getAppPreferences(), PREFERENCS_FRAME_PREFIX)) {
-            framePosition.loadFromPreferences(application.getAppPreferences(), PREFERENCS_FRAME_PREFIX);
+        if (framePosition.preferencesExists(application.getAppPreferences(), PREFERENCES_FRAME_PREFIX)) {
+            framePosition.loadFromPreferences(application.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
             WindowUtils.setWindowPosition(frame, framePosition);
         }
     }
@@ -120,7 +121,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     @Override
     public void saveFramePosition() {
         WindowPosition windowPosition = WindowUtils.getWindowPosition(frame);
-        windowPosition.saveToPreferences(application.getAppPreferences(), PREFERENCS_FRAME_PREFIX);
+        windowPosition.saveToPreferences(application.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
     }
 
     @Override
@@ -307,6 +308,6 @@ public class GuiFrameModule implements GuiFrameModuleApi {
 
     @Override
     public void setDialogTitle(JDialog dialog, ResourceBundle resourceBundle) {
-        dialog.setTitle(resourceBundle.getString("Form.title"));
+        dialog.setTitle(resourceBundle.getString(PREFERENCES_DIALOG_TITLE));
     }
 }

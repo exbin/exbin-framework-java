@@ -102,6 +102,7 @@ public class ToolsOptionsHandler {
 
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
                 WindowUtils.addHeaderPanel(dialog, hexColorPanel.getResourceBundle());
+                frameModule.setDialogTitle(dialog, hexColorPanel.getResourceBundle());
                 controlPanel.setHandler(new DefaultControlHandler() {
                     @Override
                     public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {

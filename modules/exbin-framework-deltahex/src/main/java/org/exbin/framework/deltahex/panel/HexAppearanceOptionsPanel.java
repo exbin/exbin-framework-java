@@ -61,7 +61,7 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
         setName("Form"); // NOI18N
 
         lineWrapCheckBox.setSelected(true);
-        lineWrapCheckBox.setText(resourceBundle.getString("HexAppearanceOptionsPanel.lineWrapCheckBox.text")); // NOI18N
+        lineWrapCheckBox.setText(resourceBundle.getString("lineWrapCheckBox.text")); // NOI18N
         lineWrapCheckBox.setName("lineWrapCheckBox"); // NOI18N
         lineWrapCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -69,7 +69,7 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
             }
         });
 
-        multiTabModeCheckBox.setText(resourceBundle.getString("HexAppearanceOptionsPanel.multiTabModeCheckBox.text")); // NOI18N
+        multiTabModeCheckBox.setText(resourceBundle.getString("multiTabModeCheckBox.text")); // NOI18N
         multiTabModeCheckBox.setName("multiTabModeCheckBox"); // NOI18N
         multiTabModeCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -77,7 +77,7 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
             }
         });
 
-        deltaModeCheckBox.setText(resourceBundle.getString("HexAppearanceOptionsPanel.deltaModeCheckBox.text")); // NOI18N
+        deltaModeCheckBox.setText(resourceBundle.getString("deltaModeCheckBox.text")); // NOI18N
         deltaModeCheckBox.setName("deltaModeCheckBox"); // NOI18N
         deltaModeCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

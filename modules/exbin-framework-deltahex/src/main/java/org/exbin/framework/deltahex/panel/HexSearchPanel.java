@@ -49,7 +49,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.2.0 2016/12/28
+ * @version 0.2.0 2016/12/29
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
@@ -316,7 +316,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
         findPanel.setName("findPanel"); // NOI18N
 
-        findLabel.setText(resourceBundle.getString("HexSearchPanel.findLabel.text")); // NOI18N
+        findLabel.setText(resourceBundle.getString("findLabel.text")); // NOI18N
         findLabel.setName("findLabel"); // NOI18N
 
         findTypeToolBar.setBorder(null);
@@ -326,7 +326,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         findTypeToolBar.setName("findTypeToolBar"); // NOI18N
 
         findTypeButton.setText("T");
-        findTypeButton.setToolTipText(resourceBundle.getString("HexSearchPanel.findTypeButton.toolTipText")); // NOI18N
+        findTypeButton.setToolTipText(resourceBundle.getString("findTypeButton.toolTipText")); // NOI18N
         findTypeButton.setFocusable(false);
         findTypeButton.setMaximumSize(new java.awt.Dimension(27, 27));
         findTypeButton.setMinimumSize(new java.awt.Dimension(27, 27));
@@ -377,6 +377,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
         matchCaseToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/case_sensitive.gif"))); // NOI18N
         matchCaseToggleButton.setSelected(true);
+        matchCaseToggleButton.setToolTipText(resourceBundle.getString("matchCaseToggleButton.toolTipText")); // NOI18N
         matchCaseToggleButton.setFocusable(false);
         matchCaseToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         matchCaseToggleButton.setName("matchCaseToggleButton"); // NOI18N
@@ -390,6 +391,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
         multipleMatchesToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/mark_occurrences.png"))); // NOI18N
         multipleMatchesToggleButton.setSelected(true);
+        multipleMatchesToggleButton.setToolTipText(resourceBundle.getString("multipleMatchesToggleButton.toolTipText")); // NOI18N
         multipleMatchesToggleButton.setFocusable(false);
         multipleMatchesToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         multipleMatchesToggleButton.setName("multipleMatchesToggleButton"); // NOI18N
@@ -404,7 +406,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         separator1.setName("separator1"); // NOI18N
         findToolBar.add(separator1);
 
-        optionsButton.setText(resourceBundle.getString("HexSearchPanel.optionsButton.text")); // NOI18N
+        optionsButton.setText(resourceBundle.getString("optionsButton.text")); // NOI18N
         optionsButton.setFocusable(false);
         optionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         optionsButton.setName("optionsButton"); // NOI18N
@@ -425,6 +427,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         closeToolBar.setName("closeToolBar"); // NOI18N
 
         closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/deltahex/resources/icons/open_icon_library/icons/png/16x16/actions/dialog-cancel-3.png"))); // NOI18N
+        closeButton.setToolTipText(resourceBundle.getString("closeButton.toolTipText")); // NOI18N
         closeButton.setFocusable(false);
         closeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         closeButton.setName("closeButton"); // NOI18N
@@ -470,7 +473,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         replacePanel.setName("replacePanel"); // NOI18N
         replacePanel.setPreferredSize(new java.awt.Dimension(1015, 28));
 
-        replaceLabel.setText(resourceBundle.getString("HexSearchPanel.replaceLabel.text")); // NOI18N
+        replaceLabel.setText(resourceBundle.getString("replaceLabel.text")); // NOI18N
         replaceLabel.setName("replaceLabel"); // NOI18N
 
         replaceTypeToolBar.setBorder(null);
@@ -480,7 +483,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         replaceTypeToolBar.setName("replaceTypeToolBar"); // NOI18N
 
         replaceTypeButton.setText(resourceBundle.getString("HexSearchPanel.replaceTypeButton.text")); // NOI18N
-        replaceTypeButton.setToolTipText(resourceBundle.getString("HexSearchPanel.replaceTypeButton.toolTipText")); // NOI18N
+        replaceTypeButton.setToolTipText(resourceBundle.getString("replaceTypeButton.toolTipText")); // NOI18N
         replaceTypeButton.setDefaultCapable(false);
         replaceTypeButton.setFocusable(false);
         replaceTypeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

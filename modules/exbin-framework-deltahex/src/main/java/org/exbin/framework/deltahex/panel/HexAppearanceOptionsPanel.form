@@ -49,7 +49,7 @@
       <Properties>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexAppearanceOptionsPanel.properties" key="HexAppearanceOptionsPanel.lineWrapCheckBox.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexAppearanceOptionsPanel.properties" key="lineWrapCheckBox.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
         <Property name="name" type="java.lang.String" value="lineWrapCheckBox" noResource="true"/>
       </Properties>
@@ -60,7 +60,7 @@
     <Component class="javax.swing.JCheckBox" name="multiTabModeCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexAppearanceOptionsPanel.properties" key="HexAppearanceOptionsPanel.multiTabModeCheckBox.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexAppearanceOptionsPanel.properties" key="multiTabModeCheckBox.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
         <Property name="name" type="java.lang.String" value="multiTabModeCheckBox" noResource="true"/>
       </Properties>
@@ -71,7 +71,7 @@
     <Component class="javax.swing.JCheckBox" name="deltaModeCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexAppearanceOptionsPanel.properties" key="HexAppearanceOptionsPanel.deltaModeCheckBox.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexAppearanceOptionsPanel.properties" key="deltaModeCheckBox.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
         <Property name="name" type="java.lang.String" value="deltaModeCheckBox" noResource="true"/>
       </Properties>

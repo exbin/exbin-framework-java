@@ -67,6 +67,7 @@ public class PropertiesHandler {
 
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
                 WindowUtils.addHeaderPanel(dialog, propertiesPanel.getResourceBundle());
+                frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
                 controlPanel.setHandler(new CloseControlHandler() {
                     @Override
                     public void controlActionPerformed() {
