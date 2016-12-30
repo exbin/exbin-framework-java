@@ -16,34 +16,37 @@
  */
 package org.exbin.framework.editor.text;
 
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JOptionPane;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.text.dialog.FindTextDialog;
+import org.exbin.framework.editor.text.panel.FindTextPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
 /**
  * Find/replace handler.
  *
- * @version 0.2.0 2016/01/20
+ * @version 0.2.0 2016/12/30
  * @author ExBin Project (http://exbin.org)
  */
 public class FindReplaceHandler {
 
     private final EditorProvider editorProvider;
     private final XBApplication application;
-    private ResourceBundle resourceBundle;
+    private final ResourceBundle resourceBundle;
 
     private int metaMask;
-
-    private FindTextDialog findDialog = null;
 
     private Action editFindAction;
     private Action editFindAgainAction;
@@ -61,16 +64,7 @@ public class FindReplaceHandler {
         editFindAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                initFindDialog();
-                findDialog.setShallReplace(false);
-                findDialog.setSelected();
-                findDialog.setLocationRelativeTo(findDialog.getParent());
-                findDialog.setVisible(true);
-                if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                    if (editorProvider instanceof TextPanel) {
-                        ((TextPanel) editorProvider).findText(findDialog);
-                    }
-                }
+                showFindDialog(false);
             }
         };
         ActionUtils.setupAction(editFindAction, resourceBundle, "editFindAction");
@@ -80,11 +74,7 @@ public class FindReplaceHandler {
         editFindAgainAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                initFindDialog();
-                findDialog.setShallReplace(false);
-                if (editorProvider instanceof TextPanel) {
-                    ((TextPanel) editorProvider).findText(findDialog);
-                }
+                showFindDialog(false);
             }
         };
         ActionUtils.setupAction(editFindAgainAction, resourceBundle, "editFindAgainAction");
@@ -93,21 +83,39 @@ public class FindReplaceHandler {
         editReplaceAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                initFindDialog();
-                findDialog.setShallReplace(true);
-                findDialog.setSelected();
-                findDialog.setLocationRelativeTo(findDialog.getParent());
-                findDialog.setVisible(true);
-                if (findDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                    if (editorProvider instanceof TextPanel) {
-                        ((TextPanel) editorProvider).findText(findDialog);
-                    }
-                }
+                showFindDialog(true);
             }
         };
         ActionUtils.setupAction(editReplaceAction, resourceBundle, "editReplaceAction");
         editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, metaMask));
         editReplaceAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+    }
+
+    public void showFindDialog(boolean shallReplace) {
+        final GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        final FindTextPanel findPanel = new FindTextPanel();
+        findPanel.setShallReplace(shallReplace);
+        findPanel.setSelected();
+        DefaultControlPanel controlPanel = new DefaultControlPanel(findPanel.getResourceBundle());
+        JPanel dialogPanel = WindowUtils.createDialogPanel(findPanel, controlPanel);
+        final JDialog dialog = frameModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
+        controlPanel.setHandler(new DefaultControlHandler() {
+            @Override
+            public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
+                if (actionType == ControlActionType.OK) {
+                    if (editorProvider instanceof TextPanel) {
+                        ((TextPanel) editorProvider).findText(findPanel);
+                    }
+                }
+
+                WindowUtils.closeWindow(dialog);
+            }
+        });
+        WindowUtils.addHeaderPanel(dialog, findPanel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, findPanel.getResourceBundle());
+        WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
+        dialog.setLocationRelativeTo(frameModule.getFrame());
+        dialog.setVisible(true);
     }
 
     public Action getEditFindAction() {
@@ -120,13 +128,5 @@ public class FindReplaceHandler {
 
     public Action getEditReplaceAction() {
         return editReplaceAction;
-    }
-
-    public void initFindDialog() {
-        if (findDialog == null) {
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            findDialog = new FindTextDialog(frameModule.getFrame(), true);
-            findDialog.setIconImage(application.getApplicationIcon());
-        }
     }
 }

@@ -22,6 +22,7 @@ import java.util.prefs.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Hexadecimal appearance options panel.
@@ -122,6 +123,14 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
         // TODO add your handling code here:
     }//GEN-LAST:event_deltaModeCheckBoxjCheckBoxItemStateChanged
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new HexAppearanceOptionsPanel(null));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox deltaModeCheckBox;

@@ -26,6 +26,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Hexadecimal editor color selection panel.
@@ -110,6 +111,14 @@ public class HexColorOptionsPanel extends javax.swing.JPanel implements OptionsP
         setModified(true);
     }//GEN-LAST:event_defaultColorCheckBoxItemStateChanged
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new HexColorOptionsPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox defaultColorCheckBox;

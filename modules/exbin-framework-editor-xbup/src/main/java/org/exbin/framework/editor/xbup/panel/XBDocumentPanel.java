@@ -42,8 +42,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.editor.text.dialog.FindTextDialog;
 import org.exbin.framework.editor.text.dialog.TextFontDialog;
+import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
 import org.exbin.framework.editor.xbup.dialog.ModifyBlockDialog;
@@ -82,7 +82,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.0 2016/09/25
+ * @version 0.2.0 2016/12/30
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -699,8 +699,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         textPanel.gotoLine(line);
     }
 
-    public void findText(FindTextDialog findDialog) {
-        textPanel.findText(findDialog);
+    public void findText(FindTextPanelApi findTextPanelApi) {
+        textPanel.findText(findTextPanelApi);
     }
 
     public void setCharset(Charset charset) {

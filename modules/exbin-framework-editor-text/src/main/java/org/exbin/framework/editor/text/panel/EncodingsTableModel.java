@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.editor.text.dialog;
+package org.exbin.framework.editor.text.panel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +36,7 @@ import javax.swing.table.AbstractTableModel;
 /**
  * Table model for encoding / character sets.
  *
- * @version 0.2.0 2016/12/18
+ * @version 0.2.0 2016/12/30
  * @author ExBin Project (http://exbin.org)
  */
 public class EncodingsTableModel extends AbstractTableModel {
@@ -46,8 +46,6 @@ public class EncodingsTableModel extends AbstractTableModel {
     private final Set<String> usedEncodings = new HashSet<>();
     private String nameFilter = "";
     private String countryFilter = "";
-
-    private static final Map<String, Set<String>> countryMap = new HashMap<>();
 
     @Override
     public String getColumnName(int column) {

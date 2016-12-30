@@ -33,6 +33,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 
 /**
@@ -137,6 +138,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         fillDefaultButton = new javax.swing.JButton();
 
         setName("Form"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(688, 393));
         setLayout(new java.awt.BorderLayout());
 
         splitPane.setDividerLocation(420);
@@ -235,6 +237,15 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         setColorsFromMap(defaultColors);
         setModified(true);
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new HexColorPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel colorsPanel;

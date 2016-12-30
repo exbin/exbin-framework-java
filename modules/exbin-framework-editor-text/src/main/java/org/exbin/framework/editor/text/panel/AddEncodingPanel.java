@@ -18,15 +18,15 @@ package org.exbin.framework.editor.text.panel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.exbin.framework.editor.text.dialog.EncodingsTableModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Encoding selection panel.
  *
- * @version 0.2.0 2016/12/20
+ * @version 0.2.0 2016/12/30
  * @author ExBin Project (http://exbin.org)
  */
 public class AddEncodingPanel extends javax.swing.JPanel {
@@ -124,40 +124,34 @@ public class AddEncodingPanel extends javax.swing.JPanel {
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, filterPanelLayout.createSequentialGroup()
-                .addContainerGap(162, Short.MAX_VALUE)
-                .addComponent(countryLabel)
-                .addGap(132, 132, 132))
-            .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(filterPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(filterPanelLayout.createSequentialGroup()
-                            .addComponent(nameLabel)
-                            .addGap(0, 103, Short.MAX_VALUE))
-                        .addComponent(nameTextField))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+            .addGroup(filterPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(filterPanelLayout.createSequentialGroup()
+                        .addComponent(nameLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(countryLabel)
+                    .addGroup(filterPanelLayout.createSequentialGroup()
+                        .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         filterPanelLayout.setVerticalGroup(
             filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filterPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(countryLabel)
-                .addContainerGap(43, Short.MAX_VALUE))
-            .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(filterPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(nameLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(clearButton))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(countryLabel)
+                    .addComponent(nameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clearButton)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(filterPanel, java.awt.BorderLayout.PAGE_START);
@@ -209,6 +203,10 @@ public class AddEncodingPanel extends javax.swing.JPanel {
             result.add((String) value);
         }
         return result;
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

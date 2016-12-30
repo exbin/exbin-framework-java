@@ -21,17 +21,15 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.text.dialog.FindTextDialog;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Document editing handler.
  *
- * @version 0.2.0 2016/02/28
+ * @version 0.2.0 2016/12/30
  * @author ExBin Project (http://exbin.org)
  */
 public class DocEditingHandler {
@@ -41,8 +39,6 @@ public class DocEditingHandler {
     private final ResourceBundle resourceBundle;
 
     private int metaMask;
-
-    private FindTextDialog findDialog = null;
 
     private Action addItemAction;
     private Action modifyItemAction;
@@ -84,14 +80,6 @@ public class DocEditingHandler {
 
     public Action getModifyItemAction() {
         return modifyItemAction;
-    }
-
-    public void initFindDialog() {
-        if (findDialog == null) {
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            findDialog = new FindTextDialog(frameModule.getFrame(), true);
-            findDialog.setIconImage(application.getApplicationIcon());
-        }
     }
 
     void setAddEnabled(boolean addEnabled) {

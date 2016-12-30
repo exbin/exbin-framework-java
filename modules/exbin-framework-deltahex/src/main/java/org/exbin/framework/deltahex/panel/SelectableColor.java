@@ -61,7 +61,7 @@ public class SelectableColor extends javax.swing.JPanel {
         colorPreviewPanel.setLayout(colorPreviewPanelLayout);
         colorPreviewPanelLayout.setHorizontalGroup(
             colorPreviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 370, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         colorPreviewPanelLayout.setVerticalGroup(
             colorPreviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

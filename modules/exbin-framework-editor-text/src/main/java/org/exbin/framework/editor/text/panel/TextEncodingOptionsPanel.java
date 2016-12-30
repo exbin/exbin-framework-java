@@ -50,7 +50,8 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
 
         initComponents();
 
-        encodingPanel = new TextEncodingPanel(frame);
+        encodingPanel = new TextEncodingPanel();
+        encodingPanel.setHandler(frame);
         encodingPanel.setEnabled(false);
         encodingPanel.setModifiedOptionListener(new ModifiedOptionListener() {
             @Override

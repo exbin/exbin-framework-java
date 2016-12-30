@@ -14,28 +14,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.utils.handler;
-
-import org.exbin.framework.gui.utils.WindowUtils;
+package org.exbin.framework.editor.text.handler;
 
 /**
- * Handler for options control panel.
+ * Word wrapping options interface.
  *
  * @version 0.2.0 2016/12/30
  * @author ExBin Project (http://exbin.org)
  */
-public interface OptionsControlHandler {
+public interface FindTextPanelApi {
 
-    void controlActionPerformed(ControlActionType actionType);
+    public boolean getSearchFromStart();
 
-    public interface DefaultControlListener {
+    public void setSelected();
 
-        void performClick(ControlActionType actionType);
+    public String getFindText();
 
-        WindowUtils.OkCancelListener createOkCancelListener();
-    }
+    public boolean getShallReplace();
 
-    public static enum ControlActionType {
-        SAVE, SET, CANCEL
-    }
+    public void setShallReplace(boolean shallReplace);
+
+    public String getReplaceText();
 }
