@@ -37,7 +37,6 @@ import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.deltahex.swing.ColorsGroup;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.CodeAreaPopupMenuHandler;
-import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -50,16 +49,18 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.2.0 2016/12/29
+ * @version 0.2.0 2016/12/31
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
+
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexSearchPanel.class);
 
     private Thread searchStartThread;
     private Thread searchThread;
     private final SearchParameters searchParameters = new SearchParameters();
     private final ReplaceParameters replaceParameters = new ReplaceParameters();
-    private final HexPanel hexPanel;
+    private final HexSearchPanelApi hexSearchPanelApi;
     private int matchesCount;
     private int matchPosition;
     private final CodeArea hexadecimalRenderer = new CodeArea();
@@ -75,12 +76,11 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     private ClosePanelListener closePanelListener = null;
     private CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexSearchPanel.class);
     private XBApplication application;
 
-    public HexSearchPanel(HexPanel hexPanel) {
+    public HexSearchPanel(HexSearchPanelApi hexSearchPanelApi) {
         initComponents();
-        this.hexPanel = hexPanel;
+        this.hexSearchPanelApi = hexSearchPanelApi;
         init();
     }
 
@@ -624,7 +624,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
                     ReplaceParameters dialogReplaceParameters = findHexPanel.getReplaceParameters();
                     switchReplaceMode(dialogReplaceParameters.isPerformReplace());
-                    hexPanel.performFind(dialogSearchParameters);
+                    hexSearchPanelApi.performFind(dialogSearchParameters);
                 }
                 findHexPanel.detachMenu();
                 WindowUtils.closeWindow(dialog);
@@ -637,13 +637,13 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
         matchPosition--;
-        hexPanel.setMatchPosition(matchPosition);
+        hexSearchPanelApi.setMatchPosition(matchPosition);
         setStatus(matchesCount, matchPosition);
     }//GEN-LAST:event_prevButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         matchPosition++;
-        hexPanel.setMatchPosition(matchPosition);
+        hexSearchPanelApi.setMatchPosition(matchPosition);
         setStatus(matchesCount, matchPosition);
     }//GEN-LAST:event_nextButtonActionPerformed
 
@@ -781,7 +781,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
                 break;
             }
         }
-        hexPanel.updatePosition();
+        hexSearchPanelApi.updatePosition();
         performSearch(500);
     }
 
@@ -841,7 +841,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
     }
 
     public void performFind() {
-        hexPanel.performFind(searchParameters);
+        hexSearchPanelApi.performFind(searchParameters);
         findComboBoxEditorComponent.setRunningUpdate(true);
         ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(searchParameters.getCondition());
         findComboBoxEditorComponent.setRunningUpdate(false);
@@ -849,7 +849,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
 
     public void performReplace() {
         replaceParameters.setCondition(replaceComboBoxEditorComponent.getItem());
-        hexPanel.performReplace(searchParameters, replaceParameters);
+        hexSearchPanelApi.performReplace(searchParameters, replaceParameters);
     }
 
     public void performReplaceAll() {
@@ -903,7 +903,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
     }
 
     public void dataChanged() {
-        hexPanel.clearMatches();
+        hexSearchPanelApi.clearMatches();
         performSearch(500);
     }
 

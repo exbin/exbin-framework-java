@@ -57,7 +57,7 @@ public class FindReplaceHandler {
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
                     HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
-                    activePanel.showFindPanel(false);
+                    activePanel.showSearchPanel(false);
                 }
             }
         };
@@ -80,7 +80,7 @@ public class FindReplaceHandler {
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
                     HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
-                    activePanel.showFindPanel(true);
+                    activePanel.showSearchPanel(true);
                 }
             }
         };

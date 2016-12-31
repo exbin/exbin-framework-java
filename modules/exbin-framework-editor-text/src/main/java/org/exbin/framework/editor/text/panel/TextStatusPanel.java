@@ -23,7 +23,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Text editor status panel.
  *
- * @version 0.2.0 2016/05/18
+ * @version 0.2.0 2016/12/31
  * @author ExBin Project (http://exbin.org)
  */
 public class TextStatusPanel extends javax.swing.JPanel implements TextPositionStatusApi, TextEncodingStatusApi {
@@ -93,6 +93,11 @@ public class TextStatusPanel extends javax.swing.JPanel implements TextPositionS
     @Override
     public void setTextPosition(String textPosition) {
         documentCursorPositionTextField.setText(textPosition);
+    }
+
+    @Override
+    public String getEncoding() {
+        return documentEncodingTextField.getText();
     }
 
     @Override

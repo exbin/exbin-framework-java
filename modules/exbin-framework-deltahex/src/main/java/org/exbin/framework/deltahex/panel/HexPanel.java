@@ -70,7 +70,6 @@ import org.exbin.deltahex.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.CodeAreaPopupMenuHandler;
-import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.deltahex.EncodingStatusHandler;
 import org.exbin.framework.deltahex.HexEditorProvider;
 import org.exbin.framework.deltahex.HexStatusApi;
@@ -88,10 +87,10 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.0 2016/12/28
+ * @version 0.2.0 2016/12/31
  * @author ExBin Project (http://exbin.org)
  */
-public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi {
+public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, HexSearchPanelApi {
 
     private int id = 0;
     private SegmentsRepository segmentsRepository;
@@ -204,7 +203,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         hexSearchPanel.setClosePanelListener(new HexSearchPanel.ClosePanelListener() {
             @Override
             public void panelClosed() {
-                hideFindPanel();
+                hideSearchPanel();
             }
         });
     }
@@ -213,7 +212,17 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         hexSearchPanel.setApplication(application);
     }
 
-    public void hideFindPanel() {
+    public void showSearchPanel(boolean replace) {
+        if (!findTextPanelVisible) {
+            add(hexSearchPanel, BorderLayout.SOUTH);
+            revalidate();
+            findTextPanelVisible = true;
+            hexSearchPanel.requestSearchFocus();
+        }
+        hexSearchPanel.switchReplaceMode(replace);
+    }
+
+    public void hideSearchPanel() {
         if (findTextPanelVisible) {
             hexSearchPanel.cancelSearch();
             hexSearchPanel.clearSearch();
@@ -249,16 +258,6 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         if (codeArea.isWrapMode() != mode) {
             changeLineWrap();
         }
-    }
-
-    public void showFindPanel(boolean replace) {
-        if (!findTextPanelVisible) {
-            add(hexSearchPanel, BorderLayout.SOUTH);
-            revalidate();
-            findTextPanelVisible = true;
-            hexSearchPanel.requestSearchFocus();
-        }
-        hexSearchPanel.switchReplaceMode(replace);
     }
 
     public void findAgain() {
@@ -307,7 +306,6 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             default:
                 throw new IllegalStateException("Unexpected search mode " + condition.getSearchMode().name());
         }
-
     }
 
     @Override
@@ -875,6 +873,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         return codeArea.canPaste();
     }
 
+    @Override
     public void setMatchPosition(int matchPosition) {
         HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
         painter.setCurrentMatchIndex(matchPosition);
@@ -883,6 +882,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         codeArea.repaint();
     }
 
+    @Override
     public void updatePosition() {
         hexSearchPanel.updatePosition(codeArea.getCaretPosition().getDataPosition(), codeArea.getDataSize());
     }
@@ -904,6 +904,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         hexStatus.setMemoryMode(memoryMode);
     }
 
+    @Override
     public void clearMatches() {
         HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
         painter.clearMatches();
