@@ -266,6 +266,11 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
     }
 
     @Override
+    public String getEncoding() {
+        return encodingLabel.getText();
+    }
+
+    @Override
     public void setEncoding(String encodingName) {
         encodingLabel.setText(encodingName);
     }

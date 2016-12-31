@@ -14,28 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.utils.handler;
+package org.exbin.framework.deltahex;
 
-import org.exbin.framework.gui.utils.WindowUtils;
+import java.awt.event.MouseEvent;
 
 /**
- * Handler for options control panel.
+ * Encoding status handler.
  *
  * @version 0.2.0 2016/12/31
  * @author ExBin Project (http://exbin.org)
  */
-public interface OptionsControlHandler {
+public interface EncodingStatusHandler {
 
-    void controlActionPerformed(ControlActionType actionType);
+    void cycleEncodings();
 
-    public interface OptionsControlListener {
-
-        void performClick(ControlActionType actionType);
-
-        WindowUtils.OkCancelListener createOkCancelListener();
-    }
-
-    public static enum ControlActionType {
-        SAVE, SET, CANCEL
-    }
+    void popupEncodingsMenu(MouseEvent mouseEvent);
 }

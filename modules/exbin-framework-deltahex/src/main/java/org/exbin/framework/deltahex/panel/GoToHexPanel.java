@@ -16,16 +16,21 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.text.ParseException;
 import java.util.ResourceBundle;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.text.JTextComponent;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Go-to position panel for hexadecimal editor.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2016/12/30
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToHexPanel extends javax.swing.JPanel {
@@ -38,6 +43,22 @@ public class GoToHexPanel extends javax.swing.JPanel {
 
     public GoToHexPanel() {
         initComponents();
+
+        // Spinner selection workaround from http://forums.sun.com/thread.jspa?threadID=409748&forumID=57
+        ((JSpinner.DefaultEditor) positionSpinner.getEditor()).getTextField().addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (e.getSource() instanceof JTextComponent) {
+                    final JTextComponent textComponent = ((JTextComponent) e.getSource());
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            textComponent.selectAll();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     /**
@@ -49,6 +70,7 @@ public class GoToHexPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        positionTypeButtonGroup = new javax.swing.ButtonGroup();
         currentPositionLabel = new javax.swing.JLabel();
         currentPositionTextField = new javax.swing.JTextField();
         targetPositionLabel = new javax.swing.JLabel();
@@ -70,6 +92,7 @@ public class GoToHexPanel extends javax.swing.JPanel {
 
         goToPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("GoToHexDialog.goToPanel.border.title"))); // NOI18N
 
+        positionTypeButtonGroup.add(absoluteRadioButton);
         absoluteRadioButton.setSelected(true);
         absoluteRadioButton.setText(resourceBundle.getString("GoToHexDialog.absoluteRadioButton.text")); // NOI18N
         absoluteRadioButton.addActionListener(new java.awt.event.ActionListener() {
@@ -78,6 +101,7 @@ public class GoToHexPanel extends javax.swing.JPanel {
             }
         });
 
+        positionTypeButtonGroup.add(relativeRadioButton);
         relativeRadioButton.setText(resourceBundle.getString("GoToHexDialog.relativeRadioButton.text")); // NOI18N
         relativeRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -237,6 +261,15 @@ public class GoToHexPanel extends javax.swing.JPanel {
         WindowUtils.invokeDialog(new GoToHexPanel());
     }
 
+    public void acceptInput() {
+        try {
+            positionSpinner.commitEdit();
+        } catch (ParseException ex) {
+            // Ignore parse exception
+        }
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton absoluteRadioButton;
     private javax.swing.JLabel currentPositionLabel;
@@ -244,6 +277,7 @@ public class GoToHexPanel extends javax.swing.JPanel {
     private javax.swing.JLabel decimalPositionLabel;
     private javax.swing.JPanel goToPanel;
     private javax.swing.JSpinner positionSpinner;
+    private javax.swing.ButtonGroup positionTypeButtonGroup;
     private javax.swing.JRadioButton relativeRadioButton;
     private javax.swing.JLabel targetPositionLabel;
     private javax.swing.JTextField targetPositionTextField;

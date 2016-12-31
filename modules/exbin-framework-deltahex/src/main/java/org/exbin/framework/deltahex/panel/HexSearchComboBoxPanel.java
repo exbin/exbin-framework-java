@@ -28,7 +28,7 @@ import javax.swing.event.DocumentListener;
 import org.exbin.deltahex.DataChangedListener;
 import org.exbin.deltahex.ScrollBarVisibility;
 import org.exbin.deltahex.swing.CodeArea;
-import org.exbin.framework.deltahex.DeltaHexModule;
+import org.exbin.framework.deltahex.CodeAreaPopupMenuHandler;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 
@@ -189,7 +189,7 @@ public class HexSearchComboBoxPanel extends JPanel {
         }
     }
 
-    public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler, String postfix) {
+    public void setHexCodePopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler, String postfix) {
         hexadecimalEditor.setComponentPopupMenu(hexCodePopupMenuHandler.createPopupMenu(hexadecimalEditor, ".search" + postfix));
     }
 

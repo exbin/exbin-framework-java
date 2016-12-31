@@ -25,6 +25,13 @@ package org.exbin.framework.editor.text;
 public interface TextEncodingStatusApi {
 
     /**
+     * Returns current encoding.
+     *
+     * @return encoding
+     */
+    public String getEncoding();
+
+    /**
      * Reports currently active encoding.
      *
      * @param encodingName encoding name

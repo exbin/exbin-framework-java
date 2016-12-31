@@ -690,17 +690,5 @@ public class DeltaHexModule implements XBApplicationModule {
         this.deltaMode = deltaMode;
     }
 
-    public static interface EncodingStatusHandler {
 
-        void cycleEncodings();
-
-        void popupEncodingsMenu(MouseEvent mouseEvent);
-    }
-
-    public static interface CodeAreaPopupMenuHandler {
-
-        JPopupMenu createPopupMenu(CodeArea codeArea, String menuPostfix);
-
-        void dropPopupMenu(String menuPostfix);
-    }
 }

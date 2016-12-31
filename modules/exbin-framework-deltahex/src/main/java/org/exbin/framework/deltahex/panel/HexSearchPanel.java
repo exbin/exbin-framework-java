@@ -36,6 +36,7 @@ import org.exbin.deltahex.ScrollBarVisibility;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.deltahex.swing.ColorsGroup;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.deltahex.CodeAreaPopupMenuHandler;
 import org.exbin.framework.deltahex.DeltaHexModule;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -73,7 +74,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
     private final List<SearchCondition> replaceHistory = new ArrayList<>();
 
     private ClosePanelListener closePanelListener = null;
-    private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
+    private CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexSearchPanel.class);
     private XBApplication application;
 
@@ -943,7 +944,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         return true;
     }
 
-    public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
+    public void setHexCodePopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
         findComboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "");
     }

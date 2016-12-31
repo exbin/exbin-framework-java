@@ -25,7 +25,7 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
  * @version 0.2.0 2016/12/30
  * @author ExBin Project (http://exbin.org)
  */
-public class OptionsControlPanel extends javax.swing.JPanel implements OptionsControlHandler.DefaultControlListener {
+public class OptionsControlPanel extends javax.swing.JPanel implements OptionsControlHandler.OptionsControlListener {
 
     private final java.util.ResourceBundle resourceBundle;
     private OptionsControlHandler handler;

@@ -69,7 +69,9 @@ import org.exbin.deltahex.operation.swing.CodeCommandHandler;
 import org.exbin.deltahex.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.deltahex.CodeAreaPopupMenuHandler;
 import org.exbin.framework.deltahex.DeltaHexModule;
+import org.exbin.framework.deltahex.EncodingStatusHandler;
 import org.exbin.framework.deltahex.HexEditorProvider;
 import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.TextCharsetApi;
@@ -107,7 +109,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private Action goToLineAction = null;
     private Action copyAsCode = null;
     private Action pasteFromCode = null;
-    private DeltaHexModule.EncodingStatusHandler encodingStatusHandler;
+    private EncodingStatusHandler encodingStatusHandler;
     private long documentOriginalSize;
 
     private PropertyChangeListener propertyChangeListener;
@@ -911,11 +913,11 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         this.goToLineAction = goToLineAction;
     }
 
-    public void setEncodingStatusHandler(DeltaHexModule.EncodingStatusHandler encodingStatusHandler) {
+    public void setEncodingStatusHandler(EncodingStatusHandler encodingStatusHandler) {
         this.encodingStatusHandler = encodingStatusHandler;
     }
 
-    public void setCodeAreaPopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
+    public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         hexSearchPanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
     }
 

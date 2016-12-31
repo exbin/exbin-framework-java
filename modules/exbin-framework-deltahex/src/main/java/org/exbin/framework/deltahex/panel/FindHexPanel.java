@@ -30,7 +30,7 @@ import javax.swing.ListCellRenderer;
 import org.exbin.deltahex.ScrollBarVisibility;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.deltahex.swing.ColorsGroup;
-import org.exbin.framework.deltahex.DeltaHexModule;
+import org.exbin.framework.deltahex.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
@@ -56,7 +56,7 @@ public class FindHexPanel extends javax.swing.JPanel {
     private ComboBoxEditor replaceComboBoxEditor;
     private List<SearchCondition> replaceHistory = new ArrayList<>();
 
-    private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
+    private CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
     private MultilineEditorListener multilineEditorListener = null;
 
     public FindHexPanel() {
@@ -545,7 +545,7 @@ public class FindHexPanel extends javax.swing.JPanel {
         replaceComboBox.setModel(new SearchHistoryModel(replaceHistory));
     }
 
-    public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
+    public void setHexCodePopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
         findComboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "FindHexPanel");
     }

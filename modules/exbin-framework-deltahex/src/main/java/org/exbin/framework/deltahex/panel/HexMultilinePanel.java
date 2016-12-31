@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import org.exbin.deltahex.swing.CodeArea;
-import org.exbin.framework.deltahex.DeltaHexModule;
+import org.exbin.framework.deltahex.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.utils.binary_data.EditableBinaryData;
 
@@ -41,7 +41,7 @@ public class HexMultilinePanel extends javax.swing.JPanel {
     private JTextArea textArea;
     private JScrollPane scrollPane;
     private CodeArea codeArea;
-    private DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
+    private CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
 
     public HexMultilinePanel() {
         initComponents();
@@ -100,7 +100,7 @@ public class HexMultilinePanel extends javax.swing.JPanel {
         revalidate();
     }
 
-    public void setHexCodePopupMenuHandler(DeltaHexModule.CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
+    public void setHexCodePopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
     }
 
