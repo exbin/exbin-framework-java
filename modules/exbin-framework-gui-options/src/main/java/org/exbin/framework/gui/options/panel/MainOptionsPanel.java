@@ -210,14 +210,12 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         if (selectedTheme != null) {
             if (selectedTheme.isEmpty()) {
                 String osName = System.getProperty("os.name").toLowerCase();
-                if (!osName.startsWith("windows") && osName.startsWith("max")) {
-                    // Try "GTK+" on linux
-                    selectedTheme = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+                if (!osName.startsWith("windows") && !osName.startsWith("mac")) {
                     try {
-                        UIManager.setLookAndFeel(selectedTheme);
+                        // Try "GTK+" on linux
+                        UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
                         return;
                     } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                        selectedTheme = UIManager.getSystemLookAndFeelClassName();
                     }
                 }
                 selectedTheme = UIManager.getSystemLookAndFeelClassName();
@@ -269,7 +267,6 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         if (extraCrossPlatformLAF) {
             themes.add(UIManager.getCrossPlatformLookAndFeelClassName());
         }
-        themes.add("SYSTEM");
         themes.add("javax.swing.plaf.metal.MetalLookAndFeel");
         themes.add("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
         themeNames = new ArrayList<>();
@@ -277,7 +274,6 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         if (extraCrossPlatformLAF) {
             themeNames.add(resourceBundle.getString("MainOptionsPanel.crossPlatformTheme"));
         }
-        themeNames.add(resourceBundle.getString("MainOptionsPanel.systemTheme"));
         themeNames.add("Metal");
         themeNames.add("Motif");
         UIManager.LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();

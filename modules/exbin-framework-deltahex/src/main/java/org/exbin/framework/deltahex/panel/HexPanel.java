@@ -87,7 +87,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.0 2016/12/31
+ * @version 0.2.0 2017/01/01
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, HexSearchPanelApi {
@@ -150,11 +150,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private void init() {
         codeArea = new CodeArea();
         codeArea.setPainter(new HighlightCodeAreaPainter(codeArea));
-        if (segmentsRepository != null) {
-            codeArea.setData(segmentsRepository.createDocument());
-        } else {
-            codeArea.setData(new XBData());
-        }
+        setNewData();
         codeArea.setHandleClipboard(false);
         codeArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         codeArea.addSelectionChangedListener(new SelectionChangedListener() {
@@ -692,10 +688,16 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     @Override
     public void newFile() {
-        ((EditableBinaryData) codeArea.getData()).clear();
-        codeArea.setData(codeArea.getData());
-        codeArea.repaint();
+        if (codeArea.getData() instanceof DeltaDocument) {
+            segmentsRepository.dropDocument((DeltaDocument) codeArea.getData());
+        }
+        setNewData();
+        documentOriginalSize = codeArea.getDataSize();
+        codeArea.notifyDataChanged();
+        updateCurrentDocumentSize();
+        updateCurrentMemoryMode();
         undoHandler.clear();
+        codeArea.repaint();
     }
 
     @Override
@@ -897,7 +899,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         String memoryMode = "M";
         if (codeArea.getEditationAllowed() == EditationAllowed.READ_ONLY) {
             memoryMode = "R";
-        } else if (segmentsRepository != null) {
+        } else if (codeArea.getData() instanceof DeltaDocument) {
             memoryMode = "\u0394";
         }
 
@@ -962,6 +964,14 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 editorModificationListener.modified();
             }
         });
+    }
+
+    private void setNewData() {
+        if (segmentsRepository != null) {
+            codeArea.setData(segmentsRepository.createDocument());
+        } else {
+            codeArea.setData(new XBData());
+        }
     }
 
     public static interface CharsetChangeListener {

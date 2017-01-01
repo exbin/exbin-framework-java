@@ -140,14 +140,22 @@ public class XBBaseApplication implements XBApplication {
 
         String laf = preferencesGet(PREFERENCES_LOOK_AND_FEEL, "");
         try {
-            if (laf != null && !laf.isEmpty()) {
-                if ("SYSTEM".equals(laf)) {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            if (laf == null || laf.isEmpty()) {
+                String osName = System.getProperty("os.name").toLowerCase();
+                if (!osName.startsWith("windows") && !osName.startsWith("mac")) {
+                    // Try "GTK+" on linux
+                    try {
+                        UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                        laf = UIManager.getSystemLookAndFeelClassName();
+                    }
                 } else {
-                    UIManager.setLookAndFeel(laf);
+                    laf = UIManager.getSystemLookAndFeelClassName();
                 }
-            } else {
-                UIManager.setLookAndFeel(defaultLaf);
+            }
+
+            if (laf != null && !laf.isEmpty()) {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(XBBaseApplication.class.getName()).log(Level.SEVERE, null, ex);
