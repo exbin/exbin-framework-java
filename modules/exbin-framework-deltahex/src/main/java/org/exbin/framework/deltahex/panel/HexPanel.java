@@ -65,7 +65,7 @@ import org.exbin.deltahex.delta.SegmentsRepository;
 import org.exbin.deltahex.highlight.swing.HighlightCodeAreaPainter;
 import org.exbin.deltahex.operation.BinaryDataCommand;
 import org.exbin.deltahex.operation.swing.CodeAreaUndoHandler;
-import org.exbin.deltahex.operation.swing.CodeCommandHandler;
+import org.exbin.deltahex.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.deltahex.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.api.XBApplication;
@@ -87,7 +87,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.0 2017/01/01
+ * @version 0.2.0 2017/01/02
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, HexSearchPanelApi {
@@ -159,7 +159,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 updateClipboardActionsStatus();
             }
         });
-        CodeCommandHandler commandHandler = new CodeCommandHandler(codeArea, undoHandler);
+        CodeAreaOperationCommandHandler commandHandler = new CodeAreaOperationCommandHandler(codeArea, undoHandler);
         codeArea.setCommandHandler(commandHandler);
         codeArea.addDataChangedListener(new DataChangedListener() {
             @Override
