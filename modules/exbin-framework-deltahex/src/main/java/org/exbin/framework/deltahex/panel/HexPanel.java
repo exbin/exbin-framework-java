@@ -87,7 +87,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.0 2017/01/02
+ * @version 0.2.0 2017/01/03
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, HexSearchPanelApi {
@@ -640,6 +640,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 FileDataSource openFileSource = segmentsRepository.openFileSource(file);
                 document = segmentsRepository.createDocument(openFileSource);
                 codeArea.setData(document);
+                this.fileUri = fileUri;
             } else {
                 try (FileInputStream fileStream = new FileInputStream(file)) {
                     BinaryData data = codeArea.getData();
@@ -666,9 +667,18 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             if (segmentsRepository != null) {
                 // TODO support for delta mode
                 // TODO freeze window
-                segmentsRepository.saveDocument((DeltaDocument) codeArea.getData());
+                DeltaDocument document = (DeltaDocument) codeArea.getData();
+                if (!document.getFileSource().getFile().equals(file)) {
+                    FileDataSource fileSource = segmentsRepository.openFileSource(file);
+                    document.setFileSource(fileSource);
+                }
+                segmentsRepository.saveDocument(document);
+                this.fileUri = fileUri;
             } else {
-                codeArea.getData().saveToStream(new FileOutputStream(file));
+                try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                    codeArea.getData().saveToStream(outputStream);
+                    this.fileUri = fileUri;
+                }
             }
             documentOriginalSize = codeArea.getDataSize();
             updateCurrentDocumentSize();
@@ -677,7 +687,6 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.fileUri = fileUri;
         undoHandler.setSyncPoint();
     }
 
