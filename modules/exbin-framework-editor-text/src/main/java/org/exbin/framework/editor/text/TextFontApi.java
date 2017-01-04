@@ -34,6 +34,13 @@ public interface TextFontApi {
     public Font getCurrentFont();
 
     /**
+     * Returns default font.
+     *
+     * @return font
+     */
+    public Font getDefaultFont();
+
+    /**
      * Sets font.
      *
      * @param font font

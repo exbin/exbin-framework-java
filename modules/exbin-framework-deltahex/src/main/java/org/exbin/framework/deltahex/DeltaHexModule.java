@@ -18,6 +18,7 @@ package org.exbin.framework.deltahex;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -45,8 +46,11 @@ import org.exbin.framework.deltahex.panel.HexColorType;
 import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.HexStatusPanel;
 import org.exbin.framework.editor.text.EncodingsHandler;
+import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
+import org.exbin.framework.editor.text.panel.TextFontOptionsPanel;
+import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -70,7 +74,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2016/12/28
+ * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -94,6 +98,9 @@ public class DeltaHexModule implements XBApplicationModule {
     private XBApplication application;
     private HexEditorProvider editorProvider;
     private HexStatusPanel hexStatusPanel;
+    private HexColorOptionsPanel hexColorOptionsPanel;
+    private TextEncodingOptionsPanel textEncodingOptionsPanel;
+    private TextFontOptionsPanel textFontOptionsPanel;
 
     private FindReplaceHandler findReplaceHandler;
     private ViewNonprintablesHandler viewNonprintablesHandler;
@@ -239,9 +246,9 @@ public class DeltaHexModule implements XBApplicationModule {
             }
         };
 
-        HexColorOptionsPanel optionsPanel = new HexColorOptionsPanel();
-        optionsPanel.setPanelApi(textColorPanelFrame);
-        optionsModule.addOptionsPanel(optionsPanel);
+        hexColorOptionsPanel = new HexColorOptionsPanel();
+        hexColorOptionsPanel.setPanelApi(textColorPanelFrame);
+        optionsModule.addOptionsPanel(hexColorOptionsPanel);
 
         HexAppearancePanelFrame textAppearancePanelFrame;
         textAppearancePanelFrame = new HexAppearancePanelFrame() {
@@ -258,7 +265,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
         optionsModule.extendAppearanceOptionsPanel(new HexAppearanceOptionsPanel(textAppearancePanelFrame));
 
-        TextEncodingPanelApi textEncodingPanelFrame = new TextEncodingPanelApi() {
+        TextEncodingPanelApi textEncodingPanelApi = new TextEncodingPanelApi() {
             @Override
             public List<String> getEncodings() {
                 return getEncodingsHandler().getEncodings();
@@ -282,7 +289,27 @@ public class DeltaHexModule implements XBApplicationModule {
                 }
             }
         };
-        optionsModule.addOptionsPanel(new TextEncodingOptionsPanel(textEncodingPanelFrame));
+        textEncodingOptionsPanel = new TextEncodingOptionsPanel(textEncodingPanelApi);
+        optionsModule.addOptionsPanel(textEncodingOptionsPanel);
+
+        TextFontPanelApi textFontPanelApi = new TextFontPanelApi() {
+            @Override
+            public Font getCurrentFont() {
+                return ((TextFontApi) getEditorProvider()).getCurrentFont();
+            }
+
+            @Override
+            public Font getDefaultFont() {
+                return ((TextFontApi) getEditorProvider()).getDefaultFont();
+            }
+
+            @Override
+            public void setCurrentFont(Font font) {
+                ((TextFontApi) getEditorProvider()).setCurrentFont(font);
+            }
+        };
+        textFontOptionsPanel = new TextFontOptionsPanel(textFontPanelApi);
+        optionsModule.addOptionsPanel(textFontOptionsPanel);
     }
 
     public void registerWordWrapping() {
@@ -607,6 +634,17 @@ public class DeltaHexModule implements XBApplicationModule {
 
     public void loadFromPreferences(Preferences preferences) {
         encodingsHandler.loadFromPreferences(preferences);
+
+        // TODO move it out of panels
+        if (hexColorOptionsPanel != null) {
+            hexColorOptionsPanel.loadFromPreferences(preferences);
+            hexColorOptionsPanel.applyPreferencesChanges();
+        }
+
+        if (textFontOptionsPanel != null) {
+            textFontOptionsPanel.loadFromPreferences(preferences);
+            textFontOptionsPanel.applyPreferencesChanges();
+        }
     }
 
     public CodeAreaPopupMenuHandler getCodeAreaPopupMenuHandler() {
@@ -689,6 +727,5 @@ public class DeltaHexModule implements XBApplicationModule {
     public void setDeltaMode(boolean deltaMode) {
         this.deltaMode = deltaMode;
     }
-
 
 }

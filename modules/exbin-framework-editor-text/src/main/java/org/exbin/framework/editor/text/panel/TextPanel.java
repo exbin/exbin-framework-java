@@ -573,6 +573,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         this.charset = charset;
     }
 
+    @Override
     public Font getDefaultFont() {
         return defaultFont;
     }

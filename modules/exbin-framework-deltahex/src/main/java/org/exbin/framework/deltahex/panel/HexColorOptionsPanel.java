@@ -31,7 +31,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal editor color selection panel.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
 public class HexColorOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -39,16 +39,16 @@ public class HexColorOptionsPanel extends javax.swing.JPanel implements OptionsP
     public static final String PREFERENCES_TEXT_COLOR_DEFAULT = "textColor.default";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexColorOptionsPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexColorOptionsPanel.class);
     private HexColorPanelApi panelApi;
-    private HexColorPanel colorPanel;
+    private final HexColorPanel colorPanel;
 
     public HexColorOptionsPanel() {
         initComponents();
 
         colorPanel = new HexColorPanel();
         colorPanel.setEnabled(false);
-        add(colorPanel, BorderLayout.CENTER);
+        HexColorOptionsPanel.this.add(colorPanel, BorderLayout.CENTER);
     }
 
     public void setPanelApi(HexColorPanelApi panelApi) {
@@ -144,8 +144,8 @@ public class HexColorOptionsPanel extends javax.swing.JPanel implements OptionsP
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        preferences.put(PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(defaultColorCheckBox.isSelected()));
         colorPanel.saveToPreferences(preferences);
+        preferences.put(PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(defaultColorCheckBox.isSelected()));
     }
 
     @Override

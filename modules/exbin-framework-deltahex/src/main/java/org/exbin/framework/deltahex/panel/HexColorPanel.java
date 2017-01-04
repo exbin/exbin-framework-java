@@ -39,7 +39,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Hexadecimal code editor color selection panel.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
 public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -285,6 +285,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     @Override
     public void saveToPreferences(Preferences preferences) {
+        preferences.put(HexColorOptionsPanel.PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(false));
         for (HexColorType colorType : HexColorType.values()) {
             preferences.put(colorType.getPreferencesString(), Integer.toString(getColor(colorType).getRGB()));
         }

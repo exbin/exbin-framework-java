@@ -14,9 +14,7 @@ As the project is currently in alpha stage, repository contains complete resourc
  * gradle - Gradle wrapper
  * src - Sources related to building distribution packages
  * modules - Libraries and other
- * plugins - Catalog plugins
- * resources - Related resource files, like sample files, images, etc.
- * tools - Distributable subprojects encapsulating modules to runnable applications
+ * deps - Storage for auxiliary dependency resolution modules
 
 Compiling
 ---------

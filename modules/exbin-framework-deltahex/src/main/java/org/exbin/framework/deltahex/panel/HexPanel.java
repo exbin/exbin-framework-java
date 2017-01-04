@@ -753,6 +753,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         codeArea.setCharset(charset);
     }
 
+    @Override
     public Font getDefaultFont() {
         return defaultFont;
     }

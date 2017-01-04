@@ -32,9 +32,8 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
-import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
+import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 
 /**
  * Tools options action handler.
@@ -96,17 +95,20 @@ public class ToolsOptionsHandler {
                 final HexColorPanel hexColorPanel = new HexColorPanel();
                 hexColorPanel.setPanelApi(textColorPanelFrame);
                 hexColorPanel.setColorsFromMap(textColorPanelFrame.getCurrentTextColors());
-                DefaultControlPanel controlPanel = new DefaultControlPanel(hexColorPanel.getResourceBundle());
+                OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(hexColorPanel, controlPanel);
 
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
                 WindowUtils.addHeaderPanel(dialog, hexColorPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, hexColorPanel.getResourceBundle());
-                controlPanel.setHandler(new DefaultControlHandler() {
+                controlPanel.setHandler(new OptionsControlHandler() {
                     @Override
-                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                        if (actionType == ControlActionType.OK) {
+                    public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
+                        if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                             textColorPanelFrame.setCurrentTextColors(hexColorPanel.getMapFromColors());
+                            if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                                hexColorPanel.saveToPreferences(application.getAppPreferences());
+                            }
                         }
 
                         WindowUtils.closeWindow(dialog);
