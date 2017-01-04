@@ -25,7 +25,6 @@ import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.ReplaceParameters;
 import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
-import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
@@ -69,8 +68,6 @@ public interface HexEditorProvider extends EditorProvider {
     void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters);
 
     boolean changeShowNonprintables();
-
-    void showFontDialog(TextFontDialog dialog);
 
     boolean changeLineWrap();
 

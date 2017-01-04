@@ -52,7 +52,7 @@ import javax.swing.text.Highlighter.Highlight;
 import javax.swing.undo.UndoableEdit;
 import org.exbin.framework.editor.text.EditorTextModule;
 import org.exbin.framework.editor.text.TextCharsetApi;
-import org.exbin.framework.editor.text.dialog.TextFontDialog;
+import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
@@ -79,10 +79,10 @@ import org.exbin.xbup.core.type.XBEncodingText;
 /**
  * Text editor panel.
  *
- * @version 0.2.0 2016/12/30
+ * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
-public class TextPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler, UndoActionsHandler, TextCharsetApi {
+public class TextPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler, UndoActionsHandler, TextCharsetApi, TextFontApi {
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
     private UndoUpdateListener undoUpdateListener = null;
@@ -309,20 +309,14 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         }
     }
 
+    @Override
     public void setCurrentFont(Font font) {
         textArea.setFont(font);
     }
 
+    @Override
     public Font getCurrentFont() {
         return textArea.getFont();
-    }
-
-    public void showFontDialog(TextFontDialog dlg) {
-        dlg.setStoredFont(textArea.getFont());
-        dlg.setVisible(true);
-        if (dlg.getDialogOption() == JOptionPane.OK_OPTION) {
-            textArea.setFont(dlg.getStoredFont());
-        }
     }
 
     public Color getFoundTextBackgroundColor() {

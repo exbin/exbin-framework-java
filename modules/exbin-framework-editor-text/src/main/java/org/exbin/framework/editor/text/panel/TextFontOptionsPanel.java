@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
-import javax.swing.JOptionPane;
-import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -34,7 +32,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 /**
  * Text font options panel.
  *
- * @version 0.2.0 2016/05/19
+ * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
 public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -50,6 +48,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
     public static final String PREFERENCES_TEXT_FONT_SUPERSCRIPT = "textFont.superscript";
 
     private ModifiedOptionListener modifiedOptionListener;
+    private FontChangeAction fontChangeAction;
     private final ResourceBundle resourceBundle;
     private final TextFontPanelApi frame;
     private Font font;
@@ -183,13 +182,12 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
     }//GEN-LAST:event_fillDefaultFontButtonActionPerformed
 
     private void changeFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeFontButtonActionPerformed
-        TextFontDialog fontDialog = new TextFontDialog(new javax.swing.JFrame(), true);
-        fontDialog.setStoredFont(fontPreviewLabel.getFont());
-        fontDialog.setLocationRelativeTo(fontDialog.getParent());
-        fontDialog.setVisible(true);
-        if (fontDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            fontPreviewLabel.setFont(fontDialog.getStoredFont());
-            setModified(true);
+        if (fontChangeAction != null) {
+            Font resultFont = fontChangeAction.changeFont(fontPreviewLabel.getFont());
+            if (resultFont != null) {
+                fontPreviewLabel.setFont(resultFont);
+                setModified(true);
+            }
         }
     }//GEN-LAST:event_changeFontButtonActionPerformed
 
@@ -297,5 +295,14 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
     @Override
     public void setModifiedOptionListener(ModifiedOptionListener listener) {
         modifiedOptionListener = listener;
+    }
+
+    public void setFontChangeAction(FontChangeAction fontChangeAction) {
+        this.fontChangeAction = fontChangeAction;
+    }
+
+    public static interface FontChangeAction {
+
+        Font changeFont(Font currentFont);
     }
 }

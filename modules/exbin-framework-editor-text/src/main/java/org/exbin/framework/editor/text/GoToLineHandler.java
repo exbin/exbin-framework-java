@@ -20,19 +20,24 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JOptionPane;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.text.dialog.GotoDialog;
+import org.exbin.framework.editor.text.panel.TextGoToPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
 /**
  * Go to line handler.
  *
- * @version 0.2.0 2016/01/23
+ * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToLineHandler {
@@ -42,8 +47,6 @@ public class GoToLineHandler {
     private final ResourceBundle resourceBundle;
 
     private int metaMask;
-
-    private GotoDialog gotoDialog = null;
 
     private Action goToLineAction;
 
@@ -60,16 +63,31 @@ public class GoToLineHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof TextPanel) {
-                    TextPanel activePanel = (TextPanel) editorProvider;
-                    initGotoDialog();
-                    gotoDialog.setMaxLine(activePanel.getLineCount());
-                    gotoDialog.setCharPos(1);
-                    gotoDialog.setLocationRelativeTo(gotoDialog.getParent());
-                    gotoDialog.setVisible(true);
-                    if (gotoDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                        activePanel.gotoLine(gotoDialog.getLine());
-                        activePanel.gotoRelative(gotoDialog.getCharPos());
-                    }
+                    final TextPanel activePanel = (TextPanel) editorProvider;
+                    final TextGoToPanel goToPanel = new TextGoToPanel();
+                    goToPanel.initFocus();
+                    goToPanel.setMaxLine(activePanel.getLineCount());
+                    goToPanel.setCharPos(1);
+                    DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
+                    JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
+                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                    final JDialog dialog = frameModule.createDialog(dialogPanel);
+                    WindowUtils.addHeaderPanel(dialog, goToPanel.getResourceBundle());
+                    frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
+                    controlPanel.setHandler(new DefaultControlHandler() {
+                        @Override
+                        public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
+                            if (actionType == ControlActionType.OK) {
+                                activePanel.gotoLine(goToPanel.getLine());
+                                activePanel.gotoRelative(goToPanel.getCharPos());
+                            }
+
+                            WindowUtils.closeWindow(dialog);
+                        }
+                    });
+                    WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
+                    dialog.setLocationRelativeTo(dialog.getParent());
+                    dialog.setVisible(true);
                 }
             }
         };
@@ -80,13 +98,5 @@ public class GoToLineHandler {
 
     public Action getGoToLineAction() {
         return goToLineAction;
-    }
-
-    private void initGotoDialog() {
-        if (gotoDialog == null) {
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            gotoDialog = new GotoDialog(frameModule.getFrame(), true);
-            gotoDialog.setIconImage(application.getApplicationIcon());
-        }
     }
 }

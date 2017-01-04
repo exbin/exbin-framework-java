@@ -263,7 +263,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
     public List<OptionsPanel.PathItem> getPath() {
         ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
         path.add(new PathItem("apperance", ""));
-        path.add(new PathItem("colors", resourceBundle.getString("options.Path.0"))); //
+        path.add(new PathItem("colors", resourceBundle.getString("options.Path.0")));
         return path;
     }
 

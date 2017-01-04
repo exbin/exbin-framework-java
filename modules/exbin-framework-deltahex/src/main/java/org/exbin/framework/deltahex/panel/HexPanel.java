@@ -75,7 +75,7 @@ import org.exbin.framework.deltahex.HexEditorProvider;
 import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
-import org.exbin.framework.editor.text.dialog.TextFontDialog;
+import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
@@ -87,10 +87,10 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.0 2017/01/03
+ * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
-public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, HexSearchPanelApi {
+public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
 
     private int id = 0;
     private SegmentsRepository segmentsRepository;
@@ -574,21 +574,14 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         }
     }
 
+    @Override
     public void setCurrentFont(Font font) {
         codeArea.setFont(font);
     }
 
+    @Override
     public Font getCurrentFont() {
         return codeArea.getFont();
-    }
-
-    @Override
-    public void showFontDialog(TextFontDialog dlg) {
-        dlg.setStoredFont(codeArea.getFont());
-        dlg.setVisible(true);
-        if (dlg.getDialogOption() == JOptionPane.OK_OPTION) {
-            codeArea.setFont(dlg.getStoredFont());
-        }
     }
 
     public Color getFoundTextBackgroundColor() {

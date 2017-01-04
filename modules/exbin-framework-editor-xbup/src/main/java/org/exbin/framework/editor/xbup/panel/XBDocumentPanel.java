@@ -42,7 +42,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import org.exbin.framework.deltahex.panel.HexPanel;
-import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
@@ -635,10 +634,6 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     public boolean changeLineWrap() {
         return textPanel.changeLineWrap();
-    }
-
-    public void showFontDialog(TextFontDialog dlg) {
-        textPanel.showFontDialog(dlg);
     }
 
     @Override

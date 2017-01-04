@@ -46,8 +46,6 @@ public class GoToPositionHandler {
 
     private int metaMask;
 
-    private GoToHexPanel goToPanel = null;
-
     private Action goToLineAction;
 
     public GoToPositionHandler(XBApplication application, HexEditorProvider editorProvider) {
@@ -64,7 +62,8 @@ public class GoToPositionHandler {
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof HexEditorProvider) {
                     final HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
-                    initGotoPanel();
+                    final GoToHexPanel goToPanel = new GoToHexPanel();
+                    goToPanel.initFocus();
                     goToPanel.setCursorPosition(activePanel.getCodeArea().getCaretPosition().getDataPosition());
                     goToPanel.setMaxPosition(activePanel.getCodeArea().getDataSize());
                     DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
@@ -96,12 +95,5 @@ public class GoToPositionHandler {
 
     public Action getGoToLineAction() {
         return goToLineAction;
-    }
-
-    private void initGotoPanel() {
-        if (goToPanel == null) {
-            goToPanel = new GoToHexPanel();
-            goToPanel.initFocus();
-        }
     }
 }

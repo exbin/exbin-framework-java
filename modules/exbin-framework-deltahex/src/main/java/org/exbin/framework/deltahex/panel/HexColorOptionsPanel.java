@@ -128,7 +128,7 @@ public class HexColorOptionsPanel extends javax.swing.JPanel implements OptionsP
 
     @Override
     public List<OptionsPanel.PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<OptionsPanel.PathItem>();
+        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
         path.add(new PathItem("apperance", ""));
         path.add(new PathItem("colors", resourceBundle.getString("options.Path.0")));
         return path;

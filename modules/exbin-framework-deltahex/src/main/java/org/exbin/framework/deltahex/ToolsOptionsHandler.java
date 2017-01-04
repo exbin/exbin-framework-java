@@ -28,7 +28,6 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.HexColorPanel;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
 import org.exbin.framework.deltahex.panel.HexColorType;
-import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -40,7 +39,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 /**
  * Tools options action handler.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolsOptionsHandler {
@@ -64,11 +63,10 @@ public class ToolsOptionsHandler {
         toolsSetFontAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                TextFontDialog dialog = new TextFontDialog(frameModule.getFrame(), true);
-                dialog.setIconImage(application.getApplicationIcon());
-                dialog.setLocationRelativeTo(dialog.getParent());
-                editorProvider.showFontDialog(dialog);
+                org.exbin.framework.editor.text.ToolsOptionsHandler textOptionsHandler = new org.exbin.framework.editor.text.ToolsOptionsHandler(application, editorProvider);
+                textOptionsHandler.init();
+                Action textToolsSetFontAction = textOptionsHandler.getToolsSetFontAction();
+                textToolsSetFontAction.actionPerformed(e);
             }
         };
         ActionUtils.setupAction(toolsSetFontAction, resourceBundle, "toolsSetFontAction");
@@ -97,6 +95,7 @@ public class ToolsOptionsHandler {
 
                 final HexColorPanel hexColorPanel = new HexColorPanel();
                 hexColorPanel.setPanelApi(textColorPanelFrame);
+                hexColorPanel.setColorsFromMap(textColorPanelFrame.getCurrentTextColors());
                 DefaultControlPanel controlPanel = new DefaultControlPanel(hexColorPanel.getResourceBundle());
                 JPanel dialogPanel = WindowUtils.createDialogPanel(hexColorPanel, controlPanel);
 

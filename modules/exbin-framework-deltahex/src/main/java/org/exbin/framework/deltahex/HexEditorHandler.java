@@ -35,7 +35,6 @@ import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.ReplaceParameters;
 import org.exbin.framework.deltahex.panel.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
-import org.exbin.framework.editor.text.dialog.TextFontDialog;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
@@ -279,11 +278,6 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     @Override
     public boolean changeShowNonprintables() {
         return activePanel.changeShowNonprintables();
-    }
-
-    @Override
-    public void showFontDialog(TextFontDialog dialog) {
-        activePanel.showFontDialog(dialog);
     }
 
     @Override
