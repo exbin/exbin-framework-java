@@ -27,13 +27,12 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal appearance options panel.
  *
- * @version 0.2.0 2016/12/08
+ * @version 0.2.0 2017/01/05
  * @author ExBin Project (http://exbin.org)
  */
 public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
 
     public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
-    public static final String PREFERENCES_DELTA_DATA_MODE = "experimentalDeltaMode";
     public static final String PREFERENCES_MULTITAB_MODE = "experimentalMultiTabMode";
 
     private ModifiedOptionListener modifiedOptionListener;
@@ -57,7 +56,6 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
 
         lineWrapCheckBox = new javax.swing.JCheckBox();
         multiTabModeCheckBox = new javax.swing.JCheckBox();
-        deltaModeCheckBox = new javax.swing.JCheckBox();
 
         setName("Form"); // NOI18N
 
@@ -71,18 +69,11 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
         });
 
         multiTabModeCheckBox.setText(resourceBundle.getString("multiTabModeCheckBox.text")); // NOI18N
+        multiTabModeCheckBox.setEnabled(false);
         multiTabModeCheckBox.setName("multiTabModeCheckBox"); // NOI18N
         multiTabModeCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 multiTabModeCheckBoxjCheckBoxItemStateChanged(evt);
-            }
-        });
-
-        deltaModeCheckBox.setText(resourceBundle.getString("deltaModeCheckBox.text")); // NOI18N
-        deltaModeCheckBox.setName("deltaModeCheckBox"); // NOI18N
-        deltaModeCheckBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                deltaModeCheckBoxjCheckBoxItemStateChanged(evt);
             }
         });
 
@@ -94,8 +85,7 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lineWrapCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
-                    .addComponent(multiTabModeCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
-                    .addComponent(deltaModeCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+                    .addComponent(multiTabModeCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -105,8 +95,6 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
                 .addComponent(lineWrapCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(multiTabModeCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(deltaModeCheckBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -119,10 +107,6 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
         // TODO add your handling code here:
     }//GEN-LAST:event_multiTabModeCheckBoxjCheckBoxItemStateChanged
 
-    private void deltaModeCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_deltaModeCheckBoxjCheckBoxItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_deltaModeCheckBoxjCheckBoxItemStateChanged
-
     /**
      * Test method for this panel.
      *
@@ -133,7 +117,6 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox deltaModeCheckBox;
     private javax.swing.JCheckBox lineWrapCheckBox;
     private javax.swing.JCheckBox multiTabModeCheckBox;
     // End of variables declaration//GEN-END:variables
@@ -146,14 +129,12 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
     @Override
     public void loadFromPreferences(Preferences preferences) {
         lineWrapCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_TEXT_WORD_WRAPPING, Boolean.FALSE.toString())));
-        deltaModeCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_DELTA_DATA_MODE, Boolean.FALSE.toString())));
         multiTabModeCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_MULTITAB_MODE, Boolean.FALSE.toString())));
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
         preferences.put(PREFERENCES_TEXT_WORD_WRAPPING, Boolean.toString(lineWrapCheckBox.isSelected()));
-        preferences.put(PREFERENCES_DELTA_DATA_MODE, Boolean.toString(deltaModeCheckBox.isSelected()));
         preferences.put(PREFERENCES_MULTITAB_MODE, Boolean.toString(multiTabModeCheckBox.isSelected()));
     }
 

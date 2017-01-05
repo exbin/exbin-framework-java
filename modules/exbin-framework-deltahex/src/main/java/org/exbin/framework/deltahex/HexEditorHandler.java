@@ -46,7 +46,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 /**
  * Hexadecimal editor provider.
  *
- * @version 0.2.0 2016/12/21
+ * @version 0.2.0 2017/01/05
  * @author ExBin Project (http://exbin.org)
  */
 public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
@@ -189,8 +189,13 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
         }
     }
 
+    public void setSegmentsRepository(SegmentsRepository segmentsRepository) {
+        this.segmentsRepository = segmentsRepository;
+    }
+
     private synchronized HexPanel createNewPanel() {
-        HexPanel panel = new HexPanel(segmentsRepository, lastIndex);
+        HexPanel panel = new HexPanel(lastIndex);
+        panel.setSegmentsRepository(segmentsRepository);
         lastIndex++;
         panels.add(panel);
         if (hexPanelInit != null) {

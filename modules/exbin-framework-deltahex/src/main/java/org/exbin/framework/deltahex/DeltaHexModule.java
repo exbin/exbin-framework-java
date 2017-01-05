@@ -74,7 +74,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.0 2017/01/05
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -92,6 +92,8 @@ public class DeltaHexModule implements XBApplicationModule {
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
 
     public static final String HEX_STATUS_BAR_ID = "hexStatusBar";
+
+    public static final String PREFERENCES_MEMORY_MODE = "memoryMode";
 
     private java.util.ResourceBundle resourceBundle = null;
 
@@ -117,8 +119,6 @@ public class DeltaHexModule implements XBApplicationModule {
     private ClipboardCodeHandler clipboardCodeHandler;
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
 
-    private boolean deltaMode = false;
-
     public DeltaHexModule() {
     }
 
@@ -141,13 +141,11 @@ public class DeltaHexModule implements XBApplicationModule {
 
     public HexEditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            HexPanel panel;
-            if (deltaMode) {
-                SegmentsRepository segmentsRepository = new SegmentsRepository();
-                panel = new HexPanel(segmentsRepository);
-            } else {
-                panel = new HexPanel();
-            }
+            String deltaModeString = application.getAppPreferences().get(PREFERENCES_MEMORY_MODE, HexStatusApi.MemoryMode.DELTA_MODE.getPreferencesValue());
+            HexStatusApi.MemoryMode memoryMode = HexStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
+            HexPanel panel = new HexPanel();
+            panel.setSegmentsRepository(new SegmentsRepository());
+            panel.setDeltaMemoryMode(memoryMode == HexStatusApi.MemoryMode.DELTA_MODE);
             editorProvider = panel;
 
             panel.setPopupMenu(createPopupMenu(panel.getId()));
@@ -165,6 +163,14 @@ public class DeltaHexModule implements XBApplicationModule {
                 @Override
                 public void popupEncodingsMenu(MouseEvent mouseEvent) {
                     encodingsHandler.popupEncodingsMenu(mouseEvent);
+                }
+            });
+            panel.setReleaseFileMethod(new HexPanel.ReleaseFileMethod() {
+                @Override
+                public boolean execute() {
+                    GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+                    FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
+                    return fileHandlingActions.releaseFile();
                 }
             });
         }
@@ -198,6 +204,7 @@ public class DeltaHexModule implements XBApplicationModule {
                 }
             });
             ((HexEditorHandler) editorProvider).setEditorViewHandling(dockingModule.getEditorViewHandling());
+            ((HexEditorHandler) editorProvider).setSegmentsRepository(new SegmentsRepository());
             ((HexEditorHandler) editorProvider).init();
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
@@ -723,9 +730,4 @@ public class DeltaHexModule implements XBApplicationModule {
             }
         });
     }
-
-    public void setDeltaMode(boolean deltaMode) {
-        this.deltaMode = deltaMode;
-    }
-
 }

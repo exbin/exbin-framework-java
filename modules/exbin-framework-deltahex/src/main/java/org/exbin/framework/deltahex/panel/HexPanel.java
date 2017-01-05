@@ -87,7 +87,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.0 2017/01/05
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
@@ -102,6 +102,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private Map<HexColorType, Color> defaultColors;
     private HexStatusApi hexStatus = null;
     private TextEncodingStatusApi encodingStatus = null;
+    private boolean deltaMemoryMode = false;
 
     private HexSearchPanel hexSearchPanel;
     private boolean findTextPanelVisible = false;
@@ -114,13 +115,10 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private PropertyChangeListener propertyChangeListener;
     private CharsetChangeListener charsetChangeListener = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
+    private ReleaseFileMethod releaseFileMethod = null;
+    private XBApplication application;
 
     public HexPanel() {
-        this(null);
-    }
-
-    public HexPanel(SegmentsRepository segmentsRepository) {
-        this.segmentsRepository = segmentsRepository;
         undoHandler = new CodeAreaUndoHandler(codeArea);
         undoHandler.addUndoUpdateListener(new BinaryDataUndoUpdateListener() {
             @Override
@@ -139,11 +137,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     public HexPanel(int id) {
-        this(null, id);
-    }
-
-    public HexPanel(SegmentsRepository segmentsRepository, int id) {
-        this(segmentsRepository);
+        this();
         this.id = id;
     }
 
@@ -205,7 +199,12 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     public void setApplication(XBApplication application) {
+        this.application = application;
         hexSearchPanel.setApplication(application);
+    }
+
+    public void setSegmentsRepository(SegmentsRepository segmentsRepository) {
+        this.segmentsRepository = segmentsRepository;
     }
 
     public void showSearchPanel(boolean replace) {
@@ -628,8 +627,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         File file = new File(fileUri);
         try {
             DeltaDocument document;
-            if (segmentsRepository != null) {
-                // TODO Support for delta mode
+            if (deltaMemoryMode) {
                 FileDataSource openFileSource = segmentsRepository.openFileSource(file);
                 document = segmentsRepository.createDocument(openFileSource);
                 codeArea.setData(document);
@@ -637,6 +635,9 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             } else {
                 try (FileInputStream fileStream = new FileInputStream(file)) {
                     BinaryData data = codeArea.getData();
+                    if (!(data instanceof XBData)) {
+                        data = new XBData();
+                    }
                     ((EditableBinaryData) data).loadFromStream(fileStream);
                     codeArea.setData(data);
                     this.fileUri = fileUri;
@@ -657,9 +658,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     public void saveToFile(URI fileUri, FileType fileType) {
         File file = new File(fileUri);
         try {
-            if (segmentsRepository != null) {
-                // TODO support for delta mode
-                // TODO freeze window
+            if (codeArea.getData() instanceof DeltaDocument) {
+                // TODO freeze window / replace with progress bar
                 DeltaDocument document = (DeltaDocument) codeArea.getData();
                 if (!document.getFileSource().getFile().equals(file)) {
                     FileDataSource fileSource = segmentsRepository.openFileSource(file);
@@ -694,6 +694,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             segmentsRepository.dropDocument((DeltaDocument) codeArea.getData());
         }
         setNewData();
+        fileUri = null;
         documentOriginalSize = codeArea.getDataSize();
         codeArea.notifyDataChanged();
         updateCurrentDocumentSize();
@@ -843,6 +844,44 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                     encodingStatusHandler.popupEncodingsMenu(mouseEvent);
                 }
             }
+
+            @Override
+            public void changeMemoryMode(HexStatusApi.MemoryMode memoryMode) {
+                boolean newDeltaMode = memoryMode == HexStatusApi.MemoryMode.DELTA_MODE;
+                if (newDeltaMode != deltaMemoryMode) {
+                    // Switch memory mode
+                    if (fileUri != null) {
+                        // If document is connected to file, attempt to release first if modified and then simply reload
+                        if (isModified()) {
+                            if (releaseFileMethod != null && releaseFileMethod.execute()) {
+                                deltaMemoryMode = newDeltaMode;
+                                loadFromFile(fileUri, null);
+                            }
+                        } else {
+                            deltaMemoryMode = newDeltaMode;
+                            loadFromFile(fileUri, null);
+                        }
+                    } else {
+                        // If document unsaved in memory, switch data in code area
+                        if (codeArea.getData() instanceof DeltaDocument) {
+                            XBData data = new XBData();
+                            data.insert(0, codeArea.getData());
+                            codeArea.setData(data);
+                            codeArea.getData().dispose();
+                        } else {
+                            BinaryData oldData = codeArea.getData();
+                            DeltaDocument document = segmentsRepository.createDocument();
+                            document.insert(0, oldData);
+                            codeArea.setData(document);
+                            oldData.dispose();
+                        }
+                        codeArea.notifyDataChanged();
+                        updateCurrentMemoryMode();
+                        deltaMemoryMode = newDeltaMode;
+                    }
+                    deltaMemoryMode = newDeltaMode;
+                }
+            }
         });
     }
 
@@ -898,12 +937,16 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         hexStatus.setCurrentDocumentSize(dataSize + " (" + (difference > 0 ? "+" + difference : difference) + ")");
     }
 
+    public void setDeltaMemoryMode(boolean deltaMemoryMode) {
+        this.deltaMemoryMode = deltaMemoryMode;
+    }
+
     private void updateCurrentMemoryMode() {
-        String memoryMode = "M";
+        HexStatusApi.MemoryMode memoryMode = HexStatusApi.MemoryMode.RAM_MEMORY;
         if (codeArea.getEditationAllowed() == EditationAllowed.READ_ONLY) {
-            memoryMode = "R";
+            memoryMode = HexStatusApi.MemoryMode.READ_ONLY;
         } else if (codeArea.getData() instanceof DeltaDocument) {
-            memoryMode = "\u0394";
+            memoryMode = HexStatusApi.MemoryMode.DELTA_MODE;
         }
 
         hexStatus.setMemoryMode(memoryMode);
@@ -933,6 +976,10 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     public void setPasteFromCode(Action pasteFromCode) {
         this.pasteFromCode = pasteFromCode;
+    }
+
+    public void setReleaseFileMethod(ReleaseFileMethod releaseFileMethod) {
+        this.releaseFileMethod = releaseFileMethod;
     }
 
     @Override
@@ -970,7 +1017,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     private void setNewData() {
-        if (segmentsRepository != null) {
+        if (deltaMemoryMode) {
             codeArea.setData(segmentsRepository.createDocument());
         } else {
             codeArea.setData(new XBData());
@@ -980,5 +1027,10 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     public static interface CharsetChangeListener {
 
         public void charsetChanged();
+    }
+
+    public static interface ReleaseFileMethod {
+
+        public boolean execute();
     }
 }

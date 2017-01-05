@@ -21,7 +21,7 @@ import javax.swing.Action;
 /**
  * Interface for file handling actions.
  *
- * @version 0.2.0 2016/01/09
+ * @version 0.2.0 2017/01/05
  * @author ExBin Project (http://exbin.org)
  */
 public interface FileHandlingActionsApi {
@@ -37,4 +37,6 @@ public interface FileHandlingActionsApi {
     FileHandlerApi getFileHandler();
 
     void setFileHandler(FileHandlerApi fileHandler);
+
+    boolean releaseFile();
 }

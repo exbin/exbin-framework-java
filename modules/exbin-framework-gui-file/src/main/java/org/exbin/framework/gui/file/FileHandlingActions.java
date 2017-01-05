@@ -52,7 +52,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * File handling operations.
  *
- * @version 0.2.0 2016/08/16
+ * @version 0.2.0 2017/01/05
  * @author ExBin Project (http://exbin.org)
  */
 public class FileHandlingActions implements FileHandlingActionsApi {
@@ -165,6 +165,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
      *
      * @return true if successfull
      */
+    @Override
     public boolean releaseFile() {
 
         if (fileHandler == null) {
