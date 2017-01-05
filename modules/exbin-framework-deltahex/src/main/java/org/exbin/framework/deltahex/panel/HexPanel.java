@@ -625,6 +625,16 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     @Override
     public void loadFromFile(URI fileUri, FileType fileType) {
         File file = new File(fileUri);
+        if (!file.isFile()) {
+            JOptionPane.showOptionDialog(this,
+                    "File not found",
+                    "Unable to load file",
+                    JOptionPane.CLOSED_OPTION,
+                    JOptionPane.ERROR_MESSAGE,
+                    null, null, null);
+            return;
+        }
+
         try {
             DeltaDocument document;
             if (deltaMemoryMode) {
