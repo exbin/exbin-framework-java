@@ -636,17 +636,19 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         }
 
         try {
-            DeltaDocument document;
+            BinaryData oldData = codeArea.getData();
             if (deltaMemoryMode) {
                 FileDataSource openFileSource = segmentsRepository.openFileSource(file);
-                document = segmentsRepository.createDocument(openFileSource);
+                DeltaDocument document = segmentsRepository.createDocument(openFileSource);
                 codeArea.setData(document);
                 this.fileUri = fileUri;
+                oldData.dispose();
             } else {
                 try (FileInputStream fileStream = new FileInputStream(file)) {
                     BinaryData data = codeArea.getData();
                     if (!(data instanceof XBData)) {
                         data = new XBData();
+                        oldData.dispose();
                     }
                     ((EditableBinaryData) data).loadFromStream(fileStream);
                     codeArea.setData(data);
@@ -875,19 +877,18 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                         }
                     } else {
                         // If document unsaved in memory, switch data in code area
+                        BinaryData oldData = codeArea.getData();
                         if (codeArea.getData() instanceof DeltaDocument) {
                             XBData data = new XBData();
                             data.insert(0, codeArea.getData());
                             codeArea.setData(data);
-                            codeArea.getData().dispose();
                         } else {
-                            BinaryData oldData = codeArea.getData();
                             DeltaDocument document = segmentsRepository.createDocument();
                             document.insert(0, oldData);
                             codeArea.setData(document);
-                            oldData.dispose();
                         }
                         undoHandler.clear();
+                        oldData.dispose();
                         codeArea.notifyDataChanged();
                         updateCurrentMemoryMode();
                         deltaMemoryMode = newDeltaMode;
