@@ -866,6 +866,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                             if (releaseFileMethod != null && releaseFileMethod.execute()) {
                                 deltaMemoryMode = newDeltaMode;
                                 loadFromFile(fileUri, null);
+                                codeArea.clearSelection();
+                                codeArea.setCaretPosition(0);
                             }
                         } else {
                             deltaMemoryMode = newDeltaMode;
@@ -885,6 +887,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                             codeArea.setData(document);
                             oldData.dispose();
                         }
+                        undoHandler.clear();
                         codeArea.notifyDataChanged();
                         updateCurrentMemoryMode();
                         deltaMemoryMode = newDeltaMode;
@@ -893,6 +896,11 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 }
             }
         });
+
+        if (deltaMemoryMode) {
+            setNewData();
+        }
+        updateCurrentMemoryMode();
     }
 
     @Override
@@ -959,7 +967,9 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             memoryMode = HexStatusApi.MemoryMode.DELTA_MODE;
         }
 
-        hexStatus.setMemoryMode(memoryMode);
+        if (hexStatus != null) {
+            hexStatus.setMemoryMode(memoryMode);
+        }
     }
 
     @Override
