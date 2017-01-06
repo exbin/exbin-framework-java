@@ -32,7 +32,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Text encoding options panel.
  *
- * @version 0.2.0 2016/05/19
+ * @version 0.2.0 2017/01/06
  * @author ExBin Project (http://exbin.org)
  */
 public class TextEncodingOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -224,14 +224,18 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
-        modifiedOptionListener = listener;
+    public void setModifiedOptionListener(ModifiedOptionListener modifiedOptionListener) {
+        this.modifiedOptionListener = modifiedOptionListener;
     }
 
     private void updateEncodings() {
         encodingComboBoxModel.setAvailableEncodings(encodingPanel.getEncodingList());
         defaultEncodingComboBox.repaint();
     }
+    
+    public void setAddEncodingsOperation(TextEncodingPanel.AddEncodingsOperation addEncodingsOperation) {
+        encodingPanel.setAddEncodingsOperation(addEncodingsOperation);
+    }    
 
     public class DefaultEncodingComboBoxModel implements ComboBoxModel<String> {
 

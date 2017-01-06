@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 import javax.swing.JDialog;
@@ -28,11 +29,13 @@ import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.editor.text.panel.AddEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanelApi;
 import org.exbin.framework.editor.text.panel.TextColorOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextColorPanelApi;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
+import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.editor.text.panel.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
@@ -52,14 +55,16 @@ import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * XBUP text editor module.
+ * Text editor module.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.0 2017/01/06
  * @author ExBin Project (http://exbin.org)
  */
 public class EditorTextModule implements XBApplicationModule {
@@ -247,7 +252,35 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        optionsModule.addOptionsPanel(new TextEncodingOptionsPanel(textEncodingPanelApi));
+        TextEncodingOptionsPanel textEncodingOptionsPanel = new TextEncodingOptionsPanel(textEncodingPanelApi);
+        textEncodingOptionsPanel.setAddEncodingsOperation(new TextEncodingPanel.AddEncodingsOperation() {
+            @Override
+            public List<String> run(List<String> usedEncodings) {
+                final List<String> result = new ArrayList<>();
+                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
+                addEncodingPanel.setUsedEncodings(usedEncodings);
+                DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
+                JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
+                final JDialog addEncodingDialog = frameModule.createDialog(dialogPanel);
+                controlPanel.setHandler(new DefaultControlHandler() {
+                    @Override
+                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
+                        if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                            result.addAll(addEncodingPanel.getEncodings());
+                        }
+
+                        WindowUtils.closeWindow(addEncodingDialog);
+                    }
+                });
+                frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
+                WindowUtils.assignGlobalKeyListener(addEncodingDialog, controlPanel.createOkCancelListener());
+                addEncodingDialog.setLocationRelativeTo(addEncodingDialog.getParent());
+                addEncodingDialog.setVisible(true);
+                return result;
+            }
+        });
+        optionsModule.addOptionsPanel(textEncodingOptionsPanel);
         optionsModule.extendAppearanceOptionsPanel(new TextAppearanceOptionsPanel(textAppearanceOptionsPanelApi));
     }
 

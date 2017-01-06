@@ -24,11 +24,14 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import org.exbin.deltahex.SelectionChangedListener;
@@ -47,9 +50,12 @@ import org.exbin.framework.deltahex.panel.HexPanel;
 import org.exbin.framework.deltahex.panel.HexStatusPanel;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.TextFontApi;
+import org.exbin.framework.editor.text.panel.AddEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
+import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.editor.text.panel.TextFontOptionsPanel;
+import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
@@ -69,12 +75,17 @@ import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2017/01/05
+ * @version 0.2.0 2017/01/06
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -297,6 +308,33 @@ public class DeltaHexModule implements XBApplicationModule {
             }
         };
         textEncodingOptionsPanel = new TextEncodingOptionsPanel(textEncodingPanelApi);
+        textEncodingOptionsPanel.setAddEncodingsOperation(new TextEncodingPanel.AddEncodingsOperation() {
+            @Override
+            public List<String> run(List<String> usedEncodings) {
+                final List<String> result = new ArrayList<>();
+                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
+                addEncodingPanel.setUsedEncodings(usedEncodings);
+                DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
+                JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
+                final JDialog addEncodingDialog = frameModule.createDialog(dialogPanel);
+                controlPanel.setHandler(new DefaultControlHandler() {
+                    @Override
+                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
+                        if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                            result.addAll(addEncodingPanel.getEncodings());
+                        }
+
+                        WindowUtils.closeWindow(addEncodingDialog);
+                    }
+                });
+                frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
+                WindowUtils.assignGlobalKeyListener(addEncodingDialog, controlPanel.createOkCancelListener());
+                addEncodingDialog.setLocationRelativeTo(addEncodingDialog.getParent());
+                addEncodingDialog.setVisible(true);
+                return result;
+            }
+        });
         optionsModule.addOptionsPanel(textEncodingOptionsPanel);
 
         TextFontPanelApi textFontPanelApi = new TextFontPanelApi() {
@@ -316,6 +354,43 @@ public class DeltaHexModule implements XBApplicationModule {
             }
         };
         textFontOptionsPanel = new TextFontOptionsPanel(textFontPanelApi);
+        textFontOptionsPanel.setFontChangeAction(new TextFontOptionsPanel.FontChangeAction() {
+            @Override
+            public Font changeFont(Font currentFont) {
+                final Result result = new Result();
+                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                final TextFontPanel fontPanel = new TextFontPanel();
+                fontPanel.setStoredFont(currentFont);
+                OptionsControlPanel controlPanel = new OptionsControlPanel();
+                JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
+                final JDialog dialog = frameModule.createDialog(dialogPanel);
+                WindowUtils.addHeaderPanel(dialog, fontPanel.getResourceBundle());
+                frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
+                controlPanel.setHandler(new OptionsControlHandler() {
+                    @Override
+                    public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
+                        if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+                            if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                                fontPanel.saveToPreferences(application.getAppPreferences());
+                            }
+                            result.font = fontPanel.getStoredFont();
+                        }
+
+                        WindowUtils.closeWindow(dialog);
+                    }
+                });
+                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
+                dialog.setLocationRelativeTo(dialog.getParent());
+                dialog.setVisible(true);
+
+                return result.font;
+            }
+
+            class Result {
+
+                Font font;
+            }
+        });
         optionsModule.addOptionsPanel(textFontOptionsPanel);
     }
 
