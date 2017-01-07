@@ -87,7 +87,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.0 2017/01/05
+ * @version 0.2.0 2017/01/07
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
@@ -673,7 +673,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             if (codeArea.getData() instanceof DeltaDocument) {
                 // TODO freeze window / replace with progress bar
                 DeltaDocument document = (DeltaDocument) codeArea.getData();
-                if (!document.getFileSource().getFile().equals(file)) {
+                if (document.getFileSource() == null || !file.equals(document.getFileSource().getFile())) {
                     FileDataSource fileSource = segmentsRepository.openFileSource(file);
                     document.setFileSource(fileSource);
                 }

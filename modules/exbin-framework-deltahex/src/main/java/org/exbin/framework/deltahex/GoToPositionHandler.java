@@ -22,6 +22,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.deltahex.panel.GoToHexPanel;
 import org.exbin.framework.deltahex.panel.HexPanel;
@@ -35,7 +36,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 /**
  * Go to line handler.
  *
- * @version 0.2.0 2016/12/29
+ * @version 0.2.0 2017/01/07
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToPositionHandler {
@@ -63,7 +64,6 @@ public class GoToPositionHandler {
                 if (editorProvider instanceof HexEditorProvider) {
                     final HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
                     final GoToHexPanel goToPanel = new GoToHexPanel();
-                    goToPanel.initFocus();
                     goToPanel.setCursorPosition(activePanel.getCodeArea().getCaretPosition().getDataPosition());
                     goToPanel.setMaxPosition(activePanel.getCodeArea().getDataSize());
                     DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
@@ -76,6 +76,7 @@ public class GoToPositionHandler {
                         @Override
                         public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
                             if (actionType == ControlActionType.OK) {
+                                goToPanel.acceptInput();
                                 activePanel.goToPosition(goToPanel.getGoToPosition());
                             }
 
@@ -84,6 +85,12 @@ public class GoToPositionHandler {
                     });
                     WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
                     dialog.setLocationRelativeTo(dialog.getParent());
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            goToPanel.initFocus();
+                        }
+                    });
                     dialog.setVisible(true);
                 }
             }

@@ -52,7 +52,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * File handling operations.
  *
- * @version 0.2.0 2017/01/05
+ * @version 0.2.0 2017/01/07
  * @author ExBin Project (http://exbin.org)
  */
 public class FileHandlingActions implements FileHandlingActionsApi {
@@ -279,23 +279,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                 }
                 fileHandler.loadFromFile(fileUri, fileType);
 
-                if (recentFiles != null) {
-                    // Update recent files list
-                    int i = 0;
-                    while (i < recentFiles.size()) {
-                        RecentItem recentItem = recentFiles.get(i);
-                        if (recentItem.getFileName().equals(fileUri.toString())) {
-                            recentFiles.remove(i);
-                        }
-                        i++;
-                    }
-
-                    recentFiles.add(0, new RecentItem(fileUri.toString(), "", ((FileType) openFileChooser.getFileFilter()).getFileTypeId()));
-                    if (recentFiles.size() > 15) {
-                        recentFiles.remove(15);
-                    }
-                    rebuildRecentFilesMenu();
-                }
+                updateRecentFilesList(fileUri);
             }
         }
     }
@@ -324,6 +308,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                 try {
                     URI fileUri = saveFileChooser.getSelectedFile().toURI();
                     fileHandler.saveToFile(fileUri, (FileType) saveFileChooser.getFileFilter());
+                    updateRecentFilesList(fileUri);
                 } catch (Exception ex) {
                     Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
                     String errorMessage = ex.getLocalizedMessage();
@@ -460,6 +445,26 @@ public class FileHandlingActions implements FileHandlingActionsApi {
 
     public void setPreferences(Preferences preferences) {
         this.preferences = preferences;
+    }
+
+    private void updateRecentFilesList(URI fileUri) {
+        if (recentFiles != null) {
+            // Update recent files list
+            int i = 0;
+            while (i < recentFiles.size()) {
+                RecentItem recentItem = recentFiles.get(i);
+                if (recentItem.getFileName().equals(fileUri.toString())) {
+                    recentFiles.remove(i);
+                }
+                i++;
+            }
+
+            recentFiles.add(0, new RecentItem(fileUri.toString(), "", ((FileType) openFileChooser.getFileFilter()).getFileTypeId()));
+            if (recentFiles.size() > 15) {
+                recentFiles.remove(15);
+            }
+            rebuildRecentFilesMenu();
+        }
     }
 
     public class AllFilesFilter extends FileFilter implements FileType {
