@@ -163,7 +163,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     /**
      * Attempts to release current file and warn if document was modified.
      *
-     * @return true if successfull
+     * @return true if successful
      */
     @Override
     public boolean releaseFile() {
