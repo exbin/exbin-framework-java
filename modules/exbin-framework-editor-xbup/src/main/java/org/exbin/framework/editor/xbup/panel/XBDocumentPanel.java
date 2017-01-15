@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.xbup.panel;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -42,6 +43,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import org.exbin.framework.deltahex.panel.HexPanel;
+import org.exbin.framework.deltahex.panel.HexStatusPanel;
 import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
@@ -81,7 +83,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.0 2016/12/30
+ * @version 0.2.0 2017/01/15
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -95,7 +97,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private PanelMode mode = PanelMode.TREE;
 
     private final XBDocTreePanel treePanel;
+    private final JPanel hexPanelWrapper;
     private final HexPanel hexPanel;
+    private final HexStatusPanel hexStatusPanel;
     private final TextPanel textPanel;
 
     private XBPropertyPanel propertyPanel;
@@ -114,7 +118,13 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         mainSplitPane.setRightComponent(propertyPanel);
 
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
+        hexPanelWrapper = new JPanel();
+        hexPanelWrapper.setLayout(new BorderLayout());
         hexPanel = new HexPanel();
+        hexStatusPanel = new HexStatusPanel();
+        hexPanel.registerHexStatus(hexStatusPanel);
+        hexPanelWrapper.add(hexPanel, BorderLayout.CENTER);
+        hexPanelWrapper.add(hexStatusPanel, BorderLayout.SOUTH);
         // hexPanel.setNoBorder();
         textPanel = new TextPanel();
         textPanel.setNoBorder();
@@ -780,7 +790,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             case 1:
                 return textPanel;
             case 2:
-                return hexPanel;
+                return hexPanelWrapper;
         }
 
         return null;
