@@ -97,7 +97,6 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private PanelMode mode = PanelMode.TREE;
 
     private final XBDocTreePanel treePanel;
-    private final JPanel hexPanelWrapper;
     private final HexPanel hexPanel;
     private final HexStatusPanel hexStatusPanel;
     private final TextPanel textPanel;
@@ -118,13 +117,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         mainSplitPane.setRightComponent(propertyPanel);
 
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
-        hexPanelWrapper = new JPanel();
-        hexPanelWrapper.setLayout(new BorderLayout());
         hexPanel = new HexPanel();
         hexStatusPanel = new HexStatusPanel();
         hexPanel.registerHexStatus(hexStatusPanel);
-        hexPanelWrapper.add(hexPanel, BorderLayout.CENTER);
-        hexPanelWrapper.add(hexStatusPanel, BorderLayout.SOUTH);
         // hexPanel.setNoBorder();
         textPanel = new TextPanel();
         textPanel.setNoBorder();
@@ -790,7 +785,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             case 1:
                 return textPanel;
             case 2:
-                return hexPanelWrapper;
+                return hexPanel;
         }
 
         return null;

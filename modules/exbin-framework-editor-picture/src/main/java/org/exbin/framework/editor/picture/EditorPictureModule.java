@@ -43,7 +43,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * XBUP picture editor module.
  *
- * @version 0.2.0 2016/02/09
+ * @version 0.2.0 2017/01/17
  * @author ExBin Project (http://exbin.org)
  */
 public class EditorPictureModule implements XBApplicationModule {
@@ -122,9 +122,11 @@ public class EditorPictureModule implements XBApplicationModule {
     }
 
     private void updateCurrentPosition() {
-        Point mousePosition = ((ImagePanel) editorProvider).getMousePosition();
-        double scale = ((ImagePanel) editorProvider).getScale();
-        imageStatusPanel.setCurrentPosition(new Point((int) (mousePosition.x * scale), (int) (mousePosition.y * scale)));
+        if (imageStatusPanel != null) {
+            Point mousePosition = ((ImagePanel) editorProvider).getMousePosition();
+            double scale = ((ImagePanel) editorProvider).getScale();
+            imageStatusPanel.setCurrentPosition(new Point((int) (mousePosition.x * scale), (int) (mousePosition.y * scale)));
+        }
     }
 
     public void registerStatusBar() {
