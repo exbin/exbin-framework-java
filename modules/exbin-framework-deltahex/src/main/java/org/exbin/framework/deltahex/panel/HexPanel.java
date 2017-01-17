@@ -63,6 +63,7 @@ import org.exbin.deltahex.delta.DeltaDocument;
 import org.exbin.deltahex.delta.FileDataSource;
 import org.exbin.deltahex.delta.SegmentsRepository;
 import org.exbin.deltahex.highlight.swing.HighlightCodeAreaPainter;
+import org.exbin.deltahex.highlight.swing.HighlightNonAsciiCodeAreaPainter;
 import org.exbin.deltahex.operation.BinaryDataCommand;
 import org.exbin.deltahex.operation.swing.CodeAreaUndoHandler;
 import org.exbin.deltahex.operation.swing.CodeAreaOperationCommandHandler;
@@ -143,7 +144,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     private void init() {
         codeArea = new CodeArea();
-        codeArea.setPainter(new HighlightCodeAreaPainter(codeArea));
+        codeArea.setPainter(new HighlightNonAsciiCodeAreaPainter(codeArea));
         setNewData();
         codeArea.setHandleClipboard(false);
         codeArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -338,7 +339,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
      * Performs search by binary data.
      */
     private void searchForBinaryData(SearchParameters searchParameters) {
-        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        HighlightNonAsciiCodeAreaPainter painter = (HighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
         long position = codeArea.getCaretPosition().getDataPosition();
         HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
