@@ -21,9 +21,11 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.about.api.GuiAboutModuleApi;
-import org.exbin.framework.gui.about.dialog.AboutDialog;
+import org.exbin.framework.gui.about.panel.AboutPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuGroup;
@@ -32,12 +34,15 @@ import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.CloseControlHandler;
+import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework about module.
  *
- * @version 0.2.0 2016/08/06
+ * @version 0.2.0 2017/01/18
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiAboutModule implements GuiAboutModuleApi {
@@ -75,9 +80,19 @@ public class GuiAboutModule implements GuiAboutModuleApi {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    AboutDialog aboutDialog = new AboutDialog(frameModule.getFrame(), true, application);
-                    aboutDialog.setProjectResourceBundle(application.getAppBundle());
-                    aboutDialog.setSideComponent(sideComponent);
+                    AboutPanel aboutPanel = new AboutPanel();
+                    aboutPanel.setApplication(application);
+                    aboutPanel.setSideComponent(sideComponent);
+                    CloseControlPanel controlPanel = new CloseControlPanel();
+                    JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
+                    final JDialog aboutDialog = frameModule.createDialog(dialogPanel);
+                    controlPanel.setHandler(new CloseControlHandler() {
+                        @Override
+                        public void controlActionPerformed() {
+                            WindowUtils.closeWindow(aboutDialog);
+                        }
+                    });
+                    WindowUtils.assignGlobalKeyListener(aboutDialog, controlPanel.createOkCancelListener());
                     aboutDialog.setLocationRelativeTo(aboutDialog.getParent());
                     aboutDialog.setVisible(true);
                 }
