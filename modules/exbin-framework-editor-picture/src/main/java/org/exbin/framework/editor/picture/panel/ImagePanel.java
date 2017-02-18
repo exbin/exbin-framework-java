@@ -55,7 +55,6 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
@@ -64,13 +63,10 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import org.exbin.framework.editor.picture.EditorPictureModule;
 import org.exbin.framework.editor.picture.PictureFileType;
-import org.exbin.framework.editor.picture.dialog.ImageResizeDialog;
-import org.exbin.framework.editor.picture.dialog.ToolColorDialog;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
-import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
 import org.exbin.xbup.core.catalog.XBPCatalog;
@@ -88,9 +84,9 @@ import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.visual.picture.XBBufferedImage;
 
 /**
- * Image panel for XBPEditor.
+ * Image panel for picture editor.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.1 2017/02/18
  * @author ExBin Project (http://exbin.org)
  */
 public class ImagePanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -326,15 +322,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         }
     }
 
-    public void showDialog(ToolColorDialog dlg) {
-        ToolColorPanel colorPanel = dlg.getColorPanel();
-        // colorPanel.setTextFindColor(getSelectionColor());
-        dlg.setVisible(true);
-        if (dlg.getDialogOption() == JOptionPane.OK_OPTION) {
-            // setSelectionColor(colorPanel.getTextFindColor());
-        }
-    }
-
     public Color getSelectionColor() {
         return selectionColor;
     }
@@ -476,7 +463,7 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
             int lastSegment = path.lastIndexOf("/");
             return lastSegment < 0 ? path : path.substring(lastSegment + 1);
         }
-        
+
         return null;
     }
 
@@ -671,19 +658,11 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         }
     }
 
-    public void performImageResize() {
-        ImageResizeDialog dialog = new ImageResizeDialog(WindowUtils.getFrame(this), true);
-        dialog.setResolution(new Point(image.getWidth(null), image.getHeight(null)));
-        dialog.setVisible(true);
-        if (dialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            Point point = dialog.getResolution();
-            int width = (int) (point.getX());
-            int height = (int) (point.getY());
-            image = toBufferedImage(image.getScaledInstance(width, height, Image.SCALE_DEFAULT));
-            graphics = image.getGraphics();
-            graphics.setColor(toolColor);
-            setScale(scaleRatio);
-        }
+    public void performResize(int width, int height) {
+        image = toBufferedImage(image.getScaledInstance(width, height, Image.SCALE_DEFAULT));
+        graphics = image.getGraphics();
+        graphics.setColor(toolColor);
+        setScale(scaleRatio);
     }
 
     @Override
@@ -746,6 +725,10 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
         // TODO
+    }
+
+    public Point getImageSize() {
+        return new Point(image.getWidth(null), image.getHeight(null));
     }
 
     public enum ToolMode {

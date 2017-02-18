@@ -16,30 +16,34 @@
  */
 package org.exbin.framework.editor.picture;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.picture.dialog.ToolColorDialog;
 import org.exbin.framework.editor.picture.panel.ImagePanel;
-import org.exbin.framework.editor.picture.panel.ToolColorPanelApi;
+import org.exbin.framework.editor.picture.panel.ToolColorPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
 /**
  * Tools options action handler.
  *
- * @version 0.2.0 2016/02/06
+ * @version 0.2.1 2017/02/18
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolsOptionsHandler {
 
     private int metaMask;
-    private ResourceBundle resourceBundle;
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditorPictureModule.class);
 
     private Action toolsSetColorAction;
 
@@ -49,7 +53,6 @@ public class ToolsOptionsHandler {
     public ToolsOptionsHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorPictureModule.class);
     }
 
     public void init() {
@@ -57,31 +60,29 @@ public class ToolsOptionsHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                ToolColorPanelApi toolColorPanelApi = new ToolColorPanelApi() {
-                    @Override
-                    public Color getToolColor() {
-                        return ((ImagePanel) editorProvider).getToolColor();
-                    }
 
+                final ToolColorPanel toolColorPanel = new ToolColorPanel();
+                toolColorPanel.setToolColor(((ImagePanel) editorProvider).getToolColor());
+                toolColorPanel.setSelectionColor(((ImagePanel) editorProvider).getSelectionColor());
+                DefaultControlPanel controlPanel = new DefaultControlPanel(toolColorPanel.getResourceBundle());
+                JPanel dialogPanel = WindowUtils.createDialogPanel(toolColorPanel, controlPanel);
+                final JDialog dialog = frameModule.createDialog(dialogPanel);
+                WindowUtils.addHeaderPanel(dialog, toolColorPanel.getResourceBundle());
+                frameModule.setDialogTitle(dialog, toolColorPanel.getResourceBundle());
+                controlPanel.setHandler(new DefaultControlHandler() {
                     @Override
-                    public Color getSelectionColor() {
-                        return ((ImagePanel) editorProvider).getSelectionColor();
-                    }
+                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
+                        if (actionType == ControlActionType.OK) {
+                            ((ImagePanel) editorProvider).setToolColor(toolColorPanel.getToolColor());
+                            ((ImagePanel) editorProvider).setSelectionColor(toolColorPanel.getSelectionColor());
+                        }
 
-                    @Override
-                    public void setToolColor(Color color) {
-                        ((ImagePanel) editorProvider).setToolColor(color);
+                        WindowUtils.closeWindow(dialog);
                     }
-
-                    @Override
-                    public void setSelectionColor(Color color) {
-                        ((ImagePanel) editorProvider).setSelectionColor(color);
-                    }
-                };
-                ToolColorDialog dialog = new ToolColorDialog(frameModule.getFrame(), true, toolColorPanelApi);
-                dialog.setIconImage(application.getApplicationIcon());
+                });
+                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
                 dialog.setLocationRelativeTo(dialog.getParent());
-                dialog.showDialog();
+                dialog.setVisible(true);
             }
         };
         ActionUtils.setupAction(toolsSetColorAction, resourceBundle, "toolsSetColorAction");

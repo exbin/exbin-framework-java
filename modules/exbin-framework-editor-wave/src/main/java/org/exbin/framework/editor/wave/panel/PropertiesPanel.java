@@ -14,35 +14,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.editor.wave.dialog;
+package org.exbin.framework.editor.wave.panel;
 
 import java.net.URI;
+import java.util.ResourceBundle;
 import javax.sound.sampled.AudioFormat;
-import org.exbin.framework.editor.wave.panel.AudioPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * File Properties Dialog.
+ * Wave file properties panel.
  *
- * @version 0.2.0 2016/03/14
+ * @version 0.2.1 2017/02/18
  * @author ExBin Project (http://exbin.org)
  */
-public class PropertiesDialog extends javax.swing.JDialog {
+public class PropertiesPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(PropertiesDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(PropertiesPanel.class);
 
-    public PropertiesDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public PropertiesPanel() {
         initComponents();
-        init();
-    }
-
-    private void init() {
-        WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
-        WindowUtils.assignGlobalKeyListener(this, closeButton);
-        pack();
     }
 
     /**
@@ -54,7 +44,6 @@ public class PropertiesDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainPanel = new javax.swing.JPanel();
         fileNameTextField = new javax.swing.JTextField();
         documentPanel = new javax.swing.JPanel();
         waveLengthLabel = new javax.swing.JLabel();
@@ -66,46 +55,26 @@ public class PropertiesDialog extends javax.swing.JDialog {
         encodingLabel = new javax.swing.JLabel();
         encodingTextField = new javax.swing.JTextField();
         fileNameLabel = new javax.swing.JLabel();
-        controlPanel = new javax.swing.JPanel();
-        closeButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(resourceBundle.getString("Form.title")); // NOI18N
-        setLocationByPlatform(true);
-        setModal(true);
-        setName("Form"); // NOI18N
-
-        mainPanel.setName("mainPanel"); // NOI18N
 
         fileNameTextField.setEditable(false);
-        fileNameTextField.setName("fileNameTextField"); // NOI18N
 
         documentPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("documentPanel.border.title"))); // NOI18N
-        documentPanel.setName("documentPanel"); // NOI18N
 
         waveLengthLabel.setText(resourceBundle.getString("waveLengthLabel.text")); // NOI18N
-        waveLengthLabel.setName("waveLengthLabel"); // NOI18N
 
         waveLengthTextField.setEditable(false);
-        waveLengthTextField.setName("waveLengthTextField"); // NOI18N
 
         sampleRateLabel.setText(resourceBundle.getString("sampleRateLabel.text")); // NOI18N
-        sampleRateLabel.setName("sampleRateLabel"); // NOI18N
 
         sampleRateTextField.setEditable(false);
-        sampleRateTextField.setName("sampleRateTextField"); // NOI18N
 
         channelsLabel.setText(resourceBundle.getString("channelsLabel.text")); // NOI18N
-        channelsLabel.setName("channelsLabel"); // NOI18N
 
         channelsTextField.setEditable(false);
-        channelsTextField.setName("channelsTextField"); // NOI18N
 
         encodingLabel.setText(resourceBundle.getString("encodingLabel.text")); // NOI18N
-        encodingLabel.setName("encodingLabel"); // NOI18N
 
         encodingTextField.setEditable(false);
-        encodingTextField.setName("encodingTextField"); // NOI18N
 
         javax.swing.GroupLayout documentPanelLayout = new javax.swing.GroupLayout(documentPanel);
         documentPanel.setLayout(documentPanelLayout);
@@ -118,10 +87,10 @@ public class PropertiesDialog extends javax.swing.JDialog {
                     .addComponent(sampleRateLabel)
                     .addComponent(channelsLabel)
                     .addComponent(encodingLabel)
-                    .addComponent(sampleRateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-                    .addComponent(channelsTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-                    .addComponent(encodingTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-                    .addComponent(waveLengthTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE))
+                    .addComponent(sampleRateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                    .addComponent(channelsTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                    .addComponent(encodingTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                    .addComponent(waveLengthTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
                 .addContainerGap())
         );
         documentPanelLayout.setVerticalGroup(
@@ -146,74 +115,36 @@ public class PropertiesDialog extends javax.swing.JDialog {
         );
 
         fileNameLabel.setText(resourceBundle.getString("fileNameLabel.text")); // NOI18N
-        fileNameLabel.setName("fileNameLabel"); // NOI18N
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 383, Short.MAX_VALUE)
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(documentPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(fileNameLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE))
-                    .addContainerGap()))
-        );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 285, Short.MAX_VALUE)
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(fileNameLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(documentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        );
-
-        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
-
-        controlPanel.setName("controlPanel"); // NOI18N
-
-        closeButton.setText(resourceBundle.getString("closeButton.text")); // NOI18N
-        closeButton.setName("closeButton"); // NOI18N
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
-        controlPanel.setLayout(controlPanelLayout);
-        controlPanelLayout.setHorizontalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(closeButton)
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(fileNameLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(fileNameTextField)
+                    .addComponent(documentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        controlPanelLayout.setVerticalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(closeButton)
-                .addContainerGap())
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(fileNameLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(documentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        getContentPane().add(controlPanel, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        WindowUtils.closeWindow(this);
-    }//GEN-LAST:event_closeButtonActionPerformed
-
-    public static void main(String args[]) {
-        WindowUtils.invokeWindow(new PropertiesDialog(new javax.swing.JFrame(), true));
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     public void setDocument(AudioPanel panel) {
@@ -231,18 +162,14 @@ public class PropertiesDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel channelsLabel;
     private javax.swing.JTextField channelsTextField;
-    private javax.swing.JButton closeButton;
-    private javax.swing.JPanel controlPanel;
     private javax.swing.JPanel documentPanel;
     private javax.swing.JLabel encodingLabel;
     private javax.swing.JTextField encodingTextField;
     private javax.swing.JLabel fileNameLabel;
     private javax.swing.JTextField fileNameTextField;
-    private javax.swing.JPanel mainPanel;
     private javax.swing.JLabel sampleRateLabel;
     private javax.swing.JTextField sampleRateTextField;
     private javax.swing.JLabel waveLengthLabel;
     private javax.swing.JTextField waveLengthTextField;
     // End of variables declaration//GEN-END:variables
-
 }

@@ -50,11 +50,9 @@ import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.editor.wave.EditorWaveModule;
-import org.exbin.framework.editor.wave.dialog.WaveResizeDialog;
 import org.exbin.framework.editor.wave.panel.command.WaveClipboardData;
 import org.exbin.framework.editor.wave.panel.command.WaveCopyCommand;
 import org.exbin.framework.editor.wave.panel.command.WaveCutCommand;
@@ -84,9 +82,9 @@ import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
- * Audio panel for XBSEditor.
+ * Audio panel wave editor.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.1 2017/02/18
  * @author ExBin Project (http://exbin.org)
  */
 public class AudioPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -552,7 +550,7 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
             int lastSegment = path.lastIndexOf("/");
             return lastSegment < 0 ? path : path.substring(lastSegment + 1);
         }
-        
+
         return null;
     }
 
@@ -609,11 +607,6 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
 
     public void attachCaretListener(MouseMotionListener listener) {
         wavePanel.addMouseMotionListener(listener);
-    }
-
-    public void showResizeDialog(WaveResizeDialog dlg) {
-        if (dlg.getDialogOption() == JOptionPane.OK_OPTION) {
-        }
     }
 
     public String getPositionTime() {

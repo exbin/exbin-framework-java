@@ -76,7 +76,7 @@ public class FindHexPanel extends javax.swing.JPanel {
 
         findComboBoxEditorComponent = new HexSearchComboBoxPanel();
         findComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
-            private JPanel emptyPanel = new JPanel();
+            private final JPanel emptyPanel = new JPanel();
             private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
 
             @Override
@@ -147,7 +147,7 @@ public class FindHexPanel extends javax.swing.JPanel {
 
         replaceComboBoxEditorComponent = new HexSearchComboBoxPanel();
         replaceComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
-            private JPanel emptyPanel = new JPanel();
+            private final JPanel emptyPanel = new JPanel();
             private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
 
             @Override
