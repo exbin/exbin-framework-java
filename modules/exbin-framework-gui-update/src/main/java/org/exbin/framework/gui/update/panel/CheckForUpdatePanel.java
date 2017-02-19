@@ -14,59 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.update.dialog;
+package org.exbin.framework.gui.update.panel;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.update.GuiUpdateModule;
 import org.exbin.framework.gui.update.VersionNumbers;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
-import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Check updates dialog.
+ * Check for update panel.
  *
- * @version 0.2.0 2016/07/14
+ * @version 0.2.1 2017/02/18
  * @author ExBin Project (http://exbin.org)
  */
-public class CheckUpdatesDialog extends javax.swing.JDialog implements HyperlinkListener {
+public class CheckForUpdatePanel extends javax.swing.JPanel implements HyperlinkListener {
 
-    private final XBApplication application;
-    private ResourceBundle appBundle;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckUpdatesDialog.class);
-    private String updateWebsite;
-    private VersionNumbers versionNumbers;
-    private CheckUpdatesHandler checkUpdatesHandler = null;
-    private Thread checkingThread = null;
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdatePanel.class);
     private URL downloadUrl;
+    private Thread checkingThread = null;
+    private CheckForUpdatePanelHandler checkForUpdatePanelHandler = null;
 
-    public CheckUpdatesDialog(java.awt.Frame parent, boolean modal, XBApplication application) {
-        super(parent, modal);
-
-        this.application = application;
-        if (application != null) {
-            appBundle = application.getAppBundle();
-        } else {
-            appBundle = resourceBundle;
-        }
-
-        init();
-    }
-
-    private void init() {
+    public CheckForUpdatePanel() {
         initComponents();
-
-        WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
-        WindowUtils.assignGlobalKeyListener(this, closeButton);
     }
 
     /**
@@ -90,9 +63,6 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        linkPopupMenu = new javax.swing.JPopupMenu();
-        copyLinkMenuItem = new javax.swing.JMenuItem();
-        mainPanel = new javax.swing.JPanel();
         statusPanel = new javax.swing.JPanel();
         statusIconLabel = new javax.swing.JLabel();
         statusTextLabel = new javax.swing.JLabel();
@@ -102,35 +72,14 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         availableVersionTextField = new javax.swing.JTextField();
         recheckButton = new javax.swing.JButton();
         downloadButton = new javax.swing.JButton();
-        controlPanel = new javax.swing.JPanel();
-        closeButton = new javax.swing.JButton();
-
-        linkPopupMenu.setName("linkPopupMenu"); // NOI18N
-
-        copyLinkMenuItem.setText(resourceBundle.getString("copyLinkMenuItem.text")); // NOI18N
-        copyLinkMenuItem.setName("copyLinkMenuItem"); // NOI18N
-        copyLinkMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                copyLinkMenuItemActionPerformed(evt);
-            }
-        });
-        linkPopupMenu.add(copyLinkMenuItem);
-
-        setTitle(resourceBundle.getString("checkUpdaBox.title")); // NOI18N
-        setLocationByPlatform(true);
-
-        mainPanel.setName("mainPanel"); // NOI18N
 
         statusPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         statusPanel.setMaximumSize(new java.awt.Dimension(32767, 60));
         statusPanel.setMinimumSize(new java.awt.Dimension(100, 60));
-        statusPanel.setName("statusPanel"); // NOI18N
 
         statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/update/resources/icons/open_icon_library/icons/png/48x48/apps/internet-web-browser-7.png"))); // NOI18N
-        statusIconLabel.setName("statusIconLabel"); // NOI18N
 
-        statusTextLabel.setText("Checking for available updates...");
-        statusTextLabel.setName("statusTextLabel"); // NOI18N
+        statusTextLabel.setText(resourceBundle.getString("statusTextLabel.text")); // NOI18N
 
         javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
         statusPanel.setLayout(statusPanelLayout);
@@ -140,7 +89,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                 .addContainerGap()
                 .addComponent(statusIconLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(statusTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(statusTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
                 .addContainerGap())
         );
         statusPanelLayout.setVerticalGroup(
@@ -154,61 +103,55 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         );
 
         currentVersionLabel.setText(resourceBundle.getString("currentVersionLabel.text")); // NOI18N
-        currentVersionLabel.setName("currentVersionLabel"); // NOI18N
 
         currentVersionTextField.setEditable(false);
         currentVersionTextField.setText("unknown");
-        currentVersionTextField.setName("currentVersionTextField"); // NOI18N
 
         availableVersionLabel.setText(resourceBundle.getString("availableVersionLabel.text")); // NOI18N
-        availableVersionLabel.setName("availableVersionLabel"); // NOI18N
 
         availableVersionTextField.setEditable(false);
         availableVersionTextField.setText("unknown");
-        availableVersionTextField.setName("availableVersionTextField"); // NOI18N
 
-        recheckButton.setText("Recheck");
+        recheckButton.setText(resourceBundle.getString("recheckButton.text")); // NOI18N
         recheckButton.setEnabled(false);
-        recheckButton.setName("recheckButton"); // NOI18N
         recheckButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 recheckButtonActionPerformed(evt);
             }
         });
 
-        downloadButton.setText("Download");
+        downloadButton.setText(resourceBundle.getString("downloadButton.text")); // NOI18N
         downloadButton.setEnabled(false);
-        downloadButton.setName("downloadButton"); // NOI18N
         downloadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 downloadButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(statusPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(currentVersionTextField)
                     .addComponent(availableVersionTextField)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(currentVersionLabel)
                             .addComponent(availableVersionLabel)
-                            .addGroup(mainPanelLayout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(downloadButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(recheckButton)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -220,54 +163,12 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(availableVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(recheckButton)
                     .addComponent(downloadButton))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
-
-        controlPanel.setName("controlPanel"); // NOI18N
-
-        closeButton.setText(resourceBundle.getString("closeButton.text")); // NOI18N
-        closeButton.setName("closeButton"); // NOI18N
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
-        controlPanel.setLayout(controlPanelLayout);
-        controlPanelLayout.setHorizontalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(377, Short.MAX_VALUE)
-                .addComponent(closeButton)
-                .addContainerGap())
-        );
-        controlPanelLayout.setVerticalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(closeButton)
-                .addContainerGap())
-        );
-
-        getContentPane().add(controlPanel, java.awt.BorderLayout.SOUTH);
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void copyLinkMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyLinkMenuItemActionPerformed
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(new StringSelection(updateWebsite), null);
-    }//GEN-LAST:event_copyLinkMenuItemActionPerformed
-
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        WindowUtils.closeWindow(this);
-    }//GEN-LAST:event_closeButtonActionPerformed
 
     private void recheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recheckButtonActionPerformed
         recheckButton.setEnabled(false);
@@ -280,49 +181,21 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         BareBonesBrowserLaunch.openDesktopURL(downloadUrl);
     }//GEN-LAST:event_downloadButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        WindowUtils.invokeWindow(new CheckUpdatesDialog(new javax.swing.JFrame(), true, GuiUtilsModule.getDefaultAppEditor()));
+    public void setVersionNumbers(VersionNumbers versionNumbers) {
+        currentVersionTextField.setText(versionNumbers.versionAsString());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel availableVersionLabel;
     private javax.swing.JTextField availableVersionTextField;
-    private javax.swing.JButton closeButton;
-    private javax.swing.JPanel controlPanel;
-    private javax.swing.JMenuItem copyLinkMenuItem;
     private javax.swing.JLabel currentVersionLabel;
     private javax.swing.JTextField currentVersionTextField;
     private javax.swing.JButton downloadButton;
-    private javax.swing.JPopupMenu linkPopupMenu;
-    private javax.swing.JPanel mainPanel;
     private javax.swing.JButton recheckButton;
     private javax.swing.JLabel statusIconLabel;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JLabel statusTextLabel;
     // End of variables declaration//GEN-END:variables
-
-    public ResourceBundle getProjectResourceBundle() {
-        return appBundle;
-    }
-
-    public void setProjectResourceBundle(ResourceBundle projectResourceBundle) {
-        this.appBundle = projectResourceBundle;
-    }
-
-    public void setVersionNumbers(VersionNumbers versionNumbers) {
-        this.versionNumbers = versionNumbers;
-        currentVersionTextField.setText(versionNumbers.versionAsString());
-    }
-
-    public void setCheckUpdatesHandler(CheckUpdatesHandler checkUpdatesHandler) {
-        this.checkUpdatesHandler = checkUpdatesHandler;
-        if (checkUpdatesHandler != null) {
-            performCheckForUpdates();
-        }
-    }
 
     private void performCheckForUpdates() {
         if (checkingThread != null) {
@@ -331,8 +204,8 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         checkingThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                GuiUpdateModule.CheckUpdatesResult result = checkUpdatesHandler.checkForUpdates();
-                VersionNumbers updateVersion = checkUpdatesHandler.getUpdateVersion();
+                GuiUpdateModule.CheckForUpdateResult result = checkForUpdatePanelHandler.checkForUpdate();
+                VersionNumbers updateVersion = checkForUpdatePanelHandler.getUpdateVersion();
                 if (updateVersion == null) {
                     availableVersionTextField.setText(resourceBundle.getString("unknown"));
                 } else {
@@ -345,7 +218,7 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         checkingThread.start();
     }
 
-    private void setCheckUpdatesResult(GuiUpdateModule.CheckUpdatesResult result) {
+    private void setCheckUpdatesResult(GuiUpdateModule.CheckForUpdateResult result) {
         if (result == null) {
 
             return;
@@ -394,17 +267,28 @@ public class CheckUpdatesDialog extends javax.swing.JDialog implements Hyperlink
         downloadButton.setEnabled(downloadUrl != null);
     }
 
+    public void setCheckForUpdatePanelHandler(CheckForUpdatePanelHandler checkForUpdatePanelHandler) {
+        this.checkForUpdatePanelHandler = checkForUpdatePanelHandler;
+        if (checkForUpdatePanelHandler != null) {
+            performCheckForUpdates();
+        }
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
     /**
-     * Handler for updates checking.
+     * Handler for update checking.
      */
-    public static interface CheckUpdatesHandler {
+    public static interface CheckForUpdatePanelHandler {
 
         /**
          * Performs check for updates.
          *
          * @return check for updates result
          */
-        GuiUpdateModule.CheckUpdatesResult checkForUpdates();
+        GuiUpdateModule.CheckForUpdateResult checkForUpdate();
 
         /**
          * Returns version of update if available.

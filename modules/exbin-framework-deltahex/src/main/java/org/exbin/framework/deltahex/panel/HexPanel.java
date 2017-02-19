@@ -87,7 +87,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.0 2017/01/07
+ * @version 0.2.1 2017/02/19
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
@@ -953,7 +953,9 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private void updateCurrentDocumentSize() {
         long dataSize = codeArea.getData().getDataSize();
         long difference = dataSize - documentOriginalSize;
-        hexStatus.setCurrentDocumentSize(dataSize + " (" + (difference > 0 ? "+" + difference : difference) + ")");
+        if (hexStatus != null) {
+            hexStatus.setCurrentDocumentSize(dataSize + " (" + (difference > 0 ? "+" + difference : difference) + ")");
+        }
     }
 
     public void setDeltaMemoryMode(boolean deltaMemoryMode) {
@@ -1019,11 +1021,15 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             clipboardActionsUpdateListener.stateChanged();
         }
 
-        hexStatus.setEditationMode(codeArea.getEditationMode());
+        if (hexStatus != null) {
+            hexStatus.setEditationMode(codeArea.getEditationMode());
+        }
         CaretPosition caretPosition = codeArea.getCaretPosition();
         String position = String.valueOf(caretPosition.getDataPosition());
         position += ":" + caretPosition.getCodeOffset();
-        hexStatus.setCursorPosition(position);
+        if (hexStatus != null) {
+            hexStatus.setCursorPosition(position);
+        }
         encodingStatus.setEncoding(codeArea.getCharset().name());
     }
 
