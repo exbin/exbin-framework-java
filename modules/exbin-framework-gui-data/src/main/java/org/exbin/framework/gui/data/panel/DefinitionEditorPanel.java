@@ -21,17 +21,26 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.component.GuiComponentModule;
+import org.exbin.framework.gui.component.api.EditItemActions;
 import org.exbin.framework.gui.component.api.EditItemActionsHandler;
-import org.exbin.framework.gui.component.api.EditItemActionsUpdateListener;
+import org.exbin.framework.gui.component.api.EditItemActionsHandlerEmpty;
+import org.exbin.framework.gui.component.api.MoveItemActions;
 import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
-import org.exbin.framework.gui.component.api.MoveItemActionsUpdateListener;
+import org.exbin.framework.gui.component.api.MoveItemActionsHandlerEmpty;
 import org.exbin.framework.gui.component.panel.ToolBarEditorPanel;
 import org.exbin.framework.gui.component.panel.ToolBarSidePanel;
+import org.exbin.framework.gui.menu.GuiMenuModule;
+import org.exbin.framework.gui.menu.api.ClipboardActions;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
-import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.menu.api.ClipboardActionsHandlerEmpty;
+import org.exbin.framework.gui.undo.GuiUndoModule;
+import org.exbin.framework.gui.undo.api.UndoActions;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
-import org.exbin.framework.gui.undo.api.UndoUpdateListener;
+import org.exbin.framework.gui.undo.api.UndoActionsHandlerEmpty;
+import org.exbin.framework.gui.utils.GuiUtilsModule;
+import org.exbin.framework.gui.utils.TestApplication;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.catalog.entity.XBERev;
 import org.exbin.xbup.catalog.entity.XBESpec;
 import org.exbin.xbup.catalog.entity.XBESpecDef;
@@ -49,7 +58,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 /**
  * Data type definition editor panel.
  *
- * @version 0.2.0 2016/03/23
+ * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
 public class DefinitionEditorPanel extends javax.swing.JPanel {
@@ -63,172 +72,22 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     private List<CatalogDefsTableItem> updateList;
 
     private ToolBarEditorPanel toolBarEditorPanel;
-    private ToolBarSidePanel definitionSidePanel;
-    private final XBApplication application;
+    private ToolBarSidePanel toolBarSidePanel;
 
-    public DefinitionEditorPanel(XBApplication application) {
+    public DefinitionEditorPanel() {
         super();
-        this.application = application;
         initComponents();
         init();
     }
 
     private void init() {
-        toolBarEditorPanel = new ToolBarEditorPanel(application);
+        toolBarEditorPanel = new ToolBarEditorPanel();
         add(toolBarEditorPanel, BorderLayout.CENTER);
         toolBarEditorPanel.add(definitionControlSplitPane, BorderLayout.CENTER);
-        toolBarEditorPanel.setUndoHandler(new UndoActionsHandler() {
-            @Override
-            public Boolean canUndo() {
-                return true;
-            }
 
-            @Override
-            public Boolean canRedo() {
-                return true;
-            }
-
-            @Override
-            public void performUndo() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performRedo() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performUndoManager() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setUndoUpdateListener(UndoUpdateListener undoUpdateListener) {
-            }
-        });
-        toolBarEditorPanel.setClipboardHandler(new ClipboardActionsHandler() {
-            @Override
-            public void performCut() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performCopy() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performPaste() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performDelete() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performSelectAll() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public boolean isSelection() {
-                return true;
-            }
-
-            @Override
-            public boolean isEditable() {
-                return true;
-            }
-
-            @Override
-            public boolean canSelectAll() {
-                return true;
-            }
-
-            @Override
-            public boolean canPaste() {
-                return true;
-            }
-
-            @Override
-            public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-            }
-        });
-
-        definitionSidePanel = new ToolBarSidePanel(application);
-        definitionSidePanel.setEditItemsHandler(new EditItemActionsHandler() {
-            @Override
-            public void performAddItem() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performEditItem() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performDeleteItem() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public boolean isSelection() {
-                return true;
-            }
-
-            @Override
-            public boolean isEditable() {
-                return true;
-            }
-
-            @Override
-            public void setUpdateListener(EditItemActionsUpdateListener updateListener) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-
-        definitionSidePanel.setMoveItemsHandler(new MoveItemActionsHandler() {
-            @Override
-            public void performMoveUp() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performMoveDown() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performMoveTop() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performMoveBottom() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public boolean isSelection() {
-                return true;
-            }
-
-            @Override
-            public boolean isEditable() {
-                return true;
-            }
-
-            @Override
-            public void setUpdateListener(MoveItemActionsUpdateListener updateListener) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-        definitionSidePanel.add(definitionScrollPane, BorderLayout.CENTER);
-        definitionControlSplitPane.setLeftComponent(definitionSidePanel);
+        toolBarSidePanel = new ToolBarSidePanel();
+        toolBarSidePanel.add(definitionScrollPane, BorderLayout.CENTER);
+        definitionControlSplitPane.setLeftComponent(toolBarSidePanel);
         definitionControlSplitPane.setRightComponent(propertiesScrollPanel);
 
         definitionsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -272,6 +131,32 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        TestApplication testApplication = GuiUtilsModule.getDefaultAppEditor();
+        GuiUndoModule guiUndoModule = new GuiUndoModule();
+        testApplication.addModule(GuiUndoModule.MODULE_ID, guiUndoModule);
+        GuiMenuModule guiMenuModule = new GuiMenuModule();
+        testApplication.addModule(GuiMenuModule.MODULE_ID, guiMenuModule);
+        GuiComponentModule guiComponentModule = new GuiComponentModule();
+        testApplication.addModule(GuiComponentModule.MODULE_ID, guiComponentModule);
+
+        DefinitionEditorPanel definitionEditorPanel = new DefinitionEditorPanel();
+        UndoActionsHandler undoActionsHandler = new UndoActionsHandlerEmpty();
+        definitionEditorPanel.setUndoHandler(undoActionsHandler, guiUndoModule.createUndoActions(undoActionsHandler));
+        ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
+        definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiMenuModule.createClipboardActions(clipboardActionsHandler));
+        WindowUtils.invokeDialog(definitionEditorPanel);
+        MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
+        definitionEditorPanel.setMoveItemsHandler(moveItemActionsHandler, guiComponentModule.createMoveItemActions(moveItemActionsHandler));
+        EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
+        definitionEditorPanel.setEditItemsHandler(editItemActionsHandler, guiComponentModule.createEditItemActions(editItemActionsHandler));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane definitionControlSplitPane;
@@ -357,5 +242,21 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
 
     public CatalogDefsTableModel getDefsModel() {
         return defsModel;
+    }
+
+    public void setUndoHandler(UndoActionsHandler undoHandler, UndoActions undoActions) {
+        toolBarEditorPanel.setUndoHandler(undoHandler, undoActions);
+    }
+
+    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActions clipboardActions) {
+        toolBarEditorPanel.setClipboardHandler(clipboardHandler, clipboardActions);
+    }
+
+    public void setEditItemsHandler(EditItemActionsHandler editItemActionsHandler, EditItemActions editItemActions) {
+        toolBarSidePanel.setEditItemsHandler(editItemActionsHandler, editItemActions);;
+    }
+
+    public void setMoveItemsHandler(MoveItemActionsHandler moveItemActionsHandler, MoveItemActions moveItemActions) {
+        toolBarSidePanel.setMoveItemsHandler(moveItemActionsHandler, moveItemActions);
     }
 }

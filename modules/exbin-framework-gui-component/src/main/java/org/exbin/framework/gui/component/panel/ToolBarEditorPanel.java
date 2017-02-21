@@ -17,19 +17,15 @@
 package org.exbin.framework.gui.component.panel;
 
 import java.awt.BorderLayout;
-import javax.swing.JDialog;
 import javax.swing.JToolBar;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.menu.GuiMenuModule;
 import org.exbin.framework.gui.menu.api.ClipboardActions;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
-import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
+import org.exbin.framework.gui.menu.api.ClipboardActionsHandlerEmpty;
 import org.exbin.framework.gui.undo.GuiUndoModule;
-import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.framework.gui.undo.api.UndoActions;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
-import org.exbin.framework.gui.undo.api.UndoUpdateListener;
+import org.exbin.framework.gui.undo.api.UndoActionsHandlerEmpty;
 import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -37,18 +33,16 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Panel with editation toolbar.
  *
- * @version 0.2.0 2016/03/21
+ * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolBarEditorPanel extends javax.swing.JPanel {
 
-    private final XBApplication application;
     private UndoActionsHandler undoHandler = null;
     private ClipboardActionsHandler clipboardHandler = null;
     private JToolBar toolBar = null;
 
-    public ToolBarEditorPanel(XBApplication application) {
-        this.application = application;
+    public ToolBarEditorPanel() {
         initComponents();
     }
 
@@ -67,116 +61,39 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     /**
+     * Test method for this panel.
+     *
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        JDialog dialog = WindowUtils.createBasicDialog();
         TestApplication testApplication = GuiUtilsModule.getDefaultAppEditor();
-        testApplication.addModule(GuiUndoModule.MODULE_ID, new GuiUndoModule());
-        testApplication.addModule(GuiMenuModule.MODULE_ID, new GuiMenuModule());
-        ToolBarEditorPanel toolBarPanel = new ToolBarEditorPanel(testApplication);
-        toolBarPanel.setUndoHandler(new UndoActionsHandler() {
-            @Override
-            public Boolean canUndo() {
-                return true;
-            }
+        GuiUndoModule guiUndoModule = new GuiUndoModule();
+        testApplication.addModule(GuiUndoModule.MODULE_ID, guiUndoModule);
+        GuiMenuModule guiMenuModule = new GuiMenuModule();
+        testApplication.addModule(GuiMenuModule.MODULE_ID, guiMenuModule);
 
-            @Override
-            public Boolean canRedo() {
-                return true;
-            }
-
-            @Override
-            public void performUndo() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performRedo() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performUndoManager() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setUndoUpdateListener(UndoUpdateListener undoUpdateListener) {
-            }
-        });
-        toolBarPanel.setClipboardHandler(new ClipboardActionsHandler() {
-            @Override
-            public void performCut() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performCopy() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performPaste() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performDelete() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performSelectAll() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public boolean isSelection() {
-                return true;
-            }
-
-            @Override
-            public boolean isEditable() {
-                return true;
-            }
-
-            @Override
-            public boolean canSelectAll() {
-                return true;
-            }
-
-            @Override
-            public boolean canPaste() {
-                return true;
-            }
-
-            @Override
-            public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-            }
-        });
-        dialog.add(toolBarPanel);
-        WindowUtils.invokeWindow(dialog);
+        ToolBarEditorPanel toolBarEditorPanel = new ToolBarEditorPanel();
+        UndoActionsHandler undoActionsHandler = new UndoActionsHandlerEmpty();
+        toolBarEditorPanel.setUndoHandler(undoActionsHandler, guiUndoModule.createUndoActions(undoActionsHandler));
+        ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
+        toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, guiMenuModule.createClipboardActions(clipboardActionsHandler));
+        WindowUtils.invokeDialog(toolBarEditorPanel);
     }
 
-    public void setUndoHandler(UndoActionsHandler undoHandler) {
+    public void setUndoHandler(UndoActionsHandler undoHandler, UndoActions undoActions) {
         this.undoHandler = undoHandler;
         initToolBar();
-        GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-        UndoActions undoActions = undoModule.createUndoActions(undoHandler);
         toolBar.add(undoActions.getUndoAction());
         toolBar.add(undoActions.getRedoAction());
         undoActions.updateUndoActions();
     }
 
-    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler) {
+    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActions clipboardActions) {
         this.clipboardHandler = clipboardHandler;
         initToolBar();
         if (undoHandler != null) {
             toolBar.addSeparator();
         }
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        ClipboardActions clipboardActions = menuModule.createClipboardActions(clipboardHandler);
         toolBar.add(clipboardActions.getCutAction());
         toolBar.add(clipboardActions.getCopyAction());
         toolBar.add(clipboardActions.getPasteAction());

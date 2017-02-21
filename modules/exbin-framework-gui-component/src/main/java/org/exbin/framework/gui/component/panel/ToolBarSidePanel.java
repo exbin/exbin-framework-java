@@ -17,17 +17,14 @@
 package org.exbin.framework.gui.component.panel;
 
 import java.awt.BorderLayout;
-import javax.swing.JDialog;
 import javax.swing.JToolBar;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.component.GuiComponentModule;
 import org.exbin.framework.gui.component.api.EditItemActions;
 import org.exbin.framework.gui.component.api.EditItemActionsHandler;
-import org.exbin.framework.gui.component.api.EditItemActionsUpdateListener;
-import org.exbin.framework.gui.component.api.GuiComponentModuleApi;
+import org.exbin.framework.gui.component.api.EditItemActionsHandlerEmpty;
 import org.exbin.framework.gui.component.api.MoveItemActions;
 import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
-import org.exbin.framework.gui.component.api.MoveItemActionsUpdateListener;
+import org.exbin.framework.gui.component.api.MoveItemActionsHandlerEmpty;
 import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -35,19 +32,17 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Panel with side toolbar.
  *
- * @version 0.2.0 2016/03/22
+ * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolBarSidePanel extends javax.swing.JPanel {
 
-    private final XBApplication application;
     private MoveItemActionsHandler moveItemActionsHandler = null;
     private EditItemActionsHandler editItemActionsHandler = null;
     private JToolBar toolBar = null;
     private ToolBarPosition toolBarPosisition = ToolBarPosition.LEFT;
 
-    public ToolBarSidePanel(XBApplication application) {
-        this.application = application;
+    public ToolBarSidePanel() {
         initComponents();
     }
 
@@ -66,101 +61,35 @@ public class ToolBarSidePanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     /**
+     * Test method for this panel.
+     *
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        JDialog dialog = WindowUtils.createBasicDialog();
         TestApplication testApplication = GuiUtilsModule.getDefaultAppEditor();
-        testApplication.addModule(GuiComponentModule.MODULE_ID, new GuiComponentModule());
-        ToolBarSidePanel toolBarSidePanel = new ToolBarSidePanel(testApplication);
-        toolBarSidePanel.setEditItemsHandler(new EditItemActionsHandler() {
-            @Override
-            public void performAddItem() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
+        GuiComponentModule guiComponentModule = new GuiComponentModule();
+        testApplication.addModule(GuiComponentModule.MODULE_ID, guiComponentModule);
 
-            @Override
-            public void performEditItem() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performDeleteItem() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public boolean isSelection() {
-                return true;
-            }
-
-            @Override
-            public boolean isEditable() {
-                return true;
-            }
-
-            @Override
-            public void setUpdateListener(EditItemActionsUpdateListener updateListener) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-
-        toolBarSidePanel.setMoveItemsHandler(new MoveItemActionsHandler() {
-            @Override
-            public void performMoveUp() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performMoveDown() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performMoveTop() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performMoveBottom() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public boolean isSelection() {
-                return true;
-            }
-
-            @Override
-            public boolean isEditable() {
-                return true;
-            }
-
-            @Override
-            public void setUpdateListener(MoveItemActionsUpdateListener updateListener) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-        dialog.add(toolBarSidePanel);
-        WindowUtils.invokeWindow(dialog);
+        ToolBarSidePanel toolBarSidePanel = new ToolBarSidePanel();
+        MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
+        toolBarSidePanel.setMoveItemsHandler(moveItemActionsHandler, guiComponentModule.createMoveItemActions(moveItemActionsHandler));
+        EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
+        toolBarSidePanel.setEditItemsHandler(editItemActionsHandler, guiComponentModule.createEditItemActions(editItemActionsHandler));
+        WindowUtils.invokeDialog(toolBarSidePanel);
     }
 
-    public void setEditItemsHandler(EditItemActionsHandler editItemActionsHandler) {
+    public void setEditItemsHandler(EditItemActionsHandler editItemActionsHandler, EditItemActions editItemActions) {
         this.editItemActionsHandler = editItemActionsHandler;
         initToolBar();
-        GuiComponentModuleApi componentModule = application.getModuleRepository().getModuleByInterface(GuiComponentModuleApi.class);
-        EditItemActions editItemActions = componentModule.createEditItemActions(editItemActionsHandler);
         toolBar.add(editItemActions.getAddItemAction());
         toolBar.add(editItemActions.getEditItemAction());
         toolBar.add(editItemActions.getDeleteItemAction());
         editItemActions.updateEditItemActions();
     }
 
-    public void setMoveItemsHandler(MoveItemActionsHandler moveItemActionsHandler) {
+    public void setMoveItemsHandler(MoveItemActionsHandler moveItemActionsHandler, MoveItemActions moveItemActions) {
         this.moveItemActionsHandler = moveItemActionsHandler;
         initToolBar();
-        GuiComponentModuleApi componentModule = application.getModuleRepository().getModuleByInterface(GuiComponentModuleApi.class);
-        MoveItemActions moveItemActions = componentModule.createMoveItemActions(moveItemActionsHandler);
         if (editItemActionsHandler != null) {
             toolBar.addSeparator();
         }

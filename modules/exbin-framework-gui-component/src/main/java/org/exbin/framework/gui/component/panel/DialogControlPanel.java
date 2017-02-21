@@ -16,13 +16,15 @@
  */
 package org.exbin.framework.gui.component.panel;
 
+import javax.swing.JButton;
 import org.exbin.framework.gui.component.api.DialogControlPanelHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Default control panel for options dialogs.
  *
- * @version 0.2.0 2016/12/20
+ * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
 public class DialogControlPanel extends javax.swing.JPanel {
@@ -107,6 +109,30 @@ public class DialogControlPanel extends javax.swing.JPanel {
         controlHandler.saveAction();
     }//GEN-LAST:event_saveButtonActionPerformed
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new DialogControlPanel(new DialogControlPanelHandler() {
+            @Override
+            public void cancelAction() {
+            }
+
+            @Override
+            public void setAction() {
+            }
+
+            @Override
+            public void saveAction() {
+            }
+
+            @Override
+            public void okCancelButtons(JButton okButton, JButton cancelButton) {
+            }
+        }));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

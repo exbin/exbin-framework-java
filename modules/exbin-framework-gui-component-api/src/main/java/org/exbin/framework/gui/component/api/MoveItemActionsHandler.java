@@ -19,7 +19,7 @@ package org.exbin.framework.gui.component.api;
 /**
  * Interface for clipboard handler for visual component / context menu.
  *
- * @version 0.2.0 2016/01/24
+ * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
 public interface MoveItemActionsHandler {
@@ -27,36 +27,36 @@ public interface MoveItemActionsHandler {
     /**
      * Moves selected items one level up.
      */
-    public void performMoveUp();
+    void performMoveUp();
 
     /**
      * Moves selected items one level down.
      */
-    public void performMoveDown();
+    void performMoveDown();
 
     /**
      * Moves selected items top.
      */
-    public void performMoveTop();
+    void performMoveTop();
 
     /**
      * Moves selected items bottom.
      */
-    public void performMoveBottom();
+    void performMoveBottom();
 
     /**
      * Returns if selection for clipboard operation is available.
      *
      * @return true if selection is available
      */
-    public boolean isSelection();
+    boolean isSelection();
 
     /**
      * Returns true if it is possible to move currently selected item.
      *
      * @return true if component is editable
      */
-    public boolean isEditable();
+    boolean isEditable();
 
     /**
      * Set listener for actions related updates.

@@ -22,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 import javax.swing.JTable;
 import javax.swing.text.JTextComponent;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Table editor panel.
@@ -30,13 +31,13 @@ import javax.swing.text.JTextComponent;
  * @author ExBin Project (http://exbin.org)
  */
 public class TableEditPanel extends javax.swing.JPanel {
-    
+
     private final TableModelSource tableModel;
 
     public TableEditPanel() {
         tableModel = new TableModelSource("TEST", null);
 
-        initComponents();        
+        initComponents();
     }
 
     /**
@@ -89,4 +90,12 @@ public class TableEditPanel extends javax.swing.JPanel {
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new TableEditPanel());
+    }
 }
