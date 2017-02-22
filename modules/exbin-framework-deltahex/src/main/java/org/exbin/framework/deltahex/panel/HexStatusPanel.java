@@ -24,6 +24,7 @@ import org.exbin.deltahex.EditationMode;
 import org.exbin.framework.deltahex.HexStatusApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Hexadecimal editor status panel.
@@ -269,6 +270,16 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
             statusControlHandle.popupEncodingsMenu(evt);
         }
     }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new HexStatusPanel());
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButtonMenuItem deltaMemoryModeRadioButtonMenuItem;

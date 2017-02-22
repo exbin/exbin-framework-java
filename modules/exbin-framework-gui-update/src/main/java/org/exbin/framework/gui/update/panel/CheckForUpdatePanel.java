@@ -24,11 +24,12 @@ import org.exbin.framework.gui.update.GuiUpdateModule;
 import org.exbin.framework.gui.update.VersionNumbers;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Check for update panel.
  *
- * @version 0.2.1 2017/02/18
+ * @version 0.2.1 2017/02/22
  * @author ExBin Project (http://exbin.org)
  */
 public class CheckForUpdatePanel extends javax.swing.JPanel implements HyperlinkListener {
@@ -183,6 +184,15 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
 
     public void setVersionNumbers(VersionNumbers versionNumbers) {
         currentVersionTextField.setText(versionNumbers.versionAsString());
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CheckForUpdatePanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

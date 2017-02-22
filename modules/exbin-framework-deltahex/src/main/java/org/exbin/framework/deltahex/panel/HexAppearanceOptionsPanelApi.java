@@ -17,12 +17,12 @@
 package org.exbin.framework.deltahex.panel;
 
 /**
- * XB Word Wrapping Interface.
+ * Appearance options panel api interface.
  *
- * @version 0.1.0 2016/04/03
+ * @version 0.2.1 2017/02/22
  * @author ExBin Project (http://exbin.org)
  */
-public interface HexAppearancePanelFrame {
+public interface HexAppearanceOptionsPanelApi {
 
     /**
      * Returns text word wrapping mode.

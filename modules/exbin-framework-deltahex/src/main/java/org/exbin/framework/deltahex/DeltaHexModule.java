@@ -42,7 +42,6 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.deltahex.panel.HexAppearanceOptionsPanel;
-import org.exbin.framework.deltahex.panel.HexAppearancePanelFrame;
 import org.exbin.framework.deltahex.panel.HexColorOptionsPanel;
 import org.exbin.framework.deltahex.panel.HexColorPanelApi;
 import org.exbin.framework.deltahex.panel.HexColorType;
@@ -81,6 +80,7 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.deltahex.panel.HexAppearanceOptionsPanelApi;
 
 /**
  * Hexadecimal editor module.
@@ -268,8 +268,8 @@ public class DeltaHexModule implements XBApplicationModule {
         hexColorOptionsPanel.setPanelApi(textColorPanelFrame);
         optionsModule.addOptionsPanel(hexColorOptionsPanel);
 
-        HexAppearancePanelFrame textAppearancePanelFrame;
-        textAppearancePanelFrame = new HexAppearancePanelFrame() {
+        HexAppearanceOptionsPanelApi appearanceOptionsPanelApi;
+        appearanceOptionsPanelApi = new HexAppearanceOptionsPanelApi() {
             @Override
             public boolean getWordWrapMode() {
                 return getEditorProvider().isWordWrapMode();
@@ -281,7 +281,7 @@ public class DeltaHexModule implements XBApplicationModule {
             }
         };
 
-        optionsModule.extendAppearanceOptionsPanel(new HexAppearanceOptionsPanel(textAppearancePanelFrame));
+        optionsModule.extendAppearanceOptionsPanel(new HexAppearanceOptionsPanel(appearanceOptionsPanelApi));
 
         TextEncodingPanelApi textEncodingPanelApi = new TextEncodingPanelApi() {
             @Override

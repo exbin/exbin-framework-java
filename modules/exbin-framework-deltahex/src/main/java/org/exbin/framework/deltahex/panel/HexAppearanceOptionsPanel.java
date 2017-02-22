@@ -27,7 +27,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal appearance options panel.
  *
- * @version 0.2.0 2017/01/05
+ * @version 0.2.1 2017/02/22
  * @author ExBin Project (http://exbin.org)
  */
 public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -37,10 +37,10 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
 
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexAppearanceOptionsPanel.class);
-    private final HexAppearancePanelFrame frame;
+    private final HexAppearanceOptionsPanelApi panelApi;
 
-    public HexAppearanceOptionsPanel(HexAppearancePanelFrame frame) {
-        this.frame = frame;
+    public HexAppearanceOptionsPanel(HexAppearanceOptionsPanelApi panelApi) {
+        this.panelApi = panelApi;
 
         initComponents();
     }
@@ -140,7 +140,7 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
 
     @Override
     public void applyPreferencesChanges() {
-        frame.setWordWrapMode(lineWrapCheckBox.isSelected());
+        panelApi.setWordWrapMode(lineWrapCheckBox.isSelected());
     }
 
     private void setModified(boolean modified) {

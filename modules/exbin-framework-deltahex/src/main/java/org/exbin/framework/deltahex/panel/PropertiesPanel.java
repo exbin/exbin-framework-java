@@ -26,6 +26,7 @@ import org.exbin.deltahex.delta.MemorySegment;
 import org.exbin.deltahex.delta.list.DefaultDoublyLinkedList;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * File properties dialog.
@@ -124,6 +125,25 @@ public class PropertiesPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new PropertiesPanel());
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel fileNameLabel;
+    private javax.swing.JTextField fileNameTextField;
+    private javax.swing.JLabel fileSizeLabel;
+    private javax.swing.JTextField fileSizeTextField;
+    private javax.swing.JList<String> structureList;
+    private javax.swing.JPanel structurePanel;
+    private javax.swing.JScrollPane structureScrollPane;
+    // End of variables declaration//GEN-END:variables
+
     public void setDocument(HexPanel panel) {
         URI fileUri = panel.getFileUri();
         fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
@@ -149,13 +169,4 @@ public class PropertiesPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel fileNameLabel;
-    private javax.swing.JTextField fileNameTextField;
-    private javax.swing.JLabel fileSizeLabel;
-    private javax.swing.JTextField fileSizeTextField;
-    private javax.swing.JList<String> structureList;
-    private javax.swing.JPanel structurePanel;
-    private javax.swing.JScrollPane structureScrollPane;
-    // End of variables declaration//GEN-END:variables
 }
