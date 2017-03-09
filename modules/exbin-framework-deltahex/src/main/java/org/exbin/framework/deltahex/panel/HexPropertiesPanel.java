@@ -96,7 +96,7 @@ public class HexPropertiesPanel extends javax.swing.JPanel {
                             .addComponent(fileSizeTextField, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(fileSizeLabel)
-                                .addGap(0, 297, Short.MAX_VALUE))
+                                .addGap(0, 350, Short.MAX_VALUE))
                             .addComponent(fileNameTextField, javax.swing.GroupLayout.Alignment.LEADING))
                         .addContainerGap())))
         );
