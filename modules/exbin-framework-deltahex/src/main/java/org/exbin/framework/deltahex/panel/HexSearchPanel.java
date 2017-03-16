@@ -130,7 +130,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
                     } else {
                         backgroundColor = list.getBackground();
                     }
-                    ColorsGroup mainColors = hexadecimalRenderer.getMainColors();
+                    ColorsGroup mainColors = new ColorsGroup(hexadecimalRenderer.getMainColors());
                     mainColors.setBothBackgroundColors(backgroundColor);
                     hexadecimalRenderer.setMainColors(mainColors);
                     return hexadecimalRenderer;
@@ -215,7 +215,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
                     } else {
                         backgroundColor = list.getBackground();
                     }
-                    ColorsGroup mainColors = hexadecimalRenderer.getMainColors();
+                    ColorsGroup mainColors = new ColorsGroup(hexadecimalRenderer.getMainColors());
                     mainColors.setBothBackgroundColors(backgroundColor);
                     hexadecimalRenderer.setMainColors(mainColors);
                     return hexadecimalRenderer;

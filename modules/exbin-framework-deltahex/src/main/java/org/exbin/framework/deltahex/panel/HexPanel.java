@@ -87,7 +87,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.1 2017/02/19
+ * @version 0.2.1 2017/03/16
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
@@ -420,8 +420,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             while (matchCharLength < findText.length()) {
                 long searchPosition = position + matchLength;
                 int bytesToUse = maxBytesPerChar;
-                if (position + bytesToUse > dataSize) {
-                    bytesToUse = (int) (dataSize - position);
+                if (searchPosition + bytesToUse > dataSize) {
+                    bytesToUse = (int) (dataSize - searchPosition);
                 }
                 data.copyToArray(searchPosition, charData, 0, bytesToUse);
                 char singleChar = new String(charData, charset).charAt(0);

@@ -96,7 +96,7 @@ public class FindHexPanel extends javax.swing.JPanel {
                     } else {
                         backgroundColor = list.getBackground();
                     }
-                    ColorsGroup mainColors = findHexadecimalRenderer.getMainColors();
+                    ColorsGroup mainColors = new ColorsGroup(findHexadecimalRenderer.getMainColors());
                     mainColors.setBothBackgroundColors(backgroundColor);
                     findHexadecimalRenderer.setMainColors(mainColors);
                     return findHexadecimalRenderer;
@@ -167,7 +167,7 @@ public class FindHexPanel extends javax.swing.JPanel {
                     } else {
                         backgroundColor = list.getBackground();
                     }
-                    ColorsGroup mainColors = replaceHexadecimalRenderer.getMainColors();
+                    ColorsGroup mainColors = new ColorsGroup(replaceHexadecimalRenderer.getMainColors());
                     mainColors.setBothBackgroundColors(backgroundColor);
                     replaceHexadecimalRenderer.setMainColors(mainColors);
                     return replaceHexadecimalRenderer;
