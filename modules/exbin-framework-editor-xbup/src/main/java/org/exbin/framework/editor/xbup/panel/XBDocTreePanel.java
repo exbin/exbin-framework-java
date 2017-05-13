@@ -78,7 +78,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     private boolean editEnabled;
     private boolean addEnabled;
     private final Clipboard clipboard;
-    private static final DataFlavor XB_DATA_FLAVOR = new DataFlavor(XBHead.MIME_XBUP, "XBUP Document");
+    private static final DataFlavor XB_DATA_FLAVOR = new DataFlavor(XBHead.XBUP_MIME_TYPE, "XBUP Document");
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
     private Component lastFocusedComponent = null;
