@@ -74,8 +74,8 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         XBBasicApplicationModule module = new XBBasicApplicationModule("org.exbin.framework.gui.help.GuiHelpModule", null);
         module.setName("XBUP Help Support Module");
         module.setDescription("Module supporting basic help support");
-        String[] depedency = new String[] {}; // "org.exbin.framework.gui.file.GuiFileModule", "org.exbin.framework.gui.menu.GuiMenuModule" };
-        
+        String[] depedency = new String[]{}; // "org.exbin.framework.gui.file.GuiFileModule", "org.exbin.framework.gui.menu.GuiMenuModule" };
+
         module.addDependencyModuleIds(Arrays.asList(depedency));
         try {
             XBEventWriter eventWriter = new XBEventWriter(new FileOutputStream("module.xb"));
@@ -183,28 +183,28 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         public void putXBTToken(XBTToken token) throws XBProcessingException, IOException {
             switch (token.getTokenType()) {
                 case BEGIN: {
-                    eventListener.putXBToken(new XBBeginToken(((XBTBeginToken) token).getTerminationMode()));
+                    eventListener.putXBToken(XBBeginToken.create(((XBTBeginToken) token).getTerminationMode()));
                     blockIdSent = false;
                     break;
                 }
                 case TYPE: {
-                    eventListener.putXBToken(new XBAttributeToken(new UBNat32()));
+                    eventListener.putXBToken(XBAttributeToken.create(new UBNat32()));
                     break;
                 }
                 case ATTRIBUTE: {
                     if (!blockIdSent) {
-                        eventListener.putXBToken(new XBAttributeToken(new UBNat32()));
+                        eventListener.putXBToken(XBAttributeToken.create(new UBNat32()));
                         blockIdSent = true;
                     }
-                    eventListener.putXBToken(new XBAttributeToken(((XBTAttributeToken) token).getAttribute()));
+                    eventListener.putXBToken(XBAttributeToken.create(((XBTAttributeToken) token).getAttribute()));
                     break;
                 }
                 case DATA: {
-                    eventListener.putXBToken(new XBDataToken(((XBTDataToken) token).getData()));
+                    eventListener.putXBToken(XBDataToken.create(((XBTDataToken) token).getData()));
                     break;
                 }
                 case END: {
-                    eventListener.putXBToken(new XBEndToken());
+                    eventListener.putXBToken(XBEndToken.create());
                     break;
                 }
             }
