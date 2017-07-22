@@ -31,7 +31,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Clipboard code handling.
  *
- * @version 0.1.0 2016/07/22
+ * @version 0.2.1 2017/07/16
  * @author ExBin Project (http://exbin.org)
  */
 public class ClipboardCodeHandler {
@@ -93,7 +93,6 @@ public class ClipboardCodeHandler {
             }
         };
         ActionUtils.setupAction(action, resourceBundle, "copyAsCodeAction");
-        action.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         return action;
     }
 
@@ -109,7 +108,6 @@ public class ClipboardCodeHandler {
             }
         };
         ActionUtils.setupAction(action, resourceBundle, "pasteFromCodeAction");
-        action.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         return action;
     }
 }

@@ -20,19 +20,24 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
-import org.exbin.framework.editor.xbup.dialog.DocPropertiesDialog;
+import org.exbin.framework.editor.xbup.panel.DocPropertiesPanel;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.CloseControlHandler;
+import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 
 /**
  * Properties handler.
  *
- * @version 0.2.0 2016/08/15
+ * @version 0.2.1 2017/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesHandler {
@@ -62,10 +67,23 @@ public class PropertiesHandler {
                 if (editorProvider instanceof XBDocumentPanel) {
                     XBDocumentPanel activePanel = (XBDocumentPanel) editorProvider;
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    DocPropertiesDialog dialog = new DocPropertiesDialog(frameModule.getFrame(), true);
-                    dialog.setIconImage(application.getApplicationIcon());
+                    DocPropertiesPanel propertiesPanel = new DocPropertiesPanel();
+                    propertiesPanel.setDocument(activePanel.getDoc());
+                    propertiesPanel.setDocumentUri(activePanel.getFileUri());
+                    CloseControlPanel controlPanel = new CloseControlPanel();
+                    JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
+                    final JDialog dialog = frameModule.createDialog(dialogPanel);
+                    WindowUtils.addHeaderPanel(dialog, propertiesPanel.getResourceBundle());
+                    frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
+                    controlPanel.setHandler(new CloseControlHandler() {
+                        @Override
+                        public void controlActionPerformed() {
+                            WindowUtils.closeWindow(dialog);
+                        }
+                    });
+                    WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
                     dialog.setLocationRelativeTo(dialog.getParent());
-                    dialog.runDialog(activePanel);
+                    dialog.setVisible(true);
                 }
             }
         };
