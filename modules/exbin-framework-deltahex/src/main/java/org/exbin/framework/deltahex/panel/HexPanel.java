@@ -87,7 +87,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.1 2017/03/16
+ * @version 0.2.1 2017/09/21
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
@@ -105,7 +105,9 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private boolean deltaMemoryMode = false;
 
     private HexSearchPanel hexSearchPanel;
-    private boolean findTextPanelVisible = false;
+    private boolean hexSearchPanelVisible = false;
+    private ValuesPanel valuesPanel;
+    private boolean valuesPanelVisible = false;
     private Action goToLineAction = null;
     private Action copyAsCode = null;
     private Action pasteFromCode = null;
@@ -196,6 +198,10 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 hideSearchPanel();
             }
         });
+        
+        valuesPanel = new ValuesPanel();
+        valuesPanel.setCodeArea(codeArea, undoHandler);
+        showValuesPanel();
     }
 
     public void setApplication(XBApplication application) {
@@ -208,22 +214,40 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     public void showSearchPanel(boolean replace) {
-        if (!findTextPanelVisible) {
+        if (!hexSearchPanelVisible) {
             add(hexSearchPanel, BorderLayout.SOUTH);
             revalidate();
-            findTextPanelVisible = true;
+            hexSearchPanelVisible = true;
             hexSearchPanel.requestSearchFocus();
         }
         hexSearchPanel.switchReplaceMode(replace);
     }
 
     public void hideSearchPanel() {
-        if (findTextPanelVisible) {
+        if (hexSearchPanelVisible) {
             hexSearchPanel.cancelSearch();
             hexSearchPanel.clearSearch();
             HexPanel.this.remove(hexSearchPanel);
             HexPanel.this.revalidate();
-            findTextPanelVisible = false;
+            hexSearchPanelVisible = false;
+        }
+    }
+    
+    public void showValuesPanel() {
+        if (!valuesPanelVisible) {
+            add(valuesPanel, BorderLayout.EAST);
+            revalidate();
+            valuesPanelVisible = true;
+            valuesPanel.enableUpdate();
+        }
+    }
+
+    public void hideValuesPanel() {
+        if (!valuesPanelVisible) {
+            valuesPanel.disableUpdate();
+            HexPanel.this.remove(valuesPanel);
+            HexPanel.this.revalidate();
+            valuesPanelVisible = false;
         }
     }
 
