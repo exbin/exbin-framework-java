@@ -16,10 +16,13 @@
  */
 package org.exbin.framework.deltahex.panel;
 
+import java.awt.event.KeyEvent;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.InputMismatchException;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.exbin.deltahex.CaretMovedListener;
 import org.exbin.deltahex.CaretPosition;
@@ -29,20 +32,31 @@ import org.exbin.deltahex.Section;
 import org.exbin.deltahex.operation.BinaryDataCommand;
 import org.exbin.deltahex.operation.BinaryDataOperationException;
 import org.exbin.deltahex.operation.swing.CodeAreaUndoHandler;
+import org.exbin.deltahex.operation.swing.command.HexCompoundCommand;
 import org.exbin.deltahex.operation.swing.command.InsertDataCommand;
 import org.exbin.deltahex.operation.swing.command.ModifyDataCommand;
 import org.exbin.deltahex.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.deltahex.swing.CodeArea;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
+import org.exbin.utils.binary_data.EditableBinaryData;
 
 /**
  * Values side panel.
  *
- * @version 0.2.1 2017/09/17
+ * @version 0.2.1 2017/10/02
  * @author ExBin Project (http://exbin.org)
  */
 public class ValuesPanel extends javax.swing.JPanel {
+
+    public static final int UBYTE_MAX_VALUE = 255;
+    public static final int SWORD_MIN_VALUE = -32768;
+    public static final int SWORD_MAX_VALUE = 32767;
+    public static final int UWORD_MAX_VALUE = 65535;
+    public static final long UINT_MAX_VALUE = 4294967295l;
+    public static final BigInteger ULONG_MAX_VALUE = new BigInteger("4294967295");
+    public static final BigInteger BIG_INTEGER_BYTE_MASK = BigInteger.valueOf(255);
+    public static final String VALUE_OUT_OF_RANGE = "Value is out of range";
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ValuesPanel.class);
     private CodeArea codeArea;
@@ -53,6 +67,7 @@ public class ValuesPanel extends javax.swing.JPanel {
     private BinaryDataUndoUpdateListener undoUpdateListener;
 
     private final byte[] valuesCache = new byte[8];
+    private final ByteBuffer byteBuffer = ByteBuffer.wrap(valuesCache);
     private final ValuesUpdater valuesUpdater = new ValuesUpdater();
 
     public ValuesPanel() {
@@ -155,30 +170,65 @@ public class ValuesPanel extends javax.swing.JPanel {
         byteLabel.setText(resourceBundle.getString("byteLabel.text")); // NOI18N
 
         byteTextField.setEditable(false);
+        byteTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                byteTextFieldKeyReleased(evt);
+            }
+        });
 
         wordLabel.setText("Word"); // NOI18N
 
         wordTextField.setEditable(false);
+        wordTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                wordTextFieldKeyReleased(evt);
+            }
+        });
 
         intLabel.setText(resourceBundle.getString("intLabel.text")); // NOI18N
 
         intTextField.setEditable(false);
+        intTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                intTextFieldKeyReleased(evt);
+            }
+        });
 
         longLabel.setText(resourceBundle.getString("longLabel.text")); // NOI18N
 
         longTextField.setEditable(false);
+        longTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                longTextFieldKeyReleased(evt);
+            }
+        });
 
         floatLabel.setText(resourceBundle.getString("floatLabel.text")); // NOI18N
 
         floatTextField.setEditable(false);
+        floatTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                floatTextFieldKeyReleased(evt);
+            }
+        });
 
         doubleLabel.setText(resourceBundle.getString("doubleLabel.text")); // NOI18N
 
         doubleTextField.setEditable(false);
+        doubleTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                doubleTextFieldKeyReleased(evt);
+            }
+        });
 
         characterLabel.setText(resourceBundle.getString("characterLabel.text")); // NOI18N
 
         characterTextField.setEditable(false);
+        characterTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                characterTextFieldKeyReleased(evt);
+            }
+        });
 
         endianButtonGroup.add(bigEndianRadioButton);
         bigEndianRadioButton.setSelected(true);
@@ -404,6 +454,199 @@ public class ValuesPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_binaryCheckBox7ActionPerformed
 
+    private void byteTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_byteTextFieldKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                Integer intValue = Integer.valueOf(byteTextField.getText());
+                if (isSigned()) {
+                    if (intValue < Byte.MIN_VALUE || intValue > Byte.MAX_VALUE) {
+                        throw new NumberFormatException(VALUE_OUT_OF_RANGE);
+                    }
+                } else {
+                    if (intValue < 0 || intValue > UBYTE_MAX_VALUE) {
+                        throw new NumberFormatException(VALUE_OUT_OF_RANGE);
+                    }
+                }
+
+                valuesCache[0] = intValue.byteValue();
+                modifyValues(1);
+                updateValues();
+            } catch (NumberFormatException ex) {
+                showException(ex);
+            }
+        }
+    }//GEN-LAST:event_byteTextFieldKeyReleased
+
+    private void wordTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_wordTextFieldKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                Integer intValue = Integer.valueOf(wordTextField.getText());
+                if (isSigned()) {
+                    if (intValue < SWORD_MIN_VALUE || intValue > SWORD_MAX_VALUE) {
+                        throw new NumberFormatException(VALUE_OUT_OF_RANGE);
+                    }
+                } else {
+                    if (intValue < 0 || intValue > UWORD_MAX_VALUE) {
+                        throw new NumberFormatException(VALUE_OUT_OF_RANGE);
+                    }
+                }
+
+                if (getByteOrder() == ByteOrder.LITTLE_ENDIAN) {
+                    valuesCache[0] = (byte) (intValue & 0xff);
+                    valuesCache[1] = (byte) ((intValue >> 8) & 0xff);
+                } else {
+                    valuesCache[0] = (byte) ((intValue >> 8) & 0xff);
+                    valuesCache[1] = (byte) (intValue & 0xff);
+                }
+                modifyValues(2);
+                updateValues();
+            } catch (NumberFormatException ex) {
+                showException(ex);
+            }
+        }
+    }//GEN-LAST:event_wordTextFieldKeyReleased
+
+    private void intTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_intTextFieldKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                Long longValue = Long.valueOf(intTextField.getText());
+                if (isSigned()) {
+                    if (longValue < Integer.MIN_VALUE || longValue > Integer.MAX_VALUE) {
+                        throw new NumberFormatException(VALUE_OUT_OF_RANGE);
+                    }
+                } else {
+                    if (longValue < 0 || longValue > UINT_MAX_VALUE) {
+                        throw new NumberFormatException(VALUE_OUT_OF_RANGE);
+                    }
+                }
+
+                if (getByteOrder() == ByteOrder.LITTLE_ENDIAN) {
+                    valuesCache[0] = (byte) (longValue & 0xff);
+                    valuesCache[1] = (byte) ((longValue >> 8) & 0xff);
+                    valuesCache[2] = (byte) ((longValue >> 16) & 0xff);
+                    valuesCache[3] = (byte) ((longValue >> 24) & 0xff);
+                } else {
+                    valuesCache[0] = (byte) ((longValue >> 24) & 0xff);
+                    valuesCache[1] = (byte) ((longValue >> 16) & 0xff);
+                    valuesCache[2] = (byte) ((longValue >> 8) & 0xff);
+                    valuesCache[3] = (byte) (longValue & 0xff);
+                }
+                modifyValues(4);
+                updateValues();
+            } catch (NumberFormatException ex) {
+                showException(ex);
+            }
+        }
+    }//GEN-LAST:event_intTextFieldKeyReleased
+
+    private void longTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_longTextFieldKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                ByteOrder byteOrder = getByteOrder();
+                if (isSigned()) {
+                    Long longValue = Long.valueOf(longTextField.getText());
+
+                    byteBuffer.rewind();
+                    if (byteBuffer.order() != byteOrder) {
+                        byteBuffer.order(byteOrder);
+                    }
+
+                    byteBuffer.putLong(longValue);
+
+                } else {
+                    BigInteger bigInteger = new BigInteger(longTextField.getText());
+                    if (bigInteger.compareTo(BigInteger.ZERO) == -1 || bigInteger.compareTo(ULONG_MAX_VALUE) == 1) {
+                        throw new NumberFormatException(VALUE_OUT_OF_RANGE);
+                    }
+
+                    if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+                        for (int i = 0; i < 7; i++) {
+                            BigInteger nextByte = bigInteger.and(BIG_INTEGER_BYTE_MASK);
+                            valuesCache[7 - i] = nextByte.byteValue();
+                            bigInteger = bigInteger.shiftRight(8);
+                        }
+                    } else {
+                        for (int i = 0; i < 7; i++) {
+                            BigInteger nextByte = bigInteger.and(BIG_INTEGER_BYTE_MASK);
+                            valuesCache[i] = nextByte.byteValue();
+                            bigInteger = bigInteger.shiftRight(8);
+                        }
+                    }
+                }
+
+                modifyValues(8);
+                updateValues();
+            } catch (NumberFormatException ex) {
+                showException(ex);
+            }
+        }
+    }//GEN-LAST:event_longTextFieldKeyReleased
+
+    private void floatTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_floatTextFieldKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                ByteOrder byteOrder = getByteOrder();
+                Float floatValue = Float.valueOf(floatTextField.getText());
+
+                byteBuffer.rewind();
+                if (byteBuffer.order() != byteOrder) {
+                    byteBuffer.order(byteOrder);
+                }
+
+                byteBuffer.putFloat(floatValue);
+
+                modifyValues(4);
+                updateValues();
+            } catch (NumberFormatException ex) {
+                showException(ex);
+            }
+        }
+    }//GEN-LAST:event_floatTextFieldKeyReleased
+
+    private void doubleTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_doubleTextFieldKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                ByteOrder byteOrder = getByteOrder();
+                Double doubleValue = Double.valueOf(doubleTextField.getText());
+
+                byteBuffer.rewind();
+                if (byteBuffer.order() != byteOrder) {
+                    byteBuffer.order(byteOrder);
+                }
+
+                byteBuffer.putDouble(doubleValue);
+
+                modifyValues(8);
+                updateValues();
+            } catch (NumberFormatException ex) {
+                showException(ex);
+            }
+        }
+    }//GEN-LAST:event_doubleTextFieldKeyReleased
+
+    private void characterTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_characterTextFieldKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                String characterText = characterTextField.getText();
+                if (characterText.length() == 0) {
+                    throw new InputMismatchException("Empty value not valid");
+                }
+
+                if (characterText.length() > 1) {
+                    throw new InputMismatchException("Only single character allowed");
+                }
+
+                byte[] bytes = characterText.getBytes(codeArea.getCharset());
+                System.arraycopy(bytes, 0, valuesCache, 0, bytes.length);
+
+                modifyValues(bytes.length);
+                updateValues();
+            } catch (InputMismatchException ex) {
+                showException(ex);
+            }
+        }
+    }//GEN-LAST:event_characterTextFieldKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton bigEndianRadioButton;
     private javax.swing.JCheckBox binaryCheckBox0;
@@ -488,6 +731,13 @@ public class ValuesPanel extends javax.swing.JPanel {
         binaryCheckBox5.setEnabled(editable);
         binaryCheckBox6.setEnabled(editable);
         binaryCheckBox7.setEnabled(editable);
+        byteTextField.setEditable(editable);
+        wordTextField.setEditable(editable);
+        intTextField.setEditable(editable);
+        longTextField.setEditable(editable);
+        floatTextField.setEditable(editable);
+        doubleTextField.setEditable(editable);
+        characterTextField.setEditable(editable);
     }
 
     public void updateValues() {
@@ -519,15 +769,38 @@ public class ValuesPanel extends javax.swing.JPanel {
                 ex.printStackTrace();
             }
         } else {
-            ModifyDataCommand modifyCommand = new ModifyDataCommand(codeArea, dataPosition, byteArrayData);
+            BinaryDataCommand command;
+            if (dataPosition + byteArrayData.getDataSize() > codeArea.getDataSize()) {
+                long modifiedDataSize = codeArea.getDataSize() - dataPosition;
+                EditableBinaryData modifiedData = (EditableBinaryData) byteArrayData.copy(0, modifiedDataSize);
+                EditableBinaryData insertedData = (EditableBinaryData) byteArrayData.copy(modifiedDataSize, byteArrayData.getDataSize() - modifiedDataSize);
+                command = new HexCompoundCommand(codeArea);
+                ((HexCompoundCommand) command).appendCommand(new InsertDataCommand(codeArea, dataPosition + modifiedDataSize, insertedData));
+                ((HexCompoundCommand) command).appendCommand(new ModifyDataCommand(codeArea, dataPosition, modifiedData));
+            } else {
+                command = new ModifyDataCommand(codeArea, dataPosition, byteArrayData);
+            }
+
             try {
-                undoHandler.execute(modifyCommand);
+                undoHandler.execute(command);
             } catch (BinaryDataOperationException ex) {
                 ex.printStackTrace();
             }
         }
         codeArea.setCaretPosition(oldDataPosition);
         codeArea.repaint();
+    }
+
+    private boolean isSigned() {
+        return signedRadioButton.isSelected();
+    }
+
+    private ByteOrder getByteOrder() {
+        return littleEndianRadioButton.isSelected() ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
+    }
+
+    private void showException(Exception ex) {
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
     }
 
     public enum ValuesPanelField {
@@ -587,7 +860,8 @@ public class ValuesPanel extends javax.swing.JPanel {
                 long dataSize = codeArea.getDataSize();
                 clearFields = dataPosition >= dataSize;
                 byteOrder = littleEndianRadioButton.isSelected() ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
-                signed = signedRadioButton.isSelected();
+                byteOrder = getByteOrder();
+                signed = isSigned();
                 values = valuesCache;
                 updateStarted();
             }
@@ -701,21 +975,21 @@ public class ValuesPanel extends javax.swing.JPanel {
                     break;
                 }
                 case FLOAT: {
-                    ByteBuffer buffer = ByteBuffer.wrap(values);
-                    if (buffer.order() != byteOrder) {
-                        buffer = buffer.order(byteOrder);
+                    byteBuffer.rewind();
+                    if (byteBuffer.order() != byteOrder) {
+                        byteBuffer.order(byteOrder);
                     }
 
-                    floatTextField.setText(String.valueOf(buffer.getFloat()));
+                    floatTextField.setText(String.valueOf(byteBuffer.getFloat()));
                     break;
                 }
                 case DOUBLE: {
-                    ByteBuffer buffer = ByteBuffer.wrap(values);
-                    if (buffer.order() != byteOrder) {
-                        buffer = buffer.order(byteOrder);
+                    byteBuffer.rewind();
+                    if (byteBuffer.order() != byteOrder) {
+                        byteBuffer.order(byteOrder);
                     }
 
-                    doubleTextField.setText(String.valueOf(buffer.getDouble()));
+                    doubleTextField.setText(String.valueOf(byteBuffer.getDouble()));
                     break;
                 }
                 case CHARACTER: {
