@@ -50,6 +50,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import org.exbin.deltahex.CaretMovedListener;
 import org.exbin.deltahex.CaretPosition;
 import org.exbin.deltahex.DataChangedListener;
@@ -107,6 +108,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private HexSearchPanel hexSearchPanel;
     private boolean hexSearchPanelVisible = false;
     private ValuesPanel valuesPanel;
+    private JScrollPane valuesPanelScrollPane;
     private boolean valuesPanelVisible = false;
     private Action goToLineAction = null;
     private Action copyAsCode = null;
@@ -201,6 +203,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         
         valuesPanel = new ValuesPanel();
         valuesPanel.setCodeArea(codeArea, undoHandler);
+        valuesPanelScrollPane = new JScrollPane(valuesPanel);
+        valuesPanelScrollPane.setBorder(null);
         showValuesPanel();
     }
 
@@ -235,7 +239,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     
     public void showValuesPanel() {
         if (!valuesPanelVisible) {
-            add(valuesPanel, BorderLayout.EAST);
+            add(valuesPanelScrollPane, BorderLayout.EAST);
             revalidate();
             valuesPanelVisible = true;
             valuesPanel.enableUpdate();
@@ -245,7 +249,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     public void hideValuesPanel() {
         if (!valuesPanelVisible) {
             valuesPanel.disableUpdate();
-            HexPanel.this.remove(valuesPanel);
+            HexPanel.this.remove(valuesPanelScrollPane);
             HexPanel.this.revalidate();
             valuesPanelVisible = false;
         }
