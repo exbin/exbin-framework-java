@@ -36,7 +36,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
     public static final String INSERT_EDITATION_MODE_LABEL = "INS";
     public static final String OVERWRITE_EDITATION_MODE_LABEL = "OVR";
-    
+
     private EditationMode editationMode;
     private StatusControlHandler statusControlHandle;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexStatusPanel.class);
@@ -326,7 +326,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
     @Override
     public void setEncoding(String encodingName) {
-        encodingLabel.setText(encodingName + " \u25BE");
+        encodingLabel.setText(encodingName + " ^");
     }
 
     @Override
