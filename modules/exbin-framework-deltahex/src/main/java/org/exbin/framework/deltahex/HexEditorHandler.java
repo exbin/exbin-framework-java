@@ -291,6 +291,21 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     }
 
     @Override
+    public void showValuesPanel() {
+        activePanel.showValuesPanel();
+    }
+
+    @Override
+    public void hideValuesPanel() {
+        activePanel.hideValuesPanel();
+    }
+
+    @Override
+    public boolean isValuesPanelVisible() {
+        return activePanel.isValuesPanelVisible();
+    }
+
+    @Override
     public HexPanel getDocument() {
         return activePanel;
     }

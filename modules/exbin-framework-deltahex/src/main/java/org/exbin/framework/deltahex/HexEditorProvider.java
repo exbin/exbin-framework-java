@@ -30,7 +30,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 /**
  * Hexadecimal editor provider interface.
  *
- * @version 0.2.0 2016/12/21
+ * @version 0.2.0 2017/10/15
  * @author ExBin Project (http://exbin.org)
  */
 public interface HexEditorProvider extends EditorProvider {
@@ -68,6 +68,12 @@ public interface HexEditorProvider extends EditorProvider {
     void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters);
 
     boolean changeShowNonprintables();
+
+    void showValuesPanel();
+
+    void hideValuesPanel();
+
+    boolean isValuesPanelVisible();
 
     boolean changeLineWrap();
 

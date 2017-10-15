@@ -27,12 +27,13 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal appearance options panel.
  *
- * @version 0.2.1 2017/02/22
+ * @version 0.2.1 2017/10/15
  * @author ExBin Project (http://exbin.org)
  */
 public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
 
     public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
+    public static final String PREFERENCES_SHOW_VALUES_PANEL = "showValuesPanel";
     public static final String PREFERENCES_MULTITAB_MODE = "experimentalMultiTabMode";
 
     private ModifiedOptionListener modifiedOptionListener;
@@ -56,26 +57,21 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
 
         lineWrapCheckBox = new javax.swing.JCheckBox();
         multiTabModeCheckBox = new javax.swing.JCheckBox();
+        showValuesPanelCheckBox = new javax.swing.JCheckBox();
 
         setName("Form"); // NOI18N
 
         lineWrapCheckBox.setSelected(true);
         lineWrapCheckBox.setText(resourceBundle.getString("lineWrapCheckBox.text")); // NOI18N
         lineWrapCheckBox.setName("lineWrapCheckBox"); // NOI18N
-        lineWrapCheckBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                lineWrapCheckBoxjCheckBoxItemStateChanged(evt);
-            }
-        });
 
         multiTabModeCheckBox.setText(resourceBundle.getString("multiTabModeCheckBox.text")); // NOI18N
         multiTabModeCheckBox.setEnabled(false);
         multiTabModeCheckBox.setName("multiTabModeCheckBox"); // NOI18N
-        multiTabModeCheckBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                multiTabModeCheckBoxjCheckBoxItemStateChanged(evt);
-            }
-        });
+
+        showValuesPanelCheckBox.setSelected(true);
+        showValuesPanelCheckBox.setText(resourceBundle.getString("showValuesPanelCheckBox.text")); // NOI18N
+        showValuesPanelCheckBox.setName("showValuesPanelCheckBox"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -85,7 +81,8 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lineWrapCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
-                    .addComponent(multiTabModeCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+                    .addComponent(showValuesPanelCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                    .addComponent(multiTabModeCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -94,18 +91,12 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
                 .addContainerGap()
                 .addComponent(lineWrapCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(showValuesPanelCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(multiTabModeCheckBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void lineWrapCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_lineWrapCheckBoxjCheckBoxItemStateChanged
-        setModified(true);
-    }//GEN-LAST:event_lineWrapCheckBoxjCheckBoxItemStateChanged
-
-    private void multiTabModeCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_multiTabModeCheckBoxjCheckBoxItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_multiTabModeCheckBoxjCheckBoxItemStateChanged
 
     /**
      * Test method for this panel.
@@ -119,6 +110,7 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox lineWrapCheckBox;
     private javax.swing.JCheckBox multiTabModeCheckBox;
+    private javax.swing.JCheckBox showValuesPanelCheckBox;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -129,18 +121,21 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
     @Override
     public void loadFromPreferences(Preferences preferences) {
         lineWrapCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_TEXT_WORD_WRAPPING, Boolean.FALSE.toString())));
+        showValuesPanelCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_SHOW_VALUES_PANEL, Boolean.TRUE.toString())));
         multiTabModeCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_MULTITAB_MODE, Boolean.FALSE.toString())));
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
         preferences.put(PREFERENCES_TEXT_WORD_WRAPPING, Boolean.toString(lineWrapCheckBox.isSelected()));
+        preferences.put(PREFERENCES_SHOW_VALUES_PANEL, Boolean.toString(showValuesPanelCheckBox.isSelected()));
         preferences.put(PREFERENCES_MULTITAB_MODE, Boolean.toString(multiTabModeCheckBox.isSelected()));
     }
 
     @Override
     public void applyPreferencesChanges() {
         panelApi.setWordWrapMode(lineWrapCheckBox.isSelected());
+        panelApi.setShowValuesPanel(showValuesPanelCheckBox.isSelected());
     }
 
     private void setModified(boolean modified) {

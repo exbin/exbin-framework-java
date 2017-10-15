@@ -22,8 +22,9 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lineWrapCheckBox" alignment="0" pref="274" max="32767" attributes="0"/>
-                  <Component id="multiTabModeCheckBox" alignment="1" pref="274" max="32767" attributes="0"/>
+                  <Component id="lineWrapCheckBox" pref="274" max="32767" attributes="0"/>
+                  <Component id="showValuesPanelCheckBox" alignment="0" pref="274" max="32767" attributes="0"/>
+                  <Component id="multiTabModeCheckBox" alignment="0" pref="274" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -34,6 +35,8 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="lineWrapCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="showValuesPanelCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="multiTabModeCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
@@ -50,9 +53,6 @@
         </Property>
         <Property name="name" type="java.lang.String" value="lineWrapCheckBox" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="lineWrapCheckBoxjCheckBoxItemStateChanged"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="multiTabModeCheckBox">
       <Properties>
@@ -62,9 +62,15 @@
         <Property name="enabled" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="multiTabModeCheckBox" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="multiTabModeCheckBoxjCheckBoxItemStateChanged"/>
-      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="showValuesPanelCheckBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/exbin/framework/deltahex/panel/resources/HexAppearanceOptionsPanel.properties" key="showValuesPanelCheckBox.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="showValuesPanelCheckBox" noResource="true"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

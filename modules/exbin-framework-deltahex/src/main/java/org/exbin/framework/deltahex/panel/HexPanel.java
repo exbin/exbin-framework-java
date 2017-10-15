@@ -88,7 +88,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.1 2017/09/21
+ * @version 0.2.1 2017/10/15
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
@@ -237,6 +237,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         }
     }
     
+    @Override
     public void showValuesPanel() {
         if (!valuesPanelVisible) {
             add(valuesPanelScrollPane, BorderLayout.EAST);
@@ -246,13 +247,19 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         }
     }
 
+    @Override
     public void hideValuesPanel() {
-        if (!valuesPanelVisible) {
+        if (valuesPanelVisible) {
             valuesPanel.disableUpdate();
             HexPanel.this.remove(valuesPanelScrollPane);
             HexPanel.this.revalidate();
             valuesPanelVisible = false;
         }
+    }
+
+    @Override
+    public boolean isValuesPanelVisible() {
+        return valuesPanelVisible;
     }
 
     public CodeArea getCodeArea() {

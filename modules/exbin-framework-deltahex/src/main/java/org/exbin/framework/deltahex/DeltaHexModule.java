@@ -85,7 +85,7 @@ import org.exbin.framework.deltahex.panel.HexAppearanceOptionsPanelApi;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2017/01/06
+ * @version 0.2.0 2017/10/15
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -100,6 +100,7 @@ public class DeltaHexModule implements XBApplicationModule {
 
     private static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
     private static final String VIEW_NONPRINTABLES_MENU_GROUP_ID = MODULE_ID + ".viewNonprintablesMenuGroup";
+    private static final String VIEW_VALUES_PANEL_MENU_GROUP_ID = MODULE_ID + ".viewValuesPanelMenuGroup";
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
 
     public static final String HEX_STATUS_BAR_ID = "hexStatusBar";
@@ -114,9 +115,11 @@ public class DeltaHexModule implements XBApplicationModule {
     private HexColorOptionsPanel hexColorOptionsPanel;
     private TextEncodingOptionsPanel textEncodingOptionsPanel;
     private TextFontOptionsPanel textFontOptionsPanel;
+    private HexAppearanceOptionsPanel hexAppearanceOptionsPanel;
 
     private FindReplaceHandler findReplaceHandler;
     private ViewNonprintablesHandler viewNonprintablesHandler;
+    private ViewValuesPanelHandler viewValuesPanelHandler;
     private ToolsOptionsHandler toolsOptionsHandler;
     private LineWrappingHandler wordWrappingHandler;
     private EncodingsHandler encodingsHandler;
@@ -279,9 +282,22 @@ public class DeltaHexModule implements XBApplicationModule {
             public void setWordWrapMode(boolean mode) {
                 getEditorProvider().setWordWrapMode(mode);
             }
+
+            @Override
+            public void setShowValuesPanel(boolean showValuesPanel) {
+                boolean valuesPanelVisible = getEditorProvider().isValuesPanelVisible();
+                if (valuesPanelVisible != showValuesPanel) {
+                    if (showValuesPanel) {
+                        getEditorProvider().showValuesPanel();
+                    } else {
+                        getEditorProvider().hideValuesPanel();
+                    }
+                }
+            }
         };
 
-        optionsModule.extendAppearanceOptionsPanel(new HexAppearanceOptionsPanel(appearanceOptionsPanelApi));
+        hexAppearanceOptionsPanel = new HexAppearanceOptionsPanel(appearanceOptionsPanelApi);
+        optionsModule.extendAppearanceOptionsPanel(hexAppearanceOptionsPanel);
 
         TextEncodingPanelApi textEncodingPanelApi = new TextEncodingPanelApi() {
             @Override
@@ -428,6 +444,15 @@ public class DeltaHexModule implements XBApplicationModule {
         return viewNonprintablesHandler;
     }
 
+    private ViewValuesPanelHandler getViewValuesPanelHandler() {
+        if (viewValuesPanelHandler == null) {
+            viewValuesPanelHandler = new ViewValuesPanelHandler(application, getEditorProvider());
+            viewValuesPanelHandler.init();
+        }
+
+        return viewValuesPanelHandler;
+    }
+
     private ToolsOptionsHandler getToolsOptionsHandler() {
         if (toolsOptionsHandler == null) {
             toolsOptionsHandler = new ToolsOptionsHandler(application, getEditorProvider());
@@ -553,6 +578,13 @@ public class DeltaHexModule implements XBApplicationModule {
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_NONPRINTABLES_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
         menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewNonprintablesHandler.getViewNonprintablesAction(), new MenuPosition(VIEW_NONPRINTABLES_MENU_GROUP_ID));
+    }
+
+    public void registerViewValuesPanelMenuActions() {
+        getViewValuesPanelHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_VALUES_PANEL_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewValuesPanelHandler.getViewValuesPanelAction(), new MenuPosition(VIEW_VALUES_PANEL_MENU_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
@@ -726,6 +758,11 @@ public class DeltaHexModule implements XBApplicationModule {
         if (textFontOptionsPanel != null) {
             textFontOptionsPanel.loadFromPreferences(preferences);
             textFontOptionsPanel.applyPreferencesChanges();
+        }
+
+        if (hexAppearanceOptionsPanel != null) {
+            hexAppearanceOptionsPanel.loadFromPreferences(preferences);
+            hexAppearanceOptionsPanel.applyPreferencesChanges();
         }
     }
 

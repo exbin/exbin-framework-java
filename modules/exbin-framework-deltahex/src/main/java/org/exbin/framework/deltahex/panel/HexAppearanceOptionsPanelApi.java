@@ -19,7 +19,7 @@ package org.exbin.framework.deltahex.panel;
 /**
  * Appearance options panel api interface.
  *
- * @version 0.2.1 2017/02/22
+ * @version 0.2.1 2017/10/15
  * @author ExBin Project (http://exbin.org)
  */
 public interface HexAppearanceOptionsPanelApi {
@@ -37,4 +37,6 @@ public interface HexAppearanceOptionsPanelApi {
      * @param mode word wrapping mode
      */
     public void setWordWrapMode(boolean mode);
+
+    public void setShowValuesPanel(boolean showValuesPanel);
 }
