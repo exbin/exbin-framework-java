@@ -85,7 +85,7 @@ import org.exbin.framework.deltahex.panel.HexAppearanceOptionsPanelApi;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2017/10/15
+ * @version 0.2.0 2017/10/16
  * @author ExBin Project (http://exbin.org)
  */
 public class DeltaHexModule implements XBApplicationModule {
@@ -281,6 +281,8 @@ public class DeltaHexModule implements XBApplicationModule {
             @Override
             public void setWordWrapMode(boolean mode) {
                 getEditorProvider().setWordWrapMode(mode);
+
+                wordWrappingHandler.getViewLineWrapAction().putValue(Action.SELECTED_KEY, mode);
             }
 
             @Override
@@ -293,6 +295,8 @@ public class DeltaHexModule implements XBApplicationModule {
                         getEditorProvider().hideValuesPanel();
                     }
                 }
+
+                viewValuesPanelHandler.getViewValuesPanelAction().putValue(Action.SELECTED_KEY, showValuesPanel);
             }
         };
 
