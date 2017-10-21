@@ -29,7 +29,6 @@ repositories {
 }
 
 dependencies {
-    compile 'org.dockingframes:docking-frames-common:1.1.1'
     compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
