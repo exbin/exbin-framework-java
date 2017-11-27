@@ -71,7 +71,7 @@ public class BlockPropertiesDialog extends javax.swing.JDialog {
 
     private void init() {
         WindowUtils.initWindow(this);
-        WindowUtils.addHeaderPanel(this, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
+        WindowUtils.addHeaderPanel(this, getClass(), resourceBundle);
         WindowUtils.assignGlobalKeyListener(this, closeButton);
     }
 

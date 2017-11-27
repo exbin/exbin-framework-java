@@ -67,7 +67,7 @@ public class ToolsOptionsHandler {
                 DefaultControlPanel controlPanel = new DefaultControlPanel(toolColorPanel.getResourceBundle());
                 JPanel dialogPanel = WindowUtils.createDialogPanel(toolColorPanel, controlPanel);
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, toolColorPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog, toolColorPanel.getClass(), toolColorPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, toolColorPanel.getResourceBundle());
                 controlPanel.setHandler(new DefaultControlHandler() {
                     @Override

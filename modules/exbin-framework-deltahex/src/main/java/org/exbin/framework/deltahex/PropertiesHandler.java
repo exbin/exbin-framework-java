@@ -66,7 +66,7 @@ public class PropertiesHandler {
                 JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
 
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, propertiesPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog, propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
                 controlPanel.setHandler(new CloseControlHandler() {
                     @Override

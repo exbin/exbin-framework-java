@@ -95,7 +95,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                     JPanel dialogPanel = WindowUtils.createDialogPanel(checkForUpdatePanel, controlPanel);
 
                     final JDialog dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog, checkForUpdatePanel.getResourceBundle());
+                    WindowUtils.addHeaderPanel(dialog, checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
                     controlPanel.setHandler(new CloseControlHandler() {
                         @Override
@@ -208,7 +208,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
             JPanel dialogPanel = WindowUtils.createDialogPanel(checkForUpdatePanel, controlPanel);
 
             final JDialog dialog = frameModule.createDialog(dialogPanel);
-            WindowUtils.addHeaderPanel(dialog, checkForUpdatePanel.getResourceBundle());
+            WindowUtils.addHeaderPanel(dialog, checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
             frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
             controlPanel.setHandler(new CloseControlHandler() {
                 @Override

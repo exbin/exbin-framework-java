@@ -70,7 +70,7 @@ public class PictureOperationHandler {
                     JPanel dialogPanel = WindowUtils.createDialogPanel(imageResizePanel, controlPanel);
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     final JDialog dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog, imageResizePanel.getResourceBundle());
+                    WindowUtils.addHeaderPanel(dialog, imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());
                     controlPanel.setHandler(new DefaultControlHandler() {
                         @Override

@@ -99,7 +99,7 @@ public class ToolsOptionsHandler {
                 JPanel dialogPanel = WindowUtils.createDialogPanel(hexColorPanel, controlPanel);
 
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, hexColorPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog, hexColorPanel.getClass(), hexColorPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, hexColorPanel.getResourceBundle());
                 controlPanel.setHandler(new OptionsControlHandler() {
                     @Override

@@ -111,7 +111,7 @@ public class FindReplaceHandler {
                 WindowUtils.closeWindow(dialog);
             }
         });
-        WindowUtils.addHeaderPanel(dialog, findPanel.getResourceBundle());
+        WindowUtils.addHeaderPanel(dialog, findPanel.getClass(), findPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, findPanel.getResourceBundle());
         WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
         dialog.setLocationRelativeTo(frameModule.getFrame());

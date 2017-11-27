@@ -69,7 +69,7 @@ public class ToolsOptionsHandler {
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, fontPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog, fontPanel.getClass(), fontPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                 controlPanel.setHandler(new OptionsControlHandler() {
                     @Override
@@ -117,7 +117,7 @@ public class ToolsOptionsHandler {
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(colorPanel, controlPanel);
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, colorPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog, colorPanel.getClass(), colorPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, colorPanel.getResourceBundle());
                 controlPanel.setHandler(new OptionsControlHandler() {
                     @Override

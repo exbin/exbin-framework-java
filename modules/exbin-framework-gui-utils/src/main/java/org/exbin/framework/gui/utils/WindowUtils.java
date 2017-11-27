@@ -29,9 +29,11 @@ import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -48,7 +50,7 @@ import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 /**
  * Utility static methods usable for windows and dialogs.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.0 2017/11/27
  * @author ExBin Project (http://exbin.org)
  */
 public class WindowUtils {
@@ -56,16 +58,18 @@ public class WindowUtils {
     private static final int BUTTON_CLICK_TIME = 150;
     private static LookAndFeel lookAndFeel = null;
 
-    public static void addHeaderPanel(JDialog dialog, ResourceBundle resourceBundle) {
-        addHeaderPanel(dialog, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
+    public static void addHeaderPanel(JDialog dialog, Class<?> resourceClass, ResourceBundle resourceBundle) {
+        URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
+        Icon headerIcon = iconUrl != null ? new ImageIcon(iconUrl) : null;
+        addHeaderPanel(dialog, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
     }
 
-    public static void addHeaderPanel(JDialog dialog, String headerTitle, String headerDescription, String headerIcon) {
+    public static void addHeaderPanel(JDialog dialog, String headerTitle, String headerDescription, Icon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
         headerPanel.setDescription(headerDescription);
-        if (!headerIcon.isEmpty()) {
-            headerPanel.setIcon(new ImageIcon(dialog.getClass().getResource(headerIcon)));
+        if (headerIcon != null) {
+            headerPanel.setIcon(headerIcon);
         }
         if (dialog instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
             ((WindowHeaderPanel.WindowHeaderDecorationProvider) dialog).setHeaderDecoration(headerPanel);

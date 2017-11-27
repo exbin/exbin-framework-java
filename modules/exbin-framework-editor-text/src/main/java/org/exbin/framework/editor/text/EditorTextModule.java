@@ -185,7 +185,7 @@ public class EditorTextModule implements XBApplicationModule {
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, fontPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog, fontPanel.getClass(), fontPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                 controlPanel.setHandler(new OptionsControlHandler() {
                     @Override

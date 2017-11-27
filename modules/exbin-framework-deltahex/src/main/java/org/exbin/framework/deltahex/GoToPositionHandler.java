@@ -70,7 +70,7 @@ public class GoToPositionHandler {
                     JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     final JDialog dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog, goToPanel.getResourceBundle());
+                    WindowUtils.addHeaderPanel(dialog, goToPanel.getClass(), goToPanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
                     controlPanel.setHandler(new DefaultControlHandler() {
                         @Override

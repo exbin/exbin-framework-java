@@ -154,7 +154,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
                         return result;
                     }
                 });
-                WindowUtils.addHeaderPanel(dialog, encodingsPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog, encodingsPanel.getClass(), encodingsPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, encodingsPanel.getResourceBundle());
                 WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
                 dialog.setLocationRelativeTo(frameModule.getFrame());

@@ -585,7 +585,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
         DefaultControlPanel controlPanel = new DefaultControlPanel(findHexPanel.getResourceBundle());
         final JDialog dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findHexPanel, controlPanel));
         frameModule.setDialogTitle(dialog, findHexPanel.getResourceBundle());
-        WindowUtils.addHeaderPanel(dialog, findHexPanel.getResourceBundle());
+        WindowUtils.addHeaderPanel(dialog, findHexPanel.getClass(), findHexPanel.getResourceBundle());
         findHexPanel.setMultilineEditorListener(new FindHexPanel.MultilineEditorListener() {
             @Override
             public SearchCondition multilineEdit(SearchCondition condition) {
@@ -596,7 +596,7 @@ public class HexSearchPanel extends javax.swing.JPanel {
                 JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 final JDialog multilineDialog = frameModule.createDialog(dialog, Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
-                WindowUtils.addHeaderPanel(multilineDialog, multilinePanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(multilineDialog, multilinePanel.getClass(), multilinePanel.getResourceBundle());
                 frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
                 final SearchConditionResult result = new SearchConditionResult();
                 controlPanel.setHandler(new DefaultControlHandler() {
