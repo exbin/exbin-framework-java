@@ -1,13 +1,25 @@
 // Shared modules build
 
-version = '0.1.3-SNAPSHOT'
-def repositoryName = "exbin-utils-java"
-def libraryUrl = 'http://exbin.org'
+version = '0.2.0-SNAPSHOT'
+def repositoryName = "bined-lib-java"
+def libraryUrl = 'http://bined.exbin.org/library'
 
-ext.depsExbinUtilsJava = [
+ext.depsBinedLibJava = [
     githubProfile: 'exbin',
     githubRepo: "${repositoryName}",
     version: "${version}"
+]
+
+ext.depsXbupJava = [
+    githubProfile: 'exbin',
+    githubRepo: 'xbup-java',
+    version: '0.2.1-SNAPSHOT'
+]
+
+ext.depsExbinUtilsJava = [
+    githubProfile: 'exbin',
+    githubRepo: 'exbin-utils-java',
+    version: '0.1.3-SNAPSHOT'
 ]
 
 buildscript {

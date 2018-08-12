@@ -1,0 +1,19 @@
+rootProject.name = 'exbin-framework-bined'
+
+if (rootProject.path == ':') {
+    include ":modules:exbin-framework"
+    include ":modules:exbin-framework-api"
+    include ":modules:exbin-framework-gui-frame-api"
+    include ":modules:exbin-framework-gui-editor-api"
+    include ":modules:exbin-framework-gui-menu-api"
+    include ":modules:exbin-framework-gui-component-api"
+    include ":modules:exbin-framework-gui-editor-text"
+    include ":modules:exbin-framework-gui-file-api"
+    include ":modules:exbin-framework-gui-undo-api"
+    include ":modules:exbin-framework-gui-options-api"
+    include ":modules:exbin-framework-gui-docking-api"
+    include ":modules:exbin-framework-gui-utils"
+    include ":modules:exbin-framework-editor-text"
+}
+
+apply from: '../exbin-framework-java-modules-settings.gradle'

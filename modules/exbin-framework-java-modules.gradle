@@ -22,10 +22,10 @@ ext.depsXbupDataJava = [
     version: '0.2.0-SNAPSHOT'
 ]
 
-ext.depsDeltahexJava = [
+ext.depsBinedLibJava = [
     githubProfile: 'exbin',
-    githubRepo: 'deltahex-java',
-    version: '0.1.3'
+    githubRepo: 'bined-lib-java',
+    version: '0.2.0-SNAPSHOT'
 ]
 
 ext.depsThis = 'ExbinFrameworkJava'
@@ -44,7 +44,7 @@ buildscript {
     apply plugin: it
 }
 
-sourceCompatibility = '1.7'
+sourceCompatibility = '1.8'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
