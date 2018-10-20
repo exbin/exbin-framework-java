@@ -24,7 +24,7 @@ import org.exbin.bined.delta.DeltaDocument;
 import org.exbin.bined.delta.FileSegment;
 import org.exbin.bined.delta.MemorySegment;
 import org.exbin.bined.delta.list.DefaultDoublyLinkedList;
-import org.exbin.bined.swing.basic.CodeArea;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -147,7 +147,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
     public void setDocument(HexPanel panel) {
         URI fileUri = panel.getFileUri();
         fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
-        CodeArea codeArea = panel.getCodeArea();
+        ExtCodeArea codeArea = panel.getCodeArea();
         fileSizeTextField.setText(Long.toString(codeArea.getDataSize()));
 
         if (codeArea.getContentData() instanceof DeltaDocument) {

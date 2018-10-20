@@ -31,9 +31,10 @@ repositories {
 dependencies {
     compile moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-core')
     compile moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-swing')
+    compile moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-swing-extended')
     compile moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-delta')
     compile moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-operation-swing')
-//    compile moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-highlight-swing')
+    compile moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-highlight-swing')
     compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')

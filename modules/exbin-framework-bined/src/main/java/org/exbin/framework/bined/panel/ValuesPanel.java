@@ -35,7 +35,7 @@ import org.exbin.bined.operation.swing.command.HexCompoundCommand;
 import org.exbin.bined.operation.swing.command.InsertDataCommand;
 import org.exbin.bined.operation.swing.command.ModifyDataCommand;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
-import org.exbin.bined.swing.basic.CodeArea;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
@@ -43,7 +43,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Values side panel.
  *
- * @version 0.2.1 2018/08/12
+ * @version 0.2.1 2018/10/20
  * @author ExBin Project (http://exbin.org)
  */
 public class ValuesPanel extends javax.swing.JPanel {
@@ -58,7 +58,7 @@ public class ValuesPanel extends javax.swing.JPanel {
     public static final String VALUE_OUT_OF_RANGE = "Value is out of range";
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ValuesPanel.class);
-    private CodeArea codeArea;
+    private ExtCodeArea codeArea;
     private CodeAreaUndoHandler undoHandler;
     private long dataPosition;
     private DataChangedListener dataChangedListener;
@@ -678,7 +678,7 @@ public class ValuesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField wordTextField;
     // End of variables declaration//GEN-END:variables
 
-    public void setCodeArea(CodeArea codeArea, CodeAreaUndoHandler undoHandler) {
+    public void setCodeArea(ExtCodeArea codeArea, CodeAreaUndoHandler undoHandler) {
         this.codeArea = codeArea;
         this.undoHandler = undoHandler;
     }

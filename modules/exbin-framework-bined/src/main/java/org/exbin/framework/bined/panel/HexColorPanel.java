@@ -27,8 +27,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import org.exbin.bined.EditationMode;
 import org.exbin.bined.SelectionRange;
-import org.exbin.bined.swing.basic.CodeArea;
+import org.exbin.bined.capability.EditationModeCapable;
+import org.exbin.bined.capability.RowWrappingCapable;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -39,7 +42,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Hexadecimal code editor color selection panel.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.0 2018/10/20
  * @author ExBin Project (http://exbin.org)
  */
 public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -48,7 +51,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexColorPanel.class);
     private HexColorPanelApi panelApi;
 
-    private final CodeArea previewCodeArea = new CodeArea();
+    private final ExtCodeArea previewCodeArea = new ExtCodeArea();
     private final Map<HexColorType, SelectableColor> selectableColors = new HashMap<>();
 
     public HexColorPanel() {
@@ -61,7 +64,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
     }
 
     private void init() {
-        // TODO previewCodeArea.setEditable(false);
+        ((EditationModeCapable) previewCodeArea).setEditationMode(EditationMode.READ_ONLY);
         ByteArrayEditableData exampleData = new ByteArrayEditableData();
         try {
             exampleData.loadFromStream(getClass().getResourceAsStream("/org/exbin/framework/bined/resources/preview/lorem.txt"));
@@ -69,7 +72,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
             Logger.getLogger(HexColorPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         previewCodeArea.setContentData(exampleData);
-        // TODO previewCodeArea.setWrapMode(true);
+        ((RowWrappingCapable) previewCodeArea).setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
         previewCodeArea.setEnabled(false);
         // TODO previewCodeArea.setShowUnprintableCharacters(true);
         previewCodeArea.setSelection(new SelectionRange(200, 300));

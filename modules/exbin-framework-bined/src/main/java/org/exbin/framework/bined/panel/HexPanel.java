@@ -23,7 +23,6 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
-import java.awt.datatransfer.FlavorListener;
 import java.awt.event.MouseEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -56,18 +55,19 @@ import org.exbin.bined.CaretPosition;
 import org.exbin.bined.DataChangedListener;
 import org.exbin.bined.EditationMode;
 import org.exbin.bined.EditationModeChangedListener;
-import org.exbin.bined.SelectionChangedListener;
 import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditationModeCapable;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.delta.DeltaDocument;
 import org.exbin.bined.delta.FileDataSource;
 import org.exbin.bined.delta.SegmentsRepository;
+import org.exbin.bined.highlight.swing.HighlightCodeAreaPainter;
 import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.swing.CodeAreaUndoHandler;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.basic.CodeArea;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
 import org.exbin.framework.bined.EncodingStatusHandler;
@@ -87,14 +87,14 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.1 2018/08/12
+ * @version 0.2.1 2018/10/20
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
 
     private int id = 0;
     private SegmentsRepository segmentsRepository;
-    private CodeArea codeArea;
+    private ExtCodeArea codeArea;
     private CodeAreaUndoHandler undoHandler;
     private URI fileUri = null;
     private Color foundTextBackgroundColor;
@@ -122,6 +122,25 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private XBApplication application;
 
     public HexPanel() {
+        initComponents();
+        init();
+    }
+
+    public HexPanel(int id) {
+        this();
+        this.id = id;
+    }
+
+    private void init() {
+        codeArea = new ExtCodeArea();
+        codeArea.setPainter(new HighlightCodeAreaPainter(codeArea));
+        setNewData();
+        codeArea.setHandleClipboard(false);
+        codeArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        codeArea.addSelectionChangedListener((SelectionRange selection) -> {
+            updateClipboardActionsStatus();
+        });
+
         undoHandler = new CodeAreaUndoHandler(codeArea);
         undoHandler.addUndoUpdateListener(new BinaryDataUndoUpdateListener() {
             @Override
@@ -135,45 +154,19 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 updateCurrentDocumentSize();
             }
         });
-        initComponents();
-        init();
-    }
 
-    public HexPanel(int id) {
-        this();
-        this.id = id;
-    }
-
-    private void init() {
-        codeArea = new CodeArea();
-//        codeArea.setPainter(new HighlightCodeAreaPainter(codeArea));
-        setNewData();
-        codeArea.setHandleClipboard(false);
-        codeArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        codeArea.addSelectionChangedListener(new SelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionRange selection) {
-                updateClipboardActionsStatus();
-            }
-        });
         CodeAreaOperationCommandHandler commandHandler = new CodeAreaOperationCommandHandler(codeArea, undoHandler);
         codeArea.setCommandHandler(commandHandler);
-        codeArea.addDataChangedListener(new DataChangedListener() {
-            @Override
-            public void dataChanged() {
-                if (hexSearchPanel.isVisible()) {
-                    hexSearchPanel.dataChanged();
-                }
-                updateCurrentDocumentSize();
+        codeArea.addDataChangedListener(() -> {
+            if (hexSearchPanel.isVisible()) {
+                hexSearchPanel.dataChanged();
             }
+            updateCurrentDocumentSize();
         });
         // TODO use listener in code area component instead
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.addFlavorListener(new FlavorListener() {
-            @Override
-            public void flavorsChanged(FlavorEvent e) {
-                updateClipboardActionsStatus();
-            }
+        clipboard.addFlavorListener((FlavorEvent e) -> {
+            updateClipboardActionsStatus();
         });
 
         add(codeArea);
@@ -183,23 +176,15 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
         defaultColors = getCurrentColors();
 
-        addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (propertyChangeListener != null) {
-                    propertyChangeListener.propertyChange(evt);
-                }
+        addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (propertyChangeListener != null) {
+                propertyChangeListener.propertyChange(evt);
             }
         });
 
         hexSearchPanel = new HexSearchPanel(this);
-        hexSearchPanel.setClosePanelListener(new HexSearchPanel.ClosePanelListener() {
-            @Override
-            public void panelClosed() {
-                hideSearchPanel();
-            }
-        });
-        
+        hexSearchPanel.setClosePanelListener(this::hideSearchPanel);
+
         valuesPanel = new ValuesPanel();
         valuesPanel.setCodeArea(codeArea, undoHandler);
         valuesPanelScrollPane = new JScrollPane(valuesPanel);
@@ -235,7 +220,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             hexSearchPanelVisible = false;
         }
     }
-    
+
     @Override
     public void showValuesPanel() {
         if (!valuesPanelVisible) {
@@ -261,14 +246,14 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         return valuesPanelVisible;
     }
 
-    public CodeArea getCodeArea() {
+    public ExtCodeArea getCodeArea() {
         return codeArea;
     }
 
     @Override
     public boolean changeLineWrap() {
-        ((RowWrappingCapable) codeArea).setRowWrapping(((RowWrappingCapable) codeArea).isRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING ? RowWrappingCapable.RowWrappingMode.NO_WRAPPING : RowWrappingCapable.RowWrappingMode.WRAPPING);
-        return ((RowWrappingCapable) codeArea).isRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING;
+        ((RowWrappingCapable) codeArea).setRowWrapping(((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING ? RowWrappingCapable.RowWrappingMode.NO_WRAPPING : RowWrappingCapable.RowWrappingMode.WRAPPING);
+        return ((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING;
     }
 
     @Override
@@ -298,66 +283,64 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     @Override
     public void performFind(SearchParameters searchParameters) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
-//        SearchCondition condition = searchParameters.getCondition();
-//        hexSearchPanel.clearStatus();
-//        if (condition.isEmpty()) {
-//            painter.clearMatches();
-//            codeArea.repaint();
-//            return;
-//        }
-//
-//        long position;
-//        if (searchParameters.isSearchFromCursor()) {
-//            position = codeArea.getCaretPosition().getDataPosition();
-//        } else {
-//            switch (searchParameters.getSearchDirection()) {
-//                case FORWARD: {
-//                    position = 0;
-//                    break;
-//                }
-//                case BACKWARD: {
-//                    position = codeArea.getDataSize() - 1;
-//                    break;
-//                }
-//                default:
-//                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
-//            }
-//        }
-//        searchParameters.setStartPosition(position);
-//
-//        switch (condition.getSearchMode()) {
-//            case TEXT: {
-//                searchForText(searchParameters);
-//                break;
-//            }
-//            case BINARY: {
-//                searchForBinaryData(searchParameters);
-//                break;
-//            }
-//            default:
-//                throw new IllegalStateException("Unexpected search mode " + condition.getSearchMode().name());
-//        }
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        SearchCondition condition = searchParameters.getCondition();
+        hexSearchPanel.clearStatus();
+        if (condition.isEmpty()) {
+            painter.clearMatches();
+            codeArea.repaint();
+            return;
+        }
+
+        long position;
+        if (searchParameters.isSearchFromCursor()) {
+            position = codeArea.getCaretPosition().getDataPosition();
+        } else {
+            switch (searchParameters.getSearchDirection()) {
+                case FORWARD: {
+                    position = 0;
+                    break;
+                }
+                case BACKWARD: {
+                    position = codeArea.getDataSize() - 1;
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
+            }
+        }
+        searchParameters.setStartPosition(position);
+
+        switch (condition.getSearchMode()) {
+            case TEXT: {
+                searchForText(searchParameters);
+                break;
+            }
+            case BINARY: {
+                searchForBinaryData(searchParameters);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Unexpected search mode " + condition.getSearchMode().name());
+        }
     }
 
     @Override
     public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        SearchCondition replaceCondition = replaceParameters.getCondition();
-//        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
-//        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
-//        if (currentMatch != null) {
-//            EditableBinaryData editableData = ((EditableBinaryData) codeArea.getContentData());
-//            editableData.remove(currentMatch.getPosition(), currentMatch.getLength());
-//            if (replaceCondition.getSearchMode() == SearchCondition.SearchMode.BINARY) {
-//                editableData.insert(currentMatch.getPosition(), replaceCondition.getBinaryData());
-//            } else {
-//                editableData.insert(currentMatch.getPosition(), replaceCondition.getSearchText().getBytes(codeArea.getCharset()));
-//            }
-//            painter.getMatches().remove(currentMatch);
-//            codeArea.repaint();
-//        }
+        SearchCondition replaceCondition = replaceParameters.getCondition();
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        if (currentMatch != null) {
+            EditableBinaryData editableData = ((EditableBinaryData) codeArea.getContentData());
+            editableData.remove(currentMatch.getPosition(), currentMatch.getLength());
+            if (replaceCondition.getSearchMode() == SearchCondition.SearchMode.BINARY) {
+                editableData.insert(currentMatch.getPosition(), replaceCondition.getBinaryData());
+            } else {
+                editableData.insert(currentMatch.getPosition(), replaceCondition.getSearchText().getBytes(codeArea.getCharset()));
+            }
+            painter.getMatches().remove(currentMatch);
+            codeArea.repaint();
+        }
     }
 
     private void updateClipboardActionsStatus() {
@@ -377,142 +360,140 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
      * Performs search by binary data.
      */
     private void searchForBinaryData(SearchParameters searchParameters) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
-//        SearchCondition condition = searchParameters.getCondition();
-//        long position = codeArea.getCaretPosition().getDataPosition();
-//        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
-//
-//        if (currentMatch != null) {
-//            if (currentMatch.getPosition() == position) {
-//                position++;
-//            }
-//            painter.clearMatches();
-//        } else if (!searchParameters.isSearchFromCursor()) {
-//            position = 0;
-//        }
-//
-//        BinaryData searchData = condition.getBinaryData();
-//        BinaryData data = codeArea.getContentData();
-//
-//        List<HighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
-//
-//        long dataSize = data.getDataSize();
-//        while (position < dataSize - searchData.getDataSize()) {
-//            int matchLength = 0;
-//            while (matchLength < searchData.getDataSize()) {
-//                if (data.getByte(position + matchLength) != searchData.getByte(matchLength)) {
-//                    break;
-//                }
-//                matchLength++;
-//            }
-//
-//            if (matchLength == searchData.getDataSize()) {
-//                HighlightCodeAreaPainter.SearchMatch match = new HighlightCodeAreaPainter.SearchMatch();
-//                match.setPosition(position);
-//                match.setLength(searchData.getDataSize());
-//                foundMatches.add(match);
-//
-//                if (foundMatches.size() == 100 || !searchParameters.isMultipleMatches()) {
-//                    break;
-//                }
-//            }
-//
-//            position++;
-//        }
-//
-//        painter.setMatches(foundMatches);
-//        if (foundMatches.size() > 0) {
-//            painter.setCurrentMatchIndex(0);
-//            HighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
-//            codeArea.revealPosition(firstMatch.getPosition(), codeArea.getActiveSection());
-//        }
-//        hexSearchPanel.setStatus(foundMatches.size(), 0);
-//        codeArea.repaint();
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        SearchCondition condition = searchParameters.getCondition();
+        long position = codeArea.getCaretPosition().getDataPosition();
+        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+
+        if (currentMatch != null) {
+            if (currentMatch.getPosition() == position) {
+                position++;
+            }
+            painter.clearMatches();
+        } else if (!searchParameters.isSearchFromCursor()) {
+            position = 0;
+        }
+
+        BinaryData searchData = condition.getBinaryData();
+        BinaryData data = codeArea.getContentData();
+
+        List<HighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
+
+        long dataSize = data.getDataSize();
+        while (position < dataSize - searchData.getDataSize()) {
+            int matchLength = 0;
+            while (matchLength < searchData.getDataSize()) {
+                if (data.getByte(position + matchLength) != searchData.getByte(matchLength)) {
+                    break;
+                }
+                matchLength++;
+            }
+
+            if (matchLength == searchData.getDataSize()) {
+                HighlightCodeAreaPainter.SearchMatch match = new HighlightCodeAreaPainter.SearchMatch();
+                match.setPosition(position);
+                match.setLength(searchData.getDataSize());
+                foundMatches.add(match);
+
+                if (foundMatches.size() == 100 || !searchParameters.isMultipleMatches()) {
+                    break;
+                }
+            }
+
+            position++;
+        }
+
+        painter.setMatches(foundMatches);
+        if (foundMatches.size() > 0) {
+            painter.setCurrentMatchIndex(0);
+            HighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
+            codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
+        }
+        hexSearchPanel.setStatus(foundMatches.size(), 0);
+        codeArea.repaint();
     }
 
     /**
      * Performs search by text/characters.
      */
     private void searchForText(SearchParameters searchParameters) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
-//        SearchCondition condition = searchParameters.getCondition();
-//
-//        long position = searchParameters.getStartPosition();
-//        String findText;
-//        if (searchParameters.isMatchCase()) {
-//            findText = condition.getSearchText();
-//        } else {
-//            findText = condition.getSearchText().toLowerCase();
-//        }
-//        BinaryData data = codeArea.getContentData();
-//
-//        List<HighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
-//
-//        Charset charset = codeArea.getCharset();
-//        CharsetEncoder encoder = charset.newEncoder();
-//        int maxBytesPerChar = (int) encoder.maxBytesPerChar();
-//        byte[] charData = new byte[maxBytesPerChar];
-//        long dataSize = data.getDataSize();
-//        while (position <= dataSize - findText.length()) {
-//            int matchCharLength = 0;
-//            int matchLength = 0;
-//            while (matchCharLength < findText.length()) {
-//                long searchPosition = position + matchLength;
-//                int bytesToUse = maxBytesPerChar;
-//                if (searchPosition + bytesToUse > dataSize) {
-//                    bytesToUse = (int) (dataSize - searchPosition);
-//                }
-//                data.copyToArray(searchPosition, charData, 0, bytesToUse);
-//                char singleChar = new String(charData, charset).charAt(0);
-//                String singleCharString = String.valueOf(singleChar);
-//                int characterLength = singleCharString.getBytes(charset).length;
-//
-//                if (searchParameters.isMatchCase()) {
-//                    if (singleChar != findText.charAt(matchCharLength)) {
-//                        break;
-//                    }
-//                } else if (singleCharString.toLowerCase().charAt(0) != findText.charAt(matchCharLength)) {
-//                    break;
-//                }
-//                matchCharLength++;
-//                matchLength += characterLength;
-//            }
-//
-//            if (matchCharLength == findText.length()) {
-//                HighlightCodeAreaPainter.SearchMatch match = new HighlightCodeAreaPainter.SearchMatch();
-//                match.setPosition(position);
-//                match.setLength(matchLength);
-//                foundMatches.add(match);
-//
-//                if (foundMatches.size() == 100 || !searchParameters.isMultipleMatches()) {
-//                    break;
-//                }
-//            }
-//
-//            switch (searchParameters.getSearchDirection()) {
-//                case FORWARD: {
-//                    position++;
-//                    break;
-//                }
-//                case BACKWARD: {
-//                    position--;
-//                    break;
-//                }
-//                default:
-//                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
-//            }
-//        }
-//
-//        painter.setMatches(foundMatches);
-//        if (foundMatches.size() > 0) {
-//            painter.setCurrentMatchIndex(0);
-//            HighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
-//            codeArea.revealPosition(firstMatch.getPosition(), codeArea.getActiveSection());
-//        }
-//        hexSearchPanel.setStatus(foundMatches.size(), 0);
-//        codeArea.repaint();
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        SearchCondition condition = searchParameters.getCondition();
+
+        long position = searchParameters.getStartPosition();
+        String findText;
+        if (searchParameters.isMatchCase()) {
+            findText = condition.getSearchText();
+        } else {
+            findText = condition.getSearchText().toLowerCase();
+        }
+        BinaryData data = codeArea.getContentData();
+
+        List<HighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
+
+        Charset charset = codeArea.getCharset();
+        CharsetEncoder encoder = charset.newEncoder();
+        int maxBytesPerChar = (int) encoder.maxBytesPerChar();
+        byte[] charData = new byte[maxBytesPerChar];
+        long dataSize = data.getDataSize();
+        while (position <= dataSize - findText.length()) {
+            int matchCharLength = 0;
+            int matchLength = 0;
+            while (matchCharLength < findText.length()) {
+                long searchPosition = position + matchLength;
+                int bytesToUse = maxBytesPerChar;
+                if (searchPosition + bytesToUse > dataSize) {
+                    bytesToUse = (int) (dataSize - searchPosition);
+                }
+                data.copyToArray(searchPosition, charData, 0, bytesToUse);
+                char singleChar = new String(charData, charset).charAt(0);
+                String singleCharString = String.valueOf(singleChar);
+                int characterLength = singleCharString.getBytes(charset).length;
+
+                if (searchParameters.isMatchCase()) {
+                    if (singleChar != findText.charAt(matchCharLength)) {
+                        break;
+                    }
+                } else if (singleCharString.toLowerCase().charAt(0) != findText.charAt(matchCharLength)) {
+                    break;
+                }
+                matchCharLength++;
+                matchLength += characterLength;
+            }
+
+            if (matchCharLength == findText.length()) {
+                HighlightCodeAreaPainter.SearchMatch match = new HighlightCodeAreaPainter.SearchMatch();
+                match.setPosition(position);
+                match.setLength(matchLength);
+                foundMatches.add(match);
+
+                if (foundMatches.size() == 100 || !searchParameters.isMultipleMatches()) {
+                    break;
+                }
+            }
+
+            switch (searchParameters.getSearchDirection()) {
+                case FORWARD: {
+                    position++;
+                    break;
+                }
+                case BACKWARD: {
+                    position--;
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
+            }
+        }
+
+        painter.setMatches(foundMatches);
+        if (foundMatches.size() > 0) {
+            painter.setCurrentMatchIndex(0);
+            HighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
+            codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
+        }
+        hexSearchPanel.setStatus(foundMatches.size(), 0);
+        codeArea.repaint();
     }
 
     @Override
@@ -714,7 +695,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             if (codeArea.getContentData() instanceof DeltaDocument) {
                 // TODO freeze window / replace with progress bar
                 DeltaDocument document = (DeltaDocument) codeArea.getContentData();
-                if (document.getFileSource() == null || !file.equals(document.getFileSource().getFile())) {
+                if (document == null || !file.equals(document.getFileSource().getFile())) {
                     FileDataSource fileSource = segmentsRepository.openFileSource(file);
                     document.setFileSource(fileSource);
                 }
@@ -854,20 +835,14 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     @Override
     public void registerHexStatus(HexStatusApi hexStatusApi) {
         this.hexStatus = hexStatusApi;
-        attachCaretListener(new CaretMovedListener() {
-            @Override
-            public void caretMoved(CaretPosition caretPosition) {
-                String position = String.valueOf(caretPosition.getDataPosition());
-                position += ":" + caretPosition.getCodeOffset();
-                hexStatus.setCursorPosition(position);
-            }
+        attachCaretListener((CaretPosition caretPosition) -> {
+            String position = String.valueOf(caretPosition.getDataPosition());
+            position += ":" + caretPosition.getCodeOffset();
+            hexStatus.setCursorPosition(position);
         });
 
-        attachEditationModeChangedListener(new EditationModeChangedListener() {
-            @Override
-            public void editationModeChanged(EditationMode mode) {
-                hexStatus.setEditationMode(mode);
-            }
+        attachEditationModeChangedListener((EditationMode mode) -> {
+            hexStatus.setEditationMode(mode);
         });
         hexStatus.setEditationMode(codeArea.getEditationMode());
 
@@ -948,11 +923,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     @Override
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatusApi) {
         this.encodingStatus = encodingStatusApi;
-        setCharsetChangeListener(new HexPanel.CharsetChangeListener() {
-            @Override
-            public void charsetChanged() {
-                encodingStatus.setEncoding(getCharset().name());
-            }
+        setCharsetChangeListener(() -> {
+            encodingStatus.setEncoding(getCharset().name());
         });
     }
 
@@ -979,13 +951,11 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     @Override
     public void setMatchPosition(int matchPosition) {
-        throw new UnsupportedOperationException("Not supported yet.");
-        // TODO
-//        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
-//        painter.setCurrentMatchIndex(matchPosition);
-//        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
-//        codeArea.revealPosition(currentMatch.getPosition(), codeArea.getActiveSection());
-//        codeArea.repaint();
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        painter.setCurrentMatchIndex(matchPosition);
+        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        codeArea.revealPosition(currentMatch.getPosition(), 0, codeArea.getActiveSection());
+        codeArea.repaint();
     }
 
     @Override
@@ -1020,8 +990,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     @Override
     public void clearMatches() {
-// TODO        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
-//        painter.clearMatches();
+        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        painter.clearMatches();
     }
 
     public void setGoToLineAction(Action goToLineAction) {

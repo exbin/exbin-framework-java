@@ -25,7 +25,6 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.exbin.bined.DataChangedListener;
 import org.exbin.bined.ScrollBarVisibility;
 import org.exbin.bined.basic.BasicBackgroundPaintMode;
 import org.exbin.bined.swing.basic.CodeArea;
@@ -84,12 +83,7 @@ public class HexSearchComboBoxPanel extends JPanel {
         hexadecimalEditor.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalEditor.setContentData(new ByteArrayEditableData());
         hexadecimalEditor.setBorder(comboBoxBorder);
-        hexadecimalEditor.addDataChangedListener(new DataChangedListener() {
-            @Override
-            public void dataChanged() {
-                comboBoxValueChanged();
-            }
-        });
+        hexadecimalEditor.addDataChangedListener(this::comboBoxValueChanged);
         super.add(hexadecimalEditor, BINARY_MODE);
     }
 

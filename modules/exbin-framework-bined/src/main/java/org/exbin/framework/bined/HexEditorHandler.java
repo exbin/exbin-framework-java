@@ -68,15 +68,12 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     private final ClipboardActionsUpdateListener multiClipboardUpdateListener;
 
     public HexEditorHandler() {
-        multiModificationListener = new EditorModificationListener() {
-            @Override
-            public void modified() {
-                if (editorModificationListener != null) {
-                    editorModificationListener.modified();
-                }
-                if (editorViewHandling != null) {
-                    editorViewHandling.updateEditorView(activePanel);
-                }
+        multiModificationListener = () -> {
+            if (editorModificationListener != null) {
+                editorModificationListener.modified();
+            }
+            if (editorViewHandling != null) {
+                editorViewHandling.updateEditorView(activePanel);
             }
         };
 
@@ -94,12 +91,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
             }
         };
 
-        multiClipboardUpdateListener = new ClipboardActionsUpdateListener() {
-            @Override
-            public void stateChanged() {
-                notifyClipboardStateChanged();
-            }
-        };
+        multiClipboardUpdateListener = this::notifyClipboardStateChanged;
     }
 
     @Override
@@ -109,12 +101,9 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
 
     @Override
     public void setPropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
-        activePanel.setPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                editorViewHandling.addEditorView(activePanel);
-                propertyChangeListener.propertyChange(evt);
-            }
+        activePanel.setPropertyChangeListener((PropertyChangeEvent evt) -> {
+            editorViewHandling.addEditorView(activePanel);
+            propertyChangeListener.propertyChange(evt);
         });
     }
 
@@ -253,7 +242,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
 
     @Override
     public boolean isWordWrapMode() {
-        return ((RowWrappingCapable) activePanel.getCodeArea()).isRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING;
+        return ((RowWrappingCapable) activePanel.getCodeArea()).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING;
     }
 
     @Override

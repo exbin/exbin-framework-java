@@ -17,12 +17,14 @@
 package org.exbin.framework.bined.panel;
 
 import java.awt.Color;
-import org.exbin.bined.swing.basic.CodeArea;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 
 /**
  * Enumeration of hexadecimal editor color types.
  *
- * @version 0.1.0 2016/08/31
+ * @version 0.2.1 2018/10/20
  * @author ExBin Project (http://exbin.org)
  */
 public enum HexColorType {
@@ -64,12 +66,13 @@ public enum HexColorType {
         return title;
     }
 
-    public Color getColorFromCodeArea(CodeArea codeArea) {
+    @Nullable
+    public Color getColorFromCodeArea(@Nonnull ExtCodeArea codeArea) {
         switch (this) {
-            case HEADER_TEXT:
-                return codeArea.getForeground();
-            case HEADER_BACKGROUND:
-                return codeArea.getBackground();
+//            case HEADER_TEXT:
+//                return codeArea.getForeground();
+//            case HEADER_BACKGROUND:
+//                return codeArea.getBackground();
 //            case MAIN_AREA_TEXT:
 //                return codeArea.getMainColors().getTextColor();
 //            case MAIN_AREA_BACKGROUND:
@@ -114,16 +117,16 @@ public enum HexColorType {
         }
     }
 
-    public void setColorToCodeArea(CodeArea codeArea, Color color) {
+    public void setColorToCodeArea(@Nonnull ExtCodeArea codeArea, @Nonnull Color color) {
         switch (this) {
-            case HEADER_TEXT: {
-                codeArea.setForeground(color);
-                break;
-            }
-            case HEADER_BACKGROUND: {
-                codeArea.setBackground(color);
-                break;
-            }
+//            case HEADER_TEXT: {
+//                codeArea.setForeground(color);
+//                break;
+//            }
+//            case HEADER_BACKGROUND: {
+//                codeArea.setBackground(color);
+//                break;
+//            }
 //            case MAIN_AREA_TEXT: {
 //                ColorsGroup mainColors = codeArea.getMainColors();
 //                mainColors.setTextColor(color);
