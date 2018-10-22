@@ -258,9 +258,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     @Override
     public boolean changeShowNonprintables() {
-        return false;
-// TODO        codeArea.setShowUnprintableCharacters(!codeArea.isShowUnprintableCharacters());
-//        return codeArea.isShowUnprintableCharacters();
+        codeArea.setShowUnprintables(!codeArea.isShowUnprintables());
+        return codeArea.isShowUnprintables();
     }
 
     @Override

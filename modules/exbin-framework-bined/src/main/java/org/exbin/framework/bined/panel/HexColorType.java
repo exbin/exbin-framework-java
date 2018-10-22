@@ -24,7 +24,7 @@ import org.exbin.bined.swing.extended.ExtCodeArea;
 /**
  * Enumeration of hexadecimal editor color types.
  *
- * @version 0.2.1 2018/10/20
+ * @version 0.2.1 2018/10/21
  * @author ExBin Project (http://exbin.org)
  */
 public enum HexColorType {
@@ -68,11 +68,12 @@ public enum HexColorType {
 
     @Nullable
     public Color getColorFromCodeArea(@Nonnull ExtCodeArea codeArea) {
+//        codeArea.getPainter().
         switch (this) {
 //            case HEADER_TEXT:
-//                return codeArea.getForeground();
+//                return codeArea.getTextForeground();
 //            case HEADER_BACKGROUND:
-//                return codeArea.getBackground();
+//                return codeArea.getTextBackground();
 //            case MAIN_AREA_TEXT:
 //                return codeArea.getMainColors().getTextColor();
 //            case MAIN_AREA_BACKGROUND:
