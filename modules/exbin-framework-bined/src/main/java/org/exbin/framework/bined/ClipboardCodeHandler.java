@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
-import org.exbin.bined.swing.basic.CodeArea;
+import org.exbin.bined.swing.CodeAreaCore;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.panel.HexPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -31,7 +31,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Clipboard code handling.
  *
- * @version 0.2.1 2017/07/16
+ * @version 0.2.1 2018/10/29
  * @author ExBin Project (http://exbin.org)
  */
 public class ClipboardCodeHandler {
@@ -85,7 +85,7 @@ public class ClipboardCodeHandler {
         return pasteFromCodeAction;
     }
 
-    public Action createCopyAsCodeAction(final CodeArea codeArea) {
+    public Action createCopyAsCodeAction(final CodeAreaCore codeArea) {
         Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,7 +96,7 @@ public class ClipboardCodeHandler {
         return action;
     }
 
-    public Action createPasteFromCodeAction(final CodeArea codeArea) {
+    public Action createPasteFromCodeAction(final CodeAreaCore codeArea) {
         Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

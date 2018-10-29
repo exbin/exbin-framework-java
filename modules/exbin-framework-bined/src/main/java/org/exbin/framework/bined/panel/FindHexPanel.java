@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import org.exbin.bined.ScrollBarVisibility;
 import org.exbin.bined.basic.BasicBackgroundPaintMode;
-import org.exbin.bined.swing.basic.CodeArea;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -39,7 +39,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Find text/hexadecimal data panel.
  *
- * @version 0.2.1 2018/08/12
+ * @version 0.2.1 2018/10/29
  * @author ExBin Project (http://exbin.org)
  */
 public class FindHexPanel extends javax.swing.JPanel {
@@ -47,12 +47,12 @@ public class FindHexPanel extends javax.swing.JPanel {
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(FindHexPanel.class);
     public static final String POPUP_MENU_POSTFIX = ".searchFindHexPanel";
 
-    private final CodeArea findHexadecimalRenderer = new CodeArea();
+    private final ExtCodeArea findHexadecimalRenderer = new ExtCodeArea();
     private HexSearchComboBoxPanel findComboBoxEditorComponent;
     private ComboBoxEditor findComboBoxEditor;
     private List<SearchCondition> searchHistory = new ArrayList<>();
 
-    private final CodeArea replaceHexadecimalRenderer = new CodeArea();
+    private final ExtCodeArea replaceHexadecimalRenderer = new ExtCodeArea();
     private HexSearchComboBoxPanel replaceComboBoxEditorComponent;
     private ComboBoxEditor replaceComboBoxEditor;
     private List<SearchCondition> replaceHistory = new ArrayList<>();

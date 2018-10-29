@@ -39,7 +39,7 @@ import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditationModeCapable;
 import org.exbin.bined.capability.SelectionCapable;
 import org.exbin.bined.delta.SegmentsRepository;
-import org.exbin.bined.swing.basic.CodeArea;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -87,7 +87,7 @@ import org.exbin.framework.bined.panel.HexAppearanceOptionsPanelApi;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2018/08/11
+ * @version 0.2.0 2018/10/29
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -673,7 +673,7 @@ public class BinedModule implements XBApplicationModule {
         return popupMenu;
     }
 
-    private JPopupMenu createCodeAreaPopupMenu(final CodeArea codeArea, String menuPostfix) {
+    private JPopupMenu createCodeAreaPopupMenu(final ExtCodeArea codeArea, String menuPostfix) {
         getClipboardCodeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID);
@@ -776,7 +776,7 @@ public class BinedModule implements XBApplicationModule {
         if (codeAreaPopupMenuHandler == null) {
             codeAreaPopupMenuHandler = new CodeAreaPopupMenuHandler() {
                 @Override
-                public JPopupMenu createPopupMenu(CodeArea codeArea, String menuPostfix) {
+                public JPopupMenu createPopupMenu(ExtCodeArea codeArea, String menuPostfix) {
                     return createCodeAreaPopupMenu(codeArea, menuPostfix);
                 }
 
@@ -799,14 +799,14 @@ public class BinedModule implements XBApplicationModule {
             @Override
             public boolean dispatchMouseEvent(MouseEvent mouseEvent) {
                 Component component = getSource(mouseEvent);
-                if (component instanceof CodeArea) {
-                    if (((CodeArea) component).getComponentPopupMenu() == null) {
+                if (component instanceof ExtCodeArea) {
+                    if (((ExtCodeArea) component).getComponentPopupMenu() == null) {
                         CodeAreaPopupMenuHandler handler = getCodeAreaPopupMenuHandler();
                         if (popupMenu != null) {
                             handler.dropPopupMenu(DEFAULT_MENU_POSTFIX);
                         }
 
-                        popupMenu = handler.createPopupMenu((CodeArea) component, DEFAULT_MENU_POSTFIX);
+                        popupMenu = handler.createPopupMenu((ExtCodeArea) component, DEFAULT_MENU_POSTFIX);
 
                         Point point = component.getMousePosition();
                         if (point != null) {
@@ -825,14 +825,14 @@ public class BinedModule implements XBApplicationModule {
             public boolean dispatchKeyEvent(KeyEvent keyEvent) {
                 Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 
-                if (component instanceof CodeArea) {
-                    if (((CodeArea) component).getComponentPopupMenu() == null) {
+                if (component instanceof ExtCodeArea) {
+                    if (((ExtCodeArea) component).getComponentPopupMenu() == null) {
                         CodeAreaPopupMenuHandler handler = getCodeAreaPopupMenuHandler();
                         if (popupMenu != null) {
                             handler.dropPopupMenu(DEFAULT_MENU_POSTFIX);
                         }
 
-                        popupMenu = handler.createPopupMenu((CodeArea) component, DEFAULT_MENU_POSTFIX);
+                        popupMenu = handler.createPopupMenu((ExtCodeArea) component, DEFAULT_MENU_POSTFIX);
 
                         Point point = new Point(component.getWidth() / 2, component.getHeight() / 2);
                         popupMenu.show(component, (int) point.getX(), (int) point.getY());
