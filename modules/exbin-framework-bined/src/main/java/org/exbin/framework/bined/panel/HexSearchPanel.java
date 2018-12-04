@@ -33,8 +33,9 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import org.exbin.bined.ScrollBarVisibility;
-import org.exbin.bined.basic.BasicBackgroundPaintMode;
+import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.bined.swing.extended.ExtendedBackgroundPaintMode;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -49,7 +50,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.2.0 2018/10/29
+ * @version 0.2.0 2018/12/04
  * @author ExBin Project (http://exbin.org)
  */
 public class HexSearchPanel extends javax.swing.JPanel {
@@ -85,10 +86,11 @@ public class HexSearchPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-//        hexadecimalRenderer.setShowHeader(false);
-//        hexadecimalRenderer.setShowLineNumbers(false);
-//        hexadecimalRenderer.setWrapMode(true);
-        hexadecimalRenderer.setBackgroundPaintMode(BasicBackgroundPaintMode.PLAIN);
+        hexadecimalRenderer.setShowHeader(false);
+        hexadecimalRenderer.setShowRowPosition(false);
+        hexadecimalRenderer.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        hexadecimalRenderer.setWrappingBytesGroupSize(0);
+        hexadecimalRenderer.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
         hexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setContentData(new ByteArrayEditableData(new byte[]{1, 2, 3}));

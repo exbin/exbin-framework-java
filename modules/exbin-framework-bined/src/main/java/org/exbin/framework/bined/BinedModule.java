@@ -44,6 +44,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.bined.panel.HexAppearanceOptionsPanel;
+import org.exbin.framework.bined.panel.HexAppearanceOptionsPanelApi;
 import org.exbin.framework.bined.panel.HexColorOptionsPanel;
 import org.exbin.framework.bined.panel.HexColorPanelApi;
 import org.exbin.framework.bined.panel.HexColorType;
@@ -82,7 +83,6 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
-import org.exbin.framework.bined.panel.HexAppearanceOptionsPanelApi;
 
 /**
  * Hexadecimal editor module.
