@@ -61,7 +61,7 @@ import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.delta.DeltaDocument;
 import org.exbin.bined.delta.FileDataSource;
 import org.exbin.bined.delta.SegmentsRepository;
-import org.exbin.bined.highlight.swing.HighlightCodeAreaPainter;
+import org.exbin.bined.highlight.swing.extended.ExtendedHighlightCodeAreaPainter;
 import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.operation.swing.CodeAreaUndoHandler;
@@ -86,7 +86,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.1 2018/10/29
+ * @version 0.2.1 2018/12/04
  * @author ExBin Project (http://exbin.org)
  */
 public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
@@ -132,7 +132,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     private void init() {
         codeArea = new ExtCodeArea();
-        codeArea.setPainter(new HighlightCodeAreaPainter(codeArea));
+        codeArea.setPainter(new ExtendedHighlightCodeAreaPainter(codeArea));
         setNewData();
         codeArea.setHandleClipboard(false);
         codeArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -281,7 +281,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     @Override
     public void performFind(SearchParameters searchParameters) {
-        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
         hexSearchPanel.clearStatus();
         if (condition.isEmpty()) {
@@ -326,8 +326,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     @Override
     public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters) {
         SearchCondition replaceCondition = replaceParameters.getCondition();
-        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
-        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
         if (currentMatch != null) {
             EditableBinaryData editableData = ((EditableBinaryData) codeArea.getContentData());
             editableData.remove(currentMatch.getPosition(), currentMatch.getLength());
@@ -358,10 +358,10 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
      * Performs search by binary data.
      */
     private void searchForBinaryData(SearchParameters searchParameters) {
-        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
         long position = codeArea.getCaretPosition().getDataPosition();
-        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        ExtendedHighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
 
         if (currentMatch != null) {
             if (currentMatch.getPosition() == position) {
@@ -375,7 +375,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         BinaryData searchData = condition.getBinaryData();
         BinaryData data = codeArea.getContentData();
 
-        List<HighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
+        List<ExtendedHighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
 
         long dataSize = data.getDataSize();
         while (position < dataSize - searchData.getDataSize()) {
@@ -388,7 +388,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             }
 
             if (matchLength == searchData.getDataSize()) {
-                HighlightCodeAreaPainter.SearchMatch match = new HighlightCodeAreaPainter.SearchMatch();
+                ExtendedHighlightCodeAreaPainter.SearchMatch match = new ExtendedHighlightCodeAreaPainter.SearchMatch();
                 match.setPosition(position);
                 match.setLength(searchData.getDataSize());
                 foundMatches.add(match);
@@ -404,7 +404,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         painter.setMatches(foundMatches);
         if (foundMatches.size() > 0) {
             painter.setCurrentMatchIndex(0);
-            HighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
+            ExtendedHighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
             codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
         }
         hexSearchPanel.setStatus(foundMatches.size(), 0);
@@ -415,7 +415,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
      * Performs search by text/characters.
      */
     private void searchForText(SearchParameters searchParameters) {
-        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
 
         long position = searchParameters.getStartPosition();
@@ -427,7 +427,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         }
         BinaryData data = codeArea.getContentData();
 
-        List<HighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
+        List<ExtendedHighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
 
         Charset charset = codeArea.getCharset();
         CharsetEncoder encoder = charset.newEncoder();
@@ -460,7 +460,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             }
 
             if (matchCharLength == findText.length()) {
-                HighlightCodeAreaPainter.SearchMatch match = new HighlightCodeAreaPainter.SearchMatch();
+                ExtendedHighlightCodeAreaPainter.SearchMatch match = new ExtendedHighlightCodeAreaPainter.SearchMatch();
                 match.setPosition(position);
                 match.setLength(matchLength);
                 foundMatches.add(match);
@@ -487,7 +487,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         painter.setMatches(foundMatches);
         if (foundMatches.size() > 0) {
             painter.setCurrentMatchIndex(0);
-            HighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
+            ExtendedHighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
             codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
         }
         hexSearchPanel.setStatus(foundMatches.size(), 0);
@@ -949,9 +949,9 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     @Override
     public void setMatchPosition(int matchPosition) {
-        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
         painter.setCurrentMatchIndex(matchPosition);
-        HighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        ExtendedHighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
         codeArea.revealPosition(currentMatch.getPosition(), 0, codeArea.getActiveSection());
         codeArea.repaint();
     }
@@ -988,7 +988,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
 
     @Override
     public void clearMatches() {
-        HighlightCodeAreaPainter painter = (HighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
         painter.clearMatches();
     }
 

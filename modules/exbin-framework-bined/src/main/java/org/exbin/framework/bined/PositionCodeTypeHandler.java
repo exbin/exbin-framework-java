@@ -102,8 +102,7 @@ public class PositionCodeTypeHandler {
     public void setCodeType(PositionCodeType codeType) {
         this.positionCodeType = codeType;
         HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
-        throw new UnsupportedOperationException("Not supported yet.");
-// TODO        activePanel.getCodeArea().setPositionCodeType(codeType);
+        activePanel.getCodeArea().setPositionCodeType(codeType);
     }
 
     public Action getOctalCodeTypeAction() {
