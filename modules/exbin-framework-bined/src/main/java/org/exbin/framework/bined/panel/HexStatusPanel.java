@@ -21,6 +21,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 import org.exbin.bined.EditationMode;
+import org.exbin.bined.EditationOperation;
 import org.exbin.framework.bined.HexStatusApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -39,7 +40,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
     public static final String READONLY_EDITATION_MODE_LABEL = "RO";
     public static final String INPLACE_EDITATION_MODE_LABEL = "INP";
 
-    private EditationMode editationMode;
+    private EditationOperation editationOperation;
     private StatusControlHandler statusControlHandle;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexStatusPanel.class);
 
@@ -209,10 +210,10 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
     private void editationModeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editationModeLabelMouseClicked
         if (statusControlHandle != null && evt.getButton() == MouseEvent.BUTTON1) {
-            if (editationMode == EditationMode.INSERT) {
-                statusControlHandle.changeEditationMode(EditationMode.OVERWRITE);
-            } else if (editationMode == EditationMode.OVERWRITE) {
-                statusControlHandle.changeEditationMode(EditationMode.INSERT);
+            if (editationOperation == EditationOperation.INSERT) {
+                statusControlHandle.changeEditationOperation(EditationOperation.OVERWRITE);
+            } else if (editationOperation == EditationOperation.OVERWRITE) {
+                statusControlHandle.changeEditationOperation(EditationOperation.INSERT);
             }
         }
     }//GEN-LAST:event_editationModeLabelMouseClicked
@@ -332,20 +333,27 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
     }
 
     @Override
-    public void setEditationMode(EditationMode editationMode) {
-        this.editationMode = editationMode;
+    public void setEditationMode(EditationMode editationMode, EditationOperation editationOperation) {
+        this.editationOperation = editationOperation;
         switch (editationMode) {
-            case INSERT: {
-                editationModeLabel.setText(INSERT_EDITATION_MODE_LABEL);
-                break;
-            }
-            case OVERWRITE: {
-                editationModeLabel.setText(OVERWRITE_EDITATION_MODE_LABEL);
-                break;
-            }
             case READ_ONLY: {
                 editationModeLabel.setText(READONLY_EDITATION_MODE_LABEL);
                 break;
+            }
+            case EXPANDING:
+            case CAPPED: {
+                switch (editationOperation) {
+                    case INSERT: {
+                        editationModeLabel.setText(INSERT_EDITATION_MODE_LABEL);
+                        break;
+                    }
+                    case OVERWRITE: {
+                        editationModeLabel.setText(OVERWRITE_EDITATION_MODE_LABEL);
+                        break;
+                    }
+                    default:
+                        throw new IllegalStateException("Unexpected editation operation " + editationOperation.name());
+                }
             }
             case INPLACE: {
                 editationModeLabel.setText(INPLACE_EDITATION_MODE_LABEL);

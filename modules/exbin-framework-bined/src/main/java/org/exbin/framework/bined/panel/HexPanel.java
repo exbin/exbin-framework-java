@@ -55,6 +55,7 @@ import org.exbin.bined.CaretPosition;
 import org.exbin.bined.DataChangedListener;
 import org.exbin.bined.EditationMode;
 import org.exbin.bined.EditationModeChangedListener;
+import org.exbin.bined.EditationOperation;
 import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditationModeCapable;
 import org.exbin.bined.capability.RowWrappingCapable;
@@ -839,15 +840,15 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             hexStatus.setCursorPosition(position);
         });
 
-        attachEditationModeChangedListener((EditationMode mode) -> {
-            hexStatus.setEditationMode(mode);
+        attachEditationModeChangedListener((EditationMode mode, EditationOperation operation) -> {
+            hexStatus.setEditationMode(mode, operation);
         });
-        hexStatus.setEditationMode(codeArea.getEditationMode());
+        hexStatus.setEditationMode(codeArea.getEditationMode(), codeArea.getActiveOperation());
 
         hexStatus.setControlHandler(new HexStatusApi.StatusControlHandler() {
             @Override
-            public void changeEditationMode(EditationMode editationMode) {
-                codeArea.setEditationMode(editationMode);
+            public void changeEditationOperation(EditationOperation editationOperation) {
+                codeArea.setEditationOperation(editationOperation);
             }
 
             @Override
@@ -1033,7 +1034,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         }
 
         if (hexStatus != null) {
-            hexStatus.setEditationMode(codeArea.getEditationMode());
+            hexStatus.setEditationMode(codeArea.getEditationMode(), codeArea.getActiveOperation());
         }
         CaretPosition caretPosition = codeArea.getCaretPosition();
         String position = String.valueOf(caretPosition.getDataPosition());

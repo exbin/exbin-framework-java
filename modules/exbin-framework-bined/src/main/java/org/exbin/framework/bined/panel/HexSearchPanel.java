@@ -34,8 +34,10 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import org.exbin.bined.ScrollBarVisibility;
 import org.exbin.bined.capability.RowWrappingCapable;
+import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.bined.swing.extended.ExtendedBackgroundPaintMode;
+import org.exbin.bined.swing.extended.layout.ExtendedCodeAreaLayoutProfile;
+import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -86,11 +88,17 @@ public class HexSearchPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        hexadecimalRenderer.setShowHeader(false);
-        hexadecimalRenderer.setShowRowPosition(false);
+        ExtendedCodeAreaLayoutProfile layoutProfile = hexadecimalRenderer.getLayoutProfile();
+        layoutProfile.setShowHeader(false);
+        layoutProfile.setShowRowPosition(false);
+
+        hexadecimalRenderer.setLayoutProfile(layoutProfile);
+        ExtendedCodeAreaThemeProfile themeProfile = hexadecimalRenderer.getThemeProfile();
+        themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
+
+        hexadecimalRenderer.setLayoutProfile(layoutProfile);
         hexadecimalRenderer.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
         hexadecimalRenderer.setWrappingBytesGroupSize(0);
-        hexadecimalRenderer.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
         hexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalRenderer.setContentData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
