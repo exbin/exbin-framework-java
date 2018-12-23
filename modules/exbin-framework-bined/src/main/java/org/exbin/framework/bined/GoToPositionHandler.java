@@ -25,8 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.exbin.bined.capability.CaretCapable;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.GoToHexPanel;
-import org.exbin.framework.bined.panel.HexPanel;
+import org.exbin.framework.bined.panel.GoToBinaryPanel;
+import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -42,7 +42,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
  */
 public class GoToPositionHandler {
 
-    private final HexEditorProvider editorProvider;
+    private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -50,7 +50,7 @@ public class GoToPositionHandler {
 
     private Action goToLineAction;
 
-    public GoToPositionHandler(XBApplication application, HexEditorProvider editorProvider) {
+    public GoToPositionHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
@@ -62,9 +62,9 @@ public class GoToPositionHandler {
         goToLineAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
-                    final HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
-                    final GoToHexPanel goToPanel = new GoToHexPanel();
+                if (editorProvider instanceof BinaryEditorProvider) {
+                    final BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+                    final GoToBinaryPanel goToPanel = new GoToBinaryPanel();
                     goToPanel.setCursorPosition(((CaretCapable) activePanel.getCodeArea()).getCaret().getCaretPosition().getDataPosition());
                     goToPanel.setMaxPosition(activePanel.getCodeArea().getDataSize());
                     DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());

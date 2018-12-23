@@ -31,8 +31,8 @@ import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.BinaryDataOperationException;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
-import org.exbin.framework.bined.panel.HexColorType;
-import org.exbin.framework.bined.panel.HexPanel;
+import org.exbin.framework.bined.panel.BinaryColorType;
+import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.ReplaceParameters;
 import org.exbin.framework.bined.panel.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
@@ -50,13 +50,13 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
  * @version 0.2.1 2018/08/10
  * @author ExBin Project (http://exbin.org)
  */
-public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
+public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
 
-    private HexPanelInit hexPanelInit = null;
-    private final List<HexPanel> panels = new ArrayList<>();
+    private BinaryPanelInit hexPanelInit = null;
+    private final List<BinaryPanel> panels = new ArrayList<>();
     private EditorViewHandling editorViewHandling = null;
     private SegmentsRepository segmentsRepository;
-    private HexPanel activePanel = null;
+    private BinaryPanel activePanel = null;
     private int lastIndex = 0;
     private HexStatusApi hexStatus = null;
     private TextEncodingStatusApi encodingStatus;
@@ -67,7 +67,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     private ClipboardActionsUpdateListener clipboardUpdateListener = null;
     private final ClipboardActionsUpdateListener multiClipboardUpdateListener;
 
-    public HexEditorHandler() {
+    public BinaryEditorHandler() {
         multiModificationListener = () -> {
             if (editorModificationListener != null) {
                 editorModificationListener.modified();
@@ -114,7 +114,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
 
     @Override
     public void loadFromFile(URI fileUri, FileType fileType) {
-        HexPanel panel = createNewPanel();
+        BinaryPanel panel = createNewPanel();
         panel.newFile();
         panel.loadFromFile(fileUri, fileType);
         editorViewHandling.updateEditorView(panel);
@@ -149,7 +149,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
 
     @Override
     public void newFile() {
-        HexPanel panel = createNewPanel();
+        BinaryPanel panel = createNewPanel();
         panel.newFile();
         activePanel = panel;
     }
@@ -163,7 +163,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     public void registerHexStatus(HexStatusApi hexStatusApi) {
         this.hexStatus = hexStatusApi;
         if (!panels.isEmpty()) {
-            for (HexPanel panel : panels) {
+            for (BinaryPanel panel : panels) {
                 panel.registerHexStatus(hexStatusApi);
             }
         }
@@ -173,7 +173,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatusApi) {
         this.encodingStatus = encodingStatusApi;
         if (!panels.isEmpty()) {
-            for (HexPanel panel : panels) {
+            for (BinaryPanel panel : panels) {
                 panel.registerEncodingStatus(encodingStatusApi);
             }
         }
@@ -183,8 +183,8 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
         this.segmentsRepository = segmentsRepository;
     }
 
-    private synchronized HexPanel createNewPanel() {
-        HexPanel panel = new HexPanel(lastIndex);
+    private synchronized BinaryPanel createNewPanel() {
+        BinaryPanel panel = new BinaryPanel(lastIndex);
         panel.setSegmentsRepository(segmentsRepository);
         lastIndex++;
         panels.add(panel);
@@ -208,11 +208,11 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
         activePanel.newFile();
     }
 
-    public HexPanelInit getHexPanelInit() {
+    public BinaryPanelInit getHexPanelInit() {
         return hexPanelInit;
     }
 
-    public void setHexPanelInit(HexPanelInit hexPanelInit) {
+    public void setHexPanelInit(BinaryPanelInit hexPanelInit) {
         this.hexPanelInit = hexPanelInit;
     }
 
@@ -226,17 +226,17 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     }
 
     @Override
-    public Map<HexColorType, Color> getCurrentColors() {
+    public Map<BinaryColorType, Color> getCurrentColors() {
         return activePanel.getCurrentColors();
     }
 
     @Override
-    public Map<HexColorType, Color> getDefaultColors() {
+    public Map<BinaryColorType, Color> getDefaultColors() {
         return activePanel.getDefaultColors();
     }
 
     @Override
-    public void setCurrentColors(Map<HexColorType, Color> colors) {
+    public void setCurrentColors(Map<BinaryColorType, Color> colors) {
         activePanel.setCurrentColors(colors);
     }
 
@@ -296,7 +296,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     }
 
     @Override
-    public HexPanel getDocument() {
+    public BinaryPanel getDocument() {
         return activePanel;
     }
 
@@ -307,8 +307,8 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
 
     @Override
     public void setActiveEditor(EditorProvider editorProvider) {
-        if (editorProvider instanceof HexPanel) {
-            HexPanel hexPanel = (HexPanel) editorProvider;
+        if (editorProvider instanceof BinaryPanel) {
+            BinaryPanel hexPanel = (BinaryPanel) editorProvider;
             activePanel = hexPanel;
             hexPanel.notifyListeners();
             notifyUndoChanged();
@@ -323,7 +323,7 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
 
     @Override
     public void closeFile(FileHandlerApi panel) {
-        panels.remove((HexPanel) panel);
+        panels.remove((BinaryPanel) panel);
         editorViewHandling.removeEditorView((EditorProvider) panel);
     }
 
@@ -510,8 +510,8 @@ public class HexEditorHandler implements HexEditorProvider, MultiEditorProvider,
     /**
      * Method for initialization of new hexadecimal panel.
      */
-    public static interface HexPanelInit {
+    public static interface BinaryPanelInit {
 
-        void init(HexPanel panel);
+        void init(BinaryPanel panel);
     }
 }

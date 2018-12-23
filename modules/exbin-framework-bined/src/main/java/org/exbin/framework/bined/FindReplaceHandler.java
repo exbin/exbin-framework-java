@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.HexPanel;
+import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -33,7 +33,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  */
 public class FindReplaceHandler {
 
-    private final HexEditorProvider editorProvider;
+    private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -43,7 +43,7 @@ public class FindReplaceHandler {
     private Action editFindAgainAction;
     private Action editReplaceAction;
 
-    public FindReplaceHandler(XBApplication application, HexEditorProvider editorProvider) {
+    public FindReplaceHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
@@ -55,8 +55,8 @@ public class FindReplaceHandler {
         editFindAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
-                    HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+                if (editorProvider instanceof BinaryEditorProvider) {
+                    BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
                     activePanel.showSearchPanel(false);
                 }
             }
@@ -68,7 +68,7 @@ public class FindReplaceHandler {
         editFindAgainAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+                BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
                 activePanel.findAgain();
             }
         };
@@ -78,8 +78,8 @@ public class FindReplaceHandler {
         editReplaceAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
-                    HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+                if (editorProvider instanceof BinaryEditorProvider) {
+                    BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
                     activePanel.showSearchPanel(true);
                 }
             }

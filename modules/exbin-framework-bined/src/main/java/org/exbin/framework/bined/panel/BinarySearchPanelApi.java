@@ -16,35 +16,21 @@
  */
 package org.exbin.framework.bined.panel;
 
-import java.awt.Color;
-import java.util.Map;
-
 /**
- * Hexadecimal editor color panel interface.
+ * Hex search panel interface.
  *
- * @version 0.1.0 2016/06/23
+ * @version 0.2.0 2016/12/31
  * @author ExBin Project (http://exbin.org)
  */
-public interface HexColorPanelApi {
+public interface BinarySearchPanelApi {
 
-    /**
-     * Returns current colors used in application frame.
-     *
-     * @return map of colors
-     */
-    public Map<HexColorType, Color> getCurrentTextColors();
+    void performFind(SearchParameters dialogSearchParameters);
 
-    /**
-     * Returns default colors used in application frame.
-     *
-     * @return map of colors
-     */
-    public Map<HexColorType, Color> getDefaultTextColors();
+    void setMatchPosition(int matchPosition);
 
-    /**
-     * Sets current colors used in application frame.
-     *
-     * @param colors map of colors
-     */
-    public void setCurrentTextColors(Map<HexColorType, Color> colors);
+    void updatePosition();
+
+    void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters);
+
+    void clearMatches();
 }

@@ -45,21 +45,21 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
  * @version 0.2.0 2018/10/20
  * @author ExBin Project (http://exbin.org)
  */
-public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
+public class BinaryColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexColorPanel.class);
-    private HexColorPanelApi panelApi;
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryColorPanel.class);
+    private BinaryColorPanelApi panelApi;
 
     private final ExtCodeArea previewCodeArea = new ExtCodeArea();
-    private final Map<HexColorType, SelectableColor> selectableColors = new HashMap<>();
+    private final Map<BinaryColorType, SelectableColor> selectableColors = new HashMap<>();
 
-    public HexColorPanel() {
+    public BinaryColorPanel() {
         initComponents();
         init();
     }
 
-    public void setPanelApi(HexColorPanelApi panelApi) {
+    public void setPanelApi(BinaryColorPanelApi panelApi) {
         this.panelApi = panelApi;
     }
 
@@ -69,7 +69,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         try {
             exampleData.loadFromStream(getClass().getResourceAsStream("/org/exbin/framework/bined/resources/preview/lorem.txt"));
         } catch (IOException ex) {
-            Logger.getLogger(HexColorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BinaryColorPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         previewCodeArea.setContentData(exampleData);
         ((RowWrappingCapable) previewCodeArea).setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
@@ -78,7 +78,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         previewCodeArea.setSelection(new SelectionRange(200, 300));
         previewPanel.add(previewCodeArea, BorderLayout.CENTER);
 
-        for (final HexColorType colorType : HexColorType.values()) {
+        for (final BinaryColorType colorType : BinaryColorType.values()) {
             SelectableColor selectableColor = new SelectableColor(colorType.getTitle());
             selectableColors.put(colorType, selectableColor);
             selectableColor.setColorChangedListener(new SelectableColor.ColorChangedListener() {
@@ -91,7 +91,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         }
     }
 
-    public Color getColor(HexColorType colorType) {
+    public Color getColor(BinaryColorType colorType) {
         SelectableColor selectableColor = selectableColors.get(colorType);
         if (selectableColor != null) {
             return selectableColor.getColor();
@@ -100,14 +100,14 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         return null;
     }
 
-    public void setColor(HexColorType colorType, Color color) {
+    public void setColor(BinaryColorType colorType, Color color) {
         SelectableColor selectableColor = selectableColors.get(colorType);
         if (selectableColor != null) {
             selectableColor.setColor(color);
         }
     }
 
-    private void setPreviewColor(HexColorType colorType, Color color) {
+    private void setPreviewColor(BinaryColorType colorType, Color color) {
         colorType.setColorToCodeArea(previewCodeArea, color);
     }
 
@@ -230,13 +230,13 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void fillCurrentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentButtonActionPerformed
-        Map<HexColorType, Color> currentColors = panelApi.getCurrentTextColors();
+        Map<BinaryColorType, Color> currentColors = panelApi.getCurrentTextColors();
         setColorsFromMap(currentColors);
         setModified(true);
     }//GEN-LAST:event_fillCurrentButtonActionPerformed
 
     private void fillDefaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultButtonActionPerformed
-        Map<HexColorType, Color> defaultColors = panelApi.getDefaultTextColors();
+        Map<BinaryColorType, Color> defaultColors = panelApi.getDefaultTextColors();
         setColorsFromMap(defaultColors);
         setModified(true);
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
@@ -247,7 +247,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new HexColorPanel());
+        WindowUtils.invokeDialog(new BinaryColorPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -274,7 +274,7 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
     public void loadFromPreferences(Preferences preferences) {
         setColorsFromMap(panelApi.getDefaultTextColors());
         Integer rgb = null;
-        for (HexColorType colorType : HexColorType.values()) {
+        for (BinaryColorType colorType : BinaryColorType.values()) {
             try {
                 rgb = Integer.valueOf(preferences.get(colorType.getPreferencesString(), null));
             } catch (NumberFormatException ex) {
@@ -288,8 +288,8 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        preferences.put(HexColorOptionsPanel.PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(false));
-        for (HexColorType colorType : HexColorType.values()) {
+        preferences.put(BinaryColorOptionsPanel.PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(false));
+        for (BinaryColorType colorType : BinaryColorType.values()) {
             preferences.put(colorType.getPreferencesString(), Integer.toString(getColor(colorType).getRGB()));
         }
     }
@@ -299,16 +299,16 @@ public class HexColorPanel extends javax.swing.JPanel implements OptionsPanel {
         panelApi.setCurrentTextColors(getMapFromColors());
     }
 
-    public void setColorsFromMap(Map<HexColorType, Color> colors) {
-        for (Map.Entry<HexColorType, Color> entry : colors.entrySet()) {
+    public void setColorsFromMap(Map<BinaryColorType, Color> colors) {
+        for (Map.Entry<BinaryColorType, Color> entry : colors.entrySet()) {
             setColor(entry.getKey(), entry.getValue());
             setPreviewColor(entry.getKey(), entry.getValue());
         }
     }
 
-    public Map<HexColorType, Color> getMapFromColors() {
-        Map<HexColorType, Color> colors = new HashMap<>();
-        for (Map.Entry<HexColorType, SelectableColor> entry : selectableColors.entrySet()) {
+    public Map<BinaryColorType, Color> getMapFromColors() {
+        Map<BinaryColorType, Color> colors = new HashMap<>();
+        for (Map.Entry<BinaryColorType, SelectableColor> entry : selectableColors.entrySet()) {
             colors.put(entry.getKey(), entry.getValue().getColor());
         }
         return colors;

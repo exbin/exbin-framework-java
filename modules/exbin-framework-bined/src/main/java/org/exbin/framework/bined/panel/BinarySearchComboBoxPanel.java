@@ -41,7 +41,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
  * @version 0.2.1 2018/12/11
  * @author ExBin Project (http://exbin.org)
  */
-public class HexSearchComboBoxPanel extends JPanel {
+public class BinarySearchComboBoxPanel extends JPanel {
 
     public static final String TEXT_MODE = "text";
     public static final String BINARY_MODE = "binary";
@@ -54,7 +54,7 @@ public class HexSearchComboBoxPanel extends JPanel {
     private boolean runningUpdate = false;
     private ValueChangedListener valueChangedListener = null;
 
-    public HexSearchComboBoxPanel() {
+    public BinarySearchComboBoxPanel() {
         super.setLayout(new CardLayout());
         Border comboBoxBorder = ((JComponent) (new JComboBox<>().getEditor().getEditorComponent())).getBorder();
         textField = new JTextField();

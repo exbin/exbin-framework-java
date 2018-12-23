@@ -41,8 +41,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import org.exbin.framework.bined.panel.HexPanel;
-import org.exbin.framework.bined.panel.HexStatusPanel;
+import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
@@ -96,8 +96,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private PanelMode mode = PanelMode.TREE;
 
     private final XBDocTreePanel treePanel;
-    private final HexPanel hexPanel;
-    private final HexStatusPanel hexStatusPanel;
+    private final BinaryPanel hexPanel;
+    private final BinaryStatusPanel hexStatusPanel;
     private final TextPanel textPanel;
 
     private XBPropertyPanel propertyPanel;
@@ -116,8 +116,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         mainSplitPane.setRightComponent(propertyPanel);
 
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
-        hexPanel = new HexPanel();
-        hexStatusPanel = new HexStatusPanel();
+        hexPanel = new BinaryPanel();
+        hexStatusPanel = new BinaryStatusPanel();
         hexPanel.registerHexStatus(hexStatusPanel);
         // hexPanel.setNoBorder();
         textPanel = new TextPanel();

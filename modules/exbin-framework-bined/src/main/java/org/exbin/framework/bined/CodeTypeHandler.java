@@ -23,7 +23,7 @@ import javax.swing.Action;
 import org.exbin.bined.CodeType;
 import org.exbin.bined.capability.CodeTypeCapable;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.HexPanel;
+import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -63,7 +63,7 @@ public class CodeTypeHandler {
         binaryCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
+                if (editorProvider instanceof BinaryEditorProvider) {
                     setCodeType(CodeType.BINARY);
                 }
             }
@@ -76,7 +76,7 @@ public class CodeTypeHandler {
         octalCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
+                if (editorProvider instanceof BinaryEditorProvider) {
                     setCodeType(CodeType.OCTAL);
                 }
             }
@@ -89,7 +89,7 @@ public class CodeTypeHandler {
         decimalCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
+                if (editorProvider instanceof BinaryEditorProvider) {
                     setCodeType(CodeType.DECIMAL);
                 }
             }
@@ -102,7 +102,7 @@ public class CodeTypeHandler {
         hexadecimalCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
+                if (editorProvider instanceof BinaryEditorProvider) {
                     setCodeType(CodeType.HEXADECIMAL);
                 }
             }
@@ -116,7 +116,7 @@ public class CodeTypeHandler {
 
     public void setCodeType(CodeType codeType) {
         this.codeType = codeType;
-        HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+        BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
         ((CodeTypeCapable) activePanel.getCodeArea()).setCodeType(codeType);
     }
 

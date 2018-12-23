@@ -33,7 +33,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.0 2018/09/11
  * @author ExBin Project (http://exbin.org)
  */
-public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, TextEncodingStatusApi {
+public class BinaryStatusPanel extends javax.swing.JPanel implements HexStatusApi, TextEncodingStatusApi {
 
     public static final String INSERT_EDITATION_MODE_LABEL = "INS";
     public static final String OVERWRITE_EDITATION_MODE_LABEL = "OVR";
@@ -42,9 +42,9 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
     private EditationOperation editationOperation;
     private StatusControlHandler statusControlHandle;
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexStatusPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryStatusPanel.class);
 
-    public HexStatusPanel() {
+    public BinaryStatusPanel() {
         initComponents();
     }
 
@@ -107,7 +107,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
 
         memoryModeButtonGroup.add(deltaMemoryModeRadioButtonMenuItem);
         deltaMemoryModeRadioButtonMenuItem.setSelected(true);
-        deltaMemoryModeRadioButtonMenuItem.setText(resourceBundle.getString("HexStatusPanel.deltaMemoryModeRadioButtonMenuItem.text")); // NOI18N
+        deltaMemoryModeRadioButtonMenuItem.setText(resourceBundle.getString("BinaryStatusPanel.deltaMemoryModeRadioButtonMenuItem.text")); // NOI18N
         deltaMemoryModeRadioButtonMenuItem.setName("deltaMemoryModeRadioButtonMenuItem"); // NOI18N
         deltaMemoryModeRadioButtonMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -117,7 +117,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
         memoryModePopupMenu.add(deltaMemoryModeRadioButtonMenuItem);
 
         memoryModeButtonGroup.add(ramMemoryModeRadioButtonMenuItem);
-        ramMemoryModeRadioButtonMenuItem.setText(resourceBundle.getString("HexStatusPanel.ramMemoryModeRadioButtonMenuItem.text")); // NOI18N
+        ramMemoryModeRadioButtonMenuItem.setText(resourceBundle.getString("BinaryStatusPanel.ramMemoryModeRadioButtonMenuItem.text")); // NOI18N
         ramMemoryModeRadioButtonMenuItem.setName("ramMemoryModeRadioButtonMenuItem"); // NOI18N
         ramMemoryModeRadioButtonMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -283,7 +283,7 @@ public class HexStatusPanel extends javax.swing.JPanel implements HexStatusApi, 
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new HexStatusPanel());
+        WindowUtils.invokeDialog(new BinaryStatusPanel());
     }
 
 

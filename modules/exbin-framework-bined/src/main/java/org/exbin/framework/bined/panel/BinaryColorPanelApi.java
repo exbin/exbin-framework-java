@@ -16,27 +16,35 @@
  */
 package org.exbin.framework.bined.panel;
 
+import java.awt.Color;
+import java.util.Map;
+
 /**
- * Appearance options panel api interface.
+ * Hexadecimal editor color panel interface.
  *
- * @version 0.2.1 2017/10/15
+ * @version 0.1.0 2016/06/23
  * @author ExBin Project (http://exbin.org)
  */
-public interface HexAppearanceOptionsPanelApi {
+public interface BinaryColorPanelApi {
 
     /**
-     * Returns text word wrapping mode.
+     * Returns current colors used in application frame.
      *
-     * @return wrapping mode
+     * @return map of colors
      */
-    public boolean getWordWrapMode();
+    public Map<BinaryColorType, Color> getCurrentTextColors();
 
     /**
-     * Sets text word wrapping mode.
+     * Returns default colors used in application frame.
      *
-     * @param mode word wrapping mode
+     * @return map of colors
      */
-    public void setWordWrapMode(boolean mode);
+    public Map<BinaryColorType, Color> getDefaultTextColors();
 
-    public void setShowValuesPanel(boolean showValuesPanel);
+    /**
+     * Sets current colors used in application frame.
+     *
+     * @param colors map of colors
+     */
+    public void setCurrentTextColors(Map<BinaryColorType, Color> colors);
 }

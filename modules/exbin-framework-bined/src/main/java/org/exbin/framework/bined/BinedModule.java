@@ -43,13 +43,11 @@ import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
-import org.exbin.framework.bined.panel.HexAppearanceOptionsPanel;
-import org.exbin.framework.bined.panel.HexAppearanceOptionsPanelApi;
-import org.exbin.framework.bined.panel.HexColorOptionsPanel;
-import org.exbin.framework.bined.panel.HexColorPanelApi;
-import org.exbin.framework.bined.panel.HexColorType;
-import org.exbin.framework.bined.panel.HexPanel;
-import org.exbin.framework.bined.panel.HexStatusPanel;
+import org.exbin.framework.bined.panel.BinaryAppearanceOptionsPanel;
+import org.exbin.framework.bined.panel.BinaryColorOptionsPanel;
+import org.exbin.framework.bined.panel.BinaryColorType;
+import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.panel.AddEncodingPanel;
@@ -83,6 +81,8 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.bined.panel.BinaryAppearanceOptionsPanelApi;
+import org.exbin.framework.bined.panel.BinaryColorPanelApi;
 
 /**
  * Hexadecimal editor module.
@@ -112,12 +112,12 @@ public class BinedModule implements XBApplicationModule {
     private java.util.ResourceBundle resourceBundle = null;
 
     private XBApplication application;
-    private HexEditorProvider editorProvider;
-    private HexStatusPanel hexStatusPanel;
-    private HexColorOptionsPanel hexColorOptionsPanel;
+    private BinaryEditorProvider editorProvider;
+    private BinaryStatusPanel hexStatusPanel;
+    private BinaryColorOptionsPanel hexColorOptionsPanel;
     private TextEncodingOptionsPanel textEncodingOptionsPanel;
     private TextFontOptionsPanel textFontOptionsPanel;
-    private HexAppearanceOptionsPanel hexAppearanceOptionsPanel;
+    private BinaryAppearanceOptionsPanel hexAppearanceOptionsPanel;
 
     private FindReplaceHandler findReplaceHandler;
     private ViewNonprintablesHandler viewNonprintablesHandler;
@@ -155,11 +155,11 @@ public class BinedModule implements XBApplicationModule {
         return resourceBundle;
     }
 
-    public HexEditorProvider getEditorProvider() {
+    public BinaryEditorProvider getEditorProvider() {
         if (editorProvider == null) {
             String deltaModeString = application.getAppPreferences().get(PREFERENCES_MEMORY_MODE, HexStatusApi.MemoryMode.DELTA_MODE.getPreferencesValue());
             HexStatusApi.MemoryMode memoryMode = HexStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
-            HexPanel panel = new HexPanel();
+            BinaryPanel panel = new BinaryPanel();
             panel.setSegmentsRepository(new SegmentsRepository());
             panel.setDeltaMemoryMode(memoryMode == HexStatusApi.MemoryMode.DELTA_MODE);
             editorProvider = panel;
@@ -181,7 +181,7 @@ public class BinedModule implements XBApplicationModule {
                     encodingsHandler.popupEncodingsMenu(mouseEvent);
                 }
             });
-            panel.setReleaseFileMethod(new HexPanel.ReleaseFileMethod() {
+            panel.setReleaseFileMethod(new BinaryPanel.ReleaseFileMethod() {
                 @Override
                 public boolean execute() {
                     GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
@@ -194,13 +194,13 @@ public class BinedModule implements XBApplicationModule {
         return editorProvider;
     }
 
-    public HexEditorProvider getMultiEditorProvider() {
+    public BinaryEditorProvider getMultiEditorProvider() {
         if (editorProvider == null) {
             GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
-            editorProvider = new HexEditorHandler();
-            ((HexEditorHandler) editorProvider).setHexPanelInit(new HexEditorHandler.HexPanelInit() {
+            editorProvider = new BinaryEditorHandler();
+            ((BinaryEditorHandler) editorProvider).setHexPanelInit(new BinaryEditorHandler.BinaryPanelInit() {
                 @Override
-                public void init(HexPanel panel) {
+                public void init(BinaryPanel panel) {
                     panel.setPopupMenu(createPopupMenu(panel.getId()));
 //                    panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
                     panel.setGoToLineAction(getGoToLineHandler().getGoToLineAction());
@@ -219,9 +219,9 @@ public class BinedModule implements XBApplicationModule {
                     });
                 }
             });
-            ((HexEditorHandler) editorProvider).setEditorViewHandling(dockingModule.getEditorViewHandling());
-            ((HexEditorHandler) editorProvider).setSegmentsRepository(new SegmentsRepository());
-            ((HexEditorHandler) editorProvider).init();
+            ((BinaryEditorHandler) editorProvider).setEditorViewHandling(dockingModule.getEditorViewHandling());
+            ((BinaryEditorHandler) editorProvider).setSegmentsRepository(new SegmentsRepository());
+            ((BinaryEditorHandler) editorProvider).init();
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
             fileHandlingActions.setFileHandler(editorProvider);
@@ -231,7 +231,7 @@ public class BinedModule implements XBApplicationModule {
     }
 
     public void registerStatusBar() {
-        hexStatusPanel = new HexStatusPanel();
+        hexStatusPanel = new BinaryStatusPanel();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, HEX_STATUS_BAR_ID, hexStatusPanel);
         frameModule.switchStatusBar(HEX_STATUS_BAR_ID);
@@ -252,29 +252,29 @@ public class BinedModule implements XBApplicationModule {
 
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
-        HexColorPanelApi textColorPanelFrame = new HexColorPanelApi() {
+        BinaryColorPanelApi textColorPanelFrame = new BinaryColorPanelApi() {
             @Override
-            public Map<HexColorType, Color> getCurrentTextColors() {
+            public Map<BinaryColorType, Color> getCurrentTextColors() {
                 return getEditorProvider().getCurrentColors();
             }
 
             @Override
-            public Map<HexColorType, Color> getDefaultTextColors() {
+            public Map<BinaryColorType, Color> getDefaultTextColors() {
                 return getEditorProvider().getDefaultColors();
             }
 
             @Override
-            public void setCurrentTextColors(Map<HexColorType, Color> colors) {
+            public void setCurrentTextColors(Map<BinaryColorType, Color> colors) {
                 getEditorProvider().setCurrentColors(colors);
             }
         };
 
-        hexColorOptionsPanel = new HexColorOptionsPanel();
+        hexColorOptionsPanel = new BinaryColorOptionsPanel();
         hexColorOptionsPanel.setPanelApi(textColorPanelFrame);
         optionsModule.addOptionsPanel(hexColorOptionsPanel);
 
-        HexAppearanceOptionsPanelApi appearanceOptionsPanelApi;
-        appearanceOptionsPanelApi = new HexAppearanceOptionsPanelApi() {
+        BinaryAppearanceOptionsPanelApi appearanceOptionsPanelApi;
+        appearanceOptionsPanelApi = new BinaryAppearanceOptionsPanelApi() {
             @Override
             public boolean getWordWrapMode() {
                 return getEditorProvider().isWordWrapMode();
@@ -302,7 +302,7 @@ public class BinedModule implements XBApplicationModule {
             }
         };
 
-        hexAppearanceOptionsPanel = new HexAppearanceOptionsPanel(appearanceOptionsPanelApi);
+        hexAppearanceOptionsPanel = new BinaryAppearanceOptionsPanel(appearanceOptionsPanelApi);
         optionsModule.extendAppearanceOptionsPanel(hexAppearanceOptionsPanel);
 
         TextEncodingPanelApi textEncodingPanelApi = new TextEncodingPanelApi() {
@@ -428,7 +428,7 @@ public class BinedModule implements XBApplicationModule {
         menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, goToLineHandler.getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
-    public HexStatusPanel getTextStatusPanel() {
+    public BinaryStatusPanel getTextStatusPanel() {
         return hexStatusPanel;
     }
 

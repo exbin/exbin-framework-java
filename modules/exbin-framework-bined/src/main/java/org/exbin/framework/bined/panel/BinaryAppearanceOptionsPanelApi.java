@@ -17,20 +17,26 @@
 package org.exbin.framework.bined.panel;
 
 /**
- * Hex search panel interface.
+ * Appearance options panel api interface.
  *
- * @version 0.2.0 2016/12/31
+ * @version 0.2.1 2017/10/15
  * @author ExBin Project (http://exbin.org)
  */
-public interface HexSearchPanelApi {
+public interface BinaryAppearanceOptionsPanelApi {
 
-    void performFind(SearchParameters dialogSearchParameters);
+    /**
+     * Returns text word wrapping mode.
+     *
+     * @return wrapping mode
+     */
+    public boolean getWordWrapMode();
 
-    void setMatchPosition(int matchPosition);
+    /**
+     * Sets text word wrapping mode.
+     *
+     * @param mode word wrapping mode
+     */
+    public void setWordWrapMode(boolean mode);
 
-    void updatePosition();
-
-    void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters);
-
-    void clearMatches();
+    public void setShowValuesPanel(boolean showValuesPanel);
 }

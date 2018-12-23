@@ -22,7 +22,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.HexPanel;
+import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -61,7 +61,7 @@ public class PositionCodeTypeHandler {
         octalPositionCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
+                if (editorProvider instanceof BinaryEditorProvider) {
                     setCodeType(PositionCodeType.OCTAL);
                 }
             }
@@ -74,7 +74,7 @@ public class PositionCodeTypeHandler {
         decimalPositionCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
+                if (editorProvider instanceof BinaryEditorProvider) {
                     setCodeType(PositionCodeType.DECIMAL);
                 }
             }
@@ -87,7 +87,7 @@ public class PositionCodeTypeHandler {
         hexadecimalPositionCodeTypeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
+                if (editorProvider instanceof BinaryEditorProvider) {
                     setCodeType(PositionCodeType.HEXADECIMAL);
                 }
             }
@@ -101,7 +101,7 @@ public class PositionCodeTypeHandler {
 
     public void setCodeType(PositionCodeType codeType) {
         this.positionCodeType = codeType;
-        HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+        BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
         activePanel.getCodeArea().setPositionCodeType(codeType);
     }
 

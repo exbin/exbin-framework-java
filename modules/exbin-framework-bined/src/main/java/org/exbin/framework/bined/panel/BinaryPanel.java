@@ -71,7 +71,6 @@ import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
 import org.exbin.framework.bined.EncodingStatusHandler;
-import org.exbin.framework.bined.HexEditorProvider;
 import org.exbin.framework.bined.HexStatusApi;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
@@ -83,6 +82,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.type.XBData;
+import org.exbin.framework.bined.BinaryEditorProvider;
 
 /**
  * Hexadecimal editor panel.
@@ -90,7 +90,7 @@ import org.exbin.xbup.core.type.XBData;
  * @version 0.2.1 2018/12/04
  * @author ExBin Project (http://exbin.org)
  */
-public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, HexSearchPanelApi {
+public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, BinarySearchPanelApi {
 
     private int id = 0;
     private SegmentsRepository segmentsRepository;
@@ -99,12 +99,12 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private URI fileUri = null;
     private Color foundTextBackgroundColor;
     private Font defaultFont;
-    private Map<HexColorType, Color> defaultColors;
+    private Map<BinaryColorType, Color> defaultColors;
     private HexStatusApi hexStatus = null;
     private TextEncodingStatusApi encodingStatus = null;
     private boolean deltaMemoryMode = false;
 
-    private HexSearchPanel hexSearchPanel;
+    private BinarySearchPanel hexSearchPanel;
     private boolean hexSearchPanelVisible = false;
     private ValuesPanel valuesPanel;
     private JScrollPane valuesPanelScrollPane;
@@ -121,12 +121,12 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     private ReleaseFileMethod releaseFileMethod = null;
     private XBApplication application;
 
-    public HexPanel() {
+    public BinaryPanel() {
         initComponents();
         init();
     }
 
-    public HexPanel(int id) {
+    public BinaryPanel(int id) {
         this();
         this.id = id;
     }
@@ -182,7 +182,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             }
         });
 
-        hexSearchPanel = new HexSearchPanel(this);
+        hexSearchPanel = new BinarySearchPanel(this);
         hexSearchPanel.setClosePanelListener(this::hideSearchPanel);
 
         valuesPanel = new ValuesPanel();
@@ -215,8 +215,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
         if (hexSearchPanelVisible) {
             hexSearchPanel.cancelSearch();
             hexSearchPanel.clearSearch();
-            HexPanel.this.remove(hexSearchPanel);
-            HexPanel.this.revalidate();
+            BinaryPanel.this.remove(hexSearchPanel);
+            BinaryPanel.this.revalidate();
             hexSearchPanelVisible = false;
         }
     }
@@ -235,8 +235,8 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     public void hideValuesPanel() {
         if (valuesPanelVisible) {
             valuesPanel.disableUpdate();
-            HexPanel.this.remove(valuesPanelScrollPane);
-            HexPanel.this.revalidate();
+            BinaryPanel.this.remove(valuesPanelScrollPane);
+            BinaryPanel.this.revalidate();
             valuesPanelVisible = false;
         }
     }
@@ -496,9 +496,9 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     @Override
-    public Map<HexColorType, Color> getCurrentColors() {
-        Map<HexColorType, Color> colors = new HashMap<>();
-        for (HexColorType colorType : HexColorType.values()) {
+    public Map<BinaryColorType, Color> getCurrentColors() {
+        Map<BinaryColorType, Color> colors = new HashMap<>();
+        for (BinaryColorType colorType : BinaryColorType.values()) {
             Color color = colorType.getColorFromCodeArea(codeArea);
             colors.put(colorType, color);
         }
@@ -506,13 +506,13 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     @Override
-    public Map<HexColorType, Color> getDefaultColors() {
+    public Map<BinaryColorType, Color> getDefaultColors() {
         return defaultColors;
     }
 
     @Override
-    public void setCurrentColors(Map<HexColorType, Color> colors) {
-        for (Map.Entry<HexColorType, Color> entry : colors.entrySet()) {
+    public void setCurrentColors(Map<BinaryColorType, Color> colors) {
+        for (Map.Entry<BinaryColorType, Color> entry : colors.entrySet()) {
             entry.getKey().setColorToCodeArea(codeArea, entry.getValue());
         }
     }
@@ -589,7 +589,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
                 job.print();
 //                }
             } catch (PrinterException ex) {
-                Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BinaryPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -681,7 +681,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             updateCurrentDocumentSize();
             updateCurrentMemoryMode();
         } catch (IOException ex) {
-            Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BinaryPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         undoHandler.clear();
@@ -710,7 +710,7 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
             updateCurrentDocumentSize();
             updateCurrentMemoryMode();
         } catch (IOException ex) {
-            Logger.getLogger(HexPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BinaryPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         undoHandler.setSyncPoint();
@@ -1018,12 +1018,12 @@ public class HexPanel extends javax.swing.JPanel implements HexEditorProvider, C
     }
 
     @Override
-    public HexPanel getDocument() {
+    public BinaryPanel getDocument() {
         return this;
     }
 
     /**
-     * Helper method for notifying listeners, that HexPanel tab was switched.
+     * Helper method for notifying listeners, that BinaryPanel tab was switched.
      */
     public void notifyListeners() {
         if (charsetChangeListener != null) {

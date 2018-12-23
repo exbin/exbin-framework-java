@@ -42,7 +42,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
-import org.exbin.framework.bined.panel.HexPanel;
+import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
@@ -100,11 +100,11 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     private XBTTreeNode srcNode;
     private XBTTreeNode newNode = null;
 
-    private final HexPanel hexPanel;
+    private final BinaryPanel binaryPanel;
     private XBPanelEditor customPanel;
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
-    private HexPanel tailDataHexPanel = null;
+    private BinaryPanel tailDataBinaryPanel = null;
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockDialog.class);
 
     private final String attributesPanelTitle;
@@ -120,9 +120,9 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        hexPanel = new HexPanel();
+        binaryPanel = new BinaryPanel();
         customPanel = null;
-        hexEditPanel.add(hexPanel);
+        hexEditPanel.add(binaryPanel);
 
         attributesPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(attributesPanel));
         dataPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(dataPanel));
@@ -193,7 +193,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
                     }
                     dataChanged = false;
                 } else if (extAreaEditorPanelTitle.equals(currentTitle)) {
-                    if (tailDataHexPanel == null) {
+                    if (tailDataBinaryPanel == null) {
                         reloadTailData();
                     }
                 }
@@ -526,7 +526,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         if (dataMode == XBBlockDataMode.DATA_BLOCK) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             try {
-                hexPanel.saveToStream(stream);
+                binaryPanel.saveToStream(stream);
             } catch (IOException ex) {
                 Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -596,8 +596,8 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser loadFileChooser = new JFileChooser();
         loadFileChooser.setAcceptAllFileFilterUsed(true);
         if (loadFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            hexPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
-            hexPanel.repaint();
+            binaryPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
+            binaryPanel.repaint();
         }
     }//GEN-LAST:event_loadFromButtonActionPerformed
 
@@ -605,8 +605,8 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setAcceptAllFileFilterUsed(true);
         if (saveFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            hexPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
-            hexPanel.repaint();
+            binaryPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
+            binaryPanel.repaint();
         }
     }//GEN-LAST:event_saveAsButtonActionPerformed
 
@@ -614,8 +614,8 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser loadFileChooser = new JFileChooser();
         loadFileChooser.setAcceptAllFileFilterUsed(true);
         if (loadFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            tailDataHexPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
-            tailDataHexPanel.repaint();
+            tailDataBinaryPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
+            tailDataBinaryPanel.repaint();
         }
     }//GEN-LAST:event_extLoadFromButtonActionPerformed
 
@@ -623,8 +623,8 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setAcceptAllFileFilterUsed(true);
         if (saveFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            tailDataHexPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
-            tailDataHexPanel.repaint();
+            tailDataBinaryPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
+            tailDataBinaryPanel.repaint();
         }
     }//GEN-LAST:event_extSaveFromButtoActionPerformed
 
@@ -643,7 +643,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
             mainTabbedPane.addTab(dataPanelTitle, dataPanel);
 
             try {
-                hexPanel.loadFromStream(srcNode.getData(), srcNode.getDataSize());
+                binaryPanel.loadFromStream(srcNode.getData(), srcNode.getDataSize());
             } catch (IOException ex) {
                 Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -673,7 +673,7 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
 
         if (srcNode.getParent() == null) {
             mainTabbedPane.addTab(extAreaEditorPanelTitle, tailDataPanel);
-            tailDataHexPanel = null;
+            tailDataBinaryPanel = null;
         }
 
         mainTabbedPane.setSelectedIndex(1);
@@ -739,8 +739,8 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
 
     public void saveTailData(OutputStream stream) {
         try {
-            if (tailDataHexPanel != null) {
-                tailDataHexPanel.saveToStream(stream);
+            if (tailDataBinaryPanel != null) {
+                tailDataBinaryPanel.saveToStream(stream);
             }
         } catch (IOException ex) {
             Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -865,12 +865,12 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
     }
 
     private void reloadTailData() {
-        tailDataHexPanel = new HexPanel();
-        hexEditScrollPane.setViewportView(tailDataHexPanel);
+        tailDataBinaryPanel = new BinaryPanel();
+        hexEditScrollPane.setViewportView(tailDataBinaryPanel);
 
         if (doc != null && doc.getTailDataSize() > 0) {
             try {
-                tailDataHexPanel.loadFromStream(doc.getTailData(), doc.getTailDataSize());
+                tailDataBinaryPanel.loadFromStream(doc.getTailData(), doc.getTailDataSize());
             } catch (IOException ex) {
                 Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
             }

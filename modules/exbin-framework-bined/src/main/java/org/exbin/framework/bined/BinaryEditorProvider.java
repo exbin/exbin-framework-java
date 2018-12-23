@@ -20,8 +20,8 @@ import java.awt.Color;
 import java.nio.charset.Charset;
 import java.util.Map;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
-import org.exbin.framework.bined.panel.HexColorType;
-import org.exbin.framework.bined.panel.HexPanel;
+import org.exbin.framework.bined.panel.BinaryColorType;
+import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.ReplaceParameters;
 import org.exbin.framework.bined.panel.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
@@ -33,7 +33,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
  * @version 0.2.0 2017/10/15
  * @author ExBin Project (http://exbin.org)
  */
-public interface HexEditorProvider extends EditorProvider {
+public interface BinaryEditorProvider extends EditorProvider {
 
     /**
      * Registers hex status method.
@@ -49,11 +49,11 @@ public interface HexEditorProvider extends EditorProvider {
      */
     void registerEncodingStatus(TextEncodingStatusApi encodingStatus);
 
-    Map<HexColorType, Color> getCurrentColors();
+    Map<BinaryColorType, Color> getCurrentColors();
 
-    Map<HexColorType, Color> getDefaultColors();
+    Map<BinaryColorType, Color> getDefaultColors();
 
-    void setCurrentColors(Map<HexColorType, Color> colors);
+    void setCurrentColors(Map<BinaryColorType, Color> colors);
 
     boolean isWordWrapMode();
 
@@ -77,7 +77,7 @@ public interface HexEditorProvider extends EditorProvider {
 
     boolean changeLineWrap();
 
-    HexPanel getDocument();
+    BinaryPanel getDocument();
 
     void printFile();
 

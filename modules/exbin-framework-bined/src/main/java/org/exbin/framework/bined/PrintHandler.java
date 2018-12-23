@@ -32,7 +32,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  */
 public class PrintHandler {
 
-    private final HexEditorProvider editorProvider;
+    private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -40,7 +40,7 @@ public class PrintHandler {
 
     private Action printAction;
 
-    public PrintHandler(XBApplication application, HexEditorProvider editorProvider) {
+    public PrintHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);

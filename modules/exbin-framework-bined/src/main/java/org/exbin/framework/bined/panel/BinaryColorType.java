@@ -27,7 +27,7 @@ import org.exbin.bined.swing.extended.ExtCodeArea;
  * @version 0.2.1 2018/10/21
  * @author ExBin Project (http://exbin.org)
  */
-public enum HexColorType {
+public enum BinaryColorType {
     HEADER_TEXT("Header Text", "hexColor.headerText"),
     HEADER_BACKGROUND("Header Background", "hexColor.headerBackground"),
     MAIN_AREA_TEXT("Main Area Text", "hexColor.mainAreaText"),
@@ -53,7 +53,7 @@ public enum HexColorType {
     private final String preferencesString;
     private final String title;
 
-    HexColorType(String title, String preferencesString) {
+    BinaryColorType(String title, String preferencesString) {
         this.title = title;
         this.preferencesString = preferencesString;
     }

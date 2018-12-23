@@ -32,7 +32,7 @@ import javax.swing.undo.UndoableEdit;
  * @version 0.1.0 2016/04/03
  * @author ExBin Project (http://exbin.org)
  */
-public class HexPanelCompoundUndoManager extends AbstractUndoableEdit implements UndoableEditListener {
+public class BinaryPanelCompoundUndoManager extends AbstractUndoableEdit implements UndoableEditListener {
 
     private DocumentEvent.EventType lastEditType = null;
     private final ArrayList<MyCompoundEdit> edits = new ArrayList<>();
@@ -40,7 +40,7 @@ public class HexPanelCompoundUndoManager extends AbstractUndoableEdit implements
     private int pointer = -1;
     private int lastOffset = -1;
 
-    HexPanelCompoundUndoManager() {
+    BinaryPanelCompoundUndoManager() {
     }
 
     @Override

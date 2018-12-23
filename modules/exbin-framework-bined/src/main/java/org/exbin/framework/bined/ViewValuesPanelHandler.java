@@ -32,13 +32,13 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  */
 public class ViewValuesPanelHandler {
 
-    private final HexEditorProvider editorProvider;
+    private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
     private Action viewValuesPanelAction;
 
-    public ViewValuesPanelHandler(XBApplication application, HexEditorProvider editorProvider) {
+    public ViewValuesPanelHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);

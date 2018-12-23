@@ -23,7 +23,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import org.exbin.bined.swing.CodeAreaCore;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.HexPanel;
+import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -57,8 +57,8 @@ public class ClipboardCodeHandler {
         copyAsCodeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
-                    HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+                if (editorProvider instanceof BinaryEditorProvider) {
+                    BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
                     activePanel.performCopyAsCode();
                 }
             }
@@ -68,8 +68,8 @@ public class ClipboardCodeHandler {
         pasteFromCodeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
-                    HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+                if (editorProvider instanceof BinaryEditorProvider) {
+                    BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
                     activePanel.performPasteFromCode();
                 }
             }

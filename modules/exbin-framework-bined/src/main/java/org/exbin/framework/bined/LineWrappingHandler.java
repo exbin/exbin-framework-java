@@ -32,13 +32,13 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  */
 public class LineWrappingHandler {
 
-    private final HexEditorProvider editorProvider;
+    private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
     private Action viewLineWrapAction;
 
-    public LineWrappingHandler(XBApplication application, HexEditorProvider editorProvider) {
+    public LineWrappingHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);

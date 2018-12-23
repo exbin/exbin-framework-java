@@ -144,7 +144,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane structureScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    public void setDocument(HexPanel panel) {
+    public void setDocument(BinaryPanel panel) {
         URI fileUri = panel.getFileUri();
         fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
         ExtCodeArea codeArea = panel.getCodeArea();

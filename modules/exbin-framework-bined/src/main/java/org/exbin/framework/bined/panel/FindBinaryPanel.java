@@ -45,25 +45,25 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
  * @version 0.2.1 2018/10/29
  * @author ExBin Project (http://exbin.org)
  */
-public class FindHexPanel extends javax.swing.JPanel {
+public class FindBinaryPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(FindHexPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(FindBinaryPanel.class);
     public static final String POPUP_MENU_POSTFIX = ".searchFindHexPanel";
 
     private final ExtCodeArea findHexadecimalRenderer = new ExtCodeArea();
-    private HexSearchComboBoxPanel findComboBoxEditorComponent;
+    private BinarySearchComboBoxPanel findComboBoxEditorComponent;
     private ComboBoxEditor findComboBoxEditor;
     private List<SearchCondition> searchHistory = new ArrayList<>();
 
     private final ExtCodeArea replaceHexadecimalRenderer = new ExtCodeArea();
-    private HexSearchComboBoxPanel replaceComboBoxEditorComponent;
+    private BinarySearchComboBoxPanel replaceComboBoxEditorComponent;
     private ComboBoxEditor replaceComboBoxEditor;
     private List<SearchCondition> replaceHistory = new ArrayList<>();
 
     private CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
     private MultilineEditorListener multilineEditorListener = null;
 
-    public FindHexPanel() {
+    public FindBinaryPanel() {
         initComponents();
         init();
     }
@@ -84,7 +84,7 @@ public class FindHexPanel extends javax.swing.JPanel {
         findHexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         findHexadecimalRenderer.setContentData(new ByteArrayEditableData());
 
-        findComboBoxEditorComponent = new HexSearchComboBoxPanel();
+        findComboBoxEditorComponent = new BinarySearchComboBoxPanel();
         findComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
             private final JPanel emptyPanel = new JPanel();
             private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
@@ -155,7 +155,7 @@ public class FindHexPanel extends javax.swing.JPanel {
         replaceHexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         replaceHexadecimalRenderer.setContentData(new ByteArrayEditableData());
 
-        replaceComboBoxEditorComponent = new HexSearchComboBoxPanel();
+        replaceComboBoxEditorComponent = new BinarySearchComboBoxPanel();
         replaceComboBox.setRenderer(new ListCellRenderer<SearchCondition>() {
             private final JPanel emptyPanel = new JPanel();
             private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
@@ -486,7 +486,7 @@ public class FindHexPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new FindHexPanel());
+        WindowUtils.invokeDialog(new FindBinaryPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -30,17 +30,17 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2017/10/15
  * @author ExBin Project (http://exbin.org)
  */
-public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
 
     public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
     public static final String PREFERENCES_SHOW_VALUES_PANEL = "showValuesPanel";
     public static final String PREFERENCES_MULTITAB_MODE = "experimentalMultiTabMode";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexAppearanceOptionsPanel.class);
-    private final HexAppearanceOptionsPanelApi panelApi;
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryAppearanceOptionsPanel.class);
+    private final BinaryAppearanceOptionsPanelApi panelApi;
 
-    public HexAppearanceOptionsPanel(HexAppearanceOptionsPanelApi panelApi) {
+    public BinaryAppearanceOptionsPanel(BinaryAppearanceOptionsPanelApi panelApi) {
         this.panelApi = panelApi;
 
         initComponents();
@@ -104,7 +104,7 @@ public class HexAppearanceOptionsPanel extends javax.swing.JPanel implements Opt
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new HexAppearanceOptionsPanel(null));
+        WindowUtils.invokeDialog(new BinaryAppearanceOptionsPanel(null));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

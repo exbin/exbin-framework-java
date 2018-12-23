@@ -39,7 +39,7 @@ import org.exbin.framework.gui.utils.panel.CloseControlPanel;
  */
 public class PropertiesHandler {
 
-    private final HexEditorProvider editorProvider;
+    private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -47,7 +47,7 @@ public class PropertiesHandler {
 
     private Action propertiesAction;
 
-    public PropertiesHandler(XBApplication application, HexEditorProvider editorProvider) {
+    public PropertiesHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);

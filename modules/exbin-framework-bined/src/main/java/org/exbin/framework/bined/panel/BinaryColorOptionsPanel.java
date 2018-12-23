@@ -34,24 +34,24 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
-public class HexColorOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class BinaryColorOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
 
     public static final String PREFERENCES_TEXT_COLOR_DEFAULT = "textColor.default";
 
     private ModifiedOptionListener modifiedOptionListener;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HexColorOptionsPanel.class);
-    private HexColorPanelApi panelApi;
-    private final HexColorPanel colorPanel;
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryColorOptionsPanel.class);
+    private BinaryColorPanelApi panelApi;
+    private final BinaryColorPanel colorPanel;
 
-    public HexColorOptionsPanel() {
+    public BinaryColorOptionsPanel() {
         initComponents();
 
-        colorPanel = new HexColorPanel();
+        colorPanel = new BinaryColorPanel();
         colorPanel.setEnabled(false);
-        HexColorOptionsPanel.this.add(colorPanel, BorderLayout.CENTER);
+        BinaryColorOptionsPanel.this.add(colorPanel, BorderLayout.CENTER);
     }
 
-    public void setPanelApi(HexColorPanelApi panelApi) {
+    public void setPanelApi(BinaryColorPanelApi panelApi) {
         this.panelApi = panelApi;
         colorPanel.setPanelApi(panelApi);
     }
@@ -117,7 +117,7 @@ public class HexColorOptionsPanel extends javax.swing.JPanel implements OptionsP
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new HexColorOptionsPanel());
+        WindowUtils.invokeDialog(new BinaryColorOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

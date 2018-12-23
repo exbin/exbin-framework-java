@@ -25,15 +25,15 @@ import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.HexColorPanel;
-import org.exbin.framework.bined.panel.HexColorPanelApi;
-import org.exbin.framework.bined.panel.HexColorType;
+import org.exbin.framework.bined.panel.BinaryColorPanel;
+import org.exbin.framework.bined.panel.BinaryColorType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
+import org.exbin.framework.bined.panel.BinaryColorPanelApi;
 
 /**
  * Tools options action handler.
@@ -49,10 +49,10 @@ public class ToolsOptionsHandler {
     private Action toolsSetFontAction;
     private Action toolsSetColorAction;
 
-    private final HexEditorProvider editorProvider;
+    private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
 
-    public ToolsOptionsHandler(XBApplication application, HexEditorProvider editorProvider) {
+    public ToolsOptionsHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
@@ -75,24 +75,24 @@ public class ToolsOptionsHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final HexColorPanelApi textColorPanelFrame = new HexColorPanelApi() {
+                final BinaryColorPanelApi textColorPanelFrame = new BinaryColorPanelApi() {
                     @Override
-                    public Map<HexColorType, Color> getCurrentTextColors() {
+                    public Map<BinaryColorType, Color> getCurrentTextColors() {
                         return editorProvider.getCurrentColors();
                     }
 
                     @Override
-                    public Map<HexColorType, Color> getDefaultTextColors() {
+                    public Map<BinaryColorType, Color> getDefaultTextColors() {
                         return editorProvider.getDefaultColors();
                     }
 
                     @Override
-                    public void setCurrentTextColors(Map<HexColorType, Color> colors) {
+                    public void setCurrentTextColors(Map<BinaryColorType, Color> colors) {
                         editorProvider.setCurrentColors(colors);
                     }
                 };
 
-                final HexColorPanel hexColorPanel = new HexColorPanel();
+                final BinaryColorPanel hexColorPanel = new BinaryColorPanel();
                 hexColorPanel.setPanelApi(textColorPanelFrame);
                 hexColorPanel.setColorsFromMap(textColorPanelFrame.getCurrentTextColors());
                 OptionsControlPanel controlPanel = new OptionsControlPanel();

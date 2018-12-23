@@ -32,7 +32,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  */
 public class ViewNonprintablesHandler {
 
-    private final HexEditorProvider editorProvider;
+    private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
@@ -40,7 +40,7 @@ public class ViewNonprintablesHandler {
 
     private Action viewNonprintablesAction;
 
-    public ViewNonprintablesHandler(XBApplication application, HexEditorProvider editorProvider) {
+    public ViewNonprintablesHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);

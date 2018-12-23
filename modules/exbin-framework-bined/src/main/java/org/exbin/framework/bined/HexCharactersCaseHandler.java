@@ -23,7 +23,7 @@ import javax.swing.Action;
 import org.exbin.bined.CodeCharactersCase;
 import org.exbin.bined.capability.CodeCharactersCaseCapable;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.HexPanel;
+import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -61,7 +61,7 @@ public class HexCharactersCaseHandler {
         upperHexCharsAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
+                if (editorProvider instanceof BinaryEditorProvider) {
                     setHexCharactersCase(CodeCharactersCase.UPPER);
                 }
             }
@@ -74,7 +74,7 @@ public class HexCharactersCaseHandler {
         lowerHexCharsAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof HexEditorProvider) {
+                if (editorProvider instanceof BinaryEditorProvider) {
                     setHexCharactersCase(CodeCharactersCase.LOWER);
                 }
             }
@@ -87,7 +87,7 @@ public class HexCharactersCaseHandler {
 
     public void setHexCharactersCase(CodeCharactersCase hexCharactersCase) {
         this.hexCharactersCase = hexCharactersCase;
-        HexPanel activePanel = ((HexEditorProvider) editorProvider).getDocument();
+        BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
         ((CodeCharactersCaseCapable) activePanel.getCodeArea()).setCodeCharactersCase(hexCharactersCase);
     }
 
