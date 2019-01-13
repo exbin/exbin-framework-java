@@ -10,7 +10,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
-    <AuxValue name="FormSettings_formBundle" type="java.lang.String" value="org/exbin/framework/bined/panel/resources/HexColorPanel"/>
+    <AuxValue name="FormSettings_formBundle" type="java.lang.String" value="org/exbin/framework/bined/panel/resources/BinaryColorPanel"/>
     <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
@@ -109,7 +109,7 @@
                 <Component class="javax.swing.JLabel" name="previewLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="org/exbin/framework/bined/panel/resources/HexColorPanel.properties" key="previewLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="org/exbin/framework/bined/panel/resources/BinaryColorPanel.properties" key="previewLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="name" type="java.lang.String" value="previewLabel" noResource="true"/>
                   </Properties>
@@ -159,7 +159,7 @@
         <Component class="javax.swing.JButton" name="fillCurrentButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/bined/panel/resources/HexColorPanel.properties" key="fillCurrentButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/bined/panel/resources/BinaryColorPanel.properties" key="fillCurrentButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="fillCurrentButton" noResource="true"/>
           </Properties>
@@ -170,7 +170,7 @@
         <Component class="javax.swing.JButton" name="fillDefaultButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/bined/panel/resources/HexColorPanel.properties" key="fillDefaultButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/bined/panel/resources/BinaryColorPanel.properties" key="fillDefaultButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="fillDefaultButton" noResource="true"/>
           </Properties>

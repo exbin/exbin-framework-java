@@ -18,6 +18,7 @@ package org.exbin.framework.bined.panel;
 
 import java.awt.Color;
 import java.util.Map;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Hexadecimal editor color panel interface.
@@ -25,6 +26,7 @@ import java.util.Map;
  * @version 0.1.0 2016/06/23
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface BinaryColorPanelApi {
 
     /**
@@ -32,19 +34,19 @@ public interface BinaryColorPanelApi {
      *
      * @return map of colors
      */
-    public Map<BinaryColorType, Color> getCurrentTextColors();
+    Map<BinaryColorType, Color> getCurrentTextColors();
 
     /**
      * Returns default colors used in application frame.
      *
      * @return map of colors
      */
-    public Map<BinaryColorType, Color> getDefaultTextColors();
+    Map<BinaryColorType, Color> getDefaultTextColors();
 
     /**
      * Sets current colors used in application frame.
      *
      * @param colors map of colors
      */
-    public void setCurrentTextColors(Map<BinaryColorType, Color> colors);
+    void setCurrentTextColors(Map<BinaryColorType, Color> colors);
 }

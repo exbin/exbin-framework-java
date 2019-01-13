@@ -52,7 +52,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import org.exbin.bined.CaretMovedListener;
 import org.exbin.bined.CaretPosition;
-import org.exbin.bined.DataChangedListener;
 import org.exbin.bined.EditationMode;
 import org.exbin.bined.EditationModeChangedListener;
 import org.exbin.bined.EditationOperation;
@@ -1047,12 +1046,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
     @Override
     public void setModificationListener(final EditorModificationListener editorModificationListener) {
-        codeArea.addDataChangedListener(new DataChangedListener() {
-            @Override
-            public void dataChanged() {
-                editorModificationListener.modified();
-            }
-        });
+        codeArea.addDataChangedListener(editorModificationListener::modified);
     }
 
     private void setNewData() {

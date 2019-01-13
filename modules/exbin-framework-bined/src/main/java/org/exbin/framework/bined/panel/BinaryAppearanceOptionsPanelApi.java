@@ -29,14 +29,14 @@ public interface BinaryAppearanceOptionsPanelApi {
      *
      * @return wrapping mode
      */
-    public boolean getWordWrapMode();
+    boolean getWordWrapMode();
 
     /**
      * Sets text word wrapping mode.
      *
      * @param mode word wrapping mode
      */
-    public void setWordWrapMode(boolean mode);
+    void setWordWrapMode(boolean mode);
 
-    public void setShowValuesPanel(boolean showValuesPanel);
+    void setShowValuesPanel(boolean showValuesPanel);
 }
