@@ -69,17 +69,19 @@ public class FindBinaryPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        ExtendedCodeAreaLayoutProfile layoutProfile = findHexadecimalRenderer.getLayoutProfile();
-        layoutProfile.setShowHeader(false);
-        layoutProfile.setShowRowPosition(false);
-
-        findHexadecimalRenderer.setLayoutProfile(layoutProfile);
-        ExtendedCodeAreaThemeProfile themeProfile = findHexadecimalRenderer.getThemeProfile();
-        themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
-
-        findHexadecimalRenderer.setThemeProfile(themeProfile);
+        {
+            ExtendedCodeAreaLayoutProfile layoutProfile = findHexadecimalRenderer.getLayoutProfile();
+            layoutProfile.setShowHeader(false);
+            layoutProfile.setShowRowPosition(false);
+            findHexadecimalRenderer.setLayoutProfile(layoutProfile);
+        }
         findHexadecimalRenderer.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
         findHexadecimalRenderer.setWrappingBytesGroupSize(0);
+        {
+            ExtendedCodeAreaThemeProfile themeProfile = findHexadecimalRenderer.getThemeProfile();
+            themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
+            findHexadecimalRenderer.setThemeProfile(themeProfile);
+        }
         findHexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
         findHexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         findHexadecimalRenderer.setContentData(new ByteArrayEditableData());
@@ -147,10 +149,19 @@ public class FindBinaryPanel extends javax.swing.JPanel {
         findComboBox.setEditor(findComboBoxEditor);
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
 
-        replaceHexadecimalRenderer.setLayoutProfile(layoutProfile);
-        replaceHexadecimalRenderer.setThemeProfile(themeProfile);
+        {
+            ExtendedCodeAreaLayoutProfile layoutProfile = findHexadecimalRenderer.getLayoutProfile();
+            layoutProfile.setShowHeader(false);
+            layoutProfile.setShowRowPosition(false);
+            replaceHexadecimalRenderer.setLayoutProfile(layoutProfile);
+        }
         replaceHexadecimalRenderer.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
         replaceHexadecimalRenderer.setWrappingBytesGroupSize(0);
+        {
+            ExtendedCodeAreaThemeProfile themeProfile = findHexadecimalRenderer.getThemeProfile();
+            themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
+            replaceHexadecimalRenderer.setThemeProfile(themeProfile);
+        }
         replaceHexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
         replaceHexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         replaceHexadecimalRenderer.setContentData(new ByteArrayEditableData());

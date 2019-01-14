@@ -40,7 +40,7 @@ public interface BinaryEditorProvider extends EditorProvider {
      *
      * @param hexStatus hex status
      */
-    void registerHexStatus(HexStatusApi hexStatus);
+    void registerHexStatus(BinaryStatusApi hexStatus);
 
     /**
      * Registers encoding status method.

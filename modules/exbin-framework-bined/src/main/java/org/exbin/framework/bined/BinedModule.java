@@ -157,11 +157,11 @@ public class BinedModule implements XBApplicationModule {
 
     public BinaryEditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            String deltaModeString = application.getAppPreferences().get(PREFERENCES_MEMORY_MODE, HexStatusApi.MemoryMode.DELTA_MODE.getPreferencesValue());
-            HexStatusApi.MemoryMode memoryMode = HexStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
+            String deltaModeString = application.getAppPreferences().get(PREFERENCES_MEMORY_MODE, BinaryStatusApi.MemoryMode.DELTA_MODE.getPreferencesValue());
+            BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
             BinaryPanel panel = new BinaryPanel();
             panel.setSegmentsRepository(new SegmentsRepository());
-            panel.setDeltaMemoryMode(memoryMode == HexStatusApi.MemoryMode.DELTA_MODE);
+            panel.setDeltaMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
             editorProvider = panel;
 
             panel.setPopupMenu(createPopupMenu(panel.getId()));

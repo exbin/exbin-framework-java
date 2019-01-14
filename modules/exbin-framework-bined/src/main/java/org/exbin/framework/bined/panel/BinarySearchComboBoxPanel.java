@@ -78,17 +78,20 @@ public class BinarySearchComboBoxPanel extends JPanel {
 
         super.add(textField, TEXT_MODE);
 
-        ExtendedCodeAreaLayoutProfile layoutProfile = hexadecimalEditor.getLayoutProfile();
-        layoutProfile.setShowHeader(false);
-        layoutProfile.setShowRowPosition(false);
-
-        hexadecimalEditor.setLayoutProfile(layoutProfile);
-        ExtendedCodeAreaThemeProfile themeProfile = hexadecimalEditor.getThemeProfile();
-        themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
-
-        hexadecimalEditor.setLayoutProfile(layoutProfile);
+        {
+            ExtendedCodeAreaLayoutProfile layoutProfile = hexadecimalEditor.getLayoutProfile();
+            layoutProfile.setShowHeader(false);
+            layoutProfile.setShowRowPosition(false);
+            hexadecimalEditor.setLayoutProfile(layoutProfile);
+        }
         hexadecimalEditor.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
         hexadecimalEditor.setWrappingBytesGroupSize(0);
+        {
+            ExtendedCodeAreaThemeProfile themeProfile = hexadecimalEditor.getThemeProfile();
+            themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
+            hexadecimalEditor.setThemeProfile(themeProfile);
+        }
+
         hexadecimalEditor.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalEditor.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
         hexadecimalEditor.setContentData(new ByteArrayEditableData());

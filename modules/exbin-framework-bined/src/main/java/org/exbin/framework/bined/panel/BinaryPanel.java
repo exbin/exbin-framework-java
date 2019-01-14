@@ -70,7 +70,6 @@ import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
 import org.exbin.framework.bined.EncodingStatusHandler;
-import org.exbin.framework.bined.HexStatusApi;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextFontApi;
@@ -82,6 +81,7 @@ import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinaryStatusApi;
 
 /**
  * Hexadecimal editor panel.
@@ -99,7 +99,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     private Color foundTextBackgroundColor;
     private Font defaultFont;
     private Map<BinaryColorType, Color> defaultColors;
-    private HexStatusApi hexStatus = null;
+    private BinaryStatusApi hexStatus = null;
     private TextEncodingStatusApi encodingStatus = null;
     private boolean deltaMemoryMode = false;
 
@@ -831,7 +831,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     @Override
-    public void registerHexStatus(HexStatusApi hexStatusApi) {
+    public void registerHexStatus(BinaryStatusApi hexStatusApi) {
         this.hexStatus = hexStatusApi;
         attachCaretListener((CaretPosition caretPosition) -> {
             String position = String.valueOf(caretPosition.getDataPosition());
@@ -844,7 +844,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         });
         hexStatus.setEditationMode(codeArea.getEditationMode(), codeArea.getActiveOperation());
 
-        hexStatus.setControlHandler(new HexStatusApi.StatusControlHandler() {
+        hexStatus.setControlHandler(new BinaryStatusApi.StatusControlHandler() {
             @Override
             public void changeEditationOperation(EditationOperation editationOperation) {
                 codeArea.setEditationOperation(editationOperation);
@@ -872,8 +872,8 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
             }
 
             @Override
-            public void changeMemoryMode(HexStatusApi.MemoryMode memoryMode) {
-                boolean newDeltaMode = memoryMode == HexStatusApi.MemoryMode.DELTA_MODE;
+            public void changeMemoryMode(BinaryStatusApi.MemoryMode memoryMode) {
+                boolean newDeltaMode = memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE;
                 if (newDeltaMode != deltaMemoryMode) {
                     // Switch memory mode
                     if (fileUri != null) {
@@ -974,11 +974,11 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     private void updateCurrentMemoryMode() {
-        HexStatusApi.MemoryMode memoryMode = HexStatusApi.MemoryMode.RAM_MEMORY;
+        BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.RAM_MEMORY;
         if (((EditationModeCapable) codeArea).getEditationMode() == EditationMode.READ_ONLY) {
-            memoryMode = HexStatusApi.MemoryMode.READ_ONLY;
+            memoryMode = BinaryStatusApi.MemoryMode.READ_ONLY;
         } else if (codeArea.getContentData() instanceof DeltaDocument) {
-            memoryMode = HexStatusApi.MemoryMode.DELTA_MODE;
+            memoryMode = BinaryStatusApi.MemoryMode.DELTA_MODE;
         }
 
         if (hexStatus != null) {

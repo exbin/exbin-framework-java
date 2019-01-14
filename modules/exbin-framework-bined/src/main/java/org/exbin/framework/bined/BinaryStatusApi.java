@@ -28,7 +28,7 @@ import org.exbin.bined.EditationOperation;
  * @version 0.2.1 2018/12/12
  * @author ExBin Project (http://exbin.org)
  */
-public interface HexStatusApi {
+public interface BinaryStatusApi {
 
     /**
      * Reports cursor position.

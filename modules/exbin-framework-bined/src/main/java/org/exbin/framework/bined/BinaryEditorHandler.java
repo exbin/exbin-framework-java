@@ -58,7 +58,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     private SegmentsRepository segmentsRepository;
     private BinaryPanel activePanel = null;
     private int lastIndex = 0;
-    private HexStatusApi hexStatus = null;
+    private BinaryStatusApi hexStatus = null;
     private TextEncodingStatusApi encodingStatus;
     private EditorModificationListener editorModificationListener = null;
     private final EditorModificationListener multiModificationListener;
@@ -160,7 +160,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
-    public void registerHexStatus(HexStatusApi hexStatusApi) {
+    public void registerHexStatus(BinaryStatusApi hexStatusApi) {
         this.hexStatus = hexStatusApi;
         if (!panels.isEmpty()) {
             for (BinaryPanel panel : panels) {
