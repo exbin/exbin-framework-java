@@ -70,6 +70,8 @@ public class EncodingsHandler implements TextEncodingPanelApi {
     private javax.swing.JRadioButtonMenuItem utfEncodingRadioButtonMenuItem;
     private ActionListener utfEncodingActionListener;
 
+    public static final String ENCODING_UTF8 = "UTF-8";
+
     public static final String UTF_ENCODING_TEXT = "UTF-8 (default)";
     public static final String UTF_ENCODING_TOOLTIP = "Set encoding UTF-8";
 
