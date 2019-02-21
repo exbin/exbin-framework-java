@@ -31,7 +31,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Manage list of color profiles panel.
  *
- * @version 0.2.0 2019/01/13
+ * @version 0.2.0 2019/02/21
  * @author ExBin Project (http://exbin.org)
  */
 public class ColorProfilesPanel extends javax.swing.JPanel {
