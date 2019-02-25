@@ -18,6 +18,7 @@ package org.exbin.framework.bined.preferences.panel;
 import java.awt.BorderLayout;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Theme profile panel.
@@ -155,6 +156,14 @@ public class ThemeProfilePanel extends javax.swing.JPanel {
         add(previewPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ThemeProfilePanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> backgroundModeComboBox;

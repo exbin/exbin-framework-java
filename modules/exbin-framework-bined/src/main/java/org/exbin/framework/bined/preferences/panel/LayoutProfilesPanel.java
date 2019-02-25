@@ -27,41 +27,41 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
-import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
+import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
 /**
- * Manage list of color profiles panel.
+ * Manage list of layout profiles panel.
  *
- * @version 0.2.0 2019/02/21
+ * @version 0.2.0 2019/02/25
  * @author ExBin Project (http://exbin.org)
  */
-public class ColorProfilesPanel extends javax.swing.JPanel {
+public class LayoutProfilesPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ColorProfilesPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(LayoutProfilesPanel.class);
 
     private boolean modified = false;
-    private final List<ColorProfile> colorProfiles = new ArrayList<>();
+    private final List<LayoutProfile> layoutProfiles = new ArrayList<>();
 
-    public ColorProfilesPanel() {
+    public LayoutProfilesPanel() {
         initComponents();
         init();
     }
 
     private void init() {
-        profilesList.setModel(new ListModel<ColorProfile>() {
+        profilesList.setModel(new ListModel<LayoutProfile>() {
             @Override
             public int getSize() {
-                return colorProfiles.size();
+                return layoutProfiles.size();
             }
 
             @Nonnull
             @Override
-            public ColorProfile getElementAt(int index) {
-                return colorProfiles.get(index);
+            public LayoutProfile getElementAt(int index) {
+                return layoutProfiles.get(index);
             }
 
             @Override
@@ -72,9 +72,9 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
             public void removeListDataListener(ListDataListener l) {
             }
         });
-        profilesList.setCellRenderer(new ListCellRenderer<ColorProfile>() {
+        profilesList.setCellRenderer(new ListCellRenderer<LayoutProfile>() {
             @Override
-            public Component getListCellRendererComponent(JList<? extends ColorProfile> list, ColorProfile value, int index, boolean isSelected, boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList<? extends LayoutProfile> list, LayoutProfile value, int index, boolean isSelected, boolean cellHasFocus) {
                 return new JLabel(value.profileName);
             }
         });
@@ -100,11 +100,6 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
         editButton = new javax.swing.JButton();
         hideButton = new javax.swing.JButton();
 
-        profilesList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "(build-in colors profile)" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         profilesListScrollPane.setViewportView(profilesList);
 
         upButton.setText(resourceBundle.getString("upButton.text")); // NOI18N
@@ -195,7 +190,7 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
                 .addComponent(removeButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(hideButton)
-                .addContainerGap(138, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -204,7 +199,7 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(profilesListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                .addComponent(profilesListScrollPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(profilesControlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -224,10 +219,10 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
         for (int i = 0; i < indices.length; i++) {
             int next = indices[i];
             if (last != next) {
-                ColorProfile item = colorProfiles.get(next);
-                colorProfiles.add(next - 1, item);
+                LayoutProfile item = layoutProfiles.get(next);
+                layoutProfiles.add(next - 1, item);
                 profilesList.getSelectionModel().addSelectionInterval(next - 1, next - 1);
-                colorProfiles.remove(next + 1);
+                layoutProfiles.remove(next + 1);
             } else {
                 last++;
             }
@@ -242,10 +237,10 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
         for (int i = indices.length; i > 0; i--) {
             int next = indices[i - 1];
             if (last != next) {
-                ColorProfile item = colorProfiles.get(next);
-                colorProfiles.add(next + 2, item);
+                LayoutProfile item = layoutProfiles.get(next);
+                layoutProfiles.add(next + 2, item);
                 profilesList.getSelectionModel().addSelectionInterval(next + 2, next + 2);
-                colorProfiles.remove(next);
+                layoutProfiles.remove(next);
             } else {
                 last--;
             }
@@ -254,12 +249,12 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_downButtonActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        ColorProfilePanel colorProfilePanel = new ColorProfilePanel();
+        LayoutProfilePanel layoutProfilePanel = new LayoutProfilePanel();
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(colorProfilePanel, controlPanel);
+        JPanel dialogPanel = WindowUtils.createDialogPanel(layoutProfilePanel, controlPanel);
 
         final Dialog dialog = WindowUtils.createDialog(dialogPanel, null, Dialog.ModalityType.APPLICATION_MODAL);
-        dialog.setTitle("Colors Profile");
+        dialog.setTitle("Layout Profile");
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                 // TODO
@@ -281,7 +276,7 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         for (int profileIndex : profilesList.getSelectedIndices()) {
-            colorProfiles.remove(profileIndex);
+            layoutProfiles.remove(profileIndex);
         }
         profilesList.clearSelection();
         wasModified();
@@ -317,7 +312,7 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new ColorProfilesPanel());
+        WindowUtils.invokeDialog(new LayoutProfilesPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -333,10 +328,10 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
     private javax.swing.JButton upButton;
     // End of variables declaration//GEN-END:variables
 
-    private final static class ColorProfile {
+    private final static class LayoutProfile {
 
         String profileName;
-        ExtendedCodeAreaColorProfile colorProfile;
+        ExtendedCodeAreaLayoutProfile layoutProfile;
 
     }
 }

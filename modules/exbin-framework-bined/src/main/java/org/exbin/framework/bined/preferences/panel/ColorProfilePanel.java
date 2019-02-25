@@ -17,21 +17,22 @@ package org.exbin.framework.bined.preferences.panel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import javax.swing.table.DefaultTableCellRenderer;
 import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Color profile panel.
  *
- * @version 0.2.0 2019/01/10
+ * @version 0.2.0 2019/02/25
  * @author ExBin Project (http://exbin.org)
  */
 public class ColorProfilePanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ColorProfilePanel.class);
 
-    private final ColorTableModel colorTableModel = new ColorTableModel();
+    private final ColorProfileTableModel colorTableModel = new ColorProfileTableModel();
 
     private ExtCodeArea codeArea;
 
@@ -44,7 +45,10 @@ public class ColorProfilePanel extends javax.swing.JPanel {
         codeArea = new ExtCodeArea();
         previewPanel.add(codeArea, BorderLayout.CENTER);
 
-        colorsTable.setDefaultRenderer(Color.class, new DefaultTableCellRenderer());
+        colorsTable.setDefaultRenderer(Color.class, new ColorCellTableRenderer());
+        colorsTable.setDefaultEditor(Color.class, new ColorCellTableEditor());
+
+        colorTableModel.setColorProfile((ExtendedCodeAreaColorProfile) codeArea.getColorsProfile());
     }
 
     /**
@@ -100,6 +104,14 @@ public class ColorProfilePanel extends javax.swing.JPanel {
         add(previewPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ColorProfilePanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane colorsScrollPane;

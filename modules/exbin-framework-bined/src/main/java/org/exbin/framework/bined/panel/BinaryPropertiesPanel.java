@@ -126,7 +126,6 @@ public class BinaryPropertiesPanel extends javax.swing.JPanel {
         WindowUtils.invokeDialog(new BinaryPropertiesPanel());
     }
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel fileNameLabel;
     private javax.swing.JTextField fileNameTextField;
