@@ -26,14 +26,13 @@ import org.exbin.bined.CodeAreaViewMode;
 import org.exbin.bined.CodeCharactersCase;
 import org.exbin.bined.CodeType;
 import org.exbin.bined.PositionCodeType;
-import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.panel.TextFontOptionsPanel;
 
 /**
- * Hexadecimal editor node.
+ * Hexadecimal editor preferences.
  *
- * @version 0.2.0 2018/12/31
+ * @version 0.2.0 2019/02/27
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryEditorPreferences {
@@ -45,25 +44,12 @@ public class BinaryEditorPreferences {
     public static final String PREFERENCES_ENCODING_SELECTED = "selectedEncoding";
     public static final String PREFERENCES_ENCODING_PREFIX = "textEncoding.";
     public static final String PREFERENCES_BYTES_PER_LINE = "bytesPerLine";
-    public static final String PREFERENCES_SHOW_HEADER = "showHeader";
-    public static final String PREFERENCES_HEADER_SPACE_TYPE = "headerSpaceType";
-    public static final String PREFERENCES_HEADER_SPACE = "headerSpace";
-    public static final String PREFERENCES_SHOW_LINE_NUMBERS = "showLineNumbers";
     public static final String PREFERENCES_LINE_NUMBERS_LENGTH_TYPE = "lineNumbersLengthType";
     public static final String PREFERENCES_LINE_NUMBERS_LENGTH = "lineNumbersLength";
-    public static final String PREFERENCES_LINE_NUMBERS_SPACE_TYPE = "lineNumbersSpaceType";
-    public static final String PREFERENCES_LINE_NUMBERS_SPACE = "lineNumbersSpace";
     public static final String PREFERENCES_VIEW_MODE = "viewMode";
-    public static final String PREFERENCES_BACKGROUND_MODE = "backgroundMode";
     public static final String PREFERENCES_PAINT_LINE_NUMBERS_BACKGROUND = "showLineNumbersBackground";
     public static final String PREFERENCES_POSITION_CODE_TYPE = "positionCodeType";
     public static final String PREFERENCES_HEX_CHARACTERS_CASE = "hexCharactersCase";
-    public static final String PREFERENCES_DECORATION_HEADER_LINE = "decorationHeaderLine";
-    public static final String PREFERENCES_DECORATION_PREVIEW_LINE = "decorationPreviewLine";
-    public static final String PREFERENCES_DECORATION_BOX = "decorationBox";
-    public static final String PREFERENCES_DECORATION_LINENUM_LINE = "decorationLineNumLine";
-    public static final String PREFERENCES_BYTE_GROUP_SIZE = "byteGroupSize";
-    public static final String PREFERENCES_SPACE_GROUP_SIZE = "spaceGroupSize";
     public static final String PREFERENCES_CODE_COLORIZATION = "codeColorization";
     public static final String PREFERENCES_SHOW_VALUES_PANEL = "valuesPanel";
 
@@ -102,13 +88,6 @@ public class BinaryEditorPreferences {
             preferences.put(PREFERENCES_ENCODING_PREFIX + Integer.toString(i), encodings.get(i));
         }
         preferences.remove(PREFERENCES_ENCODING_PREFIX + Integer.toString(encodings.size()));
-    }
-
-    private ExtendedBackgroundPaintMode convertBackgroundPaintMode(String value) {
-        if ("STRIPPED".equals(value)) {
-            return ExtendedBackgroundPaintMode.STRIPED;
-        }
-        return ExtendedBackgroundPaintMode.valueOf(value);
     }
 
     public void setCodeType(CodeType codeType) {
@@ -216,10 +195,6 @@ public class BinaryEditorPreferences {
 
     public PositionCodeType getPositionCodeType() {
         return PositionCodeType.valueOf(preferences.get(PREFERENCES_POSITION_CODE_TYPE, PositionCodeType.HEXADECIMAL.name()));
-    }
-
-    public ExtendedBackgroundPaintMode getBackgroundPaintMode() {
-        return convertBackgroundPaintMode(preferences.get(PREFERENCES_BACKGROUND_MODE, ExtendedBackgroundPaintMode.STRIPED.name()));
     }
 
     public CodeAreaViewMode getViewMode() {

@@ -52,13 +52,14 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     doFirst {
         options.fork = true
-        options.bootClasspath = "${System.properties['java.home']}/lib/rt.jar"
-        options.bootClasspath += "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar"
+        if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+            options.bootstrapClasspath = files("${System.properties['java.home']}/lib/rt.jar", "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar")
+        }
     }
 }
 
 // Disable tests on build
-check.dependsOn.remove(test)
+tasks.withType(Test) {enabled = false}
 
 task testJar(type: Jar, dependsOn: testClasses) {
     classifier "tests"
@@ -118,7 +119,7 @@ project.dependencies.ext.moduleDep = { depsName, packageName, moduleName ->
 
         createSvnDownloadTask(moduleName, githubModulePath, depModuleDir)
         tasks["svnDownload${moduleName}"].execute()
-        
+
         // Report as placeholder dependency
         if (!new File(depsDir + "_placeholder").exists()) {
             new File(depsDir + "_placeholder").mkdir()
@@ -145,12 +146,12 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
-//            artifact sourceJar {
-//                classifier 'sources'
-//            }
-//            artifact (javadocJar) {
-//                classifier = 'javadoc'
-//            }
+            //            artifact sourceJar {
+            //                classifier 'sources'
+            //            }
+            //            artifact (javadocJar) {
+            //                classifier = 'javadoc'
+            //            }
 
             pom.withXml {
                 asNode().children().last() + {
