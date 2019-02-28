@@ -43,7 +43,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Values side panel.
  *
- * @version 0.2.1 2018/10/20
+ * @version 0.2.1 2019/02/28
  * @author ExBin Project (http://exbin.org)
  */
 public class ValuesPanel extends javax.swing.JPanel {
@@ -56,6 +56,7 @@ public class ValuesPanel extends javax.swing.JPanel {
     public static final BigInteger ULONG_MAX_VALUE = new BigInteger("4294967295");
     public static final BigInteger BIG_INTEGER_BYTE_MASK = BigInteger.valueOf(255);
     public static final String VALUE_OUT_OF_RANGE = "Value is out of range";
+    public static int CACHE_SIZE = 250;
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ValuesPanel.class);
     private ExtCodeArea codeArea;
@@ -65,7 +66,7 @@ public class ValuesPanel extends javax.swing.JPanel {
     private CaretMovedListener caretMovedListener;
     private BinaryDataUndoUpdateListener undoUpdateListener;
 
-    private final byte[] valuesCache = new byte[8];
+    private final byte[] valuesCache = new byte[CACHE_SIZE];
     private final ByteBuffer byteBuffer = ByteBuffer.wrap(valuesCache);
     private final ValuesUpdater valuesUpdater = new ValuesUpdater();
 
@@ -105,8 +106,8 @@ public class ValuesPanel extends javax.swing.JPanel {
         floatTextField = new javax.swing.JTextField();
         doubleLabel = new javax.swing.JLabel();
         doubleTextField = new javax.swing.JTextField();
-        characterLabel = new javax.swing.JLabel();
-        characterTextField = new javax.swing.JTextField();
+        stringLabel = new javax.swing.JLabel();
+        stringTextField = new javax.swing.JTextField();
         bigEndianRadioButton = new javax.swing.JRadioButton();
         jSeparator1 = new javax.swing.JSeparator();
         signedRadioButton = new javax.swing.JRadioButton();
@@ -220,12 +221,12 @@ public class ValuesPanel extends javax.swing.JPanel {
             }
         });
 
-        characterLabel.setText(resourceBundle.getString("characterLabel.text")); // NOI18N
+        stringLabel.setText(resourceBundle.getString("stringLabel.text")); // NOI18N
 
-        characterTextField.setEditable(false);
-        characterTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+        stringTextField.setEditable(false);
+        stringTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                characterTextFieldKeyReleased(evt);
+                stringTextFieldKeyReleased(evt);
             }
         });
 
@@ -288,7 +289,7 @@ public class ValuesPanel extends javax.swing.JPanel {
                         .addComponent(unsignedRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(characterTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(stringTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(byteTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(wordTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(intTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -320,7 +321,7 @@ public class ValuesPanel extends javax.swing.JPanel {
                             .addComponent(doubleTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(characterLabel)
+                        .addComponent(stringLabel)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -363,11 +364,11 @@ public class ValuesPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(doubleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(characterLabel)
+                .addComponent(stringLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(characterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(stringTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -622,16 +623,12 @@ public class ValuesPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_doubleTextFieldKeyReleased
 
-    private void characterTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_characterTextFieldKeyReleased
+    private void stringTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stringTextFieldKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && isEditable()) {
             try {
-                String characterText = characterTextField.getText();
+                String characterText = stringTextField.getText();
                 if (characterText.length() == 0) {
                     throw new InputMismatchException("Empty value not valid");
-                }
-
-                if (characterText.length() > 1) {
-                    throw new InputMismatchException("Only single character allowed");
                 }
 
                 byte[] bytes = characterText.getBytes(codeArea.getCharset());
@@ -643,7 +640,7 @@ public class ValuesPanel extends javax.swing.JPanel {
                 showException(ex);
             }
         }
-    }//GEN-LAST:event_characterTextFieldKeyReleased
+    }//GEN-LAST:event_stringTextFieldKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton bigEndianRadioButton;
@@ -658,8 +655,6 @@ public class ValuesPanel extends javax.swing.JPanel {
     private javax.swing.JLabel binaryLabel;
     private javax.swing.JLabel byteLabel;
     private javax.swing.JTextField byteTextField;
-    private javax.swing.JLabel characterLabel;
-    private javax.swing.JTextField characterTextField;
     private javax.swing.JLabel doubleLabel;
     private javax.swing.JTextField doubleTextField;
     private javax.swing.ButtonGroup endianButtonGroup;
@@ -673,6 +668,8 @@ public class ValuesPanel extends javax.swing.JPanel {
     private javax.swing.JLabel longLabel;
     private javax.swing.JTextField longTextField;
     private javax.swing.JRadioButton signedRadioButton;
+    private javax.swing.JLabel stringLabel;
+    private javax.swing.JTextField stringTextField;
     private javax.swing.JRadioButton unsignedRadioButton;
     private javax.swing.JLabel wordLabel;
     private javax.swing.JTextField wordTextField;
@@ -684,19 +681,13 @@ public class ValuesPanel extends javax.swing.JPanel {
     }
 
     public void enableUpdate() {
-        dataChangedListener = new DataChangedListener() {
-            @Override
-            public void dataChanged() {
-                updateEditationMode();
-                updateValues();
-            }
+        dataChangedListener = () -> {
+            updateEditationMode();
+            updateValues();
         };
         codeArea.addDataChangedListener(dataChangedListener);
-        caretMovedListener = new CaretMovedListener() {
-            @Override
-            public void caretMoved(CaretPosition caretPosition) {
-                updateValues();
-            }
+        caretMovedListener = (CaretPosition caretPosition) -> {
+            updateValues();
         };
         codeArea.addCaretMovedListener(caretMovedListener);
         undoUpdateListener = new BinaryDataUndoUpdateListener() {
@@ -737,7 +728,7 @@ public class ValuesPanel extends javax.swing.JPanel {
         longTextField.setEditable(editable);
         floatTextField.setEditable(editable);
         doubleTextField.setEditable(editable);
-        characterTextField.setEditable(editable);
+        stringTextField.setEditable(editable);
     }
 
     public void updateValues() {
@@ -746,10 +737,10 @@ public class ValuesPanel extends javax.swing.JPanel {
         long dataSize = codeArea.getDataSize();
 
         if (dataPosition < dataSize) {
-            int availableData = dataSize - dataPosition > 7 ? 8 : (int) (dataSize - dataPosition);
+            int availableData = dataSize - dataPosition >= CACHE_SIZE ? CACHE_SIZE : (int) (dataSize - dataPosition);
             codeArea.getContentData().copyToArray(dataPosition, valuesCache, 0, availableData);
-            if (availableData < 8) {
-                Arrays.fill(valuesCache, availableData, 8, (byte) 0);
+            if (availableData < CACHE_SIZE) {
+                Arrays.fill(valuesCache, availableData, CACHE_SIZE, (byte) 0);
             }
         }
 
@@ -821,7 +812,7 @@ public class ValuesPanel extends javax.swing.JPanel {
         LONG,
         FLOAT,
         DOUBLE,
-        CHARACTER
+        STRING
     }
 
     private class ValuesUpdater {
@@ -846,12 +837,7 @@ public class ValuesPanel extends javax.swing.JPanel {
         }
 
         private void scheduleNextStep(final ValuesPanelField valuesPanelField) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    updateValue(valuesPanelField);
-                }
-            });
+            SwingUtilities.invokeLater(() -> updateValue(valuesPanelField));
         }
 
         public boolean isUpdateInProgress() {
@@ -885,12 +871,9 @@ public class ValuesPanel extends javax.swing.JPanel {
             if (valuesPanelField == lastValue) {
                 stopUpdate();
             } else {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        ValuesPanelField nextValue = panelFields[valuesPanelField.ordinal() + 1];
-                        updateValue(nextValue);
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    ValuesPanelField nextValue = panelFields[valuesPanelField.ordinal() + 1];
+                    updateValue(nextValue);
                 });
             }
         }
@@ -994,12 +977,12 @@ public class ValuesPanel extends javax.swing.JPanel {
                     doubleTextField.setText(String.valueOf(byteBuffer.getDouble()));
                     break;
                 }
-                case CHARACTER: {
+                case STRING: {
                     String strValue = new String(values, codeArea.getCharset());
                     if (strValue.length() > 0) {
-                        characterTextField.setText(strValue.substring(0, 1));
+                        stringTextField.setText(strValue);
                     } else {
-                        characterTextField.setText("");
+                        stringTextField.setText("");
                     }
                     break;
                 }
@@ -1064,8 +1047,8 @@ public class ValuesPanel extends javax.swing.JPanel {
                     doubleTextField.setText("");
                     break;
                 }
-                case CHARACTER: {
-                    characterTextField.setText("");
+                case STRING: {
+                    stringTextField.setText("");
                     break;
                 }
             }

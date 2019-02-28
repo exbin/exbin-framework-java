@@ -20,7 +20,7 @@ import java.awt.Color;
 import java.nio.charset.Charset;
 import java.util.Map;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
-import org.exbin.framework.bined.panel.BinaryColorType;
+import org.exbin.framework.bined.options.panel.BinaryColorType;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.ReplaceParameters;
 import org.exbin.framework.bined.panel.SearchParameters;

@@ -25,15 +25,15 @@ import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.BinaryColorPanel;
-import org.exbin.framework.bined.panel.BinaryColorType;
+import org.exbin.framework.bined.options.panel.BinaryColorPanel;
+import org.exbin.framework.bined.options.panel.BinaryColorType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
-import org.exbin.framework.bined.panel.BinaryColorPanelApi;
+import org.exbin.framework.bined.options.panel.BinaryColorPanelApi;
 
 /**
  * Tools options action handler.
@@ -92,22 +92,22 @@ public class ToolsOptionsHandler {
                     }
                 };
 
-                final BinaryColorPanel hexColorPanel = new BinaryColorPanel();
-                hexColorPanel.setPanelApi(textColorPanelFrame);
-                hexColorPanel.setColorsFromMap(textColorPanelFrame.getCurrentTextColors());
+                final BinaryColorPanel binaryColorPanel = new BinaryColorPanel();
+                binaryColorPanel.setPanelApi(textColorPanelFrame);
+                binaryColorPanel.setColorsFromMap(textColorPanelFrame.getCurrentTextColors());
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
-                JPanel dialogPanel = WindowUtils.createDialogPanel(hexColorPanel, controlPanel);
+                JPanel dialogPanel = WindowUtils.createDialogPanel(binaryColorPanel, controlPanel);
 
                 final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, hexColorPanel.getClass(), hexColorPanel.getResourceBundle());
-                frameModule.setDialogTitle(dialog, hexColorPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog, binaryColorPanel.getClass(), binaryColorPanel.getResourceBundle());
+                frameModule.setDialogTitle(dialog, binaryColorPanel.getResourceBundle());
                 controlPanel.setHandler(new OptionsControlHandler() {
                     @Override
                     public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
                         if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                            textColorPanelFrame.setCurrentTextColors(hexColorPanel.getMapFromColors());
+                            textColorPanelFrame.setCurrentTextColors(binaryColorPanel.getMapFromColors());
                             if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                                hexColorPanel.saveToPreferences(application.getAppPreferences());
+                                binaryColorPanel.saveToPreferences(application.getAppPreferences());
                             }
                         }
 

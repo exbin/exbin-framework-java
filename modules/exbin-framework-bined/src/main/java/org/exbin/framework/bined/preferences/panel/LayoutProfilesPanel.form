@@ -45,6 +45,9 @@
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
         <Component class="javax.swing.JList" name="profilesList">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;LayoutProfile&gt;"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

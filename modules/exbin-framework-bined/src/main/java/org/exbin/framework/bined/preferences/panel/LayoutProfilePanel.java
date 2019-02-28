@@ -16,13 +16,21 @@
 package org.exbin.framework.bined.preferences.panel;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.bined.EditationMode;
+import org.exbin.bined.SelectionRange;
+import org.exbin.bined.capability.EditationModeCapable;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.layout.DefaultExtendedCodeAreaLayoutProfile;
+import org.exbin.framework.bined.options.panel.BinaryColorPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.utils.binary_data.ByteArrayEditableData;
 
 /**
  * Layout profile panel.
@@ -44,7 +52,22 @@ public class LayoutProfilePanel extends javax.swing.JPanel {
 
     private void init() {
         codeArea = new ExtCodeArea();
+        initPreviewCodeArea();
         previewPanel.add(codeArea, BorderLayout.CENTER);
+    }
+
+    private void initPreviewCodeArea() {
+        ((EditationModeCapable) codeArea).setEditationMode(EditationMode.READ_ONLY);
+        ByteArrayEditableData exampleData = new ByteArrayEditableData();
+        try {
+            exampleData.loadFromStream(getClass().getResourceAsStream("/org/exbin/framework/bined/resources/preview/lorem.txt"));
+        } catch (IOException ex) {
+            Logger.getLogger(BinaryColorPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        codeArea.setContentData(exampleData);
+        ((RowWrappingCapable) codeArea).setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        codeArea.setEnabled(false);
+        codeArea.setSelection(new SelectionRange(200, 300));
     }
 
     @Nonnull
@@ -54,6 +77,21 @@ public class LayoutProfilePanel extends javax.swing.JPanel {
 
     public void setLayoutProfile(DefaultExtendedCodeAreaLayoutProfile layoutProfile) {
         codeArea.setLayoutProfile(layoutProfile);
+        // TODO Maybe move to layout?
+        wrapLineModeCheckBox.setSelected(codeArea.getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING);
+        maxBytesPerRowSpinner.setValue(codeArea.getMaxBytesPerRow());
+        minRowPositionLengthSpinner.setValue(codeArea.getMinRowPositionLength());
+        maxRowPositionLengthSpinner.setValue(codeArea.getMaxRowPositionLength());
+        showHeaderCheckBox.setSelected(layoutProfile.isShowHeader());
+        headerTopSpaceSpinner.setValue(layoutProfile.getTopHeaderSpace());
+        headerBottomSpaceSpinner.setValue(layoutProfile.getBottomHeaderSpace());
+        showRowPositionCheckBox.setSelected(layoutProfile.isShowRowPosition());
+        rowPositionLeftSpaceSpinner.setValue(layoutProfile.getLeftRowPositionSpace());
+        rowPositionRightSpaceSpinner.setValue(layoutProfile.getRightRowPositionSpace());
+        spaceGroupSizeSpinner.setValue(layoutProfile.getSpaceGroupSize());
+        halfSpaceGroupSizeSpinner.setValue(layoutProfile.getHalfSpaceGroupSize());
+        doubleSpaceGroupSizeSpinner.setValue(layoutProfile.getDoubleSpaceGroupSize());
+        
     }
 
     /**

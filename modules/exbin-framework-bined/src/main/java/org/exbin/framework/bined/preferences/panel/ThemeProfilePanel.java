@@ -16,19 +16,28 @@
 package org.exbin.framework.bined.preferences.panel;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.bined.EditationMode;
+import org.exbin.bined.SelectionRange;
+import org.exbin.bined.capability.EditationModeCapable;
+import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.layout.ExtendedCodeAreaDecorations;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
+import org.exbin.framework.bined.options.panel.BinaryColorPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.utils.binary_data.ByteArrayEditableData;
 
 /**
  * Theme profile panel.
  *
- * @version 0.2.0 2019/02/27
+ * @version 0.2.0 2019/02/28
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -45,7 +54,22 @@ public class ThemeProfilePanel extends javax.swing.JPanel {
 
     private void init() {
         codeArea = new ExtCodeArea();
+        initPreviewCodeArea();
         previewPanel.add(codeArea, BorderLayout.CENTER);
+    }
+
+    private void initPreviewCodeArea() {
+        ((EditationModeCapable) codeArea).setEditationMode(EditationMode.READ_ONLY);
+        ByteArrayEditableData exampleData = new ByteArrayEditableData();
+        try {
+            exampleData.loadFromStream(getClass().getResourceAsStream("/org/exbin/framework/bined/resources/preview/lorem.txt"));
+        } catch (IOException ex) {
+            Logger.getLogger(BinaryColorPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        codeArea.setContentData(exampleData);
+        ((RowWrappingCapable) codeArea).setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        codeArea.setEnabled(false);
+        codeArea.setSelection(new SelectionRange(200, 300));
     }
 
     @Nonnull
@@ -55,6 +79,12 @@ public class ThemeProfilePanel extends javax.swing.JPanel {
 
     public void setThemeProfile(ExtendedCodeAreaThemeProfile themeProfile) {
         codeArea.setThemeProfile(themeProfile);
+        backgroundModeComboBox.setSelectedIndex(themeProfile.getBackgroundPaintMode().ordinal());
+        paintRowPosBackgroundCheckBox.setSelected(themeProfile.isPaintRowPosBackground());
+        decoratorHeaderLineCheckBox.setSelected(themeProfile.hasDecoration(ExtendedCodeAreaDecorations.HEADER_LINE));
+        decoratorRowPosLineCheckBox.setSelected(themeProfile.hasDecoration(ExtendedCodeAreaDecorations.ROW_POSITION_LINE));
+        decoratorSplitLineCheckBox.setSelected(themeProfile.hasDecoration(ExtendedCodeAreaDecorations.SPLIT_LINE));
+        decoratorBoxCheckBox.setSelected(themeProfile.hasDecoration(ExtendedCodeAreaDecorations.BOX_LINES));
     }
 
     /**

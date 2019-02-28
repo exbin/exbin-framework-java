@@ -36,7 +36,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 /**
  * Manage list of layout profiles panel.
  *
- * @version 0.2.0 2019/02/25
+ * @version 0.2.0 2019/02/28
  * @author ExBin Project (http://exbin.org)
  */
 public class LayoutProfilesPanel extends javax.swing.JPanel {
@@ -72,12 +72,7 @@ public class LayoutProfilesPanel extends javax.swing.JPanel {
             public void removeListDataListener(ListDataListener l) {
             }
         });
-        profilesList.setCellRenderer(new ListCellRenderer<LayoutProfile>() {
-            @Override
-            public Component getListCellRendererComponent(JList<? extends LayoutProfile> list, LayoutProfile value, int index, boolean isSelected, boolean cellHasFocus) {
-                return new JLabel(value.profileName);
-            }
-        });
+        profilesList.setCellRenderer((JList<? extends LayoutProfile> list, LayoutProfile value, int index, boolean isSelected, boolean cellHasFocus) -> new JLabel(value.profileName));
     }
 
     /**
@@ -90,7 +85,7 @@ public class LayoutProfilesPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         profilesListScrollPane = new javax.swing.JScrollPane();
-        profilesList = new javax.swing.JList();
+        profilesList = new javax.swing.JList<>();
         profilesControlPanel = new javax.swing.JPanel();
         upButton = new javax.swing.JButton();
         downButton = new javax.swing.JButton();
@@ -321,7 +316,7 @@ public class LayoutProfilesPanel extends javax.swing.JPanel {
     private javax.swing.JButton editButton;
     private javax.swing.JButton hideButton;
     private javax.swing.JPanel profilesControlPanel;
-    private javax.swing.JList profilesList;
+    private javax.swing.JList<LayoutProfile> profilesList;
     private javax.swing.JScrollPane profilesListScrollPane;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton selectAllButton;

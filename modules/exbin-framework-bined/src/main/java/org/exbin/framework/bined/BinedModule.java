@@ -44,8 +44,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.bined.panel.BinaryAppearanceOptionsPanel;
-import org.exbin.framework.bined.panel.BinaryColorOptionsPanel;
-import org.exbin.framework.bined.panel.BinaryColorType;
+import org.exbin.framework.bined.options.panel.BinaryColorOptionsPanel;
+import org.exbin.framework.bined.options.panel.BinaryColorType;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.editor.text.EncodingsHandler;
@@ -82,7 +82,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.bined.panel.BinaryAppearanceOptionsPanelApi;
-import org.exbin.framework.bined.panel.BinaryColorPanelApi;
+import org.exbin.framework.bined.options.panel.BinaryColorPanelApi;
 
 /**
  * Hexadecimal editor module.

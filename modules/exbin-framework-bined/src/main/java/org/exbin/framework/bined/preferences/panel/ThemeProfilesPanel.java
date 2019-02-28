@@ -90,7 +90,7 @@ public class ThemeProfilesPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         profilesListScrollPane = new javax.swing.JScrollPane();
-        profilesList = new javax.swing.JList();
+        profilesList = new javax.swing.JList<>();
         profilesControlPanel = new javax.swing.JPanel();
         upButton = new javax.swing.JButton();
         downButton = new javax.swing.JButton();
@@ -321,7 +321,7 @@ public class ThemeProfilesPanel extends javax.swing.JPanel {
     private javax.swing.JButton editButton;
     private javax.swing.JButton hideButton;
     private javax.swing.JPanel profilesControlPanel;
-    private javax.swing.JList profilesList;
+    private javax.swing.JList<ThemeProfile> profilesList;
     private javax.swing.JScrollPane profilesListScrollPane;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton selectAllButton;

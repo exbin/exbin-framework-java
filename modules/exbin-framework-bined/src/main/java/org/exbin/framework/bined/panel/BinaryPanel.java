@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.bined.panel;
 
+import org.exbin.framework.bined.options.panel.BinaryColorType;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;

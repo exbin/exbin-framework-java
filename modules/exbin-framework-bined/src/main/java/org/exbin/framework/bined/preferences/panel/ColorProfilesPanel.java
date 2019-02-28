@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.bined.preferences.panel;
 
-import java.awt.Component;
 import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
@@ -36,7 +34,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 /**
  * Manage list of color profiles panel.
  *
- * @version 0.2.0 2019/02/21
+ * @version 0.2.0 2019/02/28
  * @author ExBin Project (http://exbin.org)
  */
 public class ColorProfilesPanel extends javax.swing.JPanel {
@@ -72,12 +70,7 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
             public void removeListDataListener(ListDataListener l) {
             }
         });
-        profilesList.setCellRenderer(new ListCellRenderer<ColorProfile>() {
-            @Override
-            public Component getListCellRendererComponent(JList<? extends ColorProfile> list, ColorProfile value, int index, boolean isSelected, boolean cellHasFocus) {
-                return new JLabel(value.profileName);
-            }
-        });
+        profilesList.setCellRenderer((JList<? extends ColorProfile> list, ColorProfile value, int index, boolean isSelected, boolean cellHasFocus) -> new JLabel(value.profileName));
     }
 
     /**
@@ -90,7 +83,7 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         profilesListScrollPane = new javax.swing.JScrollPane();
-        profilesList = new javax.swing.JList();
+        profilesList = new javax.swing.JList<>();
         profilesControlPanel = new javax.swing.JPanel();
         upButton = new javax.swing.JButton();
         downButton = new javax.swing.JButton();
@@ -100,11 +93,6 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
         editButton = new javax.swing.JButton();
         hideButton = new javax.swing.JButton();
 
-        profilesList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "(build-in colors profile)" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         profilesListScrollPane.setViewportView(profilesList);
 
         upButton.setText(resourceBundle.getString("upButton.text")); // NOI18N
@@ -326,7 +314,7 @@ public class ColorProfilesPanel extends javax.swing.JPanel {
     private javax.swing.JButton editButton;
     private javax.swing.JButton hideButton;
     private javax.swing.JPanel profilesControlPanel;
-    private javax.swing.JList profilesList;
+    private javax.swing.JList<ColorProfile> profilesList;
     private javax.swing.JScrollPane profilesListScrollPane;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton selectAllButton;
