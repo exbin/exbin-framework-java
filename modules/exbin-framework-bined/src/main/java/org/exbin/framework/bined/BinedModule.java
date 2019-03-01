@@ -114,7 +114,7 @@ public class BinedModule implements XBApplicationModule {
     private XBApplication application;
     private BinaryEditorProvider editorProvider;
     private BinaryStatusPanel hexStatusPanel;
-    private BinaryColorOptionsPanel hexColorOptionsPanel;
+    private BinaryColorOptionsPanel colorOptionsPanel;
     private TextEncodingOptionsPanel textEncodingOptionsPanel;
     private TextFontOptionsPanel textFontOptionsPanel;
     private BinaryAppearanceOptionsPanel hexAppearanceOptionsPanel;
@@ -252,7 +252,7 @@ public class BinedModule implements XBApplicationModule {
 
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
-        BinaryColorPanelApi textColorPanelFrame = new BinaryColorPanelApi() {
+        BinaryColorPanelApi colorPanelFrame = new BinaryColorPanelApi() {
             @Override
             public Map<BinaryColorType, Color> getCurrentTextColors() {
                 return getEditorProvider().getCurrentColors();
@@ -269,9 +269,9 @@ public class BinedModule implements XBApplicationModule {
             }
         };
 
-        hexColorOptionsPanel = new BinaryColorOptionsPanel();
-        hexColorOptionsPanel.setPanelApi(textColorPanelFrame);
-        optionsModule.addOptionsPanel(hexColorOptionsPanel);
+        colorOptionsPanel = new BinaryColorOptionsPanel();
+        colorOptionsPanel.setPanelApi(colorPanelFrame);
+        optionsModule.addOptionsPanel(colorOptionsPanel);
 
         BinaryAppearanceOptionsPanelApi appearanceOptionsPanelApi;
         appearanceOptionsPanelApi = new BinaryAppearanceOptionsPanelApi() {
@@ -756,9 +756,9 @@ public class BinedModule implements XBApplicationModule {
         encodingsHandler.loadFromPreferences(preferences);
 
         // TODO move it out of panels
-        if (hexColorOptionsPanel != null) {
-            hexColorOptionsPanel.loadFromPreferences(preferences);
-            hexColorOptionsPanel.applyPreferencesChanges();
+        if (colorOptionsPanel != null) {
+            colorOptionsPanel.loadFromPreferences(preferences);
+            colorOptionsPanel.applyPreferencesChanges();
         }
 
         if (textFontOptionsPanel != null) {

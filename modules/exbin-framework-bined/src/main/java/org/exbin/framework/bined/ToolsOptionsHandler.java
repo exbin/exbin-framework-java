@@ -25,7 +25,6 @@ import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.options.panel.BinaryColorPanel;
 import org.exbin.framework.bined.options.panel.BinaryColorType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -92,31 +91,32 @@ public class ToolsOptionsHandler {
                     }
                 };
 
-                final BinaryColorPanel binaryColorPanel = new BinaryColorPanel();
-                binaryColorPanel.setPanelApi(textColorPanelFrame);
-                binaryColorPanel.setColorsFromMap(textColorPanelFrame.getCurrentTextColors());
-                OptionsControlPanel controlPanel = new OptionsControlPanel();
-                JPanel dialogPanel = WindowUtils.createDialogPanel(binaryColorPanel, controlPanel);
-
-                final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, binaryColorPanel.getClass(), binaryColorPanel.getResourceBundle());
-                frameModule.setDialogTitle(dialog, binaryColorPanel.getResourceBundle());
-                controlPanel.setHandler(new OptionsControlHandler() {
-                    @Override
-                    public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
-                        if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                            textColorPanelFrame.setCurrentTextColors(binaryColorPanel.getMapFromColors());
-                            if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                                binaryColorPanel.saveToPreferences(application.getAppPreferences());
-                            }
-                        }
-
-                        WindowUtils.closeWindow(dialog);
-                    }
-                });
-                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-                dialog.setLocationRelativeTo(dialog.getParent());
-                dialog.setVisible(true);
+                throw new UnsupportedOperationException("Not supported yet.");
+//                final BinaryColorPanel binaryColorPanel = new BinaryColorPanel();
+//                binaryColorPanel.setPanelApi(textColorPanelFrame);
+//                binaryColorPanel.setColorsFromMap(textColorPanelFrame.getCurrentTextColors());
+//                OptionsControlPanel controlPanel = new OptionsControlPanel();
+//                JPanel dialogPanel = WindowUtils.createDialogPanel(binaryColorPanel, controlPanel);
+//
+//                final JDialog dialog = frameModule.createDialog(dialogPanel);
+//                WindowUtils.addHeaderPanel(dialog, binaryColorPanel.getClass(), binaryColorPanel.getResourceBundle());
+//                frameModule.setDialogTitle(dialog, binaryColorPanel.getResourceBundle());
+//                controlPanel.setHandler(new OptionsControlHandler() {
+//                    @Override
+//                    public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
+//                        if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+//                            textColorPanelFrame.setCurrentTextColors(binaryColorPanel.getMapFromColors());
+//                            if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+//                                binaryColorPanel.saveToPreferences(application.getAppPreferences());
+//                            }
+//                        }
+//
+//                        WindowUtils.closeWindow(dialog);
+//                    }
+//                });
+//                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
+//                dialog.setLocationRelativeTo(dialog.getParent());
+//                dialog.setVisible(true);
             }
         };
         ActionUtils.setupAction(toolsSetColorAction, resourceBundle, "toolsSetColorAction");

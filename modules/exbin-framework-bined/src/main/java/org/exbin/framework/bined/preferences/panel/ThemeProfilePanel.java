@@ -29,7 +29,6 @@ import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.layout.ExtendedCodeAreaDecorations;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
-import org.exbin.framework.bined.options.panel.BinaryColorPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
@@ -64,7 +63,7 @@ public class ThemeProfilePanel extends javax.swing.JPanel {
         try {
             exampleData.loadFromStream(getClass().getResourceAsStream("/org/exbin/framework/bined/resources/preview/lorem.txt"));
         } catch (IOException ex) {
-            Logger.getLogger(BinaryColorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ThemeProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         codeArea.setContentData(exampleData);
         ((RowWrappingCapable) codeArea).setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);

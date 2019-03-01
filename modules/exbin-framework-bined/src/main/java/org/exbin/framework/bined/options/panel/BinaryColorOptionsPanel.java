@@ -17,11 +17,11 @@
 package org.exbin.framework.bined.options.panel;
 
 import java.awt.BorderLayout;
-import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+import org.exbin.framework.bined.preferences.panel.ColorProfilesPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -29,31 +29,29 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Hexadecimal editor color selection panel.
+ * Color options panel.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.0 2019/03/01
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryColorOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
 
-    public static final String PREFERENCES_TEXT_COLOR_DEFAULT = "textColor.default";
-
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryColorOptionsPanel.class);
     private BinaryColorPanelApi panelApi;
-    private final BinaryColorPanel colorPanel;
+    private final ColorProfilesPanel profilesPanel;
 
     public BinaryColorOptionsPanel() {
         initComponents();
 
-        colorPanel = new BinaryColorPanel();
-        colorPanel.setEnabled(false);
-        BinaryColorOptionsPanel.this.add(colorPanel, BorderLayout.CENTER);
+        profilesPanel = new ColorProfilesPanel();
+        profilesPanel.setEnabled(false);
+        BinaryColorOptionsPanel.this.add(profilesPanel, BorderLayout.CENTER);
     }
 
     public void setPanelApi(BinaryColorPanelApi panelApi) {
         this.panelApi = panelApi;
-        colorPanel.setPanelApi(panelApi);
+// TODO        profilesPanel.setPanelApi(panelApi);
     }
 
     /**
@@ -65,23 +63,22 @@ public class BinaryColorOptionsPanel extends javax.swing.JPanel implements Optio
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jColorChooser1 = new javax.swing.JColorChooser();
         defaultColorPanel = new javax.swing.JPanel();
-        defaultColorCheckBox = new javax.swing.JCheckBox();
-
-        jColorChooser1.setName("jColorChooser1"); // NOI18N
+        defaultProfileLabel = new javax.swing.JLabel();
+        defaultProfileComboBox = new javax.swing.JComboBox();
 
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
         defaultColorPanel.setName("defaultColorPanel"); // NOI18N
 
-        defaultColorCheckBox.setSelected(true);
-        defaultColorCheckBox.setText(resourceBundle.getString("defaultColorCheckBox.text")); // NOI18N
-        defaultColorCheckBox.setName("defaultColorCheckBox"); // NOI18N
-        defaultColorCheckBox.addItemListener(new java.awt.event.ItemListener() {
+        defaultProfileLabel.setText(resourceBundle.getString("defaultProfileLabel.text")); // NOI18N
+        defaultProfileLabel.setName("defaultProfileLabel"); // NOI18N
+
+        defaultProfileComboBox.setName("defaultProfileComboBox"); // NOI18N
+        defaultProfileComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                defaultColorCheckBoxItemStateChanged(evt);
+                defaultProfileComboBoxItemStateChanged(evt);
             }
         });
 
@@ -91,25 +88,30 @@ public class BinaryColorOptionsPanel extends javax.swing.JPanel implements Optio
             defaultColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(defaultColorPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(defaultColorCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(defaultColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(defaultColorPanelLayout.createSequentialGroup()
+                        .addComponent(defaultProfileComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(defaultColorPanelLayout.createSequentialGroup()
+                        .addComponent(defaultProfileLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(385, 385, 385))))
         );
         defaultColorPanelLayout.setVerticalGroup(
             defaultColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(defaultColorPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(defaultColorCheckBox)
+                .addComponent(defaultProfileLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(defaultProfileComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(defaultColorPanel, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void defaultColorCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_defaultColorCheckBoxItemStateChanged
-        boolean checked = evt.getStateChange() != ItemEvent.SELECTED;
-        colorPanel.setEnabled(checked);
+    private void defaultProfileComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_defaultProfileComboBoxItemStateChanged
         setModified(true);
-    }//GEN-LAST:event_defaultColorCheckBoxItemStateChanged
+    }//GEN-LAST:event_defaultProfileComboBoxItemStateChanged
 
     /**
      * Test method for this panel.
@@ -121,9 +123,9 @@ public class BinaryColorOptionsPanel extends javax.swing.JPanel implements Optio
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox defaultColorCheckBox;
     private javax.swing.JPanel defaultColorPanel;
-    private javax.swing.JColorChooser jColorChooser1;
+    private javax.swing.JComboBox defaultProfileComboBox;
+    private javax.swing.JLabel defaultProfileLabel;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -136,25 +138,23 @@ public class BinaryColorOptionsPanel extends javax.swing.JPanel implements Optio
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        Boolean defaultColor = Boolean.valueOf(preferences.get(PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(true)));
-        defaultColorCheckBox.setSelected(defaultColor);
-        colorPanel.setEnabled(!defaultColor);
-        colorPanel.loadFromPreferences(preferences);
+//        Boolean defaultColor = Boolean.valueOf(preferences.get(PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(true)));
+//        profilesPanel.loadFromPreferences(preferences);
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        colorPanel.saveToPreferences(preferences);
-        preferences.put(PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(defaultColorCheckBox.isSelected()));
+//        profilesPanel.saveToPreferences(preferences);
+//        preferences.put(PREFERENCES_TEXT_COLOR_DEFAULT, Boolean.toString(defaultColorCheckBox.isSelected()));
     }
 
     @Override
     public void applyPreferencesChanges() {
-        if (defaultColorCheckBox.isSelected()) {
-            panelApi.setCurrentTextColors(panelApi.getDefaultTextColors());
-        } else {
-            colorPanel.applyPreferencesChanges();
-        }
+//        if (defaultColorCheckBox.isSelected()) {
+//            panelApi.setCurrentTextColors(panelApi.getDefaultTextColors());
+//        } else {
+//            profilesPanel.applyPreferencesChanges();
+//        }
     }
 
     private void setModified(boolean b) {
@@ -166,6 +166,6 @@ public class BinaryColorOptionsPanel extends javax.swing.JPanel implements Optio
     @Override
     public void setModifiedOptionListener(ModifiedOptionListener listener) {
         modifiedOptionListener = listener;
-        colorPanel.setModifiedOptionListener(listener);
+//        profilesPanel.setModifiedOptionListener(listener);
     }
 }
