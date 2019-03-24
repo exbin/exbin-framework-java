@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.exbin.bined.capability.CaretCapable;
@@ -31,6 +30,7 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
@@ -70,8 +70,8 @@ public class GoToPositionHandler {
                     DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
                     JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    final JDialog dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog, goToPanel.getClass(), goToPanel.getResourceBundle());
+                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
                     controlPanel.setHandler(new DefaultControlHandler() {
                         @Override
@@ -81,18 +81,18 @@ public class GoToPositionHandler {
                                 activePanel.goToPosition(goToPanel.getGoToPosition());
                             }
 
-                            WindowUtils.closeWindow(dialog);
+                            dialog.close();
                         }
                     });
-                    WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-                    dialog.setLocationRelativeTo(dialog.getParent());
+                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                    dialog.center(dialog.getParent());
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
                             goToPanel.initFocus();
                         }
                     });
-                    dialog.setVisible(true);
+                    dialog.show();
                 }
             }
         };

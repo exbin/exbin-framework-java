@@ -39,6 +39,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowPosition;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
@@ -285,29 +286,29 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     }
 
     @Override
-    public JDialog createDialog() {
+    public DialogWrapper createDialog() {
         return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL);
     }
 
     @Override
-    public JDialog createDialog(Window parentWindow, Dialog.ModalityType modalityType) {
+    public DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType) {
         return createDialog(parentWindow, modalityType, null);
     }
 
     @Override
-    public JDialog createDialog(JPanel panel) {
+    public DialogWrapper createDialog(JPanel panel) {
         return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, panel);
     }
 
     @Override
-    public JDialog createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel) {
-        JDialog dialog = WindowUtils.createDialog(panel, parentWindow, modalityType);
-        dialog.setIconImage(application.getApplicationIcon());
+    public DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel) {
+        DialogWrapper dialog = WindowUtils.createDialog(panel, parentWindow, "", modalityType);
+        ((JDialog) dialog.getWindow()).setIconImage(application.getApplicationIcon());
         return dialog;
     }
 
     @Override
-    public void setDialogTitle(JDialog dialog, ResourceBundle resourceBundle) {
-        dialog.setTitle(resourceBundle.getString(PREFERENCES_DIALOG_TITLE));
+    public void setDialogTitle(DialogWrapper dialog, ResourceBundle resourceBundle) {
+        ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString(PREFERENCES_DIALOG_TITLE));
     }
 }

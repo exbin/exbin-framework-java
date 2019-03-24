@@ -16,23 +16,14 @@
  */
 package org.exbin.framework.bined;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.options.panel.BinaryColorType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
-import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
-import org.exbin.framework.bined.options.panel.BinaryColorPanelApi;
 
 /**
  * Tools options action handler.
@@ -74,22 +65,22 @@ public class ToolsOptionsHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final BinaryColorPanelApi textColorPanelFrame = new BinaryColorPanelApi() {
-                    @Override
-                    public Map<BinaryColorType, Color> getCurrentTextColors() {
-                        return editorProvider.getCurrentColors();
-                    }
-
-                    @Override
-                    public Map<BinaryColorType, Color> getDefaultTextColors() {
-                        return editorProvider.getDefaultColors();
-                    }
-
-                    @Override
-                    public void setCurrentTextColors(Map<BinaryColorType, Color> colors) {
-                        editorProvider.setCurrentColors(colors);
-                    }
-                };
+//                final BinaryColorPanelApi textColorPanelFrame = new BinaryColorPanelApi() {
+//                    @Override
+//                    public ExtendedCodeAreaColorProfile getCurrentTextColors() {
+//                        return editorProvider.getCurrentColors();
+//                    }
+//
+//                    @Override
+//                    public Map<BinaryColorType, Color> getDefaultTextColors() {
+//                        return editorProvider.getDefaultColors();
+//                    }
+//
+//                    @Override
+//                    public void setCurrentTextColors(Map<BinaryColorType, Color> colors) {
+//                        editorProvider.setCurrentColors(colors);
+//                    }
+//                };
 
                 throw new UnsupportedOperationException("Not supported yet.");
 //                final BinaryColorPanel binaryColorPanel = new BinaryColorPanel();

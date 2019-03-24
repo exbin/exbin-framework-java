@@ -21,10 +21,10 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.util.ResourceBundle;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 
 /**
  * Interface for XBUP framework frame module.
@@ -68,7 +68,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      *
      * @return dialog
      */
-    JDialog createDialog();
+    DialogWrapper createDialog();
 
     /**
      * Creates basic dialog and sets it up.
@@ -77,7 +77,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * @param modalityType modality type
      * @return dialog
      */
-    JDialog createDialog(Window parentWindow, Dialog.ModalityType modalityType);
+    DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType);
 
     /**
      * Creates basic dialog and sets it up.
@@ -85,7 +85,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * @param panel panel
      * @return dialog
      */
-    JDialog createDialog(JPanel panel);
+    DialogWrapper createDialog(JPanel panel);
 
     /**
      * Creates basic dialog and sets it up.
@@ -95,7 +95,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * @param panel panel
      * @return dialog
      */
-    JDialog createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel);
+    DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel);
 
     /**
      * Returns frame instance.
@@ -162,5 +162,5 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
 
     void saveFramePosition();
 
-    public void setDialogTitle(JDialog dialog, ResourceBundle resourceBundle);
+    public void setDialogTitle(DialogWrapper dialog, ResourceBundle resourceBundle);
 }

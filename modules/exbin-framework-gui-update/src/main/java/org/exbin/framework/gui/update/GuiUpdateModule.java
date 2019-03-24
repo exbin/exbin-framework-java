@@ -41,6 +41,7 @@ import org.exbin.framework.gui.update.panel.CheckForUpdatePanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.CloseControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
@@ -94,17 +95,17 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(checkForUpdatePanel, controlPanel);
 
-                    final JDialog dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog, checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
+                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
                     controlPanel.setHandler(new CloseControlHandler() {
                         @Override
                         public void controlActionPerformed() {
-                            WindowUtils.closeWindow(dialog);
+                            dialog.close();
                         }
                     });
-                    WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-                    dialog.setLocationRelativeTo(dialog.getParent());
+                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                    dialog.center(dialog.getParent());
                     checkForUpdatePanel.setCheckForUpdatePanelHandler(new CheckForUpdatePanel.CheckForUpdatePanelHandler() {
                         @Override
                         public CheckForUpdateResult checkForUpdate() {
@@ -116,7 +117,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                             return GuiUpdateModule.this.getUpdateVersion();
                         }
                     });
-                    dialog.setVisible(true);
+                    dialog.show();
                 }
             };
             ActionUtils.setupAction(checkUpdateAction, resourceBundle, "checkUpdateAction");
@@ -207,17 +208,17 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
             CloseControlPanel controlPanel = new CloseControlPanel();
             JPanel dialogPanel = WindowUtils.createDialogPanel(checkForUpdatePanel, controlPanel);
 
-            final JDialog dialog = frameModule.createDialog(dialogPanel);
-            WindowUtils.addHeaderPanel(dialog, checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
+            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
             frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
             controlPanel.setHandler(new CloseControlHandler() {
                 @Override
                 public void controlActionPerformed() {
-                    WindowUtils.closeWindow(dialog);
+                    dialog.close();
                 }
             });
-            WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-            dialog.setLocationRelativeTo(dialog.getParent());
+            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+            dialog.center(dialog.getParent());
             checkForUpdatePanel.setCheckForUpdatePanelHandler(new CheckForUpdatePanel.CheckForUpdatePanelHandler() {
                 boolean first = true;
 
@@ -234,7 +235,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                     return GuiUpdateModule.this.getUpdateVersion();
                 }
             });
-            dialog.setVisible(true);
+            dialog.show();
         }
     }
 

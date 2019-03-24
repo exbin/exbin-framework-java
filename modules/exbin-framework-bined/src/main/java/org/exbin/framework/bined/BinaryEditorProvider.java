@@ -19,8 +19,9 @@ package org.exbin.framework.bined;
 import java.awt.Color;
 import java.nio.charset.Charset;
 import java.util.Map;
+import javax.annotation.Nonnull;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
-import org.exbin.framework.bined.options.panel.BinaryColorType;
+import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.ReplaceParameters;
 import org.exbin.framework.bined.panel.SearchParameters;
@@ -30,7 +31,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 /**
  * Hexadecimal editor provider interface.
  *
- * @version 0.2.0 2017/10/15
+ * @version 0.2.0 2019/03/24
  * @author ExBin Project (http://exbin.org)
  */
 public interface BinaryEditorProvider extends EditorProvider {
@@ -40,7 +41,7 @@ public interface BinaryEditorProvider extends EditorProvider {
      *
      * @param hexStatus hex status
      */
-    void registerHexStatus(BinaryStatusApi hexStatus);
+    void registerBinaryStatus(BinaryStatusApi hexStatus);
 
     /**
      * Registers encoding status method.
@@ -49,11 +50,13 @@ public interface BinaryEditorProvider extends EditorProvider {
      */
     void registerEncodingStatus(TextEncodingStatusApi encodingStatus);
 
-    Map<BinaryColorType, Color> getCurrentColors();
+    @Nonnull
+    ExtendedCodeAreaColorProfile getCurrentColors();
 
-    Map<BinaryColorType, Color> getDefaultColors();
+    @Nonnull
+    ExtendedCodeAreaColorProfile getDefaultColors();
 
-    void setCurrentColors(Map<BinaryColorType, Color> colors);
+    void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile);
 
     boolean isWordWrapMode();
 

@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
@@ -30,6 +29,7 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.CloseControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 
@@ -70,18 +70,18 @@ public class PropertiesHandler {
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
 
-                    final JDialog dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog, propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
+                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
                     controlPanel.setHandler(new CloseControlHandler() {
                         @Override
                         public void controlActionPerformed() {
-                            WindowUtils.closeWindow(dialog);
+                            dialog.close();
                         }
                     });
-                    WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-                    dialog.setLocationRelativeTo(dialog.getParent());
-                    dialog.setVisible(true);
+                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                    dialog.center(dialog.getParent());
+                    dialog.show();
                 }
             }
         };

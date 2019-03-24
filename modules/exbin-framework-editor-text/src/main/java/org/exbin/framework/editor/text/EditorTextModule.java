@@ -23,7 +23,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
@@ -55,6 +54,7 @@ import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
@@ -87,7 +87,7 @@ public class EditorTextModule implements XBApplicationModule {
     private ToolsOptionsHandler toolsOptionsHandler;
     private EncodingsHandler encodingsHandler;
     private WordWrappingHandler wordWrappingHandler;
-    private GoToLineHandler goToLineHandler;
+    private GoToPositionHandler goToLineHandler;
     private PropertiesHandler propertiesHandler;
     private PrintHandler printHandler;
 
@@ -184,8 +184,8 @@ public class EditorTextModule implements XBApplicationModule {
                 fontPanel.setStoredFont(currentFont);
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
-                final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, fontPanel.getClass(), fontPanel.getResourceBundle());
+                final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                 controlPanel.setHandler(new OptionsControlHandler() {
                     @Override
@@ -197,12 +197,12 @@ public class EditorTextModule implements XBApplicationModule {
                             result.font = fontPanel.getStoredFont();
                         }
 
-                        WindowUtils.closeWindow(dialog);
+                        dialog.close();
                     }
                 });
-                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-                dialog.setLocationRelativeTo(dialog.getParent());
-                dialog.setVisible(true);
+                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                dialog.center(dialog.getParent());
+                dialog.show();
 
                 return result.font;
             }
@@ -262,7 +262,7 @@ public class EditorTextModule implements XBApplicationModule {
                 addEncodingPanel.setUsedEncodings(usedEncodings);
                 DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
                 JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
-                final JDialog addEncodingDialog = frameModule.createDialog(dialogPanel);
+                final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
                 controlPanel.setHandler(new DefaultControlHandler() {
                     @Override
                     public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
@@ -270,13 +270,13 @@ public class EditorTextModule implements XBApplicationModule {
                             result.addAll(addEncodingPanel.getEncodings());
                         }
 
-                        WindowUtils.closeWindow(addEncodingDialog);
+                        addEncodingDialog.close();
                     }
                 });
                 frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
-                WindowUtils.assignGlobalKeyListener(addEncodingDialog, controlPanel.createOkCancelListener());
-                addEncodingDialog.setLocationRelativeTo(addEncodingDialog.getParent());
-                addEncodingDialog.setVisible(true);
+                WindowUtils.assignGlobalKeyListener(addEncodingDialog.getWindow(), controlPanel.createOkCancelListener());
+                addEncodingDialog.center(addEncodingDialog.getParent());
+                addEncodingDialog.show();
                 return result;
             }
         });
@@ -336,9 +336,9 @@ public class EditorTextModule implements XBApplicationModule {
         return wordWrappingHandler;
     }
 
-    private GoToLineHandler getGoToLineHandler() {
+    private GoToPositionHandler getGoToLineHandler() {
         if (goToLineHandler == null) {
-            goToLineHandler = new GoToLineHandler(application, (TextPanel) getEditorProvider());
+            goToLineHandler = new GoToPositionHandler(application, (TextPanel) getEditorProvider());
             goToLineHandler.init();
         }
 

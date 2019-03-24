@@ -16,14 +16,13 @@
  */
 package org.exbin.framework.bined;
 
-import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import javax.annotation.Nonnull;
 import javax.swing.JPanel;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.delta.SegmentsRepository;
@@ -31,7 +30,7 @@ import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.BinaryDataOperationException;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
-import org.exbin.framework.bined.options.panel.BinaryColorType;
+import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.ReplaceParameters;
 import org.exbin.framework.bined.panel.SearchParameters;
@@ -160,11 +159,11 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
-    public void registerHexStatus(BinaryStatusApi hexStatusApi) {
+    public void registerBinaryStatus(BinaryStatusApi hexStatusApi) {
         this.hexStatus = hexStatusApi;
         if (!panels.isEmpty()) {
             for (BinaryPanel panel : panels) {
-                panel.registerHexStatus(hexStatusApi);
+                panel.registerBinaryStatus(hexStatusApi);
             }
         }
     }
@@ -192,7 +191,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
             hexPanelInit.init(panel);
         }
         if (hexStatus != null) {
-            panel.registerHexStatus(hexStatus);
+            panel.registerBinaryStatus(hexStatus);
             panel.registerEncodingStatus(encodingStatus);
         }
         editorViewHandling.addEditorView(panel);
@@ -226,18 +225,20 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
-    public Map<BinaryColorType, Color> getCurrentColors() {
+    public ExtendedCodeAreaColorProfile getCurrentColors() {
         return activePanel.getCurrentColors();
     }
 
+    @Nonnull
     @Override
-    public Map<BinaryColorType, Color> getDefaultColors() {
+    public ExtendedCodeAreaColorProfile getDefaultColors() {
         return activePanel.getDefaultColors();
     }
 
+    @Nonnull
     @Override
-    public void setCurrentColors(Map<BinaryColorType, Color> colors) {
-        activePanel.setCurrentColors(colors);
+    public void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile) {
+        activePanel.setCurrentColors(colorsProfile);
     }
 
     @Override

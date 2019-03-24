@@ -118,7 +118,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
         hexPanel = new BinaryPanel();
         hexStatusPanel = new BinaryStatusPanel();
-        hexPanel.registerHexStatus(hexStatusPanel);
+        hexPanel.registerBinaryStatus(hexStatusPanel);
         // hexPanel.setNoBorder();
         textPanel = new TextPanel();
         textPanel.setNoBorder();

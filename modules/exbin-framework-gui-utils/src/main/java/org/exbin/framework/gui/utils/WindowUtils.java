@@ -33,9 +33,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -50,7 +53,7 @@ import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 /**
  * Utility static methods usable for windows and dialogs.
  *
- * @version 0.2.0 2017/11/27
+ * @version 0.2.0 2019/03/24
  * @author ExBin Project (http://exbin.org)
  */
 public class WindowUtils {
@@ -58,30 +61,30 @@ public class WindowUtils {
     private static final int BUTTON_CLICK_TIME = 150;
     private static LookAndFeel lookAndFeel = null;
 
-    public static void addHeaderPanel(JDialog dialog, Class<?> resourceClass, ResourceBundle resourceBundle) {
+    public static void addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle) {
         URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
         Icon headerIcon = iconUrl != null ? new ImageIcon(iconUrl) : null;
-        addHeaderPanel(dialog, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
+        addHeaderPanel(window, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
     }
 
-    public static void addHeaderPanel(JDialog dialog, String headerTitle, String headerDescription, Icon headerIcon) {
+    public static void addHeaderPanel(Window window, String headerTitle, String headerDescription, Icon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
         headerPanel.setDescription(headerDescription);
         if (headerIcon != null) {
             headerPanel.setIcon(headerIcon);
         }
-        if (dialog instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
-            ((WindowHeaderPanel.WindowHeaderDecorationProvider) dialog).setHeaderDecoration(headerPanel);
+        if (window instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
+            ((WindowHeaderPanel.WindowHeaderDecorationProvider) window).setHeaderDecoration(headerPanel);
         } else {
-            Frame frame = getFrame(dialog);
+            Frame frame = getFrame(window);
             if (frame instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
                 ((WindowHeaderPanel.WindowHeaderDecorationProvider) frame).setHeaderDecoration(headerPanel);
             }
         }
-        int height = dialog.getHeight() + headerPanel.getPreferredSize().height;
-        dialog.getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
-        dialog.setSize(dialog.getWidth(), height);
+        int height = window.getHeight() + headerPanel.getPreferredSize().height;
+        ((JDialog) window).getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
+        window.setSize(window.getWidth(), height);
     }
 
     private WindowUtils() {
@@ -114,15 +117,53 @@ public class WindowUtils {
         });
     }
 
-    public static JDialog createDialog(final Component component, Window parent, Dialog.ModalityType modalityType) {
-        JDialog dialog = new JDialog(parent, modalityType);
+    @Nonnull
+    public static DialogWrapper createDialog(final JComponent component, Window parent, String dialogTitle, Dialog.ModalityType modalityType) {
+        final JDialog dialog = new JDialog(parent, modalityType);
         Dimension size = component.getPreferredSize();
         dialog.add(component);
         dialog.setSize(size.width + 8, size.height + 24);
-        return dialog;
+        dialog.setTitle(dialogTitle);
+        return new DialogWrapper() {
+            @Override
+            public void show() {
+                dialog.setVisible(true);
+            }
+
+            @Override
+            public void close() {
+                closeWindow(dialog);
+            }
+
+            @Override
+            public void dispose() {
+                dialog.dispose();
+            }
+
+            @Override
+            public Window getWindow() {
+                return dialog;
+            }
+
+            @Override
+            public Container getParent() {
+                return dialog.getParent();
+            }
+
+            @Override
+            public void center(Container window) {
+                dialog.setLocationRelativeTo(window);
+            }
+
+            @Override
+            public void center() {
+                dialog.setLocationByPlatform(true);
+            }
+        };
     }
 
-    public static JDialog createDialog(final Component component) {
+    @Nonnull
+    public static JDialog createDialog(final JComponent component) {
         JDialog dialog = new JDialog();
         Dimension size = component.getPreferredSize();
         dialog.add(component);
@@ -130,7 +171,7 @@ public class WindowUtils {
         return dialog;
     }
 
-    public static void invokeDialog(final Component component) {
+    public static void invokeDialog(final JComponent component) {
         JDialog dialog = createDialog(component);
         invokeWindow(dialog);
     }
@@ -352,17 +393,41 @@ public class WindowUtils {
      * @param controlPanel control panel
      * @return panel
      */
+    @Nonnull
     public static JPanel createDialogPanel(JPanel mainPanel, JPanel controlPanel) {
         JPanel dialogPanel = new JPanel(new BorderLayout());
         dialogPanel.add(mainPanel, BorderLayout.CENTER);
         dialogPanel.add(controlPanel, BorderLayout.SOUTH);
+        Dimension mainPreferredSize = mainPanel.getPreferredSize();
+        Dimension controlPreferredSize = controlPanel.getPreferredSize();
+        dialogPanel.setPreferredSize(new Dimension(mainPreferredSize.width, mainPreferredSize.height + controlPreferredSize.height));
         return dialogPanel;
     }
 
-    public static interface OkCancelListener {
+    public interface OkCancelListener {
 
         void okEvent();
 
         void cancelEvent();
+    }
+
+    @ParametersAreNonnullByDefault
+    public interface DialogWrapper {
+
+        void show();
+
+        void close();
+
+        void dispose();
+
+        @Nonnull
+        Window getWindow();
+
+        @Nonnull
+        Container getParent();
+
+        void center(Container window);
+
+        void center();
     }
 }

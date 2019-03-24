@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
@@ -43,6 +42,7 @@ import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.utils.binary_data.BinaryData;
@@ -593,9 +593,9 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         findHexPanel.setReplaceParameters(replaceParameters);
         findHexPanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
         DefaultControlPanel controlPanel = new DefaultControlPanel(findHexPanel.getResourceBundle());
-        final JDialog dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findHexPanel, controlPanel));
+        final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findHexPanel, controlPanel));
         frameModule.setDialogTitle(dialog, findHexPanel.getResourceBundle());
-        WindowUtils.addHeaderPanel(dialog, findHexPanel.getClass(), findHexPanel.getResourceBundle());
+        WindowUtils.addHeaderPanel(dialog.getWindow(), findHexPanel.getClass(), findHexPanel.getResourceBundle());
         findHexPanel.setMultilineEditorListener(new FindBinaryPanel.MultilineEditorListener() {
             @Override
             public SearchCondition multilineEdit(SearchCondition condition) {
@@ -605,8 +605,8 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                 DefaultControlPanel controlPanel = new DefaultControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final JDialog multilineDialog = frameModule.createDialog(dialog, Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
-                WindowUtils.addHeaderPanel(multilineDialog, multilinePanel.getClass(), multilinePanel.getResourceBundle());
+                final DialogWrapper multilineDialog = frameModule.createDialog(dialog.getWindow(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
+                WindowUtils.addHeaderPanel(multilineDialog.getWindow(), multilinePanel.getClass(), multilinePanel.getResourceBundle());
                 frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
                 final SearchConditionResult result = new SearchConditionResult();
                 controlPanel.setHandler(new DefaultControlHandler() {
@@ -617,12 +617,12 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                             updateFindStatus();
                         }
 
-                        WindowUtils.closeWindow(multilineDialog);
+                        multilineDialog.close();
                     }
                 });
-                WindowUtils.assignGlobalKeyListener(multilineDialog, controlPanel.createOkCancelListener());
-                multilineDialog.setLocationRelativeTo(dialog);
-                multilineDialog.setVisible(true);
+                WindowUtils.assignGlobalKeyListener(multilineDialog.getWindow(), controlPanel.createOkCancelListener());
+                multilineDialog.center(dialog.getWindow());
+                multilineDialog.show();
                 multilinePanel.detachMenu();
                 return result.searchCondition;
             }
@@ -647,12 +647,12 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                     binarySearchPanelApi.performFind(dialogSearchParameters);
                 }
                 findHexPanel.detachMenu();
-                WindowUtils.closeWindow(dialog);
+                dialog.close();
             }
         });
-        WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-        dialog.setLocationRelativeTo(frameModule.getFrame());
-        dialog.setVisible(true);
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(frameModule.getFrame());
+        dialog.show();
     }//GEN-LAST:event_optionsButtonActionPerformed
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed

@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.panel.TextColorPanel;
@@ -33,6 +32,7 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 
@@ -68,8 +68,8 @@ public class ToolsOptionsHandler {
                 fontPanel.setStoredFont(((TextFontApi) editorProvider).getCurrentFont());
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
-                final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, fontPanel.getClass(), fontPanel.getResourceBundle());
+                final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                 controlPanel.setHandler(new OptionsControlHandler() {
                     @Override
@@ -81,12 +81,12 @@ public class ToolsOptionsHandler {
                             ((TextFontApi) editorProvider).setCurrentFont(fontPanel.getStoredFont());
                         }
 
-                        WindowUtils.closeWindow(dialog);
+                        dialog.close();
                     }
                 });
-                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-                dialog.setLocationRelativeTo(dialog.getParent());
-                dialog.setVisible(true);
+                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                dialog.center(dialog.getParent());
+                dialog.show();
             }
         };
         ActionUtils.setupAction(toolsSetFontAction, resourceBundle, "toolsSetFontAction");
@@ -116,8 +116,8 @@ public class ToolsOptionsHandler {
                 colorPanel.setColorsFromArray(textColorPanelHandler.getCurrentTextColors());
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(colorPanel, controlPanel);
-                final JDialog dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog, colorPanel.getClass(), colorPanel.getResourceBundle());
+                final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                WindowUtils.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, colorPanel.getResourceBundle());
                 controlPanel.setHandler(new OptionsControlHandler() {
                     @Override
@@ -129,12 +129,12 @@ public class ToolsOptionsHandler {
                             textColorPanelHandler.setCurrentTextColors(colorPanel.getArrayFromColors());
                         }
 
-                        WindowUtils.closeWindow(dialog);
+                        dialog.close();
                     }
                 });
-                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-                dialog.setLocationRelativeTo(dialog.getParent());
-                dialog.setVisible(true);
+                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                dialog.center(dialog.getParent());
+                dialog.show();
             }
         };
         ActionUtils.setupAction(toolsSetColorAction, resourceBundle, "toolsSetColorAction");

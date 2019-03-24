@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.panel.FindTextPanel;
@@ -31,6 +30,7 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
@@ -98,7 +98,7 @@ public class FindReplaceHandler {
         findPanel.setSelected();
         DefaultControlPanel controlPanel = new DefaultControlPanel(findPanel.getResourceBundle());
         JPanel dialogPanel = WindowUtils.createDialogPanel(findPanel, controlPanel);
-        final JDialog dialog = frameModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
         controlPanel.setHandler(new DefaultControlHandler() {
             @Override
             public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
@@ -108,14 +108,14 @@ public class FindReplaceHandler {
                     }
                 }
 
-                WindowUtils.closeWindow(dialog);
+                dialog.close();
             }
         });
-        WindowUtils.addHeaderPanel(dialog, findPanel.getClass(), findPanel.getResourceBundle());
+        WindowUtils.addHeaderPanel(dialog.getWindow(), findPanel.getClass(), findPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, findPanel.getResourceBundle());
-        WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-        dialog.setLocationRelativeTo(frameModule.getFrame());
-        dialog.setVisible(true);
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(frameModule.getFrame());
+        dialog.show();
     }
 
     public Action getEditFindAction() {

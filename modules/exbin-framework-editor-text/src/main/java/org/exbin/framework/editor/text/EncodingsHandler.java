@@ -28,7 +28,6 @@ import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
-import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -45,6 +44,7 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
@@ -116,7 +116,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
                 encodingsPanel.setEncodingList(new ArrayList<>(encodings));
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(encodingsPanel, controlPanel);
-                final JDialog dialog = frameModule.createDialog(dialogPanel);
+                final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                 controlPanel.setHandler(new OptionsControlHandler() {
                     @Override
                     public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
@@ -127,7 +127,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
                                 encodingsPanel.saveToPreferences(application.getAppPreferences());
                             }
                         }
-                        WindowUtils.closeWindow(dialog);
+                        dialog.close();
                     }
                 });
                 encodingsPanel.setAddEncodingsOperation(new TextEncodingPanel.AddEncodingsOperation() {
@@ -138,7 +138,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
                         addEncodingPanel.setUsedEncodings(usedEncodings);
                         DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
                         JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
-                        final JDialog addEncodingDialog = frameModule.createDialog(dialogPanel);
+                        final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
                         controlPanel.setHandler(new DefaultControlHandler() {
                             @Override
                             public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
@@ -146,21 +146,21 @@ public class EncodingsHandler implements TextEncodingPanelApi {
                                     result.addAll(addEncodingPanel.getEncodings());
                                 }
 
-                                WindowUtils.closeWindow(addEncodingDialog);
+                                addEncodingDialog.close();
                             }
                         });
                         frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
-                        WindowUtils.assignGlobalKeyListener(addEncodingDialog, controlPanel.createOkCancelListener());
-                        addEncodingDialog.setLocationRelativeTo(dialog);
-                        addEncodingDialog.setVisible(true);
+                        WindowUtils.assignGlobalKeyListener(addEncodingDialog.getWindow(), controlPanel.createOkCancelListener());
+                        addEncodingDialog.center(dialog.getWindow());
+                        addEncodingDialog.show();
                         return result;
                     }
                 });
-                WindowUtils.addHeaderPanel(dialog, encodingsPanel.getClass(), encodingsPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog.getWindow(), encodingsPanel.getClass(), encodingsPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, encodingsPanel.getResourceBundle());
-                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-                dialog.setLocationRelativeTo(frameModule.getFrame());
-                dialog.setVisible(true);
+                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                dialog.center(frameModule.getFrame());
+                dialog.show();
             }
         };
         ActionUtils.setupAction(manageEncodingsAction, resourceBundle, "manageEncodingsAction");

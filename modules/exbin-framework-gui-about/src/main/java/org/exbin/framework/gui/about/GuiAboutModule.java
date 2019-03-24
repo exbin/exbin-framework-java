@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.about.api.GuiAboutModuleApi;
@@ -35,6 +34,7 @@ import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.CloseControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
@@ -85,16 +85,16 @@ public class GuiAboutModule implements GuiAboutModuleApi {
                     aboutPanel.setSideComponent(sideComponent);
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
-                    final JDialog aboutDialog = frameModule.createDialog(dialogPanel);
+                    final DialogWrapper aboutDialog = frameModule.createDialog(dialogPanel);
                     controlPanel.setHandler(new CloseControlHandler() {
                         @Override
                         public void controlActionPerformed() {
-                            WindowUtils.closeWindow(aboutDialog);
+                            aboutDialog.close();
                         }
                     });
-                    WindowUtils.assignGlobalKeyListener(aboutDialog, controlPanel.createOkCancelListener());
-                    aboutDialog.setLocationRelativeTo(aboutDialog.getParent());
-                    aboutDialog.setVisible(true);
+                    WindowUtils.assignGlobalKeyListener(aboutDialog.getWindow(), controlPanel.createOkCancelListener());
+                    aboutDialog.center(aboutDialog.getParent());
+                    aboutDialog.show();
                 }
             };
             ActionUtils.setupAction(aboutAction, resourceBundle, "aboutAction");
