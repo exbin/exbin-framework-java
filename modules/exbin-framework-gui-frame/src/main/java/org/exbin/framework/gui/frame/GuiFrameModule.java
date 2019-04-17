@@ -53,7 +53,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";
     public static final String VIEW_BARS_GROUP_ID = MODULE_ID + ".view";
     public static final String PREFERENCES_FRAME_PREFIX = "mainFrame.";
-    public static final String PREFERENCES_DIALOG_TITLE = "Dialog.title";
+    public static final String PREFERENCES_DIALOG_TITLE = "dialog.title";
 
     private XBApplication application;
     private ResourceBundle resourceBundle;

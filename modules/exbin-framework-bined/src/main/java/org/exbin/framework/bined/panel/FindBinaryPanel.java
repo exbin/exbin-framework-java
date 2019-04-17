@@ -42,7 +42,7 @@ import org.exbin.utils.binary_data.ByteArrayEditableData;
 /**
  * Find text/hexadecimal data panel.
  *
- * @version 0.2.1 2018/10/29
+ * @version 0.2.1 2018/12/22
  * @author ExBin Project (http://exbin.org)
  */
 public class FindBinaryPanel extends javax.swing.JPanel {
@@ -150,7 +150,7 @@ public class FindBinaryPanel extends javax.swing.JPanel {
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
 
         {
-            ExtendedCodeAreaLayoutProfile layoutProfile = findHexadecimalRenderer.getLayoutProfile();
+            ExtendedCodeAreaLayoutProfile layoutProfile = replaceHexadecimalRenderer.getLayoutProfile();
             layoutProfile.setShowHeader(false);
             layoutProfile.setShowRowPosition(false);
             replaceHexadecimalRenderer.setLayoutProfile(layoutProfile);
@@ -158,7 +158,7 @@ public class FindBinaryPanel extends javax.swing.JPanel {
         replaceHexadecimalRenderer.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
         replaceHexadecimalRenderer.setWrappingBytesGroupSize(0);
         {
-            ExtendedCodeAreaThemeProfile themeProfile = findHexadecimalRenderer.getThemeProfile();
+            ExtendedCodeAreaThemeProfile themeProfile = replaceHexadecimalRenderer.getThemeProfile();
             themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
             replaceHexadecimalRenderer.setThemeProfile(themeProfile);
         }
