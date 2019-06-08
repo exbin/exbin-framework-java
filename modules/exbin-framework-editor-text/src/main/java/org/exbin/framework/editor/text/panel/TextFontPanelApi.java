@@ -31,19 +31,19 @@ public interface TextFontPanelApi {
      *
      * @return font font value
      */
-    public Font getCurrentFont();
+    Font getCurrentFont();
 
     /**
      * Returns default colors used in application frame.
      *
      * @return font font value
      */
-    public Font getDefaultFont();
+    Font getDefaultFont();
 
     /**
      * Sets current colors used in application frame.
      *
      * @param font font to set
      */
-    public void setCurrentFont(Font font);
+    void setCurrentFont(Font font);
 }

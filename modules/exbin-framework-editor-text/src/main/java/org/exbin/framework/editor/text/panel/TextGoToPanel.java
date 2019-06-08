@@ -48,12 +48,7 @@ public class TextGoToPanel extends javax.swing.JPanel {
             public void focusGained(FocusEvent e) {
                 if (e.getSource() instanceof JTextComponent) {
                     final JTextComponent textComponent = ((JTextComponent) e.getSource());
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            textComponent.selectAll();
-                        }
-                    });
+                    SwingUtilities.invokeLater(textComponent::selectAll);
                 }
             }
         });

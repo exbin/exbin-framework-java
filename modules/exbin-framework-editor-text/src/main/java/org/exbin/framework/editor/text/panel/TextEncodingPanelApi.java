@@ -31,27 +31,27 @@ public interface TextEncodingPanelApi {
      *
      * @return font
      */
-    public List<String> getEncodings();
+    List<String> getEncodings();
 
     /**
      * Gets selected encoding.
      *
      * @return selected encoding
      */
-    public String getSelectedEncoding();
+    String getSelectedEncoding();
 
     /**
      * Sets current encodings used in application frame.
      *
      * @param encodings list of encodings
      */
-    public void setEncodings(List<String> encodings);
+    void setEncodings(List<String> encodings);
 
     /**
      * Sets selected encoding.
      *
      * @param encoding encoding
      */
-    public void setSelectedEncoding(String encoding);
+    void setSelectedEncoding(String encoding);
 
 }

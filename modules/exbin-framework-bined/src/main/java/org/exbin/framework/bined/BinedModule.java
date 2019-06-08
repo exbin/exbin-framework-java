@@ -26,17 +26,16 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import org.exbin.bined.SelectionChangedListener;
 import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditationModeCapable;
 import org.exbin.bined.capability.SelectionCapable;
 import org.exbin.bined.delta.SegmentsRepository;
 import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -46,10 +45,9 @@ import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.panel.AddEncodingPanel;
-import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
-import org.exbin.framework.editor.text.panel.TextEncodingPanel;
+import org.exbin.framework.editor.text.options.panel.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
-import org.exbin.framework.editor.text.panel.TextFontOptionsPanel;
+import org.exbin.framework.editor.text.options.panel.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
@@ -77,12 +75,13 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.bined.panel.BinaryAppearanceOptionsPanelApi;
+import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2019/03/24
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -175,13 +174,10 @@ public class BinedModule implements XBApplicationModule {
                     encodingsHandler.popupEncodingsMenu(mouseEvent);
                 }
             });
-            panel.setReleaseFileMethod(new BinaryPanel.ReleaseFileMethod() {
-                @Override
-                public boolean execute() {
-                    GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-                    FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
-                    return fileHandlingActions.releaseFile();
-                }
+            panel.setReleaseFileMethod(() -> {
+                GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+                FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
+                return fileHandlingActions.releaseFile();
             });
         }
 
@@ -192,26 +188,23 @@ public class BinedModule implements XBApplicationModule {
         if (editorProvider == null) {
             GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryEditorHandler();
-            ((BinaryEditorHandler) editorProvider).setHexPanelInit(new BinaryEditorHandler.BinaryPanelInit() {
-                @Override
-                public void init(BinaryPanel panel) {
-                    panel.setPopupMenu(createPopupMenu(panel.getId()));
+            ((BinaryEditorHandler) editorProvider).setHexPanelInit((BinaryPanel panel) -> {
+                panel.setPopupMenu(createPopupMenu(panel.getId()));
 //                    panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
-                    panel.setGoToPositionAction(getGoToLineHandler().getGoToLineAction());
-                    panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
-                    panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
-                    panel.setEncodingsHandler(new EncodingStatusHandler() {
-                        @Override
-                        public void cycleEncodings() {
-                            encodingsHandler.cycleEncodings();
-                        }
+                panel.setGoToPositionAction(getGoToLineHandler().getGoToLineAction());
+                panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
+                panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
+                panel.setEncodingsHandler(new EncodingStatusHandler() {
+                    @Override
+                    public void cycleEncodings() {
+                        encodingsHandler.cycleEncodings();
+                    }
 
-                        @Override
-                        public void popupEncodingsMenu(MouseEvent mouseEvent) {
-                            encodingsHandler.popupEncodingsMenu(mouseEvent);
-                        }
-                    });
-                }
+                    @Override
+                    public void popupEncodingsMenu(MouseEvent mouseEvent) {
+                        encodingsHandler.popupEncodingsMenu(mouseEvent);
+                    }
+                });
             });
             ((BinaryEditorHandler) editorProvider).setEditorViewHandling(dockingModule.getEditorViewHandling());
             ((BinaryEditorHandler) editorProvider).setSegmentsRepository(new SegmentsRepository());
@@ -324,32 +317,26 @@ public class BinedModule implements XBApplicationModule {
             }
         };
         textEncodingOptionsPanel = new TextEncodingOptionsPanel(textEncodingPanelApi);
-        textEncodingOptionsPanel.setAddEncodingsOperation(new TextEncodingPanel.AddEncodingsOperation() {
-            @Override
-            public List<String> run(List<String> usedEncodings) {
-                final List<String> result = new ArrayList<>();
-                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
-                addEncodingPanel.setUsedEncodings(usedEncodings);
-                DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
-                JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
-                final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
-                controlPanel.setHandler(new DefaultControlHandler() {
-                    @Override
-                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                        if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                            result.addAll(addEncodingPanel.getEncodings());
-                        }
+        textEncodingOptionsPanel.setAddEncodingsOperation((List<String> usedEncodings) -> {
+            final List<String> result = new ArrayList<>();
+            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
+            addEncodingPanel.setUsedEncodings(usedEncodings);
+            DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
+            JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
+            final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
+            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                    result.addAll(addEncodingPanel.getEncodings());
+                }
 
-                        addEncodingDialog.close();
-                    }
-                });
-                frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
-                WindowUtils.assignGlobalKeyListener(addEncodingDialog.getWindow(), controlPanel.createOkCancelListener());
-                addEncodingDialog.center(addEncodingDialog.getParent());
-                addEncodingDialog.show();
-                return result;
-            }
+                addEncodingDialog.close();
+            });
+            frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
+            WindowUtils.assignGlobalKeyListener(addEncodingDialog.getWindow(), controlPanel.createOkCancelListener());
+            addEncodingDialog.center(addEncodingDialog.getParent());
+            addEncodingDialog.show();
+            return result;
         });
         optionsModule.addOptionsPanel(textEncodingOptionsPanel);
 
@@ -382,18 +369,17 @@ public class BinedModule implements XBApplicationModule {
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                 WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
-                controlPanel.setHandler(new OptionsControlHandler() {
-                    @Override
-                    public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
-                        if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                            if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                                fontPanel.saveToPreferences(application.getAppPreferences());
-                            }
-                            result.font = fontPanel.getStoredFont();
+                controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
+                    if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+                        if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                            TextFontParameters parameters = new TextFontParameters(application.getAppPreferences());
+                            parameters.setDefaultFont(false);
+                            parameters.setFont(fontPanel.getStoredFont());
                         }
-
-                        dialog.close();
+                        result.font = fontPanel.getStoredFont();
                     }
+
+                    dialog.close();
                 });
                 WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                 dialog.center(dialog.getParent());
@@ -721,13 +707,10 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void setUpdateListener(final ClipboardActionsUpdateListener updateListener) {
-                ((SelectionCapable) codeArea).addSelectionChangedListener(new SelectionChangedListener() {
-                    @Override
-                    public void selectionChanged(SelectionRange sr) {
-                        updateListener.stateChanged();
-                        copyAsCodeAction.setEnabled(codeArea.hasSelection());
-                        pasteFromCodeAction.setEnabled(codeArea.canPaste());
-                    }
+                ((SelectionCapable) codeArea).addSelectionChangedListener((SelectionRange sr) -> {
+                    updateListener.stateChanged();
+                    copyAsCodeAction.setEnabled(codeArea.hasSelection());
+                    pasteFromCodeAction.setEnabled(codeArea.canPaste());
                 });
                 updateListener.stateChanged();
             }

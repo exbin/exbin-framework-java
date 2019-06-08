@@ -17,7 +17,6 @@
 package org.exbin.framework.gui.file;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,8 +27,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
@@ -38,12 +35,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileSystemView;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.MultiFileHandlerApi;
-import org.exbin.framework.gui.frame.api.ApplicationExitListener;
+import org.exbin.framework.gui.file.preferences.RecentFilesParameters;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -52,14 +50,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * File handling operations.
  *
- * @version 0.2.0 2017/01/07
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class FileHandlingActions implements FileHandlingActionsApi {
-
-    public static final String PREFERENCES_RECENTFILE_PATH_PREFIX = "recentFile.path.";
-    public static final String PREFEFRENCES_RECENTFILE_MODULE_PREFIX = "recentFile.module.";
-    public static final String PREFERENCES_RECENFILE_MODE_PREFIX = "recentFile.mode.";
 
     public static final String ALL_FILES_FILTER = "AllFilesFilter";
 
@@ -151,12 +145,9 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         allFilesFilter = filesFilter;
 
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        frameModule.addExitListener(new ApplicationExitListener() {
-            @Override
-            public boolean processExit(ApplicationFrameHandler frameHandler) {
-                saveState();
-                return true;
-            }
+        frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
+            saveState();
+            return true;
         });
     }
 
@@ -356,12 +347,13 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     }
 
     private void loadState() {
+        RecentFilesParameters recentFilesParameters = new RecentFilesParameters(preferences);
         recentFiles.clear();
         int recent = 1;
         while (recent < 14) {
-            String filePath = preferences.get(PREFERENCES_RECENTFILE_PATH_PREFIX + String.valueOf(recent), null);
-            String moduleName = preferences.get(PREFEFRENCES_RECENTFILE_MODULE_PREFIX + String.valueOf(recent), null);
-            String fileMode = preferences.get(PREFERENCES_RECENFILE_MODE_PREFIX + String.valueOf(recent), null);
+            String filePath = recentFilesParameters.getFilePath(recent);
+            String moduleName = recentFilesParameters.getModuleName(recent);
+            String fileMode = recentFilesParameters.getFileMode(recent);
             if (filePath == null) {
                 break;
             }
@@ -372,17 +364,14 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     }
 
     private void saveState() {
+        RecentFilesParameters recentFilesParameters = new RecentFilesParameters(preferences);
         for (int i = 0; i < recentFiles.size(); i++) {
-            preferences.put(PREFERENCES_RECENTFILE_PATH_PREFIX + String.valueOf(i + 1), recentFiles.get(i).getFileName());
-            preferences.put(PREFEFRENCES_RECENTFILE_MODULE_PREFIX + String.valueOf(i + 1), recentFiles.get(i).getModuleName());
-            preferences.put(PREFERENCES_RECENFILE_MODE_PREFIX + String.valueOf(i + 1), recentFiles.get(i).getFileMode());
+            recentFilesParameters.setFilePath(recentFiles.get(i).getFileName(), i + 1);
+            recentFilesParameters.setModuleName(recentFiles.get(i).getModuleName(), i + 1);
+            recentFilesParameters.setFileMode(recentFiles.get(i).getFileMode(), i + 1);
         }
-        preferences.remove(PREFERENCES_RECENTFILE_PATH_PREFIX + String.valueOf(recentFiles.size() + 1));
-        try {
-            preferences.flush();
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        recentFilesParameters.remove(recentFiles.size() + 1);
+        preferences.flush();
     }
 
     private void rebuildRecentFilesMenu() {
@@ -392,42 +381,37 @@ public class FileHandlingActions implements FileHandlingActionsApi {
             JMenuItem menuItem = new JMenuItem(file.getName());
             menuItem.setToolTipText(recentFiles.get(recentFileIndex).getFileName());
             menuItem.setIcon(FileSystemView.getFileSystemView().getSystemIcon(file));
-            menuItem.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (e.getSource() instanceof JMenuItem) {
-                        if (!releaseFile()) {
-                            return;
-                        }
-
-                        JMenuItem menuItem = (JMenuItem) e.getSource();
-                        for (int itemIndex = 0; itemIndex < fileOpenRecentMenu.getItemCount(); itemIndex++) {
-                            if (menuItem.equals(fileOpenRecentMenu.getItem(itemIndex))) {
-                                RecentItem recentItem = recentFiles.get(itemIndex);
-                                FileType fileType = null;
-                                for (FileFilter fileFilter : openFileChooser.getChoosableFileFilters()) {
-                                    if (fileFilter instanceof FileType) {
-                                        if (((FileType) fileFilter).getFileTypeId().equals(recentItem.getFileMode())) {
-                                            fileType = (FileType) fileFilter;
-                                        }
+            menuItem.addActionListener((ActionEvent e) -> {
+                if (e.getSource() instanceof JMenuItem) {
+                    if (!releaseFile()) {
+                        return;
+                    }
+                    JMenuItem menuItem1 = (JMenuItem) e.getSource();
+                    for (int itemIndex = 0; itemIndex < fileOpenRecentMenu.getItemCount(); itemIndex++) {
+                        if (menuItem1.equals(fileOpenRecentMenu.getItem(itemIndex))) {
+                            RecentItem recentItem = recentFiles.get(itemIndex);
+                            FileType fileType = null;
+                            for (FileFilter fileFilter : openFileChooser.getChoosableFileFilters()) {
+                                if (fileFilter instanceof FileType) {
+                                    if (((FileType) fileFilter).getFileTypeId().equals(recentItem.getFileMode())) {
+                                        fileType = (FileType) fileFilter;
                                     }
                                 }
+                            }
 
-                                URI fileUri;
-                                try {
-                                    fileUri = new URI(recentItem.getFileName());
-                                    fileHandler.loadFromFile(fileUri, fileType);
+                            URI fileUri;
+                            try {
+                                fileUri = new URI(recentItem.getFileName());
+                                fileHandler.loadFromFile(fileUri, fileType);
 
-                                    if (itemIndex > 0) {
-                                        // Move recent item on top
-                                        recentFiles.remove(itemIndex);
-                                        recentFiles.add(0, recentItem);
-                                        rebuildRecentFilesMenu();
-                                    }
-                                } catch (URISyntaxException ex) {
-                                    Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
+                                if (itemIndex > 0) {
+                                    // Move recent item on top
+                                    recentFiles.remove(itemIndex);
+                                    recentFiles.add(0, recentItem);
+                                    rebuildRecentFilesMenu();
                                 }
+                            } catch (URISyntaxException ex) {
+                                Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                     }

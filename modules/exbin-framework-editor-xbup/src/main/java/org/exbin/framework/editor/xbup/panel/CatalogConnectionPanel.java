@@ -18,7 +18,7 @@ package org.exbin.framework.editor.xbup.panel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.prefs.Preferences;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;

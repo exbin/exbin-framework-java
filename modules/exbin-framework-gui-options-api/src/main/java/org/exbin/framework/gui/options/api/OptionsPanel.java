@@ -17,12 +17,12 @@
 package org.exbin.framework.gui.options.api;
 
 import java.util.List;
-import java.util.prefs.Preferences;
+import org.exbin.framework.api.Preferences;
 
 /**
  * Interface for basic options panels.
  *
- * @version 0.1.22 2013/03/18
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public interface OptionsPanel {
@@ -32,33 +32,33 @@ public interface OptionsPanel {
      *
      * @return path to options dialog
      */
-    public List<PathItem> getPath();
+    List<PathItem> getPath();
 
     /**
      * Inicializes configuration from given properties.
      */
-    public void applyPreferencesChanges();
+    void applyPreferencesChanges();
 
     /**
      * Loads configuration from given properties.
      *
      * @param preferences preferences
      */
-    public void loadFromPreferences(Preferences preferences);
+    void loadFromPreferences(Preferences preferences);
 
     /**
      * Saves configuration from given properties.
      *
      * @param preferences preferences
      */
-    public void saveToPreferences(Preferences preferences);
+    void saveToPreferences(Preferences preferences);
 
     /**
      * Registers listener for changes monitoring.
      *
      * @param listener modified option listener
      */
-    public void setModifiedOptionListener(ModifiedOptionListener listener);
+    void setModifiedOptionListener(ModifiedOptionListener listener);
 
     public class PathItem {
 
@@ -96,6 +96,6 @@ public interface OptionsPanel {
 
     public interface ModifiedOptionListener {
 
-        public void wasModified();
+        void wasModified();
     }
 }

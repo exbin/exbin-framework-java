@@ -17,24 +17,19 @@
 package org.exbin.framework.gui.options.dialog;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.options.StubPreferences;
@@ -78,58 +73,45 @@ public class OptionsDialog extends javax.swing.JDialog {
 
         optionPanels = new HashMap<>();
         modified = false;
-        modifiedOptionListener = new ModifiedOptionListener() {
-
-            @Override
-            public void wasModified() {
-                setModified(true);
-            }
+        modifiedOptionListener = () -> {
+            setModified(true);
         };
 
-        addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("modified".equals(evt.getPropertyName())) {
-                    modified = true;
-                }
+        addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if ("modified".equals(evt.getPropertyName())) {
+                modified = true;
             }
         });
 
         // Actions on change of look&feel
-        UIManager.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                SwingUtilities.updateComponentTreeUI(OptionsDialog.this);
-            }
+        UIManager.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            SwingUtilities.updateComponentTreeUI(OptionsDialog.this);
         });
 
         // Create menu tree
         top = new OptionsMutableTreeNode(resourceBundle.getString("options_options"), "options");
         createNodes(top);
         optionsTree.setModel(new DefaultTreeModel(top, true));
-        optionsTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                if (e.getPath() != null) {
-                    String caption;
-                    OptionsMutableTreeNode node = ((OptionsMutableTreeNode) optionsTree.getLastSelectedPathComponent());
-                    if (node == null) {
-                        caption = null;
-                        optionsAreaTitleLabel.setText("");
-                    } else {
-                        caption = node.getName();
-                        optionsAreaTitleLabel.setText(" " + (String) node.getUserObject());
-                    }
-                    if (currentOptionsPanel != null) {
-                        optionsAreaScrollPane.remove(currentOptionsPanel);
-                    }
-                    if (caption != null) {
-                        currentOptionsPanel = optionPanels.get(caption);
-                        optionsAreaScrollPane.setViewportView(currentOptionsPanel);
-                    } else {
-                        currentOptionsPanel = null;
-                        optionsAreaScrollPane.setViewportView(null);
-                    }
+        optionsTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
+            if (e.getPath() != null) {
+                String caption;
+                OptionsMutableTreeNode node = ((OptionsMutableTreeNode) optionsTree.getLastSelectedPathComponent());
+                if (node == null) {
+                    caption = null;
+                    optionsAreaTitleLabel.setText("");
+                } else {
+                    caption = node.getName();
+                    optionsAreaTitleLabel.setText(" " + (String) node.getUserObject());
+                }
+                if (currentOptionsPanel != null) {
+                    optionsAreaScrollPane.remove(currentOptionsPanel);
+                }
+                if (caption != null) {
+                    currentOptionsPanel = optionPanels.get(caption);
+                    optionsAreaScrollPane.setViewportView(currentOptionsPanel);
+                } else {
+                    currentOptionsPanel = null;
+                    optionsAreaScrollPane.setViewportView(null);
                 }
             }
         });
@@ -158,18 +140,14 @@ public class OptionsDialog extends javax.swing.JDialog {
     }
 
     public void savePreferences(Preferences preferences) {
-        try {
-            for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
-                Object optionPanel = optionPanelsIterator.next();
-                if (optionPanel instanceof OptionsPanel) {
-                    ((OptionsPanel) optionPanel).saveToPreferences(preferences);
-                }
+        for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
+            Object optionPanel = optionPanelsIterator.next();
+            if (optionPanel instanceof OptionsPanel) {
+                ((OptionsPanel) optionPanel).saveToPreferences(preferences);
             }
-
-            preferences.flush();
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(OptionsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        preferences.flush();
     }
 
     public void applyPreferencesChanges() {

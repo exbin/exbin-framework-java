@@ -24,13 +24,12 @@ import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Font selection panel.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class TextFontPanel extends javax.swing.JPanel {
@@ -43,18 +42,8 @@ public class TextFontPanel extends javax.swing.JPanel {
     public TextFontPanel() {
         initComponents();
 
-        ActionListener actionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updatePreview();
-            }
-        };
-        InputListPanel.ChangeListener changeListener = new InputListPanel.ChangeListener() {
-            @Override
-            public void valueChanged() {
-                updatePreview();
-            }
-        };
+        ActionListener actionListener = (ActionEvent e) -> updatePreview();
+        InputListPanel.ChangeListener changeListener = this::updatePreview;
         boldCheckBox.addActionListener(actionListener);
         italicCheckBox.addActionListener(actionListener);
         underlineCheckBox.addActionListener(actionListener);
@@ -329,30 +318,6 @@ public class TextFontPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox superscriptCheckBox;
     private javax.swing.JCheckBox underlineCheckBox;
     // End of variables declaration//GEN-END:variables
-
-    public void saveToPreferences(Preferences preferences) {
-        preferences.put(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_DEFAULT, Boolean.toString(false));
-
-        Map<TextAttribute, ?> attribs = getStoredFont().getAttributes();
-        String value = (String) attribs.get(TextAttribute.FAMILY);
-        if (value != null) {
-            preferences.put(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_FAMILY, value);
-        } else {
-            preferences.remove(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_FAMILY);
-        }
-        Float fontSize = (Float) attribs.get(TextAttribute.SIZE);
-        if (fontSize != null) {
-            preferences.put(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_SIZE, Integer.toString((int) (float) fontSize));
-        } else {
-            preferences.remove(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_SIZE);
-        }
-        preferences.put(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_UNDERLINE, Boolean.toString(TextAttribute.UNDERLINE_LOW_ONE_PIXEL.equals(attribs.get(TextAttribute.UNDERLINE))));
-        preferences.put(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_STRIKETHROUGH, Boolean.toString(TextAttribute.STRIKETHROUGH_ON.equals(attribs.get(TextAttribute.STRIKETHROUGH))));
-        preferences.put(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_STRONG, Boolean.toString(TextAttribute.WEIGHT_BOLD.equals(attribs.get(TextAttribute.WEIGHT))));
-        preferences.put(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_ITALIC, Boolean.toString(TextAttribute.POSTURE_OBLIQUE.equals(attribs.get(TextAttribute.POSTURE))));
-        preferences.put(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_SUBSCRIPT, Boolean.toString(TextAttribute.SUPERSCRIPT_SUB.equals(attribs.get(TextAttribute.SUPERSCRIPT))));
-        preferences.put(TextFontOptionsPanel.PREFERENCES_TEXT_FONT_SUPERSCRIPT, Boolean.toString(TextAttribute.SUPERSCRIPT_SUPER.equals(attribs.get(TextAttribute.SUPERSCRIPT))));
-    }
 
     public ResourceBundle getResourceBundle() {
         return resourceBundle;

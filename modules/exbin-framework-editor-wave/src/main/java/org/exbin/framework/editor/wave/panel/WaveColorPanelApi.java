@@ -31,19 +31,19 @@ public interface WaveColorPanelApi {
      *
      * @return array of 4 colors.
      */
-    public Color[] getCurrentWaveColors();
+    Color[] getCurrentWaveColors();
 
     /**
      * Returns default colors used in application frame.
      *
      * @return array of 4 colors.
      */
-    public Color[] getDefaultWaveColors();
+    Color[] getDefaultWaveColors();
 
     /**
      * Sets current colors used in application frame.
      *
      * @param colors
      */
-    public void setCurrentWaveColors(Color[] colors);
+    void setCurrentWaveColors(Color[] colors);
 }

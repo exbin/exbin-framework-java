@@ -29,5 +29,5 @@ public interface XBApplicationListener {
      *
      * @param event reported event
      */
-    public void event(XBApplicationEvent event);
+    void event(XBApplicationEvent event);
 }

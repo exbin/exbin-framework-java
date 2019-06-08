@@ -21,11 +21,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
+import org.exbin.framework.PreferencesWrapper;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.client.api.ClientConnectionEvent;
 import org.exbin.framework.client.api.ClientConnectionListener;
@@ -163,7 +164,7 @@ public class ClientModule implements ClientModuleApi {
         Preferences preferences = application.getAppPreferences();
         try {
             // Database Initialization
-            String derbyHome = System.getProperty("user.home") + "/.java/.userPrefs/" + preferences.absolutePath();
+            String derbyHome = System.getProperty("user.home") + "/.java/.userPrefs/" + ((PreferencesWrapper) preferences).getInnerPreferences().absolutePath();
             if (devMode) {
                 derbyHome += "-dev";
             }
@@ -222,7 +223,7 @@ public class ClientModule implements ClientModuleApi {
     public void useBuildInService() {
         Preferences preferences = application.getAppPreferences();
         // Database Initialization
-        String derbyHome = System.getProperty("user.home") + "/.java/.userPrefs/" + preferences.absolutePath();
+        String derbyHome = System.getProperty("user.home") + "/.java/.userPrefs/" + ((PreferencesWrapper) preferences).getInnerPreferences().absolutePath();
         if (devMode) {
             derbyHome += "-dev";
         }

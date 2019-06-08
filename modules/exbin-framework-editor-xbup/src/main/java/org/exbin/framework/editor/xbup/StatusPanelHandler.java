@@ -61,13 +61,10 @@ public class StatusPanelHandler {
 
         return docStatusPanel;
     }
-    
+
     public ClientConnectionListener getClientConnectionListener() {
-        return new ClientConnectionListener() {
-            @Override
-            public void connectionChanged(ClientConnectionEvent connectionEvent) {
-                docStatusPanel.setConnectionStatus(connectionEvent.getConnectionStatus());
-            }
+        return (ClientConnectionEvent connectionEvent) -> {
+            docStatusPanel.setConnectionStatus(connectionEvent.getConnectionStatus());
         };
     }
 }

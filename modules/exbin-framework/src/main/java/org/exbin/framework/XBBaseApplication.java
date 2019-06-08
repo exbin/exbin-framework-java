@@ -32,27 +32,23 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import javax.swing.ImageIcon;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModuleRepository;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.preferences.FrameworkParameters;
 
 /**
  * Base application class.
  *
- * @version 0.2.0 2016/12/03
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class XBBaseApplication implements XBApplication {
-
-    public static final String PREFERENCES_LOOK_AND_FEEL = "lookAndFeel";
-    public static final String PREFERENCES_LOCALE_LANGUAGE = "locale.language";
-    public static final String PREFERENCES_LOCALE_COUNTRY = "locale.country";
-    public static final String PREFERENCES_LOCALE_VARIANT = "locale.variant";
 
     private ResourceBundle appBundle;
     private Preferences appPreferences;
@@ -106,15 +102,16 @@ public class XBBaseApplication implements XBApplication {
     }
 
     public Preferences createPreferences(Class clazz) {
-        Preferences preferences;
+        java.util.prefs.Preferences prefsPreferences;
         String osName = System.getProperty("os.name").toLowerCase();
         if (osName.startsWith("win")) {
-            preferences = new FilePreferencesFactory().userNodeForPackage(clazz);
+            prefsPreferences = new FilePreferencesFactory().userNodeForPackage(clazz);
         } else {
-            preferences = Preferences.userNodeForPackage(clazz);
+            prefsPreferences = java.util.prefs.Preferences.userNodeForPackage(clazz);
         }
-        setAppPreferences(preferences);
-        return preferences;
+        PreferencesWrapper wrapper = new PreferencesWrapper(prefsPreferences);
+        setAppPreferences(wrapper);
+        return wrapper;
     }
 
     @Override
@@ -124,23 +121,17 @@ public class XBBaseApplication implements XBApplication {
 
     public void setAppPreferences(Preferences appPreferences) {
         this.appPreferences = appPreferences;
+        FrameworkParameters frameworkParameters = new FrameworkParameters(appPreferences);
 
         // Switching language
-        String localeLanguage = preferencesGet(PREFERENCES_LOCALE_LANGUAGE, Locale.US.getLanguage());
-        String localeCountry = preferencesGet(PREFERENCES_LOCALE_COUNTRY, Locale.US.getCountry());
-        String localeVariant = preferencesGet(PREFERENCES_LOCALE_VARIANT, Locale.US.getVariant());
-        try {
-            Locale locale = new Locale(localeLanguage, localeCountry, localeVariant);
-            if (!locale.equals(Locale.ROOT)) {
-                Locale.setDefault(locale);
-            }
-        } catch (SecurityException ex) {
-            // Ignore it in java webstart
+        Locale locale = frameworkParameters.getLocale();
+        if (!locale.equals(Locale.ROOT)) {
+            Locale.setDefault(locale);
         }
 
-        String laf = preferencesGet(PREFERENCES_LOOK_AND_FEEL, "");
+        String laf = frameworkParameters.getLookAndFeel();
         try {
-            if (laf == null || laf.isEmpty()) {
+            if (laf.isEmpty()) {
                 String osName = System.getProperty("os.name").toLowerCase();
                 if (!osName.startsWith("windows") && !osName.startsWith("mac")) {
                     // Try "GTK+" on linux

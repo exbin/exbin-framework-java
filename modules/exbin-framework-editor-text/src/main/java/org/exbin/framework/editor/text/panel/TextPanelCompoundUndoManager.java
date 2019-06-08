@@ -125,7 +125,9 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
     }
 
     class MyCompoundEdit extends CompoundEdit {
-        boolean isUnDone=false;
+
+        boolean isUnDone = false;
+
         public int getLength() {
             return edits.size();
         }
@@ -133,22 +135,23 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
         @Override
         public void undo() throws CannotUndoException {
             super.undo();
-            isUnDone=true;
+            isUnDone = true;
         }
+
         @Override
         public void redo() throws CannotUndoException {
             super.redo();
-            isUnDone=false;
+            isUnDone = false;
         }
+
         @Override
         public boolean canUndo() {
-            return edits.size()>0 && !isUnDone;
+            return edits.size() > 0 && !isUnDone;
         }
 
         @Override
         public boolean canRedo() {
-            return edits.size()>0 && isUnDone;
+            return edits.size() > 0 && isUnDone;
         }
-
     }
 }

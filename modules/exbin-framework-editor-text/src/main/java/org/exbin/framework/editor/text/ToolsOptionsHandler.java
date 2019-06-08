@@ -27,6 +27,7 @@ import org.exbin.framework.editor.text.panel.TextColorPanel;
 import org.exbin.framework.editor.text.panel.TextColorPanelApi;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
+import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -76,7 +77,9 @@ public class ToolsOptionsHandler {
                     public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
                         if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                             if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                                fontPanel.saveToPreferences(application.getAppPreferences());
+                                TextFontParameters parameters = new TextFontParameters(application.getAppPreferences());
+                                parameters.setDefaultFont(false);
+                                parameters.setFont(fontPanel.getStoredFont());
                             }
                             ((TextFontApi) editorProvider).setCurrentFont(fontPanel.getStoredFont());
                         }
@@ -119,18 +122,15 @@ public class ToolsOptionsHandler {
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                 WindowUtils.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, colorPanel.getResourceBundle());
-                controlPanel.setHandler(new OptionsControlHandler() {
-                    @Override
-                    public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
-                        if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                            if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                                colorPanel.saveToPreferences(application.getAppPreferences());
-                            }
-                            textColorPanelHandler.setCurrentTextColors(colorPanel.getArrayFromColors());
+                controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
+                    if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+                        if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                            colorPanel.saveToPreferences(application.getAppPreferences());
                         }
-
-                        dialog.close();
+                        textColorPanelHandler.setCurrentTextColors(colorPanel.getArrayFromColors());
                     }
+
+                    dialog.close();
                 });
                 WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                 dialog.center(dialog.getParent());

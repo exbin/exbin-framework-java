@@ -18,7 +18,7 @@ package org.exbin.framework.bined.panel;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.utils.LanguageUtils;

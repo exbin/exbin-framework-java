@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework;
+package org.exbin.framework.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Preferences interface.
  *
- * @version 0.2.0 2019/02/25
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -30,7 +31,10 @@ public interface Preferences {
     void flush();
 
     @Nullable
-    String get(String key, @Nullable String def);
+    public String get(String key);
+
+    @Nonnull
+    public String get(String key, String def);
 
     boolean getBoolean(String key, boolean def);
 

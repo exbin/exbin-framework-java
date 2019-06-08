@@ -17,10 +17,10 @@
 package org.exbin.framework.gui.service;
 
 import java.awt.Component;
-import java.util.prefs.Preferences;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;

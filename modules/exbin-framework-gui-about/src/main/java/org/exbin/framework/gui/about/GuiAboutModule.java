@@ -35,7 +35,6 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.CloseControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
@@ -86,12 +85,7 @@ public class GuiAboutModule implements GuiAboutModuleApi {
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
                     final DialogWrapper aboutDialog = frameModule.createDialog(dialogPanel);
-                    controlPanel.setHandler(new CloseControlHandler() {
-                        @Override
-                        public void controlActionPerformed() {
-                            aboutDialog.close();
-                        }
-                    });
+                    controlPanel.setHandler(aboutDialog::close);
                     WindowUtils.assignGlobalKeyListener(aboutDialog.getWindow(), controlPanel.createOkCancelListener());
                     aboutDialog.center(aboutDialog.getParent());
                     aboutDialog.show();

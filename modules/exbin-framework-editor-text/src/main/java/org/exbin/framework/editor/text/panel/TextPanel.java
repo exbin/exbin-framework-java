@@ -44,7 +44,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
@@ -135,24 +134,17 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         });
 
         // Listener for undoManagement and redo events
-        textArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
-            @Override
-            public void undoableEditHappened(UndoableEditEvent evt) {
-                undoManagement.undoableEditHappened(evt);
+        textArea.getDocument().addUndoableEditListener((UndoableEditEvent evt) -> {
+            undoManagement.undoableEditHappened(evt);
 
-                if (undoUpdateListener != null) {
-                    undoUpdateListener.undoChanged();
-                }
+            if (undoUpdateListener != null) {
+                undoUpdateListener.undoChanged();
             }
         });
 
-        addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (propertyChangeListener != null) {
-                    propertyChangeListener.propertyChange(evt);
-                }
+        addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (propertyChangeListener != null) {
+                propertyChangeListener.propertyChange(evt);
             }
         });
     }
@@ -644,20 +636,13 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
 
     public void registerTextStatus(TextStatusPanel textStatusPanel) {
         this.textStatus = textStatusPanel;
-        attachCaretListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                Point pos = getCaretPosition();
-                String textPosition = Long.toString((long) pos.getX()) + ":" + Long.toString((long) pos.getY());
-                textStatus.setTextPosition(textPosition);
-            }
+        attachCaretListener((ChangeEvent e) -> {
+            Point pos = getCaretPosition();
+            String textPosition = Long.toString((long) pos.getX()) + ":" + Long.toString((long) pos.getY());
+            textStatus.setTextPosition(textPosition);
         });
-        setCharsetChangeListener(new TextPanel.CharsetChangeListener() {
-
-            @Override
-            public void charsetChanged() {
-                textStatus.setEncoding(getCharset().name());
-            }
+        setCharsetChangeListener(() -> {
+            textStatus.setEncoding(getCharset().name());
         });
     }
 

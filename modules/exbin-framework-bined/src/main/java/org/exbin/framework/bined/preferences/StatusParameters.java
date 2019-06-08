@@ -16,7 +16,7 @@
 package org.exbin.framework.bined.preferences;
 
 import javax.annotation.Nonnull;
-import org.exbin.framework.Preferences;
+import org.exbin.framework.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.framework.bined.options.StatusOptions;

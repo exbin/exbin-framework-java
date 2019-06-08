@@ -28,18 +28,20 @@ public interface WaveColorPanelFrame {
 
     /**
      * Returns current wave colors used in application frame.
+     *
      * @return array of 5 colors.
      */
-    public Color[] getCurrentWaveColors();
+    Color[] getCurrentWaveColors();
 
     /**
      * Returns default wave colors used in application frame.
+     *
      * @return array of 5 colors.
      */
-    public Color[] getDefaultWaveColors();
+    Color[] getDefaultWaveColors();
 
     /**
      * Sets current wave colors used in application frame.
      */
-    public void setCurrentWaveColors(Color[] colors);
+    void setCurrentWaveColors(Color[] colors);
 }

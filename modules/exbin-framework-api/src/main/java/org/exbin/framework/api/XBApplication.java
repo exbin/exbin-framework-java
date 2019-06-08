@@ -20,13 +20,12 @@ import java.awt.Image;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.prefs.Preferences;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Interface for application module management.
  *
- * @version 0.2.0 2016/05/19
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public interface XBApplication extends XBModuleHandler {

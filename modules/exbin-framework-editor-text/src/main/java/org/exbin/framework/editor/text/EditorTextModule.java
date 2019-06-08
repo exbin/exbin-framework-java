@@ -22,25 +22,25 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.prefs.Preferences;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.editor.text.panel.AddEncodingPanel;
-import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanel;
-import org.exbin.framework.editor.text.panel.TextAppearanceOptionsPanelApi;
-import org.exbin.framework.editor.text.panel.TextColorOptionsPanel;
+import org.exbin.framework.editor.text.options.panel.TextAppearanceOptionsPanel;
+import org.exbin.framework.editor.text.options.panel.TextAppearanceOptionsPanelApi;
+import org.exbin.framework.editor.text.options.panel.TextColorOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextColorPanelApi;
-import org.exbin.framework.editor.text.panel.TextEncodingOptionsPanel;
-import org.exbin.framework.editor.text.panel.TextEncodingPanel;
+import org.exbin.framework.editor.text.options.panel.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
-import org.exbin.framework.editor.text.panel.TextFontOptionsPanel;
+import org.exbin.framework.editor.text.options.panel.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.text.panel.TextStatusPanel;
+import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -64,7 +64,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Text editor module.
  *
- * @version 0.2.0 2017/01/06
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class EditorTextModule implements XBApplicationModule {
@@ -187,18 +187,17 @@ public class EditorTextModule implements XBApplicationModule {
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                 WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
-                controlPanel.setHandler(new OptionsControlHandler() {
-                    @Override
-                    public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
-                        if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                            if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                                fontPanel.saveToPreferences(application.getAppPreferences());
-                            }
-                            result.font = fontPanel.getStoredFont();
+                controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
+                    if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+                        if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                            TextFontParameters textFontParameters = new TextFontParameters(application.getAppPreferences());
+                            textFontParameters.setDefaultFont(true);
+                            textFontParameters.setFont(fontPanel.getStoredFont());
                         }
-
-                        dialog.close();
+                        result.font = fontPanel.getStoredFont();
                     }
+
+                    dialog.close();
                 });
                 WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                 dialog.center(dialog.getParent());
@@ -253,32 +252,26 @@ public class EditorTextModule implements XBApplicationModule {
         };
 
         TextEncodingOptionsPanel textEncodingOptionsPanel = new TextEncodingOptionsPanel(textEncodingPanelApi);
-        textEncodingOptionsPanel.setAddEncodingsOperation(new TextEncodingPanel.AddEncodingsOperation() {
-            @Override
-            public List<String> run(List<String> usedEncodings) {
-                final List<String> result = new ArrayList<>();
-                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
-                addEncodingPanel.setUsedEncodings(usedEncodings);
-                DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
-                JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
-                final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
-                controlPanel.setHandler(new DefaultControlHandler() {
-                    @Override
-                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                        if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                            result.addAll(addEncodingPanel.getEncodings());
-                        }
+        textEncodingOptionsPanel.setAddEncodingsOperation((List<String> usedEncodings) -> {
+            final List<String> result = new ArrayList<>();
+            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
+            addEncodingPanel.setUsedEncodings(usedEncodings);
+            DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
+            JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
+            final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
+            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                    result.addAll(addEncodingPanel.getEncodings());
+                }
 
-                        addEncodingDialog.close();
-                    }
-                });
-                frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
-                WindowUtils.assignGlobalKeyListener(addEncodingDialog.getWindow(), controlPanel.createOkCancelListener());
-                addEncodingDialog.center(addEncodingDialog.getParent());
-                addEncodingDialog.show();
-                return result;
-            }
+                addEncodingDialog.close();
+            });
+            frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
+            WindowUtils.assignGlobalKeyListener(addEncodingDialog.getWindow(), controlPanel.createOkCancelListener());
+            addEncodingDialog.center(addEncodingDialog.getParent());
+            addEncodingDialog.show();
+            return result;
         });
         optionsModule.addOptionsPanel(textEncodingOptionsPanel);
         optionsModule.extendAppearanceOptionsPanel(new TextAppearanceOptionsPanel(textAppearanceOptionsPanelApi));

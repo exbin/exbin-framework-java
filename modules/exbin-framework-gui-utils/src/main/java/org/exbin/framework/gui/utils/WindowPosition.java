@@ -16,7 +16,7 @@
  */
 package org.exbin.framework.gui.utils;
 
-import java.util.prefs.Preferences;
+import org.exbin.framework.api.Preferences;
 
 /**
  * Structure for window position.

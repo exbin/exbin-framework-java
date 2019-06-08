@@ -20,62 +20,70 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
+import org.exbin.framework.PreferencesWrapper;
 
 /**
  * Stub preferences class.
  *
- * @version 0.2.0 2016/11/28
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
-public class StubPreferences extends AbstractPreferences {
-
-    private final Map<String, String> spiValues;
+public class StubPreferences extends PreferencesWrapper {
 
     public StubPreferences() {
-        super(null, "");
-        spiValues = new HashMap<>();
+        super(new StubPreferencesImpl());
     }
 
-    @Override
-    protected void putSpi(String key, String value) {
-        spiValues.put(key, value);
-    }
+    private static final class StubPreferencesImpl extends AbstractPreferences {
 
-    @Override
-    protected String getSpi(String key) {
-        return spiValues.get(key);
-    }
+        private final Map<String, String> spiValues;
 
-    @Override
-    protected void removeSpi(String key) {
-        spiValues.remove(key);
-    }
+        private StubPreferencesImpl() {
+            super(null, "");
+            spiValues = new HashMap<>();
+        }
 
-    @Override
-    protected void removeNodeSpi() throws BackingStoreException {
-        throw new UnsupportedOperationException("Can't remove the root!");
-    }
+        @Override
+        protected void putSpi(String key, String value) {
+            spiValues.put(key, value);
+        }
 
-    @Override
-    protected String[] keysSpi() throws BackingStoreException {
-        return (String[]) spiValues.keySet().toArray(new String[0]);
-    }
+        @Override
+        protected String getSpi(String key) {
+            return spiValues.get(key);
+        }
 
-    @Override
-    protected String[] childrenNamesSpi() throws BackingStoreException {
-        return new String[0];
-    }
+        @Override
+        protected void removeSpi(String key) {
+            spiValues.remove(key);
+        }
 
-    @Override
-    protected AbstractPreferences childSpi(String name) {
-        return null;
-    }
+        @Override
+        protected void removeNodeSpi() throws BackingStoreException {
+            throw new UnsupportedOperationException("Can't remove the root!");
+        }
 
-    @Override
-    protected void syncSpi() throws BackingStoreException {
-    }
+        @Override
+        protected String[] keysSpi() throws BackingStoreException {
+            return (String[]) spiValues.keySet().toArray(new String[0]);
+        }
 
-    @Override
-    protected void flushSpi() throws BackingStoreException {
+        @Override
+        protected String[] childrenNamesSpi() throws BackingStoreException {
+            return new String[0];
+        }
+
+        @Override
+        protected AbstractPreferences childSpi(String name) {
+            return null;
+        }
+
+        @Override
+        protected void syncSpi() throws BackingStoreException {
+        }
+
+        @Override
+        protected void flushSpi() throws BackingStoreException {
+        }
     }
-};
+}

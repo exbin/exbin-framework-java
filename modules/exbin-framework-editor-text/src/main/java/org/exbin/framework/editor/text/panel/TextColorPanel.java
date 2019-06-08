@@ -18,13 +18,12 @@ package org.exbin.framework.editor.text.panel;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -33,7 +32,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Text color selection panel.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -123,7 +122,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jColorChooser1 = new javax.swing.JColorChooser();
+        colorChooser = new javax.swing.JColorChooser();
         textColorPanel = new javax.swing.JPanel();
         selectTextColorButton = new javax.swing.JButton();
         textBackgroundColorPanel = new javax.swing.JPanel();
@@ -147,7 +146,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
         fillCurrentButton = new javax.swing.JButton();
         fillDefaultButton = new javax.swing.JButton();
 
-        jColorChooser1.setName("jColorChooser1"); // NOI18N
+        colorChooser.setName("colorChooser"); // NOI18N
 
         setName("Form"); // NOI18N
 
@@ -419,56 +418,41 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectTextColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTextColorButtonActionPerformed
-        jColorChooser1.setColor(textColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setTextColor(jColorChooser1.getColor());
-            }
+        colorChooser.setColor(textColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setTextColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_selectTextColorButtonActionPerformed
 
     private void selectTextBackgroundColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTextBackgroundColorButtonActionPerformed
-        jColorChooser1.setColor(textBackgroundColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setTextBackgroundColor(jColorChooser1.getColor());
-            }
+        colorChooser.setColor(textBackgroundColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setTextBackgroundColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_selectTextBackgroundColorButtonActionPerformed
 
     private void selectSelectionTextColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectSelectionTextColorButtonActionPerformed
-        jColorChooser1.setColor(selectionTextColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setSelectionTextColor(jColorChooser1.getColor());
-            }
+        colorChooser.setColor(selectionTextColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setSelectionTextColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_selectSelectionTextColorButtonActionPerformed
 
     private void selectSelectionBackgroundColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectSelectionBackgroundColorButtonActionPerformed
-        jColorChooser1.setColor(selectionBackgroundColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setSelectionBackgroundColor(jColorChooser1.getColor());
-            }
+        colorChooser.setColor(selectionBackgroundColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setSelectionBackgroundColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_selectSelectionBackgroundColorButtonActionPerformed
 
     private void selectFoundBackgroundColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFoundBackgroundColorButtonActionPerformed
-        jColorChooser1.setColor(foundBackgroundColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setFoundBackgroundColor(jColorChooser1.getColor());
-            }
+        colorChooser.setColor(foundBackgroundColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setFoundBackgroundColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_selectFoundBackgroundColorButtonActionPerformed
@@ -486,13 +470,13 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JColorChooser colorChooser;
     private javax.swing.JPanel controlButtonsPanel;
     private javax.swing.JButton fillCurrentButton;
     private javax.swing.JButton fillDefaultButton;
     private javax.swing.JLabel foundBackgroundColorLabel;
     private javax.swing.JPanel foundBackgroundColorPanel;
     private javax.swing.JLabel foundTextLabel;
-    private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JLabel normalTextLabel;
     private javax.swing.JButton selectFoundBackgroundColorButton;
     private javax.swing.JButton selectSelectionBackgroundColorButton;

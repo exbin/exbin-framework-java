@@ -14,16 +14,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.editor.text.panel;
+package org.exbin.framework.editor.text.options.panel;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.text.panel.TextEncodingPanel;
+import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -53,12 +55,9 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         encodingPanel = new TextEncodingPanel();
         encodingPanel.setHandler(frame);
         encodingPanel.setEnabled(false);
-        encodingPanel.setModifiedOptionListener(new ModifiedOptionListener() {
-            @Override
-            public void wasModified() {
-                modifiedOptionListener.wasModified();
-                updateEncodings();
-            }
+        encodingPanel.setModifiedOptionListener(() -> {
+            modifiedOptionListener.wasModified();
+            updateEncodings();
         });
         super.add(encodingPanel, BorderLayout.CENTER);
     }
@@ -95,10 +94,10 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
             }
         });
 
-        defaultEncodingLabel.setText(resourceBundle.getString("TextEncodingOptionsPanel.defaultEncodingLabel.text")); // NOI18N
+        defaultEncodingLabel.setText(resourceBundle.getString("defaultEncodingLabel.text")); // NOI18N
         defaultEncodingLabel.setName("defaultEncodingLabel"); // NOI18N
 
-        fillCurrentEncodingButton.setText(resourceBundle.getString("TextEncodingOptionsPanel.fillCurrentEncodingButton.text")); // NOI18N
+        fillCurrentEncodingButton.setText(resourceBundle.getString("fillCurrentEncodingButton.text")); // NOI18N
         fillCurrentEncodingButton.setName("fillCurrentEncodingButton"); // NOI18N
         fillCurrentEncodingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,7 +134,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
 
         encodingsControlPanel.setName("encodingsControlPanel"); // NOI18N
 
-        fillCurrentEncodingsButton.setText(resourceBundle.getString("TextEncodingOptionsPanel.fillCurrentEncodingsButton.text")); // NOI18N
+        fillCurrentEncodingsButton.setText(resourceBundle.getString("fillCurrentEncodingsButton.text")); // NOI18N
         fillCurrentEncodingsButton.setName("fillCurrentEncodingsButton"); // NOI18N
         fillCurrentEncodingsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -232,10 +231,10 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         encodingComboBoxModel.setAvailableEncodings(encodingPanel.getEncodingList());
         defaultEncodingComboBox.repaint();
     }
-    
+
     public void setAddEncodingsOperation(TextEncodingPanel.AddEncodingsOperation addEncodingsOperation) {
         encodingPanel.setAddEncodingsOperation(addEncodingsOperation);
-    }    
+    }
 
     public class DefaultEncodingComboBoxModel implements ComboBoxModel<String> {
 

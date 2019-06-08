@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBApplicationModuleInfo;
@@ -42,7 +42,7 @@ import org.exbin.xbup.plugin.XBModuleRecord;
 /**
  * Some simple static methods usable for windows and dialogs.
  *
- * @version 0.2.0 2016/03/21
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class TestApplication implements XBApplication {
@@ -63,7 +63,97 @@ public class TestApplication implements XBApplication {
 
     @Override
     public Preferences getAppPreferences() {
-        return Preferences.systemRoot();
+        return new Preferences() {
+            @Override
+            public void flush() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public String get(String key) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public String get(String key, String def) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public boolean getBoolean(String key, boolean def) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public byte[] getByteArray(String key, byte[] def) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public double getDouble(String key, double def) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public float getFloat(String key, float def) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public int getInt(String key, int def) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public long getLong(String key, long def) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void put(String key, String value) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void putBoolean(String key, boolean value) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void putByteArray(String key, byte[] value) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void putDouble(String key, double value) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void putFloat(String key, float value) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void putInt(String key, int value) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void putLong(String key, long value) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void remove(String key) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void sync() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
     }
 
     @Override

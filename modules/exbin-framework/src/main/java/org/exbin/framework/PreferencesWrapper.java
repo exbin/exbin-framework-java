@@ -15,14 +15,16 @@
  */
 package org.exbin.framework;
 
+import org.exbin.framework.api.Preferences;
 import java.util.prefs.BackingStoreException;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Wrapper for preferences.
  *
- * @version 0.2.0 2019/03/11
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -43,8 +45,15 @@ public class PreferencesWrapper implements Preferences {
         }
     }
 
+    @Nullable
     @Override
-    public String get(String key, @Nullable String def) {
+    public String get(String key) {
+        return preferences.get(key, null);
+    }
+
+    @Nonnull
+    @Override
+    public String get(String key, String def) {
         return preferences.get(key, def);
     }
 
@@ -129,5 +138,9 @@ public class PreferencesWrapper implements Preferences {
         } catch (BackingStoreException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public java.util.prefs.Preferences getInnerPreferences() {
+        return preferences;
     }
 }
