@@ -39,7 +39,7 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
-import org.exbin.framework.bined.panel.BinaryAppearanceOptionsPanel;
+import org.exbin.framework.bined.options.panel.BinaryAppearanceOptionsPanel;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.editor.text.EncodingsHandler;
@@ -74,7 +74,8 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
-import org.exbin.framework.bined.panel.BinaryAppearanceOptionsPanelApi;
+import org.exbin.framework.bined.options.panel.BinaryAppearanceOptionsPanelApi;
+import org.exbin.framework.bined.preferences.EditorParameters;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 
@@ -100,8 +101,6 @@ public class BinedModule implements XBApplicationModule {
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
 
     public static final String HEX_STATUS_BAR_ID = "hexStatusBar";
-
-    public static final String PREFERENCES_MEMORY_MODE = "memoryMode";
 
     private java.util.ResourceBundle resourceBundle = null;
 
@@ -150,7 +149,9 @@ public class BinedModule implements XBApplicationModule {
 
     public BinaryEditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            String deltaModeString = application.getAppPreferences().get(PREFERENCES_MEMORY_MODE, BinaryStatusApi.MemoryMode.DELTA_MODE.getPreferencesValue());
+            EditorParameters editorParameters = new EditorParameters(application.getAppPreferences());
+
+            String deltaModeString = editorParameters.getMemoryMode();
             BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
             BinaryPanel panel = new BinaryPanel();
             panel.setSegmentsRepository(new SegmentsRepository());

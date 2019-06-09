@@ -33,7 +33,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputMethodListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
@@ -187,33 +186,30 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         // Bind the redo action to ctl-Y
         imageArea.getInputMap().put(KeyStroke.getKeyStroke("control Y"), "Redo");
 
-        imageArea.addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                int relativeMouseX = e.getPoint().x - scrollPane.getHorizontalScrollBar().getValue();
-                int relativeMouseY = e.getPoint().y - scrollPane.getVerticalScrollBar().getValue();
-                int positionX = (int) (e.getPoint().x * scaleRatio);
-                int positionY = (int) (e.getPoint().y * scaleRatio);
-                if (e.getWheelRotation() == 1) {
-                    setScale(scaleRatio * 2);
-                    positionX -= (int) (relativeMouseX * scaleRatio);
-                    positionY -= (int) (relativeMouseY * scaleRatio);
+        imageArea.addMouseWheelListener((MouseWheelEvent e) -> {
+            int relativeMouseX = e.getPoint().x - scrollPane.getHorizontalScrollBar().getValue();
+            int relativeMouseY = e.getPoint().y - scrollPane.getVerticalScrollBar().getValue();
+            int positionX = (int) (e.getPoint().x * scaleRatio);
+            int positionY = (int) (e.getPoint().y * scaleRatio);
+            if (e.getWheelRotation() == 1) {
+                setScale(scaleRatio * 2);
+                positionX -= (int) (relativeMouseX * scaleRatio);
+                positionY -= (int) (relativeMouseY * scaleRatio);
 
-                } else if (e.getWheelRotation() == -1) {
-                    setScale(scaleRatio / 2);
-                    positionX -= (int) (relativeMouseX * scaleRatio);
-                    positionY -= (int) (relativeMouseY * scaleRatio);
-                }
-                if (positionX < 0) {
-                    positionX = 0;
-                }
-                if (positionY < 0) {
-                    positionY = 0;
-                }
-                scrollPane.getHorizontalScrollBar().setValue((int) (positionX / scaleRatio));
-                scrollPane.getVerticalScrollBar().setValue((int) (positionY / scaleRatio));
-                repaint();
+            } else if (e.getWheelRotation() == -1) {
+                setScale(scaleRatio / 2);
+                positionX -= (int) (relativeMouseX * scaleRatio);
+                positionY -= (int) (relativeMouseY * scaleRatio);
             }
+            if (positionX < 0) {
+                positionX = 0;
+            }
+            if (positionY < 0) {
+                positionY = 0;
+            }
+            scrollPane.getHorizontalScrollBar().setValue((int) (positionX / scaleRatio));
+            scrollPane.getVerticalScrollBar().setValue((int) (positionY / scaleRatio));
+            repaint();
         });
     }
 
@@ -303,16 +299,12 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
             try {
 //                PrintJob myJob = imageArea.getToolkit().getPrintJob(null, fileName, null);
 //                if (myJob != null) {
-                job.setPrintable(new Printable() {
-
-                    @Override
-                    public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-                        imageArea.print(graphics); // TODO: Rescale on page
-                        if (pageIndex == 0) {
-                            return Printable.PAGE_EXISTS;
-                        }
-                        return Printable.NO_SUCH_PAGE;
+                job.setPrintable((Graphics graphics1, PageFormat pageFormat, int pageIndex) -> {
+                    imageArea.print(graphics1); // TODO: Rescale on page
+                    if (pageIndex == 0) {
+                        return Printable.PAGE_EXISTS;
                     }
+                    return Printable.NO_SUCH_PAGE;
                 });
                 job.print();
 //                }
@@ -746,12 +738,7 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         public ImageAreaPanel() {
         }
 
-        private final ImageObserver imageObserver = new ImageObserver() {
-            @Override
-            public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-                return true;
-            }
-        };
+        private final ImageObserver imageObserver = (Image img, int infoflags, int x1, int y1, int width1, int height1) -> true;
 
         @Override
         protected void paintComponent(Graphics g) {

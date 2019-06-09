@@ -31,16 +31,16 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.gui.options.OptionsManagement;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.preferences.FrameworkParameters;
 
 /**
  * Main options panel.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.1 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -235,10 +235,11 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
             extendedPanel.loadFromPreferences(preferences);
         }
 
-        Locale locale = new Locale(preferences.get(OptionsManagement.PREFERENCES_LOCALE_LANGUAGE, ""), preferences.get(OptionsManagement.PREFERENCES_LOCALE_COUNTRY, ""), preferences.get(OptionsManagement.PREFERENCES_LOCALE_VARIANT, ""));
+        FrameworkParameters frameworkParameters = new FrameworkParameters(preferences);
+        Locale locale = frameworkParameters.getLocale();
         languageComboBox.setSelectedItem(locale);
 
-        String laf = preferences.get(OptionsManagement.PREFERENCES_LOOK_AND_FEEL, "");
+        String laf = frameworkParameters.getLookAndFeel();
         themeComboBox.setSelectedIndex(themes.indexOf(laf));
     }
 
@@ -248,11 +249,10 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
             extendedPanel.saveToPreferences(preferences);
         }
 
-        preferences.put(OptionsManagement.PREFERENCES_LOOK_AND_FEEL, themes.get(themeComboBox.getSelectedIndex()));
+        FrameworkParameters frameworkParameters = new FrameworkParameters(preferences);
+        frameworkParameters.setLookAndFeel(themes.get(themeComboBox.getSelectedIndex()));
         Locale locale = (Locale) languageComboBox.getSelectedItem();
-        preferences.put(OptionsManagement.PREFERENCES_LOCALE_LANGUAGE, locale.getLanguage());
-        preferences.put(OptionsManagement.PREFERENCES_LOCALE_COUNTRY, locale.getCountry());
-        preferences.put(OptionsManagement.PREFERENCES_LOCALE_VARIANT, locale.getVariant());
+        frameworkParameters.setLocale(locale);
     }
 
     @Override

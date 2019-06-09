@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Preferences interface.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.0 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -30,11 +30,13 @@ public interface Preferences {
 
     void flush();
 
+    boolean exists(String key);
+
     @Nullable
-    public String get(String key);
+    String get(String key);
 
     @Nonnull
-    public String get(String key, String def);
+    String get(String key, String def);
 
     boolean getBoolean(String key, boolean def);
 

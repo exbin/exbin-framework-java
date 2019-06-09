@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.capability.CharsetCapable;
 import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.framework.bined.preferences.CharsetParameters;
+import org.exbin.framework.editor.text.preferences.CharsetParameters;
 
 /**
  * Charset options.

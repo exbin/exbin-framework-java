@@ -29,5 +29,5 @@ public interface ApplicationPanel {
      *
      * @return panel name
      */
-    public String getPanelName();
+    String getPanelName();
 }

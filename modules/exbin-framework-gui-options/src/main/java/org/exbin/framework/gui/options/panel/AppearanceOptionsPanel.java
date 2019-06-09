@@ -25,19 +25,16 @@ import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
+import org.exbin.framework.gui.options.preferences.AppearanceParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
- * Tool Bar Apperance Options panel.
+ * Toolbar apperance options panel.
  *
- * @version 0.2.0 2016/08/17
+ * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
-
-    public static final String PREFERENCES_TOOLBAR_VISIBLE = "toolBar.visible";
-    public static final String PREFERENCES_TOOLBAR_CAPTIONS = "toolBar.captions";
-    public static final String PREFERENCES_STATUSBAR_VISIBLE = "statusBar.visible";
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
     private ModifiedOptionListener modifiedOptionListener;
@@ -164,9 +161,10 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
             extendedPanel.loadFromPreferences(preferences);
         }
 
-        showToolbarCheckBox.setSelected(Boolean.valueOf(preferences.get(PREFERENCES_TOOLBAR_VISIBLE, Boolean.toString(true))));
-        showCaptionsCheckBox.setSelected(Boolean.valueOf(preferences.get(PREFERENCES_TOOLBAR_CAPTIONS, Boolean.toString(true))));
-        showStatusbarCheckBox.setSelected(Boolean.valueOf(preferences.get(PREFERENCES_STATUSBAR_VISIBLE, Boolean.toString(true))));
+        AppearanceParameters appearanceParameters = new AppearanceParameters(preferences);
+        showToolbarCheckBox.setSelected(appearanceParameters.isShowToolBar());
+        showCaptionsCheckBox.setSelected(appearanceParameters.isShowToolBarCaptions());
+        showStatusbarCheckBox.setSelected(appearanceParameters.isShowStatusBar());
     }
 
     @Override
@@ -175,9 +173,10 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
             extendedPanel.saveToPreferences(preferences);
         }
 
-        preferences.put(PREFERENCES_TOOLBAR_VISIBLE, Boolean.toString(showToolbarCheckBox.isSelected()));
-        preferences.put(PREFERENCES_TOOLBAR_CAPTIONS, Boolean.toString(showCaptionsCheckBox.isSelected()));
-        preferences.put(PREFERENCES_STATUSBAR_VISIBLE, Boolean.toString(showStatusbarCheckBox.isSelected()));
+        AppearanceParameters appearanceParameters = new AppearanceParameters(preferences);
+        appearanceParameters.setShowToolBar(showToolbarCheckBox.isSelected());
+        appearanceParameters.setShowToolBarCaptions(showCaptionsCheckBox.isSelected());
+        appearanceParameters.setShowStatusBar(showStatusbarCheckBox.isSelected());
     }
 
     @Override

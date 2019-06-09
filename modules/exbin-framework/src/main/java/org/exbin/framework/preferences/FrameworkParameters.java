@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Framework preferences.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.0 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -42,17 +42,17 @@ public class FrameworkParameters {
 
     @Nonnull
     public String getLocaleLanguage() {
-        return preferences.get(PREFERENCES_LOCALE_LANGUAGE, Locale.US.getLanguage());
+        return preferences.get(PREFERENCES_LOCALE_LANGUAGE, "");
     }
 
     @Nonnull
     public String getLocaleCountry() {
-        return preferences.get(PREFERENCES_LOCALE_COUNTRY, Locale.US.getCountry());
+        return preferences.get(PREFERENCES_LOCALE_COUNTRY, "");
     }
 
     @Nonnull
     public String getLocaleVariant() {
-        return preferences.get(PREFERENCES_LOCALE_VARIANT, Locale.US.getVariant());
+        return preferences.get(PREFERENCES_LOCALE_VARIANT, "");
     }
 
     @Nonnull
@@ -69,8 +69,32 @@ public class FrameworkParameters {
         return Locale.ROOT;
     }
 
+    public void setLocaleLanguage(String language) {
+        preferences.put(PREFERENCES_LOCALE_LANGUAGE, language);
+    }
+
+    @Nonnull
+    public void setLocaleCountry(String country) {
+        preferences.put(PREFERENCES_LOCALE_COUNTRY, country);
+    }
+
+    @Nonnull
+    public void setLocaleVariant(String variant) {
+        preferences.put(PREFERENCES_LOCALE_VARIANT, variant);
+    }
+
+    public void setLocale(Locale locale) {
+        setLocaleLanguage(locale.getLanguage());
+        setLocaleCountry(locale.getCountry());
+        setLocaleVariant(locale.getVariant());
+    }
+
     @Nonnull
     public String getLookAndFeel() {
         return preferences.get(PREFERENCES_LOOK_AND_FEEL, "");
+    }
+
+    public void setLookAndFeel(String lookAndFeel) {
+        preferences.put(PREFERENCES_LOOK_AND_FEEL, lookAndFeel);
     }
 }

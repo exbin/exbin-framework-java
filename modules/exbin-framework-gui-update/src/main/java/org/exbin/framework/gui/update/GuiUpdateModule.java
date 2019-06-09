@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -38,11 +37,11 @@ import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
 import org.exbin.framework.gui.update.panel.ApplicationUpdateOptionsPanel;
 import org.exbin.framework.gui.update.panel.CheckForUpdatePanel;
+import org.exbin.framework.gui.update.preferences.CheckForUpdateParameters;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.CloseControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
@@ -98,12 +97,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
-                    controlPanel.setHandler(new CloseControlHandler() {
-                        @Override
-                        public void controlActionPerformed() {
-                            dialog.close();
-                        }
-                    });
+                    controlPanel.setHandler(dialog::close);
                     WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                     dialog.center(dialog.getParent());
                     checkForUpdatePanel.setCheckForUpdatePanelHandler(new CheckForUpdatePanel.CheckForUpdatePanelHandler() {
@@ -193,7 +187,8 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
 
     @Override
     public void checkOnStart(Frame frame) {
-        boolean checkOnStart = application.getAppPreferences().getBoolean(ApplicationUpdateOptionsPanel.PREFERENCES_CHECK_FOR_UPDATE_ON_START, true);
+        CheckForUpdateParameters checkForUpdateParameters = new CheckForUpdateParameters(application.getAppPreferences());
+        boolean checkOnStart = checkForUpdateParameters.isShouldCheckForUpdate();
 
         if (!checkOnStart) {
             return;
@@ -211,12 +206,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
             final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
             frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
-            controlPanel.setHandler(new CloseControlHandler() {
-                @Override
-                public void controlActionPerformed() {
-                    dialog.close();
-                }
-            });
+            controlPanel.setHandler(dialog::close);
             WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
             dialog.center(dialog.getParent());
             checkForUpdatePanel.setCheckForUpdatePanelHandler(new CheckForUpdatePanel.CheckForUpdatePanelHandler() {

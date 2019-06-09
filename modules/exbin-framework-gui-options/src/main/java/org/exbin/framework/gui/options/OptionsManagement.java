@@ -16,47 +16,42 @@
  */
 package org.exbin.framework.gui.options;
 
-import java.util.prefs.Preferences;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 
 /**
  * Interface for application options panels management.
  *
- * @version 0.2.0 2015/11/02
+ * @version 0.2.1 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 public interface OptionsManagement {
-
-    public static final String PREFERENCES_LOOK_AND_FEEL = "lookAndFeel";
-    public static final String PREFERENCES_LOCALE_LANGUAGE = "locale.language";
-    public static final String PREFERENCES_LOCALE_COUNTRY = "locale.country";
-    public static final String PREFERENCES_LOCALE_VARIANT = "locale.variant";
 
     /**
      * Adds options panel.
      *
      * @param optionsPanel options panel
      */
-    public void addOptionsPanel(OptionsPanel optionsPanel);
+    void addOptionsPanel(OptionsPanel optionsPanel);
 
     /**
      * Extends main options panel.
      *
      * @param optionsPanel options panel
      */
-    public void extendMainOptionsPanel(OptionsPanel optionsPanel);
+    void extendMainOptionsPanel(OptionsPanel optionsPanel);
 
     /**
      * Extends appearance options panel.
      *
      * @param optionsPanel options panel
      */
-    public void extendAppearanceOptionsPanel(OptionsPanel optionsPanel);
+    void extendAppearanceOptionsPanel(OptionsPanel optionsPanel);
 
     /**
      * Gets preferences.
      *
      * @return prefereces
      */
-    public Preferences getPreferences();
+    Preferences getPreferences();
 }

@@ -18,11 +18,12 @@ package org.exbin.framework.bined.preferences;
 import org.exbin.framework.api.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.bined.BinaryStatusApi;
 
 /**
  * Hexadecimal editor preferences.
  *
- * @version 0.2.0 2019/03/16
+ * @version 0.2.0 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -30,6 +31,7 @@ public class EditorParameters {
 
     public static final String PREFERENCES_FILE_HANDLING_MODE = "fileHandlingMode";
     public static final String PREFERENCES_SHOW_VALUES_PANEL = "valuesPanel";
+    public static final String PREFERENCES_MEMORY_MODE = "memoryMode";
 
     private final Preferences preferences;
 
@@ -52,5 +54,14 @@ public class EditorParameters {
 
     public void setShowValuesPanel(boolean showValuesPanel) {
         preferences.putBoolean(PREFERENCES_SHOW_VALUES_PANEL, showValuesPanel);
+    }
+
+    @Nonnull
+    public String getMemoryMode() {
+        return preferences.get(PREFERENCES_MEMORY_MODE, BinaryStatusApi.MemoryMode.DELTA_MODE.getPreferencesValue());
+    }
+
+    public void setMemoryMode(String memoryMode) {
+        preferences.put(PREFERENCES_MEMORY_MODE, memoryMode);
     }
 }

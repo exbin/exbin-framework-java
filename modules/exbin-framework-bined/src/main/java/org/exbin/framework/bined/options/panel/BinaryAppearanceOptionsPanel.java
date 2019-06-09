@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined.panel;
+package org.exbin.framework.bined.options.panel;
 
 import java.util.List;
 import java.util.ResourceBundle;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.bined.preferences.BinaryAppearanceParameters;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -27,14 +28,10 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Hexadecimal appearance options panel.
  *
- * @version 0.2.1 2017/10/15
+ * @version 0.2.1 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
-
-    public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
-    public static final String PREFERENCES_SHOW_VALUES_PANEL = "showValuesPanel";
-    public static final String PREFERENCES_MULTITAB_MODE = "experimentalMultiTabMode";
 
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryAppearanceOptionsPanel.class);
@@ -120,16 +117,18 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        lineWrapCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_TEXT_WORD_WRAPPING, Boolean.FALSE.toString())));
-        showValuesPanelCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_SHOW_VALUES_PANEL, Boolean.TRUE.toString())));
-        multiTabModeCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_MULTITAB_MODE, Boolean.FALSE.toString())));
+        BinaryAppearanceParameters binaryAppearanceParameters = new BinaryAppearanceParameters(preferences);
+        lineWrapCheckBox.setSelected(binaryAppearanceParameters.isTextWordWrapping());
+        showValuesPanelCheckBox.setSelected(binaryAppearanceParameters.showValuesPanel());
+        multiTabModeCheckBox.setSelected(binaryAppearanceParameters.isMultiTabMode());
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        preferences.put(PREFERENCES_TEXT_WORD_WRAPPING, Boolean.toString(lineWrapCheckBox.isSelected()));
-        preferences.put(PREFERENCES_SHOW_VALUES_PANEL, Boolean.toString(showValuesPanelCheckBox.isSelected()));
-        preferences.put(PREFERENCES_MULTITAB_MODE, Boolean.toString(multiTabModeCheckBox.isSelected()));
+        BinaryAppearanceParameters binaryAppearanceParameters = new BinaryAppearanceParameters(preferences);
+        binaryAppearanceParameters.setTextWordWrapping(lineWrapCheckBox.isSelected());
+        binaryAppearanceParameters.setShowValuesPanel(showValuesPanelCheckBox.isSelected());
+        binaryAppearanceParameters.setMultiTabMode(multiTabModeCheckBox.isSelected());
     }
 
     @Override

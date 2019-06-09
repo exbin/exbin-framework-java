@@ -20,19 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.EncodingsHandler;
 
 /**
  * Text editor preferences.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.0 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CharsetParameters {
 
-    public static final String PREFERENCES_ENCODING_SELECTED = "selectedEncoding";
+    public static final String ENCODING_UTF8 = "UTF-8";
+
     public static final String PREFERENCES_ENCODING_PREFIX = "textEncoding.";
+    public static final String PREFERENCES_ENCODING_DEFAULT = PREFERENCES_ENCODING_PREFIX + "default";
+    public static final String PREFERENCES_ENCODING_SELECTED = "selectedEncoding";
 
     private final Preferences preferences;
 
@@ -41,8 +43,17 @@ public class CharsetParameters {
     }
 
     @Nonnull
+    public String getDefaultEncoding() {
+        return preferences.get(PREFERENCES_ENCODING_DEFAULT, ENCODING_UTF8);
+    }
+
+    public void setDefaultEncoding(String encodingName) {
+        preferences.put(PREFERENCES_ENCODING_DEFAULT, encodingName);
+    }
+
+    @Nonnull
     public String getSelectedEncoding() {
-        return preferences.get(PREFERENCES_ENCODING_SELECTED, EncodingsHandler.ENCODING_UTF8);
+        return preferences.get(PREFERENCES_ENCODING_SELECTED, ENCODING_UTF8);
     }
 
     public void setSelectedEncoding(String encodingName) {

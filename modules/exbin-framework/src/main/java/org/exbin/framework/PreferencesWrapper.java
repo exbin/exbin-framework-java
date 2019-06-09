@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Wrapper for preferences.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.0 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -37,12 +37,8 @@ public class PreferencesWrapper implements Preferences {
     }
 
     @Override
-    public void put(String key, @Nullable String value) {
-        if (value == null) {
-            preferences.remove(key);
-        } else {
-            preferences.put(key, value);
-        }
+    public boolean exists(String key) {
+        return preferences.get(key, null) != null;
     }
 
     @Nullable
@@ -123,6 +119,15 @@ public class PreferencesWrapper implements Preferences {
     }
 
     @Override
+    public void put(String key, @Nullable String value) {
+        if (value == null) {
+            preferences.remove(key);
+        } else {
+            preferences.put(key, value);
+        }
+    }
+
+    @Override
     public void flush() {
         try {
             preferences.flush();
@@ -139,7 +144,7 @@ public class PreferencesWrapper implements Preferences {
             ex.printStackTrace();
         }
     }
-    
+
     public java.util.prefs.Preferences getInnerPreferences() {
         return preferences;
     }

@@ -72,18 +72,15 @@ public class PictureOperationHandler {
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());
-                    controlPanel.setHandler(new DefaultControlHandler() {
-                        @Override
-                        public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                            if (actionType == ControlActionType.OK) {
-                                Point point = imageResizePanel.getResolution();
-                                int width = (int) (point.getX());
-                                int height = (int) (point.getY());
-                                ((ImagePanel) editorProvider).performResize(width, height);
-                            }
-
-                            dialog.close();
+                    controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                        if (actionType == ControlActionType.OK) {
+                            Point point = imageResizePanel.getResolution();
+                            int width = (int) (point.getX());
+                            int height = (int) (point.getY());
+                            ((ImagePanel) editorProvider).performResize(width, height);
                         }
+                        
+                        dialog.close();
                     });
                     WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                     dialog.center(dialog.getParent());

@@ -118,7 +118,7 @@ public class WindowPosition {
         pref.put(prefix + PREFERENCES_HEIGHT, String.valueOf(height));
         pref.put(prefix + PREFERENCES_MAXIMIZED, String.valueOf(maximized));
     }
-    
+
     public void loadFromPreferences(Preferences pref, String prefix) {
         screenIndex = Integer.valueOf(pref.get(prefix + PREFERENCES_SCREEN_INDEX, "0"));
         screenWidth = Integer.valueOf(pref.get(prefix + PREFERENCES_SCREEN_WIDTH, "0"));
@@ -131,6 +131,6 @@ public class WindowPosition {
     }
 
     public boolean preferencesExists(Preferences pref, String prefix) {
-        return pref.get(prefix + PREFERENCES_SCREEN_INDEX, null) != null;
+        return pref.get(prefix + PREFERENCES_SCREEN_INDEX) != null;
     }
 }

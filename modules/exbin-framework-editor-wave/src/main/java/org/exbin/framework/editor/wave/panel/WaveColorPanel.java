@@ -18,13 +18,13 @@ package org.exbin.framework.editor.wave.panel;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.wave.preferences.WaveColorParameters;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -33,17 +33,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Wave editor color selection panel.
  *
- * @version 0.2.0 2016/08/17
+ * @version 0.2.1 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
-
-    public static final String PREFERENCES_WAVE_COLOR_WAVE = "waveColor.wave";
-    public static final String PREFERENCES_WAVE_COLOR_WAVE_FILL = "waveColor.waveFill";
-    public static final String PREFERENCES_WAVE_COLOR_BACKGROUND = "waveColor.background";
-    public static final String PREFERENCES_WAVE_COLOR_SELECTION = "waveColor.selection";
-    public static final String PREFERENCES_WAVE_COLOR_CURSOR = "waveColor.cursor";
-    public static final String PREFERENCES_WAVE_COLOR_CURSOR_WAVE = "waveColor.cursorWave";
 
     private ModifiedOptionListener modifiedOptionListener;
     private final WaveColorPanelApi panelColorApi;
@@ -128,7 +121,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jColorChooser1 = new javax.swing.JColorChooser();
+        colorChooser = new javax.swing.JColorChooser();
         waveSelectionColorButton = new javax.swing.JButton();
         waveColorLabel = new javax.swing.JLabel();
         waveColorPanel = new javax.swing.JPanel();
@@ -150,7 +143,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
         waveCursorWaveColorPanel = new javax.swing.JPanel();
         waveCursorWaveColorButton = new javax.swing.JButton();
 
-        jColorChooser1.setName("jColorChooser1"); // NOI18N
+        colorChooser.setName("colorChooser"); // NOI18N
 
         setName("Form"); // NOI18N
 
@@ -420,53 +413,37 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void waveColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waveColorButtonActionPerformed
-        jColorChooser1.setColor(waveColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setWaveColor(jColorChooser1.getColor());
-                setModified(true);
-            }
+        colorChooser.setColor(waveColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setWaveColor(colorChooser.getColor());
+            setModified(true);
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_waveColorButtonActionPerformed
 
     private void waveBackgroundColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waveBackgroundColorButtonActionPerformed
-        jColorChooser1.setColor(waveBackgroundColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setWaveBackgroundColor(jColorChooser1.getColor());
-                setModified(true);
-            }
+        colorChooser.setColor(waveBackgroundColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setWaveBackgroundColor(colorChooser.getColor());
+            setModified(true);
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_waveBackgroundColorButtonActionPerformed
 
     private void waveSelectionColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waveSelectionColorButtonActionPerformed
-        jColorChooser1.setColor(waveSelectionColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setWaveSelectionColor(jColorChooser1.getColor());
-                setModified(true);
-            }
+        colorChooser.setColor(waveSelectionColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setWaveSelectionColor(colorChooser.getColor());
+            setModified(true);
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_waveSelectionColorButtonActionPerformed
 
     private void waveCursorColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waveCursorColorButtonActionPerformed
-        jColorChooser1.setColor(waveCursorColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setWaveCursorColor(jColorChooser1.getColor());
-                setModified(true);
-            }
+        colorChooser.setColor(waveCursorColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setWaveCursorColor(colorChooser.getColor());
+            setModified(true);
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_waveCursorColorButtonActionPerformed
@@ -480,27 +457,19 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
 
     private void waveFillColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waveFillColorButtonActionPerformed
-        jColorChooser1.setColor(waveFillColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setWaveFillColor(jColorChooser1.getColor());
-                setModified(true);
-            }
+        colorChooser.setColor(waveFillColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setWaveFillColor(colorChooser.getColor());
+            setModified(true);
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_waveFillColorButtonActionPerformed
 
     private void waveCursorWaveColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waveCursorWaveColorButtonActionPerformed
-        jColorChooser1.setColor(waveCursorWaveColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, jColorChooser1, new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setWaveCursorWaveColor(jColorChooser1.getColor());
-                setModified(true);
-            }
+        colorChooser.setColor(waveCursorWaveColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+            setWaveCursorWaveColor(colorChooser.getColor());
+            setModified(true);
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_waveCursorWaveColorButtonActionPerformed
@@ -510,9 +479,9 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JColorChooser colorChooser;
     private javax.swing.JButton fillCurrentButton;
     private javax.swing.JButton fillDefaultButton;
-    private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JButton waveBackgroundColorButton;
     private javax.swing.JLabel waveBackgroundColorLabel;
     private javax.swing.JPanel waveBackgroundColorPanel;
@@ -543,30 +512,31 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
+        WaveColorParameters waveColorParameters = new WaveColorParameters(preferences);
         Integer rgb;
         try {
-            rgb = Integer.valueOf(preferences.get(PREFERENCES_WAVE_COLOR_WAVE, null));
+            rgb = waveColorParameters.getWaveColorWave();
             if (rgb != null) {
                 setWaveColor(new Color(rgb));
             }
         } catch (NumberFormatException e) {
         }
         try {
-            rgb = Integer.valueOf(preferences.get(PREFERENCES_WAVE_COLOR_BACKGROUND, null));
+            rgb = waveColorParameters.getWaveColorBackground();
             if (rgb != null) {
                 setWaveBackgroundColor(new Color(rgb));
             }
         } catch (NumberFormatException e) {
         }
         try {
-            rgb = Integer.valueOf(preferences.get(PREFERENCES_WAVE_COLOR_SELECTION, null));
+            rgb = waveColorParameters.getWaveColorSelection();
             if (rgb != null) {
                 setWaveSelectionColor(new Color(rgb));
             }
         } catch (NumberFormatException e) {
         }
         try {
-            rgb = Integer.valueOf(preferences.get(PREFERENCES_WAVE_COLOR_CURSOR, null));
+            rgb = waveColorParameters.getWaveColorCursor();
             if (rgb != null) {
                 setWaveCursorColor(new Color(rgb));
             }
@@ -576,12 +546,13 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        preferences.put(PREFERENCES_WAVE_COLOR_WAVE, Integer.toString(getWaveColor().getRGB()));
-        preferences.put(PREFERENCES_WAVE_COLOR_WAVE_FILL, Integer.toString(getWaveFillColor().getRGB()));
-        preferences.put(PREFERENCES_WAVE_COLOR_BACKGROUND, Integer.toString(getWaveBackgroundColor().getRGB()));
-        preferences.put(PREFERENCES_WAVE_COLOR_SELECTION, Integer.toString(getWaveSelectionColor().getRGB()));
-        preferences.put(PREFERENCES_WAVE_COLOR_CURSOR, Integer.toString(getWaveCursorColor().getRGB()));
-        preferences.put(PREFERENCES_WAVE_COLOR_CURSOR_WAVE, Integer.toString(getWaveCursorWaveColor().getRGB()));
+        WaveColorParameters waveColorParameters = new WaveColorParameters(preferences);
+        waveColorParameters.setWaveColorWave(getWaveColor().getRGB());
+        waveColorParameters.setWaveColorWaveFill(getWaveFillColor().getRGB());
+        waveColorParameters.setWaveColorBackground(getWaveBackgroundColor().getRGB());
+        waveColorParameters.setWaveColorSelection(getWaveSelectionColor().getRGB());
+        waveColorParameters.setWaveColorCursor(getWaveCursorColor().getRGB());
+        waveColorParameters.setWaveColorCursorWave(getWaveCursorWaveColor().getRGB());
     }
 
     @Override

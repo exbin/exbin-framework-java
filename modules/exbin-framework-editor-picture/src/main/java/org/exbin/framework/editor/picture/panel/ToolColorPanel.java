@@ -71,7 +71,7 @@ public class ToolColorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jColorChooser1 = new javax.swing.JColorChooser();
+        colorChooser = new javax.swing.JColorChooser();
         penColorLabel = new javax.swing.JLabel();
         toolColorPanel = new javax.swing.JPanel();
         penColorSelectButton = new javax.swing.JButton();
@@ -79,7 +79,7 @@ public class ToolColorPanel extends javax.swing.JPanel {
         selectionColorPanel = new javax.swing.JPanel();
         fillColorSelectButton = new javax.swing.JButton();
 
-        jColorChooser1.setName("jColorChooser1"); // NOI18N
+        colorChooser.setName("colorChooser"); // NOI18N
 
         setName("Form"); // NOI18N
 
@@ -176,24 +176,24 @@ public class ToolColorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void penColorSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_penColorSelectButtonActionPerformed
-        jColorChooser1.setColor(toolColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, "Select color", true, jColorChooser1, new ActionListener() {
+        colorChooser.setColor(toolColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, "Select color", true, colorChooser, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                setToolColor(jColorChooser1.getColor());
+                setToolColor(colorChooser.getColor());
             }
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_penColorSelectButtonActionPerformed
 
     private void fillColorSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillColorSelectButtonActionPerformed
-        jColorChooser1.setColor(selectionColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, "Select color", true, jColorChooser1, new ActionListener() {
+        colorChooser.setColor(selectionColorPanel.getBackground());
+        JDialog dialog = JColorChooser.createDialog(this, "Select color", true, colorChooser, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                setSelectionColor(jColorChooser1.getColor());
+                setSelectionColor(colorChooser.getColor());
             }
         }, null);
         dialog.setVisible(true);
@@ -213,9 +213,9 @@ public class ToolColorPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JColorChooser colorChooser;
     private javax.swing.JButton fillColorSelectButton;
     private javax.swing.JLabel fillcolorLabel;
-    private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JLabel penColorLabel;
     private javax.swing.JButton penColorSelectButton;
     private javax.swing.JPanel selectionColorPanel;

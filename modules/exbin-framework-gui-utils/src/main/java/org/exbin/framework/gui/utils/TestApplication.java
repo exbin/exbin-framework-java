@@ -70,6 +70,11 @@ public class TestApplication implements XBApplication {
             }
 
             @Override
+            public boolean exists(String key) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public String get(String key) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }

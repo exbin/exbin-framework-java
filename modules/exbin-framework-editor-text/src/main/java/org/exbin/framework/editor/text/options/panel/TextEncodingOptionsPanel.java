@@ -26,6 +26,7 @@ import javax.swing.event.ListDataListener;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
+import org.exbin.framework.editor.text.preferences.CharsetParameters;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -34,12 +35,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Text encoding options panel.
  *
- * @version 0.2.0 2017/01/06
+ * @version 0.2.1 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class TextEncodingOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
-
-    public static final String PREFERENCES_TEXT_ENCODING_DEFAULT = "textEncoding.default";
 
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
@@ -201,12 +200,14 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     public void loadFromPreferences(Preferences preferences) {
         encodingPanel.loadFromPreferences(preferences);
         updateEncodings();
-        defaultEncodingComboBox.setSelectedItem(preferences.get(PREFERENCES_TEXT_ENCODING_DEFAULT, TextEncodingPanel.ENCODING_UTF8));
+        CharsetParameters charsetParameters = new CharsetParameters(preferences);
+        defaultEncodingComboBox.setSelectedItem(charsetParameters.getDefaultEncoding());
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        preferences.put(PREFERENCES_TEXT_ENCODING_DEFAULT, (String) defaultEncodingComboBox.getSelectedItem());
+        CharsetParameters charsetParameters = new CharsetParameters(preferences);
+        charsetParameters.setDefaultEncoding((String) defaultEncodingComboBox.getSelectedItem());
         encodingPanel.saveToPreferences(preferences);
     }
 
@@ -281,7 +282,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
 
         public void setAvailableEncodings(List<String> encodings) {
             availableEncodings = new ArrayList<>();
-            availableEncodings.add(TextEncodingPanel.ENCODING_UTF8);
+            availableEncodings.add(CharsetParameters.ENCODING_UTF8);
             availableEncodings.addAll(encodings);
             int position = availableEncodings.indexOf(selectedEncoding);
             selectedEncoding = availableEncodings.get(position > 0 ? position : 0);

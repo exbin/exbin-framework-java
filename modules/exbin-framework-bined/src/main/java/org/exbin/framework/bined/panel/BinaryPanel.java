@@ -72,7 +72,6 @@ import org.exbin.framework.bined.EncodingStatusHandler;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextFontApi;
-import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
@@ -81,11 +80,12 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
+import org.exbin.framework.editor.text.preferences.CharsetParameters;
 
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.1 2018/12/04
+ * @version 0.2.1 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, BinarySearchPanelApi {
@@ -169,7 +169,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
         add(codeArea);
         foundTextBackgroundColor = Color.YELLOW;
-        codeArea.setCharset(Charset.forName(TextEncodingPanel.ENCODING_UTF8));
+        codeArea.setCharset(Charset.forName(CharsetParameters.ENCODING_UTF8));
         defaultFont = codeArea.getFont();
 
         defaultColors = getCurrentColors();
@@ -1027,7 +1027,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         if (binaryStatus != null) {
             updateCurrentDocumentSize();
             updateCurrentCaretPosition();
-       }
+        }
 
         encodingStatus.setEncoding(codeArea.getCharset().name());
     }

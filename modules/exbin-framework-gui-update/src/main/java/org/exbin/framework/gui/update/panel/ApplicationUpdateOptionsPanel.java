@@ -22,17 +22,16 @@ import java.util.ResourceBundle;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
+import org.exbin.framework.gui.update.preferences.CheckForUpdateParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Application update options panel.
  *
- * @version 0.2.0 2016/07/17
+ * @version 0.2.1 2018/06/09
  * @author ExBin Project (http://exbin.org)
  */
 public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
-
-    public static final String PREFERENCES_CHECK_FOR_UPDATE_ON_START = "start.checkForUpdate";
 
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ApplicationUpdateOptionsPanel.class);
@@ -98,12 +97,14 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        checkForUpdatesOnStartCheckBox.setSelected(Boolean.parseBoolean(preferences.get(PREFERENCES_CHECK_FOR_UPDATE_ON_START, Boolean.TRUE.toString())));
+        CheckForUpdateParameters checkForUpdateParameters = new CheckForUpdateParameters(preferences);
+        checkForUpdatesOnStartCheckBox.setSelected(checkForUpdateParameters.isShouldCheckForUpdate());
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        preferences.put(PREFERENCES_CHECK_FOR_UPDATE_ON_START, Boolean.toString(checkForUpdatesOnStartCheckBox.isSelected()));
+        CheckForUpdateParameters checkForUpdateParameters = new CheckForUpdateParameters(preferences);
+        checkForUpdateParameters.setShouldCheckForUpdate(checkForUpdatesOnStartCheckBox.isSelected());
     }
 
     @Override

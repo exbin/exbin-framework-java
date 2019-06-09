@@ -211,19 +211,16 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
         if (checkingThread != null) {
             checkingThread.interrupt();
         }
-        checkingThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                GuiUpdateModule.CheckForUpdateResult result = checkForUpdatePanelHandler.checkForUpdate();
-                VersionNumbers updateVersion = checkForUpdatePanelHandler.getUpdateVersion();
-                if (updateVersion == null) {
-                    availableVersionTextField.setText(resourceBundle.getString("unknown"));
-                } else {
-                    availableVersionTextField.setText(updateVersion.versionAsString());
-                }
-                setCheckUpdatesResult(result);
-                recheckButton.setEnabled(true);
+        checkingThread = new Thread(() -> {
+            GuiUpdateModule.CheckForUpdateResult result = checkForUpdatePanelHandler.checkForUpdate();
+            VersionNumbers updateVersion = checkForUpdatePanelHandler.getUpdateVersion();
+            if (updateVersion == null) {
+                availableVersionTextField.setText(resourceBundle.getString("unknown"));
+            } else {
+                availableVersionTextField.setText(updateVersion.versionAsString());
             }
+            setCheckUpdatesResult(result);
+            recheckButton.setEnabled(true);
         });
         checkingThread.start();
     }

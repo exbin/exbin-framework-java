@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.wave.preferences.WaveColorParameters;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -30,12 +31,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Wave editor color selection panel.
  *
- * @version 0.2.0 2016/08/17
+ * @version 0.2.1 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 public class WaveColorOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
-
-    public static final String PREFERENCES_WAVE_COLOR_DEFAULT = "waveColor.default";
 
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(WaveColorOptionsPanel.class);
@@ -129,15 +128,17 @@ public class WaveColorOptionsPanel extends javax.swing.JPanel implements Options
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        Boolean defaultColor = Boolean.valueOf(preferences.get(PREFERENCES_WAVE_COLOR_DEFAULT, Boolean.toString(true)));
-        defaultColorCheckBox.setSelected(defaultColor);
-        colorPanel.setEnabled(!defaultColor);
+        WaveColorParameters waveColorParameters = new WaveColorParameters(preferences);
+        boolean useDefaultColors = waveColorParameters.useDefaultColors();
+        defaultColorCheckBox.setSelected(useDefaultColors);
+        colorPanel.setEnabled(!useDefaultColors);
         colorPanel.loadFromPreferences(preferences);
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        preferences.put(PREFERENCES_WAVE_COLOR_DEFAULT, Boolean.toString(defaultColorCheckBox.isSelected()));
+        WaveColorParameters waveColorParameters = new WaveColorParameters(preferences);
+        waveColorParameters.setUseDefaultColors(defaultColorCheckBox.isSelected());
         colorPanel.saveToPreferences(preferences);
     }
 

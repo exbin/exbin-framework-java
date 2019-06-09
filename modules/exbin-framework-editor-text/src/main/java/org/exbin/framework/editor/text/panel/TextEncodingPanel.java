@@ -23,8 +23,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.text.preferences.CharsetParameters;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -33,13 +33,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Text encoding selection panel.
  *
- * @version 0.2.0 2017/01/06
+ * @version 0.2.1 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPanel {
-
-    public static final String ENCODING_UTF8 = "UTF-8";
-    public static final String PREFERENCES_TEXT_ENCODING_PREFIX = "textEncoding.";
 
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingPanel.class);
@@ -66,22 +63,18 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
             }
         });
 
-        encodingsList.addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    boolean emptySelection = encodingsList.isSelectionEmpty();
-                    removeButton.setEnabled(!emptySelection);
-                    selectAllButton.setEnabled(encodingsList.getModel().getSize() > 0);
-                    if (!emptySelection) {
-                        int[] indices = encodingsList.getSelectedIndices();
-                        upButton.setEnabled(encodingsList.getMaxSelectionIndex() >= indices.length);
-                        downButton.setEnabled(encodingsList.getMinSelectionIndex() + indices.length < encodingsList.getModel().getSize());
-                    } else {
-                        upButton.setEnabled(false);
-                        downButton.setEnabled(false);
-                    }
+        encodingsList.addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                boolean emptySelection = encodingsList.isSelectionEmpty();
+                removeButton.setEnabled(!emptySelection);
+                selectAllButton.setEnabled(encodingsList.getModel().getSize() > 0);
+                if (!emptySelection) {
+                    int[] indices = encodingsList.getSelectedIndices();
+                    upButton.setEnabled(encodingsList.getMaxSelectionIndex() >= indices.length);
+                    downButton.setEnabled(encodingsList.getMinSelectionIndex() + indices.length < encodingsList.getModel().getSize());
+                } else {
+                    upButton.setEnabled(false);
+                    downButton.setEnabled(false);
                 }
             }
         });
@@ -309,27 +302,15 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        List<String> encodings = new ArrayList<>();
-
-        String value;
-        int i = 0;
-        do {
-            value = preferences.get(PREFERENCES_TEXT_ENCODING_PREFIX + Integer.toString(i), null);
-            if (value != null) {
-                encodings.add(value);
-                i++;
-            }
-        } while (value != null);
+        CharsetParameters charsetParameters = new CharsetParameters(preferences);
+        List<String> encodings = charsetParameters.getEncodings();
         setEncodingList(encodings);
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        List<String> encodings = getEncodingList();
-        for (int i = 0; i < encodings.size(); i++) {
-            String value = encodings.get(i);
-            preferences.put(PREFERENCES_TEXT_ENCODING_PREFIX + Integer.toString(i), value);
-        }
+        CharsetParameters charsetParameters = new CharsetParameters(preferences);
+        charsetParameters.setEncodings(getEncodingList());
     }
 
     @Override

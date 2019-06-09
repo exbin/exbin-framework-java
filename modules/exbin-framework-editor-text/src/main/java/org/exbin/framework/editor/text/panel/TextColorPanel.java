@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.text.preferences.TextColorParameters;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -32,16 +33,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Text color selection panel.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.0 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
-
-    public static final String PREFERENCES_TEXT_COLOR_TEXT = "textColor.text";
-    public static final String PREFERENCES_TEXT_COLOR_BACKGROUND = "textColor.background";
-    public static final String PREFERENCES_TEXT_COLOR_SELECTION = "textColor.selection";
-    public static final String PREFERENCES_TEXT_COLOR_SELECTION_BACKGROUND = "textColor.selectionBackground";
-    public static final String PREFERENCES_TEXT_COLOR_FOUND = "textColor.found";
 
     private ModifiedOptionListener modifiedOptionListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorPanel.class);
@@ -505,38 +500,39 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
+        TextColorParameters textColorParameters = new TextColorParameters(preferences);
         setColorsFromArray(handler.getDefaultTextColors());
         Integer rgb;
         try {
-            rgb = Integer.valueOf(preferences.get(PREFERENCES_TEXT_COLOR_TEXT, null));
+            rgb = textColorParameters.getTextColorText();
             if (rgb != null) {
                 setTextColor(new Color(rgb));
             }
         } catch (NumberFormatException e) {
         }
         try {
-            rgb = Integer.valueOf(preferences.get(PREFERENCES_TEXT_COLOR_BACKGROUND, null));
+            rgb = textColorParameters.getTextColorBackground();
             if (rgb != null) {
                 setTextBackgroundColor(new Color(rgb));
             }
         } catch (NumberFormatException e) {
         }
         try {
-            rgb = Integer.valueOf(preferences.get(PREFERENCES_TEXT_COLOR_SELECTION, null));
+            rgb = textColorParameters.getSelectionTextColor();
             if (rgb != null) {
                 setSelectionTextColor(new Color(rgb));
             }
         } catch (NumberFormatException e) {
         }
         try {
-            rgb = Integer.valueOf(preferences.get(PREFERENCES_TEXT_COLOR_SELECTION_BACKGROUND, null));
+            rgb = textColorParameters.getSelectionBackgroundColor();
             if (rgb != null) {
                 setSelectionBackgroundColor(new Color(rgb));
             }
         } catch (NumberFormatException e) {
         }
         try {
-            rgb = Integer.valueOf(preferences.get(PREFERENCES_TEXT_COLOR_FOUND, null));
+            rgb = textColorParameters.getFoundBackgroundColor();
             if (rgb != null) {
                 setFoundBackgroundColor(new Color(rgb));
             }
@@ -546,11 +542,12 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        preferences.put(PREFERENCES_TEXT_COLOR_TEXT, Integer.toString(getTextColor().getRGB()));
-        preferences.put(PREFERENCES_TEXT_COLOR_BACKGROUND, Integer.toString(getTextBackgroundColor().getRGB()));
-        preferences.put(PREFERENCES_TEXT_COLOR_SELECTION, Integer.toString(getSelectionTextColor().getRGB()));
-        preferences.put(PREFERENCES_TEXT_COLOR_SELECTION_BACKGROUND, Integer.toString(getSelectionBackgroundColor().getRGB()));
-        preferences.put(PREFERENCES_TEXT_COLOR_FOUND, Integer.toString(getFoundBackgroundColor().getRGB()));
+        TextColorParameters textColorParameters = new TextColorParameters(preferences);
+        textColorParameters.setTextColorText(getTextColor().getRGB());
+        textColorParameters.setTextColorBackground(getTextBackgroundColor().getRGB());
+        textColorParameters.setSelectionTextColor(getSelectionTextColor().getRGB());
+        textColorParameters.setSelectionBackgroundColor(getSelectionBackgroundColor().getRGB());
+        textColorParameters.setFoundBackgroundColor(getFoundBackgroundColor().getRGB());
     }
 
     @Override

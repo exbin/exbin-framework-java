@@ -28,6 +28,7 @@ import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.options.CodeAreaOptions;
 import org.exbin.framework.editor.text.EncodingsHandler;
+import org.exbin.framework.editor.text.preferences.CharsetParameters;
 
 /**
  * Hexadecimal editor preferences.

@@ -400,37 +400,34 @@ public class ConnectionDialog extends javax.swing.JDialog {
         okButton.setEnabled(false);
         service = new XBCatalogNetServiceClient(connectionHost, connectionPort); // 22594 is 0x5842 (XB)
         final String connectionLabel = "Connecting to server " + connectionHost + ":" + connectionPort;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                setConnectionStatus(Color.ORANGE, "Connecting", connectionLabel);
-                if (service != null) {
-                    setConnectionStatus(Color.ORANGE, "Logging in", "Logging in...");
-                    try {
-                        int loginResult = service.login(usernameTextField.getText(), passwordField.getPassword());
-                        if (loginResult == 0) {
-                            setConnectionStatus(Color.GREEN, "Connected", null);
-                            dispose();
-                        } else {
-                            statusModeLabel.setText("Unable to login: error " + loginResult);
-                            setConnectionStatus(Color.RED, "Failed", null);
-                        }
-                    } catch (ConnectException ex) {
-                        statusModeLabel.setText("Unable to connect: " + ex.getMessage());
-                        setConnectionStatus(Color.RED, "Failed", null);
-                    } catch (UnsupportedOperationException ex) {
-                        Logger.getLogger(ConnectionDialog.class.getName()).log(Level.SEVERE, null, ex);
-                        setConnectionStatus(Color.RED, "Failed", null);
-                    } catch (Exception ex) {
-                        Logger.getLogger(ConnectionDialog.class.getName()).log(Level.SEVERE, null, ex);
+        new Thread(() -> {
+            setConnectionStatus(Color.ORANGE, "Connecting", connectionLabel);
+            if (service != null) {
+                setConnectionStatus(Color.ORANGE, "Logging in", "Logging in...");
+                try {
+                    int loginResult = service.login(usernameTextField.getText(), passwordField.getPassword());
+                    if (loginResult == 0) {
+                        setConnectionStatus(Color.GREEN, "Connected", null);
+                        dispose();
+                    } else {
+                        statusModeLabel.setText("Unable to login: error " + loginResult);
                         setConnectionStatus(Color.RED, "Failed", null);
                     }
-                } else {
-                    setConnectionStatus(Color.RED, "Disconnected", null);
+                } catch (ConnectException ex) {
+                    statusModeLabel.setText("Unable to connect: " + ex.getMessage());
+                    setConnectionStatus(Color.RED, "Failed", null);
+                } catch (UnsupportedOperationException ex) {
+                    Logger.getLogger(ConnectionDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    setConnectionStatus(Color.RED, "Failed", null);
+                } catch (Exception ex) {
+                    Logger.getLogger(ConnectionDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    setConnectionStatus(Color.RED, "Failed", null);
                 }
-
-                okButton.setEnabled(true);
+            } else {
+                setConnectionStatus(Color.RED, "Disconnected", null);
             }
+
+            okButton.setEnabled(true);
         }).start();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -564,9 +561,9 @@ public class ConnectionDialog extends javax.swing.JDialog {
 
     public void setConnectionList(List<String> connectionList) {
         connectionComboBox.removeAllItems();
-        for (String connection : connectionList) {
+        connectionList.forEach((connection) -> {
             connectionComboBox.addItem(connection);
-        }
+        });
     }
 
     public void loadConnectionList(Preferences preferences) {
