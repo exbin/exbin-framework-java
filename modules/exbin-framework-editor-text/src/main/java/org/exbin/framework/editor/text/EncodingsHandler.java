@@ -38,7 +38,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.panel.AddEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
-import org.exbin.framework.editor.text.preferences.CharsetParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -97,7 +97,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
         utfEncodingRadioButtonMenuItem.setText(UTF_ENCODING_TEXT);
         utfEncodingRadioButtonMenuItem.setToolTipText(UTF_ENCODING_TOOLTIP);
         utfEncodingActionListener = (java.awt.event.ActionEvent evt) -> {
-            setSelectedEncoding(CharsetParameters.ENCODING_UTF8);
+            setSelectedEncoding(TextEncodingParameters.ENCODING_UTF8);
         };
         utfEncodingRadioButtonMenuItem.addActionListener(utfEncodingActionListener);
 
@@ -200,7 +200,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
         if (encodings.size() > 0) {
             int selectedEncoding = encodings.indexOf(getSelectedEncoding());
             if (selectedEncoding < 0) {
-                setSelectedEncoding(CharsetParameters.ENCODING_UTF8);
+                setSelectedEncoding(TextEncodingParameters.ENCODING_UTF8);
                 utfEncodingRadioButtonMenuItem.setSelected(true);
             }
             toolsEncodingMenu.add(new JSeparator(), 1);
@@ -227,7 +227,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
     }
 
     public void loadFromPreferences(Preferences preferences) {
-        CharsetParameters charsetParameters = new CharsetParameters(preferences);
+        TextEncodingParameters charsetParameters = new TextEncodingParameters(preferences);
         setSelectedEncoding(charsetParameters.getDefaultEncoding());
         encodings.clear();
         encodings.addAll(charsetParameters.getEncodings());
@@ -245,7 +245,7 @@ public class EncodingsHandler implements TextEncodingPanelApi {
                 setSelectedEncoding(encodings.get(selectedEncoding + 1));
                 menuIndex = selectedEncoding + 2;
             } else {
-                setSelectedEncoding(CharsetParameters.ENCODING_UTF8);
+                setSelectedEncoding(TextEncodingParameters.ENCODING_UTF8);
             }
         }
 

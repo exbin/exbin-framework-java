@@ -16,21 +16,22 @@
  */
 package org.exbin.framework;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.api.XBApplicationModuleRepository;
-import org.exbin.xbup.plugin.XBDefaultModuleRepository;
+import org.exbin.framework.api.XBApplicationModule;
+import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * XBUP framework modules repository.
+ * Framework module.
  *
- * @version 0.2.0 2016/03/28
+ * @version 0.2.0 2019/06/14
  * @author ExBin Project (http://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class XBDefaultApplicationModuleRepository extends XBDefaultModuleRepository implements XBApplicationModuleRepository {
+public class FrameworkModule implements XBApplicationModule {
 
-    public XBDefaultApplicationModuleRepository(XBApplication application) {
-        super(application);
+    @Override
+    public void init(XBModuleHandler application) {
+    }
+
+    @Override
+    public void unregisterModule(String moduleId) {
     }
 }

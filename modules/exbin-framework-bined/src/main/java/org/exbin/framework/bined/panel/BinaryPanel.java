@@ -80,7 +80,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
-import org.exbin.framework.editor.text.preferences.CharsetParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 
 /**
  * Hexadecimal editor panel.
@@ -169,7 +169,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
         add(codeArea);
         foundTextBackgroundColor = Color.YELLOW;
-        codeArea.setCharset(Charset.forName(CharsetParameters.ENCODING_UTF8));
+        codeArea.setCharset(Charset.forName(TextEncodingParameters.ENCODING_UTF8));
         defaultFont = codeArea.getFont();
 
         defaultColors = getCurrentColors();
@@ -952,13 +952,17 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     private void updateCurrentDocumentSize() {
-        long dataSize = codeArea.getContentData().getDataSize();
-        binaryStatus.setCurrentDocumentSize(dataSize, documentOriginalSize);
+        if (binaryStatus != null) {
+            long dataSize = codeArea.getContentData().getDataSize();
+            binaryStatus.setCurrentDocumentSize(dataSize, documentOriginalSize);
+        }
     }
 
     private void updateCurrentCaretPosition() {
-        CodeAreaCaretPosition caretPosition = codeArea.getCaretPosition();
-        binaryStatus.setCursorPosition(caretPosition);
+        if (binaryStatus != null) {
+            CodeAreaCaretPosition caretPosition = codeArea.getCaretPosition();
+            binaryStatus.setCursorPosition(caretPosition);
+        }
     }
 
     public void setDeltaMemoryMode(boolean deltaMemoryMode) {

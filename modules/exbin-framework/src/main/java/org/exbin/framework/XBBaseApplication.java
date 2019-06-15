@@ -32,6 +32,7 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
@@ -48,6 +49,7 @@ import org.exbin.framework.preferences.FrameworkParameters;
  * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBBaseApplication implements XBApplication {
 
     private ResourceBundle appBundle;

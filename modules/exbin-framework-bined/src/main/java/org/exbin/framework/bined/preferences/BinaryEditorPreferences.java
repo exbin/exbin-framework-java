@@ -28,7 +28,7 @@ import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.options.CodeAreaOptions;
 import org.exbin.framework.editor.text.EncodingsHandler;
-import org.exbin.framework.editor.text.preferences.CharsetParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 
 /**
  * Hexadecimal editor preferences.
@@ -47,7 +47,7 @@ public class BinaryEditorPreferences {
     private final EditorParameters editorParameters;
     private final StatusParameters statusParameters;
     private final CodeAreaParameters codeAreaParameters;
-    private final CharsetParameters charsetParameters;
+    private final TextEncodingParameters charsetParameters;
     private final LayoutParameters layoutParameters;
     private final ThemeParameters themeParameters;
     private final ColorParameters colorParameters;
@@ -58,7 +58,7 @@ public class BinaryEditorPreferences {
         editorParameters = new EditorParameters(preferences);
         statusParameters = new StatusParameters(preferences);
         codeAreaParameters = new CodeAreaParameters(preferences);
-        charsetParameters = new CharsetParameters(preferences);
+        charsetParameters = new TextEncodingParameters(preferences);
         layoutParameters = new LayoutParameters(preferences);
         themeParameters = new ThemeParameters(preferences);
         colorParameters = new ColorParameters(preferences);
@@ -95,7 +95,7 @@ public class BinaryEditorPreferences {
         return codeAreaParameters;
     }
 
-    public CharsetParameters getCharsetParameters() {
+    public TextEncodingParameters getCharsetParameters() {
         return charsetParameters;
     }
 

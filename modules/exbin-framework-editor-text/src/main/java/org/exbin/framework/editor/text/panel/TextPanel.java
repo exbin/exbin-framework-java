@@ -53,7 +53,7 @@ import org.exbin.framework.editor.text.EditorTextModule;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.handler.FindTextPanelApi;
-import org.exbin.framework.editor.text.preferences.CharsetParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
@@ -107,7 +107,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     private void init() {
         highlight = null;
         foundTextBackgroundColor = Color.YELLOW;
-        charset = Charset.forName(CharsetParameters.ENCODING_UTF8);
+        charset = Charset.forName(TextEncodingParameters.ENCODING_UTF8);
         defaultFont = textArea.getFont();
         defaultColors = new Color[5];
         defaultColors[0] = new Color(textArea.getForeground().getRGB());

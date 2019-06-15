@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.preferences.CharsetParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 
 /**
  * Charset options.
@@ -52,12 +52,12 @@ public class CharsetOptions {
         this.encodings = encodings;
     }
 
-    public void loadFromParameters(CharsetParameters parameters) {
+    public void loadFromParameters(TextEncodingParameters parameters) {
         selectedEncoding = parameters.getSelectedEncoding();
         encodings = parameters.getEncodings();
     }
 
-    public void saveToParameters(CharsetParameters parameters) {
+    public void saveToParameters(TextEncodingParameters parameters) {
         parameters.setSelectedEncoding(selectedEncoding);
         parameters.setEncodings(encodings);
     }

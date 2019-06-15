@@ -24,7 +24,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.api.Preferences;
-import org.exbin.framework.editor.text.preferences.CharsetParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -302,14 +302,14 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        CharsetParameters charsetParameters = new CharsetParameters(preferences);
+        TextEncodingParameters charsetParameters = new TextEncodingParameters(preferences);
         List<String> encodings = charsetParameters.getEncodings();
         setEncodingList(encodings);
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        CharsetParameters charsetParameters = new CharsetParameters(preferences);
+        TextEncodingParameters charsetParameters = new TextEncodingParameters(preferences);
         charsetParameters.setEncodings(getEncodingList());
     }
 

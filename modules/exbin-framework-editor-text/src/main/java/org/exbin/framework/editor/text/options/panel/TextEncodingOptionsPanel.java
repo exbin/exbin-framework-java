@@ -26,7 +26,7 @@ import javax.swing.event.ListDataListener;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.editor.text.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
-import org.exbin.framework.editor.text.preferences.CharsetParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -200,13 +200,13 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     public void loadFromPreferences(Preferences preferences) {
         encodingPanel.loadFromPreferences(preferences);
         updateEncodings();
-        CharsetParameters charsetParameters = new CharsetParameters(preferences);
+        TextEncodingParameters charsetParameters = new TextEncodingParameters(preferences);
         defaultEncodingComboBox.setSelectedItem(charsetParameters.getDefaultEncoding());
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        CharsetParameters charsetParameters = new CharsetParameters(preferences);
+        TextEncodingParameters charsetParameters = new TextEncodingParameters(preferences);
         charsetParameters.setDefaultEncoding((String) defaultEncodingComboBox.getSelectedItem());
         encodingPanel.saveToPreferences(preferences);
     }
@@ -282,7 +282,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
 
         public void setAvailableEncodings(List<String> encodings) {
             availableEncodings = new ArrayList<>();
-            availableEncodings.add(CharsetParameters.ENCODING_UTF8);
+            availableEncodings.add(TextEncodingParameters.ENCODING_UTF8);
             availableEncodings.addAll(encodings);
             int position = availableEncodings.indexOf(selectedEncoding);
             selectedEncoding = availableEncodings.get(position > 0 ? position : 0);

@@ -22,42 +22,42 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Text editor preferences.
+ * Text editor encodings preferences.
  *
  * @version 0.2.0 2019/06/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CharsetParameters {
+public class TextEncodingParameters {
 
     public static final String ENCODING_UTF8 = "UTF-8";
 
-    public static final String PREFERENCES_ENCODING_PREFIX = "textEncoding.";
-    public static final String PREFERENCES_ENCODING_DEFAULT = PREFERENCES_ENCODING_PREFIX + "default";
-    public static final String PREFERENCES_ENCODING_SELECTED = "selectedEncoding";
+    public static final String PREFERENCES_TEXT_ENCODING_PREFIX = "textEncoding.";
+    public static final String PREFERENCES_TEXT_ENCODING_DEFAULT = PREFERENCES_TEXT_ENCODING_PREFIX + "default";
+    public static final String PREFERENCES_TEXT_ENCODING_SELECTED = "selectedEncoding";
 
     private final Preferences preferences;
 
-    public CharsetParameters(Preferences preferences) {
+    public TextEncodingParameters(Preferences preferences) {
         this.preferences = preferences;
     }
 
     @Nonnull
     public String getDefaultEncoding() {
-        return preferences.get(PREFERENCES_ENCODING_DEFAULT, ENCODING_UTF8);
+        return preferences.get(PREFERENCES_TEXT_ENCODING_DEFAULT, ENCODING_UTF8);
     }
 
     public void setDefaultEncoding(String encodingName) {
-        preferences.put(PREFERENCES_ENCODING_DEFAULT, encodingName);
+        preferences.put(PREFERENCES_TEXT_ENCODING_DEFAULT, encodingName);
     }
 
     @Nonnull
     public String getSelectedEncoding() {
-        return preferences.get(PREFERENCES_ENCODING_SELECTED, ENCODING_UTF8);
+        return preferences.get(PREFERENCES_TEXT_ENCODING_SELECTED, ENCODING_UTF8);
     }
 
     public void setSelectedEncoding(String encodingName) {
-        preferences.put(PREFERENCES_ENCODING_SELECTED, encodingName);
+        preferences.put(PREFERENCES_TEXT_ENCODING_SELECTED, encodingName);
     }
 
     @Nonnull
@@ -66,7 +66,7 @@ public class CharsetParameters {
         String value;
         int i = 0;
         do {
-            value = preferences.get(PREFERENCES_ENCODING_PREFIX + Integer.toString(i), null);
+            value = preferences.get(PREFERENCES_TEXT_ENCODING_PREFIX + Integer.toString(i), null);
             if (value != null) {
                 encodings.add(value);
                 i++;
@@ -79,8 +79,8 @@ public class CharsetParameters {
     public void setEncodings(List<String> encodings) {
         // Save encodings
         for (int i = 0; i < encodings.size(); i++) {
-            preferences.put(PREFERENCES_ENCODING_PREFIX + Integer.toString(i), encodings.get(i));
+            preferences.put(PREFERENCES_TEXT_ENCODING_PREFIX + Integer.toString(i), encodings.get(i));
         }
-        preferences.remove(PREFERENCES_ENCODING_PREFIX + Integer.toString(encodings.size()));
+        preferences.remove(PREFERENCES_TEXT_ENCODING_PREFIX + Integer.toString(encodings.size()));
     }
 }
