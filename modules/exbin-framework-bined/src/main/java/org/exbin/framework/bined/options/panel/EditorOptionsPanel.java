@@ -15,23 +15,31 @@
  */
 package org.exbin.framework.bined.options.panel;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.options.EditorOptions;
+import org.exbin.framework.bined.preferences.EditorParameters;
+import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Editor preference parameters panel.
  *
- * @version 0.2.0 2019/03/16
+ * @version 0.2.1 2019/06/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorOptionsPanel extends javax.swing.JPanel {
+public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditorOptionsPanel.class);
+    private final EditorOptionsPanelApi editorOptionsPanelApi;
 
-    public EditorOptionsPanel() {
+    public EditorOptionsPanel(@Nullable EditorOptionsPanelApi editorOptionsPanelApi) {
+        this.editorOptionsPanelApi = editorOptionsPanelApi;
         initComponents();
     }
 
@@ -97,7 +105,7 @@ public class EditorOptionsPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new EditorOptionsPanel());
+        WindowUtils.invokeDialog(new EditorOptionsPanel(null));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -105,4 +113,42 @@ public class EditorOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel fileHandlingModeLabel;
     private javax.swing.JCheckBox showValuesPanelCheckBox;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public List<PathItem> getPath() {
+        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
+        path.add(new PathItem("editor", resourceBundle.getString("options.Path.0")));
+        return path;
+    }
+
+    @Override
+    public void applyPreferencesChanges() {
+        if (editorOptionsPanelApi != null) {
+            EditorOptions editorOptions = new EditorOptions();
+            saveToOptions(editorOptions);
+            editorOptionsPanelApi.setFileHandlingMode(editorOptions.getFileHandlingMode());
+            editorOptionsPanelApi.setIsShowValuesPanel(editorOptions.isIsShowValuesPanel());
+        }
+    }
+
+    @Override
+    public void loadFromPreferences(Preferences preferences) {
+        EditorParameters parameters = new EditorParameters(preferences);
+        EditorOptions editorOptions = new EditorOptions();
+        editorOptions.loadFromParameters(parameters);
+        loadFromOptions(editorOptions);
+    }
+
+    @Override
+    public void saveToPreferences(Preferences preferences) {
+        EditorParameters parameters = new EditorParameters(preferences);
+        EditorOptions editorOptions = new EditorOptions();
+        saveToOptions(editorOptions);
+        editorOptions.saveToParameters(parameters);
+    }
+
+    @Override
+    public void setModifiedOptionListener(ModifiedOptionListener listener) {
+
+    }
 }

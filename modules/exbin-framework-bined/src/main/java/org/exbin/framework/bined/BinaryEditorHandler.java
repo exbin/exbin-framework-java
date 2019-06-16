@@ -30,6 +30,7 @@ import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.BinaryDataOperationException;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.ReplaceParameters;
@@ -46,18 +47,18 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 /**
  * Hexadecimal editor provider.
  *
- * @version 0.2.1 2018/08/10
+ * @version 0.2.1 2019/06/16
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
 
-    private BinaryPanelInit hexPanelInit = null;
+    private BinaryPanelInit binaryPanelInit = null;
     private final List<BinaryPanel> panels = new ArrayList<>();
     private EditorViewHandling editorViewHandling = null;
     private SegmentsRepository segmentsRepository;
     private BinaryPanel activePanel = null;
     private int lastIndex = 0;
-    private BinaryStatusApi hexStatus = null;
+    private BinaryStatusApi binaryStatus = null;
     private TextEncodingStatusApi encodingStatus;
     private EditorModificationListener editorModificationListener = null;
     private final EditorModificationListener multiModificationListener;
@@ -159,11 +160,11 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
-    public void registerBinaryStatus(BinaryStatusApi hexStatusApi) {
-        this.hexStatus = hexStatusApi;
+    public void registerBinaryStatus(BinaryStatusApi binaryStatusApi) {
+        this.binaryStatus = binaryStatusApi;
         if (!panels.isEmpty()) {
             for (BinaryPanel panel : panels) {
-                panel.registerBinaryStatus(hexStatusApi);
+                panel.registerBinaryStatus(binaryStatusApi);
             }
         }
     }
@@ -187,16 +188,16 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
         panel.setSegmentsRepository(segmentsRepository);
         lastIndex++;
         panels.add(panel);
-        if (hexPanelInit != null) {
-            hexPanelInit.init(panel);
+        if (binaryPanelInit != null) {
+            binaryPanelInit.init(panel);
         }
-        if (hexStatus != null) {
-            panel.registerBinaryStatus(hexStatus);
+        if (binaryStatus != null) {
+            panel.registerBinaryStatus(binaryStatus);
             panel.registerEncodingStatus(encodingStatus);
         }
         editorViewHandling.addEditorView(panel);
         panel.setModificationListener(multiModificationListener);
-        panel.getHexUndoHandler().addUndoUpdateListener(multiUndoUpdateListener);
+        panel.getBinaryUndoHandler().addUndoUpdateListener(multiUndoUpdateListener);
         panel.setUpdateListener(multiClipboardUpdateListener);
 
         return panel;
@@ -207,12 +208,17 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
         activePanel.newFile();
     }
 
-    public BinaryPanelInit getHexPanelInit() {
-        return hexPanelInit;
+    public BinaryPanelInit getBinaryPanelInit() {
+        return binaryPanelInit;
     }
 
-    public void setHexPanelInit(BinaryPanelInit hexPanelInit) {
-        this.hexPanelInit = hexPanelInit;
+    public void setBinaryPanelInit(BinaryPanelInit binaryPanelInit) {
+        this.binaryPanelInit = binaryPanelInit;
+    }
+
+    @Override
+    public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
+        activePanel.setFileHandlingMode(fileHandlingMode);
     }
 
     public EditorViewHandling getEditorViewHandling() {
@@ -302,6 +308,11 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
+    public ExtCodeArea getCodeArea() {
+        return activePanel.getCodeArea();
+    }
+
+    @Override
     public void printFile() {
         activePanel.printFile();
     }
@@ -309,9 +320,9 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     @Override
     public void setActiveEditor(EditorProvider editorProvider) {
         if (editorProvider instanceof BinaryPanel) {
-            BinaryPanel hexPanel = (BinaryPanel) editorProvider;
-            activePanel = hexPanel;
-            hexPanel.notifyListeners();
+            BinaryPanel binaryPanel = (BinaryPanel) editorProvider;
+            activePanel = binaryPanel;
+            binaryPanel.notifyListeners();
             notifyUndoChanged();
             notifyClipboardStateChanged();
         }
@@ -334,101 +345,101 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
-    public BinaryDataUndoHandler getHexUndoHandler() {
+    public BinaryDataUndoHandler getBinaryUndoHandler() {
         return new BinaryDataUndoHandler() {
             @Override
             public boolean canRedo() {
-                return activePanel.getHexUndoHandler().canRedo();
+                return activePanel.getBinaryUndoHandler().canRedo();
             }
 
             @Override
             public boolean canUndo() {
-                return activePanel.getHexUndoHandler().canUndo();
+                return activePanel.getBinaryUndoHandler().canUndo();
             }
 
             @Override
             public void clear() {
-                activePanel.getHexUndoHandler().clear();
+                activePanel.getBinaryUndoHandler().clear();
             }
 
             @Override
             public void doSync() throws BinaryDataOperationException {
-                activePanel.getHexUndoHandler().doSync();
+                activePanel.getBinaryUndoHandler().doSync();
             }
 
             @Override
             public void execute(BinaryDataCommand cmnd) throws BinaryDataOperationException {
-                activePanel.getHexUndoHandler().execute(cmnd);
+                activePanel.getBinaryUndoHandler().execute(cmnd);
             }
 
             @Override
             public void addCommand(BinaryDataCommand cmnd) {
-                activePanel.getHexUndoHandler().addCommand(cmnd);
+                activePanel.getBinaryUndoHandler().addCommand(cmnd);
             }
 
             @Override
             public List<BinaryDataCommand> getCommandList() {
-                return activePanel.getHexUndoHandler().getCommandList();
+                return activePanel.getBinaryUndoHandler().getCommandList();
             }
 
             @Override
             public long getCommandPosition() {
-                return activePanel.getHexUndoHandler().getCommandPosition();
+                return activePanel.getBinaryUndoHandler().getCommandPosition();
             }
 
             @Override
             public long getMaximumUndo() {
-                return activePanel.getHexUndoHandler().getMaximumUndo();
+                return activePanel.getBinaryUndoHandler().getMaximumUndo();
             }
 
             @Override
             public long getSyncPoint() {
-                return activePanel.getHexUndoHandler().getSyncPoint();
+                return activePanel.getBinaryUndoHandler().getSyncPoint();
             }
 
             @Override
             public long getUndoMaximumSize() {
-                return activePanel.getHexUndoHandler().getUndoMaximumSize();
+                return activePanel.getBinaryUndoHandler().getUndoMaximumSize();
             }
 
             @Override
             public long getUsedSize() {
-                return activePanel.getHexUndoHandler().getUsedSize();
+                return activePanel.getBinaryUndoHandler().getUsedSize();
             }
 
             @Override
             public void performRedo() throws BinaryDataOperationException {
-                activePanel.getHexUndoHandler().performRedo();
+                activePanel.getBinaryUndoHandler().performRedo();
             }
 
             @Override
             public void performRedo(int i) throws BinaryDataOperationException {
-                activePanel.getHexUndoHandler().performRedo(i);
+                activePanel.getBinaryUndoHandler().performRedo(i);
             }
 
             @Override
             public void performUndo() throws BinaryDataOperationException {
-                activePanel.getHexUndoHandler().performUndo();
+                activePanel.getBinaryUndoHandler().performUndo();
             }
 
             @Override
             public void performUndo(int i) throws BinaryDataOperationException {
-                activePanel.getHexUndoHandler().performUndo(i);
+                activePanel.getBinaryUndoHandler().performUndo(i);
             }
 
             @Override
             public void setCommandPosition(long l) throws BinaryDataOperationException {
-                activePanel.getHexUndoHandler().setCommandPosition(l);
+                activePanel.getBinaryUndoHandler().setCommandPosition(l);
             }
 
             @Override
             public void setSyncPoint(long l) {
-                activePanel.getHexUndoHandler().setSyncPoint(l);
+                activePanel.getBinaryUndoHandler().setSyncPoint(l);
             }
 
             @Override
             public void setSyncPoint() {
-                activePanel.getHexUndoHandler().setSyncPoint();
+                activePanel.getBinaryUndoHandler().setSyncPoint();
             }
 
             @Override

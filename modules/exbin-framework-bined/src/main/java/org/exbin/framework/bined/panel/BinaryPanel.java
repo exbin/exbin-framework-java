@@ -59,7 +59,7 @@ import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.delta.DeltaDocument;
 import org.exbin.bined.delta.FileDataSource;
 import org.exbin.bined.delta.SegmentsRepository;
-import org.exbin.bined.highlight.swing.extended.ExtendedHighlightCodeAreaPainter;
+import org.exbin.bined.highlight.swing.extended.ExtendedHighlightNonAsciiCodeAreaPainter;
 import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.operation.swing.CodeAreaUndoHandler;
@@ -80,12 +80,13 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
+import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.1 2019/06/09
+ * @version 0.2.1 2019/06/16
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, BinarySearchPanelApi {
@@ -103,7 +104,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     private boolean deltaMemoryMode = false;
 
     private BinarySearchPanel binarySearchPanel;
-    private boolean hexSearchPanelVisible = false;
+    private boolean binarySearchPanelVisible = false;
     private ValuesPanel valuesPanel;
     private JScrollPane valuesPanelScrollPane;
     private boolean valuesPanelVisible = false;
@@ -131,7 +132,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
     private void init() {
         codeArea = new ExtCodeArea();
-        codeArea.setPainter(new ExtendedHighlightCodeAreaPainter(codeArea));
+        codeArea.setPainter(new ExtendedHighlightNonAsciiCodeAreaPainter(codeArea));
         setNewData();
         codeArea.setHandleClipboard(false);
         codeArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -200,22 +201,22 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     public void showSearchPanel(boolean replace) {
-        if (!hexSearchPanelVisible) {
+        if (!binarySearchPanelVisible) {
             add(binarySearchPanel, BorderLayout.SOUTH);
             revalidate();
-            hexSearchPanelVisible = true;
+            binarySearchPanelVisible = true;
             binarySearchPanel.requestSearchFocus();
         }
         binarySearchPanel.switchReplaceMode(replace);
     }
 
     public void hideSearchPanel() {
-        if (hexSearchPanelVisible) {
+        if (binarySearchPanelVisible) {
             binarySearchPanel.cancelSearch();
             binarySearchPanel.clearSearch();
             BinaryPanel.this.remove(binarySearchPanel);
             BinaryPanel.this.revalidate();
-            hexSearchPanelVisible = false;
+            binarySearchPanelVisible = false;
         }
     }
 
@@ -244,6 +245,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         return valuesPanelVisible;
     }
 
+    @Override
     public ExtCodeArea getCodeArea() {
         return codeArea;
     }
@@ -280,7 +282,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
     @Override
     public void performFind(SearchParameters searchParameters) {
-        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
         binarySearchPanel.clearStatus();
         if (condition.isEmpty()) {
@@ -325,8 +327,8 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     @Override
     public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters) {
         SearchCondition replaceCondition = replaceParameters.getCondition();
-        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
-        ExtendedHighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
         if (currentMatch != null) {
             EditableBinaryData editableData = ((EditableBinaryData) codeArea.getContentData());
             editableData.remove(currentMatch.getPosition(), currentMatch.getLength());
@@ -357,10 +359,10 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
      * Performs search by binary data.
      */
     private void searchForBinaryData(SearchParameters searchParameters) {
-        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
         long position = codeArea.getCaretPosition().getDataPosition();
-        ExtendedHighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
 
         if (currentMatch != null) {
             if (currentMatch.getPosition() == position) {
@@ -374,7 +376,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         BinaryData searchData = condition.getBinaryData();
         BinaryData data = codeArea.getContentData();
 
-        List<ExtendedHighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
+        List<ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
 
         long dataSize = data.getDataSize();
         while (position < dataSize - searchData.getDataSize()) {
@@ -387,7 +389,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
             }
 
             if (matchLength == searchData.getDataSize()) {
-                ExtendedHighlightCodeAreaPainter.SearchMatch match = new ExtendedHighlightCodeAreaPainter.SearchMatch();
+                ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch match = new ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch();
                 match.setPosition(position);
                 match.setLength(searchData.getDataSize());
                 foundMatches.add(match);
@@ -403,7 +405,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         painter.setMatches(foundMatches);
         if (foundMatches.size() > 0) {
             painter.setCurrentMatchIndex(0);
-            ExtendedHighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
+            ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
             codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
         }
         binarySearchPanel.setStatus(foundMatches.size(), 0);
@@ -414,7 +416,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
      * Performs search by text/characters.
      */
     private void searchForText(SearchParameters searchParameters) {
-        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
 
         long position = searchParameters.getStartPosition();
@@ -426,7 +428,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         }
         BinaryData data = codeArea.getContentData();
 
-        List<ExtendedHighlightCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
+        List<ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
 
         Charset charset = codeArea.getCharset();
         CharsetEncoder encoder = charset.newEncoder();
@@ -459,7 +461,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
             }
 
             if (matchCharLength == findText.length()) {
-                ExtendedHighlightCodeAreaPainter.SearchMatch match = new ExtendedHighlightCodeAreaPainter.SearchMatch();
+                ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch match = new ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch();
                 match.setPosition(position);
                 match.setLength(matchLength);
                 foundMatches.add(match);
@@ -486,7 +488,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         painter.setMatches(foundMatches);
         if (foundMatches.size() > 0) {
             painter.setCurrentMatchIndex(0);
-            ExtendedHighlightCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
+            ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
             codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
         }
         binarySearchPanel.setStatus(foundMatches.size(), 0);
@@ -626,12 +628,12 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     @Override
-    public CodeAreaUndoHandler getHexUndoHandler() {
+    public CodeAreaUndoHandler getBinaryUndoHandler() {
         return undoHandler;
     }
 
-    public void setHexUndoHandler(CodeAreaUndoHandler hexUndoHandler) {
-        this.undoHandler = hexUndoHandler;
+    public void setBinaryUndoHandler(CodeAreaUndoHandler binaryUndoHandler) {
+        this.undoHandler = binaryUndoHandler;
     }
 
     @Override
@@ -864,41 +866,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
             @Override
             public void changeMemoryMode(BinaryStatusApi.MemoryMode memoryMode) {
                 boolean newDeltaMode = memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE;
-                if (newDeltaMode != deltaMemoryMode) {
-                    // Switch memory mode
-                    if (fileUri != null) {
-                        // If document is connected to file, attempt to release first if modified and then simply reload
-                        if (isModified()) {
-                            if (releaseFileMethod != null && releaseFileMethod.execute()) {
-                                deltaMemoryMode = newDeltaMode;
-                                loadFromFile(fileUri, null);
-                                codeArea.clearSelection();
-                                codeArea.setCaretPosition(0);
-                            }
-                        } else {
-                            deltaMemoryMode = newDeltaMode;
-                            loadFromFile(fileUri, null);
-                        }
-                    } else {
-                        // If document unsaved in memory, switch data in code area
-                        BinaryData oldData = codeArea.getContentData();
-                        if (codeArea.getContentData() instanceof DeltaDocument) {
-                            XBData data = new XBData();
-                            data.insert(0, codeArea.getContentData());
-                            codeArea.setContentData(data);
-                        } else {
-                            DeltaDocument document = segmentsRepository.createDocument();
-                            document.insert(0, oldData);
-                            codeArea.setContentData(document);
-                        }
-                        undoHandler.clear();
-                        oldData.dispose();
-                        codeArea.notifyDataChanged();
-                        updateCurrentMemoryMode();
-                        deltaMemoryMode = newDeltaMode;
-                    }
-                    deltaMemoryMode = newDeltaMode;
-                }
+                switchMemoryMode(newDeltaMode);
             }
         });
 
@@ -939,9 +907,9 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
     @Override
     public void setMatchPosition(int matchPosition) {
-        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         painter.setCurrentMatchIndex(matchPosition);
-        ExtendedHighlightCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
+        ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
         codeArea.revealPosition(currentMatch.getPosition(), 0, codeArea.getActiveSection());
         codeArea.repaint();
     }
@@ -984,7 +952,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
     @Override
     public void clearMatches() {
-        ExtendedHighlightCodeAreaPainter painter = (ExtendedHighlightCodeAreaPainter) codeArea.getPainter();
+        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         painter.clearMatches();
     }
 
@@ -1046,6 +1014,49 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
             codeArea.setContentData(segmentsRepository.createDocument());
         } else {
             codeArea.setContentData(new XBData());
+        }
+    }
+
+    @Override
+    public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
+        switchMemoryMode(fileHandlingMode == FileHandlingMode.DELTA);
+    }
+
+    private void switchMemoryMode(boolean newDeltaMode) {
+        if (newDeltaMode != deltaMemoryMode) {
+            // Switch memory mode
+            if (fileUri != null) {
+                // If document is connected to file, attempt to release first if modified and then simply reload
+                if (isModified()) {
+                    if (releaseFileMethod != null && releaseFileMethod.execute()) {
+                        deltaMemoryMode = newDeltaMode;
+                        loadFromFile(fileUri, null);
+                        codeArea.clearSelection();
+                        codeArea.setCaretPosition(0);
+                    }
+                } else {
+                    deltaMemoryMode = newDeltaMode;
+                    loadFromFile(fileUri, null);
+                }
+            } else {
+                // If document unsaved in memory, switch data in code area
+                BinaryData oldData = codeArea.getContentData();
+                if (codeArea.getContentData() instanceof DeltaDocument) {
+                    XBData data = new XBData();
+                    data.insert(0, codeArea.getContentData());
+                    codeArea.setContentData(data);
+                } else {
+                    DeltaDocument document = segmentsRepository.createDocument();
+                    document.insert(0, oldData);
+                    codeArea.setContentData(document);
+                }
+                undoHandler.clear();
+                oldData.dispose();
+                codeArea.notifyDataChanged();
+                updateCurrentMemoryMode();
+                deltaMemoryMode = newDeltaMode;
+            }
+            deltaMemoryMode = newDeltaMode;
         }
     }
 

@@ -75,6 +75,10 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.bined.options.panel.BinaryAppearanceOptionsPanelApi;
+import org.exbin.framework.bined.options.panel.CodeAreaOptionsPanel;
+import org.exbin.framework.bined.options.panel.CodeAreaOptionsPanelApi;
+import org.exbin.framework.bined.options.panel.EditorOptionsPanel;
+import org.exbin.framework.bined.options.panel.EditorOptionsPanelApi;
 import org.exbin.framework.bined.preferences.EditorParameters;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
@@ -82,7 +86,7 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.0 2019/06/16
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -100,16 +104,18 @@ public class BinedModule implements XBApplicationModule {
     private static final String VIEW_VALUES_PANEL_MENU_GROUP_ID = MODULE_ID + ".viewValuesPanelMenuGroup";
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
 
-    public static final String HEX_STATUS_BAR_ID = "hexStatusBar";
+    public static final String BINARY_STATUS_BAR_ID = "binaryStatusBar";
 
     private java.util.ResourceBundle resourceBundle = null;
 
     private XBApplication application;
     private BinaryEditorProvider editorProvider;
-    private BinaryStatusPanel hexStatusPanel;
+    private BinaryStatusPanel binaryStatusPanel;
     private TextEncodingOptionsPanel textEncodingOptionsPanel;
     private TextFontOptionsPanel textFontOptionsPanel;
-    private BinaryAppearanceOptionsPanel hexAppearanceOptionsPanel;
+    private BinaryAppearanceOptionsPanel binaryAppearanceOptionsPanel;
+    private EditorOptionsPanel editorOptionsPanel;
+    private CodeAreaOptionsPanel codeAreaOptionsPanel;
 
     private FindReplaceHandler findReplaceHandler;
     private ViewNonprintablesHandler viewNonprintablesHandler;
@@ -161,7 +167,7 @@ public class BinedModule implements XBApplicationModule {
             panel.setPopupMenu(createPopupMenu(panel.getId()));
             panel.setApplication(application);
             panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
-            panel.setGoToPositionAction(getGoToLineHandler().getGoToLineAction());
+            panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
             panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
             panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
             panel.setEncodingsHandler(new EncodingStatusHandler() {
@@ -189,10 +195,10 @@ public class BinedModule implements XBApplicationModule {
         if (editorProvider == null) {
             GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryEditorHandler();
-            ((BinaryEditorHandler) editorProvider).setHexPanelInit((BinaryPanel panel) -> {
+            ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinaryPanel panel) -> {
                 panel.setPopupMenu(createPopupMenu(panel.getId()));
 //                    panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
-                panel.setGoToPositionAction(getGoToLineHandler().getGoToLineAction());
+                panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
                 panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
                 panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
                 panel.setEncodingsHandler(new EncodingStatusHandler() {
@@ -219,14 +225,14 @@ public class BinedModule implements XBApplicationModule {
     }
 
     public void registerStatusBar() {
-        hexStatusPanel = new BinaryStatusPanel();
+        binaryStatusPanel = new BinaryStatusPanel();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        frameModule.registerStatusBar(MODULE_ID, HEX_STATUS_BAR_ID, hexStatusPanel);
-        frameModule.switchStatusBar(HEX_STATUS_BAR_ID);
-        getEditorProvider().registerBinaryStatus(hexStatusPanel);
-        getEditorProvider().registerEncodingStatus(hexStatusPanel);
+        frameModule.registerStatusBar(MODULE_ID, BINARY_STATUS_BAR_ID, binaryStatusPanel);
+        frameModule.switchStatusBar(BINARY_STATUS_BAR_ID);
+        getEditorProvider().registerBinaryStatus(binaryStatusPanel);
+        getEditorProvider().registerEncodingStatus(binaryStatusPanel);
         if (encodingsHandler != null) {
-            encodingsHandler.setTextEncodingStatus(hexStatusPanel);
+            encodingsHandler.setTextEncodingStatus(binaryStatusPanel);
         }
     }
 
@@ -290,8 +296,8 @@ public class BinedModule implements XBApplicationModule {
             }
         };
 
-        hexAppearanceOptionsPanel = new BinaryAppearanceOptionsPanel(appearanceOptionsPanelApi);
-        optionsModule.extendAppearanceOptionsPanel(hexAppearanceOptionsPanel);
+        binaryAppearanceOptionsPanel = new BinaryAppearanceOptionsPanel(appearanceOptionsPanelApi);
+        optionsModule.extendAppearanceOptionsPanel(binaryAppearanceOptionsPanel);
 
         TextEncodingPanelApi textEncodingPanelApi = new TextEncodingPanelApi() {
             @Override
@@ -395,22 +401,46 @@ public class BinedModule implements XBApplicationModule {
             }
         });
         optionsModule.addOptionsPanel(textFontOptionsPanel);
+
+        editorOptionsPanel = new EditorOptionsPanel(new EditorOptionsPanelApi() {
+            @Override
+            public void setFileHandlingMode(String fileHandlingMode) {
+                getEditorProvider().setFileHandlingMode(FileHandlingMode.valueOf(fileHandlingMode));
+            }
+
+            @Override
+            public void setIsShowValuesPanel(boolean showValuesPanel) {
+                boolean valuesPanelVisible = getEditorProvider().isValuesPanelVisible();
+                if (valuesPanelVisible != showValuesPanel) {
+                    if (showValuesPanel) {
+                        getEditorProvider().showValuesPanel();
+                    } else {
+                        getEditorProvider().hideValuesPanel();
+                    }
+                }
+            }
+        });
+        optionsModule.addOptionsPanel(editorOptionsPanel);
+
+        CodeAreaOptionsPanelApi codeAreaOptionsPanelApi = getEditorProvider()::getCodeArea;
+        codeAreaOptionsPanel = new CodeAreaOptionsPanel(codeAreaOptionsPanelApi);
+        optionsModule.addOptionsPanel(codeAreaOptionsPanel);
     }
 
     public void registerWordWrapping() {
-        getWordWrappingHandler();
+        getRowWrappingHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, wordWrappingHandler.getViewLineWrapAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
-        getGoToLineHandler();
+        getGoToPositionHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, goToLineHandler.getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
-    public BinaryStatusPanel getTextStatusPanel() {
-        return hexStatusPanel;
+    public BinaryStatusPanel getBinaryStatusPanel() {
+        return binaryStatusPanel;
     }
 
     private FindReplaceHandler getFindReplaceHandler() {
@@ -449,7 +479,7 @@ public class BinedModule implements XBApplicationModule {
         return toolsOptionsHandler;
     }
 
-    private RowWrappingHandler getWordWrappingHandler() {
+    private RowWrappingHandler getRowWrappingHandler() {
         if (wordWrappingHandler == null) {
             wordWrappingHandler = new RowWrappingHandler(application, getEditorProvider());
             wordWrappingHandler.init();
@@ -458,7 +488,7 @@ public class BinedModule implements XBApplicationModule {
         return wordWrappingHandler;
     }
 
-    private GoToPositionHandler getGoToLineHandler() {
+    private GoToPositionHandler getGoToPositionHandler() {
         if (goToLineHandler == null) {
             goToLineHandler = new GoToPositionHandler(application, getEditorProvider());
             goToLineHandler.init();
@@ -478,7 +508,7 @@ public class BinedModule implements XBApplicationModule {
 
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler(application, getEditorProvider(), getTextStatusPanel());
+            encodingsHandler = new EncodingsHandler(application, getEditorProvider(), getBinaryStatusPanel());
             encodingsHandler.init();
         }
 
@@ -743,9 +773,19 @@ public class BinedModule implements XBApplicationModule {
             textFontOptionsPanel.applyPreferencesChanges();
         }
 
-        if (hexAppearanceOptionsPanel != null) {
-            hexAppearanceOptionsPanel.loadFromPreferences(preferences);
-            hexAppearanceOptionsPanel.applyPreferencesChanges();
+        if (binaryAppearanceOptionsPanel != null) {
+            binaryAppearanceOptionsPanel.loadFromPreferences(preferences);
+            binaryAppearanceOptionsPanel.applyPreferencesChanges();
+        }
+
+        if (editorOptionsPanel != null) {
+            editorOptionsPanel.loadFromPreferences(preferences);
+            editorOptionsPanel.applyPreferencesChanges();
+        }
+
+        if (codeAreaOptionsPanel != null) {
+            codeAreaOptionsPanel.loadFromPreferences(preferences);
+            codeAreaOptionsPanel.applyPreferencesChanges();
         }
     }
 

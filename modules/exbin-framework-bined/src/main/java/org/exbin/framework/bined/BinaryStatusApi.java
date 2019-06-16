@@ -29,7 +29,7 @@ import org.exbin.bined.EditationOperation;
 /**
  * Hexadecimal editor status interface.
  *
- * @version 0.2.1 2019/03/16
+ * @version 0.2.1 2019/06/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -45,7 +45,8 @@ public interface BinaryStatusApi {
     /**
      * Reports currently active editation mode.
      *
-     * @param editationMode editation mode
+     * @param mode editation mode
+     * @param operation editation operation
      */
     void setEditationMode(EditationMode mode, EditationOperation operation);
 
@@ -77,7 +78,7 @@ public interface BinaryStatusApi {
         /**
          * Requests change of editation mode from given mode.
          *
-         * @param editationMode editation mode
+         * @param operation editation operation
          */
         void changeEditationOperation(EditationOperation operation);
 
