@@ -17,7 +17,9 @@
 package org.exbin.framework.bined.panel;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.util.ResourceBundle;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import org.exbin.bined.swing.extended.ExtCodeArea;
@@ -28,7 +30,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Multiline search condition editor panel.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.1 2019/06/17
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryMultilinePanel extends javax.swing.JPanel {
@@ -41,7 +43,7 @@ public class BinaryMultilinePanel extends javax.swing.JPanel {
     private JTextArea textArea;
     private JScrollPane scrollPane;
     private ExtCodeArea codeArea;
-    private CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
+    private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
 
     public BinaryMultilinePanel() {
         initComponents();
@@ -93,20 +95,26 @@ public class BinaryMultilinePanel extends javax.swing.JPanel {
             codeArea = new ExtCodeArea();
             codeArea.setContentData(condition.getBinaryData());
             add(codeArea, BorderLayout.CENTER);
-            if (hexCodePopupMenuHandler != null) {
-                codeArea.setComponentPopupMenu(hexCodePopupMenuHandler.createPopupMenu(codeArea, POPUP_MENU_POSTFIX));
+            if (codeAreaPopupMenuHandler != null) {
+                codeArea.setComponentPopupMenu(new JPopupMenu() {
+                    @Override
+                    public void show(Component invoker, int x, int y) {
+                        JPopupMenu popupMenu = codeAreaPopupMenuHandler.createPopupMenu(codeArea, POPUP_MENU_POSTFIX, x, y);
+                        popupMenu.show(invoker, x, y);
+                    }
+                });
             }
         }
         revalidate();
     }
 
-    public void setHexCodePopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
-        this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
+    public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler) {
+        this.codeAreaPopupMenuHandler = codeAreaPopupMenuHandler;
     }
 
     public void detachMenu() {
         if (condition.getSearchMode() == SearchCondition.SearchMode.BINARY) {
-            hexCodePopupMenuHandler.dropPopupMenu(POPUP_MENU_POSTFIX);
+            codeAreaPopupMenuHandler.dropPopupMenu(POPUP_MENU_POSTFIX);
         }
     }
 

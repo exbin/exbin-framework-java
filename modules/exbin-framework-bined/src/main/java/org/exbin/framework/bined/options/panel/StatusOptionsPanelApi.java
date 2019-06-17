@@ -14,24 +14,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined;
+package org.exbin.framework.bined.options.panel;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPopupMenu;
-import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.framework.bined.options.StatusOptions;
 
 /**
- * Code area popup menu handler.
+ * Status bar options panel api interface.
  *
- * @version 0.2.0 2019/06/17
+ * @version 0.2.1 2019/06/17
  * @author ExBin Project (http://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface CodeAreaPopupMenuHandler {
+public interface StatusOptionsPanelApi {
 
-    @Nonnull
-    JPopupMenu createPopupMenu(ExtCodeArea codeArea, String menuPostfix, int x, int y);
-
-    void dropPopupMenu(String menuPostfix);
+    public void applyStatusOptions(StatusOptions statusOptions);
 }

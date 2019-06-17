@@ -15,26 +15,35 @@
  */
 package org.exbin.framework.bined.options.panel;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.PositionCodeType;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.options.StatusOptions;
 import org.exbin.framework.bined.panel.StatusCursorPositionFormat;
 import org.exbin.framework.bined.panel.StatusDocumentSizeFormat;
+import org.exbin.framework.bined.preferences.StatusParameters;
+import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Editor preference parameters panel.
  *
- * @version 0.2.0 2019/03/16
+ * @version 0.2.1 2019/06/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class StatusOptionsPanel extends javax.swing.JPanel {
+public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(StatusOptionsPanel.class);
 
-    public StatusOptionsPanel() {
+    private final StatusOptionsPanelApi statusOptionsPanelApi;
+
+    public StatusOptionsPanel(@Nullable StatusOptionsPanelApi statusOptionsPanelApi) {
+        this.statusOptionsPanelApi = statusOptionsPanelApi;
         initComponents();
     }
 
@@ -176,7 +185,7 @@ public class StatusOptionsPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new StatusOptionsPanel());
+        WindowUtils.invokeDialog(new StatusOptionsPanel(null));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -193,4 +202,42 @@ public class StatusOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel octalGroupSizeLabel;
     private javax.swing.JSpinner octalGroupSizeSpinner;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public List<PathItem> getPath() {
+        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
+        path.add(new PathItem("editor", ""));
+        path.add(new PathItem("status", resourceBundle.getString("options.Path.0")));
+        return path;
+    }
+
+    @Override
+    public void applyPreferencesChanges() {
+        if (statusOptionsPanelApi != null) {
+            StatusOptions statusOptions = new StatusOptions();
+            saveToOptions(statusOptions);
+            statusOptionsPanelApi.applyStatusOptions(statusOptions);
+        }
+    }
+
+    @Override
+    public void loadFromPreferences(Preferences preferences) {
+        StatusParameters parameters = new StatusParameters(preferences);
+        StatusOptions statusOptions = new StatusOptions();
+        statusOptions.loadFromParameters(parameters);
+        loadFromOptions(statusOptions);
+    }
+
+    @Override
+    public void saveToPreferences(Preferences preferences) {
+        StatusParameters parameters = new StatusParameters(preferences);
+        StatusOptions statusOptions = new StatusOptions();
+        saveToOptions(statusOptions);
+        statusOptions.saveToParameters(parameters);
+    }
+
+    @Override
+    public void setModifiedOptionListener(ModifiedOptionListener listener) {
+
+    }
 }

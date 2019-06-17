@@ -964,8 +964,8 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         this.encodingsHandler = encodingsHandler;
     }
 
-    public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
-        binarySearchPanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
+    public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler) {
+        binarySearchPanel.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
     }
 
     public void setCopyAsCode(Action copyAsCode) {

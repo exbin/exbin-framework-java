@@ -17,10 +17,12 @@
 package org.exbin.framework.bined.panel;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.event.KeyListener;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
@@ -47,7 +49,7 @@ public class BinarySearchComboBoxPanel extends JPanel {
     public static final String BINARY_MODE = "binary";
 
     private final JTextField textField;
-    private final ExtCodeArea hexadecimalEditor = new ExtCodeArea();
+    private final ExtCodeArea codeArea = new ExtCodeArea();
 
     private final SearchCondition item = new SearchCondition();
 
@@ -79,25 +81,25 @@ public class BinarySearchComboBoxPanel extends JPanel {
         super.add(textField, TEXT_MODE);
 
         {
-            ExtendedCodeAreaLayoutProfile layoutProfile = hexadecimalEditor.getLayoutProfile();
+            ExtendedCodeAreaLayoutProfile layoutProfile = codeArea.getLayoutProfile();
             layoutProfile.setShowHeader(false);
             layoutProfile.setShowRowPosition(false);
-            hexadecimalEditor.setLayoutProfile(layoutProfile);
+            codeArea.setLayoutProfile(layoutProfile);
         }
-        hexadecimalEditor.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
-        hexadecimalEditor.setWrappingBytesGroupSize(0);
+        codeArea.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        codeArea.setWrappingBytesGroupSize(0);
         {
-            ExtendedCodeAreaThemeProfile themeProfile = hexadecimalEditor.getThemeProfile();
+            ExtendedCodeAreaThemeProfile themeProfile = codeArea.getThemeProfile();
             themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
-            hexadecimalEditor.setThemeProfile(themeProfile);
+            codeArea.setThemeProfile(themeProfile);
         }
 
-        hexadecimalEditor.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
-        hexadecimalEditor.setContentData(new ByteArrayEditableData());
-        hexadecimalEditor.setBorder(comboBoxBorder);
-        hexadecimalEditor.addDataChangedListener(this::comboBoxValueChanged);
-        super.add(hexadecimalEditor, BINARY_MODE);
+        codeArea.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        codeArea.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        codeArea.setContentData(new ByteArrayEditableData());
+        codeArea.setBorder(comboBoxBorder);
+        codeArea.addDataChangedListener(this::comboBoxValueChanged);
+        super.add(codeArea, BINARY_MODE);
     }
 
     public SearchCondition getItem() {
@@ -107,7 +109,7 @@ public class BinarySearchComboBoxPanel extends JPanel {
                 break;
             }
             case BINARY: {
-                item.setBinaryData((EditableBinaryData) hexadecimalEditor.getContentData());
+                item.setBinaryData((EditableBinaryData) codeArea.getContentData());
                 break;
             }
         }
@@ -140,7 +142,7 @@ public class BinarySearchComboBoxPanel extends JPanel {
                 }
                 this.item.setBinaryData(data);
                 runningUpdate = true;
-                hexadecimalEditor.setContentData(data);
+                codeArea.setContentData(data);
                 runningUpdate = false;
                 CardLayout layout = (CardLayout) getLayout();
                 layout.show(this, BINARY_MODE);
@@ -157,7 +159,7 @@ public class BinarySearchComboBoxPanel extends JPanel {
                 break;
             }
             case BINARY: {
-                hexadecimalEditor.selectAll();
+                codeArea.selectAll();
                 break;
             }
         }
@@ -171,7 +173,7 @@ public class BinarySearchComboBoxPanel extends JPanel {
 
     public void addValueKeyListener(KeyListener editorKeyListener) {
         textField.addKeyListener(editorKeyListener);
-        hexadecimalEditor.addKeyListener(editorKeyListener);
+        codeArea.addKeyListener(editorKeyListener);
     }
 
     public void setValueChangedListener(ValueChangedListener valueChangedListener) {
@@ -191,14 +193,20 @@ public class BinarySearchComboBoxPanel extends JPanel {
                 break;
             }
             case BINARY: {
-                hexadecimalEditor.requestFocus();
+                codeArea.requestFocus();
                 break;
             }
         }
     }
 
-    public void setHexCodePopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler, String postfix) {
-        hexadecimalEditor.setComponentPopupMenu(hexCodePopupMenuHandler.createPopupMenu(hexadecimalEditor, ".search" + postfix));
+    public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler, String postfix) {
+        codeArea.setComponentPopupMenu(new JPopupMenu() {
+            @Override
+            public void show(Component invoker, int x, int y) {
+                JPopupMenu popupMenu = codeAreaPopupMenuHandler.createPopupMenu(codeArea, ".search" + postfix, x, y);
+                popupMenu.show(invoker, x, y);
+            }
+        });
     }
 
     /**

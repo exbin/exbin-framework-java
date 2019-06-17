@@ -600,7 +600,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
             @Override
             public SearchCondition multilineEdit(SearchCondition condition) {
                 final BinaryMultilinePanel multilinePanel = new BinaryMultilinePanel();
-                multilinePanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
+                multilinePanel.setCodeAreaPopupMenuHandler(hexCodePopupMenuHandler);
                 multilinePanel.setCondition(condition);
                 DefaultControlPanel controlPanel = new DefaultControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
@@ -998,9 +998,9 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         return true;
     }
 
-    public void setHexCodePopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
+    public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
-        findComboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "");
+        findComboBoxEditorComponent.setCodeAreaPopupMenuHandler(hexCodePopupMenuHandler, "");
     }
 
     /**

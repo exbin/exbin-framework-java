@@ -20,25 +20,35 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import org.exbin.bined.SelectionRange;
-import org.exbin.bined.capability.EditationModeCapable;
-import org.exbin.bined.capability.SelectionCapable;
+import org.exbin.bined.BasicCodeAreaZone;
+import org.exbin.bined.PositionCodeType;
 import org.exbin.bined.delta.SegmentsRepository;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.bined.options.StatusOptions;
 import org.exbin.framework.bined.options.panel.BinaryAppearanceOptionsPanel;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
@@ -54,9 +64,6 @@ import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.menu.api.ClipboardActions;
-import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
-import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuGroup;
@@ -77,8 +84,12 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.bined.options.panel.BinaryAppearanceOptionsPanelApi;
 import org.exbin.framework.bined.options.panel.CodeAreaOptionsPanel;
 import org.exbin.framework.bined.options.panel.CodeAreaOptionsPanelApi;
+import org.exbin.framework.bined.options.panel.ColorProfilesOptionsPanel;
 import org.exbin.framework.bined.options.panel.EditorOptionsPanel;
 import org.exbin.framework.bined.options.panel.EditorOptionsPanelApi;
+import org.exbin.framework.bined.options.panel.LayoutProfilesOptionsPanel;
+import org.exbin.framework.bined.options.panel.StatusOptionsPanel;
+import org.exbin.framework.bined.options.panel.ThemeProfilesOptionsPanel;
 import org.exbin.framework.bined.preferences.EditorParameters;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
@@ -86,7 +97,7 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2019/06/16
+ * @version 0.2.0 2019/06/17
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -116,6 +127,10 @@ public class BinedModule implements XBApplicationModule {
     private BinaryAppearanceOptionsPanel binaryAppearanceOptionsPanel;
     private EditorOptionsPanel editorOptionsPanel;
     private CodeAreaOptionsPanel codeAreaOptionsPanel;
+    private StatusOptionsPanel statusOptionsPanel;
+    private ThemeProfilesOptionsPanel themeProfilesOptionsPanel;
+    private LayoutProfilesOptionsPanel layoutProfilesOptionsPanel;
+    private ColorProfilesOptionsPanel colorProfilesOptionsPanel;
 
     private FindReplaceHandler findReplaceHandler;
     private ViewNonprintablesHandler viewNonprintablesHandler;
@@ -133,7 +148,16 @@ public class BinedModule implements XBApplicationModule {
     private ClipboardCodeHandler clipboardCodeHandler;
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
 
+    private final int metaMask;
+
     public BinedModule() {
+        int metaMaskValue;
+        try {
+            metaMaskValue = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        } catch (java.awt.HeadlessException ex) {
+            metaMaskValue = java.awt.Event.CTRL_MASK;
+        }
+        metaMask = metaMaskValue;
     }
 
     @Override
@@ -246,26 +270,6 @@ public class BinedModule implements XBApplicationModule {
 
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
-//        BinaryColorPanelApi colorPanelFrame = new BinaryColorPanelApi() {
-//            @Override
-//            public Map<BinaryColorType, Color> getCurrentTextColors() {
-//                return getEditorProvider().getCurrentColors();
-//            }
-//
-//            @Override
-//            public Map<BinaryColorType, Color> getDefaultTextColors() {
-//                return getEditorProvider().getDefaultColors();
-//            }
-//
-//            @Override
-//            public void setCurrentTextColors(Map<BinaryColorType, Color> colors) {
-//                getEditorProvider().setCurrentColors(colors);
-//            }
-//        };
-//
-//        colorOptionsPanel = new BinaryColorOptionsPanel();
-//        colorOptionsPanel.setPanelApi(colorPanelFrame);
-//        optionsModule.addOptionsPanel(colorOptionsPanel);
 
         BinaryAppearanceOptionsPanelApi appearanceOptionsPanelApi;
         appearanceOptionsPanelApi = new BinaryAppearanceOptionsPanelApi() {
@@ -425,6 +429,16 @@ public class BinedModule implements XBApplicationModule {
         CodeAreaOptionsPanelApi codeAreaOptionsPanelApi = getEditorProvider()::getCodeArea;
         codeAreaOptionsPanel = new CodeAreaOptionsPanel(codeAreaOptionsPanelApi);
         optionsModule.addOptionsPanel(codeAreaOptionsPanel);
+
+        statusOptionsPanel = new StatusOptionsPanel((StatusOptions statusOptions) -> statusOptionsPanel.loadFromOptions(statusOptions));
+        optionsModule.addOptionsPanel(statusOptionsPanel);
+
+        themeProfilesOptionsPanel = new ThemeProfilesOptionsPanel(codeAreaOptionsPanelApi);
+        optionsModule.addOptionsPanel(themeProfilesOptionsPanel);
+        layoutProfilesOptionsPanel = new LayoutProfilesOptionsPanel(codeAreaOptionsPanelApi);
+        optionsModule.addOptionsPanel(layoutProfilesOptionsPanel);
+        colorProfilesOptionsPanel = new ColorProfilesOptionsPanel(codeAreaOptionsPanelApi);
+        optionsModule.addOptionsPanel(colorProfilesOptionsPanel);
     }
 
     public void registerWordWrapping() {
@@ -684,90 +698,294 @@ public class BinedModule implements XBApplicationModule {
         return popupMenu;
     }
 
-    private JPopupMenu createCodeAreaPopupMenu(final ExtCodeArea codeArea, String menuPostfix) {
+    private JPopupMenu createCodeAreaPopupMenu(final ExtCodeArea codeArea, String menuPostfix, int x, int y) {
         getClipboardCodeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID);
-        final Action copyAsCodeAction = clipboardCodeHandler.createCopyAsCodeAction(codeArea);
-        final Action pasteFromCodeAction = clipboardCodeHandler.createPasteFromCodeAction(codeArea);
-        ClipboardActions clipboardActions = menuModule.createClipboardActions(new ClipboardActionsHandler() {
-            @Override
-            public void performCut() {
-                codeArea.cut();
-            }
 
-            @Override
-            public void performCopy() {
-                codeArea.copy();
-            }
+        BasicCodeAreaZone positionZone = codeArea.getPositionZone(x, y);
 
-            @Override
-            public void performPaste() {
-                codeArea.paste();
+        final JPopupMenu popupMenu = new JPopupMenu();
+        switch (positionZone) {
+            case TOP_LEFT_CORNER:
+            case HEADER: {
+                popupMenu.add(createShowHeaderMenuItem());
+                popupMenu.add(createPositionCodeTypeMenuItem());
+                break;
             }
+            case ROW_POSITIONS: {
+                popupMenu.add(createShowRowPositionMenuItem());
+                popupMenu.add(createPositionCodeTypeMenuItem());
+                popupMenu.add(new JSeparator());
+                popupMenu.add(createGoToMenuItem());
 
-            @Override
-            public void performDelete() {
-                codeArea.delete();
+                break;
             }
-
-            @Override
-            public void performSelectAll() {
-                codeArea.selectAll();
-            }
-
-            @Override
-            public boolean isSelection() {
-                return codeArea.hasSelection();
-            }
-
-            @Override
-            public boolean isEditable() {
-                return ((EditationModeCapable) codeArea).isEditable();
-            }
-
-            @Override
-            public boolean canSelectAll() {
-                return true;
-            }
-
-            @Override
-            public boolean canPaste() {
-                return codeArea.canPaste();
-            }
-
-            @Override
-            public void setUpdateListener(final ClipboardActionsUpdateListener updateListener) {
-                ((SelectionCapable) codeArea).addSelectionChangedListener((SelectionRange sr) -> {
-                    updateListener.stateChanged();
-                    copyAsCodeAction.setEnabled(codeArea.hasSelection());
-                    pasteFromCodeAction.setEnabled(codeArea.canPaste());
+            default: {
+                final JMenuItem cutMenuItem = new JMenuItem("Cut");
+                cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, metaMask));
+                cutMenuItem.setEnabled(codeArea.hasSelection() && codeArea.isEditable());
+                cutMenuItem.addActionListener((ActionEvent e) -> {
+                    codeArea.cut();
                 });
-                updateListener.stateChanged();
-            }
-        });
-        menuModule.registerClipboardMenuItems(clipboardActions, CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, SeparationMode.AROUND);
-        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, copyAsCodeAction, new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getCopyAction().getValue(Action.NAME)));
-        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, pasteFromCodeAction, new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getPasteAction().getValue(Action.NAME)));
+                popupMenu.add(cutMenuItem);
 
-        JPopupMenu popupMenu = new JPopupMenu();
-        menuModule.buildMenu(popupMenu, CODE_AREA_POPUP_MENU_ID + menuPostfix);
+                final JMenuItem copyMenuItem = new JMenuItem("Copy");
+                copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, metaMask));
+                copyMenuItem.setEnabled(codeArea.hasSelection());
+                copyMenuItem.addActionListener((ActionEvent e) -> {
+                    codeArea.copy();
+                });
+                popupMenu.add(copyMenuItem);
+
+                final JMenuItem copyAsCodeMenuItem = new JMenuItem("Copy as Code");
+                copyAsCodeMenuItem.setEnabled(codeArea.hasSelection());
+                copyAsCodeMenuItem.addActionListener((ActionEvent e) -> {
+                    codeArea.copyAsCode();
+                });
+                popupMenu.add(copyAsCodeMenuItem);
+
+                final JMenuItem pasteMenuItem = new JMenuItem("Paste");
+                pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, metaMask));
+                pasteMenuItem.setEnabled(codeArea.canPaste() && codeArea.isEditable());
+                pasteMenuItem.addActionListener((ActionEvent e) -> {
+                    codeArea.paste();
+                });
+                popupMenu.add(pasteMenuItem);
+
+                final JMenuItem pasteFromCodeMenuItem = new JMenuItem("Paste from Code");
+                pasteFromCodeMenuItem.setEnabled(codeArea.canPaste() && codeArea.isEditable());
+                pasteFromCodeMenuItem.addActionListener((ActionEvent e) -> {
+                    try {
+                        codeArea.pasteFromCode();
+                    } catch (IllegalArgumentException ex) {
+                        JOptionPane.showMessageDialog(codeArea, ex.getMessage(), "Unable to Paste Code", JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+                popupMenu.add(pasteFromCodeMenuItem);
+
+                final JMenuItem deleteMenuItem = new JMenuItem("Delete");
+                deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+                deleteMenuItem.setEnabled(codeArea.hasSelection() && codeArea.isEditable());
+                deleteMenuItem.addActionListener((ActionEvent e) -> {
+                    codeArea.delete();
+                });
+                popupMenu.add(deleteMenuItem);
+                popupMenu.addSeparator();
+
+                final JMenuItem selectAllMenuItem = new JMenuItem("Select All");
+                selectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, metaMask));
+                selectAllMenuItem.addActionListener((ActionEvent e) -> {
+                    codeArea.selectAll();
+                });
+                popupMenu.add(selectAllMenuItem);
+                popupMenu.addSeparator();
+
+                JMenuItem goToMenuItem = createGoToMenuItem();
+                popupMenu.add(goToMenuItem);
+
+                final JMenuItem findMenuItem = new JMenuItem("Find...");
+                findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, metaMask));
+                findMenuItem.addActionListener((ActionEvent e) -> {
+//                    searchAction.actionPerformed(e);
+//                    searchAction.switchReplaceMode(BinarySearchPanel.SearchOperation.FIND);
+                });
+                popupMenu.add(findMenuItem);
+
+                final JMenuItem replaceMenuItem = new JMenuItem("Replace...");
+                replaceMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, metaMask));
+                replaceMenuItem.setEnabled(codeArea.isEditable());
+                replaceMenuItem.addActionListener((ActionEvent e) -> {
+//                    searchAction.actionPerformed(e);
+//                    searchAction.switchReplaceMode(BinarySearchPanel.SearchOperation.REPLACE);
+                });
+                popupMenu.add(replaceMenuItem);
+            }
+        }
+
+        popupMenu.addSeparator();
+
+        switch (positionZone) {
+            case TOP_LEFT_CORNER:
+            case HEADER:
+            case ROW_POSITIONS: {
+                break;
+            }
+            default: {
+                JMenu showMenu = new JMenu("Show");
+                JMenuItem showHeader = createShowHeaderMenuItem();
+                showMenu.add(showHeader);
+                JMenuItem showRowPosition = createShowRowPositionMenuItem();
+                showMenu.add(showRowPosition);
+                popupMenu.add(showMenu);
+            }
+        }
+
+        final JMenuItem optionsMenuItem = new JMenuItem("Options...");
+        optionsMenuItem.addActionListener((ActionEvent e) -> {
+//            final BinEdOptionsPanelBorder optionsPanel = new BinEdOptionsPanelBorder();
+//            optionsPanel.load();
+//            optionsPanel.setApplyOptions(getApplyOptions());
+//            OptionsControlPanel optionsControlPanel = new OptionsControlPanel();
+//            JPanel dialogPanel = WindowUtils.createDialogPanel(optionsPanel, optionsControlPanel);
+//            DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, null, "Options", Dialog.ModalityType.MODELESS);
+//            optionsControlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
+//                if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+//                    optionsPanel.store();
+//                }
+//                if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+//                    setApplyOptions(optionsPanel.getApplyOptions());
+//                    encodingsHandler.setEncodings(optionsPanel.getApplyOptions().getCharsetOptions().getEncodings());
+//                    codeArea.repaint();
+//                }
+//
+//                dialog.close();
+//            });
+//            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), optionsControlPanel.createOkCancelListener());
+//            dialog.getWindow().setSize(650, 460);
+//            dialog.show();
+        });
+        popupMenu.add(optionsMenuItem);
+
+//        final Action copyAsCodeAction = clipboardCodeHandler.createCopyAsCodeAction(codeArea);
+//        final Action pasteFromCodeAction = clipboardCodeHandler.createPasteFromCodeAction(codeArea);
+//        ClipboardActions clipboardActions = menuModule.createClipboardActions(new ClipboardActionsHandler() {
+//            @Override
+//            public void performCut() {
+//                codeArea.cut();
+//            }
+//
+//            @Override
+//            public void performCopy() {
+//                codeArea.copy();
+//            }
+//
+//            @Override
+//            public void performPaste() {
+//                codeArea.paste();
+//            }
+//
+//            @Override
+//            public void performDelete() {
+//                codeArea.delete();
+//            }
+//
+//            @Override
+//            public void performSelectAll() {
+//                codeArea.selectAll();
+//            }
+//
+//            @Override
+//            public boolean isSelection() {
+//                return codeArea.hasSelection();
+//            }
+//
+//            @Override
+//            public boolean isEditable() {
+//                return ((EditationModeCapable) codeArea).isEditable();
+//            }
+//
+//            @Override
+//            public boolean canSelectAll() {
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean canPaste() {
+//                return codeArea.canPaste();
+//            }
+//
+//            @Override
+//            public void setUpdateListener(final ClipboardActionsUpdateListener updateListener) {
+//                ((SelectionCapable) codeArea).addSelectionChangedListener((SelectionRange sr) -> {
+//                    updateListener.stateChanged();
+//                    copyAsCodeAction.setEnabled(codeArea.hasSelection());
+//                    pasteFromCodeAction.setEnabled(codeArea.canPaste());
+//                });
+//                updateListener.stateChanged();
+//            }
+//        });
+//        menuModule.registerClipboardMenuItems(clipboardActions, CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, SeparationMode.AROUND);
+//        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, copyAsCodeAction, new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getCopyAction().getValue(Action.NAME)));
+//        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, pasteFromCodeAction, new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getPasteAction().getValue(Action.NAME)));
+//
+//        menuModule.buildMenu(popupMenu, CODE_AREA_POPUP_MENU_ID + menuPostfix);
         return popupMenu;
     }
 
+    @Nonnull
+    private JMenuItem createGoToMenuItem() {
+        final JMenuItem goToMenuItem = new JMenuItem("Go To...");
+        goToMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, metaMask));
+//        goToMenuItem.addActionListener(goToRowAction);
+        return goToMenuItem;
+    }
+
+    @Nonnull
+    private JMenuItem createShowHeaderMenuItem() {
+        final JCheckBoxMenuItem showHeader = new JCheckBoxMenuItem("Show Header");
+//        showHeader.setSelected(codeArea.getLayoutProfile().isShowHeader());
+//        showHeader.addActionListener(showHeaderAction);
+        return showHeader;
+    }
+
+    @Nonnull
+    private JMenuItem createShowRowPositionMenuItem() {
+        final JCheckBoxMenuItem showRowPosition = new JCheckBoxMenuItem("Show Row Position");
+//        showRowPosition.setSelected(codeArea.getLayoutProfile().isShowRowPosition());
+//        showRowPosition.addActionListener(showRowNumbersAction);
+        return showRowPosition;
+    }
+
+    @Nonnull
+    private JMenuItem createPositionCodeTypeMenuItem() {
+        JMenu menu = new JMenu("Position Code Type");
+        PositionCodeType codeType = PositionCodeType.DECIMAL; // TODO codeArea.getPositionCodeType();
+
+        final JRadioButtonMenuItem octalCodeTypeMenuItem = new JRadioButtonMenuItem("Octal");
+        octalCodeTypeMenuItem.setSelected(codeType == PositionCodeType.OCTAL);
+        octalCodeTypeMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                codeArea.setPositionCodeType(PositionCodeType.OCTAL);
+//                preferences.getCodeAreaParameters().setPositionCodeType(PositionCodeType.OCTAL);
+            }
+        });
+        menu.add(octalCodeTypeMenuItem);
+
+        final JRadioButtonMenuItem decimalCodeTypeMenuItem = new JRadioButtonMenuItem("Decimal");
+        decimalCodeTypeMenuItem.setSelected(codeType == PositionCodeType.DECIMAL);
+        decimalCodeTypeMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                codeArea.setPositionCodeType(PositionCodeType.DECIMAL);
+//                preferences.getCodeAreaParameters().setPositionCodeType(PositionCodeType.DECIMAL);
+            }
+        });
+        menu.add(decimalCodeTypeMenuItem);
+
+        final JRadioButtonMenuItem hexadecimalCodeTypeMenuItem = new JRadioButtonMenuItem("Hexadecimal");
+        hexadecimalCodeTypeMenuItem.setSelected(codeType == PositionCodeType.HEXADECIMAL);
+        hexadecimalCodeTypeMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                codeArea.setPositionCodeType(PositionCodeType.HEXADECIMAL);
+//                preferences.getCodeAreaParameters().setPositionCodeType(PositionCodeType.HEXADECIMAL);
+            }
+        });
+        menu.add(hexadecimalCodeTypeMenuItem);
+
+        return menu;
+    }
+
     private void dropCodeAreaPopupMenu(String menuPostfix) {
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.unregisterMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix);
+//        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+//        menuModule.unregisterMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix);
     }
 
     public void loadFromPreferences(Preferences preferences) {
         encodingsHandler.loadFromPreferences(preferences);
 
-        // TODO move it out of panels
-//        if (colorOptionsPanel != null) {
-//            colorOptionsPanel.loadFromPreferences(preferences);
-//            colorOptionsPanel.applyPreferencesChanges();
-//        }
         if (textFontOptionsPanel != null) {
             textFontOptionsPanel.loadFromPreferences(preferences);
             textFontOptionsPanel.applyPreferencesChanges();
@@ -787,14 +1005,34 @@ public class BinedModule implements XBApplicationModule {
             codeAreaOptionsPanel.loadFromPreferences(preferences);
             codeAreaOptionsPanel.applyPreferencesChanges();
         }
+
+        if (statusOptionsPanel != null) {
+            statusOptionsPanel.loadFromPreferences(preferences);
+            statusOptionsPanel.applyPreferencesChanges();
+        }
+
+        if (themeProfilesOptionsPanel != null) {
+            themeProfilesOptionsPanel.loadFromPreferences(preferences);
+            themeProfilesOptionsPanel.applyPreferencesChanges();
+        }
+
+        if (layoutProfilesOptionsPanel != null) {
+            layoutProfilesOptionsPanel.loadFromPreferences(preferences);
+            layoutProfilesOptionsPanel.applyPreferencesChanges();
+        }
+
+        if (colorProfilesOptionsPanel != null) {
+            colorProfilesOptionsPanel.loadFromPreferences(preferences);
+            colorProfilesOptionsPanel.applyPreferencesChanges();
+        }
     }
 
     public CodeAreaPopupMenuHandler getCodeAreaPopupMenuHandler() {
         if (codeAreaPopupMenuHandler == null) {
             codeAreaPopupMenuHandler = new CodeAreaPopupMenuHandler() {
                 @Override
-                public JPopupMenu createPopupMenu(ExtCodeArea codeArea, String menuPostfix) {
-                    return createCodeAreaPopupMenu(codeArea, menuPostfix);
+                public JPopupMenu createPopupMenu(ExtCodeArea codeArea, String menuPostfix, int x, int y) {
+                    return createCodeAreaPopupMenu(codeArea, menuPostfix, x, y);
                 }
 
                 @Override
@@ -823,13 +1061,23 @@ public class BinedModule implements XBApplicationModule {
                             handler.dropPopupMenu(DEFAULT_MENU_POSTFIX);
                         }
 
-                        popupMenu = handler.createPopupMenu((ExtCodeArea) component, DEFAULT_MENU_POSTFIX);
-
+                        int x;
+                        int y;
                         Point point = component.getMousePosition();
                         if (point != null) {
-                            popupMenu.show(component, (int) point.getX(), (int) point.getY());
+                            x = (int) point.getX();
+                            y = (int) point.getY();
                         } else {
-                            popupMenu.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+                            x = mouseEvent.getX();
+                            y = mouseEvent.getY();
+                        }
+
+                        popupMenu = handler.createPopupMenu((ExtCodeArea) component, DEFAULT_MENU_POSTFIX, x, y);
+
+                        if (point != null) {
+                            popupMenu.show(component, x, y);
+                        } else {
+                            popupMenu.show(mouseEvent.getComponent(), x, y);
                         }
                         return true;
                     }
@@ -849,10 +1097,12 @@ public class BinedModule implements XBApplicationModule {
                             handler.dropPopupMenu(DEFAULT_MENU_POSTFIX);
                         }
 
-                        popupMenu = handler.createPopupMenu((ExtCodeArea) component, DEFAULT_MENU_POSTFIX);
-
                         Point point = new Point(component.getWidth() / 2, component.getHeight() / 2);
-                        popupMenu.show(component, (int) point.getX(), (int) point.getY());
+                        int x = (int) point.getX();
+                        int y = (int) point.getY();
+                        popupMenu = handler.createPopupMenu((ExtCodeArea) component, DEFAULT_MENU_POSTFIX, x, y);
+
+                        popupMenu.show(component, x, y);
                         return true;
                     }
                 }

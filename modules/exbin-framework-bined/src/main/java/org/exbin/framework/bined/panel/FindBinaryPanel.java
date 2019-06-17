@@ -579,7 +579,7 @@ public class FindBinaryPanel extends javax.swing.JPanel {
 
     public void setHexCodePopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
         this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
-        findComboBoxEditorComponent.setHexCodePopupMenuHandler(hexCodePopupMenuHandler, "FindHexPanel");
+        findComboBoxEditorComponent.setCodeAreaPopupMenuHandler(hexCodePopupMenuHandler, "FindHexPanel");
     }
 
     public void detachMenu() {
