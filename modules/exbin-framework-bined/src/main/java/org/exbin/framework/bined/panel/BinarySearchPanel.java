@@ -78,7 +78,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     private final List<SearchCondition> replaceHistory = new ArrayList<>();
 
     private ClosePanelListener closePanelListener = null;
-    private CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
+    private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
     private XBApplication application;
 
     public BinarySearchPanel(BinarySearchPanelApi hexSearchPanelApi) {
@@ -591,7 +591,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         findHexPanel.setSearchParameters(searchParameters);
         replaceParameters.setPerformReplace(replaceMode);
         findHexPanel.setReplaceParameters(replaceParameters);
-        findHexPanel.setHexCodePopupMenuHandler(hexCodePopupMenuHandler);
+        findHexPanel.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
         DefaultControlPanel controlPanel = new DefaultControlPanel(findHexPanel.getResourceBundle());
         final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findHexPanel, controlPanel));
         frameModule.setDialogTitle(dialog, findHexPanel.getResourceBundle());
@@ -600,7 +600,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
             @Override
             public SearchCondition multilineEdit(SearchCondition condition) {
                 final BinaryMultilinePanel multilinePanel = new BinaryMultilinePanel();
-                multilinePanel.setCodeAreaPopupMenuHandler(hexCodePopupMenuHandler);
+                multilinePanel.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
                 multilinePanel.setCondition(condition);
                 DefaultControlPanel controlPanel = new DefaultControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
@@ -998,9 +998,9 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         return true;
     }
 
-    public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
-        this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
-        findComboBoxEditorComponent.setCodeAreaPopupMenuHandler(hexCodePopupMenuHandler, "");
+    public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler) {
+        this.codeAreaPopupMenuHandler = codeAreaPopupMenuHandler;
+        findComboBoxEditorComponent.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler, "");
     }
 
     /**

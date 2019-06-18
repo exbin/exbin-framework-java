@@ -60,7 +60,7 @@ public class FindBinaryPanel extends javax.swing.JPanel {
     private ComboBoxEditor replaceComboBoxEditor;
     private List<SearchCondition> replaceHistory = new ArrayList<>();
 
-    private CodeAreaPopupMenuHandler hexCodePopupMenuHandler;
+    private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
     private MultilineEditorListener multilineEditorListener = null;
 
     public FindBinaryPanel() {
@@ -577,13 +577,13 @@ public class FindBinaryPanel extends javax.swing.JPanel {
         replaceComboBox.setModel(new SearchHistoryModel(replaceHistory));
     }
 
-    public void setHexCodePopupMenuHandler(CodeAreaPopupMenuHandler hexCodePopupMenuHandler) {
-        this.hexCodePopupMenuHandler = hexCodePopupMenuHandler;
-        findComboBoxEditorComponent.setCodeAreaPopupMenuHandler(hexCodePopupMenuHandler, "FindHexPanel");
+    public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler) {
+        this.codeAreaPopupMenuHandler = codeAreaPopupMenuHandler;
+        findComboBoxEditorComponent.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler, "FindHexPanel");
     }
 
     public void detachMenu() {
-        hexCodePopupMenuHandler.dropPopupMenu(POPUP_MENU_POSTFIX);
+        codeAreaPopupMenuHandler.dropPopupMenu(POPUP_MENU_POSTFIX);
     }
 
     private void updateReplaceEnablement() {

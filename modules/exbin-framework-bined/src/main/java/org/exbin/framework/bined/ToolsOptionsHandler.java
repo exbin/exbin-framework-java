@@ -21,14 +21,13 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Tools options action handler.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.1 2019/06/18
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolsOptionsHandler {
@@ -37,7 +36,6 @@ public class ToolsOptionsHandler {
     private final ResourceBundle resourceBundle;
 
     private Action toolsSetFontAction;
-    private Action toolsSetColorAction;
 
     private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
@@ -60,65 +58,9 @@ public class ToolsOptionsHandler {
         };
         ActionUtils.setupAction(toolsSetFontAction, resourceBundle, "toolsSetFontAction");
         toolsSetFontAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-
-        toolsSetColorAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-//                final BinaryColorPanelApi textColorPanelFrame = new BinaryColorPanelApi() {
-//                    @Override
-//                    public ExtendedCodeAreaColorProfile getCurrentTextColors() {
-//                        return editorProvider.getCurrentColors();
-//                    }
-//
-//                    @Override
-//                    public Map<BinaryColorType, Color> getDefaultTextColors() {
-//                        return editorProvider.getDefaultColors();
-//                    }
-//
-//                    @Override
-//                    public void setCurrentTextColors(Map<BinaryColorType, Color> colors) {
-//                        editorProvider.setCurrentColors(colors);
-//                    }
-//                };
-
-                throw new UnsupportedOperationException("Not supported yet.");
-//                final BinaryColorPanel binaryColorPanel = new BinaryColorPanel();
-//                binaryColorPanel.setPanelApi(textColorPanelFrame);
-//                binaryColorPanel.setColorsFromMap(textColorPanelFrame.getCurrentTextColors());
-//                OptionsControlPanel controlPanel = new OptionsControlPanel();
-//                JPanel dialogPanel = WindowUtils.createDialogPanel(binaryColorPanel, controlPanel);
-//
-//                final JDialog dialog = frameModule.createDialog(dialogPanel);
-//                WindowUtils.addHeaderPanel(dialog, binaryColorPanel.getClass(), binaryColorPanel.getResourceBundle());
-//                frameModule.setDialogTitle(dialog, binaryColorPanel.getResourceBundle());
-//                controlPanel.setHandler(new OptionsControlHandler() {
-//                    @Override
-//                    public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
-//                        if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-//                            textColorPanelFrame.setCurrentTextColors(binaryColorPanel.getMapFromColors());
-//                            if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-//                                binaryColorPanel.saveToPreferences(application.getAppPreferences());
-//                            }
-//                        }
-//
-//                        WindowUtils.closeWindow(dialog);
-//                    }
-//                });
-//                WindowUtils.assignGlobalKeyListener(dialog, controlPanel.createOkCancelListener());
-//                dialog.setLocationRelativeTo(dialog.getParent());
-//                dialog.setVisible(true);
-            }
-        };
-        ActionUtils.setupAction(toolsSetColorAction, resourceBundle, "toolsSetColorAction");
-        toolsSetColorAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
     public Action getToolsSetFontAction() {
         return toolsSetFontAction;
-    }
-
-    public Action getToolsSetColorAction() {
-        return toolsSetColorAction;
     }
 }

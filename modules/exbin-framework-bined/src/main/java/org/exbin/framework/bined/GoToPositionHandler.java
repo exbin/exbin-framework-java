@@ -32,6 +32,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
 /**
@@ -73,25 +74,17 @@ public class GoToPositionHandler {
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
-                    controlPanel.setHandler(new DefaultControlHandler() {
-                        @Override
-                        public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                            if (actionType == ControlActionType.OK) {
-                                goToPanel.acceptInput();
-                                activePanel.goToPosition(goToPanel.getGoToPosition());
-                            }
-
-                            dialog.close();
+                    controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                        if (actionType == ControlActionType.OK) {
+                            goToPanel.acceptInput();
+                            activePanel.goToPosition(goToPanel.getGoToPosition());
                         }
+
+                        dialog.close();
                     });
                     WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                     dialog.center(dialog.getParent());
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            goToPanel.initFocus();
-                        }
-                    });
+                    SwingUtilities.invokeLater(goToPanel::initFocus);
                     dialog.show();
                 }
             }
