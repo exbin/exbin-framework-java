@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -53,13 +54,17 @@ import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 /**
  * Utility static methods usable for windows and dialogs.
  *
- * @version 0.2.0 2019/03/24
+ * @version 0.2.1 2019/06/19
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class WindowUtils {
 
     private static final int BUTTON_CLICK_TIME = 150;
     private static LookAndFeel lookAndFeel = null;
+
+    private WindowUtils() {
+    }
 
     public static void addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle) {
         URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
@@ -67,7 +72,7 @@ public class WindowUtils {
         addHeaderPanel(window, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
     }
 
-    public static void addHeaderPanel(Window window, String headerTitle, String headerDescription, Icon headerIcon) {
+    public static void addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
         headerPanel.setDescription(headerDescription);
@@ -87,9 +92,6 @@ public class WindowUtils {
         window.setSize(window.getWidth(), height);
     }
 
-    private WindowUtils() {
-    }
-
     public static void invokeWindow(final Window window) {
         if (lookAndFeel != null) {
             try {
@@ -99,21 +101,18 @@ public class WindowUtils {
             }
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (window instanceof JDialog) {
-                    ((JDialog) window).setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-                }
-
-                window.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                window.setVisible(true);
+        java.awt.EventQueue.invokeLater(() -> {
+            if (window instanceof JDialog) {
+                ((JDialog) window).setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
             }
+
+            window.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            window.setVisible(true);
         });
     }
 
@@ -177,6 +176,7 @@ public class WindowUtils {
     }
 
     public static void initWindow(Window window) {
+        // TODO drop
 //        if (window.getParent() instanceof XBEditorFrame) {
 //            window.setIconImage(((XBEditorFrame) window.getParent()).getMainFrameManagement().getFrameIcon());
 //        }
@@ -194,6 +194,7 @@ public class WindowUtils {
         window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
     }
 
+    @Nonnull
     public static JDialog createBasicDialog() {
         JDialog dialog = new JDialog(new javax.swing.JFrame(), true);
         dialog.setSize(640, 480);
@@ -207,6 +208,7 @@ public class WindowUtils {
      * @param component instantiated component
      * @return frame instance if found
      */
+    @Nullable
     public static Frame getFrame(Component component) {
         Component parentComponent = SwingUtilities.getWindowAncestor(component);
         while (!(parentComponent == null || parentComponent instanceof Frame)) {
@@ -252,7 +254,7 @@ public class WindowUtils {
      * @param component target component
      * @param listener ok and cancel event listener
      */
-    public static void assignGlobalKeyListener(Container component, final OkCancelListener listener) {
+    public static void assignGlobalKeyListener(Container component, @Nullable final OkCancelListener listener) {
         KeyListener keyListener = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -319,6 +321,7 @@ public class WindowUtils {
         button.doClick(BUTTON_CLICK_TIME);
     }
 
+    @Nonnull
     public static WindowPosition getWindowPosition(Window window) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] screenDevices = ge.getScreenDevices();

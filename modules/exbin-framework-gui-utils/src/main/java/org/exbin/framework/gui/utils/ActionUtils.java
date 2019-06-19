@@ -54,6 +54,9 @@ public class ActionUtils {
     public static final String ACTION_SMALL_ICON_POSTFIX = ".smallIcon";
     public static final String ACTION_SMALL_LARGE_POSTFIX = ".largeIcon";
 
+    private ActionUtils() {
+    }
+
     /**
      * Sets action values according to values specified by resource bundle.
      *

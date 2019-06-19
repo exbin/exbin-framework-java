@@ -737,7 +737,7 @@ public class BinedModule implements XBApplicationModule {
                 });
                 popupMenu.add(copyMenuItem);
 
-                final JMenuItem copyAsCodeMenuItem = new JMenuItem("Copy as Code");
+                final JMenuItem copyAsCodeMenuItem = new JMenuItem("Copy as XCode");
                 copyAsCodeMenuItem.setEnabled(codeArea.hasSelection());
                 copyAsCodeMenuItem.addActionListener((ActionEvent e) -> {
                     codeArea.copyAsCode();

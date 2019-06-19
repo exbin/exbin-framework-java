@@ -585,18 +585,18 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     private void optionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optionsButtonActionPerformed
         cancelSearch();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        final FindBinaryPanel findHexPanel = new FindBinaryPanel();
-        findHexPanel.setSelected();
-        findHexPanel.setSearchHistory(searchHistory);
-        findHexPanel.setSearchParameters(searchParameters);
+        final FindBinaryPanel findBinaryPanel = new FindBinaryPanel();
+        findBinaryPanel.setSelected();
+        findBinaryPanel.setSearchHistory(searchHistory);
+        findBinaryPanel.setSearchParameters(searchParameters);
         replaceParameters.setPerformReplace(replaceMode);
-        findHexPanel.setReplaceParameters(replaceParameters);
-        findHexPanel.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
-        DefaultControlPanel controlPanel = new DefaultControlPanel(findHexPanel.getResourceBundle());
-        final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findHexPanel, controlPanel));
-        frameModule.setDialogTitle(dialog, findHexPanel.getResourceBundle());
-        WindowUtils.addHeaderPanel(dialog.getWindow(), findHexPanel.getClass(), findHexPanel.getResourceBundle());
-        findHexPanel.setMultilineEditorListener(new FindBinaryPanel.MultilineEditorListener() {
+        findBinaryPanel.setReplaceParameters(replaceParameters);
+        findBinaryPanel.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
+        DefaultControlPanel controlPanel = new DefaultControlPanel(findBinaryPanel.getResourceBundle());
+        final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findBinaryPanel, controlPanel));
+        frameModule.setDialogTitle(dialog, findBinaryPanel.getResourceBundle());
+        WindowUtils.addHeaderPanel(dialog.getWindow(), findBinaryPanel.getClass(), findBinaryPanel.getResourceBundle());
+        findBinaryPanel.setMultilineEditorListener(new FindBinaryPanel.MultilineEditorListener() {
             @Override
             public SearchCondition multilineEdit(SearchCondition condition) {
                 final BinaryMultilinePanel multilinePanel = new BinaryMultilinePanel();
@@ -636,17 +636,17 @@ public class BinarySearchPanel extends javax.swing.JPanel {
             @Override
             public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
                 if (actionType == ControlActionType.OK) {
-                    SearchParameters dialogSearchParameters = findHexPanel.getSearchParameters();
+                    SearchParameters dialogSearchParameters = findBinaryPanel.getSearchParameters();
                     ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(dialogSearchParameters.getCondition());
                     dialogSearchParameters.setFromParameters(dialogSearchParameters);
                     findComboBoxEditorComponent.setItem(dialogSearchParameters.getCondition());
                     updateFindStatus();
 
-                    ReplaceParameters dialogReplaceParameters = findHexPanel.getReplaceParameters();
+                    ReplaceParameters dialogReplaceParameters = findBinaryPanel.getReplaceParameters();
                     switchReplaceMode(dialogReplaceParameters.isPerformReplace());
                     binarySearchPanelApi.performFind(dialogSearchParameters);
                 }
-                findHexPanel.detachMenu();
+                findBinaryPanel.detachMenu();
                 dialog.close();
             }
         });

@@ -33,8 +33,11 @@ import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.framework.gui.undo.api.UndoActions;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 import org.exbin.framework.gui.undo.api.UndoUpdateListener;
-import org.exbin.framework.gui.undo.dialog.UndoManagerDialog;
-import org.exbin.framework.gui.undo.dialog.UndoManagerModel;
+import org.exbin.framework.gui.undo.panel.UndoManagerControlPanel;
+import org.exbin.framework.gui.undo.panel.UndoManagerPanel;
+import org.exbin.framework.gui.undo.panel.UndoManagerModel;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
@@ -185,8 +188,14 @@ public class GuiUndoModule implements GuiUndoModuleApi {
     @Override
     public void openUndoManager() {
         GuiFrameModuleApi frameModule = GuiUndoModule.this.application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        UndoManagerDialog dialog = new UndoManagerDialog(frameModule.getFrame(), true, undoModel);
-        dialog.setVisible(true);
+        UndoManagerPanel undoManagerPanel = new UndoManagerPanel(undoModel);
+        UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
+        final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(undoManagerPanel, undoManagerControlPanel));
+        frameModule.setDialogTitle(dialog, undoManagerPanel.getResourceBundle());
+        WindowUtils.addHeaderPanel(dialog.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), undoManagerControlPanel.createOkCancelListener());
+        dialog.center(frameModule.getFrame());
+        dialog.show();
     }
 
     @Override
