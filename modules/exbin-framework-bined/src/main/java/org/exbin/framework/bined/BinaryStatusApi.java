@@ -61,9 +61,9 @@ public interface BinaryStatusApi {
      * Sets current document size.
      *
      * @param documentSize document size
-     * @param initialdocumentSize document size when file was opened
+     * @param initialDocumentSize document size when file was opened
      */
-    void setCurrentDocumentSize(long documentSize, long initialdocumentSize);
+    void setCurrentDocumentSize(long documentSize, long initialDocumentSize);
 
     /**
      * Sets current memory mode.

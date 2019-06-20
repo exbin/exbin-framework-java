@@ -26,10 +26,10 @@ import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -37,6 +37,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import org.exbin.bined.CodeAreaUtils;
 import org.exbin.bined.CodeCharactersCase;
@@ -47,7 +49,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Go-to position panel for hexadecimal editor.
  *
- * @version 0.2.1 2019/06/19
+ * @version 0.2.1 2019/06/20
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToBinaryPanel extends javax.swing.JPanel {
@@ -200,8 +202,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(goToPanelLayout.createSequentialGroup()
                         .addComponent(positionTypeButton)
-                        .addGap(0, 0, 0)
-                        .addComponent(positionTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(positionTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(positionSpinner)))
                 .addContainerGap())
@@ -376,6 +378,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         positionSpinner.requestFocusInWindow();
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
@@ -393,6 +396,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
     private void setPositionValue(long value) {
         positionSpinner.setValue(value);
+        positionSpinner.firePropertyChange("value", value, value);
     }
 
     /**
@@ -450,11 +454,37 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
         public PositionSpinnerEditor(JSpinner spinner) {
             this.spinner = spinner;
-
             textField = new JTextField();
+
+            init();
+        }
+
+        private void init() {
             textField.setName("Spinner.textField");
             textField.setText(getPositionAsString((Long) spinner.getValue()));
             textField.addPropertyChangeListener(this);
+            textField.getDocument().addDocumentListener(new DocumentListener() {
+                private final PropertyChangeEvent changeEvent = new PropertyChangeEvent(spinner, "text", null, null);
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    notifyChanged();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    notifyChanged();
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    notifyChanged();
+                }
+
+                public void notifyChanged() {
+                    propertyChange(changeEvent);
+                }
+            });
             textField.setEditable(true);
             textField.setInheritsPopupMenu(true);
 
@@ -469,41 +499,38 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
             spinner.addChangeListener(this);
         }
 
+        @Nonnull
         private JTextField getTextField() {
             return textField;
         }
 
+        @Nonnull
         private JSpinner getSpinner() {
             return spinner;
         }
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            JSpinner spinner = (JSpinner) (e.getSource());
-            getTextField().setText(getPositionAsString((Long) spinner.getValue()));
+            JSpinner sourceSpinner = (JSpinner) (e.getSource());
+            getTextField().setText(getPositionAsString((Long) sourceSpinner.getValue()));
         }
 
         @Override
         public void propertyChange(PropertyChangeEvent e) {
-            JSpinner spinner = getSpinner();
-
-            if (spinner == null) {
-                // Indicates we aren't installed anywhere.
-                return;
-            }
+            JSpinner sourceSpinner = getSpinner();
 
             Object source = e.getSource();
             String name = e.getPropertyName();
-            if ((source instanceof JFormattedTextField) && "value".equals(name)) {
-                Object lastValue = spinner.getValue();
+            if ((source instanceof JTextField) && "text".equals(name)) {
+                Long lastValue = (Long) sourceSpinner.getValue();
 
                 // Try to set the new value
                 try {
-                    spinner.setValue(valueOfPosition(getTextField().getText()));
+                    sourceSpinner.setValue(valueOfPosition(getTextField().getText()));
                 } catch (IllegalArgumentException iae) {
                     // SpinnerModel didn't like new value, reset
                     try {
-                        ((JFormattedTextField) source).setValue(lastValue);
+                        ((JTextField) source).setText(getPositionAsString(lastValue));
                     } catch (IllegalArgumentException iae2) {
                         // Still bogus, nothing else we can do, the
                         // SpinnerModel and JFormattedTextField are now out
@@ -524,13 +551,15 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         /**
          * Returns the size of the parents insets.
          */
+        @Nonnull
         private Dimension insetSize(Container parent) {
             Insets insets = parent.getInsets();
-            int w = insets.left + insets.right;
-            int h = insets.top + insets.bottom;
-            return new Dimension(w, h);
+            int width = insets.left + insets.right;
+            int height = insets.top + insets.bottom;
+            return new Dimension(width, height);
         }
 
+        @Nonnull
         @Override
         public Dimension preferredLayoutSize(Container parent) {
             Dimension preferredSize = insetSize(parent);
@@ -542,6 +571,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
             return preferredSize;
         }
 
+        @Nonnull
         @Override
         public Dimension minimumLayoutSize(Container parent) {
             Dimension minimumSize = insetSize(parent);
@@ -557,12 +587,13 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         public void layoutContainer(Container parent) {
             if (parent.getComponentCount() > 0) {
                 Insets insets = parent.getInsets();
-                int w = parent.getWidth() - (insets.left + insets.right);
-                int h = parent.getHeight() - (insets.top + insets.bottom);
-                getComponent(0).setBounds(insets.left, insets.top, w, h);
+                int width = parent.getWidth() - (insets.left + insets.right);
+                int height = parent.getHeight() - (insets.top + insets.bottom);
+                getComponent(0).setBounds(insets.left, insets.top, width, height);
             }
         }
 
+        @Nonnull
         public PositionCodeType getPositionCodeType() {
             return positionCodeType;
         }
@@ -581,6 +612,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
         @Nonnull
         private String getNonNegativePostionAsString(long position) {
+            Arrays.fill(cache, ' ');
             CodeAreaUtils.longToBaseCode(cache, 0, position, positionCodeType.getBase(), LENGTH_LIMIT, false, CodeCharactersCase.LOWER);
             return new String(cache).trim();
         }
