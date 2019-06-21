@@ -49,7 +49,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Go-to position panel for hexadecimal editor.
  *
- * @version 0.2.1 2019/06/20
+ * @version 0.2.1 2019/06/21
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToBinaryPanel extends javax.swing.JPanel {
@@ -103,7 +103,6 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         relativeRadioButton = new javax.swing.JRadioButton();
         positionLabel = new javax.swing.JLabel();
         positionSpinner = new javax.swing.JSpinner();
-        positionTypeComboBox = new javax.swing.JComboBox<>();
         positionTypeButton = new javax.swing.JButton();
 
         octalMenuItem.setText("OCT");
@@ -176,10 +175,6 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
             }
         });
 
-        positionTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OCT - Octal", "DEC - Decimal", "HEX - Hexadecimal" }));
-        positionTypeComboBox.setMinimumSize(new java.awt.Dimension(20, 25));
-        positionTypeComboBox.setPreferredSize(new java.awt.Dimension(21, 25));
-
         positionTypeButton.setText("DEC");
         positionTypeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -196,16 +191,11 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
             .addComponent(fromEndRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(goToPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(goToPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(goToPanelLayout.createSequentialGroup()
-                        .addComponent(positionLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(goToPanelLayout.createSequentialGroup()
-                        .addComponent(positionTypeButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(positionTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(positionSpinner)))
+                .addGroup(goToPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(positionTypeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(positionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(positionSpinner)
                 .addContainerGap())
         );
         goToPanelLayout.setVerticalGroup(
@@ -221,7 +211,6 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(goToPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(positionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(positionTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(positionTypeButton)))
         );
 
@@ -429,7 +418,6 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner positionSpinner;
     private javax.swing.JButton positionTypeButton;
     private javax.swing.ButtonGroup positionTypeButtonGroup;
-    private javax.swing.JComboBox<String> positionTypeComboBox;
     private javax.swing.JPopupMenu positionTypePopupMenu;
     private javax.swing.JRadioButton relativeRadioButton;
     private javax.swing.JLabel targetPositionLabel;

@@ -26,7 +26,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 /**
  * Dialog for document properties showing various information about file.
  *
- * @version 0.2.1 2017/07/22
+ * @version 0.2.1 2019/06/21
  * @author ExBin Project (http://exbin.org)
  */
 public class DocPropertiesPanel extends javax.swing.JPanel {

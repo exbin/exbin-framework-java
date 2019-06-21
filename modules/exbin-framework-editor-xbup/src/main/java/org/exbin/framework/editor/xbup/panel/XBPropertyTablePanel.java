@@ -17,6 +17,7 @@
 package org.exbin.framework.editor.xbup.panel;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
@@ -24,13 +25,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
@@ -56,7 +61,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Panel for properties of the actual panel.
  *
- * @version 0.1.24 2015/01/26
+ * @version 0.2.1 2019/06/21
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTablePanel extends javax.swing.JPanel {
@@ -438,6 +443,16 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     }
 
     public void actionItemProperties() {
+//        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+//        BlockPropertiesPanel blockPropertiesPanel = new BlockPropertiesPanel();
+//        blockPropertiesPanel.setCatalog(catalog);
+//        blockPropertiesPanel.setTreeNode(activePanel.getSelectedItem());
+//        CloseControlPanel controlPanel = new CloseControlPanel();
+//        JPanel dialogPanel = WindowUtils.createDialogPanel(blockPropertiesPanel, controlPanel);
+//        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+//        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+//        dialog.center(dialog.getParent());
+//        dialog.show();
         BlockPropertiesDialog dialog = new BlockPropertiesDialog(WindowUtils.getFrame(this), true);
         dialog.setCatalog(catalog);
         dialog.runDialog(activePanel.getSelectedItem());
