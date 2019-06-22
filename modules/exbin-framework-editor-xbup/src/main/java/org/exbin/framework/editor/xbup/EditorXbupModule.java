@@ -17,7 +17,6 @@
 package org.exbin.framework.editor.xbup;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
@@ -47,7 +46,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * XBUP editor module.
  *
- * @version 0.2.0 2016/02/28
+ * @version 0.2.1 2019/06/22
  * @author ExBin Project (http://exbin.org)
  */
 public class EditorXbupModule implements XBApplicationModule {
@@ -93,18 +92,16 @@ public class EditorXbupModule implements XBApplicationModule {
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
             editorProvider = new XBDocumentPanel(catalog, undoHandler);
+            ((XBDocumentPanel) editorProvider).setApplication(application);
 
             final XBDocumentPanel docPanel = (XBDocumentPanel) editorProvider;
 
             docPanel.setPopupMenu(createPopupMenu());
-            docPanel.addUpdateListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (docEditingHandler != null) {
-                        docEditingHandler.setAddEnabled(docPanel.isAddEnabled());
-                        docEditingHandler.setEditEnabled(docPanel.isEditEnabled());
-                        propertiesHandler.setEditEnabled(docPanel.isEditEnabled());
-                    }
+            docPanel.addUpdateListener((ActionEvent e) -> {
+                if (docEditingHandler != null) {
+                    docEditingHandler.setAddEnabled(docPanel.isAddEnabled());
+                    docEditingHandler.setEditEnabled(docPanel.isEditEnabled());
+                    propertiesHandler.setEditEnabled(docPanel.isEditEnabled());
                 }
             });
         }

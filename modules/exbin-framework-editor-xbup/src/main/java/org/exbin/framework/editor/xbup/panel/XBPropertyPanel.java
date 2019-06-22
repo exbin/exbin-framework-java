@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.xbup.panel;
 
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
@@ -33,11 +34,12 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Panel for properties of the actual panel.
  *
- * @version 0.2.0 2016/08/05
+ * @version 0.2.1 2019/06/22
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private XBPropertyTablePanel propertiesPanel;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBPropertyPanel.class);
@@ -193,6 +195,10 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         add(itemInfoHeaderPanel, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
 
+    public void setApplication(XBApplication application) {
+        this.application = application;
+        propertiesPanel.setApplication(application);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel descLabel;

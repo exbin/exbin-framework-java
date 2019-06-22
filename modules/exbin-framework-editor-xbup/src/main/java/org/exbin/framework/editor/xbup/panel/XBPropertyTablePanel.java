@@ -17,7 +17,6 @@
 package org.exbin.framework.editor.xbup.panel;
 
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
@@ -30,7 +29,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -61,11 +60,12 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Panel for properties of the actual panel.
  *
- * @version 0.2.1 2019/06/21
+ * @version 0.2.1 2019/06/22
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTablePanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private XBDocumentPanel activePanel;
     private final XBPropertyTableModel tableModel;
@@ -243,6 +243,9 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         add(mainScrollPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu.Separator jSeparator10;
@@ -342,7 +345,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
             if (propertyThread != this && catalog == null) {
                 return;
             }
-            
+
             XBCSpecService specService = (XBCSpecService) catalog.getCatalogService(XBCSpecService.class);
             if (decl instanceof XBCBlockDecl) {
                 XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
@@ -443,19 +446,19 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     }
 
     public void actionItemProperties() {
-//        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-//        BlockPropertiesPanel blockPropertiesPanel = new BlockPropertiesPanel();
-//        blockPropertiesPanel.setCatalog(catalog);
-//        blockPropertiesPanel.setTreeNode(activePanel.getSelectedItem());
-//        CloseControlPanel controlPanel = new CloseControlPanel();
-//        JPanel dialogPanel = WindowUtils.createDialogPanel(blockPropertiesPanel, controlPanel);
-//        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-//        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-//        dialog.center(dialog.getParent());
-//        dialog.show();
-        BlockPropertiesDialog dialog = new BlockPropertiesDialog(WindowUtils.getFrame(this), true);
-        dialog.setCatalog(catalog);
-        dialog.runDialog(activePanel.getSelectedItem());
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        BlockPropertiesPanel panel = new BlockPropertiesPanel();
+        panel.setCatalog(catalog);
+        panel.setTreeNode(activePanel.getSelectedItem());
+        CloseControlPanel controlPanel = new CloseControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        controlPanel.setHandler(() -> {
+            WindowUtils.closeWindow(dialog.getWindow());
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }
 
     public void actionItemOpen() {

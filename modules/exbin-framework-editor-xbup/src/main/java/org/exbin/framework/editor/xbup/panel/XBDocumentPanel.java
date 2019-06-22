@@ -41,18 +41,21 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
-import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
 import org.exbin.framework.editor.xbup.dialog.ModifyBlockDialog;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.XBFBlockType;
@@ -86,6 +89,8 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
+
+    private XBApplication application;
 
     private final TreeDocument mainDoc;
     private URI fileUri = null;
@@ -350,6 +355,11 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         mainDoc.setCatalog(catalog);
         mainDoc.processSpec();
         propertyPanel.setCatalog(catalog);
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
+        propertyPanel.setApplication(application);
     }
 
     @Override
@@ -984,9 +994,19 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     public void actionItemProperties() {
-        BlockPropertiesDialog dialog = new BlockPropertiesDialog(WindowUtils.getFrame(this), true);
-        dialog.setCatalog(catalog);
-        dialog.runDialog(getSelectedItem());
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        BlockPropertiesPanel panel = new BlockPropertiesPanel();
+        panel.setCatalog(catalog);
+        panel.setTreeNode(getSelectedItem());
+        CloseControlPanel controlPanel = new CloseControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        controlPanel.setHandler(() -> {
+            WindowUtils.closeWindow(dialog.getWindow());
+        });
+        dialog.center(dialog.getParent());
+        dialog.show();
     }
 
     private class TreeDocument extends XBTTreeDocument implements OperationListener {

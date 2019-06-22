@@ -22,7 +22,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.dialog.BlockPropertiesDialog;
+import org.exbin.framework.editor.xbup.panel.BlockPropertiesPanel;
 import org.exbin.framework.editor.xbup.panel.DocPropertiesPanel;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -37,7 +37,7 @@ import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 /**
  * Properties handler.
  *
- * @version 0.2.1 2017/07/22
+ * @version 0.2.1 2019/06/22
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesHandler {
@@ -75,12 +75,7 @@ public class PropertiesHandler {
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
-                    controlPanel.setHandler(new CloseControlHandler() {
-                        @Override
-                        public void controlActionPerformed() {
-                            dialog.close();
-                        }
-                    });
+                    controlPanel.setHandler(dialog::close);
                     WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                     dialog.center(dialog.getParent());
                     dialog.show();
@@ -96,10 +91,19 @@ public class PropertiesHandler {
                 if (editorProvider instanceof XBDocumentPanel) {
                     XBDocumentPanel activePanel = (XBDocumentPanel) editorProvider;
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    BlockPropertiesDialog propertiesDialog = new BlockPropertiesDialog(frameModule.getFrame(), true);
-                    propertiesDialog.setCatalog(activePanel.getCatalog());
-                    propertiesDialog.setDevMode(devMode);
-                    propertiesDialog.runDialog(activePanel.getSelectedItem());
+                    BlockPropertiesPanel panel = new BlockPropertiesPanel();
+                    panel.setCatalog(activePanel.getCatalog());
+                    panel.setDevMode(devMode);
+                    panel.setTreeNode(activePanel.getSelectedItem());
+                    CloseControlPanel controlPanel = new CloseControlPanel();
+                    JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                    controlPanel.setHandler(() -> {
+                        WindowUtils.closeWindow(dialog.getWindow());
+                    });
+                    dialog.center(dialog.getParent());
+                    dialog.show();
                 }
             }
         };

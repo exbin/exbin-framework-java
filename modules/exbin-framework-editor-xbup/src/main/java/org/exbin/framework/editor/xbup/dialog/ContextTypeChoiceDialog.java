@@ -208,15 +208,6 @@ public class ContextTypeChoiceDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_blockTypeListValueChanged
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        BlockPropertiesDialog propertiesDialog = new BlockPropertiesDialog(new javax.swing.JFrame(), true);
-        // TODO propertiesDialog.setDevMode(true);
-        WindowUtils.invokeWindow(propertiesDialog);
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel blockLabel;
     private javax.swing.JList<String> blockTypeList;

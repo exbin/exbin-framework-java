@@ -438,15 +438,6 @@ public class AddBlockDialog extends javax.swing.JDialog {
         return workNode;
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        BlockPropertiesDialog propertiesDialog = new BlockPropertiesDialog(new javax.swing.JFrame(), true);
-        // TODO propertiesDialog.setDevMode(true);
-        WindowUtils.invokeWindow(propertiesDialog);
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> basicTypeComboBox;
     private javax.swing.JRadioButton basicTypeRadioButton;

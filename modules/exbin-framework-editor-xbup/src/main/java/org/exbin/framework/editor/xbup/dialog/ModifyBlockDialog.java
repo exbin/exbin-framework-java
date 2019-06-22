@@ -681,13 +681,6 @@ public class ModifyBlockDialog extends javax.swing.JDialog {
         return newNode;
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        WindowUtils.invokeWindow(new BlockPropertiesDialog(new javax.swing.JFrame(), true));
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JPanel attributesPanel;
