@@ -36,7 +36,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
@@ -89,7 +88,7 @@ import org.exbin.xbup.core.serial.XBSerializable;
 /**
  * Catalog editor panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/23
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
@@ -138,68 +137,37 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
                 return retValue;
             }
         });
-        catalogSpecListTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    if (catalogSpecListTable.getSelectedRow() >= 0) {
-                        setItem(specsModel.getItem(catalogSpecListTable.getSelectedRow()));
-                    } else {
-                        setItem(null);
-                    }
+        catalogSpecListTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                if (catalogSpecListTable.getSelectedRow() >= 0) {
+                    setItem(specsModel.getItem(catalogSpecListTable.getSelectedRow()));
+                } else {
+                    setItem(null);
                 }
             }
         });
 
         itemPanel = new CatalogItemPanel();
         catalogItemSplitPane.setRightComponent(itemPanel);
-        itemPanel.setJumpActionListener(new CatalogItemPanel.JumpActionListener() {
-            @Override
-            public void jumpToRev(XBCRev rev) {
-                XBCSpec spec = rev.getParent();
-                TreePath nodePath = nodesModel.findPathForSpec(spec);
-                if (nodePath != null) {
-                    catalogTree.scrollPathToVisible(nodePath);
-                    catalogTree.setSelectionPath(nodePath);
-                    // TODO doesn't properly select tree node
+        itemPanel.setJumpActionListener((XBCRev rev) -> {
+            XBCSpec spec = rev.getParent();
+            TreePath nodePath = nodesModel.findPathForSpec(spec);
+            if (nodePath != null) {
+                catalogTree.scrollPathToVisible(nodePath);
+                catalogTree.setSelectionPath(nodePath);
+                // TODO doesn't properly select tree node
 
-                    selectSpecTableRow(spec);
-                }
+                selectSpecTableRow(spec);
             }
         });
 
         updateItem();
 
-        actionListenerMap.put(DefaultEditorKit.cutAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCut();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.copyAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCopy();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.pasteAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performPaste();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
-        actionListenerMap.put("delete", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
+        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> performCut());
+        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> performCopy());
+        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
+        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
+        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
     }
 
     /**

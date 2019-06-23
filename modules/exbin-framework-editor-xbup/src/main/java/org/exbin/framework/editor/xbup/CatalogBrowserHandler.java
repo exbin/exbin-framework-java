@@ -20,19 +20,23 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.dialog.CatalogEditorDialog;
+import org.exbin.framework.editor.xbup.panel.CatalogEditorWrapperPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * Catalog browser handler.
  *
- * @version 0.2.0 2016/08/04
+ * @version 0.2.1 2019/06/23
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogBrowserHandler {
@@ -60,10 +64,18 @@ public class CatalogBrowserHandler {
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
-                CatalogEditorDialog catalogEditorDialog = new CatalogEditorDialog(frameModule.getFrame(), true);
-                catalogEditorDialog.setMenuManagement(managerModule.getDefaultMenuManagement());
-                catalogEditorDialog.setCatalog(catalog);
-                catalogEditorDialog.setVisible(true);
+                CatalogEditorWrapperPanel panel = new CatalogEditorWrapperPanel();
+                panel.setMenuManagement(managerModule.getDefaultMenuManagement());
+                panel.setCatalog(catalog);
+                CloseControlPanel controlPanel = new CloseControlPanel();
+                JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+                final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                controlPanel.setHandler(() -> {
+                    WindowUtils.closeWindow(dialog.getWindow());
+                });
+                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                dialog.center(dialog.getParent());
+                dialog.show();
             }
         };
         ActionUtils.setupAction(catalogBrowserAction, resourceBundle, "catalogBrowserAction");
