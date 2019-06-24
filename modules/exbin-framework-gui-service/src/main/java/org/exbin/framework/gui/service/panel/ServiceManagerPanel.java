@@ -35,6 +35,7 @@ import org.exbin.framework.gui.service.catalog.panel.CatalogBrowserPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogEditorPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogSearchPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogStatusPanel;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.catalog.XBAECatalog;
 import org.exbin.xbup.catalog.entity.service.XBEXDescService;
 import org.exbin.xbup.catalog.entity.service.XBEXFileService;
@@ -73,7 +74,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 /**
  * XBManager service management panel.
  *
- * @version 0.2.0 2016/03/17
+ * @version 0.2.1 2019/06/24
  * @author ExBin Project (http://exbin.org)
  */
 public class ServiceManagerPanel extends javax.swing.JPanel {
@@ -85,7 +86,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
     private final CatalogEditorPanel catalogEditorPanel;
     private final CatalogSearchPanel catalogSearchPanel;
     private String currentPanelCode;
-    
+
     private final ServiceInfoPanel serviceInfoPanel;
     private final ServiceStartupPanel serviceStartupPanel;
     private final ServiceControlPanel serviceControlPanel;
@@ -99,7 +100,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
         serviceInfoPanel = new ServiceInfoPanel();
         serviceStartupPanel = new ServiceStartupPanel();
         serviceControlPanel = new ServiceControlPanel();
-        
+
         serviceInfoScrollPane.setViewportView(serviceInfoPanel);
         panelMap.put("info", serviceInfoPanel);
         panelMap.put("startup", serviceStartupPanel);
@@ -221,7 +222,6 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
 //
 //        // return false;
 //    }
-
     public void setMenuManagement(MenuManagement menuManagement) {
         catalogBrowserPanel.setMenuManagement(menuManagement);
         catalogEditorPanel.setMenuManagement(menuManagement);
@@ -233,7 +233,6 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
 //        catalogEditorPanel.setMainFrameManagement(mainFramenManagement);
 //        catalogSearchPanel.setMainFrameManagement(mainFramenManagement);
 //    }
-
     public void setCatalog(XBACatalog catalog) {
         catalogAvailabilityPanel.setCatalog(catalog);
         catalogStatusPanel.setCatalog(catalog);
@@ -364,6 +363,15 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
                 .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ServiceManagerPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel emptyPanel;

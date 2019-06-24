@@ -18,11 +18,12 @@ package org.exbin.framework.gui.service.panel;
 
 import java.util.ResourceBundle;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Connection editor panel.
  *
- * @version 0.2.1 2017/02/20
+ * @version 0.2.1 2019/06/24
  * @author ExBin Project (http://exbin.org)
  */
 public class EditConnectionPanel extends javax.swing.JPanel {
@@ -82,6 +83,15 @@ public class EditConnectionPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new EditConnectionPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel connectionHostLabel;

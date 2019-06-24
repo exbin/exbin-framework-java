@@ -18,12 +18,13 @@ package org.exbin.framework.gui.service.panel;
 
 import org.exbin.framework.gui.service.XBDbServiceClient;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.client.XBCatalogServiceClient;
 
 /**
  * Panel for service information.
  *
- * @version 0.2.0 2016/02/20
+ * @version 0.2.1 2019/06/24
  * @author ExBin Project (http://exbin.org)
  */
 public class ServiceInfoPanel extends javax.swing.JPanel {
@@ -271,6 +272,14 @@ public class ServiceInfoPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ServiceInfoPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel connectionHostLabel;

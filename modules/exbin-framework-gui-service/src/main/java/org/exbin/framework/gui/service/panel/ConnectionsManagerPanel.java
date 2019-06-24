@@ -23,15 +23,14 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.exbin.framework.gui.service.dialog.EditConnectionDialog;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Connection Management Panel.
+ * Connection management panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/24
  * @author ExBin Project (http://exbin.org)
  */
 public class ConnectionsManagerPanel extends javax.swing.JPanel {
@@ -57,28 +56,24 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
                 selectAllButton.setEnabled(connectionsList.getModel().getSize() > 0);
             }
         });
-        connectionsList.addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    boolean emptySelection = connectionsList.isSelectionEmpty();
-                    removeButton.setEnabled(!emptySelection);
-                    modifyButton.setEnabled(!emptySelection && connectionsList.getSelectionModel().getMinSelectionIndex() == connectionsList.getSelectionModel().getMaxSelectionIndex());
-                    selectAllButton.setEnabled(connectionsList.getModel().getSize() > 0);
-                    if (!emptySelection) {
-                        int[] indices = connectionsList.getSelectedIndices();
-                        upButton.setEnabled(connectionsList.getMaxSelectionIndex() >= indices.length);
-                        downButton.setEnabled(connectionsList.getMinSelectionIndex() + indices.length < connectionsList.getModel().getSize());
-                    } else {
-                        upButton.setEnabled(false);
-                        downButton.setEnabled(false);
-                    }
+        connectionsList.addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                boolean emptySelection = connectionsList.isSelectionEmpty();
+                removeButton.setEnabled(!emptySelection);
+                modifyButton.setEnabled(!emptySelection && connectionsList.getSelectionModel().getMinSelectionIndex() == connectionsList.getSelectionModel().getMaxSelectionIndex());
+                selectAllButton.setEnabled(connectionsList.getModel().getSize() > 0);
+                if (!emptySelection) {
+                    int[] indices = connectionsList.getSelectedIndices();
+                    upButton.setEnabled(connectionsList.getMaxSelectionIndex() >= indices.length);
+                    downButton.setEnabled(connectionsList.getMinSelectionIndex() + indices.length < connectionsList.getModel().getSize());
+                } else {
+                    upButton.setEnabled(false);
+                    downButton.setEnabled(false);
                 }
             }
         });
 
-        ((ConnectionsListModel) connectionsList.getModel()).setConnections(new ArrayList<String>());
+        ((ConnectionsListModel) connectionsList.getModel()).setConnections(new ArrayList<>());
     }
 
     /**
@@ -246,7 +241,6 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
                 last++;
             }
         }
-
     }//GEN-LAST:event_upButtonActionPerformed
 
     private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
@@ -272,7 +266,6 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
         } else {
             connectionsList.clearSelection();
         }
-
     }//GEN-LAST:event_selectAllButtonActionPerformed
 
     private void modifyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyButtonActionPerformed
@@ -294,6 +287,15 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
 
     public List<String> getConnectionList() {
         return ((ConnectionsListModel) connectionsList.getModel()).getConnections();
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ConnectionsManagerPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

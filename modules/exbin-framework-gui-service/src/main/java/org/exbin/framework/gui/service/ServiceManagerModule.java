@@ -18,24 +18,28 @@ package org.exbin.framework.gui.service;
 
 import java.awt.Component;
 import javax.swing.JMenu;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.menu.api.PositionMode;
-import org.exbin.framework.gui.service.dialog.ConnectionDialog;
+import org.exbin.framework.gui.service.panel.ConnectionPanel;
 import org.exbin.framework.gui.service.panel.ServiceManagerPanel;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * XBUP service manager module.
  *
- * @version 0.2.0 2016/02/02
+ * @version 0.2.1 2019/06/24
  * @author ExBin Project (http://exbin.org)
  */
 public class ServiceManagerModule implements XBApplicationModule {
@@ -59,12 +63,15 @@ public class ServiceManagerModule implements XBApplicationModule {
     }
 
     public void openConnectionDialog() {
-        ConnectionDialog loginDialog = new ConnectionDialog(WindowUtils.getFrame(servicePanel), true);
-        loginDialog.setLocationRelativeTo(loginDialog.getParent());
-        loginDialog.loadConnectionList(preferences);
-        loginDialog.setVisible(true);
-        loginDialog.saveConnectionList(preferences);
-        getServicePanel().setService(loginDialog.getService());
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        ConnectionPanel panel = new ConnectionPanel();
+        panel.loadConnectionList(preferences);
+        final DialogWrapper dialog = frameModule.createDialog(panel);
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), panel.getCloseButton());
+        dialog.center(dialog.getParent());
+        dialog.show();
+        panel.saveConnectionList(preferences);
+        getServicePanel().setService(panel.getService());
     }
 
     public ServiceManagerPanel getServicePanel() {

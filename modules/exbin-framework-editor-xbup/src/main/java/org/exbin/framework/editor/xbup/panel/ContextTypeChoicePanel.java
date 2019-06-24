@@ -35,23 +35,23 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
  * @author ExBin Project (http://exbin.org)
  */
 public class ContextTypeChoicePanel extends javax.swing.JPanel {
-
+    
     private XBTTreeNode parentNode;
     private final XBACatalog catalog;
     private int dialogOption = JOptionPane.CLOSED_OPTION;
     private int selectedGroup;
     private final XBCXNameService nameService;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ContextTypeChoicePanel.class);
-
+    
     public ContextTypeChoicePanel(XBACatalog catalog, XBTTreeNode parentNode) {
         this.catalog = catalog;
         this.parentNode = parentNode;
-
+        
         nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
         initComponents();
         init();
     }
-
+    
     private void init() {
         if (catalog != null && parentNode != null) {
             XBContext context = parentNode.getContext();
@@ -147,7 +147,7 @@ public class ContextTypeChoicePanel extends javax.swing.JPanel {
                                 blockCaption += ": " + nameService.getDefaultText(((XBCBlockDecl) blockDecl).getBlockSpecRev().getParent());
                             }
                         }
-
+                        
                         ((DefaultListModel<String>) blockTypeList.getModel()).addElement(blockCaption);
                         blockId++;
                     }
@@ -163,6 +163,14 @@ public class ContextTypeChoicePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_blockTypeListValueChanged
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ContextTypeChoicePanel(null, null));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel blockLabel;

@@ -35,6 +35,7 @@ import javax.swing.JLabel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemInfoPanel;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockTerminationMode;
 import org.exbin.xbup.core.block.XBBlockType;
@@ -246,6 +247,15 @@ public class BlockPropertiesPanel extends javax.swing.JPanel {
         clipboard.setContents(new StringSelection(webCatalogLinkLabel.getText()), null);
     }//GEN-LAST:event_copyLinkMenuItemActionPerformed
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new BlockPropertiesPanel());
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel attributesCountLabel;
     private javax.swing.JTextField attributesCountTextField;
