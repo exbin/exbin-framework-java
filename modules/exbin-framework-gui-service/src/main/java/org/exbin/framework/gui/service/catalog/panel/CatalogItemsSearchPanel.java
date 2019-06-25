@@ -37,7 +37,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultEditorKit;
 import org.exbin.framework.gui.menu.api.MenuManagement;
@@ -63,7 +62,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 /**
  * Catalog items search panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemsSearchPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
@@ -117,49 +116,21 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
             column.setCellEditor(defaultCellEditor);
         }
 
-        catalogItemsListTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    if (catalogItemsListTable.getSelectedRow() >= 0) {
-                        setItem(itemsModel.getItem(catalogItemsListTable.getSelectedRow()));
-                    } else {
-                        setItem(null);
-                    }
+        catalogItemsListTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                if (catalogItemsListTable.getSelectedRow() >= 0) {
+                    setItem(itemsModel.getItem(catalogItemsListTable.getSelectedRow()));
+                } else {
+                    setItem(null);
                 }
             }
         });
 
-        actionListenerMap.put(DefaultEditorKit.cutAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCut();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.copyAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCopy();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.pasteAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performPaste();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
-        actionListenerMap.put("delete", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
+        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> performCut());
+        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> performCopy());
+        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
+        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
+        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
     }
 
     public void switchToSpecTypeMode(CatalogSpecItemType specType) {

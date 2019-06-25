@@ -16,22 +16,66 @@
  */
 package org.exbin.framework.editor.xbup.panel;
 
+import java.awt.CardLayout;
+import java.util.List;
 import java.util.ResourceBundle;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JPanel;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.service.catalog.panel.CatalogSelectRevPanel;
+import org.exbin.framework.gui.service.catalog.panel.CatalogSpecItemType;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.xbup.core.block.XBBlockType;
+import org.exbin.xbup.core.block.declaration.XBBlockDecl;
+import org.exbin.xbup.core.block.declaration.XBDeclBlockType;
+import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
+import org.exbin.xbup.core.block.declaration.catalog.XBCGroupDecl;
+import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCBlockRev;
+import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
+import org.exbin.xbup.core.catalog.base.XBCRev;
+import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
+import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**
  * Panel for adding new item into given document.
  *
- * @version 0.2.1 2017/02/22
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class AddBlockPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
+
+    private XBTTreeNode parentNode;
+    private XBTTreeNode workNode = null;
+    private XBACatalog catalog;
+    private XBBlockType contextBlockType = null;
+    private XBBlockType catalogBlockType = null;
+    private ActionStateListener actionStateListener = null;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AddBlockPanel.class);
 
     public AddBlockPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        reloadBasicTypes();
+        ((CardLayout) getLayout()).show(this, "type");
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
+
+    public void setActionStateListener(ActionStateListener listener) {
+        this.actionStateListener = listener;
     }
 
     /**
@@ -200,11 +244,50 @@ public class AddBlockPanel extends javax.swing.JPanel {
 
     private void contextTypeRadioButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_contextTypeRadioButtonStateChanged
         contextTypeSelectButton.setEnabled(contextTypeRadioButton.isSelected());
-        updateOkButton();
+        updateActionState();
     }//GEN-LAST:event_contextTypeRadioButtonStateChanged
 
     private void contextTypeSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contextTypeSelectButtonActionPerformed
-//        if (catalog != null) {
+        if (catalog != null) {
+            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            final ContextTypeChoicePanel panel = new ContextTypeChoicePanel(catalog, parentNode);
+
+            DefaultControlPanel controlPanel = new DefaultControlPanel();
+            JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                switch (actionType) {
+                    case OK: {
+                        contextBlockType = panel.getBlockType();
+                        XBCBlockDecl blockDecl = (XBCBlockDecl) ((XBDeclBlockType) contextBlockType).getBlockDecl();
+                        XBCBlockSpec blockSpec = blockDecl.getBlockSpecRev().getParent();
+                        //new XBDeclBlockType(new XBCBlockDecl();
+                        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+                        String targetCaption = nameService.getItemNamePath(blockSpec);
+                        if (targetCaption == null) {
+                            targetCaption = "";
+                        } else {
+                            targetCaption += " ";
+                        }
+                        targetCaption += "(" + Long.toString(blockSpec.getId()) + ")";
+                        contextTypeTextField.setText(targetCaption);
+
+                        dialog.close();
+                        break;
+                    }
+
+                    case CANCEL: {
+                        dialog.close();
+                        break;
+                    }
+                    default:
+                        throw new IllegalStateException("Unexpected action type " + actionType.name());
+                }
+            });
+            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+            dialog.center(dialog.getParent());
+            dialog.show();
+
 //            ContextTypeChoiceDialog contextTypeDialog = new ContextTypeChoiceDialog((Frame) SwingUtilities.getWindowAncestor(this), true, catalog, parentNode);
 //            contextTypeDialog.setLocationRelativeTo(this);
 //            contextTypeDialog.setVisible(true);
@@ -213,30 +296,70 @@ public class AddBlockPanel extends javax.swing.JPanel {
 //                XBCBlockDecl blockDecl = (XBCBlockDecl) ((XBDeclBlockType) contextBlockType).getBlockDecl();
 //                XBCBlockSpec blockSpec = blockDecl.getBlockSpecRev().getParent();
 //                //new XBDeclBlockType(new XBCBlockDecl();
-//                    XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-//                    String targetCaption = nameService.getItemNamePath(blockSpec);
-//                    if (targetCaption == null) {
-//                        targetCaption = "";
-//                    } else {
-//                        targetCaption += " ";
-//                    }
-//                    targetCaption += "(" + Long.toString(blockSpec.getId()) + ")";
-//                    contextTypeTextField.setText(targetCaption);
+//                XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+//                String targetCaption = nameService.getItemNamePath(blockSpec);
+//                if (targetCaption == null) {
+//                    targetCaption = "";
+//                } else {
+//                    targetCaption += " ";
 //                }
+//                targetCaption += "(" + Long.toString(blockSpec.getId()) + ")";
+//                contextTypeTextField.setText(targetCaption);
 //            }
-//
-//            updateOkButton();
+        }
+
+        updateActionState();
     }//GEN-LAST:event_contextTypeSelectButtonActionPerformed
 
     private void catalogTypeRadioButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_catalogTypeRadioButtonStateChanged
-//        catalogTypeTextField.setEnabled(catalogTypeRadioButton.isSelected());
-//        catalogTypeSelectButton.setEnabled(catalogTypeRadioButton.isSelected());
-//        nextButton.setEnabled(catalogTypeRadioButton.isSelected());
-//        updateOkButton();
+        catalogTypeTextField.setEnabled(catalogTypeRadioButton.isSelected());
+        catalogTypeSelectButton.setEnabled(catalogTypeRadioButton.isSelected());
+        if (actionStateListener != null) {
+            actionStateListener.nextEnabled(catalogTypeRadioButton.isSelected());
+        }
+        updateActionState();
     }//GEN-LAST:event_catalogTypeRadioButtonStateChanged
 
     private void catalogTypeSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_catalogTypeSelectButtonActionPerformed
-//        if (catalog != null) {
+        if (catalog != null) {
+            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            final CatalogSelectRevPanel panel = new CatalogSelectRevPanel(catalog, CatalogSpecItemType.BLOCK);
+
+            DefaultControlPanel controlPanel = new DefaultControlPanel();
+            JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                switch (actionType) {
+                    case OK: {
+                XBCRev blockRev = panel.getTarget();
+                catalogBlockType = new XBDeclBlockType(new XBCBlockDecl((XBCBlockRev) blockRev, catalog));
+                XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class
+                );
+                String targetCaption = nameService.getItemNamePath(blockRev.getParent());
+                if (targetCaption == null) {
+                    targetCaption = "";
+                } else {
+                    targetCaption += " ";
+                }
+                targetCaption += "(" + Long.toString(blockRev.getId()) + ")";
+                catalogTypeTextField.setText(targetCaption);
+
+                        dialog.close();
+                        break;
+                    }
+
+                    case CANCEL: {
+                        dialog.close();
+                        break;
+                    }
+                    default:
+                        throw new IllegalStateException("Unexpected action type " + actionType.name());
+                }
+            });
+            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+            dialog.center(dialog.getParent());
+            dialog.show();
+
 //            CatalogSelectSpecDialog selectSpecDialog = new CatalogSelectSpecDialog((Frame) SwingUtilities.getWindowAncestor(this), true, catalog, CatalogSpecItemType.BLOCK);
 //            selectSpecDialog.setLocationRelativeTo(this);
 //            selectSpecDialog.setVisible(true);
@@ -253,9 +376,9 @@ public class AddBlockPanel extends javax.swing.JPanel {
 //                targetCaption += "(" + Long.toString(blockRev.getId()) + ")";
 //                catalogTypeTextField.setText(targetCaption);
 //            }
-//        }
-//
-//        updateOkButton();
+        }
+
+        updateActionState();
     }//GEN-LAST:event_catalogTypeSelectButtonActionPerformed
 
     /**
@@ -283,14 +406,53 @@ public class AddBlockPanel extends javax.swing.JPanel {
     private javax.swing.JPanel typePanel;
     // End of variables declaration//GEN-END:variables
 
-
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
 
-    private void updateOkButton() {
-//        okButton.setEnabled(!(contextTypeRadioButton.isSelected() || catalogTypeRadioButton.isSelected())
-//                || (contextBlockType != null && contextTypeRadioButton.isSelected())
-//                || (catalogBlockType != null && catalogTypeRadioButton.isSelected()));
+    private void updateActionState() {
+        if (actionStateListener != null) {
+            actionStateListener.finishEnabled(
+                    !(contextTypeRadioButton.isSelected() || catalogTypeRadioButton.isSelected())
+                    || (contextBlockType != null && contextTypeRadioButton.isSelected())
+                    || (catalogBlockType != null && catalogTypeRadioButton.isSelected()));
+        }
+    }
+
+    public void setParentNode(XBTTreeNode parentNode) {
+        this.parentNode = parentNode;
+        contextTypeRadioButton.setEnabled(parentNode != null && parentNode.getContext().getGroupsCount() > 1);
+    }
+
+    public void setCatalog(XBACatalog catalog) {
+        this.catalog = catalog;
+        reloadBasicTypes();
+        fireCatalogUpdate();
+    }
+
+    private void fireCatalogUpdate() {
+        catalogTypeRadioButton.setEnabled(catalog != null);
+    }
+
+    private void reloadBasicTypes() {
+        DefaultComboBoxModel<String> model = (DefaultComboBoxModel) basicTypeComboBox.getModel();
+        model.removeAllElements();
+        if (catalog != null) {
+            Long[] basicGroupPath = {0l, 0l};
+            List<XBBlockDecl> list = catalog.getBlocks(((XBCGroupDecl) catalog.findGroupTypeByPath(basicGroupPath, 0)).getGroupSpecRev().getParent());
+
+            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class
+            );
+            for (XBBlockDecl decl : list) {
+                model.addElement(nameService.getDefaultText(((XBCBlockDecl) decl).getBlockSpecRev().getParent()));
+            }
+        }
+    }
+
+    public interface ActionStateListener {
+
+        void finishEnabled(boolean enablement);
+
+        void nextEnabled(boolean enablement);
     }
 }

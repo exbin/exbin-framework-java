@@ -17,6 +17,7 @@ package org.exbin.framework.gui.undo.panel;
 
 import org.exbin.framework.gui.undo.handler.UndoManagerControlHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.OkCancelListener;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
@@ -119,8 +120,8 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
     }
 
     @Override
-    public WindowUtils.OkCancelListener createOkCancelListener() {
-        return new WindowUtils.OkCancelListener() {
+    public OkCancelListener createOkCancelListener() {
+        return new OkCancelListener() {
             @Override
             public void okEvent() {
                 performClick(UndoManagerControlHandler.ControlActionType.CANCEL);

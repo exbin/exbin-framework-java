@@ -18,8 +18,6 @@ package org.exbin.framework.gui.service.panel;
 
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Frame;
-import java.awt.Window;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
@@ -29,13 +27,12 @@ import java.util.logging.Logger;
 import javax.persistence.Persistence;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.XBDbServiceClient;
-import org.exbin.framework.gui.service.dialog.ConnectionListDialog;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
@@ -47,11 +44,12 @@ import org.exbin.xbup.client.XBCatalogServiceClient;
 /**
  * Service connection panel.
  *
- * @version 0.2.1 2019/06/24
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class ConnectionPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBCatalogServiceClient service;
 
     private static final String PREFERENCES_PREFIX = "catalogConnection";
@@ -61,6 +59,10 @@ public class ConnectionPanel extends javax.swing.JPanel {
         initComponents();
 
         service = null;
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     public void setConnectionStatus(Color color, String status, String statusLabel) {
@@ -413,10 +415,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
                 } catch (ConnectException ex) {
                     statusModeLabel.setText("Unable to connect: " + ex.getMessage());
                     setConnectionStatus(Color.RED, "Failed", null);
-                } catch (UnsupportedOperationException ex) {
-                    Logger.getLogger(ConnectionPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    setConnectionStatus(Color.RED, "Failed", null);
-                } catch (Exception ex) {
+                } catch (UnsupportedOperationException | IOException ex) {
                     Logger.getLogger(ConnectionPanel.class.getName()).log(Level.SEVERE, null, ex);
                     setConnectionStatus(Color.RED, "Failed", null);
                 }
@@ -433,62 +432,42 @@ public class ConnectionPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void connectionManageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectionManageButtonActionPerformed
-//        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-//        final ConnectionsManagerPanel panel = new ConnectionsManagerPanel();
-//
-//        List<String> connectionList = new ArrayList<>();
-//        int itemsCount = connectionComboBox.getItemCount();
-//        for (int i = 0; i < itemsCount; i++) {
-//            connectionList.add((String) connectionComboBox.getItemAt(i));
-//        }
-//        panel.setConnectionList(connectionList);
-//
-//        DefaultControlPanel controlPanel = new DefaultControlPanel();
-//        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-//        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-//        controlPanel.setHandler(new DefaultControlHandler() {
-//            @Override
-//            public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-//                switch (actionType) {
-//                    case OK: {
-//                        connectionList = panel.getConnectionList();
-//                        DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) connectionComboBox.getModel();
-//                        comboBoxModel.removeAllElements();
-//                        for (String connection : connectionList) {
-//                            comboBoxModel.addElement(connection);
-//                        }
-//
-//                        break;
-//                    }
-//                    case CANCEL: {
-//                        break;
-//                    }
-//                    default:
-//                        throw new IllegalStateException("Unexpected action type " + actionType.name());
-//                }
-//            }
-//        });
-//        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-//        dialog.center(dialog.getParent());
-//        dialog.show();
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        final ConnectionsManagerPanel panel = new ConnectionsManagerPanel();
 
-        ConnectionListDialog connectionDialog = new ConnectionListDialog((Frame) this.getParent(), true);
-        List<String> connectionList = new ArrayList<>();
-        int itemsCount = connectionComboBox.getItemCount();
-        for (int i = 0; i < itemsCount; i++) {
-            connectionList.add((String) connectionComboBox.getItemAt(i));
-        }
-        connectionDialog.setConnectionList(connectionList);
-        connectionDialog.setLocationRelativeTo(connectionDialog.getParent());
-        connectionDialog.setVisible(true);
-        if (connectionDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            connectionList = connectionDialog.getConnectionList();
-            DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) connectionComboBox.getModel();
-            comboBoxModel.removeAllElements();
-            for (String connection : connectionList) {
-                comboBoxModel.addElement(connection);
+        {
+            List<String> connectionList = new ArrayList<>();
+            int itemsCount = connectionComboBox.getItemCount();
+            for (int i = 0; i < itemsCount; i++) {
+                connectionList.add((String) connectionComboBox.getItemAt(i));
             }
+            panel.setConnectionList(connectionList);
         }
+
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            switch (actionType) {
+                case OK: {
+                    List<String> connectionList = panel.getConnectionList();
+                    DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) connectionComboBox.getModel();
+                    comboBoxModel.removeAllElements();
+                    connectionList.forEach((connection) -> comboBoxModel.addElement(connection));
+                    dialog.close();
+                    break;
+                }
+                case CANCEL: {
+                    dialog.close();
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Unexpected action type " + actionType.name());
+            }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }//GEN-LAST:event_connectionManageButtonActionPerformed
 
     private void anonymousRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_anonymousRadioButtonActionPerformed

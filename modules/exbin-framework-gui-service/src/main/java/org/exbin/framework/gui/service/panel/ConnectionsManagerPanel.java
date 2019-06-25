@@ -19,21 +19,27 @@ package org.exbin.framework.gui.service.panel;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractListModel;
-import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
-import org.exbin.framework.gui.service.dialog.EditConnectionDialog;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
 /**
  * Connection management panel.
  *
- * @version 0.2.1 2019/06/24
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class ConnectionsManagerPanel extends javax.swing.JPanel {
+
+    private XBApplication application;
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ConnectionsManagerPanel.class);
 
@@ -74,6 +80,10 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
         });
 
         ((ConnectionsListModel) connectionsList.getModel()).setConnections(new ArrayList<>());
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     /**
@@ -213,12 +223,30 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        EditConnectionDialog dialog = new EditConnectionDialog(WindowUtils.getFrame(this), true);
-        dialog.setLocationRelativeTo(dialog.getParent());
-        dialog.setVisible(true);
-        if (dialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            ((ConnectionsListModel) connectionsList.getModel()).add(connectionsList.isSelectionEmpty() ? -1 : connectionsList.getSelectedIndex(), dialog.getConnection());
-        }
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        final EditConnectionPanel panel = new EditConnectionPanel();
+
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            switch (actionType) {
+                case OK: {
+                    ((ConnectionsListModel) connectionsList.getModel()).add(connectionsList.isSelectionEmpty() ? -1 : connectionsList.getSelectedIndex(), panel.getConnection());
+                    dialog.close();
+                    break;
+                }
+                case CANCEL: {
+                    dialog.close();
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Unexpected action type " + actionType.name());
+            }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
@@ -269,16 +297,34 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_selectAllButtonActionPerformed
 
     private void modifyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyButtonActionPerformed
-        EditConnectionDialog dialog = new EditConnectionDialog(WindowUtils.getFrame(this), true);
-        dialog.setConnection((String) connectionsList.getSelectedValue());
-        dialog.setLocationRelativeTo(dialog.getParent());
-        dialog.setVisible(true);
-        int modifiedRowIndex = connectionsList.getSelectedIndex();
-        if (dialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            ((ConnectionsListModel) connectionsList.getModel()).remove(modifiedRowIndex);
-            ((ConnectionsListModel) connectionsList.getModel()).add(modifiedRowIndex, dialog.getConnection());
-            connectionsList.setSelectedIndex(modifiedRowIndex);
-        }
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        final EditConnectionPanel panel = new EditConnectionPanel();
+        panel.setConnection((String) connectionsList.getSelectedValue());
+
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            switch (actionType) {
+                case OK: {
+                    int modifiedRowIndex = connectionsList.getSelectedIndex();
+                    ((ConnectionsListModel) connectionsList.getModel()).remove(modifiedRowIndex);
+                    ((ConnectionsListModel) connectionsList.getModel()).add(modifiedRowIndex, panel.getConnection());
+                    connectionsList.setSelectedIndex(modifiedRowIndex);
+                    dialog.close();
+                    break;
+                }
+                case CANCEL: {
+                    dialog.close();
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Unexpected action type " + actionType.name());
+            }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }//GEN-LAST:event_modifyButtonActionPerformed
 
     public void setConnectionList(List<String> list) {

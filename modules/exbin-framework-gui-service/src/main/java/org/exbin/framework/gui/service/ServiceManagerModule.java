@@ -18,7 +18,6 @@ package org.exbin.framework.gui.service;
 
 import java.awt.Component;
 import javax.swing.JMenu;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import org.exbin.framework.api.Preferences;
@@ -33,7 +32,6 @@ import org.exbin.framework.gui.service.panel.ConnectionPanel;
 import org.exbin.framework.gui.service.panel.ServiceManagerPanel;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
@@ -65,6 +63,7 @@ public class ServiceManagerModule implements XBApplicationModule {
     public void openConnectionDialog() {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         ConnectionPanel panel = new ConnectionPanel();
+        panel.setApplication(application);
         panel.loadConnectionList(preferences);
         final DialogWrapper dialog = frameModule.createDialog(panel);
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), panel.getCloseButton());

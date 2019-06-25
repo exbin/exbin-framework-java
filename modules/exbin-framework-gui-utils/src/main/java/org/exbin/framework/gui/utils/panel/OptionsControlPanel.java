@@ -16,13 +16,14 @@
 package org.exbin.framework.gui.utils.panel;
 
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.OkCancelListener;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 
 /**
  * Default control panel for options dialogs.
  *
- * @version 0.2.0 2016/12/30
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class OptionsControlPanel extends javax.swing.JPanel implements OptionsControlHandler.OptionsControlListener {
@@ -141,12 +142,14 @@ public class OptionsControlPanel extends javax.swing.JPanel implements OptionsCo
                 WindowUtils.doButtonClick(cancelButton);
                 break;
             }
+            default:
+                throw new IllegalStateException("Illegal action type " + actionType.name());
         }
     }
 
     @Override
-    public WindowUtils.OkCancelListener createOkCancelListener() {
-        return new WindowUtils.OkCancelListener() {
+    public OkCancelListener createOkCancelListener() {
+        return new OkCancelListener() {
             @Override
             public void okEvent() {
                 performClick(OptionsControlHandler.ControlActionType.SAVE);
@@ -155,6 +158,28 @@ public class OptionsControlPanel extends javax.swing.JPanel implements OptionsCo
             @Override
             public void cancelEvent() {
                 performClick(OptionsControlHandler.ControlActionType.CANCEL);
+            }
+        };
+    }
+
+    @Override
+    public OptionsControlHandler.OptionsControlEnablementListener createEnablementListener() {
+        return (OptionsControlHandler.ControlActionType actionType, boolean enablement) -> {
+            switch (actionType) {
+                case SET: {
+                    setButton.setEnabled(enablement);
+                    break;
+                }
+                case CANCEL: {
+                    cancelButton.setEnabled(enablement);
+                    break;
+                }
+                case SAVE: {
+                    saveButton.setEnabled(enablement);
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Illegal action type " + actionType.name());
             }
         };
     }

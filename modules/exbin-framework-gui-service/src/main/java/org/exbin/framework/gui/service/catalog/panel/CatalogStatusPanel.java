@@ -20,6 +20,7 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JList;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.service.XBENodeService;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -31,11 +32,12 @@ import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 /**
  * Panel for catalog status.
  *
- * @version 0.1.24 2015/01/09
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogStatusPanel extends javax.swing.JPanel {
 
+    private static final String UNKNOWN = "unknown";
     private XBACatalog catalog;
     private final CatalogExtensionsListModel extModel;
 
@@ -93,7 +95,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         catalogStatusPanel.add(itemsCountLabel);
 
         itemsCountTextField.setEditable(false);
-        itemsCountTextField.setText("unknown");
+        itemsCountTextField.setText(UNKNOWN);
         itemsCountTextField.setBorder(null);
         catalogStatusPanel.add(itemsCountTextField);
 
@@ -101,7 +103,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         catalogStatusPanel.add(nodesCountLabel);
 
         nodesCountTextField.setEditable(false);
-        nodesCountTextField.setText("unknown");
+        nodesCountTextField.setText(UNKNOWN);
         nodesCountTextField.setBorder(null);
         catalogStatusPanel.add(nodesCountTextField);
 
@@ -109,7 +111,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         catalogStatusPanel.add(specsCountLabel);
 
         specsCountTextField.setEditable(false);
-        specsCountTextField.setText("unknown");
+        specsCountTextField.setText(UNKNOWN);
         specsCountTextField.setBorder(null);
         catalogStatusPanel.add(specsCountTextField);
 
@@ -117,7 +119,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         catalogStatusPanel.add(formatsCountLabel);
 
         formatsCountTextField.setEditable(false);
-        formatsCountTextField.setText("unknown");
+        formatsCountTextField.setText(UNKNOWN);
         formatsCountTextField.setBorder(null);
         catalogStatusPanel.add(formatsCountTextField);
 
@@ -125,7 +127,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         catalogStatusPanel.add(groupsCountLabel);
 
         groupsCountTextField.setEditable(false);
-        groupsCountTextField.setText("unknown");
+        groupsCountTextField.setText(UNKNOWN);
         groupsCountTextField.setBorder(null);
         catalogStatusPanel.add(groupsCountTextField);
 
@@ -133,7 +135,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         catalogStatusPanel.add(blocksCountLabel);
 
         blocksCountTextField.setEditable(false);
-        blocksCountTextField.setText("unknown");
+        blocksCountTextField.setText(UNKNOWN);
         blocksCountTextField.setBorder(null);
         catalogStatusPanel.add(blocksCountTextField);
 
@@ -141,7 +143,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         catalogStatusPanel.add(defsCountLabel);
 
         defsCountTextField.setEditable(false);
-        defsCountTextField.setText("unknown");
+        defsCountTextField.setText(UNKNOWN);
         defsCountTextField.setBorder(null);
         catalogStatusPanel.add(defsCountTextField);
 
@@ -149,7 +151,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         catalogStatusPanel.add(revsCountLabel);
 
         revsCountTextField.setEditable(false);
-        revsCountTextField.setText("unknown");
+        revsCountTextField.setText(UNKNOWN);
         revsCountTextField.setBorder(null);
         catalogStatusPanel.add(revsCountTextField);
 
@@ -157,7 +159,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         catalogStatusPanel.add(lastUpdateLabel);
 
         lastUpdateTextField.setEditable(false);
-        lastUpdateTextField.setText("unknown");
+        lastUpdateTextField.setText(UNKNOWN);
         lastUpdateTextField.setBorder(null);
 
         lastUpdateNowButton.setText("Set Now");
@@ -253,6 +255,15 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_lastUpdateNowButtonActionPerformed
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogStatusPanel());
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel blocksCountLabel;
     private javax.swing.JTextField blocksCountTextField;
@@ -300,24 +311,24 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         lastUpdateNowButton.setEnabled(catalog instanceof XBECatalog);
 
         Long count = catalog == null ? null : ((XBCItemService) catalog.getCatalogService(XBCItemService.class)).getItemsCount();
-        itemsCountTextField.setText(count == null ? "unknown" : count.toString());
+        itemsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = nodeService == null ? null : nodeService.getItemsCount();
-        nodesCountTextField.setText(count == null ? "unknown" : count.toString());
+        nodesCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = specService == null ? null : specService.getItemsCount();
-        specsCountTextField.setText(count == null ? "unknown" : count.toString());
+        specsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = specService == null ? null : specService.getDefsCount();
-        defsCountTextField.setText(count == null ? "unknown" : count.toString());
+        defsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = specService == null ? null : specService.getAllFormatSpecsCount();
-        formatsCountTextField.setText(count == null ? "unknown" : count.toString());
+        formatsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = specService == null ? null : specService.getAllGroupSpecsCount();
-        groupsCountTextField.setText(count == null ? "unknown" : count.toString());
+        groupsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = specService == null ? null : specService.getAllBlockSpecsCount();
-        blocksCountTextField.setText(count == null ? "unknown" : count.toString());
+        blocksCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = revService == null ? null : revService.getItemsCount();
-        revsCountTextField.setText(count == null ? "unknown" : count.toString());
+        revsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = revService == null ? null : revService.getItemsCount();
-        revsCountTextField.setText(count == null ? "unknown" : count.toString());
+        revsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         Date date = nodeService == null ? null : nodeService.getLastUpdate();
-        lastUpdateTextField.setText(date == null ? "unknown" : date.toString());
+        lastUpdateTextField.setText(date == null ? UNKNOWN : date.toString());
     }
 }

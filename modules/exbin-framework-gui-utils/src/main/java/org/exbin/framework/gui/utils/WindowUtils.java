@@ -407,12 +407,6 @@ public class WindowUtils {
         return dialogPanel;
     }
 
-    public interface OkCancelListener {
-
-        void okEvent();
-
-        void cancelEvent();
-    }
 
     @ParametersAreNonnullByDefault
     public interface DialogWrapper {

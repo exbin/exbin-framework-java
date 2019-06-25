@@ -17,11 +17,12 @@
 package org.exbin.framework.gui.service.catalog.panel;
 
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * XBManager Catalog Specification Selection Dialog.
+ * XBManager catalog specification selection panel.
  *
- * @version 0.2.1 2017/02/19
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogAddItemPanel extends javax.swing.JPanel {
@@ -82,6 +83,15 @@ public class CatalogAddItemPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogAddItemPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel itemNameLabel;

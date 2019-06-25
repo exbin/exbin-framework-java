@@ -17,12 +17,13 @@
 package org.exbin.framework.gui.service.panel;
 
 import java.awt.CardLayout;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * Simple panel with catalog availability message.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogAvailabilityPanel extends javax.swing.JPanel {
@@ -95,6 +96,16 @@ public class CatalogAvailabilityPanel extends javax.swing.JPanel {
 
         getAccessibleContext().setAccessibleName("catalog");
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogAvailabilityPanel());
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel catalogLoadingPanel;
     private javax.swing.JPanel catalogNotAvailablePanel;

@@ -19,7 +19,6 @@ package org.exbin.framework.gui.service.catalog.panel;
 import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -30,9 +29,9 @@ import org.exbin.xbup.core.catalog.base.XBCXName;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 
 /**
- * XBManager Catalog Specification Selection Panel.
+ * XBManager catalog specification selection panel.
  *
- * @version 0.1.24 2014/12/12
+ * @version 0.2.24 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSelectSpecPanel extends javax.swing.JPanel {
@@ -85,24 +84,20 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
             }
         });
 
-        specSelectTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                XBCItem item = (XBCItem) specSelectTree.getLastSelectedPathComponent();
-                if ((item instanceof XBCNode) && (specType != CatalogSpecItemType.NODE)) {
-                    item = null;
+        specSelectTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
+            XBCItem item = (XBCItem) specSelectTree.getLastSelectedPathComponent();
+            if ((item instanceof XBCNode) && (specType != CatalogSpecItemType.NODE)) {
+                item = null;
+            }
+            if (item == null) {
+                if (selectedItem != null) {
+                    selectedItem = null;
+                    selectionListener.selectedItem(selectedItem);
                 }
-                if (item == null) {
-                    if (selectedItem != null) {
-                        selectedItem = null;
-                        selectionListener.selectedItem(selectedItem);
-                    }
-                } else {
-                    if (selectedItem != item) {
-                        selectedItem = item;
-                        selectionListener.selectedItem(selectedItem);
-                    }
+            } else {
+                if (selectedItem != item) {
+                    selectedItem = item;
+                    selectionListener.selectedItem(selectedItem);
                 }
             }
         });

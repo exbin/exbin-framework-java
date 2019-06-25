@@ -14,29 +14,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.undo.handler;
-
-import org.exbin.framework.gui.utils.OkCancelListener;
-import org.exbin.framework.gui.utils.WindowUtils;
+package org.exbin.framework.gui.utils;
 
 /**
- * Handler for undo manager control panel.
+ * Simple interface for ok and cancel event.
  *
- * @version 0.2.1 2019/06/19
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
-public interface UndoManagerControlHandler {
+public interface OkCancelListener {
 
-    void controlActionPerformed(ControlActionType actionType);
+    void okEvent();
 
-    public interface UndoManagerControlListener {
+    void cancelEvent();
 
-        void performClick(ControlActionType actionType);
-
-        OkCancelListener createOkCancelListener();
-    }
-
-    public static enum ControlActionType {
-        REVERT_TO, CANCEL
-    }
 }

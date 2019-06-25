@@ -32,12 +32,12 @@ public interface CatalogManagerPanelable {
      *
      * @param menuManagement menu management
      */
-    public void setMenuManagement(MenuManagement menuManagement);
+    void setMenuManagement(MenuManagement menuManagement);
 
     /**
      * Passes access to catalog.
      *
      * @param catalog catalog
      */
-    public void setCatalog(XBACatalog catalog);
+    void setCatalog(XBACatalog catalog);
 }

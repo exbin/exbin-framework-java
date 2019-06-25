@@ -34,20 +34,25 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.XBFileType;
 import org.exbin.framework.gui.service.YamlFileType;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogAddItemDialog;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
 import org.exbin.framework.gui.service.catalog.panel.CatalogNodesTreeModel.CatalogNodesTreeItem;
 import org.exbin.framework.gui.service.panel.CatalogManagerPanelable;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.XBEItem;
 import org.exbin.xbup.catalog.entity.XBENode;
@@ -88,11 +93,12 @@ import org.exbin.xbup.core.serial.XBSerializable;
 /**
  * Catalog editor panel.
  *
- * @version 0.2.1 2019/06/23
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
 
+    private XBApplication application;
     private XBCItem currentItem;
 
     private XBACatalog catalog;
@@ -110,7 +116,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     private XBCXDescService descService;
     private XBCXStriService striService;
 
-    private Map<String, ActionListener> actionListenerMap = new HashMap<>();
+    private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
     private MenuManagement menuManagement;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogEditorPanel.class);
 
@@ -118,8 +124,13 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         nodesModel = new CatalogNodesTreeModel();
         specsModel = new CatalogSpecsTableModel();
         catalogYaml = new XBCatalogYaml();
+        itemPanel = new CatalogItemPanel();
 
         initComponents();
+        init();
+    }
+
+    private void init() {
         catalogTree.setCellRenderer(new DefaultTreeCellRenderer() {
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
@@ -147,7 +158,6 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
             }
         });
 
-        itemPanel = new CatalogItemPanel();
         catalogItemSplitPane.setRightComponent(itemPanel);
         itemPanel.setJumpActionListener((XBCRev rev) -> {
             XBCSpec spec = rev.getParent();
@@ -168,6 +178,10 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
         actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
         actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     /**
@@ -407,63 +421,82 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     }//GEN-LAST:event_popupImportItemMenuItemActionPerformed
 
     private void popupAddMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupAddMenuItemActionPerformed
-        CatalogAddItemDialog addDialog = new CatalogAddItemDialog(WindowUtils.getFrame(this), true);
-        addDialog.setVisible(true);
-        if (addDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            // TODO: Use different transaction management later
-            EntityManager em = ((XBECatalog) catalog).getEntityManager();
-            EntityTransaction transaction = em.getTransaction();
-            transaction.begin();
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        final CatalogAddItemPanel panel = new CatalogAddItemPanel();
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            switch (actionType) {
+                case OK: {
+                    // TODO: Use different transaction management later
+                    EntityManager em = ((XBECatalog) catalog).getEntityManager();
+                    EntityTransaction transaction = em.getTransaction();
+                    transaction.begin();
 
-            XBENode node = (XBENode) (currentItem instanceof XBCNode ? currentItem : currentItem.getParent());
-            XBEItem item = null;
-            switch (addDialog.getItemType()) {
-                case NODE: {
-                    item = (XBENode) nodeService.createItem();
-                    Long newXbIndex = nodeService.findMaxSubNodeXB(node);
-                    item.setXBIndex(newXbIndex == null ? 0 : newXbIndex + 1);
-                    break;
-                }
-                case BLOCK: {
-                    item = (XBESpec) specService.createBlockSpec();
-                    Long newXbIndex = specService.findMaxBlockSpecXB(node);
-                    item.setXBIndex(newXbIndex == null ? 0 : newXbIndex + 1);
-                    break;
-                }
-                case GROUP: {
-                    item = (XBESpec) specService.createGroupSpec();
-                    Long newXbIndex = specService.findMaxBlockSpecXB(node);
-                    item.setXBIndex(newXbIndex == null ? 0 : newXbIndex + 1);
-                    break;
-                }
-                case FORMAT: {
-                    item = (XBESpec) specService.createFormatSpec();
-                    Long newXbIndex = specService.findMaxBlockSpecXB(node);
-                    item.setXBIndex(newXbIndex == null ? 0 : newXbIndex + 1);
-                    break;
-                }
-                default: {
-                    throw new IllegalStateException();
-                }
-            }
+                    XBENode node = (XBENode) (currentItem instanceof XBCNode ? currentItem : currentItem.getParent());
+                    XBEItem item = null;
+                    switch (panel.getItemType()) {
+                        case NODE: {
+                            item = (XBENode) nodeService.createItem();
+                            Long newXbIndex = nodeService.findMaxSubNodeXB(node);
+                            item.setXBIndex(newXbIndex == null ? 0 : newXbIndex + 1);
+                            break;
+                        }
+                        case BLOCK: {
+                            item = (XBESpec) specService.createBlockSpec();
+                            Long newXbIndex = specService.findMaxBlockSpecXB(node);
+                            item.setXBIndex(newXbIndex == null ? 0 : newXbIndex + 1);
+                            break;
+                        }
+                        case GROUP: {
+                            item = (XBESpec) specService.createGroupSpec();
+                            Long newXbIndex = specService.findMaxBlockSpecXB(node);
+                            item.setXBIndex(newXbIndex == null ? 0 : newXbIndex + 1);
+                            break;
+                        }
+                        case FORMAT: {
+                            item = (XBESpec) specService.createFormatSpec();
+                            Long newXbIndex = specService.findMaxBlockSpecXB(node);
+                            item.setXBIndex(newXbIndex == null ? 0 : newXbIndex + 1);
+                            break;
+                        }
+                        default: {
+                            throw new IllegalStateException();
+                        }
+                    }
 
-            if (item == null) {
-                throw new IllegalStateException();
-            }
-            item.setParent(node);
-            if (item instanceof XBCNode) {
-                nodeService.persistItem(item);
-            } else {
-                specService.persistItem(item);
-            }
-            ((XBEXNameService) nameService).setDefaultText(item, addDialog.getItemName());
-            em.flush();
-            transaction.commit();
+                    if (item == null) {
+                        throw new IllegalStateException();
+                    }
+                    item.setParent(node);
+                    if (item instanceof XBCNode) {
+                        nodeService.persistItem(item);
+                    } else {
+                        specService.persistItem(item);
+                    }
+                    ((XBEXNameService) nameService).setDefaultText(item, panel.getItemName());
+                    em.flush();
+                    transaction.commit();
 
-            reloadNodesTree();
-            setNode(item instanceof XBCNode ? (XBCNode) item : specsModel.getNode());
-            selectSpecTableRow(item);
-        }
+                    reloadNodesTree();
+                    setNode(item instanceof XBCNode ? (XBCNode) item : specsModel.getNode());
+                    selectSpecTableRow(item);
+
+                    dialog.close();
+                    break;
+                }
+                case CANCEL: {
+                    dialog.close();
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Unexpected action type " + actionType.name());
+            }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }//GEN-LAST:event_popupAddMenuItemActionPerformed
 
     private void popupRefreshMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupRefreshMenuItemActionPerformed
@@ -520,6 +553,15 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
 //        itemPanel.setMainFrameManagement(mainFrameManagement);
 //    }
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogEditorPanel());
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane catalogItemListScrollPane;
     private javax.swing.JSplitPane catalogItemSplitPane;

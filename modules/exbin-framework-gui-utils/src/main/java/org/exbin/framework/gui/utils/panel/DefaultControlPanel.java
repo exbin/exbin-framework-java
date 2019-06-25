@@ -15,16 +15,19 @@
  */
 package org.exbin.framework.gui.utils.panel;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.OkCancelListener;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 
 /**
  * Basic default control panel.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DefaultControlPanel extends javax.swing.JPanel implements DefaultControlHandler.DefaultControlListener {
 
     private final java.util.ResourceBundle resourceBundle;
@@ -114,8 +117,8 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
     }
 
     @Override
-    public WindowUtils.OkCancelListener createOkCancelListener() {
-        return new WindowUtils.OkCancelListener() {
+    public OkCancelListener createOkCancelListener() {
+        return new OkCancelListener() {
             @Override
             public void okEvent() {
                 performClick(DefaultControlHandler.ControlActionType.OK);
@@ -124,6 +127,24 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
             @Override
             public void cancelEvent() {
                 performClick(DefaultControlHandler.ControlActionType.CANCEL);
+            }
+        };
+    }
+
+    @Override
+    public DefaultControlHandler.DefaultControlEnablementListener createEnablementListener() {
+        return (DefaultControlHandler.ControlActionType actionType, boolean enablement) -> {
+            switch (actionType) {
+                case OK: {
+                    okButton.setEnabled(enablement);
+                    break;
+                }
+                case CANCEL: {
+                    cancelButton.setEnabled(enablement);
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Illegal action type " + actionType.name());
             }
         };
     }

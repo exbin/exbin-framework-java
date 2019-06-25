@@ -63,7 +63,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Panel with document tree visualization.
  *
- * @version 0.2.0 2016/02/27
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocTreePanel extends javax.swing.JPanel {
@@ -97,12 +97,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
         initComponents();
 
-        mainTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                updateItemStatus();
-            }
-        });
+        mainTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> updateItemStatus());
         /*clipboard.addFlavorListener(new FlavorListener() {
          @Override
          public void flavorsChanged(FlavorEvent e) {
@@ -110,36 +105,11 @@ public class XBDocTreePanel extends javax.swing.JPanel {
          }
          });*/
 
-        actionListenerMap.put(DefaultEditorKit.cutAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCut();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.copyAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCopy();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.pasteAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performPaste();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
-        actionListenerMap.put("delete", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
+        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> performCut());
+        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> performCopy());
+        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
+        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
+        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
 
         mainTree.setDragEnabled(true);
         mainTree.setDropMode(DropMode.USE_SELECTION);
@@ -165,7 +135,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         for (Iterator it = updateEventList.iterator(); it.hasNext();) {
             ((ActionListener) it.next()).actionPerformed(null);
         }
-        
+
         if (clipboardActionsUpdateListener != null) {
             clipboardActionsUpdateListener.stateChanged();
         }
@@ -463,7 +433,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //        lastFocusedComponent = null;
 //        return false;
 //    }
-
 //    @Override
 //    public void releaseActionStatus() {
 //        mainFrame.getItemAddAction().setEnabled(false);
@@ -492,7 +461,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //    public Object getUndoHandle() {
 //        return treeUndo;
 //    }
-
     public static class XBTSelection implements Transferable, ClipboardOwner {
 
         private ByteArrayOutputStream data;

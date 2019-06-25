@@ -14,29 +14,42 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.undo.handler;
+package org.exbin.framework.gui.utils.handler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.OkCancelListener;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Handler for undo manager control panel.
+ * Handler for multi-step control panel.
  *
- * @version 0.2.1 2019/06/19
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
-public interface UndoManagerControlHandler {
+@ParametersAreNonnullByDefault
+public interface MultiStepControlHandler {
 
     void controlActionPerformed(ControlActionType actionType);
 
-    public interface UndoManagerControlListener {
+    @ParametersAreNonnullByDefault
+    public interface MultiStepControlListener {
 
         void performClick(ControlActionType actionType);
 
+        @Nonnull
         OkCancelListener createOkCancelListener();
+
+        @Nonnull
+        MultiStepControlEnablementListener createEnablementListener();
+    }
+
+    @ParametersAreNonnullByDefault
+    public interface MultiStepControlEnablementListener {
+
+        void actionEnabled(ControlActionType actionType, boolean enablement);
     }
 
     public static enum ControlActionType {
-        REVERT_TO, CANCEL
+        FINISH, CANCEL, PREVIOUS, NEXT
     }
 }

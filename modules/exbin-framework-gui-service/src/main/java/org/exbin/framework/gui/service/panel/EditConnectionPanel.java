@@ -23,7 +23,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Connection editor panel.
  *
- * @version 0.2.1 2019/06/24
+ * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
 public class EditConnectionPanel extends javax.swing.JPanel {
@@ -33,6 +33,7 @@ public class EditConnectionPanel extends javax.swing.JPanel {
 
     public EditConnectionPanel() {
         initComponents();
+        connectionPortSpinner.setValue(DEFAULT_PORT);
     }
 
     /**
