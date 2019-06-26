@@ -89,44 +89,13 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
         catalogItemSplitPane.setLeftComponent(searchPanel);
         catalogItemSplitPane.setRightComponent(itemPanel);
 
-        searchPanel.setSelectionListener(new CatalogItemsSearchPanel.SelectionListener() {
+        searchPanel.setSelectionListener(itemPanel::setItem);
 
-            @Override
-            public void selectedItem(XBCItem item) {
-                itemPanel.setItem(item);
-            }
-        });
-
-        actionListenerMap.put(DefaultEditorKit.cutAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCut();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.copyAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCopy();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.pasteAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performPaste();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
-        actionListenerMap.put("delete", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
+        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> performCut());
+        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> performCopy());
+        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
+        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
+        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
     }
 
     /**
@@ -210,13 +179,12 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_popupRefreshMenuItemActionPerformed
 
     /**
+     * Test method for this panel.
+     *
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        JDialog dialog = new JDialog(new javax.swing.JFrame(), true);
-        dialog.setSize(600, 400);
-        dialog.getContentPane().add(new CatalogSearchPanel());
-        WindowUtils.invokeWindow(dialog);
+        WindowUtils.invokeDialog(new CatalogSearchPanel());
     }
 
     public void setItem(XBCItem item) {

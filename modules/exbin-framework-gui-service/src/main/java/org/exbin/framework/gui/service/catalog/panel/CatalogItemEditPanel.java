@@ -32,6 +32,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.catalog.entity.XBEItem;
 import org.exbin.xbup.catalog.entity.XBENode;
 import org.exbin.xbup.catalog.entity.XBEXFile;
@@ -149,6 +150,16 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
 
         add(scrollPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogItemEditPanel());
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable propertiesTable;
     private javax.swing.JScrollPane scrollPane;

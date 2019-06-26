@@ -449,10 +449,7 @@ public class CatalogItemPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        JDialog dialog = new JDialog(new javax.swing.JFrame(), true);
-        dialog.setSize(600, 400);
-        dialog.getContentPane().add(new CatalogItemPanel());
-        WindowUtils.invokeWindow(dialog);
+        WindowUtils.invokeDialog(new CatalogItemPanel());
     }
 
     public XBCItem getItem() {

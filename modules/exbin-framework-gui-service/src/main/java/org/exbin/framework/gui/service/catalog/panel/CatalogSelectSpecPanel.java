@@ -21,6 +21,7 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;
@@ -31,7 +32,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * XBManager catalog specification selection panel.
  *
- * @version 0.2.24 2019/06/25
+ * @version 0.2.1 2019/06/26
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSelectSpecPanel extends javax.swing.JPanel {
@@ -135,6 +136,15 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogSelectSpecPanel(CatalogSpecItemType.NODE));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;

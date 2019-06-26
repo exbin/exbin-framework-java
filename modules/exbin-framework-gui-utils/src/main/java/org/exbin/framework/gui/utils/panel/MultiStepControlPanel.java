@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.gui.utils.panel;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.OkCancelListener;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -23,9 +25,10 @@ import org.exbin.framework.gui.utils.handler.MultiStepControlHandler;
 /**
  * Multi-step control panel for options dialogs.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/06/26
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class MultiStepControlPanel extends javax.swing.JPanel implements MultiStepControlHandler.MultiStepControlListener {
 
     private final java.util.ResourceBundle resourceBundle;
@@ -38,6 +41,10 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
     public MultiStepControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
+    }
+
+    public void setHandler(MultiStepControlHandler handler) {
+        this.handler = handler;
     }
 
     /**
@@ -136,7 +143,6 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
         }
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton finishButton;
@@ -168,6 +174,7 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
         }
     }
 
+    @Nonnull
     @Override
     public OkCancelListener createOkCancelListener() {
         return new OkCancelListener() {
@@ -183,6 +190,7 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
         };
     }
 
+    @Nonnull
     @Override
     public MultiStepControlHandler.MultiStepControlEnablementListener createEnablementListener() {
         return (MultiStepControlHandler.ControlActionType actionType, boolean enablement) -> {

@@ -20,6 +20,7 @@ import java.awt.Frame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogSelectSpecDialog;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.definition.XBParamType;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
@@ -32,7 +33,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * Catalog specification definition editor panel.
  *
- * @version 0.2.1 2017/02/20
+ * @version 0.2.1 2019/06/26
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
@@ -160,6 +161,15 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
             setTargetRev(specSelectDialog.getTarget());
         }
     }//GEN-LAST:event_selectTargetButtonActionPerformed
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogSpecDefEditorPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel definitionTargetLabel;

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogSpecRevEditorDialog;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -37,9 +36,9 @@ import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 
 /**
- * XBManager Catalog Item Edit Revisions Panel.
+ * XBManager catalog item edit revisions panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/26
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
@@ -57,12 +56,9 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
         revsModel = new CatalogRevsTableModel();
         initComponents();
 
-        itemRevisionsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    updateItemStatus();
-                }
+        itemRevisionsTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                updateItemStatus();
             }
         });
 
@@ -218,6 +214,15 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
         defsModel.updateDefRevisions();
         updateItemStatus();
     }//GEN-LAST:event_removeDefButtonActionPerformed
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogItemEditRevsPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;

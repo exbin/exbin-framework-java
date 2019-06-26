@@ -17,7 +17,6 @@
 package org.exbin.framework.editor.xbup.panel;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockType;

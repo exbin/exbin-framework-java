@@ -18,11 +18,12 @@ package org.exbin.framework.gui.service.catalog.panel;
 
 import java.awt.event.ActionListener;
 import javax.swing.JComponent;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Property column panel with label and extending button.
  *
- * @version 0.1.24 2014/11/25
+ * @version 0.2.1 2019/06/26
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertyTableCellPanel extends javax.swing.JPanel {
@@ -58,6 +59,15 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
         propertyLabel.setName("propertyLabel"); // NOI18N
         add(propertyLabel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new PropertyTableCellPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton editorButton;

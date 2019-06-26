@@ -410,6 +410,14 @@ public class AddBlockPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
+    public XBTTreeNode getWorkNode() {
+        return workNode;
+    }
+
+    public void setWorkNode(XBTTreeNode workNode) {
+        this.workNode = workNode;
+    }
+
     private void updateActionState() {
         if (actionStateListener != null) {
             actionStateListener.finishEnabled(

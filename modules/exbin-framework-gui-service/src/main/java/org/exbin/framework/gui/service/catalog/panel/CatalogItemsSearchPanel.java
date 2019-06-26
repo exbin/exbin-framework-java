@@ -354,6 +354,15 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
         itemsModel.performSearch(searchConditions);
     }
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogItemsSearchPanel());
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane catalogItemListScrollPane;
     private javax.swing.JTable catalogItemsListTable;

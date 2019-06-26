@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.gui.utils.panel;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.OkCancelListener;
@@ -116,6 +117,7 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
         WindowUtils.doButtonClick(actionType == DefaultControlHandler.ControlActionType.OK ? okButton : cancelButton);
     }
 
+    @Nonnull
     @Override
     public OkCancelListener createOkCancelListener() {
         return new OkCancelListener() {
@@ -131,6 +133,7 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
         };
     }
 
+    @Nonnull
     @Override
     public DefaultControlHandler.DefaultControlEnablementListener createEnablementListener() {
         return (DefaultControlHandler.ControlActionType actionType, boolean enablement) -> {

@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.gui.utils.panel;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.OkCancelListener;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -26,6 +28,7 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
  * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class OptionsControlPanel extends javax.swing.JPanel implements OptionsControlHandler.OptionsControlListener {
 
     private final java.util.ResourceBundle resourceBundle;
@@ -147,6 +150,7 @@ public class OptionsControlPanel extends javax.swing.JPanel implements OptionsCo
         }
     }
 
+    @Nonnull
     @Override
     public OkCancelListener createOkCancelListener() {
         return new OkCancelListener() {
@@ -162,6 +166,7 @@ public class OptionsControlPanel extends javax.swing.JPanel implements OptionsCo
         };
     }
 
+    @Nonnull
     @Override
     public OptionsControlHandler.OptionsControlEnablementListener createEnablementListener() {
         return (OptionsControlHandler.ControlActionType actionType, boolean enablement) -> {

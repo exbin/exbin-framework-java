@@ -27,5 +27,4 @@ public interface OkCancelListener {
     void okEvent();
 
     void cancelEvent();
-
 }
