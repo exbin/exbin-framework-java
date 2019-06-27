@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -55,20 +54,19 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
         filesModel = new CatalogFilesTableModel();
 
         initComponents();
-        catalogFilesListTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    if (catalogFilesListTable.getSelectedRow() >= 0) {
-                        setItem(catalogFilesListTable.getSelectedRow());
-                    } else {
-                        setItem(-1);
-                    }
-
-                    popupImportItemMenuItem.setEnabled(currentItem >= 0);
-                    popupExportItemMenuItem.setEnabled(currentItem >= 0);
-                    popupPropertiesMenuItem.setEnabled(currentItem >= 0);
+        catalogFilesListTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                if (catalogFilesListTable.getSelectedRow() >= 0) {
+                    setItem(catalogFilesListTable.getSelectedRow());
+                } else {
+                    setItem(-1);
                 }
+
+                boolean validItem = currentItem >= 0;
+
+                popupImportItemMenuItem.setEnabled(validItem);
+                popupExportItemMenuItem.setEnabled(validItem);
+                popupPropertiesMenuItem.setEnabled(validItem);
             }
         });
     }
@@ -227,6 +225,15 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
     public void setItem(int item) {
         currentItem = item;
         // itemPanel.setItem(item);
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogItemEditFilesPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

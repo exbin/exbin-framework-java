@@ -16,11 +16,15 @@
  */
 package org.exbin.framework.gui.service.catalog.panel;
 
-import java.awt.Frame;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogSelectSpecDialog;
+import java.util.ResourceBundle;
+import javax.swing.JPanel;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.core.block.definition.XBParamType;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
@@ -33,11 +37,12 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * Catalog specification definition editor panel.
  *
- * @version 0.2.1 2019/06/26
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
 
     private XBCSpec spec;
@@ -45,8 +50,18 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
     private CatalogSpecItemType targetType = CatalogSpecItemType.BLOCK;
     private XBCRev targetRev = null;
 
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogSpecDefEditorPanel.class);
+
     public CatalogSpecDefEditorPanel() {
         initComponents();
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     /**
@@ -70,7 +85,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
         descriptionLabel = new javax.swing.JLabel();
         descriptionTextField = new javax.swing.JTextField();
 
-        operationLabel.setText("Operation");
+        operationLabel.setText(resourceBundle.getString("operationLabel.text")); // NOI18N
 
         operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Consist", "Join" }));
         operationComboBox.addItemListener(new java.awt.event.ItemListener() {
@@ -155,11 +170,22 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_operationComboBoxItemStateChanged
 
     private void selectTargetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTargetButtonActionPerformed
-        CatalogSelectSpecDialog specSelectDialog = new CatalogSelectSpecDialog((Frame) SwingUtilities.getWindowAncestor(this), true, catalog, targetType);
-        specSelectDialog.setVisible(true);
-        if (specSelectDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            setTargetRev(specSelectDialog.getTarget());
-        }
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        CatalogSelectRevPanel panel = new CatalogSelectRevPanel(catalog, targetType);
+        panel.setApplication(application);
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                setTargetRev(panel.getTarget());
+            }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }//GEN-LAST:event_selectTargetButtonActionPerformed
 
     /**
@@ -209,6 +235,25 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
     }
 
     public CatalogDefsTableItem getDefItem() {
+        String operationCaption = (String) operationComboBox.getModel().getSelectedItem();
+        XBCRev target = targetRev;
+
+        CatalogDefOperationType operation = getOperation();
+        if (target == null && getOperationRequireTarget(operation)) {
+            return null;
+        }
+
+        defItem.setName(nameTextField.getText());
+        defItem.setDescription(descriptionTextField.getText());
+        defItem.setStringId(stringIdTextField.getText());
+        defItem.setDefType(getSpecDefType());
+        defItem.setOperation(operationCaption);
+        defItem.setTarget(target);
+
+        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+        defItem.setType(target != null ? nameService.getDefaultText(target.getParent()) : null);
+        defItem.setTargetRevision(target != null ? target.getXBIndex() : null);
+
         return defItem;
     }
 

@@ -17,36 +17,43 @@
 package org.exbin.framework.gui.service.catalog.panel;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogSelectNodeDialog;
+import javax.swing.JPanel;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 
 /**
- * Catalog Parent Cell Panel.
+ * Catalog parent cell panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogParentPropertyTableCellPanel extends PropertyTableCellPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private XBCNode parent;
 
     public CatalogParentPropertyTableCellPanel(XBACatalog catalog) {
         super();
         this.catalog = catalog;
-        setEditorAction(new ActionListener() {
+        init();
+    }
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performEditorAction();
-            }
-        });
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
+
+    private void init() {
+        setEditorAction((ActionEvent e) -> performEditorAction());
     }
 
     public void performEditorAction() {
@@ -55,14 +62,27 @@ public class CatalogParentPropertyTableCellPanel extends PropertyTableCellPanel 
             return;
         }
 
-        CatalogSelectNodeDialog nodeDialog = new CatalogSelectNodeDialog(WindowUtils.getFrame(this), true, catalog, parent);
-        nodeDialog.setLocationRelativeTo(this);
-        nodeDialog.setVisible(true);
-
-        if (nodeDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            parent = nodeDialog.getNode();
-            setNodeLabel();
-        }
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        CatalogSelectSpecPanel panel = new CatalogSelectSpecPanel(CatalogSpecItemType.NODE);
+        panel.setCatalog(catalog);
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        DefaultControlHandler.DefaultControlEnablementListener enablementListener = controlPanel.createEnablementListener();
+        panel.setSelectionListener((XBCItem item) -> {
+            enablementListener.actionEnabled(DefaultControlHandler.ControlActionType.OK, item != null);
+        });
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                parent = (XBCNode) panel.getSpec();
+                setNodeLabel();
+            }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }
 
     public void setCatalogItem(XBCItem catalogItem) {

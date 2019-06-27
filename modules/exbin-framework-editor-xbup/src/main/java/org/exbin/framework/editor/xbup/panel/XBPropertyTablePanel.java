@@ -106,6 +106,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         valueCellRenderer = new XBPropertyTableCellRenderer(catalog, pluginRepository, null, null);
         columns.getColumn(1).setCellRenderer(valueCellRenderer);
         valueCellEditor = new XBPropertyTableCellEditor(catalog, pluginRepository, null, null);
+        valueCellEditor.setApplication(application);
         columns.getColumn(1).setCellEditor(valueCellEditor);
 
         propertiesTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {

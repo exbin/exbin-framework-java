@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.editor.xbup.dialog;
+package org.exbin.framework.editor.xbup.panel;
 
 import java.awt.Component;
 import javax.swing.DefaultCellEditor;
@@ -22,7 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import org.exbin.framework.editor.xbup.panel.XBPropertyTableCellPanel;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
@@ -30,13 +30,14 @@ import org.exbin.xbup.plugin.XBLineEditor;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
- * Property Table Cell Renderer.
+ * Property table cell renderer.
  *
- * @version 0.1.24 2015/01/04
+ * @version 0.2.24 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class ParametersTableCellEditor extends DefaultCellEditor {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private final XBPluginRepository pluginRepository;
 
@@ -54,6 +55,10 @@ public class ParametersTableCellEditor extends DefaultCellEditor {
         this.doc = doc;
     }
 
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
+
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         ParametersTableItem tableItem = ((ParametersTableModel) table.getModel()).getRow(row);
@@ -67,7 +72,7 @@ public class ParametersTableCellEditor extends DefaultCellEditor {
         } else {
             cellPanel = new XBPropertyTableCellPanel(lineEditorComponent, catalog, pluginRepository, node, doc, row);
         }
-
+        cellPanel.setApplication(application);
         cellPanel.setBackground(table.getSelectionBackground());
         cellPanel.getCellComponent().setBorder(null);
         return cellPanel;

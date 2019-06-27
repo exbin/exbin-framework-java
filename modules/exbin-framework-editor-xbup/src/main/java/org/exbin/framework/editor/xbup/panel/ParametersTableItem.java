@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.editor.xbup.dialog;
+package org.exbin.framework.editor.xbup.panel;
 
 import org.exbin.xbup.core.block.definition.XBParamType;
 import org.exbin.xbup.core.catalog.base.XBCSpecDef;

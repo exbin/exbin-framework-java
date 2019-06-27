@@ -17,14 +17,17 @@
 package org.exbin.framework.editor.xbup.panel;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
-import org.exbin.framework.editor.xbup.dialog.ModifyBlockDialog;
+import javax.swing.JPanel;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.cell.PropertyTableCellPanel;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.parser.token.XBTToken;
@@ -38,11 +41,12 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Properties table cell panel.
  *
- * @version 0.1.24 2015/01/16
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTableCellPanel extends PropertyTableCellPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private final XBPluginRepository pluginRepository;
     private XBTTreeNode node;
@@ -72,21 +76,14 @@ public class XBPropertyTableCellPanel extends PropertyTableCellPanel {
     }
 
     private void init() {
-        setEditorAction(new ActionListener() {
+        setEditorAction((ActionEvent e) -> performEditorAction());
+    }
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performEditorAction();
-            }
-        });
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     public void performEditorAction() {
-        ModifyBlockDialog modifyDialog = new ModifyBlockDialog(WindowUtils.getFrame(this), true);
-        modifyDialog.setCatalog(catalog);
-        modifyDialog.setPluginRepository(pluginRepository);
-        modifyDialog.setLocationRelativeTo(modifyDialog.getParent());
-        
         // TODO: Subparting instead of copy until modify operation
         XBATreeParamExtractor paramExtractor = new XBATreeParamExtractor(node, catalog);
         paramExtractor.setParameterIndex(row);
@@ -109,14 +106,28 @@ public class XBPropertyTableCellPanel extends PropertyTableCellPanel {
                 XBTListenerToToken.tokenToListener(token, reader);
             } while (depth > 0);
         } catch (XBProcessingException | IOException ex) {
-            Logger.getLogger(XBPropertyTableCellPanel.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(XBPropertyTableCellPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        XBTTreeNode newNode = modifyDialog.runDialog(paramNode, doc);
-        // TODO save
-        if (newNode != null) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        ModifyBlockPanel panel = new ModifyBlockPanel();
+        panel.setApplication(application);
+        panel.setCatalog(catalog);
+        panel.setNode(paramNode, doc);
+        panel.setPluginRepository(pluginRepository);
+        CloseControlPanel controlPanel = new CloseControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        controlPanel.setHandler(() -> {
+            XBTTreeNode newNode = panel.getNode();
+            
+            // TODO
+
+            WindowUtils.closeWindow(dialog.getWindow());
+        });
+        dialog.center(dialog.getParent());
+        dialog.show();
     }
 
     public XBACatalog getCatalog() {

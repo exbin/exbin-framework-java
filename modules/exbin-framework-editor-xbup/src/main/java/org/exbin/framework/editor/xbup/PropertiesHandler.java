@@ -23,7 +23,7 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.BlockPropertiesPanel;
-import org.exbin.framework.editor.xbup.panel.DocPropertiesPanel;
+import org.exbin.framework.editor.xbup.panel.DocumentPropertiesPanel;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -67,7 +67,7 @@ public class PropertiesHandler {
                 if (editorProvider instanceof XBDocumentPanel) {
                     XBDocumentPanel activePanel = (XBDocumentPanel) editorProvider;
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    DocPropertiesPanel propertiesPanel = new DocPropertiesPanel();
+                    DocumentPropertiesPanel propertiesPanel = new DocumentPropertiesPanel();
                     propertiesPanel.setDocument(activePanel.getDoc());
                     propertiesPanel.setDocumentUri(activePanel.getFileUri());
                     CloseControlPanel controlPanel = new CloseControlPanel();

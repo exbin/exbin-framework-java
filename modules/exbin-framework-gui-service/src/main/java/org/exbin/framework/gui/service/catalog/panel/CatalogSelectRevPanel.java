@@ -17,8 +17,11 @@
 package org.exbin.framework.gui.service.catalog.panel;
 
 import java.awt.Component;
+import java.util.ResourceBundle;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
@@ -29,19 +32,22 @@ import org.exbin.xbup.core.catalog.base.service.XBCRevService;
 /**
  * XBManager catalog specification's revision selection panel.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSelectRevPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBCRevService revService;
     private final CatalogItemsSearchPanel selectSpecPanel;
     private final CatalogRevsComboBoxModel revsModel;
     private boolean selectEnabled;
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogSelectRevPanel.class);
 
     public CatalogSelectRevPanel(XBACatalog catalog, CatalogSpecItemType specType) {
         revsModel = new CatalogRevsComboBoxModel();
         selectSpecPanel = new CatalogItemsSearchPanel();
+        selectSpecPanel.setApplication(application);
         selectSpecPanel.setCatalog(catalog);
         initComponents();
 
@@ -85,6 +91,14 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
         });
     }
 
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

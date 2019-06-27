@@ -77,7 +77,9 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="operationLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Operation"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/exbin/framework/gui/service/catalog/panel/resources/CatalogSpecRevEditorPanel.properties" key="operationLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="operationComboBox">

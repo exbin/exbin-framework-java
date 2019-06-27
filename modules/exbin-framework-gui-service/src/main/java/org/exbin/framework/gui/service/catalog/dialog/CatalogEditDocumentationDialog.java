@@ -93,7 +93,7 @@ public class CatalogEditDocumentationDialog extends javax.swing.JDialog {
             final ResourceBundle resourceBundle = ResourceBundle.getBundle(
                     "com.lightdev.app.shtm.resources.SimplyHTML", Locale.getDefault());
             return new DefaultTextResources(resourceBundle, props);
-        } catch (final Exception ex) {
+        } catch (final IOException ex) {
             Util.errMsg(null, "resources not found", ex);
             return null;
         }

@@ -18,11 +18,15 @@ package org.exbin.framework.gui.service.catalog.panel;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogSpecRevEditorDialog;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.catalog.entity.XBEItem;
 import org.exbin.xbup.catalog.entity.XBERev;
 import org.exbin.xbup.catalog.entity.service.XBEXDescService;
@@ -38,11 +42,12 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * XBManager catalog item edit revisions panel.
  *
- * @version 0.2.1 2019/06/26
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private XBCItem catalogItem;
     private XBCRevService revService;
@@ -63,6 +68,10 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
         });
 
         updateItemStatus();
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     /**
@@ -155,49 +164,67 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        CatalogSpecRevEditorDialog editorDialog = new CatalogSpecRevEditorDialog(WindowUtils.getFrame(this), true);
-        editorDialog.setRevItem(new CatalogRevsTableItem());
-        editorDialog.setVisible(true);
-
-        if (editorDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            long maxXbIndex = 0;
-            if (revsModel.getRowCount() > 0) {
-                CatalogRevsTableItem rewItem = revsModel.getRowItem(revsModel.getRowCount() - 1);
-                if (rewItem.getXbIndex() >= maxXbIndex) {
-                    maxXbIndex = rewItem.getXbIndex() + 1;
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        CatalogSpecRevEditorPanel panel = new CatalogSpecRevEditorPanel();
+        panel.setRevItem(new CatalogRevsTableItem());
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                long maxXbIndex = 0;
+                if (revsModel.getRowCount() > 0) {
+                    CatalogRevsTableItem rewItem = revsModel.getRowItem(revsModel.getRowCount() - 1);
+                    if (rewItem.getXbIndex() >= maxXbIndex) {
+                        maxXbIndex = rewItem.getXbIndex() + 1;
+                    }
                 }
-            }
 
-            CatalogRevsTableItem revItem = editorDialog.getRevItem();
-            revItem.setXbIndex(maxXbIndex);
-            if (!updateList.contains(revItem)) {
-                updateList.add(revItem);
-            }
+                CatalogRevsTableItem revItem = panel.getRevItem();
+                revItem.setXbIndex(maxXbIndex);
+                if (!updateList.contains(revItem)) {
+                    updateList.add(revItem);
+                }
 
-            revsModel.getRevs().add(revItem);
-            revsModel.fireTableDataChanged();
-            defsModel.updateDefRevisions();
-            updateItemStatus();
-        }
+                revsModel.getRevs().add(revItem);
+                revsModel.fireTableDataChanged();
+                defsModel.updateDefRevisions();
+                updateItemStatus();
+            }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void modifyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyButtonActionPerformed
         int selectedRow = itemRevisionsTable.getSelectedRow();
         CatalogRevsTableItem row = revsModel.getRowItem(selectedRow);
 
-        CatalogSpecRevEditorDialog editorDialog = new CatalogSpecRevEditorDialog(WindowUtils.getFrame(this), true);
-        editorDialog.setRevItem(row);
-        editorDialog.setVisible(true);
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        CatalogSpecRevEditorPanel panel = new CatalogSpecRevEditorPanel();
+        panel.setRevItem(row);
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                CatalogRevsTableItem revItem = panel.getRevItem();
+                if (!updateList.contains(revItem)) {
+                    updateList.add(revItem);
+                }
 
-        if (editorDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            CatalogRevsTableItem revItem = editorDialog.getRevItem();
-            if (!updateList.contains(revItem)) {
-                updateList.add(revItem);
+                defsModel.updateDefRevisions();
+                updateItemStatus();
             }
-
-            defsModel.updateDefRevisions();
-            updateItemStatus();
-        }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }//GEN-LAST:event_modifyButtonActionPerformed
 
     private void removeDefButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDefButtonActionPerformed

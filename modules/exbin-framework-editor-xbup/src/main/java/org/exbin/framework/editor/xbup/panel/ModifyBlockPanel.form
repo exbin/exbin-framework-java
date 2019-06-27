@@ -174,7 +174,7 @@
             <Component class="javax.swing.JButton" name="removeButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/editor/xbup/dialog/resources/ModifyBlockDialog.properties" key="removeButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/ModifyBlockPanel.properties" key="removeButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -184,7 +184,7 @@
             <Component class="javax.swing.JButton" name="addButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/editor/xbup/dialog/resources/ModifyBlockDialog.properties" key="addButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/ModifyBlockPanel.properties" key="addButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -239,7 +239,7 @@
             <Component class="javax.swing.JButton" name="saveAsButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/editor/xbup/dialog/resources/ModifyBlockDialog.properties" key="saveAsButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/ModifyBlockPanel.properties" key="saveAsButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -249,7 +249,7 @@
             <Component class="javax.swing.JButton" name="loadFromButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/editor/xbup/dialog/resources/ModifyBlockDialog.properties" key="loadFromButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/ModifyBlockPanel.properties" key="loadFromButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -319,7 +319,7 @@
             <Component class="javax.swing.JButton" name="extLoadFromButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/editor/xbup/dialog/resources/ModifyBlockDialog.properties" key="loadFromButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/ModifyBlockPanel.properties" key="loadFromButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -329,7 +329,7 @@
             <Component class="javax.swing.JButton" name="extSaveFromButto">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/editor/xbup/dialog/resources/ModifyBlockDialog.properties" key="saveAsButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/ModifyBlockPanel.properties" key="saveAsButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>

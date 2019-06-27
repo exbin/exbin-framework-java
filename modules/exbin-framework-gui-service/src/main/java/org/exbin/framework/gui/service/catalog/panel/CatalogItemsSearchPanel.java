@@ -32,6 +32,7 @@ import javax.persistence.EntityTransaction;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.CellEditorListener;
@@ -39,12 +40,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultEditorKit;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.YamlFileType;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
 import org.exbin.framework.gui.service.panel.CatalogManagerPanelable;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.XBEXDesc;
 import org.exbin.xbup.catalog.entity.XBEXName;
@@ -62,11 +66,12 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 /**
  * Catalog items search panel.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemsSearchPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
 
+    private XBApplication application;
     private XBCItem currentItem;
 
     private XBACatalog catalog;
@@ -131,6 +136,10 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
         actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
         actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
         actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     public void switchToSpecTypeMode(CatalogSpecItemType specType) {
@@ -280,22 +289,31 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
 
     private void popupEditMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupEditMenuItemActionPerformed
         if (currentItem != null) {
-            CatalogEditItemDialog editDialog = new CatalogEditItemDialog(WindowUtils.getFrame(this), true);
-            editDialog.setMenuManagement(menuManagement);
-            editDialog.setCatalog(catalog);
-            editDialog.setCatalogItem(currentItem);
-            editDialog.setVisible(true);
+            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            CatalogEditItemPanel editPanel = new CatalogEditItemPanel();
+            editPanel.setMenuManagement(menuManagement);
+            editPanel.setCatalog(catalog);
+            editPanel.setCatalogItem(currentItem);
+            editPanel.setVisible(true);
 
-            if (editDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                EntityManager em = ((XBECatalog) catalog).getEntityManager();
-                EntityTransaction transaction = em.getTransaction();
-                transaction.begin();
-                editDialog.persist();
-                setItem(currentItem);
-                em.flush();
-                transaction.commit();
-                reload();
-            }
+            DefaultControlPanel controlPanel = new DefaultControlPanel();
+            JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
+            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                    EntityManager em = ((XBECatalog) catalog).getEntityManager();
+                    EntityTransaction transaction = em.getTransaction();
+                    transaction.begin();
+                    editPanel.persist();
+                    setItem(currentItem);
+                    em.flush();
+                    transaction.commit();
+                    reload();
+                }
+            });
+            dialog.center(dialog.getParent());
+            dialog.show();
         }
     }//GEN-LAST:event_popupEditMenuItemActionPerformed
 
@@ -362,7 +380,7 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
     public static void main(String args[]) {
         WindowUtils.invokeDialog(new CatalogItemsSearchPanel());
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane catalogItemListScrollPane;
     private javax.swing.JTable catalogItemsListTable;

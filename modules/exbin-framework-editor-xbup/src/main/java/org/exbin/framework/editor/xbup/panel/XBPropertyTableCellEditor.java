@@ -24,6 +24,7 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
@@ -31,13 +32,14 @@ import org.exbin.xbup.plugin.XBLineEditor;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
- * Property Table Cell Renderer.
+ * Property table cell renderer.
  *
- * @version 0.1.24 2015/01/09
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTableCellEditor extends DefaultCellEditor {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private final XBPluginRepository pluginRepository;
     private final XBTTreeDocument doc;
@@ -54,6 +56,10 @@ public class XBPropertyTableCellEditor extends DefaultCellEditor {
         this.doc = doc;
     }
 
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
+
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         XBPropertyTableItem tableItem = ((XBPropertyTableModel) table.getModel()).getRow(row);
@@ -67,6 +73,7 @@ public class XBPropertyTableCellEditor extends DefaultCellEditor {
         } else {
             cellPanel = new XBPropertyTableCellPanel(lineEditorComponent, catalog, pluginRepository, node, doc, row);
         }
+        cellPanel.setApplication(application);
 
         cellPanel.setBackground(table.getSelectionBackground());
         cellPanel.getCellComponent().setBorder(null);

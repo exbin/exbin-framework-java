@@ -76,6 +76,7 @@ public class ServiceManagerModule implements XBApplicationModule {
     public ServiceManagerPanel getServicePanel() {
         if (servicePanel == null) {
             servicePanel = new ServiceManagerPanel();
+            servicePanel.setApplication(application);
             servicePanel.setMenuManagement(getDefaultMenuManagement());
         }
 

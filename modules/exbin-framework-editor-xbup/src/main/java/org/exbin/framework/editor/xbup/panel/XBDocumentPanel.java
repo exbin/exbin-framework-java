@@ -40,13 +40,11 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
-import org.exbin.framework.editor.xbup.dialog.ModifyBlockDialog;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -133,31 +131,22 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
         ((JPanel) mainTabbedPane.getComponentAt(0)).add(treePanel, java.awt.BorderLayout.CENTER);
 
-        treePanel.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
-                if (propertyChangeListener != null) {
-                    propertyChangeListener.propertyChange(evt);
-                }
+        treePanel.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+            if (propertyChangeListener != null) {
+                propertyChangeListener.propertyChange(evt);
             }
         });
 
-        treePanel.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                if (propertyPanel.isEnabled()) {
-                    propertyPanel.setActiveNode(treePanel.getSelectedItem());
-                }
+        treePanel.addTreeSelectionListener((TreeSelectionEvent e) -> {
+            if (propertyPanel.isEnabled()) {
+                propertyPanel.setActiveNode(treePanel.getSelectedItem());
             }
         });
 
-        super.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (propertyChangeListener != null) {
-                    propertyChangeListener.propertyChange(evt);
-                }
+        super.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (propertyChangeListener != null) {
+                propertyChangeListener.propertyChange(evt);
             }
         });
 
@@ -726,42 +715,52 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     public void performModify() {
         XBTTreeNode node = getSelectedItem();
-        XBTDocCommand undoStep;
-        try {
-            ModifyBlockDialog dialog = new ModifyBlockDialog(WindowUtils.getFrame(this), true);
-            dialog.setCatalog(catalog);
-            dialog.setPluginRepository(pluginRepository);
-            dialog.setLocationRelativeTo(dialog.getParent());
-            XBTTreeNode newNode = dialog.runDialog(node, mainDoc);
-            if (dialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                if (node.getParent() == null) {
-                    undoStep = new XBTChangeBlockCommand(mainDoc);
-                    long position = node.getBlockIndex();
-                    XBTModifyBlockOperation modifyOperation = new XBTModifyBlockOperation(mainDoc, position, newNode);
-                    ((XBTChangeBlockCommand) undoStep).appendOperation(modifyOperation);
-                    XBData tailData = new XBData();
-                    dialog.saveTailData(tailData.getDataOutputStream());
-                    XBTTailDataOperation extOperation = new XBTTailDataOperation(mainDoc, tailData);
-                    ((XBTChangeBlockCommand) undoStep).appendOperation(extOperation);
-                } else {
-                    undoStep = new XBTModifyBlockCommand(mainDoc, node, newNode);
-                }
-                // TODO: Optimized diff command later
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        ModifyBlockPanel panel = new ModifyBlockPanel();
+        panel.setApplication(application);
+        panel.setCatalog(catalog);
+        panel.setNode(node, mainDoc);
+        panel.setPluginRepository(pluginRepository);
+        CloseControlPanel controlPanel = new CloseControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        controlPanel.setHandler(() -> {
+            XBTTreeNode newNode = panel.getNode();
+            XBTDocCommand undoStep;
+            if (node.getParent() == null) {
+                undoStep = new XBTChangeBlockCommand(mainDoc);
+                long position = node.getBlockIndex();
+                XBTModifyBlockOperation modifyOperation = new XBTModifyBlockOperation(mainDoc, position, newNode);
+                ((XBTChangeBlockCommand) undoStep).appendOperation(modifyOperation);
+                XBData tailData = new XBData();
+                panel.saveTailData(tailData.getDataOutputStream());
+                XBTTailDataOperation extOperation = new XBTTailDataOperation(mainDoc, tailData);
+                ((XBTChangeBlockCommand) undoStep).appendOperation(extOperation);
+            } else {
+                undoStep = new XBTModifyBlockCommand(mainDoc, node, newNode);
+            }
+            // TODO: Optimized diff command later
 //                if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
 //                    undoStep = new XBTModDataBlockCommand(node, newNode);
 //                } else if (newNode.getChildrenCount() > 0) {
 //                } else {
 //                    undoStep = new XBTModAttrBlockCommand(node, newNode);
 //                }
+            try {
                 getUndoHandler().execute(undoStep);
-
-                mainDoc.processSpec();
-                reportStructureChange(node);
-                getDoc().setModified(true);
+            } catch (Exception ex) {
+                Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception ex) {
-            Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+            mainDoc.processSpec();
+            reportStructureChange(node);
+            getDoc().setModified(true);
+
+            WindowUtils.closeWindow(dialog.getWindow());
+        });
+        dialog.center(dialog.getParent());
+        dialog.show();
     }
 
     public void setSplitMode(boolean mode) {

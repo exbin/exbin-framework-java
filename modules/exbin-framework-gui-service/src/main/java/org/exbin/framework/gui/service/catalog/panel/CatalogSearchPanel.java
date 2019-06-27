@@ -29,10 +29,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultEditorKit;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.YamlFileType;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -54,11 +54,12 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 /**
  * Catalog search panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSearchPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBCItem currentItem;
 
     private XBACatalog catalog;
@@ -80,6 +81,7 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
 
     public CatalogSearchPanel() {
         searchPanel = new CatalogItemsSearchPanel();
+        searchPanel.setApplication(application);
         specsModel = new CatalogSpecsTableModel();
         catalogYaml = new XBCatalogYaml();
         itemPanel = new CatalogItemPanel();
@@ -98,6 +100,10 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
         actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
     }
 
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

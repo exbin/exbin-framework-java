@@ -17,10 +17,12 @@
 package org.exbin.framework.gui.service.catalog.panel;
 
 import java.awt.Component;
+import java.util.ResourceBundle;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
@@ -32,7 +34,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * XBManager catalog specification selection panel.
  *
- * @version 0.2.1 2019/06/26
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSelectSpecPanel extends javax.swing.JPanel {
@@ -42,6 +44,7 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
     private SelectionListener selectionListener;
     private XBCItem selectedItem;
     private final CatalogSpecItemType specType;
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogSelectSpecPanel.class);
 
     public CatalogSelectSpecPanel(final CatalogSpecItemType specType) {
         this.specType = specType;
@@ -104,6 +107,10 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
         });
     }
 
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
     public void setCatalog(XBACatalog catalog) {
         treeModel = new CatalogSelectSpecTreeModel(catalog, specType);
         specSelectTree.setModel(treeModel);
@@ -119,21 +126,21 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        scrollPane = new javax.swing.JScrollPane();
         specSelectTree = new javax.swing.JTree();
 
         specSelectTree.setModel(treeModel);
-        jScrollPane1.setViewportView(specSelectTree);
+        scrollPane.setViewportView(specSelectTree);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -147,7 +154,7 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane scrollPane;
     private javax.swing.JTree specSelectTree;
     // End of variables declaration//GEN-END:variables
 

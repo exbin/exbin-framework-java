@@ -16,18 +16,27 @@
  */
 package org.exbin.framework.gui.service.catalog.panel;
 
+import java.util.ResourceBundle;
+import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+
 /**
  * Catalog specification revision editor panel.
  *
- * @version 0.2.1 2017/02/20
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSpecRevEditorPanel extends javax.swing.JPanel {
 
     private CatalogRevsTableItem revItem;
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogSpecRevEditorPanel.class);
 
     public CatalogSpecRevEditorPanel() {
         initComponents();
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -40,13 +49,13 @@ public class CatalogSpecRevEditorPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         limitLabel = new javax.swing.JLabel();
+        limitSpinner = new javax.swing.JSpinner();
         nameLabel = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
         descriptionLabel = new javax.swing.JLabel();
         descriptionTextField = new javax.swing.JTextField();
-        limitSpinner = new javax.swing.JSpinner();
 
-        limitLabel.setText("Revision Limit");
+        limitLabel.setText(resourceBundle.getString("limitLabel.text")); // NOI18N
 
         nameLabel.setText("Name");
 
@@ -89,6 +98,15 @@ public class CatalogSpecRevEditorPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogSpecRevEditorPanel());
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel descriptionLabel;
     private javax.swing.JTextField descriptionTextField;
@@ -109,6 +127,10 @@ public class CatalogSpecRevEditorPanel extends javax.swing.JPanel {
     }
 
     public CatalogRevsTableItem getRevItem() {
+        revItem.setName(nameTextField.getText());
+        revItem.setDescription(descriptionTextField.getText());
+        revItem.setLimit(limitSpinner.getValue() instanceof Long ? (Long) limitSpinner.getValue() : (Integer) limitSpinner.getValue());
+
         return revItem;
     }
 }

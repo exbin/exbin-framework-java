@@ -21,11 +21,12 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import org.exbin.framework.client.api.ConnectionStatus;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Status panel for XB document editor.
  *
- * @version 0.2.0 2016/02/16
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocStatusPanel extends javax.swing.JPanel {
@@ -135,6 +136,14 @@ public class XBDocStatusPanel extends javax.swing.JPanel {
         add(mainPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new XBDocStatusPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel activityPanel;
@@ -151,7 +160,7 @@ public class XBDocStatusPanel extends javax.swing.JPanel {
     public void setConnectionStatus(ConnectionStatus status) {
         connectionStatusLabel.setIcon(new ImageIcon(getClass().getResource(resourceBundle.getString("connectionStatus" + status.name() + ".icon"))));
         connectionStatusLabel.setToolTipText(resourceBundle.getString("connectionStatus" + status.name() + ".toolTipText"));
-                
+
         switch (status) {
             case CONNECTING: {
                 activityProgressBar.setString("Connection in progress...");

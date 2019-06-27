@@ -45,7 +45,6 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.XBFileType;
 import org.exbin.framework.gui.service.YamlFileType;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
 import org.exbin.framework.gui.service.catalog.panel.CatalogNodesTreeModel.CatalogNodesTreeItem;
 import org.exbin.framework.gui.service.panel.CatalogManagerPanelable;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -93,7 +92,7 @@ import org.exbin.xbup.core.serial.XBSerializable;
 /**
  * Catalog editor panel.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
@@ -319,23 +318,32 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
 
     private void popupEditMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupEditMenuItemActionPerformed
         if (currentItem != null) {
-            CatalogEditItemDialog editDialog = new CatalogEditItemDialog(WindowUtils.getFrame(this), true);
-            editDialog.setMenuManagement(menuManagement);
-            editDialog.setCatalog(catalog);
-            editDialog.setCatalogItem(currentItem);
-            editDialog.setVisible(true);
+            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            CatalogEditItemPanel editPanel = new CatalogEditItemPanel();
+            editPanel.setMenuManagement(menuManagement);
+            editPanel.setCatalog(catalog);
+            editPanel.setCatalogItem(currentItem);
+            editPanel.setVisible(true);
 
-            if (editDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                EntityManager em = ((XBECatalog) catalog).getEntityManager();
-                EntityTransaction transaction = em.getTransaction();
-                transaction.begin();
-                editDialog.persist();
-                setItem(currentItem);
-                em.flush();
-                transaction.commit();
-                specsModel.setNode(specsModel.getNode());
-                selectSpecTableRow(currentItem);
-            }
+            DefaultControlPanel controlPanel = new DefaultControlPanel();
+            JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
+            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                    EntityManager em = ((XBECatalog) catalog).getEntityManager();
+                    EntityTransaction transaction = em.getTransaction();
+                    transaction.begin();
+                    editPanel.persist();
+                    setItem(currentItem);
+                    em.flush();
+                    transaction.commit();
+                    specsModel.setNode(specsModel.getNode());
+                    selectSpecTableRow(currentItem);
+                }
+            });
+            dialog.center(dialog.getParent());
+            dialog.show();
         }
     }//GEN-LAST:event_popupEditMenuItemActionPerformed
 
@@ -552,7 +560,6 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
 //        this.mainFrameManagement = mainFrameManagement;
 //        itemPanel.setMainFrameManagement(mainFrameManagement);
 //    }
-
     /**
      * Test method for this panel.
      *
@@ -561,7 +568,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     public static void main(String args[]) {
         WindowUtils.invokeDialog(new CatalogEditorPanel());
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane catalogItemListScrollPane;
     private javax.swing.JSplitPane catalogItemSplitPane;

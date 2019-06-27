@@ -19,11 +19,15 @@ package org.exbin.framework.gui.service.catalog.panel;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogSpecDefEditorDialog;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.catalog.entity.XBERev;
 import org.exbin.xbup.catalog.entity.XBESpec;
 import org.exbin.xbup.catalog.entity.XBESpecDef;
@@ -42,11 +46,12 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 /**
  * XBManager catalog item edit documentation panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private XBCItem catalogItem;
     private XBCSpecService specService;
@@ -59,19 +64,20 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
     public CatalogItemEditDefinitionPanel() {
         initComponents();
 
-        itemDefinitionsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    int selectedRow = itemDefinitionsTable.getSelectedRow();
-                    detailModel.setItem(selectedRow >= 0 ? defsModel.getRowItem(selectedRow) : null);
-                    itemDefinitionPropertyTable.repaint();
-                    updateItemStatus();
-                }
+        itemDefinitionsTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = itemDefinitionsTable.getSelectedRow();
+                detailModel.setItem(selectedRow >= 0 ? defsModel.getRowItem(selectedRow) : null);
+                itemDefinitionPropertyTable.repaint();
+                updateItemStatus();
             }
         });
 
         updateItemStatus();
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     /**
@@ -199,49 +205,77 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        CatalogSpecDefEditorDialog editorDialog = new CatalogSpecDefEditorDialog(WindowUtils.getFrame(this), true, catalog);
-        editorDialog.setSpec((XBCSpec) catalogItem);
-        editorDialog.setDefItem(new CatalogDefsTableItem());
-        editorDialog.setVisible(true);
-
-        if (editorDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            long maxXbIndex = 0;
-            if (defsModel.getRowCount() > 0) {
-                CatalogDefsTableItem defItem = defsModel.getRowItem(defsModel.getRowCount() - 1);
-                if (defItem.getXbIndex() >= maxXbIndex) {
-                    maxXbIndex = defItem.getXbIndex() + 1;
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        CatalogSpecDefEditorPanel panel = new CatalogSpecDefEditorPanel();
+        panel.setCatalog(catalog);
+        panel.setSpec((XBCSpec) catalogItem);
+        panel.setDefItem(new CatalogDefsTableItem());
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                long maxXbIndex = 0;
+                if (defsModel.getRowCount() > 0) {
+                    CatalogDefsTableItem defItem = defsModel.getRowItem(defsModel.getRowCount() - 1);
+                    if (defItem.getXbIndex() >= maxXbIndex) {
+                        maxXbIndex = defItem.getXbIndex() + 1;
+                    }
                 }
-            }
 
-            CatalogDefsTableItem defItem = editorDialog.getDefItem();
-            defItem.setXbIndex(maxXbIndex);
-            if (!updateList.contains(defItem)) {
-                updateList.add(defItem);
-            }
+                CatalogDefsTableItem defItem = panel.getDefItem();
+                if (defItem == null) {
+                    JOptionPane.showMessageDialog(this, "Target type is required", "Set is not allowed", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                defItem.setXbIndex(maxXbIndex);
+                if (!updateList.contains(defItem)) {
+                    updateList.add(defItem);
+                }
 
-            defsModel.addDefs(defItem);
-            defsModel.fireTableDataChanged();
-            updateItemStatus();
-        }
+                defsModel.addDefs(defItem);
+                defsModel.fireTableDataChanged();
+                updateItemStatus();
+            }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void modifyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyButtonActionPerformed
         int selectedRow = itemDefinitionsTable.getSelectedRow();
         CatalogDefsTableItem row = defsModel.getRowItem(selectedRow);
 
-        CatalogSpecDefEditorDialog editorDialog = new CatalogSpecDefEditorDialog(WindowUtils.getFrame(this), true, catalog);
-        editorDialog.setSpec((XBCSpec) catalogItem);
-        editorDialog.setDefItem(row);
-        editorDialog.setVisible(true);
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        CatalogSpecDefEditorPanel panel = new CatalogSpecDefEditorPanel();
+        panel.setCatalog(catalog);
+        panel.setSpec((XBCSpec) catalogItem);
+        panel.setDefItem(row);
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                CatalogDefsTableItem defItem = panel.getDefItem();
+                if (defItem == null) {
+                    JOptionPane.showMessageDialog(this, "Target type is required", "Set is not allowed", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (!updateList.contains(defItem)) {
+                    updateList.add(defItem);
+                }
 
-        if (editorDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            CatalogDefsTableItem defItem = editorDialog.getDefItem();
-            if (!updateList.contains(defItem)) {
-                updateList.add(defItem);
+                updateItemStatus();
             }
-
-            updateItemStatus();
-        }
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }//GEN-LAST:event_modifyButtonActionPerformed
 
     private void removeDefButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDefButtonActionPerformed
@@ -292,6 +326,15 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
         updateItemStatus();
         itemDefinitionsTable.setRowSelectionInterval(selectedRow + 1, selectedRow + 1);
     }//GEN-LAST:event_moveDownDefButtonActionPerformed
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogItemEditDefinitionPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;

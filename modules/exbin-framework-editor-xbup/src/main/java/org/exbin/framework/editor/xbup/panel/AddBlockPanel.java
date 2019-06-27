@@ -30,9 +30,14 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.xbup.core.block.XBBasicBlockType;
+import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
+import org.exbin.xbup.core.block.XBDBlockType;
+import org.exbin.xbup.core.block.XBFixedBlockType;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.XBDeclBlockType;
+import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCGroupDecl;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -40,12 +45,15 @@ import org.exbin.xbup.core.catalog.base.XBCBlockRev;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
+import org.exbin.xbup.core.parser.token.event.convert.XBTListenerToEventListener;
+import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
+import org.exbin.xbup.parser_tree.XBTTreeReader;
 
 /**
  * Panel for adding new item into given document.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class AddBlockPanel extends javax.swing.JPanel {
@@ -287,25 +295,6 @@ public class AddBlockPanel extends javax.swing.JPanel {
             WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
             dialog.center(dialog.getParent());
             dialog.show();
-
-//            ContextTypeChoiceDialog contextTypeDialog = new ContextTypeChoiceDialog((Frame) SwingUtilities.getWindowAncestor(this), true, catalog, parentNode);
-//            contextTypeDialog.setLocationRelativeTo(this);
-//            contextTypeDialog.setVisible(true);
-//            if (contextTypeDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-//                contextBlockType = contextTypeDialog.getBlockType();
-//                XBCBlockDecl blockDecl = (XBCBlockDecl) ((XBDeclBlockType) contextBlockType).getBlockDecl();
-//                XBCBlockSpec blockSpec = blockDecl.getBlockSpecRev().getParent();
-//                //new XBDeclBlockType(new XBCBlockDecl();
-//                XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-//                String targetCaption = nameService.getItemNamePath(blockSpec);
-//                if (targetCaption == null) {
-//                    targetCaption = "";
-//                } else {
-//                    targetCaption += " ";
-//                }
-//                targetCaption += "(" + Long.toString(blockSpec.getId()) + ")";
-//                contextTypeTextField.setText(targetCaption);
-//            }
         }
 
         updateActionState();
@@ -324,6 +313,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
         if (catalog != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             final CatalogSelectRevPanel panel = new CatalogSelectRevPanel(catalog, CatalogSpecItemType.BLOCK);
+            panel.setApplication(application);
 
             DefaultControlPanel controlPanel = new DefaultControlPanel();
             JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
@@ -331,18 +321,17 @@ public class AddBlockPanel extends javax.swing.JPanel {
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 switch (actionType) {
                     case OK: {
-                XBCRev blockRev = panel.getTarget();
-                catalogBlockType = new XBDeclBlockType(new XBCBlockDecl((XBCBlockRev) blockRev, catalog));
-                XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class
-                );
-                String targetCaption = nameService.getItemNamePath(blockRev.getParent());
-                if (targetCaption == null) {
-                    targetCaption = "";
-                } else {
-                    targetCaption += " ";
-                }
-                targetCaption += "(" + Long.toString(blockRev.getId()) + ")";
-                catalogTypeTextField.setText(targetCaption);
+                        XBCRev blockRev = panel.getTarget();
+                        catalogBlockType = new XBDeclBlockType(new XBCBlockDecl((XBCBlockRev) blockRev, catalog));
+                        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+                        String targetCaption = nameService.getItemNamePath(blockRev.getParent());
+                        if (targetCaption == null) {
+                            targetCaption = "";
+                        } else {
+                            targetCaption += " ";
+                        }
+                        targetCaption += "(" + Long.toString(blockRev.getId()) + ")";
+                        catalogTypeTextField.setText(targetCaption);
 
                         dialog.close();
                         break;
@@ -359,23 +348,6 @@ public class AddBlockPanel extends javax.swing.JPanel {
             WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
             dialog.center(dialog.getParent());
             dialog.show();
-
-//            CatalogSelectSpecDialog selectSpecDialog = new CatalogSelectSpecDialog((Frame) SwingUtilities.getWindowAncestor(this), true, catalog, CatalogSpecItemType.BLOCK);
-//            selectSpecDialog.setLocationRelativeTo(this);
-//            selectSpecDialog.setVisible(true);
-//            if (selectSpecDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-//                XBCRev blockRev = selectSpecDialog.getTarget();
-//                catalogBlockType = new XBDeclBlockType(new XBCBlockDecl((XBCBlockRev) blockRev, catalog));
-//                XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-//                String targetCaption = nameService.getItemNamePath(blockRev.getParent());
-//                if (targetCaption == null) {
-//                    targetCaption = "";
-//                } else {
-//                    targetCaption += " ";
-//                }
-//                targetCaption += "(" + Long.toString(blockRev.getId()) + ")";
-//                catalogTypeTextField.setText(targetCaption);
-//            }
         }
 
         updateActionState();
@@ -411,6 +383,30 @@ public class AddBlockPanel extends javax.swing.JPanel {
     }
 
     public XBTTreeNode getWorkNode() {
+        workNode = new XBTTreeNode();
+        if (parentNode != null) {
+            workNode.setContext(parentNode.getContext());
+        }
+
+        if (dataRadioButton.isSelected()) {
+            workNode.setDataMode(XBBlockDataMode.DATA_BLOCK);
+        } else if (basicTypeRadioButton.isSelected()) {
+            workNode.setBlockType(new XBFixedBlockType(XBBasicBlockType.valueOf(basicTypeComboBox.getSelectedIndex())));
+        } else if (contextTypeRadioButton.isSelected()) {
+            workNode.setBlockType(contextBlockType);
+        } else if (catalogTypeRadioButton.isSelected()) {
+            if (generateDeclarationCheckBox.isSelected()) {
+                XBPSerialWriter writer = new XBPSerialWriter(new XBTListenerToEventListener(new XBTTreeReader(workNode)));
+                XBDeclaration newDeclaration = new XBDeclaration(((XBDBlockType) catalogBlockType).getBlockDecl());
+                writer.write(newDeclaration);
+                XBTTreeNode newNode = new XBTTreeNode();
+                newNode.setBlockType(catalogBlockType);
+                workNode.setChildAt(newNode, workNode.getChildrenCount());
+            } else {
+                workNode.setBlockType(catalogBlockType);
+            }
+        }
+
         return workNode;
     }
 
@@ -449,8 +445,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
             Long[] basicGroupPath = {0l, 0l};
             List<XBBlockDecl> list = catalog.getBlocks(((XBCGroupDecl) catalog.findGroupTypeByPath(basicGroupPath, 0)).getGroupSpecRev().getParent());
 
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class
-            );
+            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
             for (XBBlockDecl decl : list) {
                 model.addElement(nameService.getDefaultText(((XBCBlockDecl) decl).getBlockSpecRev().getParent()));
             }

@@ -17,7 +17,6 @@
 package org.exbin.framework.gui.service.catalog.panel;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import org.exbin.framework.gui.service.catalog.dialog.CatalogEditIconDialog;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -26,9 +25,9 @@ import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.service.XBCXIconService;
 
 /**
- * Catalog Big Icon Property Cell Panel.
+ * Catalog big icon property cell panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.0 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogBIconPropertyTableCellPanel extends PropertyTableCellPanel {
@@ -39,13 +38,11 @@ public class CatalogBIconPropertyTableCellPanel extends PropertyTableCellPanel {
     public CatalogBIconPropertyTableCellPanel(XBACatalog catalog) {
         super();
         this.catalog = catalog;
-        setEditorAction(new ActionListener() {
+        init();
+    }
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performEditorAction();
-            }
-        });
+    private void init() {
+        setEditorAction((ActionEvent e) -> performEditorAction());
     }
 
     public void performEditorAction() {

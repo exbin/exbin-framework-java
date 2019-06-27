@@ -29,12 +29,12 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
  * @version 0.2.1 2019/06/21
  * @author ExBin Project (http://exbin.org)
  */
-public class DocPropertiesPanel extends javax.swing.JPanel {
+public class DocumentPropertiesPanel extends javax.swing.JPanel {
 
     private XBTEditableDocument doc;
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DocPropertiesPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DocumentPropertiesPanel.class);
 
-    public DocPropertiesPanel() {
+    public DocumentPropertiesPanel() {
         initComponents();
     }
 
@@ -44,7 +44,7 @@ public class DocPropertiesPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new DocPropertiesPanel());
+        WindowUtils.invokeDialog(new DocumentPropertiesPanel());
     }
 
     /**

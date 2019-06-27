@@ -29,6 +29,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.XBDbServiceClient;
 import org.exbin.framework.gui.service.catalog.panel.CatalogBrowserPanel;
@@ -79,6 +80,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
  */
 public class ServiceManagerPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBCatalogServiceClient service;
     private final CatalogStatusPanel catalogStatusPanel;
     private final CatalogAvailabilityPanel catalogAvailabilityPanel;
@@ -112,6 +114,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
         catalogBrowserPanel = new CatalogBrowserPanel();
         catalogEditorPanel = new CatalogEditorPanel();
         catalogSearchPanel = new CatalogSearchPanel();
+        catalogSearchPanel.setApplication(application);
 
         panelMap.put("catalog", catalogStatusPanel);
         panelMap.put("catalog_availability", catalogAvailabilityPanel);
@@ -126,6 +129,10 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
         managerTree.setModel(new DefaultTreeModel(top, true));
         managerTree.getSelectionModel().addTreeSelectionListener(new MySelectionListener());
         managerTree.setSelectionRow(0);
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     private void createNodes(DefaultMutableTreeNode top) {

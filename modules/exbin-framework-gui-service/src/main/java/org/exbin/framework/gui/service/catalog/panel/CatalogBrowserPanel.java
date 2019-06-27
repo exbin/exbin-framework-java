@@ -26,12 +26,16 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.text.DefaultEditorKit;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.ServiceManagerHandler;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogEditItemDialog;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.XBEXDesc;
 import org.exbin.xbup.catalog.entity.XBEXName;
@@ -46,13 +50,14 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 
 /**
- * Catalog Specification Panel.
+ * Catalog browser panel.
  *
- * @version 0.2.0 2016/08/04
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogBrowserPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBCItem currentItem;
 
     private XBACatalog catalog;
@@ -74,36 +79,15 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
 
         updateItem();
 
-        actionListenerMap.put(DefaultEditorKit.cutAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCut();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.copyAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performCopy();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.pasteAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performPaste();
-            }
-        });
-        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
-        actionListenerMap.put("delete", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performDelete();
-            }
-        });
+        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> performCut());
+        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> performCopy());
+        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
+        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
+        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     /**
@@ -170,21 +154,30 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
 
     private void popupEditMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupEditMenuItemActionPerformed
         if (currentItem != null) {
-            CatalogEditItemDialog editDialog = new CatalogEditItemDialog(WindowUtils.getFrame(this), true);
-            editDialog.setMenuManagement(menuManagement);
-            editDialog.setCatalog(catalog);
-            editDialog.setCatalogItem(currentItem);
-            editDialog.setVisible(true);
+            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            CatalogEditItemPanel editPanel = new CatalogEditItemPanel();
+            editPanel.setApplication(application);
+            editPanel.setMenuManagement(menuManagement);
+            editPanel.setCatalog(catalog);
+            editPanel.setCatalogItem(currentItem);
 
-            if (editDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-                EntityManager em = ((XBECatalog) catalog).getEntityManager();
-                EntityTransaction transaction = em.getTransaction();
-                transaction.begin();
-                editDialog.persist();
-                setItem(currentItem);
-                em.flush();
-                transaction.commit();
-            }
+            DefaultControlPanel controlPanel = new DefaultControlPanel();
+            JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
+            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                    EntityManager em = ((XBECatalog) catalog).getEntityManager();
+                    EntityTransaction transaction = em.getTransaction();
+                    transaction.begin();
+                    editPanel.persist();
+                    setItem(currentItem);
+                    em.flush();
+                    transaction.commit();
+                }
+            });
+            dialog.center(dialog.getParent());
+            dialog.show();
         }
     }//GEN-LAST:event_popupEditMenuItemActionPerformed
 
@@ -225,6 +218,15 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
 //    }
     public void setServiceManagerHandler(ServiceManagerHandler serviceManagerHandler) {
         this.serviceManagerHandler = serviceManagerHandler;
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogBrowserPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

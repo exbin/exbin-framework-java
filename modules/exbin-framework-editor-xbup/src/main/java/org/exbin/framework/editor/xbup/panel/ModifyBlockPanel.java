@@ -19,7 +19,6 @@ package org.exbin.framework.editor.xbup.panel;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,21 +26,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventObject;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.panel.BinaryPanel;
-import org.exbin.framework.editor.xbup.dialog.AttributesTableModel;
-import org.exbin.framework.editor.xbup.dialog.ModifyBlockDialog;
-import org.exbin.framework.editor.xbup.dialog.ParametersTableItem;
-import org.exbin.framework.editor.xbup.dialog.ParametersTableModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
@@ -84,11 +81,12 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Panel for modifying item attributes or data.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
 public class ModifyBlockPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private XBPluginRepository pluginRepository;
 
@@ -103,7 +101,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
     private BinaryPanel tailDataBinaryPanel = null;
-    private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockPanel.class);
 
     private final String attributesPanelTitle;
     private final String dataPanelTitle;
@@ -125,32 +123,23 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         parametersPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(parametersPanel));
         extAreaEditorPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(tailDataPanel));
         basicPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(basicPanel));
-        
+
         init();
     }
-    
+
     private void init() {
-        attributesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    updateAttributesButtons();
-                }
+        attributesTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                updateAttributesButtons();
             }
         });
 
-        attributesTableModel.attachChangeListener(new AttributesTableModel.ChangeListener() {
-            @Override
-            public void valueChanged() {
-                dataChanged = true;
-            }
+        attributesTableModel.attachChangeListener(() -> {
+            dataChanged = true;
         });
 
-        terminationModeCheckBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                dataChanged = true;
-            }
+        terminationModeCheckBox.addItemListener((ItemEvent e) -> {
+            dataChanged = true;
         });
 
         // DefaultCellEditor attributesTableCellEditor = new DefaultCellEditor(new JTextField());
@@ -163,42 +152,47 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         parametersTable.getColumnModel().getColumn(2).setPreferredWidth(parametersTableWidth / 6);
         parametersTable.getColumnModel().getColumn(3).setPreferredWidth(parametersTableWidth / 2);
 
-        mainTabbedPane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                JTabbedPane pane = (JTabbedPane) e.getSource();
-                if (pane.getSelectedIndex() < 0) {
-                    return;
-                }
+        mainTabbedPane.addChangeListener((ChangeEvent e) -> {
+            JTabbedPane pane = (JTabbedPane) e.getSource();
+            if (pane.getSelectedIndex() < 0) {
+                return;
+            }
 
-                String currentTitle = pane.getTitleAt(pane.getSelectedIndex());
-                if (basicPanelTitle.equals(currentTitle)) {
-                    if (dataChanged) {
-                        reloadBasic();
-                    }
-                    dataChanged = false;
-                } else if (attributesPanelTitle.equals(currentTitle)) {
-                    if (dataChanged || attributes == null) {
-                        reloadAttributes();
-                    }
-                    dataChanged = false;
-                } else if (parametersPanelTitle.equals(currentTitle)) {
-                    if (dataChanged || parametersTableModel.isEmpty()) {
-                        reloadParameters();
-                    }
-                    dataChanged = false;
-                } else if (customEditorPanelTitle.equals(currentTitle)) {
-                    if (dataChanged) {
-                        reloadCustomEditor();
-                    }
-                    dataChanged = false;
-                } else if (extAreaEditorPanelTitle.equals(currentTitle)) {
-                    if (tailDataBinaryPanel == null) {
-                        reloadTailData();
-                    }
+            String currentTitle = pane.getTitleAt(pane.getSelectedIndex());
+            if (basicPanelTitle.equals(currentTitle)) {
+                if (dataChanged) {
+                    reloadBasic();
+                }
+                dataChanged = false;
+            } else if (attributesPanelTitle.equals(currentTitle)) {
+                if (dataChanged || attributes == null) {
+                    reloadAttributes();
+                }
+                dataChanged = false;
+            } else if (parametersPanelTitle.equals(currentTitle)) {
+                if (dataChanged || parametersTableModel.isEmpty()) {
+                    reloadParameters();
+                }
+                dataChanged = false;
+            } else if (customEditorPanelTitle.equals(currentTitle)) {
+                if (dataChanged) {
+                    reloadCustomEditor();
+                }
+                dataChanged = false;
+            } else if (extAreaEditorPanelTitle.equals(currentTitle)) {
+                if (tailDataBinaryPanel == null) {
+                    reloadTailData();
                 }
             }
         });
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     public XBACatalog getCatalog() {
@@ -220,7 +214,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     private void updateAttributesButtons() {
         removeButton.setEnabled(attributesTable.getSelectedRowCount() > 0);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -521,6 +515,14 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_extSaveFromButtoActionPerformed
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ModifyBlockPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
@@ -544,13 +546,67 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox terminationModeCheckBox;
     // End of variables declaration//GEN-END:variables
 
+    public void setNode(XBTTreeNode srcNode, XBTTreeDocument doc) {
+        this.srcNode = srcNode;
+        this.doc = doc;
+        newNode = srcNode.cloneNode(true);
+
+        mainTabbedPane.removeAll();
+        customPanel = null;
+
+        reloadBasic();
+        mainTabbedPane.addTab(basicPanelTitle, basicPanel);
+        dataMode = srcNode.getDataMode();
+        if (dataMode == XBBlockDataMode.DATA_BLOCK) {
+            mainTabbedPane.addTab(dataPanelTitle, dataPanel);
+
+            try {
+                binaryPanel.loadFromStream(srcNode.getData(), srcNode.getDataSize());
+            } catch (IOException ex) {
+                Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            reloadParameters();
+            TableColumnModel columnModel = parametersTable.getColumnModel();
+            TableColumn column = columnModel.getColumn(3);
+            ParametersTableCellEditor parametersTableCellEditor = new ParametersTableCellEditor(catalog, pluginRepository, newNode, doc);
+            parametersTableCellEditor.setApplication(application);
+            column.setCellEditor(parametersTableCellEditor);
+            ParametersTableCellRenderer parametersTableCellRenderer = new ParametersTableCellRenderer(catalog, pluginRepository, newNode, doc);
+            parametersTableCellRenderer.setApplication(application);
+            column.setCellRenderer(parametersTableCellRenderer);
+
+            customPanel = getCustomPanel(srcNode);
+            if (customPanel != null) {
+                ((XBPanelEditor) customPanel).attachChangeListener(() -> dataChanged = true);
+
+                reloadCustomEditor();
+                mainTabbedPane.addTab(customEditorPanelTitle, customPanel.getPanel());
+            }
+
+            mainTabbedPane.addTab(parametersPanelTitle, parametersPanel);
+            mainTabbedPane.addTab(attributesPanelTitle, attributesPanel);
+        }
+
+        if (srcNode.getParent() == null) {
+            mainTabbedPane.addTab(extAreaEditorPanelTitle, tailDataPanel);
+            tailDataBinaryPanel = null;
+        }
+
+        mainTabbedPane.setSelectedIndex(1);
+    }
+
+    public XBTTreeNode getNode() {
+        return newNode;
+    }
+
     public void saveTailData(OutputStream stream) {
         try {
             if (tailDataBinaryPanel != null) {
                 tailDataBinaryPanel.saveToStream(stream);
             }
         } catch (IOException ex) {
-            Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -652,7 +708,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
                                 try {
                                     serialReader.read(lineEditor);
                                 } catch (XBProcessingException | IOException ex) {
-                                    Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
+                                    Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
                                 }
 
                                 lineEditor.attachChangeListener(new LineEditorChangeListener(lineEditor, paramExtractor, paramIndex));
@@ -679,7 +735,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             try {
                 tailDataBinaryPanel.loadFromStream(doc.getTailData(), doc.getTailDataSize());
             } catch (IOException ex) {
-                Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -689,7 +745,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         try {
             serialReader.read((XBSerializable) customPanel);
         } catch (XBProcessingException | IOException ex) {
-            Logger.getLogger(ModifyBlockDialog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

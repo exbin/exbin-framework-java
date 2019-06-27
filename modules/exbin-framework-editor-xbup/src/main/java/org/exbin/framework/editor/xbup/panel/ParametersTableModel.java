@@ -14,42 +14,44 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.editor.xbup.dialog;
+package org.exbin.framework.editor.xbup.panel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.xbup.core.parser.token.XBAttribute;
 
 /**
- * Attributes list table model for item editing.
+ * Parameters list table model for item editing.
  *
- * @version 0.1.24 2015/01/30
+ * @version 0.1.24 2015/01/10
  * @author ExBin Project (http://exbin.org)
  */
-public class AttributesTableModel extends AbstractTableModel {
+public class ParametersTableModel extends AbstractTableModel {
 
     private final ResourceBundle resourceBundle;
-    private List<XBAttribute> attributes;
-    private ChangeListener changeListener = null;
+    private List<ParametersTableItem> parameters;
 
     private final String[] columnNames;
     private Class[] columnTypes = new Class[]{
-        java.lang.Integer.class, java.lang.Integer.class
+        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
     };
-    private final boolean[] columnsEditable = new boolean[]{false, true};
+    private final boolean[] columnsEditable = new boolean[]{false, false, false, true};
 
-    public AttributesTableModel() {
-        resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockDialog.class);
-        columnNames = new String[]{resourceBundle.getString("attributesTableModel.itemOrder"), resourceBundle.getString("attributesTableModel.itemValue")};
-        attributes = new ArrayList<>();
+    public ParametersTableModel() {
+        resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockPanel.class);
+        columnNames = new String[]{resourceBundle.getString("parametersTableModel.itemOrder"), resourceBundle.getString("parametersTableModel.itemName"), resourceBundle.getString("parametersTableModel.itemType"), resourceBundle.getString("parametersTableModel.itemValue")};
+        parameters = new ArrayList<>();
     }
 
     @Override
     public int getRowCount() {
-        return attributes.size();
+        return parameters.size();
+    }
+
+    public ParametersTableItem getRow(int index) {
+        return parameters.get(index);
     }
 
     @Override
@@ -74,32 +76,37 @@ public class AttributesTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (columnIndex == 1) {
-            return getAttribs().get(rowIndex).convertToNatural().getInt();
-        } else {
-            return rowIndex;
+        switch (columnIndex) {
+            case 0:
+                return rowIndex;
+            case 1:
+                return getParameter(rowIndex).getValueName();
+            case 2:
+                return getParameter(rowIndex).getTypeName();
+            case 3:
+                return "";
+            default:
+                return "";
         }
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if (rowIndex < getRowCount()) {
-            if (columnIndex == 1) {
-                attributes.get(rowIndex).convertToNatural().setValue((Integer) aValue);
-                fireDataChanged();
+            if (columnIndex == 3) {
+                // ((UBNat32) parameters.get(rowIndex)).setValue((Integer) aValue);
             } else {
                 throw new IllegalStateException();
             }
         }
     }
 
-    public List<XBAttribute> getAttribs() {
-        return attributes;
+    public List<ParametersTableItem> getParameters() {
+        return parameters;
     }
 
-    public void setAttribs(List<XBAttribute> attributes) {
-        this.attributes = attributes;
-        fireTableDataChanged();
+    public void setParameters(List<ParametersTableItem> attributes) {
+        this.parameters = attributes;
     }
 
     public Class[] getTypes() {
@@ -110,27 +117,23 @@ public class AttributesTableModel extends AbstractTableModel {
         this.columnTypes = types;
     }
 
-    public int getAttribute(int index) {
-        if (index >= attributes.size()) {
-            return 0;
+    public ParametersTableItem getParameter(int index) {
+        if (index >= parameters.size()) {
+            return null;
         }
 
-        XBAttribute attribute = attributes.get(index);
-        return attribute != null ? attribute.getNaturalInt() : 0;
+        return parameters.get(index);
+    }
+    
+    public void clear() {
+        parameters.clear();
+    }
+    
+    public void addRow(ParametersTableItem item) {
+        parameters.add(item);
     }
 
-    public void fireDataChanged() {
-        if (changeListener != null) {
-            changeListener.valueChanged();
-        }
-    }
-
-    public void attachChangeListener(ChangeListener listener) {
-        changeListener = listener;
-    }
-
-    public interface ChangeListener {
-
-        void valueChanged();
+    public boolean isEmpty() {
+        return parameters == null || parameters.isEmpty();
     }
 }

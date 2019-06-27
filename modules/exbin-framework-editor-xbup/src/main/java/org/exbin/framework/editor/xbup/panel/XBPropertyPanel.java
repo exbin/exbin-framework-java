@@ -18,6 +18,7 @@ package org.exbin.framework.editor.xbup.panel;
 
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.XBFBlockType;
@@ -50,7 +51,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         initComponents();
         init();
     }
-    
+
     private void init() {
         propertiesPanel = new XBPropertyTablePanel(catalog);
         add(propertiesPanel, java.awt.BorderLayout.CENTER);
@@ -198,6 +199,15 @@ public class XBPropertyPanel extends javax.swing.JPanel {
     public void setApplication(XBApplication application) {
         this.application = application;
         propertiesPanel.setApplication(application);
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new XBPropertyPanel(null));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
