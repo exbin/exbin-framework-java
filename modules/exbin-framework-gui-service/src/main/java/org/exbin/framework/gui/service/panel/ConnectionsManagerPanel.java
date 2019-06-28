@@ -233,16 +233,15 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             switch (actionType) {
                 case OK: {
                     ((ConnectionsListModel) connectionsList.getModel()).add(connectionsList.isSelectionEmpty() ? -1 : connectionsList.getSelectedIndex(), panel.getConnection());
-                    dialog.close();
                     break;
                 }
                 case CANCEL: {
-                    dialog.close();
                     break;
                 }
                 default:
                     throw new IllegalStateException("Unexpected action type " + actionType.name());
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());
@@ -311,16 +310,15 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
                     ((ConnectionsListModel) connectionsList.getModel()).remove(modifiedRowIndex);
                     ((ConnectionsListModel) connectionsList.getModel()).add(modifiedRowIndex, panel.getConnection());
                     connectionsList.setSelectedIndex(modifiedRowIndex);
-                    dialog.close();
                     break;
                 }
                 case CANCEL: {
-                    dialog.close();
                     break;
                 }
                 default:
                     throw new IllegalStateException("Unexpected action type " + actionType.name());
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());

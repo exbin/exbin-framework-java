@@ -75,7 +75,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 /**
  * XBManager service management panel.
  *
- * @version 0.2.1 2019/06/24
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class ServiceManagerPanel extends javax.swing.JPanel {
@@ -114,7 +114,6 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
         catalogBrowserPanel = new CatalogBrowserPanel();
         catalogEditorPanel = new CatalogEditorPanel();
         catalogSearchPanel = new CatalogSearchPanel();
-        catalogSearchPanel.setApplication(application);
 
         panelMap.put("catalog", catalogStatusPanel);
         panelMap.put("catalog_availability", catalogAvailabilityPanel);
@@ -133,6 +132,9 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
 
     public void setApplication(XBApplication application) {
         this.application = application;
+        catalogBrowserPanel.setApplication(application);
+        catalogEditorPanel.setApplication(application);
+        catalogSearchPanel.setApplication(application);
     }
 
     private void createNodes(DefaultMutableTreeNode top) {

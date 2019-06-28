@@ -30,7 +30,6 @@ import javax.swing.JList;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.api.Preferences;
-import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
@@ -40,14 +39,13 @@ import org.exbin.framework.preferences.FrameworkParameters;
 /**
  * Main options panel.
  *
- * @version 0.2.1 2019/06/09
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
 
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
     private ModifiedOptionListener modifiedOptionListener;
-    private final ApplicationFrameHandler frame;
     private OptionsPanel extendedPanel = null;
 
     private DefaultComboBoxModel<String> themesComboBoxModel;
@@ -58,9 +56,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
     private List<String> themeNames;
     private List<Locale> languageLocales = null;
 
-    public MainOptionsPanel(ApplicationFrameHandler frame) {
-        this.frame = frame;
-
+    public MainOptionsPanel() {
         themesComboBoxModel = new DefaultComboBoxModel<>();
         languageComboBoxModel = new DefaultComboBoxModel<>();
         languageComboBoxCellRenderer = new DefaultListCellRenderer() {

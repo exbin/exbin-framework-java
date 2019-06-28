@@ -17,46 +17,71 @@
 package org.exbin.framework.gui.service.catalog.panel;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogEditDocumentationDialog;
+import javax.swing.JPanel;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.RemovalControlHandler;
+import org.exbin.framework.gui.utils.panel.RemovalControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.service.XBCXHDocService;
 
 /**
- * Catalog HDoc Property Cell Panel.
+ * Catalog hDoc property cell panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogDocPropertyTableCellPanel extends PropertyTableCellPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private String doc;
 
     public CatalogDocPropertyTableCellPanel(XBACatalog catalog) {
         super();
         this.catalog = catalog;
-        setEditorAction(new ActionListener() {
+        init();
+    }
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performEditorAction();
-            }
-        });
+    private void init() {
+        setEditorAction((ActionEvent e) -> performEditorAction());
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     public void performEditorAction() {
-        CatalogEditDocumentationDialog docDialog = new CatalogEditDocumentationDialog(WindowUtils.getFrame(this), true, catalog, doc);
-        docDialog.setLocationRelativeTo(this);
-        docDialog.setVisible(true);
-
-        if (docDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            doc = docDialog.getDocumentation();
-            setDocLabel();
-        }
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        CatalogEditDocumentationPanel docPanel = new CatalogEditDocumentationPanel(catalog, doc);
+        RemovalControlPanel controlPanel = new RemovalControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(docPanel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        frameModule.setDialogTitle(dialog, docPanel.getResourceBundle());
+        controlPanel.setHandler((RemovalControlHandler.ControlActionType actionType) -> {
+            switch (actionType) {
+                case OK: {
+                    doc = docPanel.getDocumentation();
+                    setDocLabel();
+                    break;
+                }
+                case CANCEL: {
+                    break;
+                }
+                case REMOVE: {
+                    doc = "";
+                    setDocLabel();
+                    break;
+                }
+            }
+            dialog.close();
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }
 
     public void setCatalogItem(XBCItem catalogItem) {

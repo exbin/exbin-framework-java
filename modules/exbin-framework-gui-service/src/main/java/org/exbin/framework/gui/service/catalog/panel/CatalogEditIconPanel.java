@@ -16,18 +16,44 @@
  */
 package org.exbin.framework.gui.service.catalog.panel;
 
+import java.awt.BorderLayout;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.visual.xbplugins.XBPicturePanel;
+import static org.exbin.xbup.visual.xbplugins.XBPicturePanel.toBufferedImage;
 
 /**
  * XBManager icon editing panel.
  *
- * @version 0.2.1 2019/06/27
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditIconPanel extends javax.swing.JPanel {
 
-    public CatalogEditIconPanel() {
+    private byte[] icon;
+    private final XBPicturePanel mainPanel;
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogEditIconPanel.class);
+
+    public CatalogEditIconPanel(XBACatalog catalog, byte[] icon) {
+        this.icon = icon;
         initComponents();
+
+        mainPanel = new XBPicturePanel();
+        add(mainPanel, BorderLayout.CENTER);
+        mainPanel.setIcon(icon != null ? new ImageIcon(icon) : null);
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -39,16 +65,7 @@ public class CatalogEditIconPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -57,9 +74,26 @@ public class CatalogEditIconPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new CatalogEditIconPanel());
+        WindowUtils.invokeDialog(new CatalogEditIconPanel(null, null));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+    public byte[] getIcon() {
+        Icon imageIcon = mainPanel.getIcon();
+        if (imageIcon != null) {
+            ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+            try {
+                ImageIO.write(toBufferedImage(((ImageIcon) imageIcon).getImage()), "png", arrayOutputStream);
+                icon = arrayOutputStream.toByteArray();
+            } catch (IOException ex) {
+                Logger.getLogger(CatalogEditIconPanel.class.getName()).log(Level.SEVERE, null, ex);
+                icon = null;
+            }
+        } else {
+            icon = null;
+        }
+
+        return icon;
+    }
 }

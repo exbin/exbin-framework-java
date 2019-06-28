@@ -164,6 +164,7 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
             DefaultControlPanel controlPanel = new DefaultControlPanel();
             JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
             final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
             WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -175,6 +176,7 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
                     em.flush();
                     transaction.commit();
                 }
+                dialog.close();
             });
             dialog.center(dialog.getParent());
             dialog.show();

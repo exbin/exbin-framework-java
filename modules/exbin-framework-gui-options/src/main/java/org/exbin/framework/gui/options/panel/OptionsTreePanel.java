@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.options.dialog;
+package org.exbin.framework.gui.options.panel;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -32,28 +33,21 @@ import javax.swing.tree.DefaultTreeModel;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.gui.options.StubPreferences;
-import org.exbin.framework.gui.options.api.OptionsPanel;
-import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
-import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
-import org.exbin.framework.gui.options.panel.AppearanceOptionsPanel;
-import org.exbin.framework.gui.options.panel.MainOptionsPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Dialog for application options and preferences setting.
+ * Panel for application options and preferences setting.
  *
- * @version 0.2.0 2016/11/28
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
-public class OptionsDialog extends javax.swing.JDialog {
+public class OptionsTreePanel extends javax.swing.JPanel {
 
     private Preferences preferences = null;
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsDialog.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsTreePanel.class);
     private Map<String, JPanel> optionPanels;
     private JPanel currentOptionsPanel = null;
-    private ModifiedOptionListener modifiedOptionListener;
+    private org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener modifiedOptionListener;
 
     private boolean modified;
     private OptionsMutableTreeNode top;
@@ -62,8 +56,8 @@ public class OptionsDialog extends javax.swing.JDialog {
     private MainOptionsPanel mainOptionsPanel;
     private AppearanceOptionsPanel appearanceOptionsPanel;
 
-    public OptionsDialog(java.awt.Frame parent, boolean modal, ApplicationFrameHandler frame) {
-        super(parent, modal);
+    public OptionsTreePanel(ApplicationFrameHandler frame) {
+        initComponents();
         this.frame = frame;
         init();
     }
@@ -85,7 +79,7 @@ public class OptionsDialog extends javax.swing.JDialog {
 
         // Actions on change of look&feel
         UIManager.addPropertyChangeListener((PropertyChangeEvent evt) -> {
-            SwingUtilities.updateComponentTreeUI(OptionsDialog.this);
+            SwingUtilities.updateComponentTreeUI(OptionsTreePanel.this);
         });
 
         // Create menu tree
@@ -116,7 +110,7 @@ public class OptionsDialog extends javax.swing.JDialog {
             }
         });
 
-        mainOptionsPanel = new MainOptionsPanel(frame);
+        mainOptionsPanel = new MainOptionsPanel();
         addOptionsPanel(mainOptionsPanel);
         appearanceOptionsPanel = new AppearanceOptionsPanel(frame);
         addOptionsPanel(appearanceOptionsPanel);
@@ -125,16 +119,17 @@ public class OptionsDialog extends javax.swing.JDialog {
 
         // Expand all nodes
         expandJTree(optionsTree, -1);
+    }
 
-        WindowUtils.initWindow(this);
-        WindowUtils.assignGlobalKeyListener(this, null, cancelButton);
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     public void loadPreferences(Preferences preferences) {
         for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
             Object optionPanel = optionPanelsIterator.next();
-            if (optionPanel instanceof OptionsPanel) {
-                ((OptionsPanel) optionPanel).loadFromPreferences(preferences);
+            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsPanel) {
+                ((org.exbin.framework.gui.options.api.OptionsPanel) optionPanel).loadFromPreferences(preferences);
             }
         }
     }
@@ -142,8 +137,8 @@ public class OptionsDialog extends javax.swing.JDialog {
     public void savePreferences(Preferences preferences) {
         for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
             Object optionPanel = optionPanelsIterator.next();
-            if (optionPanel instanceof OptionsPanel) {
-                ((OptionsPanel) optionPanel).saveToPreferences(preferences);
+            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsPanel) {
+                ((org.exbin.framework.gui.options.api.OptionsPanel) optionPanel).saveToPreferences(preferences);
             }
         }
 
@@ -153,10 +148,14 @@ public class OptionsDialog extends javax.swing.JDialog {
     public void applyPreferencesChanges() {
         for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
             Object optionPanel = optionPanelsIterator.next();
-            if (optionPanel instanceof OptionsPanel) {
-                ((OptionsPanel) optionPanel).applyPreferencesChanges();
+            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsPanel) {
+                ((org.exbin.framework.gui.options.api.OptionsPanel) optionPanel).applyPreferencesChanges();
             }
         }
+    }
+
+    public void saveToPreferences() {
+        savePreferences(preferences);
     }
 
     /**
@@ -175,39 +174,25 @@ public class OptionsDialog extends javax.swing.JDialog {
         optionsAreaScrollPane = new javax.swing.JScrollPane();
         optionsAreaTitlePanel = new javax.swing.JPanel();
         optionsAreaTitleLabel = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        cancelButton = new javax.swing.JButton();
-        applyButton = new javax.swing.JButton();
-        saveButton = new javax.swing.JButton();
+        separator = new javax.swing.JSeparator();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(resourceBundle.getString("OptionsDialog.title")); // NOI18N
-        setLocationByPlatform(true);
+        setLayout(new java.awt.BorderLayout());
 
         optionsSplitPane.setDividerLocation(130);
-        optionsSplitPane.setName("optionsSplitPane"); // NOI18N
 
-        optionsTreeScrollPane.setName("optionsTreeScrollPane"); // NOI18N
-
-        optionsTree.setName("optionsTree"); // NOI18N
         optionsTreeScrollPane.setViewportView(optionsTree);
 
         optionsSplitPane.setLeftComponent(optionsTreeScrollPane);
 
-        optionsTreePanel.setName("optionsTreePanel"); // NOI18N
         optionsTreePanel.setLayout(new java.awt.BorderLayout());
-
-        optionsAreaScrollPane.setName("optionsAreaScrollPane"); // NOI18N
         optionsTreePanel.add(optionsAreaScrollPane, java.awt.BorderLayout.CENTER);
 
         optionsAreaTitlePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        optionsAreaTitlePanel.setName("optionsAreaTitlePanel"); // NOI18N
         optionsAreaTitlePanel.setLayout(new java.awt.BorderLayout());
 
         optionsAreaTitleLabel.setBackground(javax.swing.UIManager.getDefaults().getColor("EditorPane.selectionBackground"));
         optionsAreaTitleLabel.setForeground(javax.swing.UIManager.getDefaults().getColor("EditorPane.background"));
         optionsAreaTitleLabel.setText(resourceBundle.getString("options_options")); // NOI18N
-        optionsAreaTitleLabel.setName("optionsAreaTitleLabel"); // NOI18N
         optionsAreaTitleLabel.setOpaque(true);
         optionsAreaTitleLabel.setVerifyInputWhenFocusTarget(false);
         optionsAreaTitlePanel.add(optionsAreaTitleLabel, java.awt.BorderLayout.NORTH);
@@ -216,93 +201,12 @@ public class OptionsDialog extends javax.swing.JDialog {
 
         optionsSplitPane.setRightComponent(optionsTreePanel);
 
-        jSeparator1.setName("jSeparator1"); // NOI18N
-
-        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
-        cancelButton.setName("cancelButton"); // NOI18N
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-
-        applyButton.setText(resourceBundle.getString("applyButton.text")); // NOI18N
-        applyButton.setName("applyButton"); // NOI18N
-        applyButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                applyButtonActionPerformed(evt);
-            }
-        });
-
-        saveButton.setText(resourceBundle.getString("saveButton.text")); // NOI18N
-        saveButton.setName("saveButton"); // NOI18N
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(885, Short.MAX_VALUE)
-                .addComponent(saveButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(applyButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cancelButton)
-                .addContainerGap())
-            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
-            .addComponent(optionsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(optionsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(applyButton)
-                    .addComponent(saveButton))
-                .addContainerGap())
-        );
-
-        pack();
+        add(optionsSplitPane, java.awt.BorderLayout.CENTER);
+        add(separator, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        setVisible(false);
-        dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
-        applyPreferencesChanges();
-
-        setModified(false);
-    }//GEN-LAST:event_applyButtonActionPerformed
-
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        savePreferences(preferences);
-        dispose();
-    }//GEN-LAST:event_saveButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        OptionsDialog optionsDialog = new OptionsDialog(new javax.swing.JFrame(), true, null);
-        optionsDialog.setPreferences(new StubPreferences());
-        WindowUtils.invokeWindow(optionsDialog);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton applyButton;
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JScrollPane optionsAreaScrollPane;
     private javax.swing.JLabel optionsAreaTitleLabel;
     private javax.swing.JPanel optionsAreaTitlePanel;
@@ -310,7 +214,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     private javax.swing.JTree optionsTree;
     private javax.swing.JPanel optionsTreePanel;
     private javax.swing.JScrollPane optionsTreeScrollPane;
-    private javax.swing.JButton saveButton;
+    private javax.swing.JSeparator separator;
     // End of variables declaration//GEN-END:variables
 
     private void createNodes(DefaultMutableTreeNode top) {
@@ -324,10 +228,10 @@ public class OptionsDialog extends javax.swing.JDialog {
      */
     public void setModified(boolean modified) {
         this.modified = modified;
-        applyButton.setEnabled(modified);
+        // applyButton.setEnabled(modified);
     }
 
-    public void addOptionsPanel(OptionsPanel optionPanel) {
+    public void addOptionsPanel(org.exbin.framework.gui.options.api.OptionsPanel optionPanel) {
         String panelKey;
         if (optionPanel.getPath() == null) {
             panelKey = "options";
@@ -340,17 +244,17 @@ public class OptionsDialog extends javax.swing.JDialog {
         optionsTree.setSelectionRow(0);
     }
 
-    public void extendMainOptionsPanel(OptionsPanel panel) {
+    public void extendMainOptionsPanel(org.exbin.framework.gui.options.api.OptionsPanel panel) {
         mainOptionsPanel.addExtendedPanel(panel);
     }
 
-    public void extendAppearanceOptionsPanel(OptionsPanel panel) {
+    public void extendAppearanceOptionsPanel(org.exbin.framework.gui.options.api.OptionsPanel panel) {
         appearanceOptionsPanel.addExtendedPanel(panel);
     }
 
-    private void estabilishPath(List<PathItem> path) {
+    private void estabilishPath(List<org.exbin.framework.gui.options.api.OptionsPanel.PathItem> path) {
         OptionsMutableTreeNode node = top;
-        for (PathItem pathItem : path) {
+        for (org.exbin.framework.gui.options.api.OptionsPanel.PathItem pathItem : path) {
             int childIndex = 0;
             OptionsMutableTreeNode child = null;
             if (node == null) {
@@ -391,7 +295,6 @@ public class OptionsDialog extends javax.swing.JDialog {
 
     public void setAppEditor(XBApplication appEditor) {
         this.appEditor = appEditor;
-        setIconImage(appEditor.getApplicationIcon());
     }
 
     public void setLanguageLocales(Collection<Locale> locales) {

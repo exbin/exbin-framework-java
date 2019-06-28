@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ListSelectionEvent;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -43,6 +44,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
  */
 public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private XBCXFileService fileService;
     private final CatalogFilesTableModel filesModel;
@@ -69,6 +71,10 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
                 popupPropertiesMenuItem.setEnabled(validItem);
             }
         });
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     /**

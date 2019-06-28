@@ -70,7 +70,9 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="addButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Add..."/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="org/exbin/framework/gui/service/catalog/panel/resources/CatalogItemEditRevsPanel.properties" key="addButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addButtonActionPerformed"/>
@@ -113,7 +115,9 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="modifyButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Modify..."/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="org/exbin/framework/gui/service/catalog/panel/resources/CatalogItemEditRevsPanel.properties" key="modifyButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="modifyButtonActionPerformed"/>
@@ -121,7 +125,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="removeDefButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Remove"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="org/exbin/framework/gui/service/catalog/panel/resources/CatalogItemEditRevsPanel.properties" key="removeDefButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeDefButtonActionPerformed"/>

@@ -32,6 +32,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.catalog.entity.XBEItem;
 import org.exbin.xbup.catalog.entity.XBENode;
@@ -68,11 +69,12 @@ import sun.swing.DefaultLookup;
 /**
  * Panel for properties of the catalog item.
  *
- * @version 0.1.24 2014/12/12
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemEditPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private XBCItem catalogItem;
     private CatalogDocPropertyTableCellPanel docCellPanel = null;
@@ -82,6 +84,10 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
 
     public CatalogItemEditPanel() {
         initComponents();
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     /**
@@ -207,10 +213,13 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
         docCellPanel = new CatalogDocPropertyTableCellPanel(catalog);
         docCellPanel.setCatalogItem(catalogItem);
         parentCellPanel = new CatalogParentPropertyTableCellPanel(catalog);
+        parentCellPanel.setApplication(application);
         parentCellPanel.setCatalogItem(catalogItem);
         bIconCellPanel = new CatalogBIconPropertyTableCellPanel(catalog);
+        bIconCellPanel.setApplication(application);
         bIconCellPanel.setCatalogItem(catalogItem);
         sIconCellPanel = new CatalogSIconPropertyTableCellPanel(catalog);
+        sIconCellPanel.setApplication(application);
         sIconCellPanel.setCatalogItem(catalogItem);
 
         columns.getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {

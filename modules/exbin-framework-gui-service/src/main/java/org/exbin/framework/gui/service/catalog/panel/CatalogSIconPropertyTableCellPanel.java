@@ -17,46 +17,72 @@
 package org.exbin.framework.gui.service.catalog.panel;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
-import org.exbin.framework.gui.service.catalog.dialog.CatalogEditIconDialog;
+import javax.swing.JPanel;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.RemovalControlHandler;
+import org.exbin.framework.gui.utils.panel.RemovalControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.service.XBCXIconService;
 
 /**
- * Catalog Big Icon Property Cell Panel.
+ * Catalog big icon property cell panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSIconPropertyTableCellPanel extends PropertyTableCellPanel {
 
+    private XBApplication application;
     private XBACatalog catalog;
     private byte[] icon;
 
     public CatalogSIconPropertyTableCellPanel(XBACatalog catalog) {
         super();
         this.catalog = catalog;
-        setEditorAction(new ActionListener() {
+        init();
+    }
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performEditorAction();
-            }
-        });
+    private void init() {
+        setEditorAction((ActionEvent e) -> performEditorAction());
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     public void performEditorAction() {
-        CatalogEditIconDialog iconDialog = new CatalogEditIconDialog(WindowUtils.getFrame(this), true, catalog, icon);
-        iconDialog.setLocationRelativeTo(this);
-        iconDialog.setVisible(true);
-
-        if (iconDialog.getDialogOption() == JOptionPane.OK_OPTION) {
-            icon = iconDialog.getIcon();
-            setDocLabel();
-        }
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        CatalogEditIconPanel iconPanel = new CatalogEditIconPanel(catalog, icon);
+        RemovalControlPanel controlPanel = new RemovalControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(iconPanel, controlPanel);
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), iconPanel.getClass(), iconPanel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, iconPanel.getResourceBundle());
+        controlPanel.setHandler((RemovalControlHandler.ControlActionType actionType) -> {
+            switch (actionType) {
+                case OK: {
+                    icon = iconPanel.getIcon();
+                    setDocLabel();
+                    break;
+                }
+                case CANCEL: {
+                    break;
+                }
+                case REMOVE: {
+                    icon = new byte[0];
+                    setDocLabel();
+                    break;
+                }
+            }
+            dialog.close();
+        });
+        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        dialog.center(dialog.getParent());
+        dialog.show();
     }
 
     public void setCatalogItem(XBCItem catalogItem) {

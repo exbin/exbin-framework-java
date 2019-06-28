@@ -18,6 +18,7 @@ package org.exbin.framework.editor.xbup.panel;
 
 import java.awt.BorderLayout;
 import java.util.ResourceBundle;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.catalog.panel.CatalogEditorPanel;
 import org.exbin.framework.gui.service.panel.CatalogAvailabilityPanel;
@@ -29,11 +30,12 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 /**
  * Panel for showing information about document block.
  *
- * @version 0.2.1 2019/06/23
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
 
+    private XBApplication application;
     private final CatalogEditorPanel catalogEditorPanel;
     private final CatalogAvailabilityPanel catalogAvailabilityPanel;
     private XBACatalog catalog = null;
@@ -44,6 +46,11 @@ public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements Cat
         catalogEditorPanel = new CatalogEditorPanel();
         catalogAvailabilityPanel = new CatalogAvailabilityPanel();
         add(catalogAvailabilityPanel, BorderLayout.CENTER);
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
+        catalogEditorPanel.setApplication(application);
     }
 
     /**

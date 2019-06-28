@@ -95,6 +95,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        blockTypeButtonGroup = new javax.swing.ButtonGroup();
         typePanel = new javax.swing.JPanel();
         dataRadioButton = new javax.swing.JRadioButton();
         basicTypeRadioButton = new javax.swing.JRadioButton();
@@ -113,9 +114,11 @@ public class AddBlockPanel extends javax.swing.JPanel {
 
         typePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("typePanel.border.title"))); // NOI18N
 
+        blockTypeButtonGroup.add(dataRadioButton);
         dataRadioButton.setText(resourceBundle.getString("dataRadioButton.text")); // NOI18N
         dataRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
+        blockTypeButtonGroup.add(basicTypeRadioButton);
         basicTypeRadioButton.setSelected(true);
         basicTypeRadioButton.setText(resourceBundle.getString("basicTypeRadioButton.text")); // NOI18N
         basicTypeRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -125,6 +128,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
             }
         });
 
+        blockTypeButtonGroup.add(contextTypeRadioButton);
         contextTypeRadioButton.setText(resourceBundle.getString("contextTypeRadioButton.text")); // NOI18N
         contextTypeRadioButton.setEnabled(false);
         contextTypeRadioButton.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -143,6 +147,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
 
         contextTypeTextField.setEditable(false);
 
+        blockTypeButtonGroup.add(catalogTypeRadioButton);
         catalogTypeRadioButton.setText(resourceBundle.getString("catalogTypeRadioButton.text")); // NOI18N
         catalogTypeRadioButton.setEnabled(false);
         catalogTypeRadioButton.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -365,6 +370,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> basicTypeComboBox;
     private javax.swing.JRadioButton basicTypeRadioButton;
+    private javax.swing.ButtonGroup blockTypeButtonGroup;
     private javax.swing.JRadioButton catalogTypeRadioButton;
     private javax.swing.JButton catalogTypeSelectButton;
     private javax.swing.JTextField catalogTypeTextField;

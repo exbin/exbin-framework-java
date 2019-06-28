@@ -20,8 +20,6 @@ import java.util.ResourceBundle;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.client.api.ClientConnectionEvent;
 import org.exbin.framework.client.api.ClientConnectionListener;
-import static org.exbin.framework.editor.xbup.EditorXbupModule.DOC_STATUS_BAR_ID;
-import static org.exbin.framework.editor.xbup.EditorXbupModule.MODULE_ID;
 import org.exbin.framework.editor.xbup.panel.XBDocStatusPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -30,7 +28,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Status panel handler.
  *
- * @version 0.2.0 2016/02/15
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class StatusPanelHandler {
@@ -54,8 +52,8 @@ public class StatusPanelHandler {
         if (docStatusPanel == null) {
             docStatusPanel = new XBDocStatusPanel();
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            frameModule.registerStatusBar(MODULE_ID, DOC_STATUS_BAR_ID, docStatusPanel);
-            frameModule.switchStatusBar(DOC_STATUS_BAR_ID);
+            frameModule.registerStatusBar(EditorXbupModule.MODULE_ID, EditorXbupModule.DOC_STATUS_BAR_ID, docStatusPanel);
+            frameModule.switchStatusBar(EditorXbupModule.DOC_STATUS_BAR_ID);
             // ((XBDocumentPanel) getEditorProvider()).registerTextStatus(docStatusPanel);
         }
 

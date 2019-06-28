@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JPanel;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -32,15 +33,18 @@ import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.options.api.OptionsPanel;
-import org.exbin.framework.gui.options.dialog.OptionsDialog;
+import org.exbin.framework.gui.options.panel.OptionsTreePanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework options module.
  *
- * @version 0.2.0 2016/08/17
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class GuiOptionsModule implements GuiOptionsModuleApi {
@@ -49,7 +53,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     private ResourceBundle resourceBundle;
 
     private Action optionsAction;
-    private OptionsDialog optionsDialog;
+    private OptionsTreePanel optionsTreePanel;
     private final List<OptionsPanel> optionsPanels = new ArrayList<>();
     private OptionsPanel mainOptionsExt = null;
     private OptionsPanel appearanceOptionsExt = null;
@@ -70,26 +74,8 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         if (resourceBundle == null) {
             resourceBundle = LanguageUtils.getResourceBundleByClass(GuiOptionsModule.class);
         }
-        
-        return resourceBundle;
-    }
-    private OptionsDialog getOptionsDialog() {
-        if (optionsDialog == null) {
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            optionsDialog = new OptionsDialog(frameModule.getFrame(), true, frameModule.getFrameHandler());
-            for (OptionsPanel optionsPanel : optionsPanels) {
-                optionsDialog.addOptionsPanel(optionsPanel);
-            }
-            if (mainOptionsExt != null) {
-                optionsDialog.extendMainOptionsPanel(mainOptionsExt);
-            }
-            if (appearanceOptionsExt != null) {
-                optionsDialog.extendAppearanceOptionsPanel(appearanceOptionsExt);
-            }
-            optionsDialog.setLanguageLocales(application.getLanguageLocales());
-        }
 
-        return optionsDialog;
+        return resourceBundle;
     }
 
     @Override
@@ -99,10 +85,50 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             optionsAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    getOptionsDialog();
-                    optionsDialog.setAppEditor(application);
-                    optionsDialog.setPreferences(application.getAppPreferences());
-                    optionsDialog.setVisible(true);
+                    if (optionsTreePanel == null) {
+                        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                        optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
+                        for (OptionsPanel optionsPanel : optionsPanels) {
+                            optionsTreePanel.addOptionsPanel(optionsPanel);
+                        }
+                        if (mainOptionsExt != null) {
+                            optionsTreePanel.extendMainOptionsPanel(mainOptionsExt);
+                        }
+                        if (appearanceOptionsExt != null) {
+                            optionsTreePanel.extendAppearanceOptionsPanel(appearanceOptionsExt);
+                        }
+                        optionsTreePanel.setLanguageLocales(application.getLanguageLocales());
+                    }
+
+                    optionsTreePanel.setAppEditor(application);
+                    optionsTreePanel.setPreferences(application.getAppPreferences());
+
+                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                    OptionsControlPanel controlPanel = new OptionsControlPanel();
+                    JPanel dialogPanel = WindowUtils.createDialogPanel(optionsTreePanel, controlPanel);
+                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                    frameModule.setDialogTitle(dialog, optionsTreePanel.getResourceBundle());
+                    controlPanel.setHandler((actionType) -> {
+                        switch (actionType) {
+                            case SAVE: {
+                                optionsTreePanel.saveToPreferences();
+                                WindowUtils.closeWindow(dialog.getWindow());
+                                break;
+                            }
+                            case CANCEL: {
+                                WindowUtils.closeWindow(dialog.getWindow());
+                                break;
+                            }
+                            case APPLY_ONCE: {
+                                optionsTreePanel.applyPreferencesChanges();
+                                WindowUtils.closeWindow(dialog.getWindow());
+                                break;
+                            }
+                        }
+                    });
+                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+                    dialog.center(dialog.getParent());
+                    dialog.show();
                 }
             };
 
@@ -116,8 +142,8 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     @Override
     public void addOptionsPanel(OptionsPanel optionsPanel) {
         optionsPanels.add(optionsPanel);
-        if (optionsDialog != null) {
-            optionsDialog.addOptionsPanel(optionsPanel);
+        if (optionsTreePanel != null) {
+            optionsTreePanel.addOptionsPanel(optionsPanel);
         }
     }
 
@@ -129,16 +155,16 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     @Override
     public void extendMainOptionsPanel(OptionsPanel panel) {
         mainOptionsExt = panel;
-        if (optionsDialog != null) {
-            optionsDialog.extendMainOptionsPanel(panel);
+        if (optionsTreePanel != null) {
+            optionsTreePanel.extendMainOptionsPanel(panel);
         }
     }
 
     @Override
     public void extendAppearanceOptionsPanel(OptionsPanel panel) {
         appearanceOptionsExt = panel;
-        if (optionsDialog != null) {
-            optionsDialog.extendAppearanceOptionsPanel(panel);
+        if (optionsTreePanel != null) {
+            optionsTreePanel.extendAppearanceOptionsPanel(panel);
         }
     }
 

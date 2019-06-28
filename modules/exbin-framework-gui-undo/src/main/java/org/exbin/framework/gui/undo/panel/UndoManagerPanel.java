@@ -19,6 +19,7 @@ package org.exbin.framework.gui.undo.panel;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ import org.exbin.xbup.operation.XBTOpDocCommand;
 /**
  * Undo management panel.
  *
- * @version 0.2.1 2019/06/19
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class UndoManagerPanel extends javax.swing.JPanel {
@@ -297,7 +298,8 @@ public class UndoManagerPanel extends javax.swing.JPanel {
 
         commandCaptionTextField.setText(command != null ? command.getCaption() : "");
         commandTypeTextField.setText(command instanceof XBDocCommand ? ((XBDocCommand) command).getBasicType().name() : "");
-        executionTimeTextField.setText(command != null && command.getExecutionTime() != null ? command.getExecutionTime().toString() : "");
+        Date executionTime = command != null ? command.getExecutionTime() : null;
+        executionTimeTextField.setText(executionTime != null ? executionTime.toString() : "");
 
         XBTDocOperation operation = null;
         if (command instanceof XBTOpDocCommand) {

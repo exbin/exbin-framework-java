@@ -65,6 +65,7 @@ public class CatalogBrowserHandler {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
                 CatalogEditorWrapperPanel panel = new CatalogEditorWrapperPanel();
+                panel.setApplication(application);
                 panel.setMenuManagement(managerModule.getDefaultMenuManagement());
                 panel.setCatalog(catalog);
                 CloseControlPanel controlPanel = new CloseControlPanel();

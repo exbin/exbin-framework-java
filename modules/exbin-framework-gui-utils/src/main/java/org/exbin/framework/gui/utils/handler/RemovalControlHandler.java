@@ -21,18 +21,18 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.OkCancelListener;
 
 /**
- * Handler for options control panel.
+ * Handler for control panel with support for remove action.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface OptionsControlHandler {
+public interface RemovalControlHandler {
 
     void controlActionPerformed(ControlActionType actionType);
 
     @ParametersAreNonnullByDefault
-    public interface OptionsControlListener {
+    public interface RemovalControlListener {
 
         void performClick(ControlActionType actionType);
 
@@ -40,16 +40,16 @@ public interface OptionsControlHandler {
         OkCancelListener createOkCancelListener();
 
         @Nonnull
-        OptionsControlEnablementListener createEnablementListener();
+        RemovalControlEnablementListener createEnablementListener();
     }
 
     @ParametersAreNonnullByDefault
-    public interface OptionsControlEnablementListener {
+    public interface RemovalControlEnablementListener {
 
         void actionEnabled(ControlActionType actionType, boolean enablement);
     }
 
     public static enum ControlActionType {
-        SAVE, APPLY_ONCE, CANCEL
+        OK, CANCEL, REMOVE
     }
 }

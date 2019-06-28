@@ -72,13 +72,13 @@ public class CatalogParentPropertyTableCellPanel extends PropertyTableCellPanel 
         });
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 parent = (XBCNode) panel.getSpec();
                 setNodeLabel();
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());

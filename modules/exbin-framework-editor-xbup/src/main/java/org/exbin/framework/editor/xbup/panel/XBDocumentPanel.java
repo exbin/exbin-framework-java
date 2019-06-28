@@ -53,7 +53,9 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.XBFBlockType;
@@ -83,7 +85,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.0 2017/01/15
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -348,6 +350,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     public void setApplication(XBApplication application) {
         this.application = application;
+        treePanel.setApplication(application);
         propertyPanel.setApplication(application);
     }
 
@@ -719,43 +722,45 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         ModifyBlockPanel panel = new ModifyBlockPanel();
         panel.setApplication(application);
         panel.setCatalog(catalog);
-        panel.setNode(node, mainDoc);
         panel.setPluginRepository(pluginRepository);
-        CloseControlPanel controlPanel = new CloseControlPanel();
+        panel.setNode(node, mainDoc);
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        controlPanel.setHandler(() -> {
-            XBTTreeNode newNode = panel.getNode();
-            XBTDocCommand undoStep;
-            if (node.getParent() == null) {
-                undoStep = new XBTChangeBlockCommand(mainDoc);
-                long position = node.getBlockIndex();
-                XBTModifyBlockOperation modifyOperation = new XBTModifyBlockOperation(mainDoc, position, newNode);
-                ((XBTChangeBlockCommand) undoStep).appendOperation(modifyOperation);
-                XBData tailData = new XBData();
-                panel.saveTailData(tailData.getDataOutputStream());
-                XBTTailDataOperation extOperation = new XBTTailDataOperation(mainDoc, tailData);
-                ((XBTChangeBlockCommand) undoStep).appendOperation(extOperation);
-            } else {
-                undoStep = new XBTModifyBlockCommand(mainDoc, node, newNode);
-            }
-            // TODO: Optimized diff command later
-//                if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
-//                    undoStep = new XBTModDataBlockCommand(node, newNode);
-//                } else if (newNode.getChildrenCount() > 0) {
-//                } else {
-//                    undoStep = new XBTModAttrBlockCommand(node, newNode);
-//                }
-            try {
-                getUndoHandler().execute(undoStep);
-            } catch (Exception ex) {
-                Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                XBTTreeNode newNode = panel.getNode();
+                XBTDocCommand undoStep;
+                if (node.getParent() == null) {
+                    undoStep = new XBTChangeBlockCommand(mainDoc);
+                    long position = node.getBlockIndex();
+                    XBTModifyBlockOperation modifyOperation = new XBTModifyBlockOperation(mainDoc, position, newNode);
+                    ((XBTChangeBlockCommand) undoStep).appendOperation(modifyOperation);
+                    XBData tailData = new XBData();
+                    panel.saveTailData(tailData.getDataOutputStream());
+                    XBTTailDataOperation extOperation = new XBTTailDataOperation(mainDoc, tailData);
+                    ((XBTChangeBlockCommand) undoStep).appendOperation(extOperation);
+                } else {
+                    undoStep = new XBTModifyBlockCommand(mainDoc, node, newNode);
+                }
+                // TODO: Optimized diff command later
+                //                if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
+                //                    undoStep = new XBTModDataBlockCommand(node, newNode);
+                //                } else if (newNode.getChildrenCount() > 0) {
+                //                } else {
+                //                    undoStep = new XBTModAttrBlockCommand(node, newNode);
+                //                }
+                try {
+                    getUndoHandler().execute(undoStep);
+                } catch (Exception ex) {
+                    Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
-            mainDoc.processSpec();
-            reportStructureChange(node);
-            getDoc().setModified(true);
+                mainDoc.processSpec();
+                reportStructureChange(node);
+                getDoc().setModified(true);
+            }
 
             WindowUtils.closeWindow(dialog.getWindow());
         });

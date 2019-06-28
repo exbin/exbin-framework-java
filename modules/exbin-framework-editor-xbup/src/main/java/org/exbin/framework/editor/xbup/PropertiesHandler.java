@@ -31,7 +31,6 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.CloseControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 
 /**

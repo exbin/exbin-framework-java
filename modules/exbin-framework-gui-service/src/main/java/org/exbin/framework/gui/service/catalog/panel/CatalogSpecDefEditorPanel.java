@@ -182,6 +182,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 setTargetRev(panel.getTarget());
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());

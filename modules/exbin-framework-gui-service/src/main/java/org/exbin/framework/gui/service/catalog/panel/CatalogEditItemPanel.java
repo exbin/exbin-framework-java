@@ -17,6 +17,7 @@
 package org.exbin.framework.gui.service.catalog.panel;
 
 import java.awt.Container;
+import java.util.ResourceBundle;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -29,7 +30,7 @@ import org.exbin.xbup.core.catalog.base.XBCSpec;
 /**
  * XBManager catalog item editation panel.
  *
- * @version 0.2.1 2019/06/27
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditItemPanel extends javax.swing.JPanel {
@@ -48,8 +49,8 @@ public class CatalogEditItemPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void setApplication(XBApplication application) {
-        this.application = application;
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     public void setCatalogItem(XBCItem item) {
@@ -63,6 +64,7 @@ public class CatalogEditItemPanel extends javax.swing.JPanel {
 
         if (item instanceof XBCSpec) {
             revisionsPanel = new CatalogItemEditRevsPanel();
+            revisionsPanel.setApplication(application);
             revisionsPanel.setCatalog(catalog);
             revisionsPanel.setCatalogItem(item);
             initComponent(revisionsPanel);
@@ -77,6 +79,7 @@ public class CatalogEditItemPanel extends javax.swing.JPanel {
             mainTabbedPane.add(definitionPanel, "Definition");
         } else if (item instanceof XBCNode) {
             filesPanel = new CatalogItemEditFilesPanel();
+            filesPanel.setApplication(application);
             filesPanel.setCatalog(catalog);
             filesPanel.setNode((XBCNode) item);
             if (menuManagement != null) {
@@ -85,6 +88,20 @@ public class CatalogEditItemPanel extends javax.swing.JPanel {
 
             initComponent(filesPanel);
             mainTabbedPane.add(filesPanel, "Files");
+        }
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
+        propertiesPanel.setApplication(application);
+        if (revisionsPanel != null) {
+            revisionsPanel.setApplication(application);
+        }
+        if (definitionPanel != null) {
+            definitionPanel.setApplication(application);
+        }
+        if (filesPanel != null) {
+            filesPanel.setApplication(application);
         }
     }
 

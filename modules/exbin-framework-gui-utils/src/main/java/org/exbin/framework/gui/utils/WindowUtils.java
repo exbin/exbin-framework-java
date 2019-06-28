@@ -175,13 +175,6 @@ public class WindowUtils {
         invokeWindow(dialog);
     }
 
-    public static void initWindow(Window window) {
-        // TODO drop
-//        if (window.getParent() instanceof XBEditorFrame) {
-//            window.setIconImage(((XBEditorFrame) window.getParent()).getMainFrameManagement().getFrameIcon());
-//        }
-    }
-
     public static LookAndFeel getLookAndFeel() {
         return lookAndFeel;
     }
@@ -406,7 +399,6 @@ public class WindowUtils {
         dialogPanel.setPreferredSize(new Dimension(mainPreferredSize.width, mainPreferredSize.height + controlPreferredSize.height));
         return dialogPanel;
     }
-
 
     @ParametersAreNonnullByDefault
     public interface DialogWrapper {

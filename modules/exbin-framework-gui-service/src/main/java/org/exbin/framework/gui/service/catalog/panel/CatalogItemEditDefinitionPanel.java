@@ -213,7 +213,6 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -239,6 +238,7 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
                 defsModel.fireTableDataChanged();
                 updateItemStatus();
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());
@@ -257,7 +257,6 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -272,6 +271,7 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
 
                 updateItemStatus();
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());

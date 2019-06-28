@@ -454,16 +454,15 @@ public class ConnectionPanel extends javax.swing.JPanel {
                     DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) connectionComboBox.getModel();
                     comboBoxModel.removeAllElements();
                     connectionList.forEach((connection) -> comboBoxModel.addElement(connection));
-                    dialog.close();
                     break;
                 }
                 case CANCEL: {
-                    dialog.close();
                     break;
                 }
                 default:
                     throw new IllegalStateException("Unexpected action type " + actionType.name());
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());

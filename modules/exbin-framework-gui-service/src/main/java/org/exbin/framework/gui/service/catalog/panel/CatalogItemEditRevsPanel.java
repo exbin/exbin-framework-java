@@ -42,7 +42,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * XBManager catalog item edit revisions panel.
  *
- * @version 0.2.1 2019/06/27
+ * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
@@ -99,7 +99,7 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
 
         add(itemRevisionsScrollPane, java.awt.BorderLayout.CENTER);
 
-        addButton.setText("Add...");
+        addButton.setText(resourceBundle.getString("addButton.text")); // NOI18N
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addButtonActionPerformed(evt);
@@ -125,14 +125,14 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
 
         add(revisionsControlPanel, java.awt.BorderLayout.SOUTH);
 
-        modifyButton.setText("Modify...");
+        modifyButton.setText(resourceBundle.getString("modifyButton.text")); // NOI18N
         modifyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modifyButtonActionPerformed(evt);
             }
         });
 
-        removeDefButton.setText("Remove");
+        removeDefButton.setText(resourceBundle.getString("removeDefButton.text")); // NOI18N
         removeDefButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeDefButtonActionPerformed(evt);
@@ -170,7 +170,6 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -193,6 +192,7 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
                 defsModel.updateDefRevisions();
                 updateItemStatus();
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());
@@ -209,7 +209,6 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), panel.getClass(), panel.getResourceBundle());
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -221,6 +220,7 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
                 defsModel.updateDefRevisions();
                 updateItemStatus();
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());

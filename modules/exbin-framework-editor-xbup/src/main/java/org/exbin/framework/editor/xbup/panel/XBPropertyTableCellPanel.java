@@ -27,7 +27,9 @@ import org.exbin.framework.editor.xbup.panel.cell.PropertyTableCellPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
+import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.parser.token.XBTToken;
@@ -115,14 +117,16 @@ public class XBPropertyTableCellPanel extends PropertyTableCellPanel {
         panel.setCatalog(catalog);
         panel.setNode(paramNode, doc);
         panel.setPluginRepository(pluginRepository);
-        CloseControlPanel controlPanel = new CloseControlPanel();
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        controlPanel.setHandler(() -> {
-            XBTTreeNode newNode = panel.getNode();
-            
-            // TODO
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                XBTTreeNode newNode = panel.getNode();
+
+                // TODO
+            }
 
             WindowUtils.closeWindow(dialog.getWindow());
         });

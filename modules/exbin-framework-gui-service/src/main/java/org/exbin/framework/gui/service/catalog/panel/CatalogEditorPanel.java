@@ -320,6 +320,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         if (currentItem != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             CatalogEditItemPanel editPanel = new CatalogEditItemPanel();
+            editPanel.setApplication(application);
             editPanel.setMenuManagement(menuManagement);
             editPanel.setCatalog(catalog);
             editPanel.setCatalogItem(currentItem);
@@ -328,6 +329,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
             DefaultControlPanel controlPanel = new DefaultControlPanel();
             JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
             final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
             WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -341,6 +343,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
                     specsModel.setNode(specsModel.getNode());
                     selectSpecTableRow(currentItem);
                 }
+                dialog.close();
             });
             dialog.center(dialog.getParent());
             dialog.show();
@@ -490,17 +493,15 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
                     reloadNodesTree();
                     setNode(item instanceof XBCNode ? (XBCNode) item : specsModel.getNode());
                     selectSpecTableRow(item);
-
-                    dialog.close();
                     break;
                 }
                 case CANCEL: {
-                    dialog.close();
                     break;
                 }
                 default:
                     throw new IllegalStateException("Unexpected action type " + actionType.name());
             }
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(dialog.getParent());

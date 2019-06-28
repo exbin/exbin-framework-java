@@ -291,6 +291,7 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
         if (currentItem != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             CatalogEditItemPanel editPanel = new CatalogEditItemPanel();
+            editPanel.setApplication(application);
             editPanel.setMenuManagement(menuManagement);
             editPanel.setCatalog(catalog);
             editPanel.setCatalogItem(currentItem);
@@ -299,6 +300,7 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
             DefaultControlPanel controlPanel = new DefaultControlPanel();
             JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
             final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
             WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -311,6 +313,7 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
                     transaction.commit();
                     reload();
                 }
+                dialog.close();
             });
             dialog.center(dialog.getParent());
             dialog.show();
