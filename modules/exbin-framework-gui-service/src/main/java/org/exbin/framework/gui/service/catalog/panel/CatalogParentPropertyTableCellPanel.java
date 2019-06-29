@@ -53,7 +53,9 @@ public class CatalogParentPropertyTableCellPanel extends PropertyTableCellPanel 
     }
 
     private void init() {
-        setEditorAction((ActionEvent e) -> performEditorAction());
+        setEditorAction((ActionEvent e) -> {
+            performEditorAction();
+        });
     }
 
     public void performEditorAction() {

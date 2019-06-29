@@ -81,7 +81,6 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
 
     public CatalogSearchPanel() {
         searchPanel = new CatalogItemsSearchPanel();
-        searchPanel.setApplication(application);
         specsModel = new CatalogSpecsTableModel();
         catalogYaml = new XBCatalogYaml();
         itemPanel = new CatalogItemPanel();
@@ -93,17 +92,28 @@ public class CatalogSearchPanel extends javax.swing.JPanel {
 
         searchPanel.setSelectionListener(itemPanel::setItem);
 
-        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> performCut());
-        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> performCopy());
-        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
-        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
-        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
+        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> {
+            performCut();
+        });
+        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> {
+            performCopy();
+        });
+        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> {
+            performPaste();
+        });
+        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> {
+            performDelete();
+        });
+        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> {
+            performDelete();
+        });
     }
 
     public void setApplication(XBApplication application) {
         this.application = application;
+        searchPanel.setApplication(application);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

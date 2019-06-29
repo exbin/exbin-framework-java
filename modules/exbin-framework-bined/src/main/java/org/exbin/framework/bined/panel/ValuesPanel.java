@@ -837,7 +837,9 @@ public class ValuesPanel extends javax.swing.JPanel {
         }
 
         private void scheduleNextStep(final ValuesPanelField valuesPanelField) {
-            SwingUtilities.invokeLater(() -> updateValue(valuesPanelField));
+            SwingUtilities.invokeLater(() -> {
+                updateValue(valuesPanelField);
+            });
         }
 
         public boolean isUpdateInProgress() {

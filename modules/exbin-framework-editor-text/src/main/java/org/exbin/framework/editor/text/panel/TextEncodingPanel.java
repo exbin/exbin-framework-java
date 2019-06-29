@@ -19,6 +19,8 @@ package org.exbin.framework.editor.text.panel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.AbstractListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -33,7 +35,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Text encoding selection panel.
  *
- * @version 0.2.1 2019/06/08
+ * @version 0.2.1 2019/06/29
  * @author ExBin Project (http://exbin.org)
  */
 public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPanel {
@@ -343,13 +345,10 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
 
     private class EncodingsListModel extends AbstractListModel {
 
-        private List<String> charsets = null;
+        private final List<String> charsets = new ArrayList<>();
 
         @Override
         public int getSize() {
-            if (charsets == null) {
-                return 0;
-            }
             return charsets.size();
         }
 
@@ -361,6 +360,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
         /**
          * @return the charsets
          */
+        @Nonnull
         public List<String> getCharsets() {
             return charsets;
         }
@@ -368,9 +368,12 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
         /**
          * @param charsets the charsets to set
          */
-        public void setCharsets(List<String> charsets) {
-            this.charsets = charsets;
-            fireContentsChanged(this, 0, charsets.size());
+        public void setCharsets(@Nullable List<String> charsets) {
+            this.charsets.clear();
+            if (charsets != null) {
+                this.charsets.addAll(charsets);
+            }
+            fireContentsChanged(this, 0, this.charsets.size());
         }
 
         public void addAll(List<String> list, int pos) {

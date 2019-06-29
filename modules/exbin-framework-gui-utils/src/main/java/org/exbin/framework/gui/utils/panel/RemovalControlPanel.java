@@ -35,7 +35,7 @@ public class RemovalControlPanel extends javax.swing.JPanel implements RemovalCo
     private RemovalControlHandler handler;
 
     public RemovalControlPanel() {
-        this(LanguageUtils.getResourceBundleByClass(DefaultControlPanel.class));
+        this(LanguageUtils.getResourceBundleByClass(RemovalControlPanel.class));
     }
 
     public RemovalControlPanel(java.util.ResourceBundle resourceBundle) {

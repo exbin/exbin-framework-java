@@ -102,7 +102,9 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
         initComponents();
 
-        mainTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> updateItemStatus());
+        mainTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
+            updateItemStatus();
+        });
         /*clipboard.addFlavorListener(new FlavorListener() {
          @Override
          public void flavorsChanged(FlavorEvent e) {
@@ -110,11 +112,21 @@ public class XBDocTreePanel extends javax.swing.JPanel {
          }
          });*/
 
-        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> performCut());
-        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> performCopy());
-        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
-        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
-        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
+        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> {
+            performCut();
+        });
+        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> {
+            performCopy();
+        });
+        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> {
+            performPaste();
+        });
+        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> {
+            performDelete();
+        });
+        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> {
+            performDelete();
+        });
 
         mainTree.setDragEnabled(true);
         mainTree.setDropMode(DropMode.USE_SELECTION);

@@ -47,7 +47,6 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
     public CatalogSelectRevPanel(XBACatalog catalog, CatalogSpecItemType specType) {
         revsModel = new CatalogRevsComboBoxModel();
         selectSpecPanel = new CatalogItemsSearchPanel();
-        selectSpecPanel.setApplication(application);
         selectSpecPanel.setCatalog(catalog);
         initComponents();
 
@@ -93,6 +92,7 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
 
     public void setApplication(XBApplication application) {
         this.application = application;
+        selectSpecPanel.setApplication(application);
     }
 
     public ResourceBundle getResourceBundle() {

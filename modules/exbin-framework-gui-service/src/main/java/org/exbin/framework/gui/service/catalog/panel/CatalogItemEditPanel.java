@@ -211,6 +211,7 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
 
         TableColumnModel columns = propertiesTable.getColumnModel();
         docCellPanel = new CatalogDocPropertyTableCellPanel(catalog);
+        docCellPanel.setApplication(application);
         docCellPanel.setCatalogItem(catalogItem);
         parentCellPanel = new CatalogParentPropertyTableCellPanel(catalog);
         parentCellPanel.setApplication(application);

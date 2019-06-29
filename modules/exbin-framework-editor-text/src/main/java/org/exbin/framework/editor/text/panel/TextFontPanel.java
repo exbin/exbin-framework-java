@@ -42,7 +42,9 @@ public class TextFontPanel extends javax.swing.JPanel {
     public TextFontPanel() {
         initComponents();
 
-        ActionListener actionListener = (ActionEvent e) -> updatePreview();
+        ActionListener actionListener = (ActionEvent e) -> {
+            updatePreview();
+        };
         InputListPanel.ChangeListener changeListener = this::updatePreview;
         boldCheckBox.addActionListener(actionListener);
         italicCheckBox.addActionListener(actionListener);

@@ -60,7 +60,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Panel for properties of the actual panel.
  *
- * @version 0.2.1 2019/06/22
+ * @version 0.2.1 2019/06/29
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTablePanel extends javax.swing.JPanel {
@@ -106,7 +106,6 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         valueCellRenderer = new XBPropertyTableCellRenderer(catalog, pluginRepository, null, null);
         columns.getColumn(1).setCellRenderer(valueCellRenderer);
         valueCellEditor = new XBPropertyTableCellEditor(catalog, pluginRepository, null, null);
-        valueCellEditor.setApplication(application);
         columns.getColumn(1).setCellEditor(valueCellEditor);
 
         propertiesTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -246,6 +245,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
 
     public void setApplication(XBApplication application) {
         this.application = application;
+        valueCellEditor.setApplication(application);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

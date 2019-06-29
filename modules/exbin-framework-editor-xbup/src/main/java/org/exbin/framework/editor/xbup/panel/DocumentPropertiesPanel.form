@@ -81,7 +81,7 @@
             <Component class="javax.swing.JLabel" name="fileNameLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/DocPropertiesPanel.properties" key="fileNameLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/DocumentPropertiesPanel.properties" key="fileNameLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -98,7 +98,7 @@
             <Component class="javax.swing.JLabel" name="fileTypeLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/DocPropertiesPanel.properties" key="fileTypeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/DocumentPropertiesPanel.properties" key="fileTypeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -110,7 +110,7 @@
             <Component class="javax.swing.JLabel" name="fileSizeLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/DocPropertiesPanel.properties" key="fileSizeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/editor/xbup/panel/resources/DocumentPropertiesPanel.properties" key="fileSizeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>

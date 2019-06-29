@@ -47,7 +47,9 @@ public class CatalogSIconPropertyTableCellPanel extends PropertyTableCellPanel {
     }
 
     private void init() {
-        setEditorAction((ActionEvent e) -> performEditorAction());
+        setEditorAction((ActionEvent e) -> {
+            performEditorAction();
+        });
     }
 
     public void setApplication(XBApplication application) {
@@ -60,7 +62,6 @@ public class CatalogSIconPropertyTableCellPanel extends PropertyTableCellPanel {
         RemovalControlPanel controlPanel = new RemovalControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(iconPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), iconPanel.getClass(), iconPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, iconPanel.getResourceBundle());
         controlPanel.setHandler((RemovalControlHandler.ControlActionType actionType) -> {
             switch (actionType) {

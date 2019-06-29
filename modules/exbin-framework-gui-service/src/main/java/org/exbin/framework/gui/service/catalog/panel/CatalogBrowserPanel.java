@@ -79,11 +79,21 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
 
         updateItem();
 
-        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> performCut());
-        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> performCopy());
-        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> performPaste());
-        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> performDelete());
-        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> performDelete());
+        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> {
+            performCut();
+        });
+        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> {
+            performCopy();
+        });
+        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> {
+            performPaste();
+        });
+        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> {
+            performDelete();
+        });
+        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> {
+            performDelete();
+        });
     }
 
     public void setApplication(XBApplication application) {

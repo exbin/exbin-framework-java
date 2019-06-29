@@ -30,7 +30,7 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 /**
  * Panel for showing information about document block.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2019/06/29
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
@@ -45,6 +45,10 @@ public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements Cat
         initComponents();
         catalogEditorPanel = new CatalogEditorPanel();
         catalogAvailabilityPanel = new CatalogAvailabilityPanel();
+        init();
+    }
+
+    private void init() {
         add(catalogAvailabilityPanel, BorderLayout.CENTER);
     }
 

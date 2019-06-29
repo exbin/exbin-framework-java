@@ -28,7 +28,6 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.parser.XBProcessingException;
@@ -78,7 +77,9 @@ public class XBPropertyTableCellPanel extends PropertyTableCellPanel {
     }
 
     private void init() {
-        setEditorAction((ActionEvent e) -> performEditorAction());
+        setEditorAction((ActionEvent e) -> {
+            performEditorAction();
+        });
     }
 
     public void setApplication(XBApplication application) {

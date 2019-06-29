@@ -207,6 +207,7 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         CatalogSpecDefEditorPanel panel = new CatalogSpecDefEditorPanel();
+        panel.setApplication(application);
         panel.setCatalog(catalog);
         panel.setSpec((XBCSpec) catalogItem);
         panel.setDefItem(new CatalogDefsTableItem());
@@ -251,6 +252,7 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
 
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         CatalogSpecDefEditorPanel panel = new CatalogSpecDefEditorPanel();
+        panel.setApplication(application);
         panel.setCatalog(catalog);
         panel.setSpec((XBCSpec) catalogItem);
         panel.setDefItem(row);

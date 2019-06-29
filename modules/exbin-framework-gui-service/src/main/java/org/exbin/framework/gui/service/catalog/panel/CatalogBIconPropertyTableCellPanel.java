@@ -47,7 +47,9 @@ public class CatalogBIconPropertyTableCellPanel extends PropertyTableCellPanel {
     }
 
     private void init() {
-        setEditorAction((ActionEvent e) -> performEditorAction());
+        setEditorAction((ActionEvent e) -> {
+            performEditorAction();
+        });
     }
 
     public void setApplication(XBApplication application) {

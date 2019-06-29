@@ -434,6 +434,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
     private void connectionManageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectionManageButtonActionPerformed
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         final ConnectionsManagerPanel panel = new ConnectionsManagerPanel();
+        panel.setApplication(application);
 
         {
             List<String> connectionList = new ArrayList<>();
@@ -447,13 +448,16 @@ public class ConnectionPanel extends javax.swing.JPanel {
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             switch (actionType) {
                 case OK: {
                     List<String> connectionList = panel.getConnectionList();
                     DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) connectionComboBox.getModel();
                     comboBoxModel.removeAllElements();
-                    connectionList.forEach((connection) -> comboBoxModel.addElement(connection));
+                    connectionList.forEach((connection) -> {
+                        comboBoxModel.addElement(connection);
+                    });
                     break;
                 }
                 case CANCEL: {

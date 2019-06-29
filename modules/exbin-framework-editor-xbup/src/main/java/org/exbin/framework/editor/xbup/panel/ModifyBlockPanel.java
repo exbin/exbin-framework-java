@@ -18,6 +18,9 @@ package org.exbin.framework.editor.xbup.panel;
 
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -111,6 +114,8 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     private final String customEditorPanelTitle = "Custom";
     private boolean dataChanged = false;
 
+    private boolean initialResize = true;
+
     public ModifyBlockPanel() {
         initComponents();
 
@@ -145,13 +150,6 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         // DefaultCellEditor attributesTableCellEditor = new DefaultCellEditor(new JTextField());
         // attributesTableCellEditor.setClickCountToStart(0);
         // attributesTable.getColumnModel().getColumn(1).setCellEditor(attributesTableCellEditor);
-        int parametersTableWidth = parametersTable.getWidth();
-        parametersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        parametersTable.getColumnModel().getColumn(0).setPreferredWidth(parametersTableWidth / 6);
-        parametersTable.getColumnModel().getColumn(1).setPreferredWidth(parametersTableWidth / 6);
-        parametersTable.getColumnModel().getColumn(2).setPreferredWidth(parametersTableWidth / 6);
-        parametersTable.getColumnModel().getColumn(3).setPreferredWidth(parametersTableWidth / 2);
-
         mainTabbedPane.addChangeListener((ChangeEvent e) -> {
             JTabbedPane pane = (JTabbedPane) e.getSource();
             if (pane.getSelectedIndex() < 0) {
@@ -182,6 +180,22 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             } else if (extAreaEditorPanelTitle.equals(currentTitle)) {
                 if (tailDataBinaryPanel == null) {
                     reloadTailData();
+                }
+            }
+        });
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                if (initialResize) {
+                    int parametersTableWidth = parametersTable.getWidth();
+                    parametersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                    parametersTable.getColumnModel().getColumn(0).setPreferredWidth(parametersTableWidth / 6);
+                    parametersTable.getColumnModel().getColumn(1).setPreferredWidth(parametersTableWidth / 6);
+                    parametersTable.getColumnModel().getColumn(2).setPreferredWidth(parametersTableWidth / 6);
+                    parametersTable.getColumnModel().getColumn(3).setPreferredWidth(parametersTableWidth / 2);
+
+                    initialResize = false;
                 }
             }
         });
@@ -578,7 +592,9 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
 
             customPanel = getCustomPanel(srcNode);
             if (customPanel != null) {
-                ((XBPanelEditor) customPanel).attachChangeListener(() -> dataChanged = true);
+                ((XBPanelEditor) customPanel).attachChangeListener(() -> {
+                    dataChanged = true;
+                });
 
                 reloadCustomEditor();
                 mainTabbedPane.addTab(customEditorPanelTitle, customPanel.getPanel());

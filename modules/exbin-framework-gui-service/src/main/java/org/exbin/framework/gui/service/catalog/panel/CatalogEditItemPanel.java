@@ -57,6 +57,7 @@ public class CatalogEditItemPanel extends javax.swing.JPanel {
         mainTabbedPane.removeAll();
 
         propertiesPanel = new CatalogItemEditPanel();
+        propertiesPanel.setApplication(application);
         propertiesPanel.setCatalog(catalog);
         propertiesPanel.setCatalogItem(item);
         initComponent(propertiesPanel);
@@ -93,7 +94,9 @@ public class CatalogEditItemPanel extends javax.swing.JPanel {
 
     public void setApplication(XBApplication application) {
         this.application = application;
-        propertiesPanel.setApplication(application);
+        if (propertiesPanel != null) {
+            propertiesPanel.setApplication(application);
+        }
         if (revisionsPanel != null) {
             revisionsPanel.setApplication(application);
         }

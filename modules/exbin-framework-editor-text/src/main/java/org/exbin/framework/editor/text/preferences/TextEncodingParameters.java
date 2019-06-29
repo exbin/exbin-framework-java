@@ -66,7 +66,7 @@ public class TextEncodingParameters {
         String value;
         int i = 0;
         do {
-            value = preferences.get(PREFERENCES_TEXT_ENCODING_PREFIX + Integer.toString(i), null);
+            value = preferences.get(PREFERENCES_TEXT_ENCODING_PREFIX + Integer.toString(i));
             if (value != null) {
                 encodings.add(value);
                 i++;

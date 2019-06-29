@@ -430,7 +430,9 @@ public class BinedModule implements XBApplicationModule {
         codeAreaOptionsPanel = new CodeAreaOptionsPanel(codeAreaOptionsPanelApi);
         optionsModule.addOptionsPanel(codeAreaOptionsPanel);
 
-        statusOptionsPanel = new StatusOptionsPanel((StatusOptions statusOptions) -> statusOptionsPanel.loadFromOptions(statusOptions));
+        statusOptionsPanel = new StatusOptionsPanel((StatusOptions statusOptions) -> {
+            statusOptionsPanel.loadFromOptions(statusOptions);
+        });
         optionsModule.addOptionsPanel(statusOptionsPanel);
 
         themeProfilesOptionsPanel = new ThemeProfilesOptionsPanel(codeAreaOptionsPanelApi);

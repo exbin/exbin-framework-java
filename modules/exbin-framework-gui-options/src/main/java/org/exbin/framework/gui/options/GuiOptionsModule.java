@@ -111,6 +111,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
                     controlPanel.setHandler((actionType) -> {
                         switch (actionType) {
                             case SAVE: {
+                                optionsTreePanel.applyPreferencesChanges();
                                 optionsTreePanel.saveToPreferences();
                                 WindowUtils.closeWindow(dialog.getWindow());
                                 break;
