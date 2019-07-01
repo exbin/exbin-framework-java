@@ -20,14 +20,18 @@ import java.awt.Image;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Interface for application module management.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.1 2019/07/01
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface XBApplication extends XBModuleHandler {
 
     /**
@@ -35,6 +39,7 @@ public interface XBApplication extends XBModuleHandler {
      *
      * @return the appBundle
      */
+    @Nonnull
     ResourceBundle getAppBundle();
 
     /**
@@ -42,6 +47,7 @@ public interface XBApplication extends XBModuleHandler {
      *
      * @return the appPreferences
      */
+    @Nonnull
     Preferences getAppPreferences();
 
     /**
@@ -49,23 +55,16 @@ public interface XBApplication extends XBModuleHandler {
      *
      * @return the moduleRepository
      */
+    @Nonnull
     @Override
     XBApplicationModuleRepository getModuleRepository();
-
-    /**
-     * Gets preferences key value.
-     *
-     * @param key key
-     * @param def default value
-     * @return value
-     */
-    String preferencesGet(String key, String def);
 
     /**
      * Gets application icon.
      *
      * @return application icon image
      */
+    @Nullable
     Image getApplicationIcon();
 
     /**
@@ -82,5 +81,6 @@ public interface XBApplication extends XBModuleHandler {
      *
      * @return set of locales
      */
+    @Nonnull
     Set<Locale> getLanguageLocales();
 }

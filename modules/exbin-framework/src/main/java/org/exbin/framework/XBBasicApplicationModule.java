@@ -84,7 +84,6 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         } catch (IOException ex) {
             Logger.getLogger(XBBasicApplicationModule.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     @Override

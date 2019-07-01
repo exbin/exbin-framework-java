@@ -16,6 +16,8 @@
  */
 package org.exbin.framework;
 
+import org.exbin.framework.preferences.PreferencesWrapper;
+import org.exbin.framework.preferences.FilePreferencesFactory;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URI;
@@ -32,6 +34,8 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.LookAndFeel;
@@ -46,7 +50,7 @@ import org.exbin.framework.preferences.FrameworkParameters;
 /**
  * Base application class.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.1 2019/07/01
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -74,15 +78,7 @@ public class XBBaseApplication implements XBApplication {
         }
     }
 
-    @Override
-    public String preferencesGet(String key, String def) {
-        if (getAppPreferences() == null) {
-            return def;
-        }
-
-        return getAppPreferences().get(key, def);
-    }
-
+    @Nonnull
     @Override
     public ResourceBundle getAppBundle() {
         return appBundle;
@@ -116,6 +112,7 @@ public class XBBaseApplication implements XBApplication {
         return wrapper;
     }
 
+    @Nonnull
     @Override
     public Preferences getAppPreferences() {
         return appPreferences;
@@ -191,11 +188,13 @@ public class XBBaseApplication implements XBApplication {
         }
     }
 
+    @Nullable
     @Override
     public Image getApplicationIcon() {
         return new ImageIcon(getClass().getResource(getAppBundle().getString("Application.icon"))).getImage();
     }
 
+    @Nonnull
     @Override
     public XBApplicationModuleRepository getModuleRepository() {
         return moduleRepository;
@@ -206,6 +205,7 @@ public class XBBaseApplication implements XBApplication {
         languagePlugins.put(locale, classLoader);
     }
 
+    @Nonnull
     @Override
     public Set<Locale> getLanguageLocales() {
         return languagePlugins.keySet();

@@ -36,7 +36,7 @@ public interface ClientModuleApi extends XBApplicationModule {
      *
      * @return true if connection was estabilished
      */
-    public boolean connectToService();
+    boolean connectToService();
 
     /**
      * Attempts to connect to fallback service using database connection.

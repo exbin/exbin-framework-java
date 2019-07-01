@@ -18,6 +18,7 @@ package org.exbin.framework.gui.frame;
 
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -303,7 +304,10 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     @Override
     public DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel) {
         DialogWrapper dialog = WindowUtils.createDialog(panel, parentWindow, "", modalityType);
-        ((JDialog) dialog.getWindow()).setIconImage(application.getApplicationIcon());
+        Image applicationIcon = application.getApplicationIcon();
+        if (applicationIcon != null) {
+            ((JDialog) dialog.getWindow()).setIconImage(applicationIcon);
+        }
         return dialog;
     }
 

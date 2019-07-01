@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework;
+package org.exbin.framework.preferences;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -57,7 +57,7 @@ import org.xml.sax.SAXParseException;
 /**
  * File preferences class.
  *
- * @version 0.2.0 2016/11/29
+ * @version 0.2.1 2019/07/01
  * @author ExBin Project (http://exbin.org)
  */
 public class FilePreferences extends AbstractPreferences {
@@ -88,13 +88,20 @@ public class FilePreferences extends AbstractPreferences {
         super(parent, name);
         this.spiValues = new TreeMap<>();
         this.children = new TreeMap<>();
-        preferencesFile = FilePreferencesFactory.getPreferencesFile(absolutePath());
+        preferencesFile = createPreferenceFile();
+        init();
+    }
 
+    private void init() {
         try {
             sync();
         } catch (BackingStoreException ex) {
             Logger.getLogger(FilePreferences.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private File createPreferenceFile() {
+        return FilePreferencesFactory.getPreferencesFile(absolutePath());
     }
 
     @Override

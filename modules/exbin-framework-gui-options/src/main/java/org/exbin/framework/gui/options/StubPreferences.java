@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
-import org.exbin.framework.PreferencesWrapper;
+import org.exbin.framework.preferences.PreferencesWrapper;
 
 /**
  * Stub preferences class.
