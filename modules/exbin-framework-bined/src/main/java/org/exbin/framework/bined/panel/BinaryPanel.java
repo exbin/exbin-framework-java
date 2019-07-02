@@ -614,7 +614,6 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setInheritsPopupMenu(true);
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents

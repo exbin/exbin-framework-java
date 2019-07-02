@@ -40,6 +40,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import org.exbin.bined.BasicCodeAreaZone;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.bined.delta.SegmentsRepository;
@@ -97,7 +99,7 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.0 2019/06/17
+ * @version 0.2.1 2019/07/02
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -138,7 +140,7 @@ public class BinedModule implements XBApplicationModule {
     private ToolsOptionsHandler toolsOptionsHandler;
     private RowWrappingHandler wordWrappingHandler;
     private EncodingsHandler encodingsHandler;
-    private GoToPositionHandler goToLineHandler;
+    private GoToPositionHandler goToRowHandler;
     private PropertiesHandler propertiesHandler;
     private PrintHandler printHandler;
     private ViewModeHandler viewModeHandler;
@@ -188,10 +190,10 @@ public class BinedModule implements XBApplicationModule {
             panel.setDeltaMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
             editorProvider = panel;
 
-            panel.setPopupMenu(createPopupMenu(panel.getId()));
             panel.setApplication(application);
+            panel.setPopupMenu(createPopupMenu(panel.getId(), editorProvider.getCodeArea()));
             panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
-            panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
+            panel.setGoToPositionAction(getGoToPositionHandler().getGoToRowAction());
             panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
             panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
             panel.setEncodingsHandler(new EncodingStatusHandler() {
@@ -220,9 +222,9 @@ public class BinedModule implements XBApplicationModule {
             GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryEditorHandler();
             ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinaryPanel panel) -> {
-                panel.setPopupMenu(createPopupMenu(panel.getId()));
-//                    panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
-                panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
+                panel.setPopupMenu(createPopupMenu(panel.getId(), editorProvider.getCodeArea()));
+                panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
+                panel.setGoToPositionAction(getGoToPositionHandler().getGoToRowAction());
                 panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
                 panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
                 panel.setEncodingsHandler(new EncodingStatusHandler() {
@@ -452,7 +454,7 @@ public class BinedModule implements XBApplicationModule {
     public void registerGoToLine() {
         getGoToPositionHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, goToLineHandler.getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, goToRowHandler.getGoToRowAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public BinaryStatusPanel getBinaryStatusPanel() {
@@ -505,12 +507,12 @@ public class BinedModule implements XBApplicationModule {
     }
 
     private GoToPositionHandler getGoToPositionHandler() {
-        if (goToLineHandler == null) {
-            goToLineHandler = new GoToPositionHandler(application, getEditorProvider());
-            goToLineHandler.init();
+        if (goToRowHandler == null) {
+            goToRowHandler = new GoToPositionHandler(application, getEditorProvider());
+            goToRowHandler.init();
         }
 
-        return goToLineHandler;
+        return goToRowHandler;
     }
 
     private PropertiesHandler getPropertiesHandler() {
@@ -685,23 +687,44 @@ public class BinedModule implements XBApplicationModule {
         menuModule.registerMenuItem(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID, hexCharactersCaseHandler.getLowerHexCharsAction(), new MenuPosition(PositionMode.TOP));
     }
 
-    private JPopupMenu createPopupMenu(int postfix) {
-        getClipboardCodeHandler();
+    private JPopupMenu createPopupMenu(int postfix, ExtCodeArea codeArea) {
+//        getClipboardCodeHandler();
         String popupMenuId = HEX_POPUP_MENU_ID + "." + postfix;
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenu(popupMenuId, MODULE_ID);
-        menuModule.registerClipboardMenuItems(popupMenuId, MODULE_ID, SeparationMode.AROUND);
-        menuModule.registerMenuItem(popupMenuId, MODULE_ID, clipboardCodeHandler.getCopyAsCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getCopyAction().getValue(Action.NAME)));
-        menuModule.registerMenuItem(popupMenuId, MODULE_ID, clipboardCodeHandler.getPasteFromCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getPasteAction().getValue(Action.NAME)));
+//        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+//        menuModule.registerMenu(popupMenuId, MODULE_ID);
+//        menuModule.registerClipboardMenuItems(popupMenuId, MODULE_ID, SeparationMode.AROUND);
+//        menuModule.registerMenuItem(popupMenuId, MODULE_ID, clipboardCodeHandler.getCopyAsCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getCopyAction().getValue(Action.NAME)));
+//        menuModule.registerMenuItem(popupMenuId, MODULE_ID, clipboardCodeHandler.getPasteFromCodeAction(), new MenuPosition(NextToMode.AFTER, (String) menuModule.getClipboardActions().getPasteAction().getValue(Action.NAME)));
 
-        JPopupMenu popupMenu = new JPopupMenu();
-        menuModule.buildMenu(popupMenu, popupMenuId);
+        JPopupMenu popupMenu = new JPopupMenu() {
+            @Override
+            public void show(Component invoker, int x, int y) {
+                JPopupMenu popupMenu = codeAreaPopupMenuHandler.createPopupMenu(codeArea, popupMenuId, x, y);
+                popupMenu.addPopupMenuListener(new PopupMenuListener() {
+                    @Override
+                    public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    }
+
+                    @Override
+                    public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                        codeAreaPopupMenuHandler.dropPopupMenu(popupMenuId);
+                    }
+
+                    @Override
+                    public void popupMenuCanceled(PopupMenuEvent e) {
+                    }
+                });
+                popupMenu.show(invoker, x, y);
+            }
+        };
+//        menuModule.buildMenu(popupMenu, popupMenuId);
         return popupMenu;
     }
 
     private JPopupMenu createCodeAreaPopupMenu(final ExtCodeArea codeArea, String menuPostfix, int x, int y) {
         getClipboardCodeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
         menuModule.registerMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID);
 
         BasicCodeAreaZone positionZone = codeArea.getPositionZone(x, y);
@@ -710,13 +733,13 @@ public class BinedModule implements XBApplicationModule {
         switch (positionZone) {
             case TOP_LEFT_CORNER:
             case HEADER: {
-                popupMenu.add(createShowHeaderMenuItem());
-                popupMenu.add(createPositionCodeTypeMenuItem());
+                popupMenu.add(createShowHeaderMenuItem(codeArea));
+                popupMenu.add(createPositionCodeTypeMenuItem(codeArea));
                 break;
             }
             case ROW_POSITIONS: {
-                popupMenu.add(createShowRowPositionMenuItem());
-                popupMenu.add(createPositionCodeTypeMenuItem());
+                popupMenu.add(createShowRowPositionMenuItem(codeArea));
+                popupMenu.add(createPositionCodeTypeMenuItem(codeArea));
                 popupMenu.add(new JSeparator());
                 popupMenu.add(createGoToMenuItem());
 
@@ -739,7 +762,7 @@ public class BinedModule implements XBApplicationModule {
                 });
                 popupMenu.add(copyMenuItem);
 
-                final JMenuItem copyAsCodeMenuItem = new JMenuItem("Copy as XCode");
+                final JMenuItem copyAsCodeMenuItem = new JMenuItem("Copy as Code");
                 copyAsCodeMenuItem.setEnabled(codeArea.hasSelection());
                 copyAsCodeMenuItem.addActionListener((ActionEvent e) -> {
                     codeArea.copyAsCode();
@@ -788,8 +811,7 @@ public class BinedModule implements XBApplicationModule {
                 final JMenuItem findMenuItem = new JMenuItem("Find...");
                 findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, metaMask));
                 findMenuItem.addActionListener((ActionEvent e) -> {
-//                    searchAction.actionPerformed(e);
-//                    searchAction.switchReplaceMode(BinarySearchPanel.SearchOperation.FIND);
+                    getFindReplaceHandler().getEditFindAction().actionPerformed(e);
                 });
                 popupMenu.add(findMenuItem);
 
@@ -797,8 +819,7 @@ public class BinedModule implements XBApplicationModule {
                 replaceMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, metaMask));
                 replaceMenuItem.setEnabled(codeArea.isEditable());
                 replaceMenuItem.addActionListener((ActionEvent e) -> {
-//                    searchAction.actionPerformed(e);
-//                    searchAction.switchReplaceMode(BinarySearchPanel.SearchOperation.REPLACE);
+                    getFindReplaceHandler().getEditReplaceAction().actionPerformed(e);
                 });
                 popupMenu.add(replaceMenuItem);
             }
@@ -814,9 +835,9 @@ public class BinedModule implements XBApplicationModule {
             }
             default: {
                 JMenu showMenu = new JMenu("Show");
-                JMenuItem showHeader = createShowHeaderMenuItem();
+                JMenuItem showHeader = createShowHeaderMenuItem(codeArea);
                 showMenu.add(showHeader);
-                JMenuItem showRowPosition = createShowRowPositionMenuItem();
+                JMenuItem showRowPosition = createShowRowPositionMenuItem(codeArea);
                 showMenu.add(showRowPosition);
                 popupMenu.add(showMenu);
             }
@@ -824,6 +845,7 @@ public class BinedModule implements XBApplicationModule {
 
         final JMenuItem optionsMenuItem = new JMenuItem("Options...");
         optionsMenuItem.addActionListener((ActionEvent e) -> {
+            optionsModule.getOptionsAction().actionPerformed(e);
 //            final BinEdOptionsPanelBorder optionsPanel = new BinEdOptionsPanelBorder();
 //            optionsPanel.load();
 //            optionsPanel.setApplyOptions(getApplyOptions());
@@ -918,28 +940,28 @@ public class BinedModule implements XBApplicationModule {
     private JMenuItem createGoToMenuItem() {
         final JMenuItem goToMenuItem = new JMenuItem("Go To...");
         goToMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, metaMask));
-//        goToMenuItem.addActionListener(goToRowAction);
+        goToMenuItem.addActionListener(goToRowHandler.getGoToRowAction());
         return goToMenuItem;
     }
 
     @Nonnull
-    private JMenuItem createShowHeaderMenuItem() {
+    private JMenuItem createShowHeaderMenuItem(ExtCodeArea codeArea) {
         final JCheckBoxMenuItem showHeader = new JCheckBoxMenuItem("Show Header");
-//        showHeader.setSelected(codeArea.getLayoutProfile().isShowHeader());
+        showHeader.setSelected(codeArea.getLayoutProfile().isShowHeader());
 //        showHeader.addActionListener(showHeaderAction);
         return showHeader;
     }
 
     @Nonnull
-    private JMenuItem createShowRowPositionMenuItem() {
+    private JMenuItem createShowRowPositionMenuItem(ExtCodeArea codeArea) {
         final JCheckBoxMenuItem showRowPosition = new JCheckBoxMenuItem("Show Row Position");
-//        showRowPosition.setSelected(codeArea.getLayoutProfile().isShowRowPosition());
+        showRowPosition.setSelected(codeArea.getLayoutProfile().isShowRowPosition());
 //        showRowPosition.addActionListener(showRowNumbersAction);
         return showRowPosition;
     }
 
     @Nonnull
-    private JMenuItem createPositionCodeTypeMenuItem() {
+    private JMenuItem createPositionCodeTypeMenuItem(ExtCodeArea codeArea) {
         JMenu menu = new JMenu("Position Code Type");
         PositionCodeType codeType = PositionCodeType.DECIMAL; // TODO codeArea.getPositionCodeType();
 
@@ -948,7 +970,7 @@ public class BinedModule implements XBApplicationModule {
         octalCodeTypeMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                codeArea.setPositionCodeType(PositionCodeType.OCTAL);
+                codeArea.setPositionCodeType(PositionCodeType.OCTAL);
 //                preferences.getCodeAreaParameters().setPositionCodeType(PositionCodeType.OCTAL);
             }
         });
@@ -959,7 +981,7 @@ public class BinedModule implements XBApplicationModule {
         decimalCodeTypeMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                codeArea.setPositionCodeType(PositionCodeType.DECIMAL);
+                codeArea.setPositionCodeType(PositionCodeType.DECIMAL);
 //                preferences.getCodeAreaParameters().setPositionCodeType(PositionCodeType.DECIMAL);
             }
         });
@@ -970,7 +992,7 @@ public class BinedModule implements XBApplicationModule {
         hexadecimalCodeTypeMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                codeArea.setPositionCodeType(PositionCodeType.HEXADECIMAL);
+                codeArea.setPositionCodeType(PositionCodeType.HEXADECIMAL);
 //                preferences.getCodeAreaParameters().setPositionCodeType(PositionCodeType.HEXADECIMAL);
             }
         });
@@ -980,8 +1002,8 @@ public class BinedModule implements XBApplicationModule {
     }
 
     private void dropCodeAreaPopupMenu(String menuPostfix) {
-//        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-//        menuModule.unregisterMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix);
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.unregisterMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix);
     }
 
     public void loadFromPreferences(Preferences preferences) {

@@ -248,11 +248,6 @@ public class TestApplication implements XBApplication {
     }
 
     @Override
-    public String preferencesGet(String key, String def) {
-        return null;
-    }
-
-    @Override
     public Image getApplicationIcon() {
         return null;
     }

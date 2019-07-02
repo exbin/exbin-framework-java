@@ -52,7 +52,7 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Hexadecimal editor search panel.
  *
- * @version 0.2.0 2018/12/04
+ * @version 0.2.1 2019/07/02
  * @author ExBin Project (http://exbin.org)
  */
 public class BinarySearchPanel extends javax.swing.JPanel {
@@ -194,12 +194,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         };
         findComboBox.setEditor(findComboBoxEditor);
 
-        findComboBoxEditorComponent.setValueChangedListener(new BinarySearchComboBoxPanel.ValueChangedListener() {
-            @Override
-            public void valueChanged() {
-                comboBoxValueChanged();
-            }
-        });
+        findComboBoxEditorComponent.setValueChangedListener(this::comboBoxValueChanged);
         findComboBoxEditorComponent.addValueKeyListener(editorKeyListener);
         findComboBox.setModel(new SearchHistoryModel(searchHistory));
 
@@ -609,16 +604,13 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                 WindowUtils.addHeaderPanel(multilineDialog.getWindow(), multilinePanel.getClass(), multilinePanel.getResourceBundle());
                 frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
                 final SearchConditionResult result = new SearchConditionResult();
-                controlPanel.setHandler(new DefaultControlHandler() {
-                    @Override
-                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                        if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                            result.searchCondition = multilinePanel.getCondition();
-                            updateFindStatus();
-                        }
-
-                        multilineDialog.close();
+                controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                    if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                        result.searchCondition = multilinePanel.getCondition();
+                        updateFindStatus();
                     }
+
+                    multilineDialog.close();
                 });
                 WindowUtils.assignGlobalKeyListener(multilineDialog.getWindow(), controlPanel.createOkCancelListener());
                 multilineDialog.center(dialog.getWindow());
@@ -632,23 +624,20 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                 SearchCondition searchCondition = null;
             }
         });
-        controlPanel.setHandler(new DefaultControlHandler() {
-            @Override
-            public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                if (actionType == ControlActionType.OK) {
-                    SearchParameters dialogSearchParameters = findBinaryPanel.getSearchParameters();
-                    ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(dialogSearchParameters.getCondition());
-                    dialogSearchParameters.setFromParameters(dialogSearchParameters);
-                    findComboBoxEditorComponent.setItem(dialogSearchParameters.getCondition());
-                    updateFindStatus();
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                SearchParameters dialogSearchParameters = findBinaryPanel.getSearchParameters();
+                ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(dialogSearchParameters.getCondition());
+                dialogSearchParameters.setFromParameters(dialogSearchParameters);
+                findComboBoxEditorComponent.setItem(dialogSearchParameters.getCondition());
+                updateFindStatus();
 
-                    ReplaceParameters dialogReplaceParameters = findBinaryPanel.getReplaceParameters();
-                    switchReplaceMode(dialogReplaceParameters.isPerformReplace());
-                    binarySearchPanelApi.performFind(dialogSearchParameters);
-                }
-                findBinaryPanel.detachMenu();
-                dialog.close();
+                ReplaceParameters dialogReplaceParameters = findBinaryPanel.getReplaceParameters();
+                switchReplaceMode(dialogReplaceParameters.isPerformReplace());
+                binarySearchPanelApi.performFind(dialogSearchParameters);
             }
+            findBinaryPanel.detachMenu();
+            dialog.close();
         });
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
         dialog.center(frameModule.getFrame());
@@ -851,24 +840,16 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         if (searchStartThread != null) {
             searchStartThread.interrupt();
         }
-        searchStartThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(delay);
-                    if (searchThread != null) {
-                        searchThread.interrupt();
-                    }
-                    searchThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            performFind();
-                        }
-                    });
-                    searchThread.start();
-                } catch (InterruptedException ex) {
-                    // don't search
+        searchStartThread = new Thread(() -> {
+            try {
+                Thread.sleep(delay);
+                if (searchThread != null) {
+                    searchThread.interrupt();
                 }
+                searchThread = new Thread(this::performFind);
+                searchThread.start();
+            } catch (InterruptedException ex) {
+                // don't search
             }
         });
         searchStartThread.start();

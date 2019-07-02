@@ -94,7 +94,7 @@ public class GoToPositionHandler {
         goToLineAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
-    public Action getGoToLineAction() {
+    public Action getGoToRowAction() {
         return goToLineAction;
     }
 }
