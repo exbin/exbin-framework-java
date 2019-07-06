@@ -18,9 +18,7 @@ package org.exbin.framework.bined.preferences;
 import org.exbin.framework.api.Preferences;
 import java.awt.Font;
 import java.awt.font.TextAttribute;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,13 +29,12 @@ import org.exbin.bined.CodeCharactersCase;
 import org.exbin.bined.CodeType;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.bined.capability.RowWrappingCapable;
-import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 
 /**
  * Code area preferences.
  *
- * @version 0.2.0 2019/03/16
+ * @version 0.2.1 2019/07/06
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -45,8 +42,6 @@ public class CodeAreaParameters {
 
     public static final String PREFERENCES_CODE_TYPE = "codeType";
     public static final String PREFERENCES_SHOW_UNPRINTABLES = "showNonpritables";
-    public static final String PREFERENCES_ENCODING_SELECTED = "selectedEncoding";
-    public static final String PREFERENCES_ENCODING_PREFIX = "textEncoding.";
     public static final String PREFERENCES_BYTES_PER_LINE = "bytesPerLine";
     public static final String PREFERENCES_LINE_NUMBERS_LENGTH_TYPE = "lineNumbersLengthType";
     public static final String PREFERENCES_LINE_NUMBERS_LENGTH = "lineNumbersLength";
@@ -67,47 +62,14 @@ public class CodeAreaParameters {
     }
 
     @Nonnull
-    public String getSelectedEncoding() {
-        return preferences.get(PREFERENCES_ENCODING_SELECTED, EncodingsHandler.ENCODING_UTF8);
-    }
-
-    public void setSelectedEncoding(String encodingName) {
-        preferences.put(PREFERENCES_ENCODING_SELECTED, encodingName);
-    }
-
-    @Nonnull
-    public List<String> getEncodings() {
-        List<String> encodings = new ArrayList<>();
-        String value;
-        int i = 0;
-        do {
-            value = preferences.get(PREFERENCES_ENCODING_PREFIX + Integer.toString(i), null);
-            if (value != null) {
-                encodings.add(value);
-                i++;
-            }
-        } while (value != null);
-
-        return encodings;
-    }
-
-    public void setEncodings(List<String> encodings) {
-        // Save encodings
-        for (int i = 0; i < encodings.size(); i++) {
-            preferences.put(PREFERENCES_ENCODING_PREFIX + Integer.toString(i), encodings.get(i));
-        }
-        preferences.remove(PREFERENCES_ENCODING_PREFIX + Integer.toString(encodings.size()));
-    }
-
-    @Nonnull
     public Font getCodeFont(Font initialFont) {
         String value;
         Map<TextAttribute, Object> attribs = new HashMap<>();
-        value = preferences.get(TextFontParameters.PREFERENCES_TEXT_FONT_FAMILY, null);
+        value = preferences.get(TextFontParameters.PREFERENCES_TEXT_FONT_FAMILY);
         if (value != null) {
             attribs.put(TextAttribute.FAMILY, value);
         }
-        value = preferences.get(TextFontParameters.PREFERENCES_TEXT_FONT_SIZE, null);
+        value = preferences.get(TextFontParameters.PREFERENCES_TEXT_FONT_SIZE);
         if (value != null) {
             attribs.put(TextAttribute.SIZE, new Integer(value).floatValue());
         }

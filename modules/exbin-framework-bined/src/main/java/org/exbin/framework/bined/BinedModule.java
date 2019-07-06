@@ -93,13 +93,15 @@ import org.exbin.framework.bined.options.panel.LayoutProfilesOptionsPanel;
 import org.exbin.framework.bined.options.panel.StatusOptionsPanel;
 import org.exbin.framework.bined.options.panel.ThemeProfilesOptionsPanel;
 import org.exbin.framework.bined.preferences.EditorParameters;
+import org.exbin.framework.bined.preferences.StatusParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 
 /**
  * Hexadecimal editor module.
  *
- * @version 0.2.1 2019/07/02
+ * @version 0.2.1 2019/07/06
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -144,6 +146,7 @@ public class BinedModule implements XBApplicationModule {
     private PropertiesHandler propertiesHandler;
     private PrintHandler printHandler;
     private ViewModeHandler viewModeHandler;
+    private LayoutHandler layoutHandler;
     private CodeTypeHandler codeTypeHandler;
     private PositionCodeTypeHandler positionCodeTypeHandler;
     private HexCharactersCaseHandler hexCharactersCaseHandler;
@@ -187,7 +190,7 @@ public class BinedModule implements XBApplicationModule {
             BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
             BinaryPanel panel = new BinaryPanel();
             panel.setSegmentsRepository(new SegmentsRepository());
-            panel.setDeltaMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
+            panel.setMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
             editorProvider = panel;
 
             panel.setApplication(application);
@@ -264,7 +267,7 @@ public class BinedModule implements XBApplicationModule {
 
     public void registerOptionsMenuPanels() {
         getEncodingsHandler();
-        encodingsHandler.encodingsRebuild();
+        encodingsHandler.rebuildEncodings();
 
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, encodingsHandler.getToolsEncodingMenu(), new MenuPosition(PositionMode.TOP_LAST));
@@ -319,7 +322,7 @@ public class BinedModule implements XBApplicationModule {
             @Override
             public void setEncodings(List<String> encodings) {
                 getEncodingsHandler().setEncodings(encodings);
-                getEncodingsHandler().encodingsRebuild();
+                getEncodingsHandler().rebuildEncodings();
             }
 
             @Override
@@ -526,8 +529,8 @@ public class BinedModule implements XBApplicationModule {
 
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler(application, getEditorProvider(), getBinaryStatusPanel());
-            encodingsHandler.init();
+            encodingsHandler = new EncodingsHandler(application, getBinaryStatusPanel()); // getEditorProvider(), 
+            // encodingsHandler.init();
         }
 
         return encodingsHandler;
@@ -550,6 +553,16 @@ public class BinedModule implements XBApplicationModule {
         }
 
         return viewModeHandler;
+    }
+
+    private LayoutHandler getLayoutHandler() {
+        if (layoutHandler == null) {
+            getResourceBundle();
+            layoutHandler = new LayoutHandler(application, getEditorProvider());
+            layoutHandler.init();
+        }
+
+        return layoutHandler;
     }
 
     private CodeTypeHandler getCodeTypeHandler() {
@@ -655,6 +668,13 @@ public class BinedModule implements XBApplicationModule {
         menuModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getDualModeAction(), new MenuPosition(PositionMode.TOP));
         menuModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getCodeMatrixModeAction(), new MenuPosition(PositionMode.TOP));
         menuModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getTextPreviewModeAction(), new MenuPosition(PositionMode.TOP));
+    }
+
+    public void registerLayoutMenu() {
+        getLayoutHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, layoutHandler.getShowHeaderAction(), new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, layoutHandler.getShowRowPositionAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerCodeTypeMenu() {
@@ -948,7 +968,7 @@ public class BinedModule implements XBApplicationModule {
     private JMenuItem createShowHeaderMenuItem(ExtCodeArea codeArea) {
         final JCheckBoxMenuItem showHeader = new JCheckBoxMenuItem("Show Header");
         showHeader.setSelected(codeArea.getLayoutProfile().isShowHeader());
-//        showHeader.addActionListener(showHeaderAction);
+        showHeader.addActionListener(layoutHandler.getShowHeaderAction());
         return showHeader;
     }
 
@@ -956,7 +976,7 @@ public class BinedModule implements XBApplicationModule {
     private JMenuItem createShowRowPositionMenuItem(ExtCodeArea codeArea) {
         final JCheckBoxMenuItem showRowPosition = new JCheckBoxMenuItem("Show Row Position");
         showRowPosition.setSelected(codeArea.getLayoutProfile().isShowRowPosition());
-//        showRowPosition.addActionListener(showRowNumbersAction);
+        showRowPosition.addActionListener(layoutHandler.getShowRowPositionAction());
         return showRowPosition;
     }
 
@@ -1007,7 +1027,8 @@ public class BinedModule implements XBApplicationModule {
     }
 
     public void loadFromPreferences(Preferences preferences) {
-        encodingsHandler.loadFromPreferences(preferences);
+        encodingsHandler.loadFromPreferences(new TextEncodingParameters(preferences));
+        binaryStatusPanel.loadFromPreferences(new StatusParameters(preferences));
 
         if (textFontOptionsPanel != null) {
             textFontOptionsPanel.loadFromPreferences(preferences);

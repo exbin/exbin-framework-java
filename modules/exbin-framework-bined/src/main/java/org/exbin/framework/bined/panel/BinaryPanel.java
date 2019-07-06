@@ -101,7 +101,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     private ExtendedCodeAreaColorProfile defaultColors;
     private BinaryStatusApi binaryStatus = null;
     private TextEncodingStatusApi encodingStatus = null;
-    private boolean deltaMemoryMode = false;
+    private boolean memoryMode = false;
 
     private BinarySearchPanel binarySearchPanel;
     private boolean binarySearchPanelVisible = false;
@@ -650,7 +650,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
         try {
             BinaryData oldData = codeArea.getContentData();
-            if (deltaMemoryMode) {
+            if (memoryMode) {
                 FileDataSource openFileSource = segmentsRepository.openFileSource(file);
                 DeltaDocument document = segmentsRepository.createDocument(openFileSource);
                 codeArea.setContentData(document);
@@ -869,7 +869,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
             }
         });
 
-        if (deltaMemoryMode) {
+        if (memoryMode) {
             setNewData();
         }
         updateCurrentMemoryMode();
@@ -932,8 +932,8 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         }
     }
 
-    public void setDeltaMemoryMode(boolean deltaMemoryMode) {
-        this.deltaMemoryMode = deltaMemoryMode;
+    public void setMemoryMode(boolean memoryMode) {
+        this.memoryMode = memoryMode;
     }
 
     private void updateCurrentMemoryMode() {
@@ -1009,7 +1009,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     private void setNewData() {
-        if (deltaMemoryMode) {
+        if (memoryMode) {
             codeArea.setContentData(segmentsRepository.createDocument());
         } else {
             codeArea.setContentData(new XBData());
@@ -1021,20 +1021,20 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         switchMemoryMode(fileHandlingMode == FileHandlingMode.DELTA);
     }
 
-    private void switchMemoryMode(boolean newDeltaMode) {
-        if (newDeltaMode != deltaMemoryMode) {
+    private void switchMemoryMode(boolean newMemoryMode) {
+        if (newMemoryMode != memoryMode) {
             // Switch memory mode
             if (fileUri != null) {
                 // If document is connected to file, attempt to release first if modified and then simply reload
                 if (isModified()) {
                     if (releaseFileMethod != null && releaseFileMethod.execute()) {
-                        deltaMemoryMode = newDeltaMode;
+                        memoryMode = newMemoryMode;
                         loadFromFile(fileUri, null);
                         codeArea.clearSelection();
                         codeArea.setCaretPosition(0);
                     }
                 } else {
-                    deltaMemoryMode = newDeltaMode;
+                    memoryMode = newMemoryMode;
                     loadFromFile(fileUri, null);
                 }
             } else {
@@ -1053,19 +1053,19 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
                 oldData.dispose();
                 codeArea.notifyDataChanged();
                 updateCurrentMemoryMode();
-                deltaMemoryMode = newDeltaMode;
+                memoryMode = newMemoryMode;
             }
-            deltaMemoryMode = newDeltaMode;
+            memoryMode = newMemoryMode;
         }
     }
 
     public static interface CharsetChangeListener {
 
-        public void charsetChanged();
+        void charsetChanged();
     }
 
     public static interface ReleaseFileMethod {
 
-        public boolean execute();
+        boolean execute();
     }
 }

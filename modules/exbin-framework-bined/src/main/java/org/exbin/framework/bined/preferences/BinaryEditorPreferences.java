@@ -33,7 +33,7 @@ import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 /**
  * Hexadecimal editor preferences.
  *
- * @version 0.2.0 2019/04/17
+ * @version 0.2.1 2019/07/06
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -116,8 +116,6 @@ public class BinaryEditorPreferences {
 
     private void importLegacyPreferences() {
         LegacyPreferences legacyPreferences = new LegacyPreferences(preferences);
-        codeAreaParameters.setSelectedEncoding(legacyPreferences.getSelectedEncoding());
-        codeAreaParameters.setEncodings(new ArrayList<>(legacyPreferences.getEncodings()));
         codeAreaParameters.setUseDefaultFont(legacyPreferences.isUseDefaultFont());
         codeAreaParameters.setCodeFont(legacyPreferences.getCodeFont(CodeAreaOptions.DEFAULT_FONT));
         codeAreaParameters.setCodeType(legacyPreferences.getCodeType());
@@ -154,6 +152,8 @@ public class BinaryEditorPreferences {
         themeParameters.setThemeProfile(0, themeProfile);
         themeParameters.setThemeProfilesList(themeProfiles);
 
+        charsetParameters.setSelectedEncoding(legacyPreferences.getSelectedEncoding());
+        charsetParameters.setEncodings(new ArrayList<>(legacyPreferences.getEncodings()));
         Collection<String> legacyEncodings = legacyPreferences.getEncodings();
         List<String> encodings = new ArrayList<>(legacyEncodings);
         if (!encodings.isEmpty() && !encodings.contains(EncodingsHandler.ENCODING_UTF8)) {

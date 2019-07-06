@@ -40,6 +40,7 @@ import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.text.panel.TextStatusPanel;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
@@ -130,7 +131,7 @@ public class EditorTextModule implements XBApplicationModule {
 
     public void registerOptionsMenuPanels() {
         getEncodingsHandler();
-        encodingsHandler.encodingsRebuild();
+        encodingsHandler.rebuildEncodings();
 
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, encodingsHandler.getToolsEncodingMenu(), new MenuPosition(PositionMode.TOP_LAST));
@@ -227,7 +228,7 @@ public class EditorTextModule implements XBApplicationModule {
             @Override
             public void setEncodings(List<String> encodings) {
                 getEncodingsHandler().setEncodings(encodings);
-                getEncodingsHandler().encodingsRebuild();
+                getEncodingsHandler().rebuildEncodings();
             }
 
             @Override
@@ -313,8 +314,8 @@ public class EditorTextModule implements XBApplicationModule {
 
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler(application, (TextPanel) getEditorProvider(), getTextStatusPanel());
-            encodingsHandler.init();
+            encodingsHandler = new EncodingsHandler(application, getTextStatusPanel()); // (TextPanel) getEditorProvider(), 
+            // encodingsHandler.init();
         }
 
         return encodingsHandler;
@@ -392,7 +393,7 @@ public class EditorTextModule implements XBApplicationModule {
     }
 
     public void loadFromPreferences(Preferences preferences) {
-        encodingsHandler.loadFromPreferences(preferences);
+        encodingsHandler.loadFromPreferences(new TextEncodingParameters(preferences));
     }
 
     public class XBTFileType extends FileFilter implements FileType {

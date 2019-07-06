@@ -40,12 +40,11 @@ import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 /**
  * Tools options action handler.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.1 2019/06/07
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolsOptionsHandler {
 
-    private int metaMask;
     private final ResourceBundle resourceBundle;
 
     private Action toolsSetFontAction;
@@ -72,20 +71,17 @@ public class ToolsOptionsHandler {
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                 WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
-                controlPanel.setHandler(new OptionsControlHandler() {
-                    @Override
-                    public void controlActionPerformed(OptionsControlHandler.ControlActionType actionType) {
-                        if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                            if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                                TextFontParameters parameters = new TextFontParameters(application.getAppPreferences());
-                                parameters.setDefaultFont(false);
-                                parameters.setFont(fontPanel.getStoredFont());
-                            }
-                            ((TextFontApi) editorProvider).setCurrentFont(fontPanel.getStoredFont());
+                controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
+                    if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+                        if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                            TextFontParameters parameters = new TextFontParameters(application.getAppPreferences());
+                            parameters.setDefaultFont(false);
+                            parameters.setFont(fontPanel.getStoredFont());
                         }
-
-                        dialog.close();
+                        ((TextFontApi) editorProvider).setCurrentFont(fontPanel.getStoredFont());
                     }
+
+                    dialog.close();
                 });
                 WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                 dialog.center(dialog.getParent());

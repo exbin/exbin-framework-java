@@ -68,11 +68,11 @@ public class TextFontParameters {
     public Map<TextAttribute, Object> getFontAttribs() {
         String value;
         Map<TextAttribute, Object> attribs = new HashMap<>();
-        value = preferences.get(PREFERENCES_TEXT_FONT_FAMILY, null);
+        value = preferences.get(PREFERENCES_TEXT_FONT_FAMILY);
         if (value != null) {
             attribs.put(TextAttribute.FAMILY, value);
         }
-        value = preferences.get(PREFERENCES_TEXT_FONT_SIZE, null);
+        value = preferences.get(PREFERENCES_TEXT_FONT_SIZE);
         if (value != null) {
             attribs.put(TextAttribute.SIZE, new Integer(value).floatValue());
         }
