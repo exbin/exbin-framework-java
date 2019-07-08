@@ -5,6 +5,7 @@
  */
 package org.exbin.framework.api;
 
+import javax.annotation.Nonnull;
 import org.exbin.xbup.plugin.XBModuleRecord;
 
 /**
@@ -15,5 +16,6 @@ import org.exbin.xbup.plugin.XBModuleRecord;
  */
 public interface XBApplicationModuleInfo extends XBModuleRecord {
 
+    @Nonnull
     XBApplicationModule getPlugin();
 }

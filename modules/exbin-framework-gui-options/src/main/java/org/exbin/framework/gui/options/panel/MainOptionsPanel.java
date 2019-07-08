@@ -34,6 +34,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.preferences.FrameworkParameters;
 
 /**
@@ -175,6 +176,15 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         setModified(true);
     }//GEN-LAST:event_languageComboBoxjComboBoxItemStateChanged
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new MainOptionsPanel());
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<Locale> languageComboBox;
     private javax.swing.JLabel languageLabel;
@@ -185,7 +195,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
     private javax.swing.JLabel visualThemeLabel;
     // End of variables declaration//GEN-END:variables
 
-    private void setModified(boolean b) {
+    private void setModified(boolean modified) {
         if (modifiedOptionListener != null) {
             modifiedOptionListener.wasModified();
         }

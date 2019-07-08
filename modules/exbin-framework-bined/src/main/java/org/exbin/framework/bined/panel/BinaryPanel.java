@@ -568,16 +568,12 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
             try {
 //                PrintJob myJob = imageArea.getToolkit().getPrintJob(null, fileName, null);
 //                if (myJob != null) {
-                job.setPrintable(new Printable() {
-
-                    @Override
-                    public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-                        codeArea.print(graphics);
-                        if (pageIndex == 0) {
-                            return Printable.PAGE_EXISTS;
-                        }
-                        return Printable.NO_SUCH_PAGE;
+                job.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
+                    codeArea.print(graphics);
+                    if (pageIndex == 0) {
+                        return Printable.PAGE_EXISTS;
                     }
+                    return Printable.NO_SUCH_PAGE;
                 });
                 job.print();
 //                }

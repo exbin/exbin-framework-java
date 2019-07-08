@@ -16,6 +16,9 @@
  */
 package org.exbin.framework.gui.options.panel;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,6 +37,8 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 
 /**
  * Panel for application options and preferences setting.
@@ -205,6 +210,69 @@ public class OptionsTreePanel extends javax.swing.JPanel {
         add(separator, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new OptionsTreePanel(new ApplicationFrameHandler() {
+            @Override
+            public Frame getFrame() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setToolBarVisible(boolean toolBarVisible) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setStatusBarVisible(boolean statusBarVisible) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setToolBarCaptionsVisible(boolean captionsVisible) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setApplication(XBApplication app) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setMainPanel(Component component) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void loadMainMenu(XBApplication application) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void loadMainToolBar(XBApplication application) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void show() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setDefaultSize(Dimension windowSize) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane optionsAreaScrollPane;

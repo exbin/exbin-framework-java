@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Empty implementation for clipboard handler for visual component / context
  * menu.
@@ -23,6 +25,7 @@ package org.exbin.framework.gui.menu.api;
  * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ClipboardActionsHandlerEmpty implements ClipboardActionsHandler {
 
     @Override

@@ -34,10 +34,10 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
 
     private ModifiedOptionListener modifiedOptionListener;
     private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
-    private TextAppearanceOptionsPanelApi frame;
+    private TextAppearanceOptionsPanelApi panelApi;
 
-    public TextAppearanceOptionsPanel(TextAppearanceOptionsPanelApi frame) {
-        this.frame = frame;
+    public TextAppearanceOptionsPanel(TextAppearanceOptionsPanelApi panelApi) {
+        this.panelApi = panelApi;
 
         initComponents();
     }
@@ -109,7 +109,7 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
 
     @Override
     public void applyPreferencesChanges() {
-        frame.setWordWrapMode(wordWrapCheckBox.isSelected());
+        panelApi.setWordWrapMode(wordWrapCheckBox.isSelected());
     }
 
     private void setModified(boolean b) {

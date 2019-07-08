@@ -16,12 +16,15 @@
  */
 package org.exbin.framework.editor.text;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Text position status interface.
  *
  * @version 0.2.0 2016/05/18
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface TextPositionStatusApi {
 
     /**

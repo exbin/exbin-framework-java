@@ -17,13 +17,16 @@
 package org.exbin.framework.editor.text.panel;
 
 import java.awt.Color;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * XB Text Editor Module.
+ * Text color panel API.
  *
- * @version 0.1.22 2013/03/10
+ * @version 0.2.1 2019/07/08
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface TextColorPanelApi {
 
     /**
@@ -31,19 +34,21 @@ public interface TextColorPanelApi {
      *
      * @return array of 5 colors
      */
-    public Color[] getCurrentTextColors();
+    @Nonnull
+    Color[] getCurrentTextColors();
 
     /**
      * Returns default colors used in application frame.
      *
      * @return array of 5 colors
      */
-    public Color[] getDefaultTextColors();
+    @Nonnull
+    Color[] getDefaultTextColors();
 
     /**
      * Sets current colors used in application frame.
      *
      * @param colors colors
      */
-    public void setCurrentTextColors(Color[] colors);
+    void setCurrentTextColors(Color[] colors);
 }

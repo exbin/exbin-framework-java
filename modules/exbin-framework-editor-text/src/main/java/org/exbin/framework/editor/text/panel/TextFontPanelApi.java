@@ -17,6 +17,8 @@
 package org.exbin.framework.editor.text.panel;
 
 import java.awt.Font;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Text font panel frame interface.
@@ -24,6 +26,7 @@ import java.awt.Font;
  * @version 0.2.0 2016/01/23
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface TextFontPanelApi {
 
     /**
@@ -31,6 +34,7 @@ public interface TextFontPanelApi {
      *
      * @return font font value
      */
+    @Nonnull
     Font getCurrentFont();
 
     /**
@@ -38,6 +42,7 @@ public interface TextFontPanelApi {
      *
      * @return font font value
      */
+    @Nonnull
     Font getDefaultFont();
 
     /**

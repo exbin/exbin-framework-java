@@ -18,6 +18,7 @@ package org.exbin.framework.gui.menu.api;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for popup event trigger dispatcher.
@@ -25,6 +26,7 @@ import java.awt.event.MouseEvent;
  * @version 0.2.0 2016/08/09
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface ComponentPopupEventDispatcher {
 
     /**

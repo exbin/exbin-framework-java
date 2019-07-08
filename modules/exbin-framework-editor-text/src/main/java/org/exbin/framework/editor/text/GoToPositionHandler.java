@@ -74,16 +74,13 @@ public class GoToPositionHandler {
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
-                    controlPanel.setHandler(new DefaultControlHandler() {
-                        @Override
-                        public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                            if (actionType == ControlActionType.OK) {
-                                activePanel.gotoLine(goToPanel.getLine());
-                                activePanel.gotoRelative(goToPanel.getCharPos());
-                            }
-
-                            dialog.close();
+                    controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                        if (actionType == ControlActionType.OK) {
+                            activePanel.gotoLine(goToPanel.getLine());
+                            activePanel.gotoRelative(goToPanel.getCharPos());
                         }
+
+                        dialog.close();
                     });
                     WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                     dialog.center(dialog.getParent());

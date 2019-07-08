@@ -67,7 +67,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Clipboard operations.
  *
- * @version 0.2.0 2016/08/09
+ * @version 0.2.1 2019/07/08
  * @author ExBin Project (http://exbin.org)
  */
 public class ClipboardActionsImpl implements ClipboardActionsApi {
@@ -94,6 +94,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
 
     private ActionMap defaultTextActionMap;
     private JPopupMenu defaultPopupMenu;
+    private JPopupMenu defaultEditPopupMenu;
     private DefaultPopupClipboardAction defaultCutAction;
     private DefaultPopupClipboardAction defaultCopyAction;
     private DefaultPopupClipboardAction defaultPasteAction;
@@ -168,19 +169,41 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
         selectAllTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, metaMask));
     }
 
-    public JPopupMenu getDefaultPopupMenu() {
-        if (defaultPopupMenu == null) {
-            defaultPopupMenu = new JPopupMenu();
+    public void buildDefaultPopupMenu() {
+        defaultPopupMenu = new JPopupMenu();
 
-            defaultPopupMenu.setName("defaultPopupMenu"); // NOI18N
-            fillPopupMenu(defaultPopupMenu, -1);
-        }
-
-        return defaultPopupMenu;
+        defaultPopupMenu.setName("defaultPopupMenu"); // NOI18N
+        fillDefaultPopupMenu(defaultPopupMenu, -1);
     }
 
-    public void fillPopupMenu(JPopupMenu popupMenu, int position) {
+    public void buildDefaultEditPopupMenu() {
+        defaultEditPopupMenu = new JPopupMenu();
 
+        defaultEditPopupMenu.setName("defaultEditPopupMenu"); // NOI18N
+        fillDefaultEditPopupMenu(defaultEditPopupMenu, -1);
+    }
+
+    public void fillDefaultPopupMenu(JPopupMenu popupMenu, int position) {
+        JMenuItem basicPopupCopyMenuItem = new javax.swing.JMenuItem();
+        JMenuItem basicPopupSelectAllMenuItem = new javax.swing.JMenuItem();
+
+        basicPopupCopyMenuItem.setAction(defaultCopyAction);
+        basicPopupCopyMenuItem.setName("basicEditPopupCopyMenuItem"); // NOI18N
+        basicPopupSelectAllMenuItem.setAction(defaultSelectAllAction);
+        basicPopupSelectAllMenuItem.setName("basicEditPopupSelectAllMenuItem"); // NOI18N
+
+        if (position >= 0) {
+            popupMenu.insert(basicPopupCopyMenuItem, position);
+            popupMenu.insert(new JPopupMenu.Separator(), position + 1);
+            popupMenu.insert(basicPopupSelectAllMenuItem, position + 2);
+        } else {
+            popupMenu.add(basicPopupCopyMenuItem);
+            popupMenu.addSeparator();
+            popupMenu.add(basicPopupSelectAllMenuItem);
+        }
+    }
+
+    public void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position) {
         JMenuItem basicPopupCutMenuItem = new javax.swing.JMenuItem();
         JMenuItem basicPopupCopyMenuItem = new javax.swing.JMenuItem();
         JMenuItem basicPopupPasteMenuItem = new javax.swing.JMenuItem();
@@ -299,7 +322,8 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
         DefaultPopupClipboardAction[] actions = {defaultCutAction, defaultCopyAction, defaultPasteAction, defaultDeleteAction, defaultSelectAllAction};
         defaultTextActions = actions;
 
-        getDefaultPopupMenu();
+        buildDefaultPopupMenu();
+        buildDefaultEditPopupMenu();
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new PopupEventQueue());
     }
 
@@ -634,7 +658,11 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
             Point point = mouseEvent.getLocationOnScreen();
             Point locationOnScreen = component.getLocationOnScreen();
             point.translate(-locationOnScreen.x, -locationOnScreen.y);
-            defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            if (clipboardHandler.isEditable()) {
+                defaultEditPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            } else {
+                defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            }
         }
 
         private void activateKeyPopup(Component component, Point point, ClipboardActionsHandler clipboardHandler) {
@@ -650,7 +678,11 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
                     point = new Point(component.getWidth() / 2, component.getHeight() / 2);
                 }
             }
-            defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            if (clipboardHandler.isEditable()) {
+                defaultEditPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            } else {
+                defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            }
         }
 
         private Component getSource(MouseEvent e) {

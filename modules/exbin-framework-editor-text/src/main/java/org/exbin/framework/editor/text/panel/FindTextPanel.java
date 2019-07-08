@@ -19,11 +19,12 @@ package org.exbin.framework.editor.text.panel;
 import java.util.ResourceBundle;
 import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Find text panel.
  *
- * @version 0.2.0 2016/12/30
+ * @version 0.2.1 2019/07/08
  * @author ExBin Project (http://exbin.org)
  */
 public class FindTextPanel extends javax.swing.JPanel implements FindTextPanelApi {
@@ -143,6 +144,15 @@ public class FindTextPanel extends javax.swing.JPanel implements FindTextPanelAp
         textToReplaceTextField.setEnabled(performReplaceCheckBox.isSelected());
         textToReplaceLabel.setEnabled(performReplaceCheckBox.isSelected());
     }//GEN-LAST:event_performReplaceCheckBoxActionPerformed
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new FindTextPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel findPanel;

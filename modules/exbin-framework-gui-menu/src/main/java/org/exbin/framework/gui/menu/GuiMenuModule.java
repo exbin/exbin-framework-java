@@ -84,7 +84,7 @@ public class GuiMenuModule implements GuiMenuModuleApi {
 
     @Override
     public void fillPopupMenu(JPopupMenu popupMenu, int position) {
-        getClipboardActions().fillPopupMenu(popupMenu, position);
+        getClipboardActions().fillDefaultEditPopupMenu(popupMenu, position);
     }
 
     private MenuHandler getMenuHandler() {

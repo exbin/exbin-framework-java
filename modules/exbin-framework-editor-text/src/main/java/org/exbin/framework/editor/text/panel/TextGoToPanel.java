@@ -107,14 +107,6 @@ public class TextGoToPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jumpLineLabel;
-    private javax.swing.JSpinner jumpLineSpinner;
-    private javax.swing.JLabel posLineLabel;
-    private javax.swing.JSpinner posLineSpinner;
-    // End of variables declaration//GEN-END:variables
-
     /**
      * Test method for this panel.
      *
@@ -123,6 +115,13 @@ public class TextGoToPanel extends javax.swing.JPanel {
     public static void main(String args[]) {
         WindowUtils.invokeDialog(new TextGoToPanel());
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jumpLineLabel;
+    private javax.swing.JSpinner jumpLineSpinner;
+    private javax.swing.JLabel posLineLabel;
+    private javax.swing.JSpinner posLineSpinner;
+    // End of variables declaration//GEN-END:variables
 
     public ResourceBundle getResourceBundle() {
         return resourceBundle;

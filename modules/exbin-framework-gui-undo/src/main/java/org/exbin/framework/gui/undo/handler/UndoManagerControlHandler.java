@@ -16,8 +16,9 @@
  */
 package org.exbin.framework.gui.undo.handler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.OkCancelListener;
-import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Handler for undo manager control panel.
@@ -25,14 +26,17 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2019/06/19
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface UndoManagerControlHandler {
 
     void controlActionPerformed(ControlActionType actionType);
 
+    @ParametersAreNonnullByDefault
     public interface UndoManagerControlListener {
 
         void performClick(ControlActionType actionType);
 
+        @Nonnull
         OkCancelListener createOkCancelListener();
     }
 

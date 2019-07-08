@@ -18,15 +18,20 @@ package org.exbin.framework.gui.options.panel;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.options.preferences.AppearanceParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 
 /**
  * Toolbar apperance options panel.
@@ -123,6 +128,70 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     private void showStatusbarCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showStatusbarCheckBoxjCheckBoxItemStateChanged
         setModified(true);
     }//GEN-LAST:event_showStatusbarCheckBoxjCheckBoxItemStateChanged
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new AppearanceOptionsPanel(new ApplicationFrameHandler() {
+            @Override
+            public Frame getFrame() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setToolBarVisible(boolean toolBarVisible) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setStatusBarVisible(boolean statusBarVisible) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setToolBarCaptionsVisible(boolean captionsVisible) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setApplication(XBApplication app) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setMainPanel(Component component) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void loadMainMenu(XBApplication application) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void loadMainToolBar(XBApplication application) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void show() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setDefaultSize(Dimension windowSize) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox showCaptionsCheckBox;

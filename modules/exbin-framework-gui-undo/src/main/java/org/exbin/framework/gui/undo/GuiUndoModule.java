@@ -193,11 +193,8 @@ public class GuiUndoModule implements GuiUndoModuleApi {
         UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
         final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(undoManagerPanel, undoManagerControlPanel));
         frameModule.setDialogTitle(dialog, undoManagerPanel.getResourceBundle());
-        undoManagerControlPanel.setHandler(new UndoManagerControlHandler() {
-            @Override
-            public void controlActionPerformed(UndoManagerControlHandler.ControlActionType actionType) {
-                WindowUtils.closeWindow(dialog.getWindow());
-            }
+        undoManagerControlPanel.setHandler((UndoManagerControlHandler.ControlActionType actionType) -> {
+            WindowUtils.closeWindow(dialog.getWindow());
         });
         WindowUtils.addHeaderPanel(dialog.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), undoManagerControlPanel.createOkCancelListener());

@@ -16,15 +16,18 @@
  */
 package org.exbin.framework.gui.options;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.gui.options.api.OptionsPanel;
 
 /**
  * Interface for application options panels management.
  *
- * @version 0.2.1 2019/06/09
+ * @version 0.2.1 2019/07/08
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface OptionsManagement {
 
     /**
@@ -53,5 +56,6 @@ public interface OptionsManagement {
      *
      * @return prefereces
      */
+    @Nonnull
     Preferences getPreferences();
 }

@@ -51,11 +51,8 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         toolBar.setVisible(false);
 
         // Actions on change of look&feel
-        UIManager.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                SwingUtilities.updateComponentTreeUI(XBApplicationFrame.this);
-            }
+        UIManager.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            SwingUtilities.updateComponentTreeUI(XBApplicationFrame.this);
         });
     }
 
@@ -182,12 +179,9 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         /**
          * Create and display the form.
          */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                XBApplicationFrame frame = new XBApplicationFrame();
-                frame.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            XBApplicationFrame frame = new XBApplicationFrame();
+            frame.setVisible(true);
         });
     }
 

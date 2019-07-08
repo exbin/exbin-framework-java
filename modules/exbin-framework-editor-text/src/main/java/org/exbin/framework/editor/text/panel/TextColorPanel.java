@@ -29,6 +29,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Text color selection panel.
@@ -463,6 +464,30 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsPanel {
         setColorsFromArray(defaultColors);
         setModified(true);
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new TextColorPanel(new TextColorPanelApi() {
+            @Override
+            public Color[] getCurrentTextColors() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public Color[] getDefaultTextColors() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setCurrentTextColors(Color[] colors) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JColorChooser colorChooser;

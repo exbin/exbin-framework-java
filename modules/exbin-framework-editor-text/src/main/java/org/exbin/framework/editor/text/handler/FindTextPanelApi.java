@@ -24,15 +24,15 @@ package org.exbin.framework.editor.text.handler;
  */
 public interface FindTextPanelApi {
 
-    public boolean getSearchFromStart();
+    boolean getSearchFromStart();
 
-    public void setSelected();
+    void setSelected();
 
-    public String getFindText();
+    String getFindText();
 
-    public boolean getShallReplace();
+    boolean getShallReplace();
 
-    public void setShallReplace(boolean shallReplace);
+    void setShallReplace(boolean shallReplace);
 
-    public String getReplaceText();
+    String getReplaceText();
 }

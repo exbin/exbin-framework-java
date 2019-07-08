@@ -17,6 +17,8 @@
 package org.exbin.framework.editor.text;
 
 import java.awt.Font;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Text font access interface.
@@ -24,6 +26,7 @@ import java.awt.Font;
  * @version 0.2.0 2017/01/04
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface TextFontApi {
 
     /**
@@ -31,14 +34,16 @@ public interface TextFontApi {
      *
      * @return font
      */
-    public Font getCurrentFont();
+    @Nonnull
+    Font getCurrentFont();
 
     /**
      * Returns default font.
      *
      * @return font
      */
-    public Font getDefaultFont();
+    @Nonnull
+    Font getDefaultFont();
 
     /**
      * Sets font.

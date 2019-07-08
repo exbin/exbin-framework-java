@@ -16,72 +16,75 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Interface for clipboard handler for visual component / context menu.
  *
  * @version 0.2.0 2016/01/24
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface ClipboardActionsHandler {
 
     /**
-     * Performs performCut to clipboard operation.
+     * Performs cut to clipboard operation.
      */
-    public void performCut();
+    void performCut();
 
     /**
-     * Performs performCopy to clipboard operation.
+     * Performs copy to clipboard operation.
      */
-    public void performCopy();
+    void performCopy();
 
     /**
-     * Performs performPaste from clipboard operation.
+     * Performs paste from clipboard operation.
      */
-    public void performPaste();
+    void performPaste();
 
     /**
-     * Performs performDelete selection operation.
+     * Performs delete selection operation.
      */
-    public void performDelete();
+    void performDelete();
 
     /**
      * Performs select all operation. (should include focus request)
      */
-    public void performSelectAll();
+    void performSelectAll();
 
     /**
      * Returns if selection for clipboard operation is available.
      *
      * @return true if selection is available
      */
-    public boolean isSelection();
+    boolean isSelection();
 
     /**
-     * Returns if it is possible to change components data using clipboard
+     * Returns whether it is possible to change components data using clipboard
      * operations.
      *
      * @return true if component is editable
      */
-    public boolean isEditable();
+    boolean isEditable();
 
     /**
-     * Returns true if it is possible to execute select all operation.
+     * Returns whether it is possible to execute select all operation.
      *
      * @return true if can perform select all
      */
-    public boolean canSelectAll();
+    boolean canSelectAll();
 
     /**
-     * Returns true if it is possible to paste current content of the clipboard.
+     * Returns whether it is possible to paste current content of the clipboard.
      *
      * @return true if can perform paste
      */
-    public boolean canPaste();
+    boolean canPaste();
 
     /**
      * Sets listener for clipboard actions related updates.
      *
      * @param updateListener update listener
      */
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener);
+    void setUpdateListener(ClipboardActionsUpdateListener updateListener);
 }

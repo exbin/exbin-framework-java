@@ -17,6 +17,7 @@
 package org.exbin.framework.gui.menu.api;
 
 import java.awt.Component;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
@@ -27,6 +28,7 @@ import javax.swing.JToolBar;
  * @version 0.2.0 2016/05/19
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface MenuManagement {
 
     /**
@@ -37,7 +39,7 @@ public interface MenuManagement {
      * @param menuId menu id
      * @param positionMode position mode
      */
-    public void extendMenu(JMenu menu, Integer pluginId, String menuId, PositionMode positionMode);
+    void extendMenu(JMenu menu, Integer pluginId, String menuId, PositionMode positionMode);
 
     /**
      * Adds given menu component into menu manager.
@@ -47,7 +49,7 @@ public interface MenuManagement {
      * @param positionMode position mode
      * @param menuId menu id
      */
-    public void addMenuItem(Component menuItem, Integer pluginId, String menuId, PositionMode positionMode);
+    void addMenuItem(Component menuItem, Integer pluginId, String menuId, PositionMode positionMode);
 
     /**
      * Insert menu into menubar into main menu manager.
@@ -56,14 +58,14 @@ public interface MenuManagement {
      * @param pluginId plugin id
      * @param positionMode position mode
      */
-    public void insertMenu(JMenu menu, Integer pluginId, PositionMode positionMode);
+    void insertMenu(JMenu menu, Integer pluginId, PositionMode positionMode);
 
     /**
      * Adds all items from given toolbar instance into menu manager.
      *
      * @param toolBar toolbar
      */
-    public void extendToolBar(JToolBar toolBar);
+    void extendToolBar(JToolBar toolBar);
 
     /**
      * Copy and insert main popup menu into given popup menu.
@@ -71,5 +73,5 @@ public interface MenuManagement {
      * @param popupMenu popup menu
      * @param position position
      */
-    public void insertMainPopupMenu(JPopupMenu popupMenu, int position);
+    void insertMainPopupMenu(JPopupMenu popupMenu, int position);
 }

@@ -31,6 +31,7 @@ import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Text encoding selection panel.
@@ -276,6 +277,15 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsPane
 
     public List<String> getEncodingList() {
         return ((EncodingsListModel) encodingsList.getModel()).getCharsets();
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new TextEncodingPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

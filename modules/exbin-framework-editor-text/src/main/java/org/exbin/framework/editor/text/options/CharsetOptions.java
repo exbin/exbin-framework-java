@@ -62,13 +62,6 @@ public class CharsetOptions {
         parameters.setEncodings(encodings);
     }
 
-//    public void applyFromCodeArea(ExtCodeArea codeArea) {
-//        selectedEncoding = ((CharsetCapable) codeArea).getCharset().name();
-//    }
-//
-//    public void applyToCodeArea(ExtCodeArea codeArea) {
-//        ((CharsetCapable) codeArea).setCharset(Charset.forName(selectedEncoding));
-//    }
     public void setOptions(CharsetOptions charsetOptions) {
         selectedEncoding = charsetOptions.selectedEncoding;
         encodings = new ArrayList<>();

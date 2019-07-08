@@ -45,8 +45,6 @@ public class PropertiesHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action propertiesAction;
 
     public PropertiesHandler(XBApplication application, EditorProvider editorProvider) {
@@ -56,8 +54,6 @@ public class PropertiesHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         propertiesAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,11 +67,8 @@ public class PropertiesHandler {
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
-                    controlPanel.setHandler(new CloseControlHandler() {
-                        @Override
-                        public void controlActionPerformed() {
-                            dialog.close();
-                        }
+                    controlPanel.setHandler(() -> {
+                        dialog.close();
                     });
                     WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                     dialog.center(dialog.getParent());

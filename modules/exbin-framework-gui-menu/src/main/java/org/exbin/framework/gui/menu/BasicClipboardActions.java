@@ -19,14 +19,12 @@ package org.exbin.framework.gui.menu;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
-import java.awt.datatransfer.FlavorListener;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.gui.menu.api.ClipboardActions;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
-import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -123,11 +121,8 @@ public class BasicClipboardActions implements ClipboardActions {
         } catch (SecurityException e) {
             clipboard = new Clipboard("sandbox");
         }
-        clipboard.addFlavorListener(new FlavorListener() {
-            @Override
-            public void flavorsChanged(FlavorEvent e) {
-                updateClipboardActions();
-            }
+        clipboard.addFlavorListener((FlavorEvent e) -> {
+            updateClipboardActions();
         });
     }
 
@@ -148,12 +143,7 @@ public class BasicClipboardActions implements ClipboardActions {
 
     private void changeClipboardActionsHandler() {
         if (clipboardActionsHandler != null) {
-            clipboardActionsHandler.setUpdateListener(new ClipboardActionsUpdateListener() {
-                @Override
-                public void stateChanged() {
-                    updateClipboardActions();
-                }
-            });
+            clipboardActionsHandler.setUpdateListener(this::updateClipboardActions);
         }
     }
 

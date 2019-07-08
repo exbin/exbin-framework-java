@@ -18,9 +18,9 @@ package org.exbin.framework.bined.panel;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Simple color selection component.
@@ -33,10 +33,6 @@ public class SelectableColor extends javax.swing.JPanel {
     private ColorChangedListener colorChangedListener = null;
     private final String label;
 
-    /**
-     * Creates new form SelectableColor
-     * @param label text label
-     */
     public SelectableColor(String label) {
         this.label = label;
         initComponents();
@@ -103,19 +99,25 @@ public class SelectableColor extends javax.swing.JPanel {
 
     private void colorSelectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorSelectionButtonActionPerformed
         final JColorChooser colorChooser = new javax.swing.JColorChooser();
-        JDialog dialog = JColorChooser.createDialog(this, "Select Color", true, colorChooser, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Color color = colorChooser.getColor();
-                colorPreviewPanel.setBackground(color);
-                if (colorChangedListener != null) {
-                    colorChangedListener.colorChanged(color);
-                }
+        JDialog dialog = JColorChooser.createDialog(this, "Select Color", true, colorChooser, (ActionEvent e) -> {
+            Color color = colorChooser.getColor();
+            colorPreviewPanel.setBackground(color);
+            if (colorChangedListener != null) {
+                colorChangedListener.colorChanged(color);
             }
         }, null);
         dialog.setVisible(true);
     }//GEN-LAST:event_colorSelectionButtonActionPerformed
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new SelectableColor(""));
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel colorLabel;
     private javax.swing.JPanel colorPreviewPanel;
@@ -129,7 +131,7 @@ public class SelectableColor extends javax.swing.JPanel {
         colorLabel.setEnabled(enabled);
         colorSelectionButton.setEnabled(enabled);
     }
-    
+
     public Color getColor() {
         return colorPreviewPanel.getBackground();
     }

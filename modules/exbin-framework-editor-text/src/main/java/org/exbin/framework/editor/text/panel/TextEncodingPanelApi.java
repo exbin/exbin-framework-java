@@ -17,11 +17,12 @@
 package org.exbin.framework.editor.text.panel;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
- * XB Text Editor Module.
+ * Text encoding panel API.
  *
- * @version 0.1.22 2013/03/17
+ * @version 0.2.1 2019/07/08
  * @author ExBin Project (http://exbin.org)
  */
 public interface TextEncodingPanelApi {
@@ -31,6 +32,7 @@ public interface TextEncodingPanelApi {
      *
      * @return font
      */
+    @Nonnull
     List<String> getEncodings();
 
     /**
@@ -38,6 +40,7 @@ public interface TextEncodingPanelApi {
      *
      * @return selected encoding
      */
+    @Nonnull
     String getSelectedEncoding();
 
     /**
