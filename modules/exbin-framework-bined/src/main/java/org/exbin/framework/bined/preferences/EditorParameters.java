@@ -15,10 +15,13 @@
  */
 package org.exbin.framework.bined.preferences;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.exbin.framework.api.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.bined.BinaryStatusApi;
+import org.exbin.framework.bined.FileHandlingMode;
 
 /**
  * Hexadecimal editor preferences.
@@ -40,12 +43,18 @@ public class EditorParameters {
     }
 
     @Nonnull
-    public String getFileHandlingMode() {
-        return preferences.get(PREFERENCES_FILE_HANDLING_MODE, "DELTA");
+    public FileHandlingMode getFileHandlingMode() {
+        FileHandlingMode defaultFileHandlingMode = FileHandlingMode.DELTA;
+        try {
+            return FileHandlingMode.valueOf(preferences.get(PREFERENCES_FILE_HANDLING_MODE, defaultFileHandlingMode.name()));
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(EditorParameters.class.getName()).log(Level.SEVERE, null, ex);
+            return defaultFileHandlingMode;
+        }
     }
 
-    public void setFileHandlingMode(String fileHandlingMode) {
-        preferences.put(PREFERENCES_FILE_HANDLING_MODE, fileHandlingMode);
+    public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
+        preferences.put(PREFERENCES_FILE_HANDLING_MODE, fileHandlingMode.name());
     }
 
     public boolean isShowValuesPanel() {

@@ -34,7 +34,7 @@ import org.exbin.framework.editor.text.preferences.TextFontParameters;
 /**
  * Code area preferences.
  *
- * @version 0.2.1 2019/07/06
+ * @version 0.2.1 2019/07/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -130,13 +130,13 @@ public class CodeAreaParameters {
 
     @Nonnull
     public CodeType getCodeType() {
+        CodeType defaultCodeType = CodeType.HEXADECIMAL;
         try {
-            return CodeType.valueOf(preferences.get(PREFERENCES_CODE_TYPE, CodeType.HEXADECIMAL.name()));
+            return CodeType.valueOf(preferences.get(PREFERENCES_CODE_TYPE, defaultCodeType.name()));
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(CodeAreaParameters.class.getName()).log(Level.SEVERE, null, ex);
+            return defaultCodeType;
         }
-
-        return CodeType.HEXADECIMAL;
     }
 
     public void setCodeType(CodeType codeType) {
@@ -153,13 +153,13 @@ public class CodeAreaParameters {
 
     @Nonnull
     public CodeCharactersCase getCodeCharactersCase() {
+        CodeCharactersCase defaultCharactersCase = CodeCharactersCase.UPPER;
         try {
-            return CodeCharactersCase.valueOf(preferences.get(PREFERENCES_HEX_CHARACTERS_CASE, CodeCharactersCase.UPPER.name()));
+            return CodeCharactersCase.valueOf(preferences.get(PREFERENCES_HEX_CHARACTERS_CASE, defaultCharactersCase.name()));
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(CodeAreaParameters.class.getName()).log(Level.SEVERE, null, ex);
+            return defaultCharactersCase;
         }
-
-        return CodeCharactersCase.UPPER;
     }
 
     public void setCodeCharactersCase(CodeCharactersCase codeCharactersCase) {
@@ -168,13 +168,13 @@ public class CodeAreaParameters {
 
     @Nonnull
     public PositionCodeType getPositionCodeType() {
+        PositionCodeType defaultCodeType = PositionCodeType.HEXADECIMAL;
         try {
-            return PositionCodeType.valueOf(preferences.get(PREFERENCES_POSITION_CODE_TYPE, PositionCodeType.HEXADECIMAL.name()));
+            return PositionCodeType.valueOf(preferences.get(PREFERENCES_POSITION_CODE_TYPE, defaultCodeType.name()));
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(CodeAreaParameters.class.getName()).log(Level.SEVERE, null, ex);
+            return defaultCodeType;
         }
-
-        return PositionCodeType.HEXADECIMAL;
     }
 
     public void setPositionCodeType(PositionCodeType positionCodeType) {
@@ -183,13 +183,13 @@ public class CodeAreaParameters {
 
     @Nonnull
     public CodeAreaViewMode getViewMode() {
+        CodeAreaViewMode defaultMode = CodeAreaViewMode.DUAL;
         try {
-            return CodeAreaViewMode.valueOf(preferences.get(PREFERENCES_VIEW_MODE, CodeAreaViewMode.DUAL.name()));
+            return CodeAreaViewMode.valueOf(preferences.get(PREFERENCES_VIEW_MODE, defaultMode.name()));
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(CodeAreaParameters.class.getName()).log(Level.SEVERE, null, ex);
+            return defaultMode;
         }
-
-        return CodeAreaViewMode.DUAL;
     }
 
     public void setViewMode(CodeAreaViewMode viewMode) {
@@ -222,10 +222,12 @@ public class CodeAreaParameters {
 
     @Nonnull
     public RowWrappingCapable.RowWrappingMode getRowWrappingMode() {
+        RowWrappingCapable.RowWrappingMode defaultMode = RowWrappingCapable.RowWrappingMode.NO_WRAPPING;
         try {
-            return RowWrappingCapable.RowWrappingMode.valueOf(preferences.get(PREFERENCES_ROW_WRAPPING_MODE, RowWrappingCapable.RowWrappingMode.NO_WRAPPING.name()));
+            return RowWrappingCapable.RowWrappingMode.valueOf(preferences.get(PREFERENCES_ROW_WRAPPING_MODE, defaultMode.name()));
         } catch (Exception ex) {
-            return RowWrappingCapable.RowWrappingMode.NO_WRAPPING;
+            Logger.getLogger(CodeAreaParameters.class.getName()).log(Level.SEVERE, null, ex);
+            return defaultMode;
         }
     }
 

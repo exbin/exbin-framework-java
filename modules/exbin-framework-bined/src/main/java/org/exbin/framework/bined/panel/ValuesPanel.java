@@ -22,6 +22,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.exbin.bined.CaretMovedListener;
@@ -37,6 +39,7 @@ import org.exbin.bined.operation.swing.command.ModifyDataCommand;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 
@@ -665,6 +668,15 @@ public class ValuesPanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ValuesPanel());
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton bigEndianRadioButton;
     private javax.swing.JCheckBox binaryCheckBox0;
@@ -779,7 +791,7 @@ public class ValuesPanel extends javax.swing.JPanel {
             try {
                 undoHandler.execute(insertCommand);
             } catch (BinaryDataOperationException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(ValuesPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             BinaryDataCommand command;
@@ -797,7 +809,7 @@ public class ValuesPanel extends javax.swing.JPanel {
             try {
                 undoHandler.execute(command);
             } catch (BinaryDataOperationException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(ValuesPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         codeArea.setCaretPosition(oldDataPosition);

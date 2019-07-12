@@ -16,6 +16,10 @@
  */
 package org.exbin.framework.bined.panel;
 
+import org.exbin.framework.bined.ReplaceParameters;
+import org.exbin.framework.bined.SearchCondition;
+import org.exbin.framework.bined.SearchParameters;
+import org.exbin.framework.bined.SearchHistoryModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -38,7 +42,7 @@ import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
+import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -48,6 +52,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
+import org.exbin.framework.bined.service.BinarySearchService;
 
 /**
  * Hexadecimal editor search panel.
@@ -63,7 +68,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     private Thread searchThread;
     private final SearchParameters searchParameters = new SearchParameters();
     private final ReplaceParameters replaceParameters = new ReplaceParameters();
-    private final BinarySearchPanelApi binarySearchPanelApi;
+    private final BinarySearchService binarySearchService;
     private int matchesCount;
     private int matchPosition;
     private final ExtCodeArea hexadecimalRenderer = new ExtCodeArea();
@@ -81,9 +86,9 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
     private XBApplication application;
 
-    public BinarySearchPanel(BinarySearchPanelApi hexSearchPanelApi) {
+    public BinarySearchPanel(BinarySearchService binarySearchService) {
         initComponents();
-        this.binarySearchPanelApi = hexSearchPanelApi;
+        this.binarySearchService = binarySearchService;
         init();
     }
 
@@ -634,7 +639,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
                 ReplaceParameters dialogReplaceParameters = findBinaryPanel.getReplaceParameters();
                 switchReplaceMode(dialogReplaceParameters.isPerformReplace());
-                binarySearchPanelApi.performFind(dialogSearchParameters);
+                binarySearchService.performFind(dialogSearchParameters);
             }
             findBinaryPanel.detachMenu();
             dialog.close();
@@ -646,13 +651,13 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
         matchPosition--;
-        binarySearchPanelApi.setMatchPosition(matchPosition);
+        binarySearchService.setMatchPosition(matchPosition);
         setStatus(matchesCount, matchPosition);
     }//GEN-LAST:event_prevButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         matchPosition++;
-        binarySearchPanelApi.setMatchPosition(matchPosition);
+        binarySearchService.setMatchPosition(matchPosition);
         setStatus(matchesCount, matchPosition);
     }//GEN-LAST:event_nextButtonActionPerformed
 
@@ -731,7 +736,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new BinarySearchPanel(new BinarySearchPanelApi() {
+        WindowUtils.invokeDialog(new BinarySearchPanel(new BinarySearchService() {
             @Override
             public void performFind(SearchParameters dialogSearchParameters) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -824,7 +829,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                 break;
             }
         }
-        binarySearchPanelApi.updatePosition();
+        binarySearchService.updatePosition();
         performSearch(500);
     }
 
@@ -876,7 +881,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     }
 
     public void performFind() {
-        binarySearchPanelApi.performFind(searchParameters);
+        binarySearchService.performFind(searchParameters);
         findComboBoxEditorComponent.setRunningUpdate(true);
         ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(searchParameters.getCondition());
         findComboBoxEditorComponent.setRunningUpdate(false);
@@ -884,7 +889,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
     public void performReplace() {
         replaceParameters.setCondition(replaceComboBoxEditorComponent.getItem());
-        binarySearchPanelApi.performReplace(searchParameters, replaceParameters);
+        binarySearchService.performReplace(searchParameters, replaceParameters);
     }
 
     public void performReplaceAll() {
@@ -938,7 +943,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     }
 
     public void dataChanged() {
-        binarySearchPanelApi.clearMatches();
+        binarySearchService.clearMatches();
         performSearch(500);
     }
 

@@ -16,6 +16,10 @@
  */
 package org.exbin.framework.bined.panel;
 
+import org.exbin.framework.bined.ReplaceParameters;
+import org.exbin.framework.bined.SearchCondition;
+import org.exbin.framework.bined.SearchParameters;
+import org.exbin.framework.bined.SearchHistoryModel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -34,7 +38,7 @@ import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
-import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
+import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.ByteArrayEditableData;

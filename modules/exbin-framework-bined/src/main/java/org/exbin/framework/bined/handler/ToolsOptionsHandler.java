@@ -14,54 +14,55 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined;
+package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
- * View nonprintables handler.
+ * Tools options action handler.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.1 2019/06/18
  * @author ExBin Project (http://exbin.org)
  */
-public class ViewNonprintablesHandler {
+public class ToolsOptionsHandler {
+
+    private int metaMask;
+    private final ResourceBundle resourceBundle;
+
+    private Action toolsSetFontAction;
 
     private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
-    private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
-    private Action viewNonprintablesAction;
-
-    public ViewNonprintablesHandler(XBApplication application, BinaryEditorProvider editorProvider) {
+    public ToolsOptionsHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
-        viewNonprintablesAction = new AbstractAction() {
+        toolsSetFontAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean showUnprintables = editorProvider.changeShowNonprintables();
-                viewNonprintablesAction.putValue(Action.SELECTED_KEY, showUnprintables);
+                org.exbin.framework.editor.text.ToolsOptionsHandler textOptionsHandler = new org.exbin.framework.editor.text.ToolsOptionsHandler(application, editorProvider);
+                textOptionsHandler.init();
+                Action textToolsSetFontAction = textOptionsHandler.getToolsSetFontAction();
+                textToolsSetFontAction.actionPerformed(e);
             }
         };
-        ActionUtils.setupAction(viewNonprintablesAction, resourceBundle, "viewNonprintablesAction");
-        viewNonprintablesAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
-        viewNonprintablesAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, metaMask));
+        ActionUtils.setupAction(toolsSetFontAction, resourceBundle, "toolsSetFontAction");
+        toolsSetFontAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
-    public Action getViewNonprintablesAction() {
-        return viewNonprintablesAction;
+    public Action getToolsSetFontAction() {
+        return toolsSetFontAction;
     }
 }

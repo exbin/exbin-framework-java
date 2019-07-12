@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined;
+package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -24,6 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.exbin.bined.capability.CaretCapable;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.bined.panel.GoToBinaryPanel;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -47,8 +49,6 @@ public class GoToPositionHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action goToLineAction;
 
     public GoToPositionHandler(XBApplication application, BinaryEditorProvider editorProvider) {
@@ -58,8 +58,6 @@ public class GoToPositionHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         goToLineAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -90,7 +88,7 @@ public class GoToPositionHandler {
             }
         };
         ActionUtils.setupAction(goToLineAction, resourceBundle, "goToLineAction");
-        goToLineAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, metaMask));
+        goToLineAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, ActionUtils.getMetaMask()));
         goToLineAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 

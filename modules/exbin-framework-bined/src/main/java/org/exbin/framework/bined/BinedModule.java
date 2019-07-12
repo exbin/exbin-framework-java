@@ -16,6 +16,23 @@
  */
 package org.exbin.framework.bined;
 
+import org.exbin.framework.bined.handler.BinaryEditorHandler;
+import org.exbin.framework.bined.handler.LayoutHandler;
+import org.exbin.framework.bined.handler.ClipboardCodeHandler;
+import org.exbin.framework.bined.handler.GoToPositionHandler;
+import org.exbin.framework.bined.handler.ViewValuesPanelHandler;
+import org.exbin.framework.bined.handler.EncodingStatusHandler;
+import org.exbin.framework.bined.handler.CodeTypeHandler;
+import org.exbin.framework.bined.handler.ToolsOptionsHandler;
+import org.exbin.framework.bined.handler.ViewModeHandler;
+import org.exbin.framework.bined.handler.PrintHandler;
+import org.exbin.framework.bined.handler.ViewNonprintablesHandler;
+import org.exbin.framework.bined.handler.RowWrappingHandler;
+import org.exbin.framework.bined.handler.PropertiesHandler;
+import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
+import org.exbin.framework.bined.handler.FindReplaceHandler;
+import org.exbin.framework.bined.handler.HexCharactersCaseHandler;
+import org.exbin.framework.bined.handler.PositionCodeTypeHandler;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
@@ -413,8 +430,8 @@ public class BinedModule implements XBApplicationModule {
 
         editorOptionsPanel = new EditorOptionsPanel(new EditorOptionsPanelApi() {
             @Override
-            public void setFileHandlingMode(String fileHandlingMode) {
-                getEditorProvider().setFileHandlingMode(FileHandlingMode.valueOf(fileHandlingMode));
+            public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
+                getEditorProvider().setFileHandlingMode(fileHandlingMode);
             }
 
             @Override

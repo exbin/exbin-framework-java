@@ -14,39 +14,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined.panel;
+package org.exbin.framework.bined.service;
 
-import java.util.Objects;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.bined.PositionCodeType;
+import org.exbin.framework.bined.ReplaceParameters;
+import org.exbin.framework.bined.SearchParameters;
 
 /**
- * Cursor position format for status.
+ * Binary search service.
  *
- * @version 0.2.0 2019/03/15
+ * @version 0.2.1 2019/07/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class StatusCursorPositionFormat {
+public interface BinarySearchService {
 
-    private PositionCodeType positionCodeType = PositionCodeType.DECIMAL;
-    private boolean showOffset = true;
+    void performFind(SearchParameters dialogSearchParameters);
 
-    @Nonnull
-    public PositionCodeType getCodeType() {
-        return positionCodeType;
-    }
+    void setMatchPosition(int matchPosition);
 
-    public void setCodeType(PositionCodeType positionCodeType) {
-        this.positionCodeType = Objects.requireNonNull(positionCodeType);
-    }
+    void updatePosition();
 
-    public boolean isShowOffset() {
-        return showOffset;
-    }
+    void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters);
 
-    public void setShowOffset(boolean showOffset) {
-        this.showOffset = showOffset;
-    }
+    void clearMatches();
 }

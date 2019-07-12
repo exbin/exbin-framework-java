@@ -14,23 +14,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined;
+package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
- * Print handler.
+ * View nonprintables handler.
  *
- * @version 0.1.0 2016/04/03
+ * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
-public class PrintHandler {
+public class ViewNonprintablesHandler {
 
     private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
@@ -38,9 +40,9 @@ public class PrintHandler {
 
     private int metaMask;
 
-    private Action printAction;
+    private Action viewNonprintablesAction;
 
-    public PrintHandler(XBApplication application, BinaryEditorProvider editorProvider) {
+    public ViewNonprintablesHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
@@ -49,18 +51,19 @@ public class PrintHandler {
     public void init() {
         metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
-        printAction = new AbstractAction() {
+        viewNonprintablesAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                editorProvider.printFile();
+                boolean showUnprintables = editorProvider.changeShowNonprintables();
+                viewNonprintablesAction.putValue(Action.SELECTED_KEY, showUnprintables);
             }
         };
-        ActionUtils.setupAction(printAction, resourceBundle, "printAction");
-        printAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, metaMask));
-        printAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        ActionUtils.setupAction(viewNonprintablesAction, resourceBundle, "viewNonprintablesAction");
+        viewNonprintablesAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
+        viewNonprintablesAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, metaMask));
     }
 
-    public Action getPrintAction() {
-        return printAction;
+    public Action getViewNonprintablesAction() {
+        return viewNonprintablesAction;
     }
 }

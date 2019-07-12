@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined.panel;
+package org.exbin.framework.bined;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -22,16 +22,16 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.PositionCodeType;
 
 /**
- * Document size format for status.
+ * Cursor position format for status.
  *
  * @version 0.2.0 2019/03/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class StatusDocumentSizeFormat {
+public class StatusCursorPositionFormat {
 
     private PositionCodeType positionCodeType = PositionCodeType.DECIMAL;
-    private boolean showRelative = true;
+    private boolean showOffset = true;
 
     @Nonnull
     public PositionCodeType getCodeType() {
@@ -42,11 +42,11 @@ public class StatusDocumentSizeFormat {
         this.positionCodeType = Objects.requireNonNull(positionCodeType);
     }
 
-    public boolean isShowRelative() {
-        return showRelative;
+    public boolean isShowOffset() {
+        return showOffset;
     }
 
-    public void setShowRelative(boolean showRelativeSize) {
-        this.showRelative = showRelativeSize;
+    public void setShowOffset(boolean showOffset) {
+        this.showOffset = showOffset;
     }
 }

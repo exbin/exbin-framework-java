@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined;
+package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -23,6 +23,8 @@ import javax.swing.Action;
 import org.exbin.bined.CodeCharactersCase;
 import org.exbin.bined.capability.CodeCharactersCaseCapable;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;

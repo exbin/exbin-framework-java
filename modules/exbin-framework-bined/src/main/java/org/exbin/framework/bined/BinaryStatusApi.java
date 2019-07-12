@@ -17,8 +17,6 @@
 package org.exbin.framework.bined;
 
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -116,7 +114,6 @@ public interface BinaryStatusApi {
 
         private final String displayChar;
         private final String value;
-        private final static Map<String, MemoryMode> preferencesValueMap = new HashMap<>();
 
         private MemoryMode(String displayChar, String preferencesValue) {
             this.displayChar = displayChar;

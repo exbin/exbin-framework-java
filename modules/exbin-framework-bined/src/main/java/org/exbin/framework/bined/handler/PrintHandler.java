@@ -14,53 +14,55 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined;
+package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
- * Tools options action handler.
+ * Print handler.
  *
- * @version 0.2.1 2019/06/18
+ * @version 0.1.0 2016/04/03
  * @author ExBin Project (http://exbin.org)
  */
-public class ToolsOptionsHandler {
-
-    private int metaMask;
-    private final ResourceBundle resourceBundle;
-
-    private Action toolsSetFontAction;
+public class PrintHandler {
 
     private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
+    private final ResourceBundle resourceBundle;
 
-    public ToolsOptionsHandler(XBApplication application, BinaryEditorProvider editorProvider) {
+    private int metaMask;
+
+    private Action printAction;
+
+    public PrintHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
     }
 
     public void init() {
-        toolsSetFontAction = new AbstractAction() {
+        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
+        printAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                org.exbin.framework.editor.text.ToolsOptionsHandler textOptionsHandler = new org.exbin.framework.editor.text.ToolsOptionsHandler(application, editorProvider);
-                textOptionsHandler.init();
-                Action textToolsSetFontAction = textOptionsHandler.getToolsSetFontAction();
-                textToolsSetFontAction.actionPerformed(e);
+                editorProvider.printFile();
             }
         };
-        ActionUtils.setupAction(toolsSetFontAction, resourceBundle, "toolsSetFontAction");
-        toolsSetFontAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        ActionUtils.setupAction(printAction, resourceBundle, "printAction");
+        printAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, metaMask));
+        printAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
-    public Action getToolsSetFontAction() {
-        return toolsSetFontAction;
+    public Action getPrintAction() {
+        return printAction;
     }
 }

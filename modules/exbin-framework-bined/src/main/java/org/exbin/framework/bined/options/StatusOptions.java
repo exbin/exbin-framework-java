@@ -17,8 +17,8 @@ package org.exbin.framework.bined.options;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.bined.panel.StatusCursorPositionFormat;
-import org.exbin.framework.bined.panel.StatusDocumentSizeFormat;
+import org.exbin.framework.bined.StatusCursorPositionFormat;
+import org.exbin.framework.bined.StatusDocumentSizeFormat;
 import org.exbin.framework.bined.preferences.StatusParameters;
 
 /**

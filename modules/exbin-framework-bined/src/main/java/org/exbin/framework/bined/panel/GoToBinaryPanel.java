@@ -58,7 +58,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
     private long cursorPosition;
     private long maxPosition;
-    private GoToMode goToMode = GoToMode.FROM_START;
+    private GoToBinaryPositionMode goToMode = GoToBinaryPositionMode.FROM_START;
     private final PositionSpinnerEditor positionSpinnerEditor;
 
     public GoToBinaryPanel() {
@@ -249,8 +249,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void fromStartRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromStartRadioButtonActionPerformed
-        if (goToMode != GoToMode.FROM_START && fromStartRadioButton.isSelected()) {
-            goToMode = GoToMode.FROM_START;
+        if (goToMode != GoToBinaryPositionMode.FROM_START && fromStartRadioButton.isSelected()) {
+            goToMode = GoToBinaryPositionMode.FROM_START;
             long currentValue = getPositionValue();
             setPositionValue(0l);
             ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(0l);
@@ -262,8 +262,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_fromStartRadioButtonActionPerformed
 
     private void relativeRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relativeRadioButtonActionPerformed
-        if (goToMode != GoToMode.RELATIVE && relativeRadioButton.isSelected()) {
-            goToMode = GoToMode.RELATIVE;
+        if (goToMode != GoToBinaryPositionMode.RELATIVE && relativeRadioButton.isSelected()) {
+            goToMode = GoToBinaryPositionMode.RELATIVE;
             long currentValue = getPositionValue();
             setPositionValue(0l);
             ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(-cursorPosition);
@@ -279,8 +279,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_positionSpinnerStateChanged
 
     private void fromEndRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromEndRadioButtonActionPerformed
-        if (goToMode == GoToMode.FROM_END && fromEndRadioButton.isSelected()) {
-            goToMode = GoToMode.FROM_END;
+        if (goToMode == GoToBinaryPositionMode.FROM_END && fromEndRadioButton.isSelected()) {
+            goToMode = GoToBinaryPositionMode.FROM_END;
             long currentValue = getPositionValue();
             positionSpinner.setValue(0l);
             ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(0l);
@@ -424,7 +424,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     private javax.swing.JTextField targetPositionTextField;
     // End of variables declaration//GEN-END:variables
 
-    public enum GoToMode {
+    public enum GoToBinaryPositionMode {
         FROM_START, FROM_END, RELATIVE
     }
 

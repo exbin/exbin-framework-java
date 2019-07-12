@@ -22,8 +22,6 @@ import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.panel.BinaryPanel;
-import org.exbin.framework.bined.panel.ReplaceParameters;
-import org.exbin.framework.bined.panel.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 

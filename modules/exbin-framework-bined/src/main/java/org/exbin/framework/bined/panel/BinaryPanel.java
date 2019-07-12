@@ -16,6 +16,9 @@
  */
 package org.exbin.framework.bined.panel;
 
+import org.exbin.framework.bined.ReplaceParameters;
+import org.exbin.framework.bined.SearchCondition;
+import org.exbin.framework.bined.SearchParameters;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -67,8 +70,8 @@ import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
-import org.exbin.framework.bined.EncodingStatusHandler;
+import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
+import org.exbin.framework.bined.handler.EncodingStatusHandler;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextFontApi;
@@ -82,14 +85,16 @@ import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 
 /**
  * Hexadecimal editor panel.
  *
- * @version 0.2.1 2019/06/16
+ * @version 0.2.1 2019/07/12
  * @author ExBin Project (http://exbin.org)
  */
-public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi, BinarySearchPanelApi {
+public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi {
 
     private int id = 0;
     private SegmentsRepository segmentsRepository;
@@ -181,7 +186,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
             }
         });
 
-        binarySearchPanel = new BinarySearchPanel(this);
+        binarySearchPanel = new BinarySearchPanel(new BinarySearchServiceImpl(codeArea));
         binarySearchPanel.setClosePanelListener(this::hideSearchPanel);
 
         valuesPanel = new ValuesPanel();
@@ -614,6 +619,14 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new BinaryPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
@@ -900,20 +913,6 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         return codeArea.canPaste();
     }
 
-    @Override
-    public void setMatchPosition(int matchPosition) {
-        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
-        painter.setCurrentMatchIndex(matchPosition);
-        ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
-        codeArea.revealPosition(currentMatch.getPosition(), 0, codeArea.getActiveSection());
-        codeArea.repaint();
-    }
-
-    @Override
-    public void updatePosition() {
-        binarySearchPanel.updatePosition(codeArea.getCaretPosition().getDataPosition(), codeArea.getDataSize());
-    }
-
     private void updateCurrentDocumentSize() {
         if (binaryStatus != null) {
             long dataSize = codeArea.getContentData().getDataSize();
@@ -933,22 +932,16 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     private void updateCurrentMemoryMode() {
-        BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.RAM_MEMORY;
+        BinaryStatusApi.MemoryMode newMemoryMode = BinaryStatusApi.MemoryMode.RAM_MEMORY;
         if (((EditationModeCapable) codeArea).getEditationMode() == EditationMode.READ_ONLY) {
-            memoryMode = BinaryStatusApi.MemoryMode.READ_ONLY;
+            newMemoryMode = BinaryStatusApi.MemoryMode.READ_ONLY;
         } else if (codeArea.getContentData() instanceof DeltaDocument) {
-            memoryMode = BinaryStatusApi.MemoryMode.DELTA_MODE;
+            newMemoryMode = BinaryStatusApi.MemoryMode.DELTA_MODE;
         }
 
         if (binaryStatus != null) {
-            binaryStatus.setMemoryMode(memoryMode);
+            binaryStatus.setMemoryMode(newMemoryMode);
         }
-    }
-
-    @Override
-    public void clearMatches() {
-        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
-        painter.clearMatches();
     }
 
     public void setGoToPositionAction(Action goToPositionAction) {

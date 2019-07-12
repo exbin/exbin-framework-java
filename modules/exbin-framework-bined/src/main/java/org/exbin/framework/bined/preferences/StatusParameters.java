@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.bined.preferences;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import org.exbin.framework.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,7 +26,7 @@ import org.exbin.framework.bined.options.StatusOptions;
 /**
  * Status panel parameters.
  *
- * @version 0.2.0 2019/03/16
+ * @version 0.2.1 2019/07/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -46,10 +48,12 @@ public class StatusParameters {
 
     @Nonnull
     public PositionCodeType getCursorPositionCodeType() {
+        PositionCodeType defaultCodeType = PositionCodeType.DECIMAL;
         try {
-            return PositionCodeType.valueOf(preferences.get(PREFERENCES_CURSOR_POSITION_CODE_TYPE, PositionCodeType.DECIMAL.name()));
+            return PositionCodeType.valueOf(preferences.get(PREFERENCES_CURSOR_POSITION_CODE_TYPE, defaultCodeType.name()));
         } catch (Exception ex) {
-            return PositionCodeType.DECIMAL;
+            Logger.getLogger(StatusParameters.class.getName()).log(Level.SEVERE, null, ex);
+            return defaultCodeType;
         }
     }
 
@@ -67,10 +71,12 @@ public class StatusParameters {
 
     @Nonnull
     public PositionCodeType getDocumentSizeCodeType() {
+        PositionCodeType defaultCodeType = PositionCodeType.DECIMAL;
         try {
-            return PositionCodeType.valueOf(preferences.get(PREFERENCES_DOCUMENT_SIZE_CODE_TYPE, PositionCodeType.DECIMAL.name()));
+            return PositionCodeType.valueOf(preferences.get(PREFERENCES_DOCUMENT_SIZE_CODE_TYPE, defaultCodeType.name()));
         } catch (Exception ex) {
-            return PositionCodeType.DECIMAL;
+            Logger.getLogger(StatusParameters.class.getName()).log(Level.SEVERE, null, ex);
+            return defaultCodeType;
         }
     }
 

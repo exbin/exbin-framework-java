@@ -77,9 +77,9 @@ public class UndoHandlerWrapper implements XBUndoHandler {
     @Override
     public List<Command> getCommandList() {
         List<Command> result = new ArrayList<>();
-        for (BinaryDataCommand command : handler.getCommandList()) {
+        handler.getCommandList().forEach((command) -> {
             result.add(new CommandWrapper(command));
-        }
+        });
 
         return result;
     }
@@ -145,25 +145,25 @@ public class UndoHandlerWrapper implements XBUndoHandler {
     }
 
     @Override
-    public void addUndoUpdateListener(final XBUndoUpdateListener xl) {
+    public void addUndoUpdateListener(final XBUndoUpdateListener listener) {
         BinaryDataUndoUpdateListener binaryListener = new BinaryDataUndoUpdateListener() {
             @Override
             public void undoCommandPositionChanged() {
-                xl.undoCommandPositionChanged();
+                listener.undoCommandPositionChanged();
             }
 
             @Override
             public void undoCommandAdded(BinaryDataCommand bdc) {
-                xl.undoCommandAdded(new CommandWrapper(bdc));
+                listener.undoCommandAdded(new CommandWrapper(bdc));
             }
         };
-        listenersMap.put(xl, binaryListener);
+        listenersMap.put(listener, binaryListener);
         handler.addUndoUpdateListener(binaryListener);
     }
 
     @Override
-    public void removeUndoUpdateListener(XBUndoUpdateListener xl) {
-        BinaryDataUndoUpdateListener binaryListener = listenersMap.remove(xl);
+    public void removeUndoUpdateListener(XBUndoUpdateListener listener) {
+        BinaryDataUndoUpdateListener binaryListener = listenersMap.remove(listener);
         handler.removeUndoUpdateListener(binaryListener);
     }
 

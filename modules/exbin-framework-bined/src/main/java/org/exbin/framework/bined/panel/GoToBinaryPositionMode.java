@@ -14,19 +14,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined;
-
-import java.awt.event.MouseEvent;
+package org.exbin.framework.bined.panel;
 
 /**
- * Encoding status handler.
+ * Mode for calculation of the go-to position in binary document.
  *
- * @version 0.2.0 2016/12/31
+ * @version 0.2.1 2019/07/12
  * @author ExBin Project (http://exbin.org)
  */
-public interface EncodingStatusHandler {
-
-    void cycleEncodings();
-
-    void popupEncodingsMenu(MouseEvent mouseEvent);
+public enum GoToBinaryPositionMode {
+    /**
+     * Count from start of the document.
+     */
+    FROM_START,
+    /**
+     * Count from end of the document.
+     */
+    FROM_END,
+    /**
+     * Count from current position of the cursor in the document.
+     */
+    FROM_CURSOR
 }

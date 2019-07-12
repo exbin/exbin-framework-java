@@ -127,7 +127,7 @@ public class BinaryEditorPreferences {
         codeAreaParameters.setPaintRowPosBackground(legacyPreferences.isPaintRowPosBackground());
         codeAreaParameters.setCodeColorization(legacyPreferences.isCodeColorization());
 
-        editorParameters.setFileHandlingMode(legacyPreferences.isDeltaMemoryMode() ? FileHandlingMode.DELTA.name() : FileHandlingMode.MEMORY.name());
+        editorParameters.setFileHandlingMode(legacyPreferences.isDeltaMemoryMode() ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY);
         editorParameters.setShowValuesPanel(legacyPreferences.isShowValuesPanel());
 
         List<String> layoutProfiles = new ArrayList<>();

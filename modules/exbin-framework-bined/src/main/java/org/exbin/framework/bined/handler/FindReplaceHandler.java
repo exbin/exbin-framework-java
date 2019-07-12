@@ -14,38 +14,38 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined;
+package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JOptionPane;
-import org.exbin.bined.swing.CodeAreaCore;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.bined.panel.BinaryPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
- * Clipboard code handling.
+ * Find/replace handler.
  *
- * @version 0.2.1 2018/10/29
+ * @version 0.2.0 2016/12/24
  * @author ExBin Project (http://exbin.org)
  */
-public class ClipboardCodeHandler {
+public class FindReplaceHandler {
 
-    private final EditorProvider editorProvider;
+    private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
     private int metaMask;
 
-    private Action copyAsCodeAction;
-    private Action pasteFromCodeAction;
+    private Action editFindAction;
+    private Action editFindAgainAction;
+    private Action editReplaceAction;
 
-    public ClipboardCodeHandler(XBApplication application, EditorProvider editorProvider) {
+    public FindReplaceHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
@@ -54,60 +54,52 @@ public class ClipboardCodeHandler {
     public void init() {
         metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
-        copyAsCodeAction = new AbstractAction() {
+        editFindAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof BinaryEditorProvider) {
                     BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
-                    activePanel.performCopyAsCode();
+                    activePanel.showSearchPanel(false);
                 }
             }
         };
-        ActionUtils.setupAction(copyAsCodeAction, resourceBundle, "copyAsCodeAction");
+        ActionUtils.setupAction(editFindAction, resourceBundle, "editFindAction");
+        editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, metaMask));
+        editFindAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
 
-        pasteFromCodeAction = new AbstractAction() {
+        editFindAgainAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+                activePanel.findAgain();
+            }
+        };
+        ActionUtils.setupAction(editFindAgainAction, resourceBundle, "editFindAgainAction");
+        editFindAgainAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
+
+        editReplaceAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof BinaryEditorProvider) {
                     BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
-                    activePanel.performPasteFromCode();
+                    activePanel.showSearchPanel(true);
                 }
             }
         };
-        ActionUtils.setupAction(pasteFromCodeAction, resourceBundle, "pasteFromCodeAction");
+        ActionUtils.setupAction(editReplaceAction, resourceBundle, "editReplaceAction");
+        editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, metaMask));
+        editReplaceAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
-    public Action getCopyAsCodeAction() {
-        return copyAsCodeAction;
+    public Action getEditFindAction() {
+        return editFindAction;
     }
 
-    public Action getPasteFromCodeAction() {
-        return pasteFromCodeAction;
+    public Action getEditFindAgainAction() {
+        return editFindAgainAction;
     }
 
-    public Action createCopyAsCodeAction(final CodeAreaCore codeArea) {
-        Action action = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                codeArea.copyAsCode();
-            }
-        };
-        ActionUtils.setupAction(action, resourceBundle, "copyAsCodeAction");
-        return action;
-    }
-
-    public Action createPasteFromCodeAction(final CodeAreaCore codeArea) {
-        Action action = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    codeArea.pasteFromCode();
-                } catch (IllegalArgumentException ex) {
-                    JOptionPane.showMessageDialog(codeArea, ex.getMessage(), "Unable to Paste Code", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        };
-        ActionUtils.setupAction(action, resourceBundle, "pasteFromCodeAction");
-        return action;
+    public Action getEditReplaceAction() {
+        return editReplaceAction;
     }
 }

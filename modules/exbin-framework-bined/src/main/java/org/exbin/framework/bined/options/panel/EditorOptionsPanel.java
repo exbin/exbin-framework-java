@@ -20,6 +20,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.options.EditorOptions;
 import org.exbin.framework.bined.preferences.EditorParameters;
 import org.exbin.framework.gui.options.api.OptionsPanel;
@@ -44,7 +45,7 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsPan
     }
 
     public void saveToOptions(EditorOptions options) {
-        options.setFileHandlingMode((String) fileHandlingModeComboBox.getSelectedItem());
+        options.setFileHandlingMode(FileHandlingMode.valueOf((String) fileHandlingModeComboBox.getSelectedItem()));
         options.setIsShowValuesPanel(showValuesPanelCheckBox.isSelected());
     }
 

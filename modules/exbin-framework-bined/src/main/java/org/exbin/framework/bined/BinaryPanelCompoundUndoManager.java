@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined.panel;
+package org.exbin.framework.bined;
 
 import java.util.ArrayList;
 import javax.swing.event.DocumentEvent;
@@ -149,6 +149,5 @@ public class BinaryPanelCompoundUndoManager extends AbstractUndoableEdit impleme
         public boolean canRedo() {
             return edits.size()>0 && isUnDone;
         }
-
     }
 }

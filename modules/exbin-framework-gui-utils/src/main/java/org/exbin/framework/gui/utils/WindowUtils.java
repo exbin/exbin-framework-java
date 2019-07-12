@@ -43,6 +43,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -399,6 +400,8 @@ public class WindowUtils {
         dialogPanel.setPreferredSize(new Dimension(mainPreferredSize.width, mainPreferredSize.height + controlPreferredSize.height));
         return dialogPanel;
     }
+    
+    // TODO        Window window = JOptionPane.getWindowForComponent(c);
 
     @ParametersAreNonnullByDefault
     public interface DialogWrapper {

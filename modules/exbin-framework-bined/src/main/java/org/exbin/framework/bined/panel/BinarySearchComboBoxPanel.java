@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.bined.panel;
 
+import org.exbin.framework.bined.SearchCondition;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.event.KeyListener;
@@ -33,7 +34,7 @@ import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
-import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
+import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 

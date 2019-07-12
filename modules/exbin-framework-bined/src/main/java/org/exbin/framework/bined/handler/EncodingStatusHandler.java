@@ -14,23 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined.panel;
+package org.exbin.framework.bined.handler;
+
+import java.awt.event.MouseEvent;
 
 /**
- * Hex search panel interface.
+ * Encoding status handler.
  *
  * @version 0.2.0 2016/12/31
  * @author ExBin Project (http://exbin.org)
  */
-public interface BinarySearchPanelApi {
+public interface EncodingStatusHandler {
 
-    void performFind(SearchParameters dialogSearchParameters);
+    void cycleEncodings();
 
-    void setMatchPosition(int matchPosition);
-
-    void updatePosition();
-
-    void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters);
-
-    void clearMatches();
+    void popupEncodingsMenu(MouseEvent mouseEvent);
 }

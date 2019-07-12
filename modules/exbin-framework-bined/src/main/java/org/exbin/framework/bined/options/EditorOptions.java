@@ -29,15 +29,15 @@ import org.exbin.framework.bined.preferences.EditorParameters;
 @ParametersAreNonnullByDefault
 public class EditorOptions {
 
-    private String fileHandlingMode = FileHandlingMode.DELTA.name();
+    private FileHandlingMode fileHandlingMode = FileHandlingMode.DELTA;
     private boolean isShowValuesPanel = true;
 
     @Nonnull
-    public String getFileHandlingMode() {
+    public FileHandlingMode getFileHandlingMode() {
         return fileHandlingMode;
     }
 
-    public void setFileHandlingMode(String fileHandlingMode) {
+    public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
         this.fileHandlingMode = fileHandlingMode;
     }
 

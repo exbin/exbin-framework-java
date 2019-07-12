@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined;
+package org.exbin.framework.bined.handler;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,9 +32,12 @@ import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
+import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinaryStatusApi;
+import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.panel.BinaryPanel;
-import org.exbin.framework.bined.panel.ReplaceParameters;
-import org.exbin.framework.bined.panel.SearchParameters;
+import org.exbin.framework.bined.ReplaceParameters;
+import org.exbin.framework.bined.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -85,9 +88,9 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
             @Override
             public void undoCommandAdded(BinaryDataCommand cmnd) {
-                for (BinaryDataUndoUpdateListener listener : undoListeners) {
+                undoListeners.forEach((listener) -> {
                     listener.undoCommandAdded(cmnd);
-                }
+                });
             }
         };
 
@@ -163,9 +166,9 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     public void registerBinaryStatus(BinaryStatusApi binaryStatusApi) {
         this.binaryStatus = binaryStatusApi;
         if (!panels.isEmpty()) {
-            for (BinaryPanel panel : panels) {
+            panels.forEach((panel) -> {
                 panel.registerBinaryStatus(binaryStatusApi);
-            }
+            });
         }
     }
 
@@ -173,9 +176,9 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatusApi) {
         this.encodingStatus = encodingStatusApi;
         if (!panels.isEmpty()) {
-            for (BinaryPanel panel : panels) {
+            panels.forEach((panel) -> {
                 panel.registerEncodingStatus(encodingStatusApi);
-            }
+            });
         }
     }
 
@@ -455,9 +458,9 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     private void notifyUndoChanged() {
-        for (BinaryDataUndoUpdateListener listener : undoListeners) {
+        undoListeners.forEach((listener) -> {
             listener.undoCommandPositionChanged();
-        }
+        });
         if (editorViewHandling != null) {
             editorViewHandling.updateEditorView(activePanel);
         }

@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.bined.panel;
 
+import org.exbin.framework.bined.SearchCondition;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.util.ResourceBundle;
@@ -23,8 +24,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.framework.bined.CodeAreaPopupMenuHandler;
+import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.utils.binary_data.EditableBinaryData;
 
 /**
@@ -62,6 +64,14 @@ public class BinaryMultilinePanel extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new BinaryMultilinePanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
