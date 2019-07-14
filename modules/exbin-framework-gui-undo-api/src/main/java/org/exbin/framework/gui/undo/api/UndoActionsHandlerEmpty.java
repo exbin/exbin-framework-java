@@ -16,21 +16,24 @@
  */
 package org.exbin.framework.gui.undo.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Empty implementation of undo handling.
  *
  * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class UndoActionsHandlerEmpty implements UndoActionsHandler {
 
     @Override
-    public Boolean canUndo() {
+    public boolean canUndo() {
         return false;
     }
 
     @Override
-    public Boolean canRedo() {
+    public boolean canRedo() {
         return false;
     }
 

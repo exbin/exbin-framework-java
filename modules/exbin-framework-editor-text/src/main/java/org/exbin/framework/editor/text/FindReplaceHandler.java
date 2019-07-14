@@ -37,7 +37,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 /**
  * Find/replace handler.
  *
- * @version 0.2.0 2016/12/30
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class FindReplaceHandler {
@@ -99,17 +99,14 @@ public class FindReplaceHandler {
         DefaultControlPanel controlPanel = new DefaultControlPanel(findPanel.getResourceBundle());
         JPanel dialogPanel = WindowUtils.createDialogPanel(findPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
-        controlPanel.setHandler(new DefaultControlHandler() {
-            @Override
-            public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                if (actionType == ControlActionType.OK) {
-                    if (editorProvider instanceof TextPanel) {
-                        ((TextPanel) editorProvider).findText(findPanel);
-                    }
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                if (editorProvider instanceof TextPanel) {
+                    ((TextPanel) editorProvider).findText(findPanel);
                 }
-
-                dialog.close();
             }
+
+            dialog.close();
         });
         WindowUtils.addHeaderPanel(dialog.getWindow(), findPanel.getClass(), findPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, findPanel.getResourceBundle());

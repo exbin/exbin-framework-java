@@ -16,12 +16,17 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Menu position.
  *
- * @version 0.2.0 2016/01/24
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class MenuPosition {
 
     private final PositionMode basicMode;
@@ -46,14 +51,17 @@ public class MenuPosition {
         this.nextToMode = nextToMode;
     }
 
+    @Nullable
     public PositionMode getBasicMode() {
         return basicMode;
     }
 
+    @Nonnull
     public String getGroupId() {
         return groupId;
     }
 
+    @Nullable
     public NextToMode getNextToMode() {
         return nextToMode;
     }

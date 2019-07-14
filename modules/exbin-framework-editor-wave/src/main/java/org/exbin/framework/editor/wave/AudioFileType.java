@@ -17,6 +17,9 @@
 package org.exbin.framework.editor.wave;
 
 import java.io.File;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.gui.file.api.FileType;
 
@@ -26,6 +29,7 @@ import org.exbin.framework.gui.file.api.FileType;
  * @version 0.2.0 2016/01/23
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class AudioFileType extends FileFilter implements FileType {
 
     private String ext;
@@ -35,43 +39,46 @@ public class AudioFileType extends FileFilter implements FileType {
     }
 
     @Override
-    public boolean accept(File f) {
-        if (f.isDirectory()) {
+    public boolean accept(File file) {
+        if (file.isDirectory()) {
             return true;
         }
 
-        String extension = getExtension(f);
+        String extension = getExtension(file);
         if (extension != null) {
             return extension.toLowerCase().equals(getExt());
         }
         return false;
     }
 
-    //The description of this filter
+    @Nonnull
     @Override
     public String getDescription() {
-        return "Audio files " + getExt().toUpperCase() + " (*."+getExt()+")";
+        return "Audio files " + getExt().toUpperCase() + " (*." + getExt() + ")";
     }
 
-    public static String getExtension(File f) {
+    @Nullable
+    public static String getExtension(File file) {
         String ext = null;
-        String s = f.getName();
+        String s = file.getName();
         int i = s.lastIndexOf('.');
 
-        if (i > 0 &&  i < s.length() - 1) {
-            ext = s.substring(i+1).toLowerCase();
+        if (i > 0 && i < s.length() - 1) {
+            ext = s.substring(i + 1).toLowerCase();
         }
         return ext;
     }
 
+    @Nullable
     public String getExt() {
         return ext;
     }
 
-    public void setExt(String ext) {
+    public void setExt(@Nullable String ext) {
         this.ext = ext;
     }
 
+    @Nonnull
     @Override
     public String getFileTypeId() {
         return "XBWaveEditor.AudioFileFilter" + ext;

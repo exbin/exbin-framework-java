@@ -18,15 +18,18 @@ package org.exbin.framework.editor.xbup.panel.cell;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 /**
  * Empty property column panel with operation button.
  *
- * @version 0.1.24 2014/12/13
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PropertyTableCellPanel extends javax.swing.JPanel {
 
     private int paramIndex;
@@ -39,6 +42,10 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
     public PropertyTableCellPanel(JComponent cellComponent) {
         this.cellComponent = cellComponent;
         initComponents();
+        init();
+    }
+
+    private void init() {
         add(cellComponent, BorderLayout.CENTER);
     }
 
@@ -78,6 +85,7 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
         this.paramIndex = paramIndex;
     }
 
+    @Nonnull
     public JComponent getCellComponent() {
         return cellComponent;
     }

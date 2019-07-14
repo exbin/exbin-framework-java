@@ -16,15 +16,17 @@
  */
 package org.exbin.framework;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Framework module.
  *
- * @version 0.2.0 2019/06/14
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class FrameworkModule implements XBApplicationModule {
 
     @Override

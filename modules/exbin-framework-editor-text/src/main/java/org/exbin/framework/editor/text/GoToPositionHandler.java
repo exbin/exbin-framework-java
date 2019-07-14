@@ -31,7 +31,6 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 
 /**
@@ -75,7 +74,7 @@ public class GoToPositionHandler {
                     WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                        if (actionType == ControlActionType.OK) {
+                        if (actionType == DefaultControlHandler.ControlActionType.OK) {
                             activePanel.gotoLine(goToPanel.getLine());
                             activePanel.gotoRelative(goToPanel.getCharPos());
                         }

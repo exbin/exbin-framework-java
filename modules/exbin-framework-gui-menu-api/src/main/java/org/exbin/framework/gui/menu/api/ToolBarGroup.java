@@ -16,12 +16,16 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Tool bar group definition.
  *
  * @version 0.2.0 2016/01/11
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ToolBarGroup {
 
     private final String groupId;
@@ -40,14 +44,17 @@ public class ToolBarGroup {
         this.separationMode = separationMode;
     }
 
+    @Nonnull
     public String getGroupId() {
         return groupId;
     }
 
+    @Nonnull
     public ToolBarPosition getPosition() {
         return position;
     }
 
+    @Nonnull
     public SeparationMode getSeparationMode() {
         return separationMode;
     }

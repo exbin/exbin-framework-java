@@ -16,31 +16,38 @@
  */
 package org.exbin.framework.bined.options.panel;
 
-import java.util.List;
+import org.exbin.framework.bined.service.BinaryAppearanceService;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.preferences.BinaryAppearanceParameters;
-import org.exbin.framework.gui.options.api.OptionsPanel;
-import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 
 /**
- * Hexadecimal appearance options panel.
+ * Binary viewer/editor appearance options panel.
  *
- * @version 0.2.1 2019/06/09
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
-public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
-    private ModifiedOptionListener modifiedOptionListener;
+    private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryAppearanceOptionsPanel.class);
-    private final BinaryAppearanceOptionsPanelApi panelApi;
+    private final BinaryAppearanceService panelApi;
 
-    public BinaryAppearanceOptionsPanel(BinaryAppearanceOptionsPanelApi panelApi) {
+    public BinaryAppearanceOptionsPanel(BinaryAppearanceService panelApi) {
         this.panelApi = panelApi;
 
         initComponents();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -111,11 +118,6 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public List<OptionsPanel.PathItem> getPath() {
-        return null;
-    }
-
-    @Override
     public void loadFromPreferences(Preferences preferences) {
         BinaryAppearanceParameters binaryAppearanceParameters = new BinaryAppearanceParameters(preferences);
         lineWrapCheckBox.setSelected(binaryAppearanceParameters.isTextWordWrapping());
@@ -138,13 +140,13 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
     }
 
     private void setModified(boolean modified) {
-        if (modifiedOptionListener != null) {
-            modifiedOptionListener.wasModified();
+        if (optionsModifiedListener != null) {
+            optionsModifiedListener.wasModified();
         }
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
-        modifiedOptionListener = listener;
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
+        optionsModifiedListener = listener;
     }
 }

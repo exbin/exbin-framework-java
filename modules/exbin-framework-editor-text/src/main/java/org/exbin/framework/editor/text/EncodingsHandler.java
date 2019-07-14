@@ -34,8 +34,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.panel.AddEncodingPanel;
-import org.exbin.framework.editor.text.panel.TextEncodingPanel;
-import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
+import org.exbin.framework.editor.text.options.panel.TextEncodingPanel;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -46,6 +45,7 @@ import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
+import org.exbin.framework.editor.text.service.TextEncodingService;
 
 /**
  * Encodings handler.
@@ -53,7 +53,7 @@ import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
  * @version 0.2.1 2019/07/06
  * @author ExBin Project (http://exbin.org)
  */
-public class EncodingsHandler implements TextEncodingPanelApi {
+public class EncodingsHandler implements TextEncodingService {
 
     private final ResourceBundle resourceBundle;
 

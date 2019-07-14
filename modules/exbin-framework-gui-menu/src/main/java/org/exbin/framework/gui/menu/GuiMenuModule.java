@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.menu;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -43,6 +45,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
  * @version 0.2.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiMenuModule implements GuiMenuModuleApi {
 
     private XBApplication application;
@@ -62,6 +65,7 @@ public class GuiMenuModule implements GuiMenuModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     @Override
     public ClipboardActionsImpl getClipboardActions() {
         if (clipboardActions == null) {
@@ -87,6 +91,7 @@ public class GuiMenuModule implements GuiMenuModuleApi {
         getClipboardActions().fillDefaultEditPopupMenu(popupMenu, position);
     }
 
+    @Nonnull
     private MenuHandler getMenuHandler() {
         if (menuHandler == null) {
             menuHandler = new MenuHandler();
@@ -95,6 +100,7 @@ public class GuiMenuModule implements GuiMenuModuleApi {
         return menuHandler;
     }
 
+    @Nonnull
     private ToolBarHandler getToolBarHandler() {
         if (toolBarHandler == null) {
             toolBarHandler = new ToolBarHandler();
@@ -204,6 +210,7 @@ public class GuiMenuModule implements GuiMenuModuleApi {
         return menuHandler.menuGroupExists(menuId, groupId);
     }
 
+    @Nonnull
     @Override
     public ClipboardActions createClipboardActions(ClipboardActionsHandler clipboardActionsHandler) {
         return new BasicClipboardActions(clipboardActionsHandler);

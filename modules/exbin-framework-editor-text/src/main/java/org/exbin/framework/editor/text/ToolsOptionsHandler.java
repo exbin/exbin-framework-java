@@ -23,8 +23,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.text.panel.TextColorPanel;
-import org.exbin.framework.editor.text.panel.TextColorPanelApi;
+import org.exbin.framework.editor.text.options.panel.TextColorPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
@@ -36,6 +35,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
+import org.exbin.framework.editor.text.service.TextColorService;
 
 /**
  * Tools options action handler.
@@ -95,7 +95,7 @@ public class ToolsOptionsHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final TextColorPanelApi textColorPanelHandler = new TextColorPanelApi() {
+                final TextColorService textColorPanelHandler = new TextColorService() {
                     @Override
                     public Color[] getCurrentTextColors() {
                         return ((TextPanel) editorProvider).getCurrentColors();

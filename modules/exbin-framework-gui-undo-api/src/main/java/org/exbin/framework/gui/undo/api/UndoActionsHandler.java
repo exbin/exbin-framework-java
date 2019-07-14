@@ -16,12 +16,15 @@
  */
 package org.exbin.framework.gui.undo.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Interface for undo handling.
  *
- * @version 0.2.0 2016/03/20
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface UndoActionsHandler {
 
     /**
@@ -29,14 +32,14 @@ public interface UndoActionsHandler {
      *
      * @return true if undo possible
      */
-    Boolean canUndo();
+    boolean canUndo();
 
     /**
      * Returns if redo operation is available.
      *
      * @return true if redo possible
      */
-    Boolean canRedo();
+    boolean canRedo();
 
     /**
      * Performs undo.

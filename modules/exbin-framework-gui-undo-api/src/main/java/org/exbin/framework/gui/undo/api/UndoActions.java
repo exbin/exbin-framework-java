@@ -16,14 +16,17 @@
  */
 package org.exbin.framework.gui.undo.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
  * Interface for undo action set.
  *
- * @version 0.2.0 2016/03/20
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface UndoActions {
 
     /**
@@ -43,6 +46,7 @@ public interface UndoActions {
      *
      * @return undo action
      */
+    @Nonnull
     Action getUndoAction();
 
     /**
@@ -50,6 +54,7 @@ public interface UndoActions {
      *
      * @return redo action
      */
+    @Nonnull
     Action getRedoAction();
 
     /**
@@ -57,5 +62,6 @@ public interface UndoActions {
      *
      * @return undo manager action
      */
+    @Nonnull
     Action getUndoManagerAction();
 }

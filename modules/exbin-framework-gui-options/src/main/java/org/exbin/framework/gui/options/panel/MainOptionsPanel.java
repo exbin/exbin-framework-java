@@ -22,32 +22,33 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.api.Preferences;
-import org.exbin.framework.gui.options.api.OptionsPanel;
-import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
-import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.preferences.FrameworkParameters;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 
 /**
  * Main options panel.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
-public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
-    private ModifiedOptionListener modifiedOptionListener;
-    private OptionsPanel extendedPanel = null;
+    private OptionsModifiedListener optionsModifiedListener;
+    private OptionsCapable extendedPanel = null;
 
     private DefaultComboBoxModel<String> themesComboBoxModel;
     private DefaultComboBoxModel<Locale> languageComboBoxModel;
@@ -66,7 +67,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
                 DefaultListCellRenderer retValue = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Locale) {
                     if (value.equals(Locale.ROOT)) {
-                        retValue.setText("<" + resourceBundle.getString("MainOptionsPanel.defaultLanguage") + ">");
+                        retValue.setText("<" + resourceBundle.getString("defaultLanguage") + ">");
                     } else {
                         retValue.setText(((Locale) value).getDisplayLanguage((Locale) value));
                     }
@@ -77,6 +78,48 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
 
         initComponents();
         init();
+    }
+
+    private void init() {
+        themes = new ArrayList<>();
+        themes.add("");
+        boolean extraCrossPlatformLAF = !"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName());
+        if (extraCrossPlatformLAF) {
+            themes.add(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+        themes.add("javax.swing.plaf.metal.MetalLookAndFeel");
+        themes.add("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        themeNames = new ArrayList<>();
+        themeNames.add(resourceBundle.getString("defaultTheme"));
+        if (extraCrossPlatformLAF) {
+            themeNames.add(resourceBundle.getString("crossPlatformTheme"));
+        }
+        themeNames.add("Metal");
+        themeNames.add("Motif");
+        UIManager.LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
+        for (UIManager.LookAndFeelInfo lookAndFeelInfo : infos) {
+            if (!themes.contains(lookAndFeelInfo.getClassName())) {
+                themes.add(lookAndFeelInfo.getClassName());
+                themeNames.add(lookAndFeelInfo.getName());
+            }
+        }
+
+        themeNames.forEach((themeName) -> {
+            themesComboBoxModel.addElement(themeName);
+        });
+
+        languageLocales = new ArrayList<>();
+        languageLocales.add(Locale.ROOT);
+        languageLocales.add(new Locale("en", "US"));
+        languageLocales.forEach((language) -> {
+            languageComboBoxModel.addElement(language);
+        });
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -98,7 +141,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
 
         setLayout(new java.awt.BorderLayout());
 
-        visualThemeLabel.setText(resourceBundle.getString("MainOptionsPanel.visualThemeLabel.text")); // NOI18N
+        visualThemeLabel.setText(resourceBundle.getString("visualThemeLabel.text")); // NOI18N
 
         themeComboBox.setModel(themesComboBoxModel);
         themeComboBox.addItemListener(new java.awt.event.ItemListener() {
@@ -115,7 +158,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
             }
         });
 
-        languageLabel.setText(resourceBundle.getString("MainOptionsPanel.languageLabel.text")); // NOI18N
+        languageLabel.setText(resourceBundle.getString("languageLabel.text")); // NOI18N
 
         javax.swing.GroupLayout mainOptionsBasicPanelLayout = new javax.swing.GroupLayout(mainOptionsBasicPanel);
         mainOptionsBasicPanel.setLayout(mainOptionsBasicPanelLayout);
@@ -146,7 +189,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
 
         add(mainOptionsBasicPanel, java.awt.BorderLayout.NORTH);
 
-        requireRestartLabel.setText(resourceBundle.getString("MainOptionsPanel.requireRestartLabel.text")); // NOI18N
+        requireRestartLabel.setText(resourceBundle.getString("requireRestartLabel.text")); // NOI18N
 
         javax.swing.GroupLayout mainOptionsNotePanelLayout = new javax.swing.GroupLayout(mainOptionsNotePanel);
         mainOptionsNotePanel.setLayout(mainOptionsNotePanelLayout);
@@ -196,14 +239,9 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
     // End of variables declaration//GEN-END:variables
 
     private void setModified(boolean modified) {
-        if (modifiedOptionListener != null) {
-            modifiedOptionListener.wasModified();
+        if (optionsModifiedListener != null) {
+            optionsModifiedListener.wasModified();
         }
-    }
-
-    @Override
-    public List<PathItem> getPath() {
-        return null;
     }
 
     @Override
@@ -262,53 +300,17 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
-        modifiedOptionListener = listener;
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
+        optionsModifiedListener = listener;
     }
 
-    private void init() {
-        themes = new ArrayList<>();
-        themes.add("");
-        boolean extraCrossPlatformLAF = !"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName());
-        if (extraCrossPlatformLAF) {
-            themes.add(UIManager.getCrossPlatformLookAndFeelClassName());
-        }
-        themes.add("javax.swing.plaf.metal.MetalLookAndFeel");
-        themes.add("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-        themeNames = new ArrayList<>();
-        themeNames.add(resourceBundle.getString("MainOptionsPanel.defaultTheme"));
-        if (extraCrossPlatformLAF) {
-            themeNames.add(resourceBundle.getString("MainOptionsPanel.crossPlatformTheme"));
-        }
-        themeNames.add("Metal");
-        themeNames.add("Motif");
-        UIManager.LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
-        for (UIManager.LookAndFeelInfo lookAndFeelInfo : infos) {
-            if (!themes.contains(lookAndFeelInfo.getClassName())) {
-                themes.add(lookAndFeelInfo.getClassName());
-                themeNames.add(lookAndFeelInfo.getName());
-            }
-        }
-
-        for (String themeName : themeNames) {
-            themesComboBoxModel.addElement(themeName);
-        }
-
-        languageLocales = new ArrayList<>();
-        languageLocales.add(Locale.ROOT);
-        languageLocales.add(new Locale("en", "US"));
-        for (Locale language : languageLocales) {
-            languageComboBoxModel.addElement(language);
-        }
-    }
-
-    public void addExtendedPanel(OptionsPanel panel) {
+    public void addExtendedPanel(OptionsCapable panel) {
         if (extendedPanel != null) {
             remove((Component) extendedPanel);
         }
         extendedPanel = panel;
         add((Component) panel, BorderLayout.CENTER);
-        extendedPanel.setModifiedOptionListener(modifiedOptionListener);
+        extendedPanel.setOptionsModifiedListener(optionsModifiedListener);
     }
 
     public void setLanguageLocales(Collection<Locale> locales) {
@@ -317,9 +319,9 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsPanel
         languageLocales.add(new Locale("en", "US"));
         languageLocales.addAll(locales);
         languageComboBoxModel.removeAllElements();
-        for (Locale language : languageLocales) {
+        languageLocales.forEach((language) -> {
             languageComboBoxModel.addElement(language);
-        }
+        });
         languageComboBox.revalidate();
     }
 }

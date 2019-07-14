@@ -34,14 +34,14 @@ public interface ClientModuleApi extends XBApplicationModule {
     /**
      * Attempts to connect to running service.
      *
-     * @return true if connection was estabilished
+     * @return true if connection was established
      */
     boolean connectToService();
 
     /**
      * Attempts to connect to fallback service using database connection.
      *
-     * @return true if connection was estabilished
+     * @return true if connection was established
      */
     boolean connectToFallbackService();
 

@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -42,6 +43,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  * @version 0.2.0 2016/01/11
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ToolBarHandler {
 
     /**
@@ -240,6 +242,7 @@ public class ToolBarHandler {
         toolBarDef.getContributions().add(toolBarContribution);
     }
 
+    @ParametersAreNonnullByDefault
     private class ToolBarGroupRecord {
 
         String groupId;
@@ -257,6 +260,7 @@ public class ToolBarHandler {
         }
     }
 
+    @ParametersAreNonnullByDefault
     private class ToolBarGroupRecordPathNode {
 
         List<ToolBarGroupRecord> records;

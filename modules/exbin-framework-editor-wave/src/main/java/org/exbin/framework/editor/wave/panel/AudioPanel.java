@@ -22,7 +22,6 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.InputMethodListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.print.PageFormat;
@@ -122,19 +121,13 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
         audioFormatType = null;
 
         wavePanel = new XBWavePanel();
-        wavePanel.setSelectionChangedListener(new XBWavePanel.SelectionChangedListener() {
-            @Override
-            public void selectionChanged() {
-                if (clipboardActionsUpdateListener != null) {
-                    clipboardActionsUpdateListener.stateChanged();
-                }
+        wavePanel.setSelectionChangedListener(() -> {
+            if (clipboardActionsUpdateListener != null) {
+                clipboardActionsUpdateListener.stateChanged();
             }
         });
-        wavePanel.setZoomChangedListener(new XBWavePanel.ZoomChangedListener() {
-            @Override
-            public void zoomChanged() {
-                scrollBar.setMaximum(wavePanel.getWaveWidth());
-            }
+        wavePanel.setZoomChangedListener(() -> {
+            scrollBar.setMaximum(wavePanel.getWaveWidth());
         });
         sourceDataLine = null;
         defaultColors = getAudioPanelColors();
@@ -142,18 +135,15 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
         add(wavePanel);
         /*scrollPane.setViewportView(wavePanel); */
 
-        scrollBar.addAdjustmentListener(new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent evt) {
-                int valuePosition = evt.getValue();
-                if (wavePlayed) {
-                    if ((int) (wavePosition * wavePanel.getScaleRatio()) != valuePosition) {
-                        seekPlaying((int) (valuePosition / wavePanel.getScaleRatio()));
-                    }
-                } else if (wavePosition != valuePosition) {
-                    wavePanel.setWindowPosition(valuePosition < 0 ? 0 : (int) (valuePosition / wavePanel.getScaleRatio()));
-                    repaint();
+        scrollBar.addAdjustmentListener((AdjustmentEvent evt) -> {
+            int valuePosition = evt.getValue();
+            if (wavePlayed) {
+                if ((int) (wavePosition * wavePanel.getScaleRatio()) != valuePosition) {
+                    seekPlaying((int) (valuePosition / wavePanel.getScaleRatio()));
                 }
+            } else if (wavePosition != valuePosition) {
+                wavePanel.setWindowPosition(valuePosition < 0 ? 0 : (int) (valuePosition / wavePanel.getScaleRatio()));
+                repaint();
             }
         });
 
@@ -341,16 +331,12 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
             try {
 //                PrintJob myJob = imageArea.getToolkit().getPrintJob(null, fileName, null);
 //                if (myJob != null) {
-                job.setPrintable(new Printable() {
-
-                    @Override
-                    public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-//                        imageArea.print(graphics); // TODO: Rescale on page
-                        if (pageIndex == 0) {
-                            return Printable.PAGE_EXISTS;
-                        }
-                        return Printable.NO_SUCH_PAGE;
+                job.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
+                    //                        imageArea.print(graphics); // TODO: Rescale on page
+                    if (pageIndex == 0) {
+                        return Printable.PAGE_EXISTS;
                     }
+                    return Printable.NO_SUCH_PAGE;
                 });
                 job.print();
 //                }
@@ -926,13 +912,14 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     private void notifyStatusChangeListeners() {
-        for (StatusChangeListener listener : statusChangeListeners) {
+        statusChangeListeners.stream().map((listener) -> {
             if (wavePlayed != isPlaying()) {
                 wavePlayed = !wavePlayed;
             }
-
+            return listener;
+        }).forEachOrdered((listener) -> {
             listener.statusChanged();
-        }
+        });
     }
 
     public interface WaveRepaintListener extends EventListener {
@@ -949,9 +936,9 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     private void notifyWaveRepaintListeners() {
-        for (WaveRepaintListener listener : waveRepaintListeners) {
+        waveRepaintListeners.forEach((listener) -> {
             listener.waveRepaint();
-        }
+        });
     }
 
     public static String getTimeForTicks(int position, XBWave wave) {

@@ -15,26 +15,27 @@
  */
 package org.exbin.framework.bined.options.panel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.options.EditorOptions;
 import org.exbin.framework.bined.preferences.EditorParameters;
-import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 
 /**
  * Editor preference parameters panel.
  *
- * @version 0.2.1 2019/06/16
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditorOptionsPanel.class);
     private final EditorOptionsPanelApi editorOptionsPanelApi;
@@ -42,6 +43,12 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsPan
     public EditorOptionsPanel(@Nullable EditorOptionsPanelApi editorOptionsPanelApi) {
         this.editorOptionsPanelApi = editorOptionsPanelApi;
         initComponents();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     public void saveToOptions(EditorOptions options) {
@@ -116,13 +123,6 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsPan
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public List<PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
-        path.add(new PathItem("editor", resourceBundle.getString("options.Path.0")));
-        return path;
-    }
-
-    @Override
     public void applyPreferencesChanges() {
         if (editorOptionsPanelApi != null) {
             EditorOptions editorOptions = new EditorOptions();
@@ -149,7 +149,6 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsPan
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
-
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
     }
 }

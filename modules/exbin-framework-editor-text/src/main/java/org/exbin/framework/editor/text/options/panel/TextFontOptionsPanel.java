@@ -18,35 +18,42 @@ package org.exbin.framework.editor.text.options.panel;
 
 import java.awt.Font;
 import java.awt.event.ItemEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
-import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
-import org.exbin.framework.gui.options.api.OptionsPanel;
-import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
-import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
+import org.exbin.framework.editor.text.service.TextFontService;
 
 /**
  * Text font options panel.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
-public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+@ParametersAreNonnullByDefault
+public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
-    private ModifiedOptionListener modifiedOptionListener;
+    private OptionsModifiedListener optionsModifiedListener;
     private FontChangeAction fontChangeAction;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextFontOptionsPanel.class);
-    private final TextFontPanelApi frame;
+    private final TextFontService frame;
     private Font font;
 
-    public TextFontOptionsPanel(TextFontPanelApi frame) {
+    public TextFontOptionsPanel(TextFontService frame) {
         this.frame = frame;
 
         initComponents();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     @Override
@@ -185,6 +192,14 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
         setModified(true);
     }//GEN-LAST:event_fillCurrentFontButtonActionPerformed
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new TextFontOptionsPanel(null));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton changeFontButton;
@@ -194,14 +209,6 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
     private javax.swing.JLabel fontPreviewLabel;
     private javax.swing.JColorChooser jColorChooser1;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public List<OptionsPanel.PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
-        path.add(new PathItem("apperance", ""));
-        path.add(new PathItem("font", resourceBundle.getString("options.Path.0")));
-        return path;
-    }
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
@@ -235,14 +242,14 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsP
     }
 
     private void setModified(boolean b) {
-        if (modifiedOptionListener != null) {
-            modifiedOptionListener.wasModified();
+        if (optionsModifiedListener != null) {
+            optionsModifiedListener.wasModified();
         }
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
-        modifiedOptionListener = listener;
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
+        optionsModifiedListener = listener;
     }
 
     public void setFontChangeAction(FontChangeAction fontChangeAction) {

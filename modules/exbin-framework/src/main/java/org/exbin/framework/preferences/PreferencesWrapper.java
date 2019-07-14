@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.preferences;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.exbin.framework.api.Preferences;
 import java.util.prefs.BackingStoreException;
 import javax.annotation.Nonnull;
@@ -135,7 +137,7 @@ public class PreferencesWrapper implements Preferences {
         try {
             preferences.flush();
         } catch (BackingStoreException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(PreferencesWrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -147,7 +149,7 @@ public class PreferencesWrapper implements Preferences {
         try {
             preferences.sync();
         } catch (BackingStoreException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(PreferencesWrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -18,37 +18,41 @@ package org.exbin.framework.gui.options.panel;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.gui.options.api.OptionsPanel;
-import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
-import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.options.preferences.AppearanceParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
+import org.exbin.framework.gui.utils.ComponentResourceProvider;
 
 /**
  * Toolbar apperance options panel.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
-public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+@ParametersAreNonnullByDefault
+public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable, ComponentResourceProvider {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
-    private ModifiedOptionListener modifiedOptionListener;
+    private OptionsModifiedListener optionsModifiedListener;
     private final ApplicationFrameHandler frame;
-    private OptionsPanel extendedPanel = null;
+    private OptionsCapable extendedPanel = null;
 
     public AppearanceOptionsPanel(ApplicationFrameHandler frame) {
         this.frame = frame;
         initComponents();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -68,7 +72,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
         setLayout(new java.awt.BorderLayout());
 
         showToolbarCheckBox.setSelected(true);
-        showToolbarCheckBox.setText(resourceBundle.getString("AppearanceOptionsPanel.showToolbarCheckBox.text")); // NOI18N
+        showToolbarCheckBox.setText(resourceBundle.getString("showToolbarCheckBox.text")); // NOI18N
         showToolbarCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 showToolbarCheckBoxjCheckBoxItemStateChanged(evt);
@@ -76,7 +80,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
         });
 
         showCaptionsCheckBox.setSelected(true);
-        showCaptionsCheckBox.setText(resourceBundle.getString("AppearanceOptionsPanel.showCaptionsCheckBox.text")); // NOI18N
+        showCaptionsCheckBox.setText(resourceBundle.getString("showCaptionsCheckBox.text")); // NOI18N
         showCaptionsCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 showCaptionsCheckBoxjCheckBoxItemStateChanged(evt);
@@ -84,7 +88,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
         });
 
         showStatusbarCheckBox.setSelected(true);
-        showStatusbarCheckBox.setText(resourceBundle.getString("AppearanceOptionsPanel.showStatusbarCheckBox.text")); // NOI18N
+        showStatusbarCheckBox.setText(resourceBundle.getString("showStatusbarCheckBox.text")); // NOI18N
         showStatusbarCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 showStatusbarCheckBoxjCheckBoxItemStateChanged(evt);
@@ -135,62 +139,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new AppearanceOptionsPanel(new ApplicationFrameHandler() {
-            @Override
-            public Frame getFrame() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setToolBarVisible(boolean toolBarVisible) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setStatusBarVisible(boolean statusBarVisible) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setToolBarCaptionsVisible(boolean captionsVisible) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setApplication(XBApplication app) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setMainPanel(Component component) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void loadMainMenu(XBApplication application) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void loadMainToolBar(XBApplication application) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void show() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setDefaultSize(Dimension windowSize) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        }));
+        WindowUtils.invokeDialog(new AppearanceOptionsPanel(null));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -200,17 +149,10 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     private javax.swing.JPanel toolBarsOptionsPanel;
     // End of variables declaration//GEN-END:variables
 
-    private void setModified(boolean b) {
-        if (modifiedOptionListener != null) {
-            modifiedOptionListener.wasModified();
+    private void setModified(boolean modified) {
+        if (optionsModifiedListener != null) {
+            optionsModifiedListener.wasModified();
         }
-    }
-
-    @Override
-    public List<PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
-        path.add(new PathItem("apperance", ""));
-        return path;
     }
 
     @Override
@@ -249,16 +191,16 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
-        modifiedOptionListener = listener;
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
+        optionsModifiedListener = listener;
     }
 
-    public void addExtendedPanel(OptionsPanel panel) {
+    public void addExtendedPanel(OptionsCapable panel) {
         if (extendedPanel != null) {
             remove((Component) extendedPanel);
         }
         extendedPanel = panel;
         add((Component) panel, BorderLayout.CENTER);
-        extendedPanel.setModifiedOptionListener(modifiedOptionListener);
+        extendedPanel.setOptionsModifiedListener(optionsModifiedListener);
     }
 }

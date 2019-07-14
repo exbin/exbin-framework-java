@@ -19,11 +19,12 @@ package org.exbin.framework.editor.text.panel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextPositionStatusApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Text editor status panel.
  *
- * @version 0.2.0 2016/12/31
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
 public class TextStatusPanel extends javax.swing.JPanel implements TextPositionStatusApi, TextEncodingStatusApi {
@@ -83,6 +84,15 @@ public class TextStatusPanel extends javax.swing.JPanel implements TextPositionS
                 .addComponent(encodingLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new TextStatusPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField documentCursorPositionTextField;

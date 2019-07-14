@@ -109,12 +109,12 @@ public class GuiUndoModule implements GuiUndoModuleApi {
         this.undoHandler = undoHandler;
         getDefaultUndoActions().setUndoActionsHandler(new UndoActionsHandler() {
             @Override
-            public Boolean canUndo() {
+            public boolean canUndo() {
                 return undoHandler.canUndo();
             }
 
             @Override
-            public Boolean canRedo() {
+            public boolean canRedo() {
                 return undoHandler.canRedo();
             }
 

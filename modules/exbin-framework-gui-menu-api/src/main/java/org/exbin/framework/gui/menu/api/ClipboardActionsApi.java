@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
@@ -24,15 +26,21 @@ import javax.swing.Action;
  * @version 0.2.0 2016/01/09
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface ClipboardActionsApi {
 
+    @Nonnull
     Action getCutAction();
 
+    @Nonnull
     Action getCopyAction();
 
+    @Nonnull
     Action getPasteAction();
 
+    @Nonnull
     Action getDeleteAction();
 
+    @Nonnull
     Action getSelectAllAction();
 }

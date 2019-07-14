@@ -17,23 +17,24 @@
 package org.exbin.framework.bined.options.panel;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.preferences.ColorParameters;
-import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 
 /**
  * Color profiles options panel.
  *
- * @version 0.2.0 2019/06/17
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
-public class ColorProfilesOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class ColorProfilesOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ColorProfilesOptionsPanel.class);
 
@@ -52,6 +53,12 @@ public class ColorProfilesOptionsPanel extends javax.swing.JPanel implements Opt
     private void init() {
         add(selectionPanel, BorderLayout.NORTH);
         add(profilesPanel, BorderLayout.CENTER);
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -78,14 +85,6 @@ public class ColorProfilesOptionsPanel extends javax.swing.JPanel implements Opt
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     @Override
-    public List<PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
-        path.add(new PathItem("editor", ""));
-        path.add(new PathItem("colorProfiles", resourceBundle.getString("options.Path.0")));
-        return path;
-    }
-
-    @Override
     public void applyPreferencesChanges() {
         if (codeAreaOptionsPanelApi != null) {
             int defaultProfile = selectionPanel.getDefaultProfile();
@@ -111,7 +110,7 @@ public class ColorProfilesOptionsPanel extends javax.swing.JPanel implements Opt
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
 
     }
 }

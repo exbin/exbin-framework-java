@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.bined.options.panel;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.bined.options.StatusOptions;
 
 /**
@@ -24,7 +25,8 @@ import org.exbin.framework.bined.options.StatusOptions;
  * @version 0.2.1 2019/06/17
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface StatusOptionsPanelApi {
 
-    public void applyStatusOptions(StatusOptions statusOptions);
+    void applyStatusOptions(StatusOptions statusOptions);
 }

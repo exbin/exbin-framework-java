@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.editor.wave;
 
-import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
@@ -25,11 +24,10 @@ import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
-import org.exbin.framework.editor.wave.panel.AudioDevicesPanel;
+import org.exbin.framework.editor.wave.options.panel.AudioDevicesPanel;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
 import org.exbin.framework.editor.wave.panel.AudioStatusPanel;
-import org.exbin.framework.editor.wave.panel.WaveColorOptionsPanel;
-import org.exbin.framework.editor.wave.panel.WaveColorPanelApi;
+import org.exbin.framework.editor.wave.options.panel.WaveColorOptionsPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -43,11 +41,13 @@ import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.editor.wave.service.WaveColorService;
+import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
 
 /**
  * XBUP audio editor module.
  *
- * @version 0.2.0 2016/01/30
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class EditorWaveModule implements XBApplicationModule {
@@ -98,18 +98,8 @@ public class EditorWaveModule implements XBApplicationModule {
 
             editorProvider = audioPanel;
 
-            audioPanel.addStatusChangeListener(new AudioPanel.StatusChangeListener() {
-                @Override
-                public void statusChanged() {
-                    updateStatus();
-                }
-            });
-            audioPanel.addWaveRepaintListener(new AudioPanel.WaveRepaintListener() {
-                @Override
-                public void waveRepaint() {
-                    updatePositionTime();
-                }
-            });
+            audioPanel.addStatusChangeListener(this::updateStatus);
+            audioPanel.addWaveRepaintListener(this::updatePositionTime);
 
             audioPanel.attachCaretListener(new MouseMotionListener() {
 
@@ -188,22 +178,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
-        WaveColorPanelApi waveColorPanelFrame = new WaveColorPanelApi() {
-            @Override
-            public Color[] getCurrentWaveColors() {
-                return ((AudioPanel) getEditorProvider()).getAudioPanelColors();
-            }
-
-            @Override
-            public Color[] getDefaultWaveColors() {
-                return ((AudioPanel) getEditorProvider()).getDefaultColors();
-            }
-
-            @Override
-            public void setCurrentWaveColors(Color[] colors) {
-                ((AudioPanel) getEditorProvider()).setAudioPanelColors(colors);
-            }
-        };
+        WaveColorService waveColorPanelFrame = new WaveColorServiceImpl(getEditorProvider());
 
         optionsModule.addOptionsPanel(new WaveColorOptionsPanel(waveColorPanelFrame));
         optionsModule.addOptionsPanel(new AudioDevicesPanel());

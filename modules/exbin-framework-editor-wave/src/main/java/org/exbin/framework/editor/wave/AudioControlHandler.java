@@ -19,6 +19,8 @@ package org.exbin.framework.editor.wave;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
@@ -34,13 +36,12 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.0 2016/01/23
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class AudioControlHandler {
 
     private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
-
-    private int metaMask;
 
     private Action audioPlayAction;
     private Action audioStopAction;
@@ -52,8 +53,6 @@ public class AudioControlHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         audioPlayAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -78,10 +77,12 @@ public class AudioControlHandler {
         ActionUtils.setupAction(audioStopAction, resourceBundle, "audioStopAction");
     }
 
+    @Nonnull
     public Action getPlayAction() {
         return audioPlayAction;
     }
 
+    @Nonnull
     public Action getStopAction() {
         return audioStopAction;
     }

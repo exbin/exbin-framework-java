@@ -16,8 +16,7 @@
 package org.exbin.framework.bined.options.panel;
 
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,21 +30,22 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.options.CodeAreaOptions;
 import org.exbin.framework.bined.preferences.CodeAreaParameters;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
-import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 
 /**
  * Code area preference parameters panel.
  *
- * @version 0.2.0 2019/06/16
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
     private Font codeFont = new Font(Font.MONOSPACED, Font.PLAIN, 12);
 
@@ -55,6 +55,12 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsP
     public CodeAreaOptionsPanel(@Nullable CodeAreaOptionsPanelApi codeAreaOptionsPanelApi) {
         this.codeAreaOptionsPanelApi = codeAreaOptionsPanelApi;
         initComponents();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     @Nonnull
@@ -348,14 +354,6 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsP
     }
 
     @Override
-    public List<PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
-        path.add(new PathItem("editor", ""));
-        path.add(new PathItem("codeArea", resourceBundle.getString("options.Path.0")));
-        return path;
-    }
-
-    @Override
     public void applyPreferencesChanges() {
         if (codeAreaOptionsPanelApi != null) {
             CodeAreaOptions codeAreaOptions = new CodeAreaOptions();
@@ -381,7 +379,6 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsP
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
-
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
     }
 }

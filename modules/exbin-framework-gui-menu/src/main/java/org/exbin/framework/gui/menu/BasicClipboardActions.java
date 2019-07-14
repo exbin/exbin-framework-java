@@ -21,6 +21,9 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.gui.menu.api.ClipboardActions;
@@ -31,9 +34,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Basic clipboard action set.
  *
- * @version 0.2.0 2016/03/16
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class BasicClipboardActions implements ClipboardActions {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiMenuModule.class);
@@ -51,7 +55,7 @@ public class BasicClipboardActions implements ClipboardActions {
         this(null);
     }
 
-    public BasicClipboardActions(ClipboardActionsHandler handler) {
+    public BasicClipboardActions(@Nullable ClipboardActionsHandler handler) {
         this.clipboardActionsHandler = handler;
 
         cutAction = new AbstractAction() {
@@ -147,26 +151,31 @@ public class BasicClipboardActions implements ClipboardActions {
         }
     }
 
+    @Nonnull
     @Override
     public Action getCutAction() {
         return cutAction;
     }
 
+    @Nonnull
     @Override
     public Action getCopyAction() {
         return copyAction;
     }
 
+    @Nonnull
     @Override
     public Action getPasteAction() {
         return pasteAction;
     }
 
+    @Nonnull
     @Override
     public Action getDeleteAction() {
         return deleteAction;
     }
 
+    @Nonnull
     @Override
     public Action getSelectAllAction() {
         return selectAllAction;

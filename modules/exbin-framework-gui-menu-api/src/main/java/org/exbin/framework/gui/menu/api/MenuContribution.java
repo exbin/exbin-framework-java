@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.Nonnull;
+
 /**
  * Interface for menu contributions.
  *
@@ -24,5 +26,6 @@ package org.exbin.framework.gui.menu.api;
  */
 public interface MenuContribution {
 
+    @Nonnull
     MenuPosition getMenuPosition();
 }

@@ -18,12 +18,15 @@ package org.exbin.framework.gui.options;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
@@ -32,7 +35,6 @@ import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
-import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.options.panel.OptionsTreePanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -40,13 +42,17 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsPathItem;
+import org.exbin.framework.gui.utils.ComponentResourceProvider;
 
 /**
- * Implementation of XBUP framework options module.
+ * Implementation of framework options module.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiOptionsModule implements GuiOptionsModuleApi {
 
     private XBApplication application;
@@ -54,9 +60,9 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
 
     private Action optionsAction;
     private OptionsTreePanel optionsTreePanel;
-    private final List<OptionsPanel> optionsPanels = new ArrayList<>();
-    private OptionsPanel mainOptionsExt = null;
-    private OptionsPanel appearanceOptionsExt = null;
+    private final Map<List<OptionsPathItem>, OptionsCapable> optionsPanels = new HashMap<>();
+    private OptionsCapable mainOptionsExt = null;
+    private OptionsCapable appearanceOptionsExt = null;
 
     public GuiOptionsModule() {
     }
@@ -78,6 +84,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         return resourceBundle;
     }
 
+    @Nonnull
     @Override
     public Action getOptionsAction() {
         if (optionsAction == null) {
@@ -88,9 +95,9 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
                     if (optionsTreePanel == null) {
                         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                         optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
-                        for (OptionsPanel optionsPanel : optionsPanels) {
-                            optionsTreePanel.addOptionsPanel(optionsPanel);
-                        }
+                        optionsPanels.entrySet().forEach((optionsPanel) -> {
+                            optionsTreePanel.addOptionsPanel(optionsPanel.getValue(), optionsPanel.getKey());
+                        });
                         if (mainOptionsExt != null) {
                             optionsTreePanel.extendMainOptionsPanel(mainOptionsExt);
                         }
@@ -141,20 +148,46 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     }
 
     @Override
-    public void addOptionsPanel(OptionsPanel optionsPanel) {
-        optionsPanels.add(optionsPanel);
+    public void addOptionsPanel(OptionsCapable optionsPanel, List<OptionsPathItem> path) {
+        optionsPanels.put(path, optionsPanel);
         if (optionsTreePanel != null) {
-            optionsTreePanel.addOptionsPanel(optionsPanel);
+            optionsTreePanel.addOptionsPanel(optionsPanel, path);
         }
     }
 
     @Override
-    public Preferences getPreferences() {
-        return null; // TODO getOptionsDialog().getPreferences();
+    public void addOptionsPanel(OptionsCapable optionsPanel, String parentPath) {
+        ArrayList<OptionsPathItem> optionsPath = new ArrayList<>();
+        String[] pathParts = parentPath.split("/");
+        for (String pathPart : pathParts) {
+            if (!pathPart.isEmpty()) {
+                optionsPath.add(new OptionsPathItem(pathPart, null));
+            }
+        }
+        if (optionsPanel instanceof ComponentResourceProvider) {
+            ResourceBundle componentResourceBundle = ((ComponentResourceProvider) optionsPanel).getResourceBundle();
+            String optionsDefaultName = componentResourceBundle.getString("options.name");
+            String optionsDefaultCaption = componentResourceBundle.getString("options.caption");
+            optionsPath.add(new OptionsPathItem(optionsDefaultName, optionsDefaultCaption));
+        }
+        addOptionsPanel(optionsPanel, optionsPath);
     }
 
     @Override
-    public void extendMainOptionsPanel(OptionsPanel panel) {
+    public void addOptionsPanel(OptionsCapable optionsPanel) {
+        String optionsDefaultPath;
+        if (optionsPanel instanceof ComponentResourceProvider) {
+            ResourceBundle componentResourceBundle = ((ComponentResourceProvider) optionsPanel).getResourceBundle();
+            optionsDefaultPath = componentResourceBundle.getString("options.path");
+        } else {
+            optionsDefaultPath = null;
+        }
+
+        addOptionsPanel(optionsPanel, optionsDefaultPath);
+    }
+
+    @Override
+    public void extendMainOptionsPanel(OptionsCapable panel) {
         mainOptionsExt = panel;
         if (optionsTreePanel != null) {
             optionsTreePanel.extendMainOptionsPanel(panel);
@@ -162,7 +195,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     }
 
     @Override
-    public void extendAppearanceOptionsPanel(OptionsPanel panel) {
+    public void extendAppearanceOptionsPanel(OptionsCapable panel) {
         appearanceOptionsExt = panel;
         if (optionsTreePanel != null) {
             optionsTreePanel.extendAppearanceOptionsPanel(panel);

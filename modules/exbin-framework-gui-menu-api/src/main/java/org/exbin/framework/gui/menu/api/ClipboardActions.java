@@ -16,12 +16,15 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Interface for clipboard action set.
  *
  * @version 0.2.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface ClipboardActions extends ClipboardActionsApi {
 
     /**

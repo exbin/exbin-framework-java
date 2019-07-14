@@ -15,8 +15,8 @@
  */
 package org.exbin.framework.bined.options.panel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.PositionCodeType;
@@ -25,18 +25,19 @@ import org.exbin.framework.bined.options.StatusOptions;
 import org.exbin.framework.bined.StatusCursorPositionFormat;
 import org.exbin.framework.bined.StatusDocumentSizeFormat;
 import org.exbin.framework.bined.preferences.StatusParameters;
-import org.exbin.framework.gui.options.api.OptionsPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 
 /**
- * Editor preference parameters panel.
+ * Editor status panel options panel.
  *
- * @version 0.2.1 2019/06/17
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(StatusOptionsPanel.class);
 
@@ -45,6 +46,12 @@ public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsPan
     public StatusOptionsPanel(@Nullable StatusOptionsPanelApi statusOptionsPanelApi) {
         this.statusOptionsPanelApi = statusOptionsPanelApi;
         initComponents();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     public void saveToOptions(StatusOptions options) {
@@ -204,14 +211,6 @@ public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsPan
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public List<PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
-        path.add(new PathItem("editor", ""));
-        path.add(new PathItem("status", resourceBundle.getString("options.Path.0")));
-        return path;
-    }
-
-    @Override
     public void applyPreferencesChanges() {
         if (statusOptionsPanelApi != null) {
             StatusOptions statusOptions = new StatusOptions();
@@ -237,7 +236,7 @@ public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsPan
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
 
     }
 }

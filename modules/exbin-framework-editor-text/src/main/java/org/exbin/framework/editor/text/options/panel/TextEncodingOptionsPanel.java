@@ -20,45 +20,54 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import org.exbin.framework.api.Preferences;
-import org.exbin.framework.editor.text.panel.TextEncodingPanel;
-import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
-import org.exbin.framework.gui.options.api.OptionsPanel;
-import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
-import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
+import org.exbin.framework.editor.text.service.TextEncodingService;
 
 /**
  * Text encoding options panel.
  *
- * @version 0.2.1 2019/06/08
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
-public class TextEncodingOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class TextEncodingOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
-    private ModifiedOptionListener modifiedOptionListener;
+    private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
-    private final TextEncodingPanelApi frame;
+    private final TextEncodingService frame;
     private final TextEncodingPanel encodingPanel;
     private final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
 
-    public TextEncodingOptionsPanel(TextEncodingPanelApi frame) {
+    public TextEncodingOptionsPanel(TextEncodingService frame) {
         this.frame = frame;
+        encodingPanel = new TextEncodingPanel();
 
         initComponents();
+        init();
+    }
 
-        encodingPanel = new TextEncodingPanel();
+    private void init() {
         encodingPanel.setHandler(frame);
         encodingPanel.setEnabled(false);
-        encodingPanel.setModifiedOptionListener(() -> {
-            modifiedOptionListener.wasModified();
+        encodingPanel.setOptionsModifiedListener(() -> {
+            optionsModifiedListener.wasModified();
             updateEncodings();
         });
         super.add(encodingPanel, BorderLayout.CENTER);
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -177,6 +186,14 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         setModified(true);
     }//GEN-LAST:event_defaultEncodingComboBoxItemStateChanged
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new TextEncodingOptionsPanel(null));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox defaultEncodingComboBox;
@@ -187,14 +204,6 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     private javax.swing.JButton fillCurrentEncodingsButton;
     private javax.swing.JColorChooser jColorChooser1;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public List<OptionsPanel.PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
-        path.add(new PathItem("apperance", ""));
-        path.add(new PathItem("encoding", resourceBundle.getString("options.Path.0")));
-        return path;
-    }
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
@@ -218,14 +227,14 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     }
 
     private void setModified(boolean b) {
-        if (modifiedOptionListener != null) {
-            modifiedOptionListener.wasModified();
+        if (optionsModifiedListener != null) {
+            optionsModifiedListener.wasModified();
         }
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener modifiedOptionListener) {
-        this.modifiedOptionListener = modifiedOptionListener;
+    public void setOptionsModifiedListener(OptionsModifiedListener optionsModifiedListener) {
+        this.optionsModifiedListener = optionsModifiedListener;
     }
 
     private void updateEncodings() {

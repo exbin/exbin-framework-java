@@ -30,14 +30,10 @@ import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.editor.text.panel.AddEncodingPanel;
 import org.exbin.framework.editor.text.options.panel.TextAppearanceOptionsPanel;
-import org.exbin.framework.editor.text.options.panel.TextAppearanceOptionsPanelApi;
 import org.exbin.framework.editor.text.options.panel.TextColorOptionsPanel;
-import org.exbin.framework.editor.text.panel.TextColorPanelApi;
 import org.exbin.framework.editor.text.options.panel.TextEncodingOptionsPanel;
-import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.editor.text.options.panel.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
-import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.text.panel.TextStatusPanel;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
@@ -61,6 +57,10 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.editor.text.service.TextAppearanceService;
+import org.exbin.framework.editor.text.service.TextEncodingService;
+import org.exbin.framework.editor.text.service.TextColorService;
+import org.exbin.framework.editor.text.service.TextFontService;
 
 /**
  * Text editor module.
@@ -139,7 +139,7 @@ public class EditorTextModule implements XBApplicationModule {
 
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
-        TextColorPanelApi textColorPanelFrame = new TextColorPanelApi() {
+        TextColorService textColorPanelFrame = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
                 return ((TextPanel) getEditorProvider()).getCurrentColors();
@@ -158,7 +158,7 @@ public class EditorTextModule implements XBApplicationModule {
 
         optionsModule.addOptionsPanel(new TextColorOptionsPanel(textColorPanelFrame));
 
-        TextFontPanelApi textFontPanelFrame = new TextFontPanelApi() {
+        TextFontService textFontPanelFrame = new TextFontService() {
             @Override
             public Font getCurrentFont() {
                 return ((TextPanel) getEditorProvider()).getCurrentFont();
@@ -214,7 +214,7 @@ public class EditorTextModule implements XBApplicationModule {
         });
         optionsModule.addOptionsPanel(textFontOptionsPanel);
 
-        TextEncodingPanelApi textEncodingPanelApi = new TextEncodingPanelApi() {
+        TextEncodingService textEncodingPanelApi = new TextEncodingService() {
             @Override
             public List<String> getEncodings() {
                 return getEncodingsHandler().getEncodings();
@@ -239,8 +239,8 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        TextAppearanceOptionsPanelApi textAppearanceOptionsPanelApi;
-        textAppearanceOptionsPanelApi = new TextAppearanceOptionsPanelApi() {
+        TextAppearanceService textAppearanceOptionsPanelApi;
+        textAppearanceOptionsPanelApi = new TextAppearanceService() {
             @Override
             public boolean getWordWrapMode() {
                 return ((TextPanel) getEditorProvider()).getWordWrapMode();

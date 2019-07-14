@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -84,7 +85,7 @@ public class FilePreferences extends AbstractPreferences {
         this(null, "");
     }
 
-    public FilePreferences(AbstractPreferences parent, String name) {
+    public FilePreferences(@Nullable AbstractPreferences parent, String name) {
         super(parent, name);
         this.spiValues = new TreeMap<>();
         this.children = new TreeMap<>();

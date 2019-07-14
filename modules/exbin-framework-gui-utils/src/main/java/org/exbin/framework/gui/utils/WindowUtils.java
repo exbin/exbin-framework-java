@@ -39,12 +39,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.LookAndFeel;
@@ -204,11 +206,19 @@ public class WindowUtils {
      */
     @Nullable
     public static Frame getFrame(Component component) {
-        Component parentComponent = SwingUtilities.getWindowAncestor(component);
+        Window parentComponent = SwingUtilities.getWindowAncestor(component);
         while (!(parentComponent == null || parentComponent instanceof Frame)) {
-            parentComponent = parentComponent.getParent();
+            parentComponent = SwingUtilities.getWindowAncestor(parentComponent);
+        }
+        if (parentComponent == null) {
+            parentComponent = JOptionPane.getRootFrame();
         }
         return (Frame) parentComponent;
+    }
+
+    @Nullable
+    public static Window getWindow(Component component) {
+        return SwingUtilities.getWindowAncestor(component);
     }
 
     /**
@@ -217,8 +227,15 @@ public class WindowUtils {
      * @param component target component
      * @param closeButton button which will be used for closing operation
      */
-    public static void assignGlobalKeyListener(Container component, final JButton closeButton) {
+    public static void assignGlobalKeyListener(Component component, final JButton closeButton) {
         assignGlobalKeyListener(component, closeButton, closeButton);
+        if (component instanceof LazyComponentsIssuable) {
+            RecursiveLazyComponentListener listener = new RecursiveLazyComponentListener((Component childComponent) -> {
+                assignGlobalKeyListener(childComponent, closeButton, closeButton);
+            });
+
+            ((LazyComponentsIssuable) component).addChildComponentListener(listener);
+        }
     }
 
     /**
@@ -228,7 +245,7 @@ public class WindowUtils {
      * @param okButton button which will be used for default ENTER
      * @param cancelButton button which will be used for closing operation
      */
-    public static void assignGlobalKeyListener(Container component, final JButton okButton, final JButton cancelButton) {
+    public static void assignGlobalKeyListener(Component component, final JButton okButton, final JButton cancelButton) {
         assignGlobalKeyListener(component, new OkCancelListener() {
             @Override
             public void okEvent() {
@@ -248,7 +265,7 @@ public class WindowUtils {
      * @param component target component
      * @param listener ok and cancel event listener
      */
-    public static void assignGlobalKeyListener(Container component, @Nullable final OkCancelListener listener) {
+    public static void assignGlobalKeyListener(Component component, @Nullable final OkCancelListener listener) {
         KeyListener keyListener = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -256,6 +273,10 @@ public class WindowUtils {
 
             @Override
             public void keyPressed(KeyEvent evt) {
+                if (listener == null) {
+                    return;
+                }
+
                 if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                     boolean performOkAction = true;
 
@@ -270,12 +291,21 @@ public class WindowUtils {
                         performOkAction = !((JEditorPane) evt.getSource()).isEditable();
                     }
 
-                    if (performOkAction && listener != null) {
+                    if (performOkAction) {
                         listener.okEvent();
                     }
+                } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    boolean performCancelAction = true;
+                    if (evt.getSource() instanceof JComboBox) {
+                        performCancelAction = !((JComboBox) evt.getSource()).isPopupVisible();
+                    } else if (evt.getSource() instanceof JRootPane) {
+                        // Ignore in popup menus
+                        performCancelAction = false;
+                    }
 
-                } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE && listener != null) {
-                    listener.cancelEvent();
+                    if (performCancelAction) {
+                        listener.cancelEvent();
+                    }
                 }
             }
 
@@ -284,26 +314,12 @@ public class WindowUtils {
             }
         };
 
-        assignGlobalKeyListener(component, keyListener);
-    }
-
-    /**
-     * Assign key listener for all focusable components recursively.
-     *
-     * @param component target component
-     * @param keyListener key lisneter
-     */
-    public static void assignGlobalKeyListener(Container component, KeyListener keyListener) {
-        Component[] comps = component.getComponents();
-        for (Component item : comps) {
-            if (item.isFocusable()) {
-                item.addKeyListener(keyListener);
+        RecursiveLazyComponentListener componentListener = new RecursiveLazyComponentListener((Component childComponent) -> {
+            if (childComponent.isFocusable()) {
+                childComponent.addKeyListener(keyListener);
             }
-
-            if (item instanceof Container) {
-                assignGlobalKeyListener((Container) item, keyListener);
-            }
-        }
+        });
+        componentListener.fireListener(component);
     }
 
     /**
@@ -400,8 +416,6 @@ public class WindowUtils {
         dialogPanel.setPreferredSize(new Dimension(mainPreferredSize.width, mainPreferredSize.height + controlPreferredSize.height));
         return dialogPanel;
     }
-    
-    // TODO        Window window = JOptionPane.getWindowForComponent(c);
 
     @ParametersAreNonnullByDefault
     public interface DialogWrapper {

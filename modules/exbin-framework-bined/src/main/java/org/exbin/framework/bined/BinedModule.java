@@ -75,10 +75,8 @@ import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.panel.AddEncodingPanel;
 import org.exbin.framework.editor.text.options.panel.TextEncodingOptionsPanel;
-import org.exbin.framework.editor.text.panel.TextEncodingPanelApi;
 import org.exbin.framework.editor.text.options.panel.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
-import org.exbin.framework.editor.text.panel.TextFontPanelApi;
 import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -100,7 +98,6 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
-import org.exbin.framework.bined.options.panel.BinaryAppearanceOptionsPanelApi;
 import org.exbin.framework.bined.options.panel.CodeAreaOptionsPanel;
 import org.exbin.framework.bined.options.panel.CodeAreaOptionsPanelApi;
 import org.exbin.framework.bined.options.panel.ColorProfilesOptionsPanel;
@@ -114,6 +111,9 @@ import org.exbin.framework.bined.preferences.StatusParameters;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.bined.service.BinaryAppearanceService;
+import org.exbin.framework.editor.text.service.TextEncodingService;
+import org.exbin.framework.editor.text.service.TextFontService;
 
 /**
  * Hexadecimal editor module.
@@ -293,8 +293,8 @@ public class BinedModule implements XBApplicationModule {
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
 
-        BinaryAppearanceOptionsPanelApi appearanceOptionsPanelApi;
-        appearanceOptionsPanelApi = new BinaryAppearanceOptionsPanelApi() {
+        BinaryAppearanceService appearanceOptionsPanelApi;
+        appearanceOptionsPanelApi = new BinaryAppearanceService() {
             @Override
             public boolean getWordWrapMode() {
                 return getEditorProvider().isWordWrapMode();
@@ -325,7 +325,7 @@ public class BinedModule implements XBApplicationModule {
         binaryAppearanceOptionsPanel = new BinaryAppearanceOptionsPanel(appearanceOptionsPanelApi);
         optionsModule.extendAppearanceOptionsPanel(binaryAppearanceOptionsPanel);
 
-        TextEncodingPanelApi textEncodingPanelApi = new TextEncodingPanelApi() {
+        TextEncodingService textEncodingPanelApi = new TextEncodingService() {
             @Override
             public List<String> getEncodings() {
                 return getEncodingsHandler().getEncodings();
@@ -373,7 +373,7 @@ public class BinedModule implements XBApplicationModule {
         });
         optionsModule.addOptionsPanel(textEncodingOptionsPanel);
 
-        TextFontPanelApi textFontPanelApi = new TextFontPanelApi() {
+        TextFontService textFontPanelApi = new TextFontService() {
             @Override
             public Font getCurrentFont() {
                 return ((TextFontApi) getEditorProvider()).getCurrentFont();

@@ -43,7 +43,6 @@ import javax.swing.event.TreeSelectionEvent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
-import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
@@ -81,6 +80,7 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
+import org.exbin.framework.editor.text.service.FindTextService;
 
 /**
  * Panel with XBUP document visualization.
@@ -700,7 +700,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         textPanel.gotoLine(line);
     }
 
-    public void findText(FindTextPanelApi findTextPanelApi) {
+    public void findText(FindTextService findTextPanelApi) {
         textPanel.findText(findTextPanelApi);
     }
 

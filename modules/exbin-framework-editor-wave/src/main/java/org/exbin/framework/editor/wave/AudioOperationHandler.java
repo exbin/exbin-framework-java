@@ -38,8 +38,6 @@ public class AudioOperationHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action audioReverseAction;
 
     public AudioOperationHandler(XBApplication application, EditorProvider editorProvider) {
@@ -49,8 +47,6 @@ public class AudioOperationHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         audioReverseAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

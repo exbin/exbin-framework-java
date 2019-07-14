@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -46,6 +47,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
  * @version 0.2.0 2016/07/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class MenuHandler {
 
     /**
@@ -507,6 +509,7 @@ public class MenuHandler {
         menuDef.getContributions().add(menuContribution);
     }
 
+    @ParametersAreNonnullByDefault
     private class MenuGroupRecord {
 
         String groupId;
@@ -524,6 +527,7 @@ public class MenuHandler {
         }
     }
 
+    @ParametersAreNonnullByDefault
     private class MenuGroupRecordPathNode {
 
         List<MenuGroupRecord> records;
@@ -534,6 +538,7 @@ public class MenuHandler {
         }
     }
 
+    @ParametersAreNonnullByDefault
     private static interface MenuTarget {
 
         void add(JMenu menuItem);
@@ -543,6 +548,7 @@ public class MenuHandler {
         void addSeparator();
     }
 
+    @ParametersAreNonnullByDefault
     private static class MenuBarWrapper implements MenuTarget {
 
         private final JMenuBar menuBar;
@@ -566,6 +572,7 @@ public class MenuHandler {
         }
     }
 
+    @ParametersAreNonnullByDefault
     private static class PopupMenuWrapper implements MenuTarget {
 
         private final JPopupMenu menu;

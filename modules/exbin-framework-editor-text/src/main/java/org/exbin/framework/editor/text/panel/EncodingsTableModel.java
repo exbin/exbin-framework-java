@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +35,7 @@ import javax.swing.table.AbstractTableModel;
 /**
  * Table model for encoding / character sets.
  *
- * @version 0.2.0 2016/12/30
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
 public class EncodingsTableModel extends AbstractTableModel {
@@ -69,27 +68,22 @@ public class EncodingsTableModel extends AbstractTableModel {
 
     private void rebuildFiltered() {
         filtered.clear();
-        for (Entry<String, EncodingRecord> record : encodings.entrySet()) {
+        encodings.entrySet().forEach((record) -> {
             String name = record.getKey();
-            if (usedEncodings.contains(name)) {
-                continue;
+            if (!(usedEncodings.contains(name))) {
+                if (!(!nameFilter.isEmpty() && !name.contains(nameFilter.toLowerCase()))) {
+                    if (!(!countryFilter.isEmpty() && (record.getValue().countries == null || !record.getValue().countries.toLowerCase().contains(countryFilter.toLowerCase())))) {
+                        filtered.add(name);
+                    }
+                }
             }
-            if (!nameFilter.isEmpty() && !name.contains(nameFilter.toLowerCase())) {
-                continue;
-            }
-            if (!countryFilter.isEmpty() && (record.getValue().countries == null || !record.getValue().countries.toLowerCase().contains(countryFilter.toLowerCase()))) {
-                continue;
-            }
-
-            filtered.add(name);
-        }
+        });
         Collections.sort(filtered);
         fireTableDataChanged();
     }
 
     private void initEncodings() {
-        for (Entry<String, Charset> entry : Charset.availableCharsets().entrySet()) {
-            Charset charset = entry.getValue();
+        Charset.availableCharsets().entrySet().stream().map((entry) -> entry.getValue()).forEachOrdered((charset) -> {
             EncodingRecord record = new EncodingRecord();
             record.name = charset.name();
             try {
@@ -98,7 +92,7 @@ public class EncodingsTableModel extends AbstractTableModel {
                 // ignore
             }
             encodings.put(charset.name().toLowerCase(), record);
-        }
+        });
 
         try (InputStream stream = this.getClass().getResourceAsStream("/org/exbin/framework/editor/text/resources/encodingsMap.txt")) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -155,9 +149,9 @@ public class EncodingsTableModel extends AbstractTableModel {
 
     public void setUsedEncodings(List<String> encodings) {
         usedEncodings.clear();
-        for (String name : encodings) {
+        encodings.forEach((name) -> {
             usedEncodings.add(name.toLowerCase());
-        }
+        });
         rebuildFiltered();
     }
 

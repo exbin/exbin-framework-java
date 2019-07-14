@@ -18,38 +18,45 @@ package org.exbin.framework.editor.text.options.panel;
 
 import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import org.exbin.framework.api.Preferences;
-import org.exbin.framework.editor.text.panel.TextColorPanel;
-import org.exbin.framework.editor.text.panel.TextColorPanelApi;
 import org.exbin.framework.editor.text.preferences.TextColorParameters;
-import org.exbin.framework.gui.options.api.OptionsPanel;
-import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
-import org.exbin.framework.gui.options.api.OptionsPanel.PathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
+import org.exbin.framework.editor.text.service.TextColorService;
 
 /**
  * Text color panel.
  *
- * @version 0.2.1 2019/06/08
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
-public class TextColorOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class TextColorOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
-    private ModifiedOptionListener modifiedOptionListener;
+    private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
-    private final TextColorPanelApi frame;
+    private final TextColorService frame;
     private final TextColorPanel colorPanel;
 
-    public TextColorOptionsPanel(TextColorPanelApi frame) {
+    public TextColorOptionsPanel(TextColorService frame) {
         this.frame = frame;
-        initComponents();
-
         colorPanel = new TextColorPanel(frame);
+        initComponents();
+        init();
+    }
+
+    private void init() {
         colorPanel.setEnabled(false);
         super.add(colorPanel, BorderLayout.CENTER);
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -107,20 +114,20 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
         setModified(true);
     }//GEN-LAST:event_defaultColorCheckBoxItemStateChanged
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new TextColorOptionsPanel(null));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox defaultColorCheckBox;
     private javax.swing.JPanel defaultColorPanel;
     private javax.swing.JColorChooser jColorChooser1;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public List<OptionsPanel.PathItem> getPath() {
-        ArrayList<OptionsPanel.PathItem> path = new ArrayList<>();
-        path.add(new PathItem("apperance", ""));
-        path.add(new PathItem("colors", resourceBundle.getString("options.Path.0")));
-        return path;
-    }
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
@@ -148,14 +155,14 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     }
 
     private void setModified(boolean b) {
-        if (modifiedOptionListener != null) {
-            modifiedOptionListener.wasModified();
+        if (optionsModifiedListener != null) {
+            optionsModifiedListener.wasModified();
         }
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
-        modifiedOptionListener = listener;
-        colorPanel.setModifiedOptionListener(listener);
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
+        optionsModifiedListener = listener;
+        colorPanel.setOptionsModifiedListener(listener);
     }
 }

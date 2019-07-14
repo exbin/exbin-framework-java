@@ -38,6 +38,9 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -67,9 +70,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Clipboard operations.
  *
- * @version 0.2.1 2019/07/08
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ClipboardActionsImpl implements ClipboardActionsApi {
 
     private ResourceBundle resourceBundle;
@@ -348,26 +352,31 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
         }
     }
 
+    @Nonnull
     @Override
     public Action getCutAction() {
         return clipboardActionsSet.getCutAction();
     }
 
+    @Nonnull
     @Override
     public Action getCopyAction() {
         return clipboardActionsSet.getCopyAction();
     }
 
+    @Nonnull
     @Override
     public Action getPasteAction() {
         return clipboardActionsSet.getPasteAction();
     }
 
+    @Nonnull
     @Override
     public Action getDeleteAction() {
         return clipboardActionsSet.getDeleteAction();
     }
 
+    @Nonnull
     @Override
     public Action getSelectAllAction() {
         return clipboardActionsSet.getSelectAllAction();
@@ -400,6 +409,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
         return modifiers;
     }
 
+    @ParametersAreNonnullByDefault
     public class PassingTextAction extends TextAction {
 
         private final TextAction parentAction;
@@ -491,6 +501,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
 
     }
 
+    @Nullable
     private Component getFocusOwner() {
         return KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
@@ -563,6 +574,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
         clipboardEventDispatchers.remove(dispatcher);
     }
 
+    @ParametersAreNonnullByDefault
     public class PopupEventQueue extends EventQueue {
 
         @Override
@@ -919,6 +931,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
     /**
      * Clipboard action for default popup menu.
      */
+    @ParametersAreNonnullByDefault
     private static abstract class DefaultPopupClipboardAction extends AbstractAction {
 
         protected ClipboardActionsHandler clipboardHandler;

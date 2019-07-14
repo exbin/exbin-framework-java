@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.editor.wave;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -24,8 +23,7 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
-import org.exbin.framework.editor.wave.panel.WaveColorPanel;
-import org.exbin.framework.editor.wave.panel.WaveColorPanelApi;
+import org.exbin.framework.editor.wave.options.panel.WaveColorPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -35,16 +33,17 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.framework.editor.wave.service.WaveColorService;
+import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
 
 /**
  * Tools options action handler.
  *
- * @version 0.2.1 2017/02/18
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
 public class ToolsOptionsHandler {
 
-    private int metaMask;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditorWaveModule.class);
 
     private Action toolsSetColorAction;
@@ -63,22 +62,7 @@ public class ToolsOptionsHandler {
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
 
-                WaveColorPanelApi textColorPanelApi = new WaveColorPanelApi() {
-                    @Override
-                    public Color[] getCurrentWaveColors() {
-                        return ((AudioPanel) editorProvider).getAudioPanelColors();
-                    }
-
-                    @Override
-                    public Color[] getDefaultWaveColors() {
-                        return ((AudioPanel) editorProvider).getDefaultColors();
-                    }
-
-                    @Override
-                    public void setCurrentWaveColors(Color[] colors) {
-                        ((AudioPanel) editorProvider).setAudioPanelColors(colors);
-                    }
-                };
+                WaveColorService textColorPanelApi = new WaveColorServiceImpl(editorProvider);
 
                 final WaveColorPanel waveColorPanel = new WaveColorPanel(textColorPanelApi);
                 waveColorPanel.setWaveColorsFromArray(((AudioPanel) editorProvider).getAudioPanelColors());
@@ -87,15 +71,12 @@ public class ToolsOptionsHandler {
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                 WindowUtils.addHeaderPanel(dialog.getWindow(), waveColorPanel.getClass(), waveColorPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, waveColorPanel.getResourceBundle());
-                controlPanel.setHandler(new DefaultControlHandler() {
-                    @Override
-                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                        if (actionType == ControlActionType.OK) {
-                            ((AudioPanel) editorProvider).setAudioPanelColors(waveColorPanel.getWaveColorsAsArray());
-                        }
-
-                        dialog.close();
+                controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                    if (actionType == ControlActionType.OK) {
+                        ((AudioPanel) editorProvider).setAudioPanelColors(waveColorPanel.getWaveColorsAsArray());
                     }
+
+                    dialog.close();
                 });
                 WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                 dialog.center(dialog.getParent());

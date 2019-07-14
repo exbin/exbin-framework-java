@@ -120,6 +120,10 @@ public class XBBaseApplication implements XBApplication {
 
     public void setAppPreferences(Preferences appPreferences) {
         this.appPreferences = appPreferences;
+        initByPreferences();
+    }
+
+    private void initByPreferences() {
         FrameworkParameters frameworkParameters = new FrameworkParameters(appPreferences);
 
         // Switching language
@@ -178,11 +182,9 @@ public class XBBaseApplication implements XBApplication {
             Manifest manifest = new Manifest(targetClass.getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
             Attributes classPaths = manifest.getAttributes("Class-Path");
             Collection<Object> values = classPaths.values();
-            for (Object classPath : values) {
-                if (classPath instanceof String) {
-                    XBBaseApplication.this.loadPlugin((String) classPath);
-                }
-            }
+            values.stream().filter((classPath) -> (classPath instanceof String)).forEachOrdered((classPath) -> {
+                XBBaseApplication.this.loadPlugin((String) classPath);
+            });
         } catch (IOException ex) {
             // ignore
         }

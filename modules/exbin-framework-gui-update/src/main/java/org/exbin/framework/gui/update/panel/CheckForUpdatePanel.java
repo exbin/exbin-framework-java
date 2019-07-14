@@ -18,6 +18,9 @@ package org.exbin.framework.gui.update.panel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.gui.update.GuiUpdateModule;
@@ -29,9 +32,10 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Check for update panel.
  *
- * @version 0.2.1 2017/02/22
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CheckForUpdatePanel extends javax.swing.JPanel implements HyperlinkListener {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdatePanel.class);
@@ -281,6 +285,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
         }
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
@@ -295,6 +300,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
          *
          * @return check for updates result
          */
+        @Nonnull
         GuiUpdateModule.CheckForUpdateResult checkForUpdate();
 
         /**
@@ -302,6 +308,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
          *
          * @return version of update
          */
+        @Nullable
         VersionNumbers getUpdateVersion();
     }
 }

@@ -77,7 +77,6 @@ public class TextEncodingParameters {
     }
 
     public void setEncodings(List<String> encodings) {
-        // Save encodings
         for (int i = 0; i < encodings.size(); i++) {
             preferences.put(PREFERENCES_TEXT_ENCODING_PREFIX + Integer.toString(i), encodings.get(i));
         }

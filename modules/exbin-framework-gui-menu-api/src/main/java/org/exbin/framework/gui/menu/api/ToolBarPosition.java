@@ -16,12 +16,16 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Tool bar position.
  *
- * @version 0.2.0 2016/01/11
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ToolBarPosition {
 
     private final PositionMode basicMode;
@@ -37,10 +41,12 @@ public class ToolBarPosition {
         this.groupId = groupId;
     }
 
+    @Nullable
     public PositionMode getBasicMode() {
         return basicMode;
     }
 
+    @Nullable
     public String getGroupId() {
         return groupId;
     }

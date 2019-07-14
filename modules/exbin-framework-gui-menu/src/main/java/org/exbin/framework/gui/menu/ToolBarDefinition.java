@@ -18,6 +18,7 @@ package org.exbin.framework.gui.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.menu.api.ToolBarContribution;
 
 /**
@@ -26,6 +27,7 @@ import org.exbin.framework.gui.menu.api.ToolBarContribution;
  * @version 0.2.0 2016/01/11
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ToolBarDefinition {
 
     private final String pluginId;
@@ -35,16 +37,10 @@ public class ToolBarDefinition {
         this.pluginId = pluginId;
     }
 
-    /**
-     * @return the contributions
-     */
     public List<ToolBarContribution> getContributions() {
         return contributions;
     }
 
-    /**
-     * @param contributions the contributions to set
-     */
     public void setContributions(List<ToolBarContribution> contributions) {
         this.contributions = contributions;
     }

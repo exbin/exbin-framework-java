@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.ResourceBundle;
 import javax.sound.sampled.AudioFormat;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Wave file properties panel.
@@ -157,6 +158,15 @@ public class PropertiesPanel extends javax.swing.JPanel {
             channelsTextField.setText(String.valueOf(waveFormat.getChannels()));
             encodingTextField.setText(String.valueOf(waveFormat.getEncoding().toString()));
         }
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new PropertiesPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

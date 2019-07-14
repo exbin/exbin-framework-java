@@ -41,7 +41,7 @@
                       <Component id="matchCaseCheckBox" alignment="0" max="32767" attributes="0"/>
                       <Component id="searchFromCursorCheckBox" alignment="0" max="32767" attributes="0"/>
                       <Component id="textToFindLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="textToFindjTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="textToFindTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -52,7 +52,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="textToFindLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="textToFindjTextField" min="-2" max="-2" attributes="0"/>
+                  <Component id="textToFindTextField" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="searchFromCursorCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -70,7 +70,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="textToFindjTextField">
+        <Component class="javax.swing.JTextField" name="textToFindTextField">
         </Component>
         <Component class="javax.swing.JCheckBox" name="searchFromCursorCheckBox">
           <Properties>

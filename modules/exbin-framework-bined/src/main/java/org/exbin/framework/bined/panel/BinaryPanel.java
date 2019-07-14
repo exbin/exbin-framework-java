@@ -89,9 +89,9 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 
 /**
- * Hexadecimal editor panel.
+ * Binary editor panel.
  *
- * @version 0.2.1 2019/07/12
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi {
@@ -162,7 +162,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         CodeAreaOperationCommandHandler commandHandler = new CodeAreaOperationCommandHandler(codeArea, undoHandler);
         codeArea.setCommandHandler(commandHandler);
         codeArea.addDataChangedListener(() -> {
-            if (binarySearchPanel.isVisible()) {
+            if (binarySearchPanelVisible) {
                 binarySearchPanel.dataChanged();
             }
             updateCurrentDocumentSize();

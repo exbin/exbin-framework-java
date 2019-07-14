@@ -16,12 +16,16 @@
  */
 package org.exbin.framework.gui.update;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Simple structure for application version.
  *
- * @version 0.2.0 2016/07/14
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class VersionNumbers {
 
     private VersionNumbersFormat format;
@@ -49,6 +53,7 @@ public class VersionNumbers {
         }
     }
 
+    @Nullable
     public String versionAsString() {
         if (format == null) {
             return null;

@@ -16,13 +16,10 @@
  */
 package org.exbin.framework.bined.service;
 
-import org.exbin.framework.bined.ReplaceParameters;
-import org.exbin.framework.bined.SearchParameters;
-
 /**
- * Hex search panel interface.
+ * Multiline service interface for binary panel.
  *
- * @version 0.2.1 2019/07/12
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
 public interface BinaryMultilineService {

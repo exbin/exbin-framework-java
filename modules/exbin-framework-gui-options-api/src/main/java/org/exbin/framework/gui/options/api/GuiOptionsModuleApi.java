@@ -16,51 +16,65 @@
  */
 package org.exbin.framework.gui.options.api;
 
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
- * Interface for XBUP framework options module.
+ * Interface for framework options module.
  *
- * @version 0.2.0 2016/01/12
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiOptionsModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiOptionsModuleApi.class);
     public static String TOOLS_OPTIONS_MENU_GROUP_ID = MODULE_ID + ".toolsOptionsMenuGroup";
 
+    @Nonnull
     Action getOptionsAction();
 
     /**
-     * Adds options panel.
+     * Adds options panel to given path.
+     *
+     * @param optionsPanel options panel
+     * @param path path to use for options panel tree
+     */
+    void addOptionsPanel(OptionsCapable optionsPanel, List<OptionsPathItem> path);
+
+    /**
+     * Adds options panel to given path with default name.
+     *
+     * @param optionsPanel options panel
+     * @param parentPath path string to use for options panel tree with strings
+     * separated by /
+     */
+    void addOptionsPanel(OptionsCapable optionsPanel, String parentPath);
+
+    /**
+     * Adds options panel to default path and name.
      *
      * @param optionsPanel options panel
      */
-    void addOptionsPanel(OptionsPanel optionsPanel);
+    void addOptionsPanel(OptionsCapable optionsPanel);
 
     /**
      * Extends main options panel.
      *
      * @param optionsPanel options panel
      */
-    void extendMainOptionsPanel(OptionsPanel optionsPanel);
+    void extendMainOptionsPanel(OptionsCapable optionsPanel);
 
     /**
      * Extends appearance options panel.
      *
      * @param optionsPanel options panel
      */
-    void extendAppearanceOptionsPanel(OptionsPanel optionsPanel);
-
-    /**
-     * Gets preferences.
-     *
-     * @return prefereces.
-     */
-    Preferences getPreferences();
+    void extendAppearanceOptionsPanel(OptionsCapable optionsPanel);
 
     /**
      * Registers options menu action in default position.

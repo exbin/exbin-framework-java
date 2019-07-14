@@ -16,12 +16,16 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Record of sub/child menu contribution.
  *
- * @version 0.2.0 2016/01/09
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class SubMenuContribution implements MenuContribution {
 
     private final String menuId;
@@ -34,14 +38,17 @@ public class SubMenuContribution implements MenuContribution {
         this.position = position;
     }
 
+    @Nonnull
     public String getMenuId() {
         return menuId;
     }
 
+    @Nonnull
     public String getName() {
         return name;
     }
 
+    @Nonnull
     @Override
     public MenuPosition getMenuPosition() {
         return position;

@@ -18,6 +18,8 @@ package org.exbin.framework.gui.link;
 
 import java.awt.event.ActionEvent;
 import java.net.URL;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
@@ -37,6 +39,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
  * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiLinkModule implements GuiLinkModuleApi {
 
     private XBApplication application;
@@ -57,6 +60,7 @@ public class GuiLinkModule implements GuiLinkModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     @Override
     public Action getOnlineHelpAction() {
         if (onlineHelpAction == null) {

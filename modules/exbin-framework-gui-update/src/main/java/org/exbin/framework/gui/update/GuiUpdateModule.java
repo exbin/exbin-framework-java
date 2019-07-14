@@ -25,6 +25,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -35,7 +38,7 @@ import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
-import org.exbin.framework.gui.update.panel.ApplicationUpdateOptionsPanel;
+import org.exbin.framework.gui.update.options.panel.ApplicationUpdateOptionsPanel;
 import org.exbin.framework.gui.update.panel.CheckForUpdatePanel;
 import org.exbin.framework.gui.update.preferences.CheckForUpdateParameters;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -48,9 +51,10 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of XBUP framework check updates module.
  *
- * @version 0.2.1 2017/02/18
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiUpdateModule implements GuiUpdateModuleApi {
 
     private XBApplication application;
@@ -72,6 +76,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     private ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
             resourceBundle = LanguageUtils.getResourceBundleByClass(GuiUpdateModule.class);
@@ -80,6 +85,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
         return resourceBundle;
     }
 
+    @Nonnull
     @Override
     public Action getCheckUpdateAction() {
         if (checkUpdateAction == null) {
@@ -133,6 +139,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
         optionsModule.addOptionsPanel(new ApplicationUpdateOptionsPanel());
     }
 
+    @Nonnull
     public VersionNumbers getVersionNumbers() {
         ResourceBundle appBundle = application.getAppBundle();
         String releaseString = appBundle.getString("Application.release");
@@ -146,6 +153,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
         this.checkUpdateUrl = updateUrl;
     }
 
+    @Nonnull
     public CheckForUpdateResult checkForUpdates() {
         if (checkUpdateUrl == null) {
             return CheckForUpdateResult.UPDATE_URL_NOT_SET;
@@ -176,6 +184,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
         }
     }
 
+    @Nullable
     public VersionNumbers getUpdateVersion() {
         return updateVersion;
     }

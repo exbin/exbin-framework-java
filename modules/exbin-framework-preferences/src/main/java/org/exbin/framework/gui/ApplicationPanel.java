@@ -16,10 +16,12 @@
  */
 package org.exbin.framework.gui;
 
+import javax.annotation.Nonnull;
+
 /**
  * Interface for application's panel.
  *
- * @version 0.2.0 2015/10/25
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public interface ApplicationPanel {
@@ -29,5 +31,6 @@ public interface ApplicationPanel {
      *
      * @return panel name
      */
+    @Nonnull
     String getPanelName();
 }

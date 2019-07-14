@@ -18,6 +18,8 @@ package org.exbin.framework.gui.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.menu.api.MenuContribution;
 
 /**
@@ -26,6 +28,7 @@ import org.exbin.framework.gui.menu.api.MenuContribution;
  * @version 0.2.0 2016/01/04
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class MenuDefinition {
 
     private final String pluginId;
@@ -38,6 +41,7 @@ public class MenuDefinition {
     /**
      * @return the contributions
      */
+    @Nonnull
     public List<MenuContribution> getContributions() {
         return contributions;
     }

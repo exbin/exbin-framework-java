@@ -17,9 +17,9 @@
 package org.exbin.framework.editor.text.panel;
 
 import java.util.ResourceBundle;
-import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.editor.text.service.FindTextService;
 
 /**
  * Find text panel.
@@ -27,7 +27,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2019/07/08
  * @author ExBin Project (http://exbin.org)
  */
-public class FindTextPanel extends javax.swing.JPanel implements FindTextPanelApi {
+public class FindTextPanel extends javax.swing.JPanel implements FindTextService {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(FindTextPanel.class);
 
@@ -46,7 +46,7 @@ public class FindTextPanel extends javax.swing.JPanel implements FindTextPanelAp
 
         findPanel = new javax.swing.JPanel();
         textToFindLabel = new javax.swing.JLabel();
-        textToFindjTextField = new javax.swing.JTextField();
+        textToFindTextField = new javax.swing.JTextField();
         searchFromCursorCheckBox = new javax.swing.JCheckBox();
         matchCaseCheckBox = new javax.swing.JCheckBox();
         replacePanel = new javax.swing.JPanel();
@@ -77,7 +77,7 @@ public class FindTextPanel extends javax.swing.JPanel implements FindTextPanelAp
                     .addComponent(matchCaseCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(searchFromCursorCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(textToFindLabel)
-                    .addComponent(textToFindjTextField))
+                    .addComponent(textToFindTextField))
                 .addContainerGap())
         );
         findPanelLayout.setVerticalGroup(
@@ -85,7 +85,7 @@ public class FindTextPanel extends javax.swing.JPanel implements FindTextPanelAp
             .addGroup(findPanelLayout.createSequentialGroup()
                 .addComponent(textToFindLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(textToFindjTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(textToFindTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchFromCursorCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -162,7 +162,7 @@ public class FindTextPanel extends javax.swing.JPanel implements FindTextPanelAp
     private javax.swing.JPanel replacePanel;
     private javax.swing.JCheckBox searchFromCursorCheckBox;
     private javax.swing.JLabel textToFindLabel;
-    private javax.swing.JTextField textToFindjTextField;
+    private javax.swing.JTextField textToFindTextField;
     private javax.swing.JLabel textToReplaceLabel;
     private javax.swing.JTextField textToReplaceTextField;
     // End of variables declaration//GEN-END:variables
@@ -178,13 +178,13 @@ public class FindTextPanel extends javax.swing.JPanel implements FindTextPanelAp
 
     @Override
     public void setSelected() {
-        textToFindjTextField.requestFocusInWindow();
-        textToFindjTextField.selectAll();
+        textToFindTextField.requestFocusInWindow();
+        textToFindTextField.selectAll();
     }
 
     @Override
     public String getFindText() {
-        return textToFindjTextField.getText();
+        return textToFindTextField.getText();
     }
 
     @Override

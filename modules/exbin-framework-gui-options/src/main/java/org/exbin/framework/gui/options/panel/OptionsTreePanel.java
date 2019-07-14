@@ -16,10 +16,8 @@
  */
 package org.exbin.framework.gui.options.panel;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,6 +25,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -36,23 +36,26 @@ import javax.swing.tree.DefaultTreeModel;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
+import org.exbin.framework.gui.options.api.OptionsPathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 
 /**
  * Panel for application options and preferences setting.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class OptionsTreePanel extends javax.swing.JPanel {
 
     private Preferences preferences = null;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsTreePanel.class);
     private Map<String, JPanel> optionPanels;
     private JPanel currentOptionsPanel = null;
-    private org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener modifiedOptionListener;
+    private OptionsModifiedListener optionsModifiedListener;
 
     private boolean modified;
     private OptionsMutableTreeNode top;
@@ -72,7 +75,7 @@ public class OptionsTreePanel extends javax.swing.JPanel {
 
         optionPanels = new HashMap<>();
         modified = false;
-        modifiedOptionListener = () -> {
+        optionsModifiedListener = () -> {
             setModified(true);
         };
 
@@ -88,8 +91,7 @@ public class OptionsTreePanel extends javax.swing.JPanel {
         });
 
         // Create menu tree
-        top = new OptionsMutableTreeNode(resourceBundle.getString("options_options"), "options");
-        createNodes(top);
+        top = new OptionsMutableTreeNode(resourceBundle.getString("options.root.caption"), "options");
         optionsTree.setModel(new DefaultTreeModel(top, true));
         optionsTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
             if (e.getPath() != null) {
@@ -116,10 +118,14 @@ public class OptionsTreePanel extends javax.swing.JPanel {
         });
 
         mainOptionsPanel = new MainOptionsPanel();
-        addOptionsPanel(mainOptionsPanel);
+        addOptionsPanel(mainOptionsPanel, null);
         appearanceOptionsPanel = new AppearanceOptionsPanel(frame);
-        addOptionsPanel(appearanceOptionsPanel);
-
+        {
+            ResourceBundle optionsResourceBundle = appearanceOptionsPanel.getResourceBundle();
+            List<OptionsPathItem> optionsPath = new ArrayList<>();
+            optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
+            addOptionsPanel(appearanceOptionsPanel, optionsPath);
+        }
         optionsTree.setSelectionRow(0);
 
         // Expand all nodes
@@ -133,8 +139,8 @@ public class OptionsTreePanel extends javax.swing.JPanel {
     public void loadPreferences(Preferences preferences) {
         for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
             Object optionPanel = optionPanelsIterator.next();
-            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsPanel) {
-                ((org.exbin.framework.gui.options.api.OptionsPanel) optionPanel).loadFromPreferences(preferences);
+            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsCapable) {
+                ((org.exbin.framework.gui.options.api.OptionsCapable) optionPanel).loadFromPreferences(preferences);
             }
         }
     }
@@ -142,8 +148,8 @@ public class OptionsTreePanel extends javax.swing.JPanel {
     public void savePreferences(Preferences preferences) {
         for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
             Object optionPanel = optionPanelsIterator.next();
-            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsPanel) {
-                ((org.exbin.framework.gui.options.api.OptionsPanel) optionPanel).saveToPreferences(preferences);
+            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsCapable) {
+                ((org.exbin.framework.gui.options.api.OptionsCapable) optionPanel).saveToPreferences(preferences);
             }
         }
 
@@ -153,8 +159,8 @@ public class OptionsTreePanel extends javax.swing.JPanel {
     public void applyPreferencesChanges() {
         for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
             Object optionPanel = optionPanelsIterator.next();
-            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsPanel) {
-                ((org.exbin.framework.gui.options.api.OptionsPanel) optionPanel).applyPreferencesChanges();
+            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsCapable) {
+                ((org.exbin.framework.gui.options.api.OptionsCapable) optionPanel).applyPreferencesChanges();
             }
         }
     }
@@ -197,7 +203,7 @@ public class OptionsTreePanel extends javax.swing.JPanel {
 
         optionsAreaTitleLabel.setBackground(javax.swing.UIManager.getDefaults().getColor("EditorPane.selectionBackground"));
         optionsAreaTitleLabel.setForeground(javax.swing.UIManager.getDefaults().getColor("EditorPane.background"));
-        optionsAreaTitleLabel.setText(resourceBundle.getString("options_options")); // NOI18N
+        optionsAreaTitleLabel.setText(resourceBundle.getString("optionsAreaTitleLabel.text")); // NOI18N
         optionsAreaTitleLabel.setOpaque(true);
         optionsAreaTitleLabel.setVerifyInputWhenFocusTarget(false);
         optionsAreaTitlePanel.add(optionsAreaTitleLabel, java.awt.BorderLayout.NORTH);
@@ -216,62 +222,7 @@ public class OptionsTreePanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new OptionsTreePanel(new ApplicationFrameHandler() {
-            @Override
-            public Frame getFrame() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setToolBarVisible(boolean toolBarVisible) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setStatusBarVisible(boolean statusBarVisible) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setToolBarCaptionsVisible(boolean captionsVisible) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setApplication(XBApplication app) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setMainPanel(Component component) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void loadMainMenu(XBApplication application) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void loadMainToolBar(XBApplication application) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void show() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setDefaultSize(Dimension windowSize) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        }));
+        WindowUtils.invokeDialog(new OptionsTreePanel(null));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -285,12 +236,6 @@ public class OptionsTreePanel extends javax.swing.JPanel {
     private javax.swing.JSeparator separator;
     // End of variables declaration//GEN-END:variables
 
-    private void createNodes(DefaultMutableTreeNode top) {
-        DefaultMutableTreeNode item;
-        item = new OptionsMutableTreeNode(resourceBundle.getString("options_apperance"), "apperance");
-        top.add(item);
-    }
-
     /**
      * @param modified the modified to set
      */
@@ -299,30 +244,31 @@ public class OptionsTreePanel extends javax.swing.JPanel {
         // applyButton.setEnabled(modified);
     }
 
-    public void addOptionsPanel(org.exbin.framework.gui.options.api.OptionsPanel optionPanel) {
+    public void addOptionsPanel(OptionsCapable optionPanel, @Nullable List<OptionsPathItem> path) {
         String panelKey;
-        if (optionPanel.getPath() == null) {
+        if (path == null) {
             panelKey = "options";
         } else {
-            panelKey = optionPanel.getPath().get(optionPanel.getPath().size() - 1).getName();
-            estabilishPath(optionPanel.getPath());
+            panelKey = path.get(path.size() - 1).getName();
+            establishPath(path);
         }
+
         optionPanels.put(panelKey, (JPanel) optionPanel);
-        optionPanel.setModifiedOptionListener(modifiedOptionListener);
+        optionPanel.setOptionsModifiedListener(optionsModifiedListener);
         optionsTree.setSelectionRow(0);
     }
 
-    public void extendMainOptionsPanel(org.exbin.framework.gui.options.api.OptionsPanel panel) {
+    public void extendMainOptionsPanel(OptionsCapable panel) {
         mainOptionsPanel.addExtendedPanel(panel);
     }
 
-    public void extendAppearanceOptionsPanel(org.exbin.framework.gui.options.api.OptionsPanel panel) {
+    public void extendAppearanceOptionsPanel(OptionsCapable panel) {
         appearanceOptionsPanel.addExtendedPanel(panel);
     }
 
-    private void estabilishPath(List<org.exbin.framework.gui.options.api.OptionsPanel.PathItem> path) {
+    private void establishPath(List<OptionsPathItem> path) {
         OptionsMutableTreeNode node = top;
-        for (org.exbin.framework.gui.options.api.OptionsPanel.PathItem pathItem : path) {
+        for (OptionsPathItem pathItem : path) {
             int childIndex = 0;
             OptionsMutableTreeNode child = null;
             if (node == null) {
@@ -331,7 +277,13 @@ public class OptionsTreePanel extends javax.swing.JPanel {
 
             while ((childIndex >= 0) && (childIndex < node.getChildCount())) {
                 child = (OptionsMutableTreeNode) node.getChildAt(childIndex);
-                if (child.getName().equals(pathItem.getName())) {
+                String name = child.getName();
+                if (name.equals(pathItem.getName())) {
+                    Object caption = child.getUserObject();
+                    String newCaption = pathItem.getCaption();
+                    if (caption instanceof String && name.equals(caption) && !name.equals(newCaption)) {
+                        child.setUserObject(newCaption);
+                    }
                     break;
                 } else {
                     childIndex++;
@@ -369,6 +321,7 @@ public class OptionsTreePanel extends javax.swing.JPanel {
         mainOptionsPanel.setLanguageLocales(locales);
     }
 
+    @ParametersAreNonnullByDefault
     private class OptionsMutableTreeNode extends DefaultMutableTreeNode {
 
         private final String name;

@@ -29,8 +29,8 @@ import java.util.regex.Pattern;
  */
 public class FilePreferencesFactory implements PreferencesFactory {
 
-    public static String PREFERENCE_FILENAME = "prefs.xml";
-    public static String PREFERENCES_PATH = null;
+    public static String preferenceFilename = "prefs.xml";
+    public static String preferencesPath = null;
     private Preferences userPreferences;
     private Preferences systemPreferences;
 
@@ -53,13 +53,13 @@ public class FilePreferencesFactory implements PreferencesFactory {
     }
 
     public static File getPreferencesFile(String absolutePath) {
-        if (PREFERENCES_PATH == null) {
-            PREFERENCES_PATH = System.getProperty("user.home") + File.separator + ".java" + File.separator + ".userPrefs";
+        if (preferencesPath == null) {
+            preferencesPath = System.getProperty("user.home") + File.separator + ".java" + File.separator + ".userPrefs";
         }
 
-        return new File(PREFERENCES_PATH + absolutePath.replace('/', File.separatorChar) + File.separator + PREFERENCE_FILENAME);
+        return new File(preferencesPath + absolutePath.replace('/', File.separatorChar) + File.separator + preferenceFilename);
     }
-    
+
     public FilePreferences userNodeForPackage(Class clazz) {
         System.setProperty("java.util.prefs.PreferencesFactory", "org.exbin.framework.FilePreferencesFactory");
         FilePreferences preferences = (FilePreferences) userRoot();
@@ -67,7 +67,7 @@ public class FilePreferencesFactory implements PreferencesFactory {
         for (String packageComponent : packageComponents) {
             preferences = (FilePreferences) preferences.childSpi(packageComponent);
         }
-        
+
         return preferences;
     }
 }

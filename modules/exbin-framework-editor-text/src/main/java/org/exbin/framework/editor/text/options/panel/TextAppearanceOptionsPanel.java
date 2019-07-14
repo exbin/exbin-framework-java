@@ -16,30 +16,38 @@
  */
 package org.exbin.framework.editor.text.options.panel;
 
-import java.util.List;
+import org.exbin.framework.editor.text.service.TextAppearanceService;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.editor.text.preferences.TextAppearanceParameters;
-import org.exbin.framework.gui.options.api.OptionsPanel;
-import org.exbin.framework.gui.options.api.OptionsPanel.ModifiedOptionListener;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 
 /**
- * XBTEditor Text Encoding Options panel.
+ * Text encoding options panel.
  *
- * @version 0.2.0 2016/04/03
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
-public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsPanel {
+public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
 
-    private ModifiedOptionListener modifiedOptionListener;
+    private OptionsModifiedListener optionsModifiedListener;
     private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
-    private TextAppearanceOptionsPanelApi panelApi;
+    private TextAppearanceService panelApi;
 
-    public TextAppearanceOptionsPanel(TextAppearanceOptionsPanelApi panelApi) {
+    public TextAppearanceOptionsPanel(TextAppearanceService panelApi) {
         this.panelApi = panelApi;
 
         initComponents();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -85,15 +93,18 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
         setModified(true);
     }//GEN-LAST:event_wordWrapCheckBoxjCheckBoxItemStateChanged
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new TextAppearanceOptionsPanel(null));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox wordWrapCheckBox;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public List<OptionsPanel.PathItem> getPath() {
-        return null;
-    }
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
@@ -113,13 +124,13 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
     }
 
     private void setModified(boolean b) {
-        if (modifiedOptionListener != null) {
-            modifiedOptionListener.wasModified();
+        if (optionsModifiedListener != null) {
+            optionsModifiedListener.wasModified();
         }
     }
 
     @Override
-    public void setModifiedOptionListener(ModifiedOptionListener listener) {
-        modifiedOptionListener = listener;
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
+        optionsModifiedListener = listener;
     }
 }

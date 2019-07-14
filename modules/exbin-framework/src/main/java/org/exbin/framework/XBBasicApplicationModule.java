@@ -23,6 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBApplicationModuleInfo;
 import org.exbin.xbup.core.parser.XBProcessingException;
@@ -53,6 +56,7 @@ import org.exbin.xbup.plugin.XBModule;
  * @version 0.2.0 2015/12/31
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBBasicApplicationModule implements XBPSequenceSerializable, XBApplicationModuleInfo {
 
     static long[] XBUP_BLOCKREV_CATALOGPATH = {1, 3, 1, 2, 0, 0};
@@ -86,16 +90,19 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         }
     }
 
+    @Nonnull
     @Override
     public String getModuleId() {
         return moduleId;
     }
 
+    @Nonnull
     @Override
     public XBApplicationModule getPlugin() {
         return plugin;
     }
 
+    @Nullable
     @Override
     public String getName() {
         return name;
@@ -105,6 +112,7 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         this.name = name;
     }
 
+    @Nullable
     @Override
     public String getDescription() {
         return description;
@@ -114,6 +122,7 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         this.description = description;
     }
 
+    @Nullable
     @Override
     public List<String> getOptionalModuleIds() {
         return optionalModuleIds;
@@ -123,6 +132,7 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         this.optionalModuleIds.addAll(optionalModuleIds);
     }
 
+    @Nullable
     @Override
     public List<String> getDependencyModuleIds() {
         return dependencyModuleIds;
@@ -169,6 +179,7 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @ParametersAreNonnullByDefault
     private static class XBTToXBEventTypeRemover implements XBTEventListener, XBEventProducer {
 
         private XBEventListener eventListener;

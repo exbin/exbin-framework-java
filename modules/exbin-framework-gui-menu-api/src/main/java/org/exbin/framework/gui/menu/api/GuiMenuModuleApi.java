@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -31,6 +32,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @version 0.2.0 2016/07/22
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiMenuModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiMenuModuleApi.class);
@@ -202,7 +204,7 @@ public interface GuiMenuModuleApi extends XBApplicationModule {
      * @param groupId group id
      * @return true if group exists
      */
-    public boolean menuGroupExists(String menuId, String groupId);
+    boolean menuGroupExists(String menuId, String groupId);
 
     /**
      * Adds component popup menu event dispatcher.

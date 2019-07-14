@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Encoding selection panel.
@@ -207,6 +208,15 @@ public class AddEncodingPanel extends javax.swing.JPanel {
 
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new AddEncodingPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

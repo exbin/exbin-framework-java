@@ -16,16 +16,19 @@
  */
 package org.exbin.framework.gui.undo.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
- * Interface for XBUP framework undo/redo module.
+ * Interface for framework undo/redo module.
  *
- * @version 0.2.0 2016/03/20
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiUndoModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiUndoModuleApi.class);
@@ -35,6 +38,7 @@ public interface GuiUndoModuleApi extends XBApplicationModule {
      *
      * @return undo handler
      */
+    @Nonnull
     XBUndoHandler getUndoHandler();
 
     /**
@@ -75,5 +79,6 @@ public interface GuiUndoModuleApi extends XBApplicationModule {
      * @param undoActionsHandler clipboard handler
      * @return undo actions set
      */
+    @Nonnull
     UndoActions createUndoActions(UndoActionsHandler undoActionsHandler);
 }

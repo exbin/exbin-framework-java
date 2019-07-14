@@ -16,12 +16,16 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Menu group definition.
  *
- * @version 0.2.0 2016/01/09
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class MenuGroup {
 
     private final String groupId;
@@ -40,14 +44,17 @@ public class MenuGroup {
         this.separationMode = separationMode;
     }
 
+    @Nonnull
     public String getGroupId() {
         return groupId;
     }
 
+    @Nonnull
     public MenuPosition getPosition() {
         return position;
     }
 
+    @Nonnull
     public SeparationMode getSeparationMode() {
         return separationMode;
     }

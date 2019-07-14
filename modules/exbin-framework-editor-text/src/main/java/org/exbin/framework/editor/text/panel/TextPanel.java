@@ -52,7 +52,6 @@ import javax.swing.undo.UndoableEdit;
 import org.exbin.framework.editor.text.EditorTextModule;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextFontApi;
-import org.exbin.framework.editor.text.handler.FindTextPanelApi;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
@@ -60,6 +59,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
 import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 import org.exbin.framework.gui.undo.api.UndoUpdateListener;
+import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
 import org.exbin.xbup.core.catalog.XBPCatalog;
@@ -75,11 +75,12 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
+import org.exbin.framework.editor.text.service.FindTextService;
 
 /**
  * Text editor panel.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class TextPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler, UndoActionsHandler, TextCharsetApi, TextFontApi {
@@ -165,7 +166,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         }
     }
 
-    public void findText(FindTextPanelApi findTextPanelApi) {
+    public void findText(FindTextService findTextPanelApi) {
         String text = textArea.getText();
         int pos = textArea.getCaretPosition();
         if (highlight != null) {
@@ -346,6 +347,14 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         add(textAreaScrollPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new TextPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea textArea;
@@ -581,12 +590,12 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     }
 
     @Override
-    public Boolean canUndo() {
+    public boolean canUndo() {
         return getUndo().canUndo();
     }
 
     @Override
-    public Boolean canRedo() {
+    public boolean canRedo() {
         return getUndo().canRedo();
     }
 
