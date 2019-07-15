@@ -249,9 +249,8 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             }
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
@@ -327,9 +326,8 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             }
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_modifyButtonActionPerformed
 
     public void setConnectionList(List<String> list) {

@@ -186,7 +186,8 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
             }
         });
 
-        binarySearchPanel = new BinarySearchPanel(new BinarySearchServiceImpl(codeArea));
+        binarySearchPanel = new BinarySearchPanel();
+        binarySearchPanel.setBinarySearchService(new BinarySearchServiceImpl(codeArea));
         binarySearchPanel.setClosePanelListener(this::hideSearchPanel);
 
         valuesPanel = new ValuesPanel();

@@ -17,6 +17,7 @@
 package org.exbin.framework.gui.service;
 
 import java.awt.Component;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
@@ -37,9 +38,10 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * XBUP service manager module.
  *
- * @version 0.2.1 2019/06/24
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ServiceManagerModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(ServiceManagerModule.class);
@@ -60,15 +62,15 @@ public class ServiceManagerModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    public void openConnectionDialog() {
+    public void openConnectionDialog(Component parentComponent) {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         ConnectionPanel panel = new ConnectionPanel();
         panel.setApplication(application);
         panel.loadConnectionList(preferences);
         final DialogWrapper dialog = frameModule.createDialog(panel);
         WindowUtils.assignGlobalKeyListener(dialog.getWindow(), panel.getCloseButton());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(parentComponent);
+        dialog.dispose();
         panel.saveConnectionList(preferences);
         getServicePanel().setService(panel.getService());
     }

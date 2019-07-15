@@ -29,7 +29,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * View nonprintables handler.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
 public class ViewNonprintablesHandler {
@@ -37,8 +37,6 @@ public class ViewNonprintablesHandler {
     private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
-
-    private int metaMask;
 
     private Action viewNonprintablesAction;
 
@@ -49,8 +47,6 @@ public class ViewNonprintablesHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         viewNonprintablesAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -60,7 +56,7 @@ public class ViewNonprintablesHandler {
         };
         ActionUtils.setupAction(viewNonprintablesAction, resourceBundle, "viewNonprintablesAction");
         viewNonprintablesAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
-        viewNonprintablesAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, metaMask));
+        viewNonprintablesAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, ActionUtils.getMetaMask()));
     }
 
     public Action getViewNonprintablesAction() {

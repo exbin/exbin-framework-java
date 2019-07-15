@@ -727,7 +727,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        WindowUtils.addHeaderPanel(dialog.getWindow(), ModifyBlockPanel.class, panel.getResourceBundle(), controlPanel);
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 XBTTreeNode newNode = panel.getNode();
@@ -762,10 +762,10 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 getDoc().setModified(true);
             }
 
-            WindowUtils.closeWindow(dialog.getWindow());
+            dialog.close();
         });
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }
 
     public void setSplitMode(boolean mode) {
@@ -1005,12 +1005,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        controlPanel.setHandler(() -> {
-            WindowUtils.closeWindow(dialog.getWindow());
-        });
-        dialog.center(dialog.getParent());
-        dialog.show();
+        controlPanel.setHandler(dialog::close);
+        dialog.showCentered(this);
+        dialog.dispose();
     }
 
     private class TreeDocument extends XBTTreeDocument implements OperationListener {

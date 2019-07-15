@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.about;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -86,9 +87,8 @@ public class GuiAboutModule implements GuiAboutModuleApi {
                     JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
                     final DialogWrapper aboutDialog = frameModule.createDialog(dialogPanel);
                     controlPanel.setHandler(aboutDialog::close);
-                    WindowUtils.assignGlobalKeyListener(aboutDialog.getWindow(), controlPanel.createOkCancelListener());
-                    aboutDialog.center(aboutDialog.getParent());
-                    aboutDialog.show();
+                    aboutDialog.showCentered((Component) e.getSource());
+                    aboutDialog.dispose();
                 }
             };
             ActionUtils.setupAction(aboutAction, resourceBundle, "aboutAction");

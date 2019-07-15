@@ -22,6 +22,8 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.Preferences;
@@ -68,6 +70,7 @@ import org.exbin.framework.editor.text.service.TextFontService;
  * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class EditorTextModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(EditorTextModule.class);
@@ -104,6 +107,7 @@ public class EditorTextModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
             editorProvider = new TextPanel();
@@ -186,7 +190,7 @@ public class EditorTextModule implements XBApplicationModule {
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                 controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
@@ -200,9 +204,8 @@ public class EditorTextModule implements XBApplicationModule {
 
                     dialog.close();
                 });
-                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                dialog.center(dialog.getParent());
-                dialog.show();
+                dialog.showCentered(frameModule.getFrame());
+                dialog.dispose();
 
                 return result.font;
             }
@@ -260,18 +263,17 @@ public class EditorTextModule implements XBApplicationModule {
             addEncodingPanel.setUsedEncodings(usedEncodings);
             DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
             JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
-            final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
+            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {
                     result.addAll(addEncodingPanel.getEncodings());
                 }
 
-                addEncodingDialog.close();
+                dialog.close();
             });
-            frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
-            WindowUtils.assignGlobalKeyListener(addEncodingDialog.getWindow(), controlPanel.createOkCancelListener());
-            addEncodingDialog.center(addEncodingDialog.getParent());
-            addEncodingDialog.show();
+            frameModule.setDialogTitle(dialog, addEncodingPanel.getResourceBundle());
+            dialog.showCentered(frameModule.getFrame());
+            dialog.dispose();
             return result;
         });
         optionsModule.addOptionsPanel(textEncodingOptionsPanel);
@@ -396,14 +398,15 @@ public class EditorTextModule implements XBApplicationModule {
         encodingsHandler.loadFromPreferences(new TextEncodingParameters(preferences));
     }
 
+    @ParametersAreNonnullByDefault
     public class XBTFileType extends FileFilter implements FileType {
 
         @Override
-        public boolean accept(File f) {
-            if (f.isDirectory()) {
+        public boolean accept(File file) {
+            if (file.isDirectory()) {
                 return true;
             }
-            String extension = getExtension(f);
+            String extension = getExtension(file);
             if (extension != null) {
                 if (extension.length() < 3) {
                     return false;
@@ -424,14 +427,15 @@ public class EditorTextModule implements XBApplicationModule {
         }
     }
 
+    @ParametersAreNonnullByDefault
     public class TXTFileType extends FileFilter implements FileType {
 
         @Override
-        public boolean accept(File f) {
-            if (f.isDirectory()) {
+        public boolean accept(File file) {
+            if (file.isDirectory()) {
                 return true;
             }
-            String extension = getExtension(f);
+            String extension = getExtension(file);
             if (extension != null) {
                 return "txt".equals(extension);
             }

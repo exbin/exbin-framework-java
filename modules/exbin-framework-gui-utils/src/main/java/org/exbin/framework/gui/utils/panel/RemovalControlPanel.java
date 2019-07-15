@@ -25,14 +25,15 @@ import org.exbin.framework.gui.utils.handler.RemovalControlHandler;
 /**
  * Basic control panel with support for removal.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class RemovalControlPanel extends javax.swing.JPanel implements RemovalControlHandler.RemovalControlListener {
+public class RemovalControlPanel extends javax.swing.JPanel implements RemovalControlHandler.RemovalControlService {
 
     private final java.util.ResourceBundle resourceBundle;
     private RemovalControlHandler handler;
+    private OkCancelListener okCancelListener;
 
     public RemovalControlPanel() {
         this(LanguageUtils.getResourceBundleByClass(RemovalControlPanel.class));
@@ -41,6 +42,18 @@ public class RemovalControlPanel extends javax.swing.JPanel implements RemovalCo
     public RemovalControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
+
+        okCancelListener = new OkCancelListener() {
+            @Override
+            public void okEvent() {
+                performClick(RemovalControlHandler.ControlActionType.OK);
+            }
+
+            @Override
+            public void cancelEvent() {
+                performClick(RemovalControlHandler.ControlActionType.CANCEL);
+            }
+        };
     }
 
     public void setHandler(RemovalControlHandler handler) {
@@ -138,18 +151,8 @@ public class RemovalControlPanel extends javax.swing.JPanel implements RemovalCo
 
     @Nonnull
     @Override
-    public OkCancelListener createOkCancelListener() {
-        return new OkCancelListener() {
-            @Override
-            public void okEvent() {
-                performClick(RemovalControlHandler.ControlActionType.OK);
-            }
-
-            @Override
-            public void cancelEvent() {
-                performClick(RemovalControlHandler.ControlActionType.CANCEL);
-            }
-        };
+    public OkCancelListener getOkCancelListener() {
+        return okCancelListener;
     }
 
     @Nonnull

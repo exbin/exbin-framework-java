@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.picture;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -47,8 +48,6 @@ public class PictureOperationHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action imageResizeAction;
 
     public PictureOperationHandler(XBApplication application, EditorProvider editorProvider) {
@@ -58,8 +57,6 @@ public class PictureOperationHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         imageResizeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -70,7 +67,7 @@ public class PictureOperationHandler {
                     JPanel dialogPanel = WindowUtils.createDialogPanel(imageResizePanel, controlPanel);
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle(), controlPanel);
                     frameModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType == ControlActionType.OK) {
@@ -79,12 +76,11 @@ public class PictureOperationHandler {
                             int height = (int) (point.getY());
                             ((ImagePanel) editorProvider).performResize(width, height);
                         }
-                        
+
                         dialog.close();
                     });
-                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                    dialog.center(dialog.getParent());
-                    dialog.show();
+                    dialog.showCentered((Component) e.getSource());
+                    dialog.dispose();
                 }
             }
         };

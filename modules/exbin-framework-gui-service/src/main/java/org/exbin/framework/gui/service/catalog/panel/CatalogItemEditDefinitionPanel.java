@@ -241,9 +241,8 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
             }
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void modifyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyButtonActionPerformed
@@ -275,9 +274,8 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
             }
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_modifyButtonActionPerformed
 
     private void removeDefButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDefButtonActionPerformed

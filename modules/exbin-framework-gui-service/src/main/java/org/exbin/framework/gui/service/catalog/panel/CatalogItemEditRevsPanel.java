@@ -194,9 +194,8 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
             }
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void modifyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyButtonActionPerformed
@@ -222,9 +221,8 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
             }
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_modifyButtonActionPerformed
 
     private void removeDefButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDefButtonActionPerformed
@@ -262,7 +260,7 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void persist() {
-        for (CatalogRevsTableItem revItem : updateList) {
+        updateList.forEach((revItem) -> {
             XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
             XBCXDescService descService = (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
 
@@ -279,13 +277,11 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
 
             ((XBEXNameService) nameService).setDefaultText(rev, revItem.getName());
             ((XBEXDescService) descService).setDefaultText(rev, revItem.getDescription());
-        }
+        });
 
-        for (CatalogRevsTableItem revItem : removeList) {
-            if (revItem.getRev() != null) {
-                revService.removeItemDepth(revItem.getRev());
-            }
-        }
+        removeList.stream().filter((revItem) -> (revItem.getRev() != null)).forEachOrdered((revItem) -> {
+            revService.removeItemDepth(revItem.getRev());
+        });
     }
 
     private void updateItemStatus() {

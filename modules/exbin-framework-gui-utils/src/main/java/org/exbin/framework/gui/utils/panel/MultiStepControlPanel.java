@@ -25,14 +25,15 @@ import org.exbin.framework.gui.utils.handler.MultiStepControlHandler;
 /**
  * Multi-step control panel for options dialogs.
  *
- * @version 0.2.1 2019/06/26
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MultiStepControlPanel extends javax.swing.JPanel implements MultiStepControlHandler.MultiStepControlListener {
+public class MultiStepControlPanel extends javax.swing.JPanel implements MultiStepControlHandler.MultiStepControlService {
 
     private final java.util.ResourceBundle resourceBundle;
     private MultiStepControlHandler handler;
+    private OkCancelListener okCancelListener;
 
     public MultiStepControlPanel() {
         this(LanguageUtils.getResourceBundleByClass(MultiStepControlPanel.class));
@@ -41,6 +42,18 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
     public MultiStepControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
+
+        okCancelListener = new OkCancelListener() {
+            @Override
+            public void okEvent() {
+                performClick(MultiStepControlHandler.ControlActionType.FINISH);
+            }
+
+            @Override
+            public void cancelEvent() {
+                performClick(MultiStepControlHandler.ControlActionType.CANCEL);
+            }
+        };
     }
 
     public void setHandler(MultiStepControlHandler handler) {
@@ -176,18 +189,8 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
 
     @Nonnull
     @Override
-    public OkCancelListener createOkCancelListener() {
-        return new OkCancelListener() {
-            @Override
-            public void okEvent() {
-                performClick(MultiStepControlHandler.ControlActionType.FINISH);
-            }
-
-            @Override
-            public void cancelEvent() {
-                performClick(MultiStepControlHandler.ControlActionType.CANCEL);
-            }
-        };
+    public OkCancelListener getOkCancelListener() {
+        return okCancelListener;
     }
 
     @Nonnull

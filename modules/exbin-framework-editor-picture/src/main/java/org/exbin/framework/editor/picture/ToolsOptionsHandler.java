@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.picture;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -42,7 +43,6 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
  */
 public class ToolsOptionsHandler {
 
-    private int metaMask;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditorPictureModule.class);
 
     private Action toolsSetColorAction;
@@ -67,22 +67,18 @@ public class ToolsOptionsHandler {
                 DefaultControlPanel controlPanel = new DefaultControlPanel(toolColorPanel.getResourceBundle());
                 JPanel dialogPanel = WindowUtils.createDialogPanel(toolColorPanel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), toolColorPanel.getClass(), toolColorPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog.getWindow(), toolColorPanel.getClass(), toolColorPanel.getResourceBundle(), controlPanel);
                 frameModule.setDialogTitle(dialog, toolColorPanel.getResourceBundle());
-                controlPanel.setHandler(new DefaultControlHandler() {
-                    @Override
-                    public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                        if (actionType == ControlActionType.OK) {
-                            ((ImagePanel) editorProvider).setToolColor(toolColorPanel.getToolColor());
-                            ((ImagePanel) editorProvider).setSelectionColor(toolColorPanel.getSelectionColor());
-                        }
-
-                        dialog.close();
+                controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                    if (actionType == ControlActionType.OK) {
+                        ((ImagePanel) editorProvider).setToolColor(toolColorPanel.getToolColor());
+                        ((ImagePanel) editorProvider).setSelectionColor(toolColorPanel.getSelectionColor());
                     }
+
+                    dialog.close();
                 });
-                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                dialog.center(dialog.getParent());
-                dialog.show();
+                dialog.showCentered((Component) e.getSource());
+                dialog.dispose();
             }
         };
         ActionUtils.setupAction(toolsSetColorAction, resourceBundle, "toolsSetColorAction");

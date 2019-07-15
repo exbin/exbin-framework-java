@@ -310,8 +310,7 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
             DefaultControlPanel controlPanel = new DefaultControlPanel();
             JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
             final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-            WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
-            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+            WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle(), controlPanel);
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {
                     EntityManager em = ((XBECatalog) catalog).getEntityManager();
@@ -325,8 +324,8 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
                 }
                 dialog.close();
             });
-            dialog.center(dialog.getParent());
-            dialog.show();
+            dialog.showCentered(this);
+            dialog.dispose();
         }
     }//GEN-LAST:event_popupEditMenuItemActionPerformed
 

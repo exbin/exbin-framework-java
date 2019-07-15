@@ -297,9 +297,8 @@ public class AddBlockPanel extends javax.swing.JPanel {
                         throw new IllegalStateException("Unexpected action type " + actionType.name());
                 }
             });
-            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-            dialog.center(dialog.getParent());
-            dialog.show();
+            dialog.showCentered(this);
+            dialog.dispose();
         }
 
         updateActionState();
@@ -350,9 +349,8 @@ public class AddBlockPanel extends javax.swing.JPanel {
                         throw new IllegalStateException("Unexpected action type " + actionType.name());
                 }
             });
-            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-            dialog.center(dialog.getParent());
-            dialog.show();
+            dialog.showCentered(this);
+            dialog.dispose();
         }
 
         updateActionState();

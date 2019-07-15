@@ -18,6 +18,8 @@ package org.exbin.framework.editor.text;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
@@ -29,16 +31,15 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Print handler.
  *
- * @version 0.2.0 2016/01/23
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PrintHandler {
 
     private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
-
-    private int metaMask;
 
     private Action printAction;
 
@@ -49,8 +50,6 @@ public class PrintHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         printAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -61,10 +60,11 @@ public class PrintHandler {
             }
         };
         ActionUtils.setupAction(printAction, resourceBundle, "printAction");
-        printAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, metaMask));
+        printAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, ActionUtils.getMetaMask()));
         printAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
+    @Nonnull
     public Action getPrintAction() {
         return printAction;
     }

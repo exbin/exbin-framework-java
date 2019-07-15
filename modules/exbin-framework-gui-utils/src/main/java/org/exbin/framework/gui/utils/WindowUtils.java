@@ -52,12 +52,13 @@ import javax.swing.JTextPane;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.exbin.framework.gui.utils.handler.OkCancelService;
 import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
 
 /**
  * Utility static methods usable for windows and dialogs.
  *
- * @version 0.2.1 2019/06/19
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -70,12 +71,20 @@ public class WindowUtils {
     }
 
     public static void addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle) {
-        URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
-        Icon headerIcon = iconUrl != null ? new ImageIcon(iconUrl) : null;
-        addHeaderPanel(window, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
+        addHeaderPanel(window, resourceClass, resourceBundle, null);
     }
 
-    public static void addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon) {
+    public static void addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle, @Nullable OkCancelService okCancelService) {
+        URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
+        Icon headerIcon = iconUrl != null ? new ImageIcon(iconUrl) : null;
+        WindowHeaderPanel headerPanel = addHeaderPanel(window, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
+        if (okCancelService != null) {
+            WindowUtils.assignGlobalKeyListener(headerPanel, okCancelService.getOkCancelListener());
+        }
+    }
+
+    @Nonnull
+    public static WindowHeaderPanel addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
         headerPanel.setDescription(headerDescription);
@@ -93,6 +102,7 @@ public class WindowUtils {
         int height = window.getHeight() + headerPanel.getPreferredSize().height;
         ((JDialog) window).getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
         window.setSize(window.getWidth(), height);
+        return headerPanel;
     }
 
     public static void invokeWindow(final Window window) {
@@ -133,6 +143,12 @@ public class WindowUtils {
             }
 
             @Override
+            public void showCentered(@Nullable Component component) {
+                center(component);
+                show();
+            }
+
+            @Override
             public void close() {
                 closeWindow(dialog);
             }
@@ -153,8 +169,12 @@ public class WindowUtils {
             }
 
             @Override
-            public void center(Container window) {
-                dialog.setLocationRelativeTo(window);
+            public void center(@Nullable Component component) {
+                if (component == null) {
+                    center();
+                } else {
+                    dialog.setLocationRelativeTo(component);
+                }
             }
 
             @Override
@@ -414,6 +434,7 @@ public class WindowUtils {
         Dimension mainPreferredSize = mainPanel.getPreferredSize();
         Dimension controlPreferredSize = controlPanel.getPreferredSize();
         dialogPanel.setPreferredSize(new Dimension(mainPreferredSize.width, mainPreferredSize.height + controlPreferredSize.height));
+        WindowUtils.assignGlobalKeyListener(mainPanel, ((OkCancelService) controlPanel).getOkCancelListener());
         return dialogPanel;
     }
 
@@ -421,6 +442,8 @@ public class WindowUtils {
     public interface DialogWrapper {
 
         void show();
+
+        void showCentered(@Nullable Component window);
 
         void close();
 
@@ -432,7 +455,7 @@ public class WindowUtils {
         @Nonnull
         Container getParent();
 
-        void center(Container window);
+        void center(@Nullable Component window);
 
         void center();
     }

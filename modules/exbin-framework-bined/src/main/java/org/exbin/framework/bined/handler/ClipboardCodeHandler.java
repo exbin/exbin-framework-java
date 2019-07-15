@@ -42,8 +42,6 @@ public class ClipboardCodeHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action copyAsCodeAction;
     private Action pasteFromCodeAction;
 
@@ -54,8 +52,6 @@ public class ClipboardCodeHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         copyAsCodeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

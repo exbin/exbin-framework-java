@@ -34,7 +34,6 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 public class BasicUndoActions implements UndoActions {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiUndoModule.class);
-    private final int metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
     private UndoActionsHandler undoHandler = null;
     private Action undoAction = null;
@@ -71,7 +70,7 @@ public class BasicUndoActions implements UndoActions {
                 }
             };
             ActionUtils.setupAction(undoAction, resourceBundle, "editUndoAction");
-            undoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, metaMask));
+            undoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, ActionUtils.getMetaMask()));
             undoAction.setEnabled(false);
         }
         return undoAction;
@@ -87,7 +86,7 @@ public class BasicUndoActions implements UndoActions {
                 }
             };
             ActionUtils.setupAction(redoAction, resourceBundle, "editRedoAction");
-            redoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_MASK | metaMask));
+            redoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_MASK | ActionUtils.getMetaMask()));
             redoAction.setEnabled(false);
         }
         return redoAction;

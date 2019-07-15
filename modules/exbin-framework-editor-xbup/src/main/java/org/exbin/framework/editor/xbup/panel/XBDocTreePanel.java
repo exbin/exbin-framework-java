@@ -347,6 +347,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         MultiStepControlPanel controlPanel = new MultiStepControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(addItemPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, addItemPanel.getResourceBundle(), controlPanel);
         controlPanel.setHandler((MultiStepControlHandler.ControlActionType actionType) -> {
             switch (actionType) {
                 case FINISH: {
@@ -364,11 +365,11 @@ public class XBDocTreePanel extends javax.swing.JPanel {
                     mainDoc.setModified(true);
                     updateItemStatus();
 
-                    WindowUtils.closeWindow(dialog.getWindow());
+                    dialog.close();
                     break;
                 }
                 case CANCEL: {
-                    WindowUtils.closeWindow(dialog.getWindow());
+                    dialog.close();
                     break;
                 }
                 case NEXT: {
@@ -379,9 +380,8 @@ public class XBDocTreePanel extends javax.swing.JPanel {
                 }
             }
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
 
 //        addItemPanel.setLocationRelativeTo(addItemPanel.getParent());
 //        addItemPanel.setParentNode(node);

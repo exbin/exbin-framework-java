@@ -41,8 +41,6 @@ public class DrawingControlHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action dotsModeAction;
     private Action lineModeAction;
     private Action integralModeAction;
@@ -56,8 +54,6 @@ public class DrawingControlHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         dotsModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

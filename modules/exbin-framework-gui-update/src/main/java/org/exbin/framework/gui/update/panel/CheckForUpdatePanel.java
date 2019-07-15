@@ -19,12 +19,11 @@ package org.exbin.framework.gui.update.panel;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import org.exbin.framework.gui.update.GuiUpdateModule;
-import org.exbin.framework.gui.update.VersionNumbers;
+import org.exbin.framework.gui.update.api.VersionNumbers;
+import org.exbin.framework.gui.update.service.CheckForUpdateService;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -32,19 +31,50 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Check for update panel.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CheckForUpdatePanel extends javax.swing.JPanel implements HyperlinkListener {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdatePanel.class);
-    private URL downloadUrl;
-    private Thread checkingThread = null;
-    private CheckForUpdatePanelHandler checkForUpdatePanelHandler = null;
+    private CheckForUpdateService checkForUpdateService;
 
     public CheckForUpdatePanel() {
         initComponents();
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
+    public void setCheckForUpdateService(CheckForUpdateService checkForUpdateService) {
+        this.checkForUpdateService = checkForUpdateService;
+
+        URL downloadUrl = checkForUpdateService.getDownloadUrl();
+        downloadButton.setEnabled(downloadUrl != null);
+
+        setVersionNumbers(checkForUpdateService.getCurrentVersion());
+        VersionNumbers updateVersion = checkForUpdateService.getUpdateVersion();
+        if (updateVersion != null) {
+            setUpdateVersionNumbers(updateVersion);
+        }
+    }
+
+    public void checkForUpdate() {
+        recheckButton.setEnabled(false);
+        statusTextLabel.setText(resourceBundle.getString("status.checking.text"));
+        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.checking.icon"))));
+        checkForUpdateService.performCheckForUpdates((CheckForUpdateService.CheckForUpdateResult result, VersionNumbers updateVersion) -> {
+            if (updateVersion == null) {
+                availableVersionTextField.setText(resourceBundle.getString("unknown"));
+            } else {
+                setUpdateVersionNumbers(updateVersion);
+            }
+            setCheckUpdatesResult(result);
+            recheckButton.setEnabled(true);
+        });
     }
 
     /**
@@ -176,18 +206,19 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
     }// </editor-fold>//GEN-END:initComponents
 
     private void recheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recheckButtonActionPerformed
-        recheckButton.setEnabled(false);
-        statusTextLabel.setText(resourceBundle.getString("status.checking.text"));
-        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.checking.icon"))));
-        performCheckForUpdates();
+        checkForUpdate();
     }//GEN-LAST:event_recheckButtonActionPerformed
 
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        BareBonesBrowserLaunch.openDesktopURL(downloadUrl);
+        BareBonesBrowserLaunch.openDesktopURL(checkForUpdateService.getDownloadUrl());
     }//GEN-LAST:event_downloadButtonActionPerformed
 
-    public void setVersionNumbers(VersionNumbers versionNumbers) {
+    private void setVersionNumbers(VersionNumbers versionNumbers) {
         currentVersionTextField.setText(versionNumbers.versionAsString());
+    }
+
+    private void setUpdateVersionNumbers(VersionNumbers versionNumbers) {
+        availableVersionTextField.setText(versionNumbers.versionAsString());
     }
 
     /**
@@ -211,27 +242,8 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
     private javax.swing.JLabel statusTextLabel;
     // End of variables declaration//GEN-END:variables
 
-    private void performCheckForUpdates() {
-        if (checkingThread != null) {
-            checkingThread.interrupt();
-        }
-        checkingThread = new Thread(() -> {
-            GuiUpdateModule.CheckForUpdateResult result = checkForUpdatePanelHandler.checkForUpdate();
-            VersionNumbers updateVersion = checkForUpdatePanelHandler.getUpdateVersion();
-            if (updateVersion == null) {
-                availableVersionTextField.setText(resourceBundle.getString("unknown"));
-            } else {
-                availableVersionTextField.setText(updateVersion.versionAsString());
-            }
-            setCheckUpdatesResult(result);
-            recheckButton.setEnabled(true);
-        });
-        checkingThread.start();
-    }
-
-    private void setCheckUpdatesResult(GuiUpdateModule.CheckForUpdateResult result) {
+    private void setCheckUpdatesResult(CheckForUpdateService.CheckForUpdateResult result) {
         if (result == null) {
-
             return;
         }
         switch (result) {
@@ -271,44 +283,5 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
                 break;
             }
         }
-    }
-
-    public void setUpdateDownloadUrl(URL downloadUrl) {
-        this.downloadUrl = downloadUrl;
-        downloadButton.setEnabled(downloadUrl != null);
-    }
-
-    public void setCheckForUpdatePanelHandler(CheckForUpdatePanelHandler checkForUpdatePanelHandler) {
-        this.checkForUpdatePanelHandler = checkForUpdatePanelHandler;
-        if (checkForUpdatePanelHandler != null) {
-            performCheckForUpdates();
-        }
-    }
-
-    @Nonnull
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
-    }
-
-    /**
-     * Handler for update checking.
-     */
-    public static interface CheckForUpdatePanelHandler {
-
-        /**
-         * Performs check for updates.
-         *
-         * @return check for updates result
-         */
-        @Nonnull
-        GuiUpdateModule.CheckForUpdateResult checkForUpdate();
-
-        /**
-         * Returns version of update if available.
-         *
-         * @return version of update
-         */
-        @Nullable
-        VersionNumbers getUpdateVersion();
     }
 }

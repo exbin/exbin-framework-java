@@ -19,6 +19,7 @@ package org.exbin.framework.editor.text;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -46,8 +47,6 @@ public class FindReplaceHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action editFindAction;
     private Action editFindAgainAction;
     private Action editReplaceAction;
@@ -59,8 +58,6 @@ public class FindReplaceHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         editFindAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -68,7 +65,7 @@ public class FindReplaceHandler {
             }
         };
         ActionUtils.setupAction(editFindAction, resourceBundle, "editFindAction");
-        editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, metaMask));
+        editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
         editFindAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
 
         editFindAgainAction = new AbstractAction() {
@@ -87,7 +84,7 @@ public class FindReplaceHandler {
             }
         };
         ActionUtils.setupAction(editReplaceAction, resourceBundle, "editReplaceAction");
-        editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, metaMask));
+        editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
         editReplaceAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
@@ -108,21 +105,23 @@ public class FindReplaceHandler {
 
             dialog.close();
         });
-        WindowUtils.addHeaderPanel(dialog.getWindow(), findPanel.getClass(), findPanel.getResourceBundle());
+        WindowUtils.addHeaderPanel(dialog.getWindow(), findPanel.getClass(), findPanel.getResourceBundle(), controlPanel);
         frameModule.setDialogTitle(dialog, findPanel.getResourceBundle());
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(frameModule.getFrame());
-        dialog.show();
+        dialog.showCentered(frameModule.getFrame());
+        dialog.dispose();
     }
 
+    @Nonnull
     public Action getEditFindAction() {
         return editFindAction;
     }
 
+    @Nonnull
     public Action getEditFindAgainAction() {
         return editFindAgainAction;
     }
 
+    @Nonnull
     public Action getEditReplaceAction() {
         return editReplaceAction;
     }

@@ -29,10 +29,11 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class OptionsControlPanel extends javax.swing.JPanel implements OptionsControlHandler.OptionsControlListener {
+public class OptionsControlPanel extends javax.swing.JPanel implements OptionsControlHandler.OptionsControlService {
 
     private final java.util.ResourceBundle resourceBundle;
     private OptionsControlHandler handler;
+    private OkCancelListener okCancelListener;
 
     public OptionsControlPanel() {
         this(LanguageUtils.getResourceBundleByClass(OptionsControlPanel.class));
@@ -41,6 +42,18 @@ public class OptionsControlPanel extends javax.swing.JPanel implements OptionsCo
     public OptionsControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
+
+        okCancelListener = new OkCancelListener() {
+            @Override
+            public void okEvent() {
+                performClick(OptionsControlHandler.ControlActionType.SAVE);
+            }
+
+            @Override
+            public void cancelEvent() {
+                performClick(OptionsControlHandler.ControlActionType.CANCEL);
+            }
+        };
     }
 
     public void setHandler(OptionsControlHandler handler) {
@@ -152,18 +165,8 @@ public class OptionsControlPanel extends javax.swing.JPanel implements OptionsCo
 
     @Nonnull
     @Override
-    public OkCancelListener createOkCancelListener() {
-        return new OkCancelListener() {
-            @Override
-            public void okEvent() {
-                performClick(OptionsControlHandler.ControlActionType.SAVE);
-            }
-
-            @Override
-            public void cancelEvent() {
-                performClick(OptionsControlHandler.ControlActionType.CANCEL);
-            }
-        };
+    public OkCancelListener getOkCancelListener() {
+        return okCancelListener;
     }
 
     @Nonnull

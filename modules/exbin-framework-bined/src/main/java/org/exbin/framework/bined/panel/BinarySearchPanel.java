@@ -30,6 +30,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -55,9 +57,9 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.framework.bined.service.BinarySearchService;
 
 /**
- * Hexadecimal editor search panel.
+ * Binary editor search panel.
  *
- * @version 0.2.1 2019/07/02
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
 public class BinarySearchPanel extends javax.swing.JPanel {
@@ -68,7 +70,8 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     private Thread searchThread;
     private final SearchParameters searchParameters = new SearchParameters();
     private final ReplaceParameters replaceParameters = new ReplaceParameters();
-    private final BinarySearchService binarySearchService;
+
+    private BinarySearchService binarySearchService;
     private int matchesCount;
     private int matchPosition;
     private final ExtCodeArea hexadecimalRenderer = new ExtCodeArea();
@@ -86,14 +89,13 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
     private XBApplication application;
 
-    public BinarySearchPanel(BinarySearchService binarySearchService) {
+    public BinarySearchPanel() {
         initComponents();
-        this.binarySearchService = binarySearchService;
         init();
     }
 
     private void init() {
-        ExtendedCodeAreaLayoutProfile layoutProfile = hexadecimalRenderer.getLayoutProfile();
+        ExtendedCodeAreaLayoutProfile layoutProfile = Objects.requireNonNull(hexadecimalRenderer.getLayoutProfile());
         layoutProfile.setShowHeader(false);
         layoutProfile.setShowRowPosition(false);
 
@@ -281,6 +283,10 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
         replaceComboBoxEditorComponent.addValueKeyListener(editorKeyListener);
         replaceComboBox.setModel(new SearchHistoryModel(replaceHistory));
+    }
+
+    public void setBinarySearchService(BinarySearchService binarySearchService) {
+        this.binarySearchService = binarySearchService;
     }
 
     public void switchReplaceMode(boolean replaceMode) {
@@ -595,7 +601,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         DefaultControlPanel controlPanel = new DefaultControlPanel(findBinaryPanel.getResourceBundle());
         final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findBinaryPanel, controlPanel));
         frameModule.setDialogTitle(dialog, findBinaryPanel.getResourceBundle());
-        WindowUtils.addHeaderPanel(dialog.getWindow(), findBinaryPanel.getClass(), findBinaryPanel.getResourceBundle());
+        WindowUtils.addHeaderPanel(dialog.getWindow(), findBinaryPanel.getClass(), findBinaryPanel.getResourceBundle(), controlPanel);
         findBinaryPanel.setMultilineEditorListener(new FindBinaryPanel.MultilineEditorListener() {
             @Override
             public SearchCondition multilineEdit(SearchCondition condition) {
@@ -606,7 +612,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                 JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 final DialogWrapper multilineDialog = frameModule.createDialog(dialog.getWindow(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
-                WindowUtils.addHeaderPanel(multilineDialog.getWindow(), multilinePanel.getClass(), multilinePanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(multilineDialog.getWindow(), multilinePanel.getClass(), multilinePanel.getResourceBundle(), controlPanel);
                 frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
                 final SearchConditionResult result = new SearchConditionResult();
                 controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
@@ -617,10 +623,9 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
                     multilineDialog.close();
                 });
-                WindowUtils.assignGlobalKeyListener(multilineDialog.getWindow(), controlPanel.createOkCancelListener());
-                multilineDialog.center(dialog.getWindow());
-                multilineDialog.show();
+                multilineDialog.showCentered(BinarySearchPanel.this);
                 multilinePanel.detachMenu();
+                dialog.dispose();
                 return result.searchCondition;
             }
 
@@ -644,9 +649,8 @@ public class BinarySearchPanel extends javax.swing.JPanel {
             findBinaryPanel.detachMenu();
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(frameModule.getFrame());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_optionsButtonActionPerformed
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
@@ -736,32 +740,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new BinarySearchPanel(new BinarySearchService() {
-            @Override
-            public void performFind(SearchParameters dialogSearchParameters) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setMatchPosition(int matchPosition) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void updatePosition() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void clearMatches() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        }));
+        WindowUtils.invokeDialog(new BinarySearchPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -954,6 +933,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         }
     }
 
+    @Nullable
     public ClosePanelListener getClosePanelListener() {
         return closePanelListener;
     }

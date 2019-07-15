@@ -18,7 +18,6 @@ package org.exbin.framework.gui.utils.handler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.utils.OkCancelListener;
 
 /**
  * Handler for multi-step control panel.
@@ -32,12 +31,9 @@ public interface MultiStepControlHandler {
     void controlActionPerformed(ControlActionType actionType);
 
     @ParametersAreNonnullByDefault
-    public interface MultiStepControlListener {
+    public interface MultiStepControlService extends OkCancelService {
 
         void performClick(ControlActionType actionType);
-
-        @Nonnull
-        OkCancelListener createOkCancelListener();
 
         @Nonnull
         MultiStepControlEnablementListener createEnablementListener();

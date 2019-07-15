@@ -18,7 +18,6 @@ package org.exbin.framework.gui.utils.handler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.utils.OkCancelListener;
 
 /**
  * Handler for default control panel.
@@ -32,12 +31,9 @@ public interface DefaultControlHandler {
     void controlActionPerformed(ControlActionType actionType);
 
     @ParametersAreNonnullByDefault
-    public interface DefaultControlListener {
+    public interface DefaultControlService extends OkCancelService {
 
         void performClick(ControlActionType actionType);
-
-        @Nonnull
-        OkCancelListener createOkCancelListener();
 
         @Nonnull
         DefaultControlEnablementListener createEnablementListener();

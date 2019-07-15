@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.bined.handler;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -30,13 +31,12 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.CloseControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 
 /**
  * Properties handler.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesHandler {
@@ -44,8 +44,6 @@ public class PropertiesHandler {
     private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
-
-    private int metaMask;
 
     private Action propertiesAction;
 
@@ -56,8 +54,6 @@ public class PropertiesHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         propertiesAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -68,17 +64,11 @@ public class PropertiesHandler {
                 JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
 
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle(), controlPanel);
                 frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
-                controlPanel.setHandler(new CloseControlHandler() {
-                    @Override
-                    public void controlActionPerformed() {
-                        dialog.close();
-                    }
-                });
-                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                dialog.center(dialog.getParent());
-                dialog.show();
+                controlPanel.setHandler(dialog::close);
+                dialog.showCentered((Component) e.getSource());
+                dialog.dispose();
             }
         };
         ActionUtils.setupAction(propertiesAction, resourceBundle, "propertiesAction");

@@ -20,6 +20,7 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Window;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -28,9 +29,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 
 /**
- * Interface for XBUP framework frame module.
+ * Interface for framework frame module.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -58,6 +59,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      *
      * @return frame handler
      */
+    @Nonnull
     ApplicationFrameHandler getFrameHandler();
 
     /**
@@ -70,6 +72,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      *
      * @return dialog
      */
+    @Nonnull
     DialogWrapper createDialog();
 
     /**
@@ -79,6 +82,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * @param modalityType modality type
      * @return dialog
      */
+    @Nonnull
     DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType);
 
     /**
@@ -87,6 +91,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * @param panel panel
      * @return dialog
      */
+    @Nonnull
     DialogWrapper createDialog(JPanel panel);
 
     /**
@@ -104,6 +109,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      *
      * @return frame
      */
+    @Nonnull
     Frame getFrame();
 
     /**
@@ -111,6 +117,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      *
      * @return exit action
      */
+    @Nonnull
     Action getExitAction();
 
     /**
@@ -132,10 +139,13 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      */
     void removeExitListener(ApplicationExitListener listener);
 
+    @Nonnull
     Action getViewToolBarAction();
 
+    @Nonnull
     Action getViewToolBarCaptionsAction();
 
+    @Nonnull
     Action getViewStatusBarAction();
 
     void registerBarsVisibilityActions();
@@ -164,5 +174,5 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
 
     void saveFramePosition();
 
-    public void setDialogTitle(DialogWrapper dialog, ResourceBundle resourceBundle);
+    void setDialogTitle(DialogWrapper dialog, ResourceBundle resourceBundle);
 }

@@ -39,8 +39,6 @@ public class PropertyPanelHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action viewPropertyPanelAction;
 
     public PropertyPanelHandler(XBApplication application, EditorProvider editorProvider) {
@@ -50,8 +48,6 @@ public class PropertyPanelHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         viewPropertyPanelAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

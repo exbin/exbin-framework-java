@@ -317,8 +317,7 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
 
             dialog.close();
         });
-        dialog.center();
-        dialog.show();
+        dialog.showCentered(this);
         dialog.dispose();
     }//GEN-LAST:event_addButtonActionPerformed
 
@@ -365,8 +364,7 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
 
             dialog.close();
         });
-        dialog.center();
-        dialog.show();
+        dialog.showCentered(this);
         dialog.dispose();
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -409,8 +407,7 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
 
             dialog.close();
         });
-        dialog.center();
-        dialog.show();
+        dialog.showCentered(this);
         dialog.dispose();
     }//GEN-LAST:event_copyButtonActionPerformed
 

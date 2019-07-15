@@ -18,7 +18,6 @@ package org.exbin.framework.gui.utils.handler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.utils.OkCancelListener;
 
 /**
  * Handler for control panel with support for remove action.
@@ -32,12 +31,9 @@ public interface RemovalControlHandler {
     void controlActionPerformed(ControlActionType actionType);
 
     @ParametersAreNonnullByDefault
-    public interface RemovalControlListener {
+    public interface RemovalControlService extends OkCancelService {
 
         void performClick(ControlActionType actionType);
-
-        @Nonnull
-        OkCancelListener createOkCancelListener();
 
         @Nonnull
         RemovalControlEnablementListener createEnablementListener();

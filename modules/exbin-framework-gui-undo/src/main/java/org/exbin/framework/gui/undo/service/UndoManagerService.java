@@ -14,38 +14,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.utils.handler;
+package org.exbin.framework.gui.undo.service;
 
-import javax.annotation.Nonnull;
+import java.awt.Component;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.xbup.operation.Command;
 
 /**
- * Handler for options control panel.
+ * Interface for undo manager service.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface OptionsControlHandler {
+public interface UndoManagerService {
 
-    void controlActionPerformed(ControlActionType actionType);
+    public void exportCommand(Component parentComponent, Command command);
 
-    @ParametersAreNonnullByDefault
-    public interface OptionsControlService extends OkCancelService {
-
-        void performClick(ControlActionType actionType);
-
-        @Nonnull
-        OptionsControlEnablementListener createEnablementListener();
-    }
-
-    @ParametersAreNonnullByDefault
-    public interface OptionsControlEnablementListener {
-
-        void actionEnabled(ControlActionType actionType, boolean enablement);
-    }
-
-    public static enum ControlActionType {
-        SAVE, APPLY_ONCE, CANCEL
-    }
 }

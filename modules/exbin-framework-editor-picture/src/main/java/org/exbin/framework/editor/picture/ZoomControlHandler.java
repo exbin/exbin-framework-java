@@ -40,8 +40,6 @@ public class ZoomControlHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action normalZoomAction;
     private Action zoomUpAction;
     private Action zoomDownAction;
@@ -53,8 +51,6 @@ public class ZoomControlHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         normalZoomAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

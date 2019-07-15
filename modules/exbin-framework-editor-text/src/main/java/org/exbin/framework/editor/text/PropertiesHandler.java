@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.text;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -30,7 +31,6 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.CloseControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 
 /**
@@ -65,14 +65,13 @@ public class PropertiesHandler {
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle(), controlPanel);
                     frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
                     controlPanel.setHandler(() -> {
                         dialog.close();
                     });
-                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                    dialog.center(dialog.getParent());
-                    dialog.show();
+                    dialog.showCentered((Component) e.getSource());
+                    dialog.dispose();
                 }
             }
         };

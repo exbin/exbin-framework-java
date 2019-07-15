@@ -18,6 +18,8 @@ package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
@@ -33,13 +35,12 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.0 2016/12/24
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class FindReplaceHandler {
 
     private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
-
-    private int metaMask;
 
     private Action editFindAction;
     private Action editFindAgainAction;
@@ -52,8 +53,6 @@ public class FindReplaceHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         editFindAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,7 +63,7 @@ public class FindReplaceHandler {
             }
         };
         ActionUtils.setupAction(editFindAction, resourceBundle, "editFindAction");
-        editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, metaMask));
+        editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
         editFindAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
 
         editFindAgainAction = new AbstractAction() {
@@ -87,18 +86,21 @@ public class FindReplaceHandler {
             }
         };
         ActionUtils.setupAction(editReplaceAction, resourceBundle, "editReplaceAction");
-        editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, metaMask));
+        editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
         editReplaceAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
+    @Nonnull
     public Action getEditFindAction() {
         return editFindAction;
     }
 
+    @Nonnull
     public Action getEditFindAgainAction() {
         return editFindAgainAction;
     }
 
+    @Nonnull
     public Action getEditReplaceAction() {
         return editReplaceAction;
     }

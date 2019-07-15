@@ -468,9 +468,8 @@ public class ConnectionPanel extends javax.swing.JPanel {
             }
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_connectionManageButtonActionPerformed
 
     private void anonymousRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_anonymousRadioButtonActionPerformed

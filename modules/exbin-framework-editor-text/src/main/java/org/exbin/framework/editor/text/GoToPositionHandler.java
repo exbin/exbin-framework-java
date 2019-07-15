@@ -18,6 +18,8 @@ package org.exbin.framework.editor.text;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -36,16 +38,15 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 /**
  * Go to line handler.
  *
- * @version 0.2.0 2017/01/04
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GoToPositionHandler {
 
     private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
-
-    private int metaMask;
 
     private Action goToLineAction;
 
@@ -56,8 +57,6 @@ public class GoToPositionHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         goToLineAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,7 +70,7 @@ public class GoToPositionHandler {
                     JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle(), controlPanel);
                     frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -81,17 +80,17 @@ public class GoToPositionHandler {
 
                         dialog.close();
                     });
-                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                    dialog.center(dialog.getParent());
-                    dialog.show();
+                    dialog.showCentered(frameModule.getFrame());
+                    dialog.dispose();
                 }
             }
         };
         ActionUtils.setupAction(goToLineAction, resourceBundle, "goToLineAction");
-        goToLineAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, metaMask));
+        goToLineAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, ActionUtils.getMetaMask()));
         goToLineAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
+    @Nonnull
     public Action getGoToLineAction() {
         return goToLineAction;
     }

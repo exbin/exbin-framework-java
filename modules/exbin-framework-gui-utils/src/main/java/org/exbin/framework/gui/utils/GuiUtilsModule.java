@@ -16,16 +16,19 @@
  */
 package org.exbin.framework.gui.utils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework GUI utilities module.
+ * Implementation of framework GUI utilities module.
  *
- * @version 0.2.0 2016/12/23
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiUtilsModule implements XBApplicationModule {
 
     private XBApplication application;
@@ -42,6 +45,7 @@ public class GuiUtilsModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     public static TestApplication getDefaultAppEditor() {
         return new TestApplication();
     }

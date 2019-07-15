@@ -38,8 +38,6 @@ public class DocEditingHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action addItemAction;
     private Action modifyItemAction;
 
@@ -50,8 +48,6 @@ public class DocEditingHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         addItemAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

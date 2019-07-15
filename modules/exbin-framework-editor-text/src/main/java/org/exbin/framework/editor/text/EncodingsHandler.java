@@ -23,6 +23,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
@@ -50,9 +52,10 @@ import org.exbin.framework.editor.text.service.TextEncodingService;
 /**
  * Encodings handler.
  *
- * @version 0.2.1 2019/07/06
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class EncodingsHandler implements TextEncodingService {
 
     private final ResourceBundle resourceBundle;
@@ -134,10 +137,12 @@ public class EncodingsHandler implements TextEncodingService {
 
                         addEncodingDialog.close();
                     });
-                    addEncodingDialog.show();
+                    addEncodingDialog.showCentered(addEncodingPanel);
+                    addEncodingDialog.dispose();
                     return result;
                 });
-                dialog.show();
+                dialog.showCentered(frameModule.getFrame());
+                dialog.dispose();
             }
         };
         ActionUtils.setupAction(manageEncodingsAction, resourceBundle, "manageEncodingsAction");
@@ -178,6 +183,7 @@ public class EncodingsHandler implements TextEncodingService {
         this.textEncodingStatus = textEncodingStatus;
     }
 
+    @Nonnull
     public JMenu getToolsEncodingMenu() {
         return toolsEncodingMenu;
     }

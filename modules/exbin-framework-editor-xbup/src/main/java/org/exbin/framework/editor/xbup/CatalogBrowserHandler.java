@@ -16,8 +16,11 @@
  */
 package org.exbin.framework.editor.xbup;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -36,17 +39,16 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 /**
  * Catalog browser handler.
  *
- * @version 0.2.1 2019/06/23
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogBrowserHandler {
 
     private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
     private XBACatalog catalog;
-
-    private int metaMask;
 
     private Action catalogBrowserAction;
 
@@ -57,8 +59,6 @@ public class CatalogBrowserHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         catalogBrowserAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,18 +71,16 @@ public class CatalogBrowserHandler {
                 CloseControlPanel controlPanel = new CloseControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                controlPanel.setHandler(() -> {
-                    WindowUtils.closeWindow(dialog.getWindow());
-                });
-                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                dialog.center(dialog.getParent());
-                dialog.show();
+                controlPanel.setHandler(dialog::close);
+                dialog.showCentered((Component) e.getSource());
+                dialog.dispose();
             }
         };
         ActionUtils.setupAction(catalogBrowserAction, resourceBundle, "catalogBrowserAction");
         catalogBrowserAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
+    @Nonnull
     public Action getCatalogBrowserAction() {
         return catalogBrowserAction;
     }

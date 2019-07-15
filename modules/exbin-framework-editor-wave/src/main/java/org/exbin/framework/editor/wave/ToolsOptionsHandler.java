@@ -16,8 +16,10 @@
  */
 package org.exbin.framework.editor.wave;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -69,7 +71,7 @@ public class ToolsOptionsHandler {
                 DefaultControlPanel controlPanel = new DefaultControlPanel(waveColorPanel.getResourceBundle());
                 JPanel dialogPanel = WindowUtils.createDialogPanel(waveColorPanel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), waveColorPanel.getClass(), waveColorPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog.getWindow(), waveColorPanel.getClass(), waveColorPanel.getResourceBundle(), controlPanel);
                 frameModule.setDialogTitle(dialog, waveColorPanel.getResourceBundle());
                 controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                     if (actionType == ControlActionType.OK) {
@@ -78,15 +80,15 @@ public class ToolsOptionsHandler {
 
                     dialog.close();
                 });
-                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                dialog.center(dialog.getParent());
-                dialog.show();
+                dialog.showCentered((Component) e.getSource());
+                dialog.dispose();
             }
         };
         ActionUtils.setupAction(toolsSetColorAction, resourceBundle, "toolsSetColorAction");
         toolsSetColorAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
+    @Nonnull
     public Action getToolsSetColorAction() {
         return toolsSetColorAction;
     }

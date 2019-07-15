@@ -25,14 +25,15 @@ import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 /**
  * Basic default control panel.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultControlPanel extends javax.swing.JPanel implements DefaultControlHandler.DefaultControlListener {
+public class DefaultControlPanel extends javax.swing.JPanel implements DefaultControlHandler.DefaultControlService {
 
     private final java.util.ResourceBundle resourceBundle;
     private DefaultControlHandler handler;
+    private OkCancelListener okCancelListener;
 
     public DefaultControlPanel() {
         this(LanguageUtils.getResourceBundleByClass(DefaultControlPanel.class));
@@ -41,6 +42,18 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
     public DefaultControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
+        
+        okCancelListener = new OkCancelListener() {
+            @Override
+            public void okEvent() {
+                performClick(DefaultControlHandler.ControlActionType.OK);
+            }
+
+            @Override
+            public void cancelEvent() {
+                performClick(DefaultControlHandler.ControlActionType.CANCEL);
+            }
+        };
     }
 
     public void setHandler(DefaultControlHandler handler) {
@@ -119,18 +132,8 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
 
     @Nonnull
     @Override
-    public OkCancelListener createOkCancelListener() {
-        return new OkCancelListener() {
-            @Override
-            public void okEvent() {
-                performClick(DefaultControlHandler.ControlActionType.OK);
-            }
-
-            @Override
-            public void cancelEvent() {
-                performClick(DefaultControlHandler.ControlActionType.CANCEL);
-            }
-        };
+    public OkCancelListener getOkCancelListener() {
+        return okCancelListener;
     }
 
     @Nonnull

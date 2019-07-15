@@ -18,6 +18,7 @@ package org.exbin.framework.bined;
 
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
@@ -31,6 +32,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
  * @version 0.2.0 2019/06/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface BinaryEditorProvider extends EditorProvider {
 
     /**

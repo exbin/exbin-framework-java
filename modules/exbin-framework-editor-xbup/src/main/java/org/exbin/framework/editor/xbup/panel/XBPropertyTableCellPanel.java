@@ -121,7 +121,7 @@ public class XBPropertyTableCellPanel extends PropertyTableCellPanel {
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
+        WindowUtils.addHeaderPanel(dialog.getWindow(), ModifyBlockPanel.class, panel.getResourceBundle(), controlPanel);
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 XBTTreeNode newNode = panel.getNode();
@@ -129,10 +129,10 @@ public class XBPropertyTableCellPanel extends PropertyTableCellPanel {
                 // TODO
             }
 
-            WindowUtils.closeWindow(dialog.getWindow());
+            dialog.close();
         });
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }
 
     public XBACatalog getCatalog() {

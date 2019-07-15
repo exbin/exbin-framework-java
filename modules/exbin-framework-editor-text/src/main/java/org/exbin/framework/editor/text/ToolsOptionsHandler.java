@@ -19,6 +19,8 @@ package org.exbin.framework.editor.text;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -40,9 +42,10 @@ import org.exbin.framework.editor.text.service.TextColorService;
 /**
  * Tools options action handler.
  *
- * @version 0.2.1 2019/06/07
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ToolsOptionsHandler {
 
     private final ResourceBundle resourceBundle;
@@ -69,7 +72,7 @@ public class ToolsOptionsHandler {
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                 controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
@@ -83,9 +86,8 @@ public class ToolsOptionsHandler {
 
                     dialog.close();
                 });
-                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                dialog.center(dialog.getParent());
-                dialog.show();
+                dialog.showCentered(frameModule.getFrame());
+                dialog.dispose();
             }
         };
         ActionUtils.setupAction(toolsSetFontAction, resourceBundle, "toolsSetFontAction");
@@ -116,7 +118,7 @@ public class ToolsOptionsHandler {
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(colorPanel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle(), controlPanel);
                 frameModule.setDialogTitle(dialog, colorPanel.getResourceBundle());
                 controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
@@ -128,19 +130,20 @@ public class ToolsOptionsHandler {
 
                     dialog.close();
                 });
-                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                dialog.center(dialog.getParent());
-                dialog.show();
+                dialog.showCentered(frameModule.getFrame());
+                dialog.dispose();
             }
         };
         ActionUtils.setupAction(toolsSetColorAction, resourceBundle, "toolsSetColorAction");
         toolsSetColorAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
+    @Nonnull
     public Action getToolsSetFontAction() {
         return toolsSetFontAction;
     }
 
+    @Nonnull
     public Action getToolsSetColorAction() {
         return toolsSetColorAction;
     }

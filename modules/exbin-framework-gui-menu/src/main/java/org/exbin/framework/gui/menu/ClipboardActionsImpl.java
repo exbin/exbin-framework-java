@@ -77,7 +77,6 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 public class ClipboardActionsImpl implements ClipboardActionsApi {
 
     private ResourceBundle resourceBundle;
-    private int metaMask;
     private ActionMap actionMap;
     private Component actionFocusOwner = null;
 
@@ -113,7 +112,6 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
 
     public void init() {
         resourceBundle = LanguageUtils.getResourceBundleByClass(GuiMenuModule.class);
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
         initializeClipboardActions();
         initializeTextActions();
@@ -128,19 +126,19 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
         actionMap = new ActionMap();
         cutTextAction = new PassingTextAction(new DefaultEditorKit.CutAction());
         ActionUtils.setupAction(cutTextAction, resourceBundle, "editCutAction");
-        cutTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, metaMask));
+        cutTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
         cutTextAction.setEnabled(false);
         actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), cutTextAction);
 
         copyTextAction = new PassingTextAction(new DefaultEditorKit.CopyAction());
         ActionUtils.setupAction(copyTextAction, resourceBundle, "editCopyAction");
-        copyTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, metaMask));
+        copyTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
         copyTextAction.setEnabled(false);
         actionMap.put(TransferHandler.getCopyAction().getValue(Action.NAME), copyTextAction);
 
         pasteTextAction = new PassingTextAction(new DefaultEditorKit.PasteAction());
         ActionUtils.setupAction(pasteTextAction, resourceBundle, "editPasteAction");
-        pasteTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, metaMask));
+        pasteTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
         pasteTextAction.setEnabled(false);
         actionMap.put(TransferHandler.getPasteAction().getValue(Action.NAME), pasteTextAction);
 
@@ -170,7 +168,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
             }
         });
         ActionUtils.setupAction(selectAllTextAction, resourceBundle, "editSelectAllAction");
-        selectAllTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, metaMask));
+        selectAllTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
     }
 
     public void buildDefaultPopupMenu() {
@@ -256,7 +254,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
             }
         };
         ActionUtils.setupAction(defaultCutAction, resourceBundle, "editCutAction");
-        defaultCutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, metaMask));
+        defaultCutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
         defaultCutAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), defaultCutAction);
 
@@ -272,7 +270,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
             }
         };
         ActionUtils.setupAction(defaultCopyAction, resourceBundle, "editCopyAction");
-        defaultCopyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, metaMask));
+        defaultCopyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
         defaultCopyAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getCopyAction().getValue(Action.NAME), defaultCopyAction);
 
@@ -288,7 +286,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
             }
         };
         ActionUtils.setupAction(defaultPasteAction, resourceBundle, "editPasteAction");
-        defaultPasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, metaMask));
+        defaultPasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
         defaultPasteAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getPasteAction().getValue(Action.NAME), defaultPasteAction);
 
@@ -320,7 +318,7 @@ public class ClipboardActionsImpl implements ClipboardActionsApi {
             }
         };
         ActionUtils.setupAction(defaultSelectAllAction, resourceBundle, "editSelectAllAction");
-        defaultSelectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, metaMask));
+        defaultSelectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         defaultTextActionMap.put("selectAll", defaultSelectAllAction);
 
         DefaultPopupClipboardAction[] actions = {defaultCutAction, defaultCopyAction, defaultPasteAction, defaultDeleteAction, defaultSelectAllAction};

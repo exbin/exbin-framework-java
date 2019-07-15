@@ -81,9 +81,8 @@ public class CatalogDocPropertyTableCellPanel extends PropertyTableCellPanel {
             }
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }
 
     public void setCatalogItem(XBCItem catalogItem) {

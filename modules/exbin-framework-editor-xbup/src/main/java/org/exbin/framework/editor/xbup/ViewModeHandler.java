@@ -40,8 +40,6 @@ public class ViewModeHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action viewTreeModeAction;
     private Action viewTextModeAction;
     private Action viewHexModeAction;
@@ -55,8 +53,6 @@ public class ViewModeHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         viewTreeModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

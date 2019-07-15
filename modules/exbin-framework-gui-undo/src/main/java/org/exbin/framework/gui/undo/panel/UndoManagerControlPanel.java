@@ -23,22 +23,39 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Undo management control panel.
  *
- * @version 0.2.1 2019/06/19
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
-public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoManagerControlHandler.UndoManagerControlListener {
+public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoManagerControlHandler.UndoManagerControlService {
 
     private final java.util.ResourceBundle resourceBundle;
     private UndoManagerControlHandler handler;
+    private OkCancelListener okCancelListener;
 
     public UndoManagerControlPanel() {
         this(LanguageUtils.getResourceBundleByClass(UndoManagerControlPanel.class));
         initComponents();
+        init();
     }
 
     public UndoManagerControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
+        init();
+    }
+
+    private void init() {
+        okCancelListener = new OkCancelListener() {
+            @Override
+            public void okEvent() {
+                performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
+            }
+
+            @Override
+            public void cancelEvent() {
+                performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
+            }
+        };
     }
 
     public void setHandler(UndoManagerControlHandler handler) {
@@ -120,20 +137,9 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
     }
 
     @Override
-    public OkCancelListener createOkCancelListener() {
-        return new OkCancelListener() {
-            @Override
-            public void okEvent() {
-                performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
-            }
-
-            @Override
-            public void cancelEvent() {
-                performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
-            }
-        };
+    public OkCancelListener getOkCancelListener() {
+        return okCancelListener;
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;

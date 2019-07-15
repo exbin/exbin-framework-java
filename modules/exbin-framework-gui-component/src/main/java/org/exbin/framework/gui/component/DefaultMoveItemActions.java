@@ -34,7 +34,6 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 public class DefaultMoveItemActions implements MoveItemActions {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiComponentModule.class);
-    private final int metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
     private MoveItemActionsHandler actionsHandler = null;
     private Action moveUpAction = null;

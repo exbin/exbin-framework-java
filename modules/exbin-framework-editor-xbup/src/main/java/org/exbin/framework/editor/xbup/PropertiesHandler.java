@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.xbup;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -45,8 +46,6 @@ public class PropertiesHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action propertiesAction;
     private Action itemPropertiesAction;
     private boolean devMode;
@@ -58,8 +57,6 @@ public class PropertiesHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         propertiesAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,12 +69,11 @@ public class PropertiesHandler {
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle(), controlPanel);
                     frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
                     controlPanel.setHandler(dialog::close);
-                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                    dialog.center(dialog.getParent());
-                    dialog.show();
+                    dialog.showCentered((Component) e.getSource());
+                    dialog.dispose();
                 }
             }
         };
@@ -97,12 +93,9 @@ public class PropertiesHandler {
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                    controlPanel.setHandler(() -> {
-                        WindowUtils.closeWindow(dialog.getWindow());
-                    });
-                    dialog.center(dialog.getParent());
-                    dialog.show();
+                    controlPanel.setHandler(dialog::close);
+                    dialog.showCentered((Component) e.getSource());
+                    dialog.dispose();
                 }
             }
         };

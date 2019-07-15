@@ -25,14 +25,15 @@ import org.exbin.framework.gui.utils.handler.CloseControlHandler;
 /**
  * Basic close control panel.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseControlPanel extends javax.swing.JPanel implements CloseControlHandler.CloseControlListener {
+public class CloseControlPanel extends javax.swing.JPanel implements CloseControlHandler.CloseControlService {
 
     private final java.util.ResourceBundle resourceBundle;
     private CloseControlHandler handler;
+    private OkCancelListener okCancelListener;
 
     public CloseControlPanel() {
         this(LanguageUtils.getResourceBundleByClass(CloseControlPanel.class));
@@ -41,6 +42,18 @@ public class CloseControlPanel extends javax.swing.JPanel implements CloseContro
     public CloseControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
+
+        okCancelListener = new OkCancelListener() {
+            @Override
+            public void okEvent() {
+                performCloseClick();
+            }
+
+            @Override
+            public void cancelEvent() {
+                performCloseClick();
+            }
+        };
     }
 
     public void setHandler(CloseControlHandler handler) {
@@ -100,18 +113,8 @@ public class CloseControlPanel extends javax.swing.JPanel implements CloseContro
 
     @Nonnull
     @Override
-    public OkCancelListener createOkCancelListener() {
-        return new OkCancelListener() {
-            @Override
-            public void okEvent() {
-                performCloseClick();
-            }
-
-            @Override
-            public void cancelEvent() {
-                performCloseClick();
-            }
-        };
+    public OkCancelListener getOkCancelListener() {
+        return okCancelListener;
     }
 
     @Nonnull

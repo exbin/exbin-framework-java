@@ -30,7 +30,7 @@ import javax.swing.Icon;
 /**
  * Simple header panel.
  *
- * @version 0.2.1 2019/06/26
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -41,7 +41,7 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
     private Image decorationImage = null;
     private boolean darkMode = false;
 
-    private final ImageObserver imageObserver = (Image img, int infoflags, int x1, int y1, int width1, int height1) -> true;
+    private final ImageObserver imageObserver = (Image img, int infoflags, int x, int y, int width, int height) -> true;
 
     public WindowHeaderPanel() {
         initComponents();
@@ -221,6 +221,8 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
                 }
                 break;
             }
+            default:
+                throw new IllegalStateException("Illegal decoration mode " + decorationMode.name());
         }
     }
 

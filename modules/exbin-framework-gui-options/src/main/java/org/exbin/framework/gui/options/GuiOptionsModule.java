@@ -120,21 +120,18 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
                             case SAVE: {
                                 optionsTreePanel.applyPreferencesChanges();
                                 optionsTreePanel.saveToPreferences();
-                                WindowUtils.closeWindow(dialog.getWindow());
                                 break;
                             }
                             case CANCEL: {
-                                WindowUtils.closeWindow(dialog.getWindow());
                                 break;
                             }
                             case APPLY_ONCE: {
                                 optionsTreePanel.applyPreferencesChanges();
-                                WindowUtils.closeWindow(dialog.getWindow());
                                 break;
                             }
                         }
+                        dialog.close();
                     });
-                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                     dialog.center(dialog.getParent());
                     dialog.show();
                 }

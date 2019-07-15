@@ -34,9 +34,8 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 public class DefaultEditItemActions implements EditItemActions {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiComponentModule.class);
-    private final int metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
     private EditItemActionsHandler actionsHandler = null;
+
     private Action addItemAction = null;
     private Action editItemAction = null;
     private Action deleteItemAction = null;

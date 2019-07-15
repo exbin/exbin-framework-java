@@ -300,8 +300,8 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
 
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), textFontControlPanel.createOkCancelListener());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_selectFontButtonActionPerformed
 
     /**

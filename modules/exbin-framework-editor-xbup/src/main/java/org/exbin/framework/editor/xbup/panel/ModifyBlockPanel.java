@@ -20,7 +20,6 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;

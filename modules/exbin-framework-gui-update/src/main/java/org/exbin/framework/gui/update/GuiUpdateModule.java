@@ -16,13 +16,10 @@
  */
 package org.exbin.framework.gui.update;
 
+import org.exbin.framework.gui.update.api.VersionNumbers;
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -41,6 +38,8 @@ import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
 import org.exbin.framework.gui.update.options.panel.ApplicationUpdateOptionsPanel;
 import org.exbin.framework.gui.update.panel.CheckForUpdatePanel;
 import org.exbin.framework.gui.update.preferences.CheckForUpdateParameters;
+import org.exbin.framework.gui.update.service.CheckForUpdateService;
+import org.exbin.framework.gui.update.service.impl.CheckForUpdateServiceImpl;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -49,9 +48,9 @@ import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework check updates module.
+ * Implementation of framework check update module.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -60,9 +59,12 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     private XBApplication application;
     private java.util.ResourceBundle resourceBundle = null;
     private Action checkUpdateAction;
+
     private URL checkUpdateUrl;
     private VersionNumbers updateVersion;
     private URL downloadUrl;
+
+    private CheckForUpdateService checkForUpdateService;
 
     public GuiUpdateModule() {
     }
@@ -95,29 +97,18 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                 public void actionPerformed(ActionEvent e) {
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
-                    checkForUpdatePanel.setUpdateDownloadUrl(downloadUrl);
-                    checkForUpdatePanel.setVersionNumbers(getVersionNumbers());
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(checkForUpdatePanel, controlPanel);
 
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle(), controlPanel);
                     frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
                     controlPanel.setHandler(dialog::close);
-                    WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
                     dialog.center(dialog.getParent());
-                    checkForUpdatePanel.setCheckForUpdatePanelHandler(new CheckForUpdatePanel.CheckForUpdatePanelHandler() {
-                        @Override
-                        public CheckForUpdateResult checkForUpdate() {
-                            return GuiUpdateModule.this.checkForUpdates();
-                        }
-
-                        @Override
-                        public VersionNumbers getUpdateVersion() {
-                            return GuiUpdateModule.this.getUpdateVersion();
-                        }
-                    });
-                    dialog.show();
+                    checkForUpdatePanel.setCheckForUpdateService(getCheckForUpdateService());
+                    checkForUpdatePanel.checkForUpdate();
+                    dialog.showCentered((Component) e.getSource());
+                    dialog.dispose();
                 }
             };
             ActionUtils.setupAction(checkUpdateAction, resourceBundle, "checkUpdateAction");
@@ -140,7 +131,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     }
 
     @Nonnull
-    public VersionNumbers getVersionNumbers() {
+    public VersionNumbers getCurrentVersion() {
         ResourceBundle appBundle = application.getAppBundle();
         String releaseString = appBundle.getString("Application.release");
         VersionNumbers versionNumbers = new VersionNumbers();
@@ -153,40 +144,36 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
         this.checkUpdateUrl = updateUrl;
     }
 
+    @Nullable
+    @Override
+    public URL getUpdateUrl() {
+        return checkUpdateUrl;
+    }
+
     @Nonnull
-    public CheckForUpdateResult checkForUpdates() {
-        if (checkUpdateUrl == null) {
-            return CheckForUpdateResult.UPDATE_URL_NOT_SET;
+    public CheckForUpdateService getCheckForUpdateService() {
+        if (checkForUpdateService == null) {
+            checkForUpdateService = new CheckForUpdateServiceImpl(this);
         }
 
-        try {
-            try (InputStream checkUpdateStream = checkUpdateUrl.openStream(); BufferedReader reader = new BufferedReader(new InputStreamReader(checkUpdateStream))) {
-                String line = reader.readLine();
-                if (line == null) {
-                    return CheckForUpdateResult.NOT_FOUND;
-                }
-                updateVersion = new VersionNumbers();
-                updateVersion.versionFromString(line);
-            }
+        return checkForUpdateService;
+    }
 
-            // Compare versions
-            if (updateVersion.isGreaterThan(getVersionNumbers())) {
-                return CheckForUpdateResult.UPDATE_FOUND;
-            }
-
-            return CheckForUpdateResult.NO_UPDATE_AVAILABLE;
-        } catch (FileNotFoundException ex) {
-            return CheckForUpdateResult.NOT_FOUND;
-        } catch (IOException ex) {
-            return CheckForUpdateResult.CONNECTION_ISSUE;
-        } catch (Exception ex) {
-            return CheckForUpdateResult.CONNECTION_ISSUE;
-        }
+    @Override
+    public void setUpdateVersion(VersionNumbers updateVersion) {
+        this.updateVersion = updateVersion;
     }
 
     @Nullable
+    @Override
     public VersionNumbers getUpdateVersion() {
         return updateVersion;
+    }
+
+    @Nullable
+    @Override
+    public URL getUpdateDownloadUrl() {
+        return downloadUrl;
     }
 
     @Override
@@ -203,50 +190,22 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
             return;
         }
 
-        final CheckForUpdateResult checkForUpdates = checkForUpdates();
-        if (checkForUpdates == CheckForUpdateResult.UPDATE_FOUND) {
+        getCheckForUpdateService();
+        final CheckForUpdateService.CheckForUpdateResult checkForUpdates = checkForUpdateService.checkForUpdate();
+        if (checkForUpdates == CheckForUpdateService.CheckForUpdateResult.UPDATE_FOUND) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
-            checkForUpdatePanel.setUpdateDownloadUrl(downloadUrl);
-            checkForUpdatePanel.setVersionNumbers(getVersionNumbers());
             CloseControlPanel controlPanel = new CloseControlPanel();
             JPanel dialogPanel = WindowUtils.createDialogPanel(checkForUpdatePanel, controlPanel);
 
             final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-            WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
+            WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle(), controlPanel);
             frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
             controlPanel.setHandler(dialog::close);
-            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
             dialog.center(dialog.getParent());
-            checkForUpdatePanel.setCheckForUpdatePanelHandler(new CheckForUpdatePanel.CheckForUpdatePanelHandler() {
-                boolean first = true;
-
-                @Override
-                public CheckForUpdateResult checkForUpdate() {
-                    if (first) {
-                        return checkForUpdates;
-                    }
-                    return GuiUpdateModule.this.checkForUpdates();
-                }
-
-                @Override
-                public VersionNumbers getUpdateVersion() {
-                    return GuiUpdateModule.this.getUpdateVersion();
-                }
-            });
-            dialog.show();
+            checkForUpdatePanel.setCheckForUpdateService(checkForUpdateService);
+            dialog.showCentered(frame);
+            dialog.dispose();
         }
-    }
-
-    /**
-     * Enumeration of result types.
-     */
-    public static enum CheckForUpdateResult {
-        UPDATE_URL_NOT_SET,
-        NO_CONNECTION,
-        CONNECTION_ISSUE,
-        NOT_FOUND,
-        NO_UPDATE_AVAILABLE,
-        UPDATE_FOUND
     }
 }

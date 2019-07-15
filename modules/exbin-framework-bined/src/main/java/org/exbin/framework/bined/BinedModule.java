@@ -366,9 +366,8 @@ public class BinedModule implements XBApplicationModule {
                 addEncodingDialog.close();
             });
             frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
-            WindowUtils.assignGlobalKeyListener(addEncodingDialog.getWindow(), controlPanel.createOkCancelListener());
-            addEncodingDialog.center(addEncodingDialog.getParent());
-            addEncodingDialog.show();
+            addEncodingDialog.showCentered(textEncodingOptionsPanel);
+            addEncodingDialog.dispose();
             return result;
         });
         optionsModule.addOptionsPanel(textEncodingOptionsPanel);
@@ -400,7 +399,7 @@ public class BinedModule implements XBApplicationModule {
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
+                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
                 frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                 controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
@@ -414,9 +413,8 @@ public class BinedModule implements XBApplicationModule {
 
                     dialog.close();
                 });
-                WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-                dialog.center(dialog.getParent());
-                dialog.show();
+                dialog.showCentered(textFontOptionsPanel);
+                dialog.dispose();
 
                 return result.font;
             }

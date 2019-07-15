@@ -18,7 +18,6 @@ package org.exbin.framework.gui.utils.handler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.utils.OkCancelListener;
 
 /**
  * Handler for close control panel.
@@ -31,12 +30,9 @@ public interface CloseControlHandler {
 
     void controlActionPerformed();
 
-    public interface CloseControlListener {
+    public interface CloseControlService extends OkCancelService {
 
         void performCloseClick();
-
-        @Nonnull
-        OkCancelListener createOkCancelListener();
 
         @Nonnull
         CloseControlEnablementListener createEnablementListener();

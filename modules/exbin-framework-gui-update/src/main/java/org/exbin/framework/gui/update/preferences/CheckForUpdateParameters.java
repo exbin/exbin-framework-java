@@ -19,7 +19,7 @@ import org.exbin.framework.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Wave editor color preferences.
+ * Check for update on start preferences.
  *
  * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)

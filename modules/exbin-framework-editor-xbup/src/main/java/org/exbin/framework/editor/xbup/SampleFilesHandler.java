@@ -42,8 +42,6 @@ public class SampleFilesHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action sampleHtmlFileAction;
     private Action samplePictureFileAction;
 
@@ -54,8 +52,6 @@ public class SampleFilesHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         sampleHtmlFileAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

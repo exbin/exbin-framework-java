@@ -17,6 +17,7 @@
 package org.exbin.framework.gui.service.catalog.panel;
 
 import java.util.ResourceBundle;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -37,9 +38,10 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * Catalog specification definition editor panel.
  *
- * @version 0.2.1 2019/06/27
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
 
     private XBApplication application;
@@ -183,9 +185,8 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
             }
             dialog.close();
         });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        dialog.showCentered(this);
+        dialog.dispose();
     }//GEN-LAST:event_selectTargetButtonActionPerformed
 
     /**

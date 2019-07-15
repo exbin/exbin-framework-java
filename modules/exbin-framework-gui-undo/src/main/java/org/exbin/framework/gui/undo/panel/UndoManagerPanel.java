@@ -16,14 +16,11 @@
  */
 package org.exbin.framework.gui.undo.panel;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Date;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.gui.undo.service.UndoManagerService;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.operation.Command;
@@ -34,21 +31,28 @@ import org.exbin.xbup.operation.XBTOpDocCommand;
 /**
  * Undo management panel.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class UndoManagerPanel extends javax.swing.JPanel {
 
     private final UndoManagerModel undoModel;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(UndoManagerPanel.class);
+    private UndoManagerService undoManagerService;
 
     public UndoManagerPanel(UndoManagerModel undoModel) {
         this.undoModel = undoModel;
         initComponents();
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void setUndoManagerService(UndoManagerService undoManagerService) {
+        this.undoManagerService = undoManagerService;
     }
 
     /**
@@ -229,28 +233,8 @@ public class UndoManagerPanel extends javax.swing.JPanel {
         if (selectedIndex >= 0) {
             command = undoModel.getItem(selectedIndex);
         }
-
-        if (command instanceof XBTOpDocCommand) {
-            JFileChooser exportFileChooser = new JFileChooser();
-            exportFileChooser.setAcceptAllFileFilterUsed(true);
-            if (exportFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-                FileOutputStream fileStream;
-                try {
-                    fileStream = new FileOutputStream(exportFileChooser.getSelectedFile().getAbsolutePath());
-                    try {
-                        ((XBTOpDocCommand) command).getOperation().getData().saveToStream(fileStream);
-                    } finally {
-                        fileStream.close();
-                    }
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(UndoManagerPanel.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(UndoManagerPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } else {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+        
+        undoManagerService.exportCommand(this, command);
     }//GEN-LAST:event_exportButtonActionPerformed
 
     public long getCommandPosition() {

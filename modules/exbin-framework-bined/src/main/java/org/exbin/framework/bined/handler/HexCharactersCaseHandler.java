@@ -44,8 +44,6 @@ public class HexCharactersCaseHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action upperHexCharsAction;
     private Action lowerHexCharsAction;
 
@@ -58,8 +56,6 @@ public class HexCharactersCaseHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         upperHexCharsAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

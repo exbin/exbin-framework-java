@@ -18,6 +18,7 @@ package org.exbin.framework.gui.undo;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import org.exbin.framework.api.XBApplication;
@@ -194,12 +195,11 @@ public class GuiUndoModule implements GuiUndoModuleApi {
         final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(undoManagerPanel, undoManagerControlPanel));
         frameModule.setDialogTitle(dialog, undoManagerPanel.getResourceBundle());
         undoManagerControlPanel.setHandler((UndoManagerControlHandler.ControlActionType actionType) -> {
-            WindowUtils.closeWindow(dialog.getWindow());
+            dialog.close();
         });
-        WindowUtils.addHeaderPanel(dialog.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), undoManagerControlPanel.createOkCancelListener());
-        dialog.center(frameModule.getFrame());
-        dialog.show();
+        WindowUtils.addHeaderPanel(dialog.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle(), undoManagerControlPanel);
+        dialog.showCentered(frameModule.getFrame());
+        dialog.dispose();
     }
 
     @Override
@@ -209,6 +209,7 @@ public class GuiUndoModule implements GuiUndoModuleApi {
         return undoActions;
     }
 
+    @Nonnull
     public BasicUndoActions getDefaultUndoActions() {
         if (defaultUndoActions == null) {
             defaultUndoActions = new BasicUndoActions();

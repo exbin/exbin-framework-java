@@ -38,8 +38,6 @@ public class ImportExportHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private int metaMask;
-
     private Action importItemAction;
     private Action exportItemAction;
 
@@ -50,8 +48,6 @@ public class ImportExportHandler {
     }
 
     public void init() {
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
         importItemAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

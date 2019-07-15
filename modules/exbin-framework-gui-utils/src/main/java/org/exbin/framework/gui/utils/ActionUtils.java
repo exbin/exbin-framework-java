@@ -17,14 +17,16 @@
 package org.exbin.framework.gui.utils;
 
 import java.util.ResourceBundle;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
  * Some simple static methods usable for actions, menus and toolbars.
  *
- * @version 0.2.0 2016/12/23
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ActionUtils {
 
     public static final String DIALOG_MENUITEM_EXT = "...";
@@ -79,7 +81,7 @@ public class ActionUtils {
             action.putValue(Action.LARGE_ICON_KEY, new javax.swing.ImageIcon(action.getClass().getResource(bundle.getString(actionId + ACTION_SMALL_LARGE_POSTFIX))));
         }
     }
-    
+
     public static int getMetaMask() {
         return java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
     }

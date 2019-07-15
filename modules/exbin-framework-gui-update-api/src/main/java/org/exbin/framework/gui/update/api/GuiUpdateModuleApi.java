@@ -18,33 +18,43 @@ package org.exbin.framework.gui.update.api;
 
 import java.awt.Frame;
 import java.net.URL;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
- * Interface of the XBUP framework update checking module.
+ * Interface of the framework update checking module.
  *
- * @version 0.2.0 2016/07/16
+ * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiUpdateModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiUpdateModuleApi.class);
 
     /**
-     * Returns update check action.
+     * Returns check for available updates action.
      *
      * @return action
      */
+    @Nonnull
     Action getCheckUpdateAction();
 
-    /**
-     * Registers default menu item.
-     */
     void registerDefaultMenuItem();
 
     void registerOptionsPanels();
+
+    /**
+     * Returns URL of update data source.
+     *
+     * @return update URL
+     */
+    @Nullable
+    URL getUpdateUrl();
 
     /**
      * Sets URL of update data source.
@@ -52,6 +62,14 @@ public interface GuiUpdateModuleApi extends XBApplicationModule {
      * @param updateUrl update URL
      */
     void setUpdateUrl(URL updateUrl);
+
+    @Nullable
+    public VersionNumbers getUpdateVersion();
+
+    void setUpdateVersion(VersionNumbers updateVersion);
+
+    @Nullable
+    URL getUpdateDownloadUrl();
 
     /**
      * Sets URL of download website for updated application.

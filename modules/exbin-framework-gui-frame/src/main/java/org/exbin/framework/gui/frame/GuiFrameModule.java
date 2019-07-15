@@ -22,6 +22,8 @@ import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JDialog;
@@ -46,9 +48,10 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of XBUP framework frame module.
  *
- * @version 0.2.0 2016/12/29
+ * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiFrameModule implements GuiFrameModuleApi {
 
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";
@@ -152,6 +155,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         menuModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getExitAction(), new MenuPosition(appClosingActionsGroup));
     }
 
+    @Nonnull
     @Override
     public ApplicationFrameHandler getFrameHandler() {
         if (frame == null) {

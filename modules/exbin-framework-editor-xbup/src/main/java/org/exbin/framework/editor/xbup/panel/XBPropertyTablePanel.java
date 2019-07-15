@@ -454,12 +454,9 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        controlPanel.setHandler(() -> {
-            WindowUtils.closeWindow(dialog.getWindow());
-        });
-        WindowUtils.assignGlobalKeyListener(dialog.getWindow(), controlPanel.createOkCancelListener());
-        dialog.center(dialog.getParent());
-        dialog.show();
+        controlPanel.setHandler(dialog::close);
+        dialog.showCentered(this);
+        dialog.dispose();
     }
 
     public void actionItemOpen() {

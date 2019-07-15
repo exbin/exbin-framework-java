@@ -96,6 +96,7 @@ public class LanguageUtils {
      * Resource bundle which looks for language resources first and main
      * resources as fallback.
      */
+    @ParametersAreNonnullByDefault
     private static class LanguageResourceBundle extends ResourceBundle {
 
         private final ResourceBundle mainResourceBundle;
@@ -106,6 +107,7 @@ public class LanguageUtils {
             languageResourceBundle = ResourceBundle.getBundle(baseName, Locale.getDefault(), languageClassLoader);
         }
 
+        @Nullable
         @Override
         protected Object handleGetObject(String key) {
             Object object = languageResourceBundle.getObject(key);
@@ -116,6 +118,7 @@ public class LanguageUtils {
             return object;
         }
 
+        @Nonnull
         @Override
         public Enumeration<String> getKeys() {
             Set<String> keys = new HashSet<>();
