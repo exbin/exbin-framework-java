@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -40,13 +41,14 @@ import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 
 /**
  * Values side panel.
  *
- * @version 0.2.1 2019/03/24
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
 public class ValuesPanel extends javax.swing.JPanel {
@@ -773,7 +775,8 @@ public class ValuesPanel extends javax.swing.JPanel {
 
         if (dataPosition < dataSize) {
             int availableData = dataSize - dataPosition >= CACHE_SIZE ? CACHE_SIZE : (int) (dataSize - dataPosition);
-            codeArea.getContentData().copyToArray(dataPosition, valuesCache, 0, availableData);
+            BinaryData contentData = Objects.requireNonNull(codeArea.getContentData());
+            contentData.copyToArray(dataPosition, valuesCache, 0, availableData);
             if (availableData < CACHE_SIZE) {
                 Arrays.fill(valuesCache, availableData, CACHE_SIZE, (byte) 0);
             }

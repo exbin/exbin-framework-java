@@ -17,25 +17,84 @@
 package org.exbin.framework.bined.service;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.bined.ReplaceParameters;
 import org.exbin.framework.bined.SearchParameters;
 
 /**
  * Binary search service.
  *
- * @version 0.2.1 2019/07/12
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface BinarySearchService {
 
-    void performFind(SearchParameters dialogSearchParameters);
+    void performFind(SearchParameters dialogSearchParameters, ExtCodeArea codeArea, SearchStatusListener searchStatusListener);
 
-    void setMatchPosition(int matchPosition);
+    void setMatchPosition(int matchPosition, ExtCodeArea codeArea);
 
-    void updatePosition();
+    void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters, ExtCodeArea codeArea);
 
-    void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters);
+    void clearMatches(ExtCodeArea codeArea);
 
-    void clearMatches();
+    @ParametersAreNonnullByDefault
+    public interface SearchStatusListener {
+
+        void setStatus(FoundMatches foundMatches);
+
+        void clearStatus();
+    }
+
+    public static class FoundMatches {
+
+        private int matchesCount;
+        private int matchPosition;
+
+        public FoundMatches() {
+            matchesCount = 0;
+            matchPosition = -1;
+        }
+
+        public FoundMatches(int matchesCount, int matchPosition) {
+            if (matchPosition >= matchesCount) {
+                throw new IllegalStateException("Match position is out of range");
+            }
+
+            this.matchesCount = matchesCount;
+            this.matchPosition = matchPosition;
+        }
+
+        public int getMatchesCount() {
+            return matchesCount;
+        }
+
+        public int getMatchPosition() {
+            return matchPosition;
+        }
+
+        public void setMatchesCount(int matchesCount) {
+            this.matchesCount = matchesCount;
+        }
+
+        public void setMatchPosition(int matchPosition) {
+            this.matchPosition = matchPosition;
+        }
+
+        public void next() {
+            if (matchPosition == matchesCount - 1) {
+                throw new IllegalStateException("Cannot step next on last match");
+            }
+
+            matchPosition++;
+        }
+
+        public void prev() {
+            if (matchPosition == 0) {
+                throw new IllegalStateException("Cannot step previous on first match");
+            }
+
+            matchPosition--;
+        }
+    }
 }

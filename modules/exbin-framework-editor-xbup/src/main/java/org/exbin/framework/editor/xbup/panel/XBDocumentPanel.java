@@ -101,7 +101,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private PanelMode mode = PanelMode.TREE;
 
     private final XBDocTreePanel treePanel;
-    private final BinaryPanel hexPanel;
+    private final BinaryPanel binaryPanel;
     private final BinaryStatusPanel hexStatusPanel;
     private final TextPanel textPanel;
 
@@ -121,9 +121,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         mainSplitPane.setRightComponent(propertyPanel);
 
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
-        hexPanel = new BinaryPanel();
+        binaryPanel = new BinaryPanel();
         hexStatusPanel = new BinaryStatusPanel();
-        hexPanel.registerBinaryStatus(hexStatusPanel);
+        binaryPanel.registerBinaryStatus(hexStatusPanel);
         // hexPanel.setNoBorder();
         textPanel = new TextPanel();
         textPanel.setNoBorder();
@@ -364,7 +364,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performCut();
                 break;
             case HEX:
-                hexPanel.performCut();
+                binaryPanel.performCut();
             default:
                 break;
         }
@@ -380,7 +380,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performCopy();
                 break;
             case HEX:
-                hexPanel.performCopy();
+                binaryPanel.performCopy();
             default:
                 break;
         }
@@ -396,7 +396,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performPaste();
                 break;
             case HEX:
-                hexPanel.performPaste();
+                binaryPanel.performPaste();
                 break;
             default:
                 break;
@@ -413,7 +413,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performSelectAll();
                 break;
             case HEX:
-                hexPanel.performSelectAll();
+                binaryPanel.performSelectAll();
                 break;
             default:
                 break;
@@ -434,7 +434,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performDelete();
                 break;
             case HEX:
-                hexPanel.performDelete();
+                binaryPanel.performDelete();
                 break;
             default:
                 break;
@@ -453,7 +453,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                     // TODO: Replace stupid buffer copy later
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                     try {
-                        hexPanel.saveToStream(buffer);
+                        binaryPanel.saveToStream(buffer);
                         mainDoc.fromStreamUB(new ByteArrayInputStream(buffer.toByteArray()));
                     } catch (XBProcessingException ex) {
                         Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -482,7 +482,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                     try {
                         mainDoc.toStreamUB(buffer);
-                        hexPanel.loadFromStream(new ByteArrayInputStream(buffer.toByteArray()), buffer.size());
+                        binaryPanel.loadFromStream(new ByteArrayInputStream(buffer.toByteArray()), buffer.size());
                     } catch (IOException ex) {
                         Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -798,7 +798,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             case 1:
                 return textPanel;
             case 2:
-                return hexPanel;
+                return binaryPanel;
         }
 
         return null;
@@ -937,7 +937,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             case TEXT:
                 return true;
             case HEX:
-                return hexPanel.isEditable();
+                return binaryPanel.isEditable();
             default:
                 return false;
         }
@@ -967,7 +967,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 // TODO Allow to paste text only
                 return true;
             case HEX:
-                return hexPanel.canPaste();
+                return binaryPanel.canPaste();
             default:
                 return false;
         }

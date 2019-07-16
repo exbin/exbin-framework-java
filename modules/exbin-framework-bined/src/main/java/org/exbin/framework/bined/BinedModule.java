@@ -112,13 +112,14 @@ import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.bined.service.BinaryAppearanceService;
+import org.exbin.framework.bined.service.impl.BinaryAppearanceServiceImpl;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextFontService;
 
 /**
- * Hexadecimal editor module.
+ * Binary data editor module.
  *
- * @version 0.2.1 2019/07/06
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -293,36 +294,10 @@ public class BinedModule implements XBApplicationModule {
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
 
-        BinaryAppearanceService appearanceOptionsPanelApi;
-        appearanceOptionsPanelApi = new BinaryAppearanceService() {
-            @Override
-            public boolean getWordWrapMode() {
-                return getEditorProvider().isWordWrapMode();
-            }
+        BinaryAppearanceService binaryAppearanceService;
+        binaryAppearanceService = new BinaryAppearanceServiceImpl(this);
 
-            @Override
-            public void setWordWrapMode(boolean mode) {
-                getEditorProvider().setWordWrapMode(mode);
-
-                wordWrappingHandler.getViewLineWrapAction().putValue(Action.SELECTED_KEY, mode);
-            }
-
-            @Override
-            public void setShowValuesPanel(boolean showValuesPanel) {
-                boolean valuesPanelVisible = getEditorProvider().isValuesPanelVisible();
-                if (valuesPanelVisible != showValuesPanel) {
-                    if (showValuesPanel) {
-                        getEditorProvider().showValuesPanel();
-                    } else {
-                        getEditorProvider().hideValuesPanel();
-                    }
-                }
-
-                viewValuesPanelHandler.getViewValuesPanelAction().putValue(Action.SELECTED_KEY, showValuesPanel);
-            }
-        };
-
-        binaryAppearanceOptionsPanel = new BinaryAppearanceOptionsPanel(appearanceOptionsPanelApi);
+        binaryAppearanceOptionsPanel = new BinaryAppearanceOptionsPanel(binaryAppearanceService);
         optionsModule.extendAppearanceOptionsPanel(binaryAppearanceOptionsPanel);
 
         TextEncodingService textEncodingPanelApi = new TextEncodingService() {
@@ -479,7 +454,8 @@ public class BinedModule implements XBApplicationModule {
         return binaryStatusPanel;
     }
 
-    private FindReplaceHandler getFindReplaceHandler() {
+    @Nonnull
+    public FindReplaceHandler getFindReplaceHandler() {
         if (findReplaceHandler == null) {
             findReplaceHandler = new FindReplaceHandler(application, getEditorProvider());
             findReplaceHandler.init();
@@ -488,7 +464,8 @@ public class BinedModule implements XBApplicationModule {
         return findReplaceHandler;
     }
 
-    private ViewNonprintablesHandler getViewNonprintablesHandler() {
+    @Nonnull
+    public ViewNonprintablesHandler getViewNonprintablesHandler() {
         if (viewNonprintablesHandler == null) {
             viewNonprintablesHandler = new ViewNonprintablesHandler(application, getEditorProvider());
             viewNonprintablesHandler.init();
@@ -497,7 +474,8 @@ public class BinedModule implements XBApplicationModule {
         return viewNonprintablesHandler;
     }
 
-    private ViewValuesPanelHandler getViewValuesPanelHandler() {
+    @Nonnull
+    public ViewValuesPanelHandler getViewValuesPanelHandler() {
         if (viewValuesPanelHandler == null) {
             viewValuesPanelHandler = new ViewValuesPanelHandler(application, getEditorProvider());
             viewValuesPanelHandler.init();
@@ -506,7 +484,8 @@ public class BinedModule implements XBApplicationModule {
         return viewValuesPanelHandler;
     }
 
-    private ToolsOptionsHandler getToolsOptionsHandler() {
+    @Nonnull
+    public ToolsOptionsHandler getToolsOptionsHandler() {
         if (toolsOptionsHandler == null) {
             toolsOptionsHandler = new ToolsOptionsHandler(application, getEditorProvider());
             toolsOptionsHandler.init();
@@ -515,7 +494,8 @@ public class BinedModule implements XBApplicationModule {
         return toolsOptionsHandler;
     }
 
-    private RowWrappingHandler getRowWrappingHandler() {
+    @Nonnull
+    public RowWrappingHandler getRowWrappingHandler() {
         if (wordWrappingHandler == null) {
             wordWrappingHandler = new RowWrappingHandler(application, getEditorProvider());
             wordWrappingHandler.init();
@@ -524,7 +504,8 @@ public class BinedModule implements XBApplicationModule {
         return wordWrappingHandler;
     }
 
-    private GoToPositionHandler getGoToPositionHandler() {
+    @Nonnull
+    public GoToPositionHandler getGoToPositionHandler() {
         if (goToRowHandler == null) {
             goToRowHandler = new GoToPositionHandler(application, getEditorProvider());
             goToRowHandler.init();
@@ -533,7 +514,8 @@ public class BinedModule implements XBApplicationModule {
         return goToRowHandler;
     }
 
-    private PropertiesHandler getPropertiesHandler() {
+    @Nonnull
+    public PropertiesHandler getPropertiesHandler() {
         if (propertiesHandler == null) {
             propertiesHandler = new PropertiesHandler(application, getEditorProvider());
             propertiesHandler.init();
@@ -542,7 +524,8 @@ public class BinedModule implements XBApplicationModule {
         return propertiesHandler;
     }
 
-    private EncodingsHandler getEncodingsHandler() {
+    @Nonnull
+    public EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
             encodingsHandler = new EncodingsHandler(application, getBinaryStatusPanel()); // getEditorProvider(), 
             // encodingsHandler.init();
@@ -551,7 +534,8 @@ public class BinedModule implements XBApplicationModule {
         return encodingsHandler;
     }
 
-    private PrintHandler getPrintHandler() {
+    @Nonnull
+    public PrintHandler getPrintHandler() {
         if (printHandler == null) {
             printHandler = new PrintHandler(application, getEditorProvider());
             printHandler.init();
@@ -560,7 +544,8 @@ public class BinedModule implements XBApplicationModule {
         return printHandler;
     }
 
-    private ViewModeHandler getViewModeHandler() {
+    @Nonnull
+    public ViewModeHandler getViewModeHandler() {
         if (viewModeHandler == null) {
             getResourceBundle();
             viewModeHandler = new ViewModeHandler(application, getEditorProvider());
@@ -570,7 +555,8 @@ public class BinedModule implements XBApplicationModule {
         return viewModeHandler;
     }
 
-    private LayoutHandler getLayoutHandler() {
+    @Nonnull
+    public LayoutHandler getLayoutHandler() {
         if (layoutHandler == null) {
             getResourceBundle();
             layoutHandler = new LayoutHandler(application, getEditorProvider());
@@ -580,7 +566,8 @@ public class BinedModule implements XBApplicationModule {
         return layoutHandler;
     }
 
-    private CodeTypeHandler getCodeTypeHandler() {
+    @Nonnull
+    public CodeTypeHandler getCodeTypeHandler() {
         if (codeTypeHandler == null) {
             getResourceBundle();
             codeTypeHandler = new CodeTypeHandler(application, getEditorProvider());
@@ -590,7 +577,8 @@ public class BinedModule implements XBApplicationModule {
         return codeTypeHandler;
     }
 
-    private PositionCodeTypeHandler getPositionCodeTypeHandler() {
+    @Nonnull
+    public PositionCodeTypeHandler getPositionCodeTypeHandler() {
         if (positionCodeTypeHandler == null) {
             getResourceBundle();
             positionCodeTypeHandler = new PositionCodeTypeHandler(application, getEditorProvider());
@@ -600,7 +588,8 @@ public class BinedModule implements XBApplicationModule {
         return positionCodeTypeHandler;
     }
 
-    private HexCharactersCaseHandler getHexCharactersCaseHandler() {
+    @Nonnull
+    public HexCharactersCaseHandler getHexCharactersCaseHandler() {
         if (hexCharactersCaseHandler == null) {
             getResourceBundle();
             hexCharactersCaseHandler = new HexCharactersCaseHandler(application, getEditorProvider());
@@ -610,7 +599,8 @@ public class BinedModule implements XBApplicationModule {
         return hexCharactersCaseHandler;
     }
 
-    private ClipboardCodeHandler getClipboardCodeHandler() {
+    @Nonnull
+    public ClipboardCodeHandler getClipboardCodeHandler() {
         if (clipboardCodeHandler == null) {
             getResourceBundle();
             clipboardCodeHandler = new ClipboardCodeHandler(application, getEditorProvider());

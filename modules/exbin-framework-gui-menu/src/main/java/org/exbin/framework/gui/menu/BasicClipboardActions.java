@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.gui.menu;
 
-import java.awt.Event;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;

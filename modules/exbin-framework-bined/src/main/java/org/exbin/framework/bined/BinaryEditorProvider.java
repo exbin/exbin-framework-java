@@ -65,10 +65,6 @@ public interface BinaryEditorProvider extends EditorProvider {
 
     void setCharset(Charset forName);
 
-    void performFind(SearchParameters searchParameters);
-
-    void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters);
-
     boolean changeShowNonprintables();
 
     void showValuesPanel();

@@ -51,15 +51,15 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
-import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.framework.bined.service.BinarySearchService;
+import org.exbin.framework.bined.service.BinarySearchService.FoundMatches;
 
 /**
  * Binary editor search panel.
  *
- * @version 0.2.1 2019/07/15
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
 public class BinarySearchPanel extends javax.swing.JPanel {
@@ -72,9 +72,10 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     private final ReplaceParameters replaceParameters = new ReplaceParameters();
 
     private BinarySearchService binarySearchService;
-    private int matchesCount;
-    private int matchPosition;
-    private final ExtCodeArea hexadecimalRenderer = new ExtCodeArea();
+    private final BinarySearchService.SearchStatusListener searchStatusListener;
+
+    private FoundMatches foundMatches = new FoundMatches();
+    private final ExtCodeArea codeArea = new ExtCodeArea();
 
     private boolean replaceMode = true;
     private ComboBoxEditor findComboBoxEditor;
@@ -91,24 +92,58 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
     public BinarySearchPanel() {
         initComponents();
+        searchStatusListener = new BinarySearchService.SearchStatusListener() {
+            @Override
+            public void setStatus(FoundMatches foundMatches) {
+                BinarySearchPanel.this.foundMatches = foundMatches;
+                switch (foundMatches.getMatchesCount()) {
+                    case 0:
+                        infoLabel.setText("No matches found");
+                        break;
+                    case 1:
+                        infoLabel.setText("Single match found");
+                        break;
+                    default:
+                        infoLabel.setText("Match " + (foundMatches.getMatchPosition() + 1) + " of " + foundMatches.getMatchesCount());
+                        break;
+                }
+                updateMatchStatus();
+            }
+
+            @Override
+            public void clearStatus() {
+                infoLabel.setText("");
+                BinarySearchPanel.this.foundMatches = new FoundMatches();
+                updateMatchStatus();
+            }
+
+            private void updateMatchStatus() {
+                int matchesCount = foundMatches.getMatchesCount();
+                int matchPosition = foundMatches.getMatchPosition();
+                prevButton.setEnabled(matchesCount > 1 && matchPosition > 0);
+                nextButton.setEnabled(matchPosition < matchesCount - 1);
+                replaceButton.setEnabled(matchesCount > 0);
+                replaceAllButton.setEnabled(matchesCount > 0);
+            }
+        };
         init();
     }
 
     private void init() {
-        ExtendedCodeAreaLayoutProfile layoutProfile = Objects.requireNonNull(hexadecimalRenderer.getLayoutProfile());
+        ExtendedCodeAreaLayoutProfile layoutProfile = Objects.requireNonNull(codeArea.getLayoutProfile());
         layoutProfile.setShowHeader(false);
         layoutProfile.setShowRowPosition(false);
 
-        hexadecimalRenderer.setLayoutProfile(layoutProfile);
-        ExtendedCodeAreaThemeProfile themeProfile = hexadecimalRenderer.getThemeProfile();
+        codeArea.setLayoutProfile(layoutProfile);
+        ExtendedCodeAreaThemeProfile themeProfile = codeArea.getThemeProfile();
         themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
 
-        hexadecimalRenderer.setLayoutProfile(layoutProfile);
-        hexadecimalRenderer.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
-        hexadecimalRenderer.setWrappingBytesGroupSize(0);
-        hexadecimalRenderer.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
-        hexadecimalRenderer.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
-        hexadecimalRenderer.setContentData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
+        codeArea.setLayoutProfile(layoutProfile);
+        codeArea.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        codeArea.setWrappingBytesGroupSize(0);
+        codeArea.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        codeArea.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);
+        codeArea.setContentData(new ByteArrayEditableData(new byte[]{1, 2, 3}));
 
         final KeyAdapter editorKeyListener = new KeyAdapter() {
             @Override
@@ -139,8 +174,8 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                 if (value.getSearchMode() == SearchCondition.SearchMode.TEXT) {
                     return listCellRenderer.getListCellRendererComponent(list, value.getSearchText(), index, isSelected, cellHasFocus);
                 } else {
-                    hexadecimalRenderer.setContentData(value.getBinaryData());
-                    hexadecimalRenderer.setPreferredSize(new Dimension(200, 20));
+                    codeArea.setContentData(value.getBinaryData());
+                    codeArea.setPreferredSize(new Dimension(200, 20));
                     Color backgroundColor;
                     if (isSelected) {
                         backgroundColor = list.getSelectionBackground();
@@ -150,7 +185,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 // TODO                    ColorsGroup mainColors = new ColorsGroup(hexadecimalRenderer.getMainColors());
 //                    mainColors.setBothBackgroundColors(backgroundColor);
 //                    hexadecimalRenderer.setMainColors(mainColors);
-                    return hexadecimalRenderer;
+                    return codeArea;
                 }
             }
         });
@@ -219,8 +254,8 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                 if (value.getSearchMode() == SearchCondition.SearchMode.TEXT) {
                     return listCellRenderer.getListCellRendererComponent(list, value.getSearchText(), index, isSelected, cellHasFocus);
                 } else {
-                    hexadecimalRenderer.setContentData(value.getBinaryData());
-                    hexadecimalRenderer.setPreferredSize(new Dimension(200, 20));
+                    codeArea.setContentData(value.getBinaryData());
+                    codeArea.setPreferredSize(new Dimension(200, 20));
                     Color backgroundColor;
                     if (isSelected) {
                         backgroundColor = list.getSelectionBackground();
@@ -230,7 +265,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 // TODO                    ColorsGroup mainColors = new ColorsGroup(hexadecimalRenderer.getMainColors());
 //                    mainColors.setBothBackgroundColors(backgroundColor);
 //                    hexadecimalRenderer.setMainColors(mainColors);
-                    return hexadecimalRenderer;
+                    return codeArea;
                 }
             }
         });
@@ -644,7 +679,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
                 ReplaceParameters dialogReplaceParameters = findBinaryPanel.getReplaceParameters();
                 switchReplaceMode(dialogReplaceParameters.isPerformReplace());
-                binarySearchService.performFind(dialogSearchParameters);
+                binarySearchService.performFind(dialogSearchParameters, codeArea, searchStatusListener);
             }
             findBinaryPanel.detachMenu();
             dialog.close();
@@ -654,15 +689,15 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_optionsButtonActionPerformed
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
-        matchPosition--;
-        binarySearchService.setMatchPosition(matchPosition);
-        setStatus(matchesCount, matchPosition);
+        foundMatches.prev();
+        binarySearchService.setMatchPosition(foundMatches.getMatchPosition(), codeArea);
+        searchStatusListener.setStatus(foundMatches);
     }//GEN-LAST:event_prevButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
-        matchPosition++;
-        binarySearchService.setMatchPosition(matchPosition);
-        setStatus(matchesCount, matchPosition);
+        foundMatches.next();
+        binarySearchService.setMatchPosition(foundMatches.getMatchPosition(), codeArea);
+        searchStatusListener.setStatus(foundMatches);
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void multipleMatchesToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multipleMatchesToggleButtonActionPerformed
@@ -798,7 +833,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                     return;
                 }
 
-                if (dataEquals(searchData, condition.getBinaryData())) {
+                if (searchData.equals(condition.getBinaryData())) {
                     return;
                 }
 
@@ -808,7 +843,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                 break;
             }
         }
-        binarySearchService.updatePosition();
+        updatePosition(codeArea.getCaretPosition().getDataPosition(), codeArea.getDataSize());
         performSearch(500);
     }
 
@@ -860,7 +895,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     }
 
     public void performFind() {
-        binarySearchService.performFind(searchParameters);
+        binarySearchService.performFind(searchParameters, codeArea, searchStatusListener);
         findComboBoxEditorComponent.setRunningUpdate(true);
         ((SearchHistoryModel) findComboBox.getModel()).addSearchCondition(searchParameters.getCondition());
         findComboBoxEditorComponent.setRunningUpdate(false);
@@ -868,7 +903,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
     public void performReplace() {
         replaceParameters.setCondition(replaceComboBoxEditorComponent.getItem());
-        binarySearchService.performReplace(searchParameters, replaceParameters);
+        binarySearchService.performReplace(searchParameters, replaceParameters, codeArea);
     }
 
     public void performReplaceAll() {
@@ -897,32 +932,8 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         searchParameters.setStartPosition(startPosition);
     }
 
-    public void setStatus(int matchesCount, int matchPosition) {
-        this.matchesCount = matchesCount;
-        this.matchPosition = matchPosition;
-        switch (matchesCount) {
-            case 0:
-                infoLabel.setText("No matches found");
-                break;
-            case 1:
-                infoLabel.setText("Single match found");
-                break;
-            default:
-                infoLabel.setText("Match " + (matchPosition + 1) + " of " + matchesCount);
-                break;
-        }
-        updateMatchStatus();
-    }
-
-    public void clearStatus() {
-        infoLabel.setText("");
-        matchesCount = 0;
-        matchPosition = -1;
-        updateMatchStatus();
-    }
-
     public void dataChanged() {
-        binarySearchService.clearMatches();
+        binarySearchService.clearMatches(codeArea);
         performSearch(500);
     }
 
@@ -940,28 +951,6 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
     public void setClosePanelListener(ClosePanelListener closePanelListener) {
         this.closePanelListener = closePanelListener;
-    }
-
-    private void updateMatchStatus() {
-        prevButton.setEnabled(matchesCount > 1 && matchPosition > 0);
-        nextButton.setEnabled(matchPosition < matchesCount - 1);
-        replaceButton.setEnabled(matchesCount > 0);
-        replaceAllButton.setEnabled(matchesCount > 0);
-    }
-
-    // TODO implement optimalized method
-    private boolean dataEquals(EditableBinaryData binaryData, BinaryData comparedData) {
-        if (binaryData == null || comparedData == null || binaryData.getDataSize() != comparedData.getDataSize()) {
-            return false;
-        }
-
-        for (int position = 0; position < binaryData.getDataSize(); position++) {
-            if (binaryData.getByte(position) != comparedData.getByte(position)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler) {

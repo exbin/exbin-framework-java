@@ -16,9 +16,6 @@
  */
 package org.exbin.framework.bined.panel;
 
-import org.exbin.framework.bined.ReplaceParameters;
-import org.exbin.framework.bined.SearchCondition;
-import org.exbin.framework.bined.SearchParameters;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -41,9 +38,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -91,7 +86,7 @@ import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 /**
  * Binary editor panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi {
@@ -187,7 +182,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         });
 
         binarySearchPanel = new BinarySearchPanel();
-        binarySearchPanel.setBinarySearchService(new BinarySearchServiceImpl(codeArea));
+        binarySearchPanel.setBinarySearchService(new BinarySearchServiceImpl());
         binarySearchPanel.setClosePanelListener(this::hideSearchPanel);
 
         valuesPanel = new ValuesPanel();
@@ -286,68 +281,6 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         // TODO hexSearchPanel.f
     }
 
-    @Override
-    public void performFind(SearchParameters searchParameters) {
-        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
-        SearchCondition condition = searchParameters.getCondition();
-        binarySearchPanel.clearStatus();
-        if (condition.isEmpty()) {
-            painter.clearMatches();
-            codeArea.repaint();
-            return;
-        }
-
-        long position;
-        if (searchParameters.isSearchFromCursor()) {
-            position = codeArea.getCaretPosition().getDataPosition();
-        } else {
-            switch (searchParameters.getSearchDirection()) {
-                case FORWARD: {
-                    position = 0;
-                    break;
-                }
-                case BACKWARD: {
-                    position = codeArea.getDataSize() - 1;
-                    break;
-                }
-                default:
-                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
-            }
-        }
-        searchParameters.setStartPosition(position);
-
-        switch (condition.getSearchMode()) {
-            case TEXT: {
-                searchForText(searchParameters);
-                break;
-            }
-            case BINARY: {
-                searchForBinaryData(searchParameters);
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected search mode " + condition.getSearchMode().name());
-        }
-    }
-
-    @Override
-    public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters) {
-        SearchCondition replaceCondition = replaceParameters.getCondition();
-        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
-        ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
-        if (currentMatch != null) {
-            EditableBinaryData editableData = ((EditableBinaryData) codeArea.getContentData());
-            editableData.remove(currentMatch.getPosition(), currentMatch.getLength());
-            if (replaceCondition.getSearchMode() == SearchCondition.SearchMode.BINARY) {
-                editableData.insert(currentMatch.getPosition(), replaceCondition.getBinaryData());
-            } else {
-                editableData.insert(currentMatch.getPosition(), replaceCondition.getSearchText().getBytes(codeArea.getCharset()));
-            }
-            painter.getMatches().remove(currentMatch);
-            codeArea.repaint();
-        }
-    }
-
     private void updateClipboardActionsStatus() {
         if (clipboardActionsUpdateListener != null) {
             clipboardActionsUpdateListener.stateChanged();
@@ -359,146 +292,6 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         if (pasteFromCode != null) {
             pasteFromCode.setEnabled(codeArea.canPaste());
         }
-    }
-
-    /**
-     * Performs search by binary data.
-     */
-    private void searchForBinaryData(SearchParameters searchParameters) {
-        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
-        SearchCondition condition = searchParameters.getCondition();
-        long position = codeArea.getCaretPosition().getDataPosition();
-        ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
-
-        if (currentMatch != null) {
-            if (currentMatch.getPosition() == position) {
-                position++;
-            }
-            painter.clearMatches();
-        } else if (!searchParameters.isSearchFromCursor()) {
-            position = 0;
-        }
-
-        BinaryData searchData = condition.getBinaryData();
-        BinaryData data = codeArea.getContentData();
-
-        List<ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
-
-        long dataSize = data.getDataSize();
-        while (position < dataSize - searchData.getDataSize()) {
-            int matchLength = 0;
-            while (matchLength < searchData.getDataSize()) {
-                if (data.getByte(position + matchLength) != searchData.getByte(matchLength)) {
-                    break;
-                }
-                matchLength++;
-            }
-
-            if (matchLength == searchData.getDataSize()) {
-                ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch match = new ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch();
-                match.setPosition(position);
-                match.setLength(searchData.getDataSize());
-                foundMatches.add(match);
-
-                if (foundMatches.size() == 100 || !searchParameters.isMultipleMatches()) {
-                    break;
-                }
-            }
-
-            position++;
-        }
-
-        painter.setMatches(foundMatches);
-        if (foundMatches.size() > 0) {
-            painter.setCurrentMatchIndex(0);
-            ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
-            codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
-        }
-        binarySearchPanel.setStatus(foundMatches.size(), 0);
-        codeArea.repaint();
-    }
-
-    /**
-     * Performs search by text/characters.
-     */
-    private void searchForText(SearchParameters searchParameters) {
-        ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
-        SearchCondition condition = searchParameters.getCondition();
-
-        long position = searchParameters.getStartPosition();
-        String findText;
-        if (searchParameters.isMatchCase()) {
-            findText = condition.getSearchText();
-        } else {
-            findText = condition.getSearchText().toLowerCase();
-        }
-        BinaryData data = codeArea.getContentData();
-
-        List<ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
-
-        Charset charset = codeArea.getCharset();
-        CharsetEncoder encoder = charset.newEncoder();
-        int maxBytesPerChar = (int) encoder.maxBytesPerChar();
-        byte[] charData = new byte[maxBytesPerChar];
-        long dataSize = data.getDataSize();
-        while (position <= dataSize - findText.length()) {
-            int matchCharLength = 0;
-            int matchLength = 0;
-            while (matchCharLength < findText.length()) {
-                long searchPosition = position + matchLength;
-                int bytesToUse = maxBytesPerChar;
-                if (searchPosition + bytesToUse > dataSize) {
-                    bytesToUse = (int) (dataSize - searchPosition);
-                }
-                data.copyToArray(searchPosition, charData, 0, bytesToUse);
-                char singleChar = new String(charData, charset).charAt(0);
-                String singleCharString = String.valueOf(singleChar);
-                int characterLength = singleCharString.getBytes(charset).length;
-
-                if (searchParameters.isMatchCase()) {
-                    if (singleChar != findText.charAt(matchCharLength)) {
-                        break;
-                    }
-                } else if (singleCharString.toLowerCase().charAt(0) != findText.charAt(matchCharLength)) {
-                    break;
-                }
-                matchCharLength++;
-                matchLength += characterLength;
-            }
-
-            if (matchCharLength == findText.length()) {
-                ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch match = new ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch();
-                match.setPosition(position);
-                match.setLength(matchLength);
-                foundMatches.add(match);
-
-                if (foundMatches.size() == 100 || !searchParameters.isMultipleMatches()) {
-                    break;
-                }
-            }
-
-            switch (searchParameters.getSearchDirection()) {
-                case FORWARD: {
-                    position++;
-                    break;
-                }
-                case BACKWARD: {
-                    position--;
-                    break;
-                }
-                default:
-                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
-            }
-        }
-
-        painter.setMatches(foundMatches);
-        if (foundMatches.size() > 0) {
-            painter.setCurrentMatchIndex(0);
-            ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
-            codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
-        }
-        binarySearchPanel.setStatus(foundMatches.size(), 0);
-        codeArea.repaint();
     }
 
     @Override
@@ -726,7 +519,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     @Override
     public void newFile() {
         if (codeArea.getContentData() instanceof DeltaDocument) {
-            segmentsRepository.dropDocument((DeltaDocument) codeArea.getContentData());
+            segmentsRepository.dropDocument(Objects.requireNonNull((DeltaDocument) codeArea.getContentData()));
         }
         setNewData();
         fileUri = null;
@@ -759,16 +552,19 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     public void loadFromStream(InputStream stream) throws IOException {
-        ((EditableBinaryData) codeArea.getContentData()).loadFromStream(stream);
+        EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) codeArea.getContentData());
+        data.loadFromStream(stream);
     }
 
     public void loadFromStream(InputStream stream, long dataSize) throws IOException {
-        ((EditableBinaryData) codeArea.getContentData()).clear();
-        ((EditableBinaryData) codeArea.getContentData()).insert(0, stream, dataSize);
+        EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) codeArea.getContentData());
+        data.clear();
+        data.insert(0, stream, dataSize);
     }
 
     public void saveToStream(OutputStream stream) throws IOException {
-        codeArea.getContentData().saveToStream(stream);
+        BinaryData data = Objects.requireNonNull((BinaryData) codeArea.getContentData());
+        data.saveToStream(stream);
     }
 
     public void attachCaretListener(CaretMovedListener listener) {
@@ -916,7 +712,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
     private void updateCurrentDocumentSize() {
         if (binaryStatus != null) {
-            long dataSize = codeArea.getContentData().getDataSize();
+            long dataSize = codeArea.getDataSize();
             binaryStatus.setCurrentDocumentSize(dataSize, documentOriginalSize);
         }
     }
@@ -1029,7 +825,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
                 }
             } else {
                 // If document unsaved in memory, switch data in code area
-                BinaryData oldData = codeArea.getContentData();
+                BinaryData oldData = Objects.requireNonNull(codeArea.getContentData());
                 if (codeArea.getContentData() instanceof DeltaDocument) {
                     XBData data = new XBData();
                     data.insert(0, codeArea.getContentData());

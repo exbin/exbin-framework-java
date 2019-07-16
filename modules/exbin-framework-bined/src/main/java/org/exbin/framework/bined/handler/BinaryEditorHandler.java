@@ -36,8 +36,6 @@ import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.panel.BinaryPanel;
-import org.exbin.framework.bined.ReplaceParameters;
-import org.exbin.framework.bined.SearchParameters;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -50,7 +48,7 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 /**
  * Hexadecimal editor provider.
  *
- * @version 0.2.1 2019/06/16
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
@@ -268,16 +266,6 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     @Override
     public void setCharset(Charset charset) {
         activePanel.setCharset(charset);
-    }
-
-    @Override
-    public void performFind(SearchParameters searchParameters) {
-        activePanel.performFind(searchParameters);
-    }
-
-    @Override
-    public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters) {
-        activePanel.performReplace(searchParameters, replaceParameters);
     }
 
     @Override

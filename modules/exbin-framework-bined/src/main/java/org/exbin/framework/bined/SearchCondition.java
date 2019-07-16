@@ -17,6 +17,9 @@
 package org.exbin.framework.bined;
 
 import java.util.Objects;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.utils.binary_data.ByteArrayEditableData;
 import org.exbin.utils.binary_data.EditableBinaryData;
@@ -24,9 +27,10 @@ import org.exbin.utils.binary_data.EditableBinaryData;
 /**
  * Parameters for action to search for occurences of text or data.
  *
- * @version 0.1.0 2016/07/18
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class SearchCondition {
 
     private SearchMode searchMode = SearchMode.TEXT;
@@ -50,6 +54,7 @@ public class SearchCondition {
         }
     }
 
+    @Nonnull
     public SearchMode getSearchMode() {
         return searchMode;
     }
@@ -58,6 +63,7 @@ public class SearchCondition {
         this.searchMode = searchMode;
     }
 
+    @Nonnull
     public String getSearchText() {
         return searchText;
     }
@@ -66,6 +72,7 @@ public class SearchCondition {
         this.searchText = searchText;
     }
 
+    @Nullable
     public BinaryData getBinaryData() {
         return binaryData;
     }
@@ -94,7 +101,7 @@ public class SearchCondition {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }

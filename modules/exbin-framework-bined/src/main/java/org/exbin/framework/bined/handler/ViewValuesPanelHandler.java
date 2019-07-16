@@ -18,6 +18,8 @@ package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
@@ -32,6 +34,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.0 2017/10/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ViewValuesPanelHandler {
 
     private final BinaryEditorProvider editorProvider;
@@ -63,6 +66,7 @@ public class ViewValuesPanelHandler {
         viewValuesPanelAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
     }
 
+    @Nonnull
     public Action getViewValuesPanelAction() {
         return viewValuesPanelAction;
     }
