@@ -16,14 +16,16 @@
  */
 package org.exbin.framework.gui.editor.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.file.api.MultiFileHandlerApi;
 
 /**
- * XBUP framework multitab editor interface.
+ * Framework multitab editor interface.
  *
  * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface MultiEditorProvider extends EditorProvider, MultiFileHandlerApi {
 
     /**

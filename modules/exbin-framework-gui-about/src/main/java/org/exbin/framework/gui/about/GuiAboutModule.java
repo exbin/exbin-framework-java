@@ -19,6 +19,8 @@ package org.exbin.framework.gui.about;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -45,6 +47,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
  * @version 0.2.0 2017/01/18
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiAboutModule implements GuiAboutModuleApi {
 
     private XBApplication application;
@@ -64,6 +67,7 @@ public class GuiAboutModule implements GuiAboutModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     private ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
             resourceBundle = LanguageUtils.getResourceBundleByClass(GuiAboutModule.class);
@@ -72,6 +76,7 @@ public class GuiAboutModule implements GuiAboutModuleApi {
         return resourceBundle;
     }
 
+    @Nonnull
     @Override
     public Action getAboutAction() {
         if (aboutAction == null) {

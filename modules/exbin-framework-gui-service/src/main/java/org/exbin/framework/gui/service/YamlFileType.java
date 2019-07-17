@@ -17,19 +17,23 @@
 package org.exbin.framework.gui.service;
 
 import java.io.File;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.gui.file.api.FileType;
 
 /**
  * YAML file type.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class YamlFileType extends FileFilter implements FileType {
 
     public static final String YAML_FILE_TYPE = "YamlFileType";
-    
+
     public YamlFileType() {
     }
 
@@ -45,11 +49,13 @@ public class YamlFileType extends FileFilter implements FileType {
         return false;
     }
 
+    @Nonnull
     @Override
     public String getDescription() {
         return "YAML File (*.yaml)";
     }
 
+    @Nonnull
     @Override
     public String getFileTypeId() {
         return YAML_FILE_TYPE;
@@ -61,6 +67,7 @@ public class YamlFileType extends FileFilter implements FileType {
      * @param file Source file
      * @return extension part of file name
      */
+    @Nullable
     public static String getExtension(File file) {
         String ext = null;
         String str = file.getName();

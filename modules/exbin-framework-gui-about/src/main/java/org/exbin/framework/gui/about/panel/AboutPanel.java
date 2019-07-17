@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.event.HyperlinkEvent;
@@ -44,6 +45,7 @@ import org.exbin.xbup.plugin.XBModuleRecord;
  * @version 0.2.0 2017/01/18
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener {
 
     private XBApplication application;
@@ -91,12 +93,14 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         Properties systemProperties = System.getProperties();
         DefaultTableModel tableModel = (DefaultTableModel) environmentTable.getModel();
         Set<java.util.Map.Entry<Object, Object>> items = systemProperties.entrySet();
-        for (java.util.Map.Entry<Object, Object> entry : items) {
+        items.stream().map((entry) -> {
             Object[] line = new Object[2];
             line[0] = entry.getKey();
             line[1] = entry.getValue();
+            return line;
+        }).forEachOrdered((line) -> {
             tableModel.addRow(line);
-        }
+        });
 
         // Fill list of modules
         modulesTable.setModel(new javax.swing.table.DefaultTableModel(

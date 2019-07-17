@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import javax.annotation.Nonnull;
+
 /**
  * Interface for file types.
  *
@@ -30,5 +32,6 @@ public interface FileType {
      *
      * @return file type ID
      */
-    public String getFileTypeId();
+    @Nonnull
+    String getFileTypeId();
 }

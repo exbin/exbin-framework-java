@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.about.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplicationModule;
@@ -27,6 +29,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @version 0.2.0 2016/08/06
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiAboutModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiAboutModuleApi.class);
@@ -37,6 +40,7 @@ public interface GuiAboutModuleApi extends XBApplicationModule {
      *
      * @return action
      */
+    @Nonnull
     Action getAboutAction();
 
     void registerDefaultMenuItem();

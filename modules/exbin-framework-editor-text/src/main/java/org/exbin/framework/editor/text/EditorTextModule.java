@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
@@ -416,11 +417,13 @@ public class EditorTextModule implements XBApplicationModule {
             return false;
         }
 
+        @Nonnull
         @Override
         public String getDescription() {
             return "XBUP Text Files (*.xbt*)";
         }
 
+        @Nonnull
         @Override
         public String getFileTypeId() {
             return XBT_FILE_TYPE;
@@ -442,11 +445,13 @@ public class EditorTextModule implements XBApplicationModule {
             return false;
         }
 
+        @Nonnull
         @Override
         public String getDescription() {
             return "Text Files (*.txt)";
         }
 
+        @Nonnull
         @Override
         public String getFileTypeId() {
             return TXT_FILE_TYPE;
@@ -459,6 +464,7 @@ public class EditorTextModule implements XBApplicationModule {
      * @param file Source file
      * @return extension part of file name
      */
+    @Nullable
     public static String getExtension(File file) {
         String ext = null;
         String str = file.getName();

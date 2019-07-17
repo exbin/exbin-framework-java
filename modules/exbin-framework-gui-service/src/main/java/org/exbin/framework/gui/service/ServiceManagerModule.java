@@ -17,6 +17,8 @@
 package org.exbin.framework.gui.service;
 
 import java.awt.Component;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -75,6 +77,7 @@ public class ServiceManagerModule implements XBApplicationModule {
         getServicePanel().setService(panel.getService());
     }
 
+    @Nonnull
     public ServiceManagerPanel getServicePanel() {
         if (servicePanel == null) {
             servicePanel = new ServiceManagerPanel();
@@ -85,6 +88,7 @@ public class ServiceManagerModule implements XBApplicationModule {
         return servicePanel;
     }
 
+    @Nonnull
     public MenuManagement getDefaultMenuManagement() {
         return new MenuManagement() {
             @Override
@@ -116,6 +120,7 @@ public class ServiceManagerModule implements XBApplicationModule {
         };
     }
 
+    @Nullable
     public void setPreferences(Preferences preferences) {
         this.preferences = preferences;
     }

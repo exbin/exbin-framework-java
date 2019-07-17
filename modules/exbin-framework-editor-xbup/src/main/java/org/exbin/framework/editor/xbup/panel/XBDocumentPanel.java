@@ -44,6 +44,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
+import org.exbin.framework.editor.text.service.TextService;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -80,12 +81,11 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
-import org.exbin.framework.editor.text.service.FindTextService;
 
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2019/07/17
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -700,8 +700,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         textPanel.gotoLine(line);
     }
 
-    public void findText(FindTextService findTextPanelApi) {
-        textPanel.findText(findTextPanelApi);
+    public void findText(TextService.FindTextParameters findTextParameters) {
+        textPanel.findText(findTextParameters);
     }
 
     public void setCharset(Charset charset) {

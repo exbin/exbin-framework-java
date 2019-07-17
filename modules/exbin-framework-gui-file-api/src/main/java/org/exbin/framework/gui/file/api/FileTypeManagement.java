@@ -16,14 +16,17 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
 
 /**
  * Interface for file types management.
  *
- * @version 0.2.0 2016/01/23
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface FileTypeManagement {
 
     /**
@@ -82,5 +85,6 @@ public interface FileTypeManagement {
      *
      * @return window title
      */
+    @Nonnull
     String getWindowTitle();
 }

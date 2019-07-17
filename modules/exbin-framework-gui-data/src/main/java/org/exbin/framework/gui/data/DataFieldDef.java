@@ -36,5 +36,4 @@ public class DataFieldDef {
     public void setFieldType(Object fieldType) {
         this.fieldType = fieldType;
     }
-
 }

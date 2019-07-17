@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JPanel;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.delta.SegmentsRepository;
@@ -222,6 +223,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
         activePanel.setFileHandlingMode(fileHandlingMode);
     }
 
+    @Nullable
     public EditorViewHandling getEditorViewHandling() {
         return editorViewHandling;
     }

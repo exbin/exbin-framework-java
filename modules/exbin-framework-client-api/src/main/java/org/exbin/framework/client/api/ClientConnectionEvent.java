@@ -16,12 +16,15 @@
  */
 package org.exbin.framework.client.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Class for XBUP framework client connection event.
  *
  * @version 0.2.0 2016/02/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ClientConnectionEvent {
 
     private ConnectionStatus connectionStatus;

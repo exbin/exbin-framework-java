@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.component;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.component.api.DialogControlPanelHandler;
@@ -28,11 +30,12 @@ import org.exbin.framework.gui.component.panel.DialogControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework component module.
+ * Implementation of framework component module.
  *
- * @version 0.2.0 2016/12/20
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiComponentModule implements GuiComponentModuleApi {
 
     private XBApplication application;
@@ -49,12 +52,14 @@ public class GuiComponentModule implements GuiComponentModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     @Override
     public JPanel getTableEditPanel() {
         // return new TableEditPanel();
         return null;
     }
 
+    @Nonnull
     @Override
     public EditItemActions createEditItemActions(EditItemActionsHandler editItemActionsHandler) {
         DefaultEditItemActions editActions = new DefaultEditItemActions();
@@ -62,6 +67,7 @@ public class GuiComponentModule implements GuiComponentModuleApi {
         return editActions;
     }
 
+    @Nonnull
     @Override
     public MoveItemActions createMoveItemActions(MoveItemActionsHandler moveItemActionsHandler) {
         DefaultMoveItemActions moveActions = new DefaultMoveItemActions();
@@ -69,6 +75,7 @@ public class GuiComponentModule implements GuiComponentModuleApi {
         return moveActions;
     }
 
+    @Nonnull
     @Override
     public JPanel createDialogControlPanel(DialogControlPanelHandler handler) {
         return new DialogControlPanel(handler);

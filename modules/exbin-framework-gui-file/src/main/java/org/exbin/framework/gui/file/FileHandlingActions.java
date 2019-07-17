@@ -27,6 +27,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
@@ -53,6 +56,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class FileHandlingActions implements FileHandlingActionsApi {
 
     public static final String ALL_FILES_FILTER = "AllFilesFilter";
@@ -218,21 +222,25 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         return false;
     }
 
+    @Nonnull
     @Override
     public Action getNewFileAction() {
         return newFileAction;
     }
 
+    @Nonnull
     @Override
     public Action getOpenFileAction() {
         return openFileAction;
     }
 
+    @Nonnull
     @Override
     public Action getSaveFileAction() {
         return saveFileAction;
     }
 
+    @Nonnull
     @Override
     public Action getSaveAsFileAction() {
         return saveAsFileAction;
@@ -423,6 +431,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         fileOpenRecentMenu.setEnabled(recentFiles.size() > 0);
     }
 
+    @Nullable
     public Preferences getPreferences() {
         return preferences;
     }
@@ -451,18 +460,21 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         }
     }
 
+    @ParametersAreNonnullByDefault
     public class AllFilesFilter extends FileFilter implements FileType {
 
         @Override
-        public boolean accept(File f) {
+        public boolean accept(File file) {
             return true;
         }
 
+        @Nonnull
         @Override
         public String getDescription() {
             return "All files (*)";
         }
 
+        @Nonnull
         @Override
         public String getFileTypeId() {
             return ALL_FILES_FILTER;
@@ -482,39 +494,43 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     /**
      * Class for representation of recently opened or saved files.
      */
+    @ParametersAreNonnullByDefault
     public class RecentItem {
 
         private String fileName;
         private String moduleName;
         private String fileMode;
 
-        public RecentItem(String fileName, String moduleName, String fileMode) {
+        public RecentItem(@Nullable String fileName, @Nullable String moduleName, @Nullable String fileMode) {
             this.fileName = fileName;
             this.moduleName = moduleName;
             this.fileMode = fileMode;
         }
 
+        @Nullable
         public String getFileName() {
             return fileName;
         }
 
-        public void setFileName(String path) {
+        public void setFileName(@Nullable String path) {
             this.fileName = path;
         }
 
+        @Nullable
         public String getFileMode() {
             return fileMode;
         }
 
-        public void setFileMode(String fileMode) {
+        public void setFileMode(@Nullable String fileMode) {
             this.fileMode = fileMode;
         }
 
+        @Nullable
         public String getModuleName() {
             return moduleName;
         }
 
-        public void setModuleName(String moduleName) {
+        public void setModuleName(@Nullable String moduleName) {
             this.moduleName = moduleName;
         }
     }

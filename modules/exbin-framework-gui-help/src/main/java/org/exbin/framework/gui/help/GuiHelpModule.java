@@ -24,6 +24,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.help.CSH;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
@@ -46,6 +48,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
  * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiHelpModule implements GuiHelpModuleApi {
 
     private XBApplication application;
@@ -83,6 +86,7 @@ public class GuiHelpModule implements GuiHelpModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     @Override
     public Action getHelpAction() {
         if (helpAction == null) {
@@ -109,11 +113,12 @@ public class GuiHelpModule implements GuiHelpModuleApi {
     /**
      * Finds the helpset file and create a HelpSet object.
      */
-    private HelpSet getHelpSet(String helpsetfile) {
+    @Nonnull
+    private HelpSet getHelpSet(String helpSetFile) {
         HelpSet hs = null;
         ClassLoader cl = getClass().getClassLoader();
         try {
-            URL hsURL = HelpSet.findHelpSet(cl, helpsetfile);
+            URL hsURL = HelpSet.findHelpSet(cl, helpSetFile);
             File file = new File("./help/help.hs");
             if (!file.exists()) {
                 file = new File("./../help/help.hs");
@@ -124,7 +129,7 @@ public class GuiHelpModule implements GuiHelpModuleApi {
             hs = new HelpSet(null, hsURL);
         } catch (MalformedURLException | HelpSetException ex) {
             System.out.println("HelpSet: " + ex.getMessage());
-            System.out.println("HelpSet: " + helpsetfile + " not found");
+            System.out.println("HelpSet: " + helpSetFile + " not found");
         }
         return hs;
     }

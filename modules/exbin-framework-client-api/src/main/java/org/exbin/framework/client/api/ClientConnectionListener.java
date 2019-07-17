@@ -16,17 +16,20 @@
  */
 package org.exbin.framework.client.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Interface for XBUP framework client connection listener.
  *
  * @version 0.2.0 2016/02/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface ClientConnectionListener {
 
     /**
      * Reports change in connection state.
-     * 
+     *
      * @param connectionEvent connection state event
      */
     void connectionChanged(ClientConnectionEvent connectionEvent);

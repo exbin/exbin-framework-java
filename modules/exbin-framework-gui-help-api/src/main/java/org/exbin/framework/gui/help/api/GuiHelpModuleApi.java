@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.help.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -26,6 +28,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @version 0.2.0 2016/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiHelpModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiHelpModuleApi.class);
@@ -40,5 +43,6 @@ public interface GuiHelpModuleApi extends XBApplicationModule {
      *
      * @return help action
      */
+    @Nonnull
     Action getHelpAction();
 }

@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.FlushModeType;
@@ -80,6 +82,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @version 0.2.0 2016/02/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ClientModule implements ClientModuleApi {
 
     private XBApplication application;
@@ -251,6 +254,7 @@ public class ClientModule implements ClientModuleApi {
         }
     }
 
+    @Nonnull
     private XBAECatalog createInternalCatalog(EntityManager em) {
         XBAECatalog createdCatalog = new XBAECatalog(em);
 
@@ -307,11 +311,13 @@ public class ClientModule implements ClientModuleApi {
 //        }
     }
 
+    @Nonnull
     @Override
     public XBACatalog getCatalog() {
         return catalog;
     }
 
+    @Nonnull
     @Override
     public XBPluginRepository getPluginRepository() {
         return pluginRepository;

@@ -76,6 +76,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     private ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
             resourceBundle = LanguageUtils.getResourceBundleByClass(GuiOptionsModule.class);

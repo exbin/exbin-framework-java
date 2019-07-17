@@ -20,13 +20,14 @@ import java.util.logging.Logger;
 import org.exbin.framework.api.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.bined.basic.EnterKeyHandlingMode;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
 
 /**
  * Hexadecimal editor preferences.
  *
- * @version 0.2.0 2019/06/09
+ * @version 0.2.1 2019/07/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -35,6 +36,7 @@ public class EditorParameters {
     public static final String PREFERENCES_FILE_HANDLING_MODE = "fileHandlingMode";
     public static final String PREFERENCES_SHOW_VALUES_PANEL = "valuesPanel";
     public static final String PREFERENCES_MEMORY_MODE = "memoryMode";
+    public static final String PREFERENCES_ENTER_KEY_HANDLING_MODE = "enterKeyHandlingMode";
 
     private final Preferences preferences;
 
@@ -72,5 +74,19 @@ public class EditorParameters {
 
     public void setMemoryMode(String memoryMode) {
         preferences.put(PREFERENCES_MEMORY_MODE, memoryMode);
+    }
+
+    @Nonnull
+    public EnterKeyHandlingMode getEnterKeyHandlingMode() {
+        EnterKeyHandlingMode defaultValue = EnterKeyHandlingMode.PLATFORM_SPECIFIC;
+        try {
+            return EnterKeyHandlingMode.valueOf(preferences.get(PREFERENCES_ENTER_KEY_HANDLING_MODE, defaultValue.name()));
+        } catch (IllegalArgumentException ex) {
+            return defaultValue;
+        }
+    }
+
+    public void setEnterKeyHandlingMode(EnterKeyHandlingMode enterKeyHandlingMode) {
+        preferences.put(PREFERENCES_ENTER_KEY_HANDLING_MODE, enterKeyHandlingMode.name());
     }
 }

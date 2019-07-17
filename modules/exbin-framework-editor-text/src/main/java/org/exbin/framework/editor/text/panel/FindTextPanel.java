@@ -17,22 +17,29 @@
 package org.exbin.framework.editor.text.panel;
 
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.editor.text.service.FindTextService;
 
 /**
  * Find text panel.
  *
- * @version 0.2.1 2019/07/08
+ * @version 0.2.1 2019/07/17
  * @author ExBin Project (http://exbin.org)
  */
-public class FindTextPanel extends javax.swing.JPanel implements FindTextService {
+@ParametersAreNonnullByDefault
+public class FindTextPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(FindTextPanel.class);
 
     public FindTextPanel() {
         initComponents();
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**
@@ -167,39 +174,39 @@ public class FindTextPanel extends javax.swing.JPanel implements FindTextService
     private javax.swing.JTextField textToReplaceTextField;
     // End of variables declaration//GEN-END:variables
 
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
-    }
-
-    @Override
-    public boolean getSearchFromStart() {
+    public boolean isSearchFromStart() {
         return !searchFromCursorCheckBox.isSelected();
     }
 
-    @Override
     public void setSelected() {
         textToFindTextField.requestFocusInWindow();
         textToFindTextField.selectAll();
     }
 
-    @Override
+    @Nonnull
     public String getFindText() {
         return textToFindTextField.getText();
     }
 
-    @Override
-    public boolean getShallReplace() {
+    public void setFindText(String text) {
+        textToFindTextField.setText(text);
+    }
+
+    public boolean isShallReplace() {
         return performReplaceCheckBox.isSelected();
     }
 
-    @Override
     public void setShallReplace(boolean shallReplace) {
         performReplaceCheckBox.setSelected(shallReplace);
         performReplaceCheckBoxActionPerformed(null);
     }
 
-    @Override
+    @Nonnull
     public String getReplaceText() {
         return textToReplaceTextField.getText();
+    }
+
+    public void setReplaceText(String text) {
+        textToReplaceTextField.setText(text);
     }
 }

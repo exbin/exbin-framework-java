@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
@@ -33,7 +34,6 @@ import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
-import org.exbin.framework.gui.undo.api.UndoUpdateListener;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
@@ -45,6 +45,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
  * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiEditorModule implements GuiEditorModuleApi {
 
     private XBApplication application;
@@ -167,21 +168,15 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     @Override
     public void registerEditor(String pluginId, final EditorProvider editorProvider) {
         if (editorProvider instanceof UndoActionsHandler) {
-            ((UndoActionsHandler) editorProvider).setUndoUpdateListener(new UndoUpdateListener() {
-                @Override
-                public void undoChanged() {
-                    GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-                    undoModule.updateUndoStatus();
-                }
+            ((UndoActionsHandler) editorProvider).setUndoUpdateListener(() -> {
+                GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
+                undoModule.updateUndoStatus();
             });
         }
         if (editorProvider instanceof ClipboardActionsHandler) {
-            ((ClipboardActionsHandler) editorProvider).setUpdateListener(new ClipboardActionsUpdateListener() {
-                @Override
-                public void stateChanged() {
-                    if (editorProvider == activeEditor) {
-                        clipboardActionsUpdateListener.stateChanged();
-                    }
+            ((ClipboardActionsHandler) editorProvider).setUpdateListener(() -> {
+                if (editorProvider == activeEditor) {
+                    clipboardActionsUpdateListener.stateChanged();
                 }
             });
         }

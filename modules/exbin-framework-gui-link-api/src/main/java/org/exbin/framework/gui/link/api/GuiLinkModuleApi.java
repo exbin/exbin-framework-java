@@ -17,16 +17,19 @@
 package org.exbin.framework.gui.link.api;
 
 import java.net.URL;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
- * Interface for XBUP framework link support module.
+ * Interface for framework link support module.
  *
- * @version 0.2.0 2016/07/14
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiLinkModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiLinkModuleApi.class);
@@ -41,6 +44,7 @@ public interface GuiLinkModuleApi extends XBApplicationModule {
      *
      * @return online help action
      */
+    @Nonnull
     Action getOnlineHelpAction();
 
     /**

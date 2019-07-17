@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
@@ -25,10 +27,12 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @version 0.2.0 2016/02/03
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiFileModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiFileModuleApi.class);
 
+    @Nonnull
     FileHandlingActionsApi getFileHandlingActions();
 
     void addFileType(FileType fileType);
@@ -54,7 +58,7 @@ public interface GuiFileModuleApi extends XBApplicationModule {
      * @param filename filename
      */
     void loadFromFile(String filename);
-    
+
     /**
      * Registers list of last opened files into file menu.
      */

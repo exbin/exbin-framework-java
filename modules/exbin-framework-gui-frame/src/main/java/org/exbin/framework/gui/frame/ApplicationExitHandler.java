@@ -18,6 +18,7 @@ package org.exbin.framework.gui.frame;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.frame.api.ApplicationExitListener;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 
@@ -27,6 +28,7 @@ import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
  * @version 0.2.0 2016/01/10
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ApplicationExitHandler {
 
     private final List<ApplicationExitListener> listeners = new ArrayList<>();

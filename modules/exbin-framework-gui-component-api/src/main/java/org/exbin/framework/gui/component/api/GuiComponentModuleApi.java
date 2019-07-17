@@ -16,20 +16,24 @@
  */
 package org.exbin.framework.gui.component.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
- * Interface for XBUP framework component module.
+ * Interface for framework component module.
  *
- * @version 0.2.0 2016/12/20
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiComponentModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiComponentModuleApi.class);
 
+    @Nonnull
     JPanel getTableEditPanel();
 
     /**
@@ -38,6 +42,7 @@ public interface GuiComponentModuleApi extends XBApplicationModule {
      * @param editItemActionsHandler move item actions handler
      * @return edit item actions set
      */
+    @Nonnull
     EditItemActions createEditItemActions(EditItemActionsHandler editItemActionsHandler);
 
     /**
@@ -46,6 +51,7 @@ public interface GuiComponentModuleApi extends XBApplicationModule {
      * @param moveItemActionsHandler move item actions handler
      * @return move item actions set
      */
+    @Nonnull
     MoveItemActions createMoveItemActions(MoveItemActionsHandler moveItemActionsHandler);
 
     /**
@@ -54,5 +60,6 @@ public interface GuiComponentModuleApi extends XBApplicationModule {
      * @param handler dialog control panel handler
      * @return dialog control panel
      */
+    @Nonnull
     JPanel createDialogControlPanel(DialogControlPanelHandler handler);
 }

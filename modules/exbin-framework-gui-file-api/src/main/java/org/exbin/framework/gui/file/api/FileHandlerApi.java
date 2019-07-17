@@ -17,6 +17,8 @@
 package org.exbin.framework.gui.file.api;
 
 import java.net.URI;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for file handling actions.
@@ -24,6 +26,7 @@ import java.net.URI;
  * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface FileHandlerApi {
 
     /**
@@ -47,6 +50,7 @@ public interface FileHandlerApi {
      *
      * @return URI
      */
+    @Nonnull
     URI getFileUri();
 
     /**
@@ -56,6 +60,7 @@ public interface FileHandlerApi {
      *
      * @return filename
      */
+    @Nonnull
     String getFileName();
 
     /**
@@ -63,6 +68,7 @@ public interface FileHandlerApi {
      *
      * @return fileType file type
      */
+    @Nonnull
     FileType getFileType();
 
     /**

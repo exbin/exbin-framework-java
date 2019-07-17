@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.bined.basic.EnterKeyHandlingMode;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.options.EditorOptions;
@@ -31,7 +32,7 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 /**
  * Editor preference parameters panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -54,11 +55,13 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCap
     public void saveToOptions(EditorOptions options) {
         options.setFileHandlingMode(FileHandlingMode.valueOf((String) fileHandlingModeComboBox.getSelectedItem()));
         options.setIsShowValuesPanel(showValuesPanelCheckBox.isSelected());
+        options.setEnterKeyHandlingMode(EnterKeyHandlingMode.valueOf((String) enterKeyHandlingModeComboBox.getSelectedItem()));
     }
 
     public void loadFromOptions(EditorOptions options) {
-        fileHandlingModeComboBox.setSelectedItem(options.getFileHandlingMode());
+        fileHandlingModeComboBox.setSelectedIndex(options.getFileHandlingMode().ordinal());
         showValuesPanelCheckBox.setSelected(options.isIsShowValuesPanel());
+        enterKeyHandlingModeComboBox.setSelectedIndex(options.getEnterKeyHandlingMode().ordinal());
     }
 
     /**
@@ -73,12 +76,18 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCap
         fileHandlingModeLabel = new javax.swing.JLabel();
         fileHandlingModeComboBox = new javax.swing.JComboBox<>();
         showValuesPanelCheckBox = new javax.swing.JCheckBox();
+        enterKeyHandlingModeLabel = new javax.swing.JLabel();
+        enterKeyHandlingModeComboBox = new javax.swing.JComboBox<>();
 
         fileHandlingModeLabel.setText(resourceBundle.getString("fileHandlingModeLabel.text")); // NOI18N
 
         fileHandlingModeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DELTA", "MEMORY" }));
 
         showValuesPanelCheckBox.setText(resourceBundle.getString("showValuesPanelCheckBox.text")); // NOI18N
+
+        enterKeyHandlingModeLabel.setText(resourceBundle.getString("enterKeyHandlingModeLabel.text")); // NOI18N
+
+        enterKeyHandlingModeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PLATFORM_SPECIFIC", "CR", "LF", "CRLF", "IGNORE" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -90,8 +99,11 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCap
                     .addComponent(fileHandlingModeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(showValuesPanelCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(fileHandlingModeLabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fileHandlingModeLabel)
+                            .addComponent(enterKeyHandlingModeLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(enterKeyHandlingModeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -103,6 +115,10 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCap
                 .addComponent(fileHandlingModeLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fileHandlingModeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(enterKeyHandlingModeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(enterKeyHandlingModeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -117,6 +133,8 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCap
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> enterKeyHandlingModeComboBox;
+    private javax.swing.JLabel enterKeyHandlingModeLabel;
     private javax.swing.JComboBox<String> fileHandlingModeComboBox;
     private javax.swing.JLabel fileHandlingModeLabel;
     private javax.swing.JCheckBox showValuesPanelCheckBox;
@@ -129,6 +147,7 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCap
             saveToOptions(editorOptions);
             editorOptionsPanelApi.setFileHandlingMode(editorOptions.getFileHandlingMode());
             editorOptionsPanelApi.setIsShowValuesPanel(editorOptions.isIsShowValuesPanel());
+            editorOptionsPanelApi.setEditorHandlingMode(editorOptions.getEnterKeyHandlingMode());
         }
     }
 

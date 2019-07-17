@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.service.panel;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
@@ -25,6 +26,7 @@ import org.exbin.xbup.core.catalog.XBACatalog;
  * @version 0.2.0 2016/02/01
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface CatalogManagerPanelable {
 
     /**

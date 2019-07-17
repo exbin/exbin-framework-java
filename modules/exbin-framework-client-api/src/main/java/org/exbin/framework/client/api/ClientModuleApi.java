@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.client.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -27,6 +29,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @version 0.2.0 2016/02/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface ClientModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(ClientModuleApi.class);
@@ -50,8 +53,10 @@ public interface ClientModuleApi extends XBApplicationModule {
      */
     void useBuildInService();
 
+    @Nonnull
     XBACatalog getCatalog();
 
+    @Nonnull
     XBPluginRepository getPluginRepository();
 
     boolean isDevMode();

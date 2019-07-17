@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.component.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
@@ -24,6 +26,7 @@ import javax.swing.Action;
  * @version 0.2.0 2016/03/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface MoveItemActions {
 
     /**
@@ -38,6 +41,7 @@ public interface MoveItemActions {
      *
      * @return move up action
      */
+    @Nonnull
     Action getMoveUpAction();
 
     /**
@@ -45,6 +49,7 @@ public interface MoveItemActions {
      *
      * @return move down action
      */
+    @Nonnull
     Action getMoveDownAction();
 
     /**
@@ -52,6 +57,7 @@ public interface MoveItemActions {
      *
      * @return move top action
      */
+    @Nonnull
     Action getMoveTopAction();
 
     /**
@@ -59,6 +65,7 @@ public interface MoveItemActions {
      *
      * @return move bottom action
      */
+    @Nonnull
     Action getMoveBottomAction();
 
     /**

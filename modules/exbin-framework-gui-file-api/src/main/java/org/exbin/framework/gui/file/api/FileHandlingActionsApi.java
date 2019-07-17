@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
@@ -24,16 +26,22 @@ import javax.swing.Action;
  * @version 0.2.0 2017/01/05
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface FileHandlingActionsApi {
 
+    @Nonnull
     Action getNewFileAction();
 
+    @Nonnull
     Action getOpenFileAction();
 
+    @Nonnull
     Action getSaveFileAction();
 
+    @Nonnull
     Action getSaveAsFileAction();
 
+    @Nonnull
     FileHandlerApi getFileHandler();
 
     void setFileHandler(FileHandlerApi fileHandler);

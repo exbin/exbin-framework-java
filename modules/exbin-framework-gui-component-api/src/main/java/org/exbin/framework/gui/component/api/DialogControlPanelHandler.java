@@ -16,21 +16,23 @@
  */
 package org.exbin.framework.gui.component.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 
 /**
  * Interface for basic dialog control panel.
  *
- * @version 0.2.0 2016/12/20
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface DialogControlPanelHandler {
 
-    public void cancelAction();
+    void cancelAction();
 
-    public void setAction();
+    void setAction();
 
-    public void saveAction();
+    void saveAction();
 
-    public void okCancelButtons(JButton okButton, JButton cancelButton);
+    void okCancelButtons(JButton okButton, JButton cancelButton);
 }

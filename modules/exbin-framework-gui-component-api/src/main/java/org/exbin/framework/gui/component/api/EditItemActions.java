@@ -16,14 +16,17 @@
  */
 package org.exbin.framework.gui.component.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
  * Interface for item movement action set.
  *
- * @version 0.2.0 2016/03/22
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface EditItemActions {
 
     /**
@@ -38,6 +41,7 @@ public interface EditItemActions {
      *
      * @return add item action
      */
+    @Nonnull
     Action getAddItemAction();
 
     /**
@@ -45,6 +49,7 @@ public interface EditItemActions {
      *
      * @return edit item action
      */
+    @Nonnull
     Action getEditItemAction();
 
     /**
@@ -52,6 +57,7 @@ public interface EditItemActions {
      *
      * @return delete item action
      */
+    @Nonnull
     Action getDeleteItemAction();
 
     /**

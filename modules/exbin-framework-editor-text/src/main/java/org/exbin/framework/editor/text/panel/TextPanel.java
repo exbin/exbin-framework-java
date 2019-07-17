@@ -36,6 +36,9 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -53,6 +56,8 @@ import org.exbin.framework.editor.text.EditorTextModule;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
+import org.exbin.framework.editor.text.service.TextService;
+import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
@@ -75,14 +80,14 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
-import org.exbin.framework.editor.text.service.FindTextService;
 
 /**
  * Text editor panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/17
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TextPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler, UndoActionsHandler, TextCharsetApi, TextFontApi {
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
@@ -166,40 +171,35 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         }
     }
 
-    public void findText(FindTextService findTextPanelApi) {
-        String text = textArea.getText();
+    public void findText(TextService.FindTextParameters findTextParameters) {
         int pos = textArea.getCaretPosition();
         if (highlight != null) {
             if (((Highlight) highlight).getStartOffset() == pos) {
                 pos++;
             }
             textArea.getHighlighter().removeHighlight(highlight);
-        } else if (findTextPanelApi.getSearchFromStart()) {
+        } else if (findTextParameters.isSearchFromStart()) {
             pos = 0;
         }
-        String findText = findTextPanelApi.getFindText();
-        pos = text.indexOf(findText, pos);
-        if (pos >= 0) {
+
+        findTextParameters.setStartFrom(pos);
+        TextService textService = new TextServiceImpl();
+        TextService.FoundMatch foundMatch = textService.findText(textArea, findTextParameters);
+
+        if (foundMatch != null) {
             try {
-                int toPos;
-                if (findTextPanelApi.getShallReplace()) {
-                    String replaceText = findTextPanelApi.getReplaceText();
-                    textArea.replaceRange(replaceText, pos, pos + findText.length());
-                    toPos = pos + replaceText.length();
-                } else {
-                    toPos = pos + findText.length();
-                }
-                highlight = textArea.getHighlighter().addHighlight(pos, toPos, new DefaultHighlighter.DefaultHighlightPainter(foundTextBackgroundColor));
-                textArea.setCaretPosition(pos);
-                return;
+                textArea.setCaretPosition(foundMatch.getTo());
+                highlight = textArea.getHighlighter().addHighlight(foundMatch.getFrom(), foundMatch.getTo(), new DefaultHighlighter.DefaultHighlightPainter(foundTextBackgroundColor));
             } catch (BadLocationException ex) {
                 Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else {
+            JOptionPane.showMessageDialog(WindowUtils.getFrame(this), "String was not found", "Find text", JOptionPane.INFORMATION_MESSAGE);
+            highlight = null;
         }
-        JOptionPane.showMessageDialog(null, "String was not found", "Find text", JOptionPane.INFORMATION_MESSAGE); // getFrame
-        highlight = null;
     }
 
+    @Nonnull
     public Color[] getCurrentColors() {
         Color[] colors = new Color[5];
         colors[0] = textArea.getForeground();
@@ -479,6 +479,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         return fileUri;
     }
 
+    @Nullable
     @Override
     public String getFileName() {
         if (fileUri != null) {
@@ -548,6 +549,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         this.undoUpdateListener = undoUpdateListener;
     }
 
+    @Nonnull
     public Point getCaretPosition() {
         int line;
         int caretPosition = textArea.getCaretPosition();

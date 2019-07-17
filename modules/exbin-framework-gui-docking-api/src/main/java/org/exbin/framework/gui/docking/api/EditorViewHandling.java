@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.docking.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 
@@ -25,6 +26,7 @@ import org.exbin.framework.gui.editor.api.MultiEditorProvider;
  * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface EditorViewHandling {
 
     /**

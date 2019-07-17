@@ -17,6 +17,8 @@
 package org.exbin.framework.gui.editor.api;
 
 import java.beans.PropertyChangeListener;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 
@@ -26,6 +28,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface EditorProvider extends FileHandlerApi {
 
     /**
@@ -33,21 +36,21 @@ public interface EditorProvider extends FileHandlerApi {
      *
      * @return panel
      */
-    public JPanel getPanel();
+    JPanel getPanel();
 
     /**
      * Changes passing listener.
      *
      * @param propertyChangeListener change listener
      */
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener);
+    void setPropertyChangeListener(PropertyChangeListener propertyChangeListener);
 
     /**
      * Sets modification listener.
      *
      * @param editorModificationListener editor modification listener
      */
-    public void setModificationListener(EditorModificationListener editorModificationListener);
+    void setModificationListener(EditorModificationListener editorModificationListener);
 
     /**
      * Gets window title related to last opened or saved file.
@@ -55,7 +58,8 @@ public interface EditorProvider extends FileHandlerApi {
      * @param frameTitle title of frame
      * @return title related to last opened file
      */
-    public String getWindowTitle(String frameTitle);
+    @Nonnull
+    String getWindowTitle(String frameTitle);
 
     /**
      * Interface for editor modifications listener.

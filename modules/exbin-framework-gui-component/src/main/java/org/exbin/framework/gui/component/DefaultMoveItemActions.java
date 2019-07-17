@@ -18,6 +18,8 @@ package org.exbin.framework.gui.component;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.gui.component.api.MoveItemActions;
@@ -31,6 +33,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.0 2016/03/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DefaultMoveItemActions implements MoveItemActions {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiComponentModule.class);
@@ -49,6 +52,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
         this.actionsHandler = actionsHandler;
     }
 
+    @Nonnull
     @Override
     public Action getMoveUpAction() {
         if (moveUpAction == null) {
@@ -64,6 +68,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
         return moveUpAction;
     }
 
+    @Nonnull
     @Override
     public Action getMoveDownAction() {
         if (moveDownAction == null) {
@@ -79,6 +84,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
         return moveDownAction;
     }
 
+    @Nonnull
     @Override
     public Action getMoveTopAction() {
         if (moveTopAction == null) {
@@ -94,6 +100,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
         return moveTopAction;
     }
 
+    @Nonnull
     @Override
     public Action getMoveBottomAction() {
         if (moveBottomAction == null) {

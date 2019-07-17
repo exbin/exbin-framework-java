@@ -18,6 +18,8 @@ package org.exbin.framework.gui.component;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.gui.component.api.EditItemActions;
@@ -31,6 +33,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.0 2016/03/22
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DefaultEditItemActions implements EditItemActions {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiComponentModule.class);
@@ -48,6 +51,7 @@ public class DefaultEditItemActions implements EditItemActions {
         this.actionsHandler = actionsHandler;
     }
 
+    @Nonnull
     @Override
     public Action getAddItemAction() {
         if (addItemAction == null) {
@@ -63,6 +67,7 @@ public class DefaultEditItemActions implements EditItemActions {
         return addItemAction;
     }
 
+    @Nonnull
     @Override
     public Action getEditItemAction() {
         if (editItemAction == null) {
@@ -78,6 +83,7 @@ public class DefaultEditItemActions implements EditItemActions {
         return editItemAction;
     }
 
+    @Nonnull
     @Override
     public Action getDeleteItemAction() {
         if (deleteItemAction == null) {

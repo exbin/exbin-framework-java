@@ -18,6 +18,7 @@ package org.exbin.framework.gui.frame;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 
 /**
@@ -26,6 +27,7 @@ import javax.swing.JPanel;
  * @version 0.2.0 2016/07/10
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class StatusBarHandler {
 
     private final XBApplicationFrame frame;

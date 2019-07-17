@@ -20,12 +20,14 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.panel.FindTextPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
+import org.exbin.framework.editor.text.service.TextService;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -38,9 +40,10 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 /**
  * Find/replace handler.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/17
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class FindReplaceHandler {
 
     private final EditorProvider editorProvider;
@@ -99,7 +102,13 @@ public class FindReplaceHandler {
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 if (editorProvider instanceof TextPanel) {
-                    ((TextPanel) editorProvider).findText(findPanel);
+                    TextService.FindTextParameters findTextParameters = new TextService.FindTextParameters();
+                    findTextParameters.setFindText(findPanel.getFindText());
+                    findTextParameters.setSearchFromStart(findPanel.isSearchFromStart());
+                    findTextParameters.setShallReplace(findPanel.isShallReplace());
+                    findTextParameters.setReplaceText(findPanel.getReplaceText());
+
+                    ((TextPanel) editorProvider).findText(findTextParameters);
                 }
             }
 

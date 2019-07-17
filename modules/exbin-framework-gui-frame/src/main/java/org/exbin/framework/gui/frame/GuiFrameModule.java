@@ -129,6 +129,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         windowPosition.saveToPreferences(application.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
     }
 
+    @Nonnull
     @Override
     public Action getExitAction() {
         Action exitAction = new AbstractAction() {
@@ -180,6 +181,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         getExitHandler().removeListener(listener);
     }
 
+    @Nonnull
     private ApplicationExitHandler getExitHandler() {
         if (exitHandler == null) {
             exitHandler = new ApplicationExitHandler();
@@ -191,6 +193,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         return exitHandler;
     }
 
+    @Nonnull
     private StatusBarHandler getStatusBarHandler() {
         getFrameHandler();
         if (statusBarHandler == null) {
@@ -210,6 +213,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         getStatusBarHandler().switchStatusBar(statusBarId);
     }
 
+    @Nonnull
     @Override
     public Action getViewToolBarAction() {
         final Action viewToolBarAction = new AbstractAction() {
@@ -227,6 +231,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         return viewToolBarAction;
     }
 
+    @Nonnull
     @Override
     public Action getViewToolBarCaptionsAction() {
         final Action viewToolBarCaptionsAction = new AbstractAction() {
@@ -244,6 +249,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         return viewToolBarCaptionsAction;
     }
 
+    @Nonnull
     @Override
     public Action getViewStatusBarAction() {
         final Action viewStatusBarAction = new AbstractAction() {
@@ -290,21 +296,25 @@ public class GuiFrameModule implements GuiFrameModuleApi {
         }
     }
 
+    @Nonnull
     @Override
     public DialogWrapper createDialog() {
         return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL);
     }
 
+    @Nonnull
     @Override
     public DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType) {
         return createDialog(parentWindow, modalityType, null);
     }
 
+    @Nonnull
     @Override
     public DialogWrapper createDialog(JPanel panel) {
         return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, panel);
     }
 
+    @Nonnull
     @Override
     public DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel) {
         DialogWrapper dialog = WindowUtils.createDialog(panel, parentWindow, "", modalityType);

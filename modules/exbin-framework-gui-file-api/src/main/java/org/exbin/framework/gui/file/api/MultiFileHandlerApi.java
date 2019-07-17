@@ -16,12 +16,15 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Interface for file handling actions with support for multiple files.
  *
  * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface MultiFileHandlerApi extends FileHandlerApi {
 
     /**

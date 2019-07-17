@@ -19,11 +19,12 @@ package org.exbin.framework.gui.file;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JMenu;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
-import org.exbin.framework.gui.frame.api.ApplicationExitListener;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
@@ -36,11 +37,12 @@ import org.exbin.framework.gui.menu.api.ToolBarPosition;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework file module.
+ * Implementation of framework file module.
  *
- * @version 0.2.0 2016/02/03
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiFileModule implements GuiFileModuleApi {
 
     private static final String FILE_MENU_GROUP_ID = MODULE_ID + ".fileMenuGroup";
@@ -61,6 +63,7 @@ public class GuiFileModule implements GuiFileModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     @Override
     public FileHandlingActions getFileHandlingActions() {
         if (fileHandlingActions == null) {
@@ -103,12 +106,7 @@ public class GuiFileModule implements GuiFileModuleApi {
     public void registerCloseListener() {
         getFileHandlingActions();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        frameModule.addExitListener(new ApplicationExitListener() {
-            @Override
-            public boolean processExit(ApplicationFrameHandler frameHandler) {
-                return fileHandlingActions.releaseFile();
-            }
-        });
+        frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> fileHandlingActions.releaseFile());
     }
 
     @Override

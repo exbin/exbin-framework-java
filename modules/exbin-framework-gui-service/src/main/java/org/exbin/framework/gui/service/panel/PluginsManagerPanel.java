@@ -16,12 +16,15 @@
  */
 package org.exbin.framework.gui.service.panel;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Panel for list of plugins.
  *
  * @version 0.2.0 2016/02/01
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PluginsManagerPanel extends javax.swing.JPanel {
 
     public PluginsManagerPanel() {

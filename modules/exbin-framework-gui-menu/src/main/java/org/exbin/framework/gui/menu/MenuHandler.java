@@ -311,16 +311,16 @@ public class MenuHandler {
                     }
                     List<MenuContribution> nextToBefore = beforeItem.get(name);
                     if (nextToBefore != null) {
-                        for (MenuContribution menuContribution : nextToBefore) {
+                        nextToBefore.forEach((menuContribution) -> {
                             queue.add(new QueuedContribution(processed, menuContribution));
-                        }
+                        });
                     }
 
                     List<MenuContribution> nextToAfter = afterItem.get(name);
                     if (nextToAfter != null) {
-                        for (MenuContribution menuContribution : nextToAfter) {
+                        nextToAfter.forEach((menuContribution) -> {
                             queue.add(new QueuedContribution(processed, menuContribution));
-                        }
+                        });
                     }
                 }
 
@@ -376,10 +376,8 @@ public class MenuHandler {
             return false;
         }
 
-        for (MenuGroup menuGroup : menuGroupDefs) {
-            if (groupId.equals(menuGroup.getGroupId())) {
-                return true;
-            }
+        if (menuGroupDefs.stream().anyMatch((menuGroup) -> (groupId.equals(menuGroup.getGroupId())))) {
+            return true;
         }
 
         return false;

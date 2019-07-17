@@ -43,6 +43,7 @@ import java.awt.event.MouseEvent;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.swing.AbstractAction;
@@ -61,7 +62,10 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import org.exbin.bined.BasicCodeAreaZone;
 import org.exbin.bined.PositionCodeType;
+import org.exbin.bined.basic.EnterKeyHandlingMode;
 import org.exbin.bined.delta.SegmentsRepository;
+import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
+import org.exbin.bined.swing.CodeAreaCommandHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
@@ -119,13 +123,13 @@ import org.exbin.framework.editor.text.service.TextFontService;
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2019/07/16
+ * @version 0.2.1 2019/07/17
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(BinedModule.class);
-    public static final String HEX_POPUP_MENU_ID = MODULE_ID + ".hexPopupMenu";
+    public static final String BINARY_POPUP_MENU_ID = MODULE_ID + ".binaryPopupMenu";
     public static final String CODE_AREA_POPUP_MENU_ID = MODULE_ID + ".codeAreaPopupMenu";
     public static final String VIEW_MODE_SUBMENU_ID = MODULE_ID + ".viewModeSubMenu";
     public static final String CODE_TYPE_SUBMENU_ID = MODULE_ID + ".codeTypeSubMenu";
@@ -417,6 +421,12 @@ public class BinedModule implements XBApplicationModule {
                         getEditorProvider().hideValuesPanel();
                     }
                 }
+            }
+
+            @Override
+            public void setEditorHandlingMode(EnterKeyHandlingMode enterKeyHandlingMode) {
+                CodeAreaCommandHandler commandHandler = getEditorProvider().getCodeArea().getCommandHandler();
+                ((CodeAreaOperationCommandHandler) commandHandler).setEnterKeyHandlingMode(enterKeyHandlingMode);
             }
         });
         optionsModule.addOptionsPanel(editorOptionsPanel);
@@ -714,7 +724,7 @@ public class BinedModule implements XBApplicationModule {
 
     private JPopupMenu createPopupMenu(int postfix, ExtCodeArea codeArea) {
 //        getClipboardCodeHandler();
-        String popupMenuId = HEX_POPUP_MENU_ID + "." + postfix;
+        String popupMenuId = BINARY_POPUP_MENU_ID + "." + postfix;
 //        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
 //        menuModule.registerMenu(popupMenuId, MODULE_ID);
 //        menuModule.registerClipboardMenuItems(popupMenuId, MODULE_ID, SeparationMode.AROUND);
@@ -972,7 +982,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private JMenuItem createShowHeaderMenuItem(ExtCodeArea codeArea) {
         final JCheckBoxMenuItem showHeader = new JCheckBoxMenuItem("Show Header");
-        showHeader.setSelected(codeArea.getLayoutProfile().isShowHeader());
+        showHeader.setSelected(Objects.requireNonNull(codeArea.getLayoutProfile()).isShowHeader());
         showHeader.addActionListener(layoutHandler.getShowHeaderAction());
         return showHeader;
     }
@@ -980,7 +990,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private JMenuItem createShowRowPositionMenuItem(ExtCodeArea codeArea) {
         final JCheckBoxMenuItem showRowPosition = new JCheckBoxMenuItem("Show Row Position");
-        showRowPosition.setSelected(codeArea.getLayoutProfile().isShowRowPosition());
+        showRowPosition.setSelected(Objects.requireNonNull(codeArea.getLayoutProfile()).isShowRowPosition());
         showRowPosition.addActionListener(layoutHandler.getShowRowPositionAction());
         return showRowPosition;
     }
@@ -988,7 +998,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private JMenuItem createPositionCodeTypeMenuItem(ExtCodeArea codeArea) {
         JMenu menu = new JMenu("Position Code Type");
-        PositionCodeType codeType = PositionCodeType.DECIMAL; // TODO codeArea.getPositionCodeType();
+        PositionCodeType codeType = codeArea.getPositionCodeType();
 
         final JRadioButtonMenuItem octalCodeTypeMenuItem = new JRadioButtonMenuItem("Octal");
         octalCodeTypeMenuItem.setSelected(codeType == PositionCodeType.OCTAL);

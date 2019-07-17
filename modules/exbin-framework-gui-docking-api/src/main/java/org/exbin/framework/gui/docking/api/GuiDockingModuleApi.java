@@ -17,6 +17,8 @@
 package org.exbin.framework.gui.docking.api;
 
 import java.awt.Component;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
@@ -26,6 +28,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiDockingModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiDockingModuleApi.class);
@@ -35,6 +38,7 @@ public interface GuiDockingModuleApi extends XBApplicationModule {
      *
      * @return panel component
      */
+    @Nonnull
     Component getDockingPanel();
 
     /**
@@ -49,5 +53,6 @@ public interface GuiDockingModuleApi extends XBApplicationModule {
      *
      * @return editor view handling
      */
+    @Nonnull
     EditorViewHandling getEditorViewHandling();
 }

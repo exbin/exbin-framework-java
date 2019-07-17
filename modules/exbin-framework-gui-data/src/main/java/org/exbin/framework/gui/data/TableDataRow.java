@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.data;
 
+import javax.annotation.Nonnull;
+
 /**
  * Table model data row.
  *
@@ -24,5 +26,6 @@ package org.exbin.framework.gui.data;
  */
 public interface TableDataRow {
 
+    @Nonnull
     Object[] getRowData();
 }

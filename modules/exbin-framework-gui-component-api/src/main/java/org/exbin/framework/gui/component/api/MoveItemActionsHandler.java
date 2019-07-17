@@ -16,12 +16,15 @@
  */
 package org.exbin.framework.gui.component.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Interface for clipboard handler for visual component / context menu.
  *
  * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface MoveItemActionsHandler {
 
     /**

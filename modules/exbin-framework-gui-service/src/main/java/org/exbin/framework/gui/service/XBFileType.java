@@ -17,15 +17,19 @@
 package org.exbin.framework.gui.service;
 
 import java.io.File;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.gui.file.api.FileType;
 
 /**
  * XB file type.
  *
- * @version 0.1.25 2015/02/20
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBFileType extends FileFilter implements FileType {
 
     public static final String XB_FILE_TYPE = "XBFileType";
@@ -45,11 +49,13 @@ public class XBFileType extends FileFilter implements FileType {
         return false;
     }
 
+    @Nonnull
     @Override
     public String getDescription() {
         return "XB File (*.xb)";
     }
 
+    @Nonnull
     @Override
     public String getFileTypeId() {
         return XB_FILE_TYPE;
@@ -61,6 +67,7 @@ public class XBFileType extends FileFilter implements FileType {
      * @param file Source file
      * @return extension part of file name
      */
+    @Nullable
     public static String getExtension(File file) {
         String ext = null;
         String str = file.getName();

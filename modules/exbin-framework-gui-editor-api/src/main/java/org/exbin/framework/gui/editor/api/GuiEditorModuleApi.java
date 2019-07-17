@@ -17,6 +17,7 @@
 package org.exbin.framework.gui.editor.api;
 
 import java.awt.Component;
+import javax.annotation.Nonnull;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
@@ -51,6 +52,7 @@ public interface GuiEditorModuleApi extends XBApplicationModule {
      *
      * @return panel component
      */
+    @Nonnull
     Component getEditorPanel();
 
     /**

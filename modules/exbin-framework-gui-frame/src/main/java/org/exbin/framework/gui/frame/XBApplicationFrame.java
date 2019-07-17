@@ -21,7 +21,9 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -39,6 +41,7 @@ import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
  * @version 0.2.0 2016/07/23
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBApplicationFrame extends javax.swing.JFrame implements ApplicationFrameHandler, WindowHeaderPanel.WindowHeaderDecorationProvider {
 
     private XBApplication application;
@@ -185,6 +188,7 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         });
     }
 
+    @Nonnull
     @Override
     public Frame getFrame() {
         return this;
@@ -235,7 +239,7 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         menuModule.buildToolBar(toolBar, GuiFrameModule.MAIN_TOOL_BAR_ID);
     }
 
-    public void switchStatusBar(JPanel panel) {
+    public void switchStatusBar(@Nullable JPanel panel) {
         if (currentStatusBarPanel != null) {
             statusPanel.remove(currentStatusBarPanel);
         }

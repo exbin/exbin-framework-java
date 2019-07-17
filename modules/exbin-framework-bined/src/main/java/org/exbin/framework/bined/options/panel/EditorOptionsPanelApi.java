@@ -16,17 +16,22 @@
  */
 package org.exbin.framework.bined.options.panel;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.bined.basic.EnterKeyHandlingMode;
 import org.exbin.framework.bined.FileHandlingMode;
 
 /**
  * Editor options panel api interface.
  *
- * @version 0.2.1 2019/06/16
+ * @version 0.2.1 2019/07/17
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface EditorOptionsPanelApi {
 
     void setFileHandlingMode(FileHandlingMode fileHandlingMode);
 
     void setIsShowValuesPanel(boolean isShowValuesPanel);
+
+    void setEditorHandlingMode(EnterKeyHandlingMode enterKeyHandlingMode);
 }

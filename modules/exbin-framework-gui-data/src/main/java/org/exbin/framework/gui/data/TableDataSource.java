@@ -17,6 +17,9 @@
 package org.exbin.framework.gui.data;
 
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Table model data source.
@@ -24,20 +27,24 @@ import java.util.List;
  * @version 0.2.0 2016/02/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface TableDataSource {
 
     public List<ColumnDefinition> getColumns();
-    
+
     public int getRowCount();
-    
+
+    @Nullable
     Object getValueAt(int rowIndex, int columnIndex);
 
     void setValueAt(Object value, int rowIndex, int columnIndex);
 
     public interface ColumnDefinition {
 
+        @Nonnull
         String getName();
 
+        @Nonnull
         Class<?> getValueClass();
     }
 }
