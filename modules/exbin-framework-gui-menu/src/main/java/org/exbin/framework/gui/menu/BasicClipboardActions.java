@@ -26,8 +26,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.gui.menu.api.ClipboardActions;
-import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
+import org.exbin.framework.gui.utils.ClipboardActions;
+import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 

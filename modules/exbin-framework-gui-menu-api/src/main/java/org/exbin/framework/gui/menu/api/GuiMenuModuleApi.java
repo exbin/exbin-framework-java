@@ -16,6 +16,10 @@
  */
 package org.exbin.framework.gui.menu.api;
 
+import org.exbin.framework.gui.utils.ComponentPopupEventDispatcher;
+import org.exbin.framework.gui.utils.ClipboardActionsHandler;
+import org.exbin.framework.gui.utils.ClipboardActions;
+import org.exbin.framework.gui.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JMenu;

@@ -43,8 +43,8 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
-import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.utils.ClipboardActionsHandler;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 
 /**
  * Hexadecimal editor provider.

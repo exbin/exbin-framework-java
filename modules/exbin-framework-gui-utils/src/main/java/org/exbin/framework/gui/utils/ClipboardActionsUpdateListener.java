@@ -14,33 +14,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.menu.api;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
+package org.exbin.framework.gui.utils;
 
 /**
- * Interface for clipboard editing actions.
+ * Clipboard actions update listener.
  *
- * @version 0.2.0 2016/01/09
+ * @version 0.2.0 2016/01/24
  * @author ExBin Project (http://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface ClipboardActionsApi {
+public interface ClipboardActionsUpdateListener {
 
-    @Nonnull
-    Action getCutAction();
-
-    @Nonnull
-    Action getCopyAction();
-
-    @Nonnull
-    Action getPasteAction();
-
-    @Nonnull
-    Action getDeleteAction();
-
-    @Nonnull
-    Action getSelectAllAction();
+    /**
+     * Notify about change in undo state.
+     */
+    void stateChanged();
 }

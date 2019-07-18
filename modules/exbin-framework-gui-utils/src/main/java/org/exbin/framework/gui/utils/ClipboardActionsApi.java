@@ -14,28 +14,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.gui.menu.api;
+package org.exbin.framework.gui.utils;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 
 /**
- * Interface for clipboard action set.
+ * Interface for clipboard editing actions.
  *
- * @version 0.2.0 2016/07/21
+ * @version 0.2.0 2016/01/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ClipboardActions extends ClipboardActionsApi {
+public interface ClipboardActionsApi {
 
-    /**
-     * Updates state of these actions according to clipboard handler.
-     */
-    void updateClipboardActions();
+    @Nonnull
+    Action getCutAction();
 
-    /**
-     * Sets clipboard handler.
-     *
-     * @param clipboardHandler clipboard handler
-     */
-    void setClipboardActionsHandler(ClipboardActionsHandler clipboardHandler);
+    @Nonnull
+    Action getCopyAction();
+
+    @Nonnull
+    Action getPasteAction();
+
+    @Nonnull
+    Action getDeleteAction();
+
+    @Nonnull
+    Action getSelectAllAction();
 }

@@ -26,10 +26,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.menu.api.ClipboardActions;
-import org.exbin.framework.gui.menu.api.ClipboardActionsApi;
-import org.exbin.framework.gui.menu.api.ClipboardActionsHandler;
-import org.exbin.framework.gui.menu.api.ComponentPopupEventDispatcher;
+import org.exbin.framework.gui.utils.ClipboardActions;
+import org.exbin.framework.gui.utils.ClipboardActionsApi;
+import org.exbin.framework.gui.utils.ClipboardActionsHandler;
+import org.exbin.framework.gui.utils.ComponentPopupEventDispatcher;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuGroup;
 import org.exbin.framework.gui.menu.api.MenuPosition;
@@ -37,12 +37,13 @@ import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
+import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework menu module.
+ * Implementation of framework menu module.
  *
- * @version 0.2.0 2016/07/22
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -78,17 +79,17 @@ public class GuiMenuModule implements GuiMenuModuleApi {
 
     @Override
     public void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        getClipboardActions().addClipboardEventDispatcher(dispatcher);
+        ClipboardUtils.addComponentPopupEventDispatcher(dispatcher);
     }
 
     @Override
     public void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        getClipboardActions().removeClipboardEventDispatcher(dispatcher);
+        ClipboardUtils.removeComponentPopupEventDispatcher(dispatcher);
     }
 
     @Override
     public void fillPopupMenu(JPopupMenu popupMenu, int position) {
-        getClipboardActions().fillDefaultEditPopupMenu(popupMenu, position);
+        ClipboardUtils.fillDefaultEditPopupMenu(popupMenu, position);
     }
 
     @Nonnull

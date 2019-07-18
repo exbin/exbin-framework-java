@@ -1,0 +1,657 @@
+/*
+ * Copyright (C) ExBin Project
+ *
+ * This application or library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * This application or library is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along this application.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.exbin.framework.gui.utils;
+
+import java.awt.AWTEvent;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.KeyboardFocusManager;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.ScrollPane;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.JTextComponent;
+
+/**
+ * Utilities for default menu generation.
+ *
+ * @version 0.2.1 2019/07/18
+ * @author ExBin Project (http://exbin.org)
+ */
+@ParametersAreNonnullByDefault
+public class DefaultPopupMenu {
+
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DefaultPopupMenu.class);
+
+    private ActionMap defaultTextActionMap;
+    private JPopupMenu defaultPopupMenu;
+    private JPopupMenu defaultEditPopupMenu;
+    private DefaultPopupClipboardAction defaultCutAction;
+    private DefaultPopupClipboardAction defaultCopyAction;
+    private DefaultPopupClipboardAction defaultPasteAction;
+    private DefaultPopupClipboardAction defaultDeleteAction;
+    private DefaultPopupClipboardAction defaultSelectAllAction;
+    private DefaultPopupClipboardAction[] defaultTextActions;
+
+    private final List<ComponentPopupEventDispatcher> clipboardEventDispatchers = new ArrayList<>();
+
+    private static DefaultPopupMenu instance = null;
+
+    private DefaultPopupMenu() {
+    }
+
+    @Nonnull
+    public static synchronized DefaultPopupMenu getInstance() {
+        if (instance == null) {
+            instance = new DefaultPopupMenu();
+        }
+
+        return instance;
+    }
+
+    /**
+     * Registers default popup menu to AWT.
+     */
+    public static void register() {
+        DefaultPopupMenu defaultPopupMenu = getInstance();
+        defaultPopupMenu.initDefaultPopupMenu();
+        defaultPopupMenu.registerToEventQueue();
+    }
+
+    /**
+     * Registers default popup menu to AWT.
+     *
+     * @param resourceBundle resource bundle
+     * @param resourceClass resource class
+     */
+    public static void register(ResourceBundle resourceBundle, Class resourceClass) {
+        DefaultPopupMenu defaultPopupMenu = getInstance();
+        defaultPopupMenu.initDefaultPopupMenu(resourceBundle, resourceClass);
+        defaultPopupMenu.registerToEventQueue();
+    }
+
+    private void registerToEventQueue() {
+        Toolkit.getDefaultToolkit().getSystemEventQueue().push(new PopupEventQueue());
+    }
+
+    private void initDefaultPopupMenu() {
+        initDefaultPopupMenu(resourceBundle, this.getClass());
+    }
+
+    private void initDefaultPopupMenu(ResourceBundle resourceBundle, Class resourceClass) {
+        defaultTextActionMap = new ActionMap();
+        defaultCutAction = new DefaultPopupClipboardAction(DefaultEditorKit.cutAction) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clipboardHandler.performCut();
+            }
+
+            @Override
+            protected void postTextComponentInitialize() {
+                setEnabled(clipboardHandler.isEditable() && clipboardHandler.isSelection());
+            }
+        };
+        ActionUtils.setupAction(defaultCutAction, resourceBundle, resourceClass, "editCutAction");
+        defaultCutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
+        defaultCutAction.setEnabled(false);
+        defaultTextActionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), defaultCutAction);
+
+        defaultCopyAction = new DefaultPopupClipboardAction(DefaultEditorKit.copyAction) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clipboardHandler.performCopy();
+            }
+
+            @Override
+            protected void postTextComponentInitialize() {
+                setEnabled(clipboardHandler.isSelection());
+            }
+        };
+        ActionUtils.setupAction(defaultCopyAction, resourceBundle, resourceClass, "editCopyAction");
+        defaultCopyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
+        defaultCopyAction.setEnabled(false);
+        defaultTextActionMap.put(TransferHandler.getCopyAction().getValue(Action.NAME), defaultCopyAction);
+
+        defaultPasteAction = new DefaultPopupClipboardAction(DefaultEditorKit.pasteAction) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clipboardHandler.performPaste();
+            }
+
+            @Override
+            protected void postTextComponentInitialize() {
+                setEnabled(clipboardHandler.isEditable());
+            }
+        };
+        ActionUtils.setupAction(defaultPasteAction, resourceBundle, resourceClass, "editPasteAction");
+        defaultPasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
+        defaultPasteAction.setEnabled(false);
+        defaultTextActionMap.put(TransferHandler.getPasteAction().getValue(Action.NAME), defaultPasteAction);
+
+        defaultDeleteAction = new DefaultPopupClipboardAction(DefaultEditorKit.deleteNextCharAction) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clipboardHandler.performDelete();
+            }
+
+            @Override
+            protected void postTextComponentInitialize() {
+                setEnabled(clipboardHandler.isEditable() && clipboardHandler.isSelection());
+            }
+        };
+        ActionUtils.setupAction(defaultDeleteAction, resourceBundle, resourceClass, "editDeleteAction");
+        defaultDeleteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
+        defaultDeleteAction.setEnabled(false);
+        defaultTextActionMap.put("delete", defaultDeleteAction);
+
+        defaultSelectAllAction = new DefaultPopupClipboardAction(DefaultEditorKit.selectAllAction) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clipboardHandler.performSelectAll();
+            }
+
+            @Override
+            protected void postTextComponentInitialize() {
+                setEnabled(clipboardHandler.canSelectAll());
+            }
+        };
+        ActionUtils.setupAction(defaultSelectAllAction, resourceBundle, resourceClass, "editSelectAllAction");
+        defaultSelectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
+        defaultTextActionMap.put("selectAll", defaultSelectAllAction);
+
+        DefaultPopupClipboardAction[] actions = {defaultCutAction, defaultCopyAction, defaultPasteAction, defaultDeleteAction, defaultSelectAllAction};
+        defaultTextActions = actions;
+
+        buildDefaultPopupMenu();
+        buildDefaultEditPopupMenu();
+    }
+
+    private void buildDefaultPopupMenu() {
+        defaultPopupMenu = new JPopupMenu();
+
+        defaultPopupMenu.setName("defaultPopupMenu"); // NOI18N
+        fillDefaultPopupMenu(defaultPopupMenu, -1);
+    }
+
+    private void buildDefaultEditPopupMenu() {
+        defaultEditPopupMenu = new JPopupMenu();
+
+        defaultEditPopupMenu.setName("defaultEditPopupMenu"); // NOI18N
+        fillDefaultEditPopupMenu(defaultEditPopupMenu, -1);
+    }
+
+    public void fillDefaultPopupMenu(JPopupMenu popupMenu, int position) {
+        JMenuItem basicPopupCopyMenuItem = new javax.swing.JMenuItem();
+        JMenuItem basicPopupSelectAllMenuItem = new javax.swing.JMenuItem();
+
+        basicPopupCopyMenuItem.setAction(defaultCopyAction);
+        basicPopupCopyMenuItem.setName("basicEditPopupCopyMenuItem"); // NOI18N
+        basicPopupSelectAllMenuItem.setAction(defaultSelectAllAction);
+        basicPopupSelectAllMenuItem.setName("basicEditPopupSelectAllMenuItem"); // NOI18N
+
+        if (position >= 0) {
+            popupMenu.insert(basicPopupCopyMenuItem, position);
+            popupMenu.insert(new JPopupMenu.Separator(), position + 1);
+            popupMenu.insert(basicPopupSelectAllMenuItem, position + 2);
+        } else {
+            popupMenu.add(basicPopupCopyMenuItem);
+            popupMenu.addSeparator();
+            popupMenu.add(basicPopupSelectAllMenuItem);
+        }
+    }
+
+    public void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position) {
+        JMenuItem basicPopupCutMenuItem = new javax.swing.JMenuItem();
+        JMenuItem basicPopupCopyMenuItem = new javax.swing.JMenuItem();
+        JMenuItem basicPopupPasteMenuItem = new javax.swing.JMenuItem();
+        JMenuItem basicPopupDeleteMenuItem = new javax.swing.JMenuItem();
+        JMenuItem basicPopupSelectAllMenuItem = new javax.swing.JMenuItem();
+
+        basicPopupCutMenuItem.setAction(defaultCutAction);
+        basicPopupCutMenuItem.setName("basicPopupCutMenuItem");
+        basicPopupCopyMenuItem.setAction(defaultCopyAction);
+        basicPopupCopyMenuItem.setName("basicPopupCopyMenuItem");
+        basicPopupPasteMenuItem.setAction(defaultPasteAction);
+        basicPopupPasteMenuItem.setName("basicPopupPasteMenuItem");
+        basicPopupDeleteMenuItem.setAction(defaultDeleteAction);
+        basicPopupDeleteMenuItem.setName("basicPopupDeleteMenuItem");
+        basicPopupSelectAllMenuItem.setAction(defaultSelectAllAction);
+        basicPopupSelectAllMenuItem.setName("basicPopupSelectAllMenuItem");
+
+        if (position >= 0) {
+            popupMenu.insert(basicPopupCutMenuItem, position);
+            popupMenu.insert(basicPopupCopyMenuItem, position + 1);
+            popupMenu.insert(basicPopupPasteMenuItem, position + 2);
+            popupMenu.insert(basicPopupDeleteMenuItem, position + 3);
+            popupMenu.insert(new JPopupMenu.Separator(), position + 4);
+            popupMenu.insert(basicPopupSelectAllMenuItem, position + 5);
+        } else {
+            popupMenu.add(basicPopupCutMenuItem);
+            popupMenu.add(basicPopupCopyMenuItem);
+            popupMenu.add(basicPopupPasteMenuItem);
+            popupMenu.add(basicPopupDeleteMenuItem);
+            popupMenu.addSeparator();
+            popupMenu.add(basicPopupSelectAllMenuItem);
+        }
+    }
+
+    public void addClipboardEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
+        clipboardEventDispatchers.add(dispatcher);
+    }
+
+    public void removeClipboardEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
+        clipboardEventDispatchers.remove(dispatcher);
+    }
+
+    @ParametersAreNonnullByDefault
+    public class PopupEventQueue extends EventQueue {
+
+        @Override
+        protected void dispatchEvent(AWTEvent event) {
+            if (event.getID() == MouseEvent.MOUSE_RELEASED || event.getID() == MouseEvent.MOUSE_PRESSED) {
+                MouseEvent mouseEvent = (MouseEvent) event;
+
+                if (mouseEvent.isPopupTrigger()) {
+                    for (ComponentPopupEventDispatcher dispatcher : clipboardEventDispatchers) {
+                        if (dispatcher.dispatchMouseEvent(mouseEvent)) {
+                            return;
+                        }
+                    }
+
+                    Component component = getSource(mouseEvent);
+                    if (component instanceof JViewport) {
+                        component = ((JViewport) component).getView();
+                    }
+
+                    if (component instanceof JTextComponent) {
+                        if (((JTextComponent) component).getComponentPopupMenu() == null) {
+                            activateMousePopup(mouseEvent, component, new TextComponentClipboardHandler((JTextComponent) component));
+                            return;
+                        }
+                    } else if (component instanceof JList) {
+                        if (((JList) component).getComponentPopupMenu() == null) {
+                            activateMousePopup(mouseEvent, component, new ListClipboardHandler((JList) component));
+                            return;
+                        }
+                    } else if (component instanceof JTable) {
+                        if (((JTable) component).getComponentPopupMenu() == null) {
+                            activateMousePopup(mouseEvent, component, new TableClipboardHandler((JTable) component));
+                            return;
+                        }
+                    }
+                }
+            } else if (event.getID() == KeyEvent.KEY_PRESSED) {
+                KeyEvent keyEvent = (KeyEvent) event;
+                if (keyEvent.getKeyCode() == KeyEvent.VK_CONTEXT_MENU || (keyEvent.getKeyCode() == KeyEvent.VK_F10 && keyEvent.isShiftDown())) {
+                    for (ComponentPopupEventDispatcher dispatcher : clipboardEventDispatchers) {
+                        if (dispatcher.dispatchKeyEvent(keyEvent)) {
+                            return;
+                        }
+                    }
+
+                    Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+
+                    if (component instanceof JTextComponent) {
+                        if (((JTextComponent) component).getComponentPopupMenu() == null) {
+                            // TODO Compute position of cursor
+                            // Point point = ((JTextComponent) component).getDocument().getCaret().
+                            activateKeyPopup(component, null, new TextComponentClipboardHandler((JTextComponent) component));
+                            return;
+                        }
+                    } else if (component instanceof JList) {
+                        if (((JList) component).getComponentPopupMenu() == null) {
+                            Point point = null;
+                            int selectedIndex = ((JList) component).getSelectedIndex();
+                            if (selectedIndex >= 0) {
+                                Rectangle cellBounds = ((JList) component).getCellBounds(selectedIndex, selectedIndex);
+                                point = new Point(component.getWidth() / 2, cellBounds.y);
+                            }
+                            activateKeyPopup(component, point, new ListClipboardHandler((JList) component));
+                            return;
+                        }
+                    } else if (component instanceof JTable) {
+                        if (((JTable) component).getComponentPopupMenu() == null) {
+                            Point point = null;
+                            int selectedRow = ((JTable) component).getSelectedRow();
+                            if (selectedRow >= 0) {
+                                int selectedColumn = ((JTable) component).getSelectedColumn();
+                                if (selectedColumn < -1) {
+                                    selectedColumn = 0;
+                                }
+                                Rectangle cellBounds = ((JTable) component).getCellRect(selectedRow, selectedColumn, false);
+                                point = new Point(cellBounds.x, cellBounds.y);
+                            }
+                            activateKeyPopup(component, point, new TableClipboardHandler((JTable) component));
+                            return;
+                        }
+                    }
+                }
+            }
+
+            super.dispatchEvent(event);
+        }
+
+        private void activateMousePopup(MouseEvent mouseEvent, Component component, ClipboardActionsHandler clipboardHandler) {
+            for (Object action : defaultTextActions) {
+                ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
+            }
+
+            Point point = mouseEvent.getLocationOnScreen();
+            Point locationOnScreen = component.getLocationOnScreen();
+            point.translate(-locationOnScreen.x, -locationOnScreen.y);
+            if (clipboardHandler.isEditable()) {
+                defaultEditPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            } else {
+                defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            }
+        }
+
+        private void activateKeyPopup(Component component, Point point, ClipboardActionsHandler clipboardHandler) {
+            for (Object action : defaultTextActions) {
+                ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
+            }
+
+            if (point == null) {
+                if (component.getParent() instanceof ScrollPane) {
+                    // TODO
+                    point = new Point(component.getWidth() / 2, component.getHeight() / 2);
+                } else {
+                    point = new Point(component.getWidth() / 2, component.getHeight() / 2);
+                }
+            }
+            if (clipboardHandler.isEditable()) {
+                defaultEditPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            } else {
+                defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            }
+        }
+
+        @Nullable
+        private Component getSource(MouseEvent e) {
+            return SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
+        }
+
+        private class TextComponentClipboardHandler implements ClipboardActionsHandler {
+
+            private final JTextComponent txtComp;
+
+            public TextComponentClipboardHandler(JTextComponent txtComp) {
+                this.txtComp = txtComp;
+            }
+
+            @Override
+            public void performCut() {
+                txtComp.cut();
+            }
+
+            @Override
+            public void performCopy() {
+                txtComp.copy();
+            }
+
+            @Override
+            public void performPaste() {
+                txtComp.paste();
+            }
+
+            @Override
+            public void performDelete() {
+                ActionUtils.invokeTextAction(txtComp, DefaultEditorKit.deleteNextCharAction);
+            }
+
+            @Override
+            public void performSelectAll() {
+                txtComp.requestFocus();
+                txtComp.selectAll();
+            }
+
+            @Override
+            public boolean isSelection() {
+                return txtComp.isEnabled() && txtComp.getSelectionStart() != txtComp.getSelectionEnd();
+            }
+
+            @Override
+            public boolean isEditable() {
+                return txtComp.isEnabled() && txtComp.isEditable();
+            }
+
+            @Override
+            public boolean canSelectAll() {
+                return txtComp.isEnabled() && !txtComp.getText().isEmpty();
+            }
+
+            @Override
+            public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+                // Ignore
+            }
+
+            @Override
+            public boolean canPaste() {
+                return true;
+            }
+        }
+
+        private class ListClipboardHandler implements ClipboardActionsHandler {
+
+            private final JList listComp;
+
+            public ListClipboardHandler(JList listComp) {
+                this.listComp = listComp;
+            }
+
+            @Override
+            public void performCut() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void performCopy() {
+                StringBuilder builder = new StringBuilder();
+                List rows = listComp.getSelectedValuesList();
+                boolean empty = true;
+                for (Object row : rows) {
+                    builder.append(empty ? row.toString() : System.getProperty("line.separator") + row);
+
+                    if (empty) {
+                        empty = false;
+                    }
+                }
+
+                ClipboardUtils.getClipboard().setContents(new StringSelection(builder.toString()), null);
+            }
+
+            @Override
+            public void performPaste() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void performDelete() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void performSelectAll() {
+                if (listComp.getModel().getSize() > 0) {
+                    listComp.setSelectionInterval(0, listComp.getModel().getSize() - 1);
+                }
+            }
+
+            @Override
+            public boolean isSelection() {
+                return listComp.isEnabled() && !listComp.isSelectionEmpty();
+            }
+
+            @Override
+            public boolean isEditable() {
+                return false;
+            }
+
+            @Override
+            public boolean canSelectAll() {
+                return listComp.isEnabled() && listComp.getSelectionMode() != DefaultListSelectionModel.SINGLE_SELECTION;
+            }
+
+            @Override
+            public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+                // Ignore
+            }
+
+            @Override
+            public boolean canPaste() {
+                return true;
+            }
+        }
+
+        private class TableClipboardHandler implements ClipboardActionsHandler {
+
+            private final JTable tableComp;
+
+            public TableClipboardHandler(JTable tableComp) {
+                this.tableComp = tableComp;
+            }
+
+            @Override
+            public void performCut() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void performCopy() {
+                StringBuilder builder = new StringBuilder();
+                int[] rows = tableComp.getSelectedRows();
+                int[] columns;
+                if (tableComp.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) {
+                    columns = new int[tableComp.getColumnCount()];
+                    for (int i = 0; i < tableComp.getColumnCount(); i++) {
+                        columns[i] = i;
+                    }
+                } else {
+                    columns = tableComp.getSelectedColumns();
+                }
+
+                boolean empty = true;
+                for (int rowIndex : rows) {
+                    if (!empty) {
+                        builder.append(System.getProperty("line.separator"));
+                    } else {
+                        empty = false;
+                    }
+
+                    boolean columnEmpty = true;
+                    for (int columnIndex : columns) {
+                        if (!columnEmpty) {
+                            builder.append("\t");
+                        } else {
+                            columnEmpty = false;
+                        }
+
+                        Object value = tableComp.getModel().getValueAt(rowIndex, columnIndex);
+                        if (value != null) {
+                            builder.append(value.toString());
+                        }
+                    }
+                }
+
+                ClipboardUtils.getClipboard().setContents(new StringSelection(builder.toString()), null);
+            }
+
+            @Override
+            public void performPaste() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void performDelete() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void performSelectAll() {
+                tableComp.selectAll();
+            }
+
+            @Override
+            public boolean isSelection() {
+                return tableComp.isEnabled() && (tableComp.getSelectedColumn() >= 0 || tableComp.getSelectedRow() >= 0);
+            }
+
+            @Override
+            public boolean isEditable() {
+                return false;
+            }
+
+            @Override
+            public boolean canSelectAll() {
+                return tableComp.isEnabled() && tableComp.getSelectionModel().getSelectionMode() != ListSelectionModel.SINGLE_SELECTION;
+            }
+
+            @Override
+            public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+                // Ignore
+            }
+
+            @Override
+            public boolean canPaste() {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * Clipboard action for default popup menu.
+     */
+    @ParametersAreNonnullByDefault
+    private static abstract class DefaultPopupClipboardAction extends AbstractAction {
+
+        protected ClipboardActionsHandler clipboardHandler;
+
+        public DefaultPopupClipboardAction(String name) {
+            super(name);
+        }
+
+        public void setClipboardHandler(ClipboardActionsHandler clipboardHandler) {
+            this.clipboardHandler = clipboardHandler;
+            postTextComponentInitialize();
+        }
+
+        protected abstract void postTextComponentInitialize();
+    }
+}

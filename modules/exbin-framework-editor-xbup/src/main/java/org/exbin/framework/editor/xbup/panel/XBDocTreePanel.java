@@ -47,7 +47,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.tree.TreePath;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.menu.api.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.MultiStepControlHandler;
