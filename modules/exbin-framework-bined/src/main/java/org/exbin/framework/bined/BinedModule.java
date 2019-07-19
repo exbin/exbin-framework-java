@@ -119,11 +119,12 @@ import org.exbin.framework.bined.service.BinaryAppearanceService;
 import org.exbin.framework.bined.service.impl.BinaryAppearanceServiceImpl;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextFontService;
+import org.exbin.framework.editor.text.service.impl.TextEncodingServiceImpl;
 
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2019/07/17
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -304,31 +305,21 @@ public class BinedModule implements XBApplicationModule {
         binaryAppearanceOptionsPanel = new BinaryAppearanceOptionsPanel(binaryAppearanceService);
         optionsModule.extendAppearanceOptionsPanel(binaryAppearanceOptionsPanel);
 
-        TextEncodingService textEncodingPanelApi = new TextEncodingService() {
+        TextEncodingService textEncodingService = new TextEncodingServiceImpl();
+        textEncodingService.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
             @Override
-            public List<String> getEncodings() {
-                return getEncodingsHandler().getEncodings();
-            }
-
-            @Override
-            public String getSelectedEncoding() {
-                return getEditorProvider().getCharset().name();
-            }
-
-            @Override
-            public void setEncodings(List<String> encodings) {
-                getEncodingsHandler().setEncodings(encodings);
+            public void encodingListChanged() {
                 getEncodingsHandler().rebuildEncodings();
             }
 
             @Override
-            public void setSelectedEncoding(String encoding) {
-                if (encoding != null) {
-                    getEditorProvider().setCharset(Charset.forName(encoding));
-                }
+            public void selectedEncodingChanged() {
+                getEditorProvider().setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
             }
-        };
-        textEncodingOptionsPanel = new TextEncodingOptionsPanel(textEncodingPanelApi);
+        });
+
+        textEncodingOptionsPanel = new TextEncodingOptionsPanel();
+        textEncodingOptionsPanel.setTextEncodingService(textEncodingService);
         textEncodingOptionsPanel.setAddEncodingsOperation((List<String> usedEncodings) -> {
             final List<String> result = new ArrayList<>();
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
@@ -351,7 +342,7 @@ public class BinedModule implements XBApplicationModule {
         });
         optionsModule.addOptionsPanel(textEncodingOptionsPanel);
 
-        TextFontService textFontPanelApi = new TextFontService() {
+        TextFontService textFontService = new TextFontService() {
             @Override
             public Font getCurrentFont() {
                 return ((TextFontApi) getEditorProvider()).getCurrentFont();
@@ -367,7 +358,8 @@ public class BinedModule implements XBApplicationModule {
                 ((TextFontApi) getEditorProvider()).setCurrentFont(font);
             }
         };
-        textFontOptionsPanel = new TextFontOptionsPanel(textFontPanelApi);
+        textFontOptionsPanel = new TextFontOptionsPanel();
+        textFontOptionsPanel.setTextFontService(textFontService);
         textFontOptionsPanel.setFontChangeAction(new TextFontOptionsPanel.FontChangeAction() {
             @Override
             public Font changeFont(Font currentFont) {
@@ -384,7 +376,7 @@ public class BinedModule implements XBApplicationModule {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                         if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
                             TextFontParameters parameters = new TextFontParameters(application.getAppPreferences());
-                            parameters.setDefaultFont(false);
+                            parameters.setUseDefaultFont(false);
                             parameters.setFont(fontPanel.getStoredFont());
                         }
                         result.font = fontPanel.getStoredFont();
@@ -537,7 +529,8 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler(application, getBinaryStatusPanel()); // getEditorProvider(), 
+            encodingsHandler = new EncodingsHandler(application); // getEditorProvider(), 
+            encodingsHandler.setTextEncodingStatus(getBinaryStatusPanel());
             // encodingsHandler.init();
         }
 

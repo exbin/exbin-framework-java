@@ -30,14 +30,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 
 /**
  * Table model for encoding / character sets.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class EncodingsTableModel extends AbstractTableModel {
 
     private final Map<String, EncodingRecord> encodings = new HashMap<>();
@@ -46,40 +49,8 @@ public class EncodingsTableModel extends AbstractTableModel {
     private String nameFilter = "";
     private String countryFilter = "";
 
-    @Override
-    public String getColumnName(int column) {
-        switch (column) {
-            case 0:
-                return "Name";
-            case 1:
-                return "Description";
-            case 2:
-                return "Country Codes";
-            case 3:
-                return "Max Bytes";
-        }
-
-        return null;
-    }
-
     public EncodingsTableModel() {
         initEncodings();
-    }
-
-    private void rebuildFiltered() {
-        filtered.clear();
-        encodings.entrySet().forEach((record) -> {
-            String name = record.getKey();
-            if (!(usedEncodings.contains(name))) {
-                if (!(!nameFilter.isEmpty() && !name.contains(nameFilter.toLowerCase()))) {
-                    if (!(!countryFilter.isEmpty() && (record.getValue().countries == null || !record.getValue().countries.toLowerCase().contains(countryFilter.toLowerCase())))) {
-                        filtered.add(name);
-                    }
-                }
-            }
-        });
-        Collections.sort(filtered);
-        fireTableDataChanged();
     }
 
     private void initEncodings() {
@@ -115,6 +86,39 @@ public class EncodingsTableModel extends AbstractTableModel {
         }
     }
 
+    @Nullable
+    @Override
+    public String getColumnName(int column) {
+        switch (column) {
+            case 0:
+                return "Name";
+            case 1:
+                return "Description";
+            case 2:
+                return "Country Codes";
+            case 3:
+                return "Max Bytes";
+        }
+
+        return null;
+    }
+
+    private void rebuildFiltered() {
+        filtered.clear();
+        encodings.entrySet().forEach((record) -> {
+            String name = record.getKey();
+            if (!(usedEncodings.contains(name))) {
+                if (!(!nameFilter.isEmpty() && !name.contains(nameFilter.toLowerCase()))) {
+                    if (!(!countryFilter.isEmpty() && (record.getValue().countries == null || !record.getValue().countries.toLowerCase().contains(countryFilter.toLowerCase())))) {
+                        filtered.add(name);
+                    }
+                }
+            }
+        });
+        Collections.sort(filtered);
+        fireTableDataChanged();
+    }
+
     @Override
     public int getRowCount() {
         return filtered.size();
@@ -125,6 +129,7 @@ public class EncodingsTableModel extends AbstractTableModel {
         return 4;
     }
 
+    @Nullable
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         String name = filtered.get(rowIndex);

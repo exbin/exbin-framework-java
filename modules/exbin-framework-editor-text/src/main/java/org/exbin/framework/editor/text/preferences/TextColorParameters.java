@@ -22,7 +22,7 @@ import org.exbin.framework.api.Preferences;
 /**
  * Text font parameters.
  *
- * @version 0.2.0 2019/06/09
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -50,12 +50,12 @@ public class TextColorParameters {
     }
 
     @Nullable
-    public Integer getTextColorText() {
+    public Integer getTextColor() {
         return getColorAsInt(PREFERENCES_TEXT_COLOR_TEXT);
     }
 
     @Nullable
-    public Integer getTextColorBackground() {
+    public Integer getTextBackgroundColor() {
         return getColorAsInt(PREFERENCES_TEXT_COLOR_BACKGROUND);
     }
 
@@ -80,23 +80,23 @@ public class TextColorParameters {
         return value == null ? null : Integer.valueOf(value);
     }
 
-    public void setTextColorText(int color) {
-        preferences.put(PREFERENCES_TEXT_COLOR_TEXT, Integer.toString(color));
+    public void setTextColor(int color) {
+        preferences.putInt(PREFERENCES_TEXT_COLOR_TEXT, color);
     }
 
-    public void setTextColorBackground(int color) {
-        preferences.put(PREFERENCES_TEXT_COLOR_BACKGROUND, Integer.toString(color));
+    public void setTextBackgroundColor(int color) {
+        preferences.putInt(PREFERENCES_TEXT_COLOR_BACKGROUND, color);
     }
 
     public void setSelectionTextColor(int color) {
-        preferences.put(PREFERENCES_TEXT_COLOR_SELECTION, Integer.toString(color));
+        preferences.putInt(PREFERENCES_TEXT_COLOR_SELECTION, color);
     }
 
     public void setSelectionBackgroundColor(int color) {
-        preferences.put(PREFERENCES_TEXT_COLOR_SELECTION_BACKGROUND, Integer.toString(color));
+        preferences.putInt(PREFERENCES_TEXT_COLOR_SELECTION_BACKGROUND, color);
     }
 
     public void setFoundBackgroundColor(int color) {
-        preferences.put(PREFERENCES_TEXT_COLOR_FOUND, Integer.toString(color));
+        preferences.putInt(PREFERENCES_TEXT_COLOR_FOUND, color);
     }
 }

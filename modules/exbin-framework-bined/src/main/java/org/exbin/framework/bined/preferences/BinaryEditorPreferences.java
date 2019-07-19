@@ -27,7 +27,6 @@ import org.exbin.bined.swing.extended.layout.ExtendedCodeAreaDecorations;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.options.CodeAreaOptions;
-import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 
 /**
@@ -156,8 +155,8 @@ public class BinaryEditorPreferences {
         charsetParameters.setEncodings(new ArrayList<>(legacyPreferences.getEncodings()));
         Collection<String> legacyEncodings = legacyPreferences.getEncodings();
         List<String> encodings = new ArrayList<>(legacyEncodings);
-        if (!encodings.isEmpty() && !encodings.contains(EncodingsHandler.ENCODING_UTF8)) {
-            encodings.add(EncodingsHandler.ENCODING_UTF8);
+        if (!encodings.isEmpty() && !encodings.contains(TextEncodingParameters.ENCODING_UTF8)) {
+            encodings.add(TextEncodingParameters.ENCODING_UTF8);
         }
         charsetParameters.setEncodings(encodings);
 

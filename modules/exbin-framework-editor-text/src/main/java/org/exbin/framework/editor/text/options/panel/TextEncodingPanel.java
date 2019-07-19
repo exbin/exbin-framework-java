@@ -27,6 +27,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.text.options.TextEncodingOptions;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -37,7 +38,7 @@ import org.exbin.framework.editor.text.service.TextEncodingService;
 /**
  * Text encoding selection panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -93,6 +94,14 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void saveToOptions(TextEncodingOptions options) {
+        options.setEncodings(getEncodingList());
+    }
+
+    public void loadFromOptions(TextEncodingOptions options) {
+        setEncodingList(options.getEncodings());
     }
 
     public void setHandler(TextEncodingService handler) {
@@ -318,15 +327,16 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        TextEncodingParameters charsetParameters = new TextEncodingParameters(preferences);
-        List<String> encodings = charsetParameters.getEncodings();
-        setEncodingList(encodings);
+        TextEncodingOptions options = new TextEncodingOptions();
+        options.loadFromParameters(new TextEncodingParameters(preferences));
+        loadFromOptions(options);
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        TextEncodingParameters charsetParameters = new TextEncodingParameters(preferences);
-        charsetParameters.setEncodings(getEncodingList());
+        TextEncodingOptions options = new TextEncodingOptions();
+        saveToOptions(options);
+        options.saveToParameters(new TextEncodingParameters(preferences));
     }
 
     @Override
@@ -353,6 +363,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
         List<String> run(List<String> usedEncodings);
     }
 
+    @ParametersAreNonnullByDefault
     private class EncodingsListModel extends AbstractListModel {
 
         private final List<String> charsets = new ArrayList<>();

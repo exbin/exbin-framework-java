@@ -64,11 +64,12 @@ import org.exbin.framework.editor.text.service.TextAppearanceService;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.editor.text.service.TextFontService;
+import org.exbin.framework.editor.text.service.impl.TextEncodingServiceImpl;
 
 /**
  * Text editor module.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -163,7 +164,7 @@ public class EditorTextModule implements XBApplicationModule {
 
         optionsModule.addOptionsPanel(new TextColorOptionsPanel(textColorPanelFrame));
 
-        TextFontService textFontPanelFrame = new TextFontService() {
+        TextFontService textFontService = new TextFontService() {
             @Override
             public Font getCurrentFont() {
                 return ((TextPanel) getEditorProvider()).getCurrentFont();
@@ -180,7 +181,8 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        TextFontOptionsPanel textFontOptionsPanel = new TextFontOptionsPanel(textFontPanelFrame);
+        TextFontOptionsPanel textFontOptionsPanel = new TextFontOptionsPanel();
+        textFontOptionsPanel.setTextFontService(textFontService);
         textFontOptionsPanel.setFontChangeAction(new TextFontOptionsPanel.FontChangeAction() {
             @Override
             public Font changeFont(Font currentFont) {
@@ -197,7 +199,7 @@ public class EditorTextModule implements XBApplicationModule {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                         if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
                             TextFontParameters textFontParameters = new TextFontParameters(application.getAppPreferences());
-                            textFontParameters.setDefaultFont(true);
+                            textFontParameters.setUseDefaultFont(true);
                             textFontParameters.setFont(fontPanel.getStoredFont());
                         }
                         result.font = fontPanel.getStoredFont();
@@ -218,33 +220,21 @@ public class EditorTextModule implements XBApplicationModule {
         });
         optionsModule.addOptionsPanel(textFontOptionsPanel);
 
-        TextEncodingService textEncodingPanelApi = new TextEncodingService() {
+        TextEncodingService textEncodingService = new TextEncodingServiceImpl();
+        textEncodingService.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
             @Override
-            public List<String> getEncodings() {
-                return getEncodingsHandler().getEncodings();
-            }
-
-            @Override
-            public String getSelectedEncoding() {
-                return ((TextPanel) getEditorProvider()).getCharset().name();
-            }
-
-            @Override
-            public void setEncodings(List<String> encodings) {
-                getEncodingsHandler().setEncodings(encodings);
+            public void encodingListChanged() {
                 getEncodingsHandler().rebuildEncodings();
             }
 
             @Override
-            public void setSelectedEncoding(String encoding) {
-                if (encoding != null) {
-                    ((TextPanel) getEditorProvider()).setCharset(Charset.forName(encoding));
-                }
+            public void selectedEncodingChanged() {
+                ((TextPanel) getEditorProvider()).setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
             }
-        };
+        });
 
-        TextAppearanceService textAppearanceOptionsPanelApi;
-        textAppearanceOptionsPanelApi = new TextAppearanceService() {
+        TextAppearanceService textAppearanceService;
+        textAppearanceService = new TextAppearanceService() {
             @Override
             public boolean getWordWrapMode() {
                 return ((TextPanel) getEditorProvider()).getWordWrapMode();
@@ -256,7 +246,8 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        TextEncodingOptionsPanel textEncodingOptionsPanel = new TextEncodingOptionsPanel(textEncodingPanelApi);
+        TextEncodingOptionsPanel textEncodingOptionsPanel = new TextEncodingOptionsPanel();
+        textEncodingOptionsPanel.setTextEncodingService(textEncodingService);
         textEncodingOptionsPanel.setAddEncodingsOperation((List<String> usedEncodings) -> {
             final List<String> result = new ArrayList<>();
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
@@ -278,7 +269,9 @@ public class EditorTextModule implements XBApplicationModule {
             return result;
         });
         optionsModule.addOptionsPanel(textEncodingOptionsPanel);
-        optionsModule.extendAppearanceOptionsPanel(new TextAppearanceOptionsPanel(textAppearanceOptionsPanelApi));
+        TextAppearanceOptionsPanel optionsPanel = new TextAppearanceOptionsPanel();
+        optionsPanel.setTextAppearanceService(textAppearanceService);
+        optionsModule.extendAppearanceOptionsPanel(optionsPanel);
     }
 
     public void registerWordWrapping() {
@@ -317,7 +310,8 @@ public class EditorTextModule implements XBApplicationModule {
 
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler(application, getTextStatusPanel()); // (TextPanel) getEditorProvider(), 
+            encodingsHandler = new EncodingsHandler(application); // (TextPanel) getEditorProvider(), 
+            encodingsHandler.setTextEncodingStatus(getTextStatusPanel());
             // encodingsHandler.init();
         }
 

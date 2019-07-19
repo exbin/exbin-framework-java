@@ -26,7 +26,7 @@ import org.exbin.framework.api.Preferences;
 /**
  * Text font parameters.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -49,11 +49,11 @@ public class TextFontParameters {
         this.preferences = preferences;
     }
 
-    public boolean isDefaultFont() {
+    public boolean isUseDefaultFont() {
         return preferences.getBoolean(PREFERENCES_TEXT_FONT_DEFAULT, true);
     }
 
-    public void setDefaultFont(boolean defaultFont) {
+    public void setUseDefaultFont(boolean defaultFont) {
         preferences.putBoolean(PREFERENCES_TEXT_FONT_DEFAULT, defaultFont);
     }
 
@@ -74,7 +74,7 @@ public class TextFontParameters {
         }
         value = preferences.get(PREFERENCES_TEXT_FONT_SIZE);
         if (value != null) {
-            attribs.put(TextAttribute.SIZE, new Integer(value).floatValue());
+            attribs.put(TextAttribute.SIZE, Integer.valueOf(value).floatValue());
         }
         if (Boolean.valueOf(preferences.get(PREFERENCES_TEXT_FONT_UNDERLINE, null))) {
             attribs.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);

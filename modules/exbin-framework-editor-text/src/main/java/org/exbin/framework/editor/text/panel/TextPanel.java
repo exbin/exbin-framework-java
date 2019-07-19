@@ -56,7 +56,6 @@ import org.exbin.framework.editor.text.EditorTextModule;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
-import org.exbin.framework.editor.text.service.TextService;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
@@ -80,6 +79,7 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
+import org.exbin.framework.editor.text.service.TextSearchService;
 
 /**
  * Text editor panel.
@@ -171,7 +171,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         }
     }
 
-    public void findText(TextService.FindTextParameters findTextParameters) {
+    public void findText(TextSearchService.FindTextParameters findTextParameters) {
         int pos = textArea.getCaretPosition();
         if (highlight != null) {
             if (((Highlight) highlight).getStartOffset() == pos) {
@@ -183,8 +183,8 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         }
 
         findTextParameters.setStartFrom(pos);
-        TextService textService = new TextServiceImpl();
-        TextService.FoundMatch foundMatch = textService.findText(textArea, findTextParameters);
+        TextSearchService textService = new TextServiceImpl();
+        TextSearchService.FoundMatch foundMatch = textService.findText(textArea, findTextParameters);
 
         if (foundMatch != null) {
             try {

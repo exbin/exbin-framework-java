@@ -31,6 +31,7 @@ import org.exbin.bined.CodeType;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.framework.editor.text.EncodingsHandler;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 
 /**
@@ -79,7 +80,7 @@ public class LegacyPreferences {
 
     @Nonnull
     public String getSelectedEncoding() {
-        return preferences.get(PREFERENCES_ENCODING_SELECTED, EncodingsHandler.ENCODING_UTF8);
+        return preferences.get(PREFERENCES_ENCODING_SELECTED, TextEncodingParameters.ENCODING_UTF8);
     }
 
     public void setSelectedEncoding(String encodingName) {

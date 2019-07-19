@@ -16,12 +16,9 @@
  */
 package org.exbin.framework.editor.text.service.impl;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTextArea;
-import javax.swing.text.BadLocationException;
 import org.exbin.framework.editor.text.service.*;
 
 /**
@@ -31,7 +28,7 @@ import org.exbin.framework.editor.text.service.*;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextServiceImpl implements TextService {
+public class TextServiceImpl implements TextSearchService {
 
     @Nullable
     @Override

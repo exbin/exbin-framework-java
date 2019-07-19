@@ -21,6 +21,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.EncodingsHandler;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 
 /**
  * Code area preferences.
@@ -42,7 +43,7 @@ public class CharsetParameters {
 
     @Nonnull
     public String getSelectedEncoding() {
-        return preferences.get(PREFERENCES_ENCODING_SELECTED, EncodingsHandler.ENCODING_UTF8);
+        return preferences.get(PREFERENCES_ENCODING_SELECTED, TextEncodingParameters.ENCODING_UTF8);
     }
 
     public void setSelectedEncoding(String encodingName) {

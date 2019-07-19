@@ -78,7 +78,7 @@ public class ToolsOptionsHandler {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                         if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
                             TextFontParameters parameters = new TextFontParameters(application.getAppPreferences());
-                            parameters.setDefaultFont(false);
+                            parameters.setUseDefaultFont(false);
                             parameters.setFont(fontPanel.getStoredFont());
                         }
                         ((TextFontApi) editorProvider).setCurrentFont(fontPanel.getStoredFont());

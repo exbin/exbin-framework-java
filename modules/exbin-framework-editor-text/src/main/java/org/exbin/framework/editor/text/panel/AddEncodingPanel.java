@@ -19,6 +19,8 @@ package org.exbin.framework.editor.text.panel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -27,9 +29,10 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Encoding selection panel.
  *
- * @version 0.2.0 2016/12/30
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class AddEncodingPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AddEncodingPanel.class);
@@ -196,6 +199,7 @@ public class AddEncodingPanel extends javax.swing.JPanel {
         tableModel.setUsedEncodings(encodings);
     }
 
+    @Nonnull
     public List<String> getEncodings() {
         ArrayList<String> result = new ArrayList<>();
         int[] selectedValues = encodingsTable.getSelectedRows();
@@ -206,6 +210,7 @@ public class AddEncodingPanel extends javax.swing.JPanel {
         return result;
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }

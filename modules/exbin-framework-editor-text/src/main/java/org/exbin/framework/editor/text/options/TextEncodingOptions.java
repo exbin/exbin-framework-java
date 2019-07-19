@@ -22,15 +22,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 
 /**
- * Charset options.
+ * Text encoding options.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CharsetOptions {
+public class TextEncodingOptions {
 
-    private String selectedEncoding = "UTF-8";
+    private String selectedEncoding = TextEncodingParameters.ENCODING_UTF8;
     private List<String> encodings = new ArrayList<>();
 
     @Nonnull
@@ -62,9 +62,9 @@ public class CharsetOptions {
         parameters.setEncodings(encodings);
     }
 
-    public void setOptions(CharsetOptions charsetOptions) {
-        selectedEncoding = charsetOptions.selectedEncoding;
+    public void setOptions(TextEncodingOptions options) {
+        selectedEncoding = options.selectedEncoding;
         encodings = new ArrayList<>();
-        encodings.addAll(charsetOptions.encodings);
+        encodings.addAll(options.encodings);
     }
 }

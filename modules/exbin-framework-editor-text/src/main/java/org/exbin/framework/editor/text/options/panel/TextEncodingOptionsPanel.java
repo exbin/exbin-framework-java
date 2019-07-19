@@ -25,6 +25,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.text.options.TextEncodingOptions;
 import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -42,12 +43,11 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
-    private final TextEncodingService frame;
+    private TextEncodingService textEncodingService;
     private final TextEncodingPanel encodingPanel;
     private final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
 
-    public TextEncodingOptionsPanel(TextEncodingService frame) {
-        this.frame = frame;
+    public TextEncodingOptionsPanel() {
         encodingPanel = new TextEncodingPanel();
 
         initComponents();
@@ -55,7 +55,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     }
 
     private void init() {
-        encodingPanel.setHandler(frame);
+        encodingPanel.setHandler(textEncodingService);
         encodingPanel.setEnabled(false);
         encodingPanel.setOptionsModifiedListener(() -> {
             optionsModifiedListener.wasModified();
@@ -68,6 +68,21 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void setTextEncodingService(TextEncodingService textEncodingService) {
+        this.textEncodingService = textEncodingService;
+    }
+
+    public void saveToOptions(TextEncodingOptions options) {
+        encodingPanel.saveToOptions(options);
+        options.setSelectedEncoding((String) defaultEncodingComboBox.getSelectedItem());
+    }
+
+    public void loadFromOptions(TextEncodingOptions options) {
+        encodingPanel.loadFromOptions(options);
+        defaultEncodingComboBox.setSelectedItem(options.getSelectedEncoding());
+        updateEncodings();
     }
 
     /**
@@ -170,14 +185,14 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     }// </editor-fold>//GEN-END:initComponents
 
     private void fillCurrentEncodingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentEncodingsButtonActionPerformed
-        encodingPanel.setEncodingList(frame.getEncodings());
+        encodingPanel.setEncodingList(textEncodingService.getEncodings());
         encodingPanel.repaint();
         updateEncodings();
         setModified(true);
     }//GEN-LAST:event_fillCurrentEncodingsButtonActionPerformed
 
     private void fillCurrentEncodingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentEncodingButtonActionPerformed
-        defaultEncodingComboBox.setSelectedItem(frame.getSelectedEncoding());
+        defaultEncodingComboBox.setSelectedItem(textEncodingService.getSelectedEncoding());
         defaultEncodingComboBox.repaint();
         setModified(true);
     }//GEN-LAST:event_fillCurrentEncodingButtonActionPerformed
@@ -192,7 +207,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new TextEncodingOptionsPanel(null));
+        WindowUtils.invokeDialog(new TextEncodingOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -207,22 +222,21 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        encodingPanel.loadFromPreferences(preferences);
-        updateEncodings();
-        TextEncodingParameters charsetParameters = new TextEncodingParameters(preferences);
-        defaultEncodingComboBox.setSelectedItem(charsetParameters.getDefaultEncoding());
+        TextEncodingOptions options = new TextEncodingOptions();
+        options.loadFromParameters(new TextEncodingParameters(preferences));
+        loadFromOptions(options);
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        TextEncodingParameters charsetParameters = new TextEncodingParameters(preferences);
-        charsetParameters.setDefaultEncoding((String) defaultEncodingComboBox.getSelectedItem());
-        encodingPanel.saveToPreferences(preferences);
+        TextEncodingOptions options = new TextEncodingOptions();
+        saveToOptions(options);
+        options.saveToParameters(new TextEncodingParameters(preferences));
     }
 
     @Override
     public void applyPreferencesChanges() {
-        frame.setSelectedEncoding((String) defaultEncodingComboBox.getSelectedItem());
+        textEncodingService.setSelectedEncoding((String) defaultEncodingComboBox.getSelectedItem());
         encodingPanel.applyPreferencesChanges();
     }
 

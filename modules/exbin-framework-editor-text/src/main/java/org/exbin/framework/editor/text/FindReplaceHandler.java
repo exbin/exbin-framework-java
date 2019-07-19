@@ -27,7 +27,6 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.panel.FindTextPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
-import org.exbin.framework.editor.text.service.TextService;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -36,6 +35,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.framework.editor.text.service.TextSearchService;
 
 /**
  * Find/replace handler.
@@ -102,7 +102,7 @@ public class FindReplaceHandler {
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 if (editorProvider instanceof TextPanel) {
-                    TextService.FindTextParameters findTextParameters = new TextService.FindTextParameters();
+                    TextSearchService.FindTextParameters findTextParameters = new TextSearchService.FindTextParameters();
                     findTextParameters.setFindText(findPanel.getFindText());
                     findTextParameters.setSearchFromStart(findPanel.isSearchFromStart());
                     findTextParameters.setShallReplace(findPanel.isShallReplace());

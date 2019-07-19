@@ -63,7 +63,6 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
         return resourceBundle;
     }
 
-    @Nonnull
     public void saveToOptions(CodeAreaOptions options) {
         options.setCodeFont(codeFont);
         options.setCodeType(CodeType.valueOf((String) codeTypeComboBox.getSelectedItem()));

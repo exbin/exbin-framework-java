@@ -31,7 +31,7 @@ import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CharsetOptions {
+public class EncodingOptions {
 
     private String selectedEncoding = "UTF-8";
     private List<String> encodings = new ArrayList<>();
@@ -73,7 +73,7 @@ public class CharsetOptions {
         ((CharsetCapable) codeArea).setCharset(Charset.forName(selectedEncoding));
     }
 
-    public void setOptions(CharsetOptions charsetOptions) {
+    public void setOptions(EncodingOptions charsetOptions) {
         selectedEncoding = charsetOptions.selectedEncoding;
         encodings = new ArrayList<>();
         encodings.addAll(charsetOptions.encodings);

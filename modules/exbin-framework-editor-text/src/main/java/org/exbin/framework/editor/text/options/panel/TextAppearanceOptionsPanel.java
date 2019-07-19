@@ -20,6 +20,7 @@ import org.exbin.framework.editor.text.service.TextAppearanceService;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.text.options.TextAppearanceOptions;
 import org.exbin.framework.editor.text.preferences.TextAppearanceParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -36,11 +37,9 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
 
     private OptionsModifiedListener optionsModifiedListener;
     private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
-    private TextAppearanceService panelApi;
+    private TextAppearanceService textAppearanceService;
 
-    public TextAppearanceOptionsPanel(TextAppearanceService panelApi) {
-        this.panelApi = panelApi;
-
+    public TextAppearanceOptionsPanel() {
         initComponents();
     }
 
@@ -48,6 +47,18 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void setTextAppearanceService(TextAppearanceService textAppearanceService) {
+        this.textAppearanceService = textAppearanceService;
+    }
+
+    public void saveToOptions(TextAppearanceOptions options) {
+        options.setWordWrapping(wordWrapCheckBox.isSelected());
+    }
+
+    public void loadFromOptions(TextAppearanceOptions options) {
+        wordWrapCheckBox.setSelected(options.isWordWrapping());
     }
 
     /**
@@ -99,7 +110,7 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new TextAppearanceOptionsPanel(null));
+        WindowUtils.invokeDialog(new TextAppearanceOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -108,19 +119,21 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        TextAppearanceParameters textAppearanceParameters = new TextAppearanceParameters(preferences);
-        wordWrapCheckBox.setSelected(textAppearanceParameters.isWordWrapping());
+        TextAppearanceOptions options = new TextAppearanceOptions();
+        options.loadFromParameters(new TextAppearanceParameters(preferences));
+        loadFromOptions(options);
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        TextAppearanceParameters textAppearanceParameters = new TextAppearanceParameters(preferences);
-        textAppearanceParameters.setWordWrapping(wordWrapCheckBox.isSelected());
+        TextAppearanceOptions options = new TextAppearanceOptions();
+        saveToOptions(options);
+        options.saveToParameters(new TextAppearanceParameters(preferences));
     }
 
     @Override
     public void applyPreferencesChanges() {
-        panelApi.setWordWrapMode(wordWrapCheckBox.isSelected());
+        textAppearanceService.setWordWrapMode(wordWrapCheckBox.isSelected());
     }
 
     private void setModified(boolean b) {

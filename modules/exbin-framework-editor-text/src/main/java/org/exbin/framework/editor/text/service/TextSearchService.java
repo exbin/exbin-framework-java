@@ -28,7 +28,7 @@ import javax.swing.JTextArea;
  * @version 0.2.1 2019/07/17
  * @author ExBin Project (http://exbin.org)
  */
-public interface TextService {
+public interface TextSearchService {
 
     @Nullable
     FoundMatch findText(JTextArea textArea, FindTextParameters findTextParameters);

@@ -18,10 +18,13 @@ package org.exbin.framework.editor.text.options.panel;
 
 import java.awt.Font;
 import java.awt.event.ItemEvent;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.text.options.TextFontOptions;
 import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -32,7 +35,7 @@ import org.exbin.framework.editor.text.service.TextFontService;
 /**
  * Text font options panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -41,12 +44,10 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     private OptionsModifiedListener optionsModifiedListener;
     private FontChangeAction fontChangeAction;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextFontOptionsPanel.class);
-    private final TextFontService frame;
+    private TextFontService textFontService;
     private Font font;
 
-    public TextFontOptionsPanel(TextFontService frame) {
-        this.frame = frame;
-
+    public TextFontOptionsPanel() {
         initComponents();
     }
 
@@ -54,6 +55,24 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void setTextFontService(TextFontService textFontService) {
+        this.textFontService = textFontService;
+    }
+
+    public void saveToOptions(TextFontOptions options) {
+        options.setUseDefaultFont(defaultFontCheckBox.isSelected());
+        options.setFontAttributes(font != null ? (Map<TextAttribute, Object>) font.getAttributes() : null);
+    }
+
+    public void loadFromOptions(TextFontOptions options) {
+        boolean useDefaultFont = options.isUseDefaultFont();
+        defaultFontCheckBox.setSelected(useDefaultFont);
+        setEnabled(!useDefaultFont);
+
+        font = textFontService.getDefaultFont().deriveFont(options.getFontAttributes());
+        fontPreviewLabel.setFont(font);
     }
 
     @Override
@@ -74,14 +93,14 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jColorChooser1 = new javax.swing.JColorChooser();
+        colorChooser = new javax.swing.JColorChooser();
         defaultFontCheckBox = new javax.swing.JCheckBox();
         fillDefaultFontButton = new javax.swing.JButton();
         changeFontButton = new javax.swing.JButton();
         fontPreviewLabel = new javax.swing.JLabel();
         fillCurrentFontButton = new javax.swing.JButton();
 
-        jColorChooser1.setName("jColorChooser1"); // NOI18N
+        colorChooser.setName("colorChooser"); // NOI18N
 
         setName("Form"); // NOI18N
 
@@ -173,7 +192,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     }//GEN-LAST:event_defaultFontCheckBoxItemStateChanged
 
     private void fillDefaultFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultFontButtonActionPerformed
-        fontPreviewLabel.setFont(frame.getDefaultFont());
+        fontPreviewLabel.setFont(textFontService.getDefaultFont());
         setModified(true);
     }//GEN-LAST:event_fillDefaultFontButtonActionPerformed
 
@@ -188,7 +207,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     }//GEN-LAST:event_changeFontButtonActionPerformed
 
     private void fillCurrentFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentFontButtonActionPerformed
-        fontPreviewLabel.setFont(frame.getCurrentFont());
+        fontPreviewLabel.setFont(textFontService.getCurrentFont());
         setModified(true);
     }//GEN-LAST:event_fillCurrentFontButtonActionPerformed
 
@@ -198,46 +217,38 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new TextFontOptionsPanel(null));
+        WindowUtils.invokeDialog(new TextFontOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton changeFontButton;
+    private javax.swing.JColorChooser colorChooser;
     private javax.swing.JCheckBox defaultFontCheckBox;
     private javax.swing.JButton fillCurrentFontButton;
     private javax.swing.JButton fillDefaultFontButton;
     private javax.swing.JLabel fontPreviewLabel;
-    private javax.swing.JColorChooser jColorChooser1;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void loadFromPreferences(Preferences preferences) {
-        TextFontParameters textFontParameters = new TextFontParameters(preferences);
-        boolean useDefaultFont = textFontParameters.isDefaultFont();
-        defaultFontCheckBox.setSelected(useDefaultFont);
-        setEnabled(!useDefaultFont);
-
-        font = frame.getDefaultFont().deriveFont(textFontParameters.getFontAttribs());
-        fontPreviewLabel.setFont(font);
+        TextFontOptions options = new TextFontOptions();
+        options.loadFromParameters(new TextFontParameters(preferences));
+        loadFromOptions(options);
     }
 
     @Override
     public void saveToPreferences(Preferences preferences) {
-        TextFontParameters textFontParameters = new TextFontParameters(preferences);
-        textFontParameters.setDefaultFont(getUseDefaultFont());
-        textFontParameters.setFont(font);
-    }
-
-    public boolean getUseDefaultFont() {
-        return defaultFontCheckBox.isSelected();
+        TextFontOptions options = new TextFontOptions();
+        saveToOptions(options);
+        options.saveToParameters(new TextFontParameters(preferences));
     }
 
     @Override
     public void applyPreferencesChanges() {
         if (defaultFontCheckBox.isSelected()) {
-            frame.setCurrentFont(frame.getDefaultFont());
+            textFontService.setCurrentFont(textFontService.getDefaultFont());
         } else {
-            frame.setCurrentFont(font);
+            textFontService.setCurrentFont(font);
         }
     }
 

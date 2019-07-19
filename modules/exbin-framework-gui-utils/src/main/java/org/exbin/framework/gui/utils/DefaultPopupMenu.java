@@ -44,15 +44,17 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
+import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
 
 /**
  * Utilities for default menu generation.
  *
- * @version 0.2.1 2019/07/18
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -285,10 +287,17 @@ public class DefaultPopupMenu {
 
         @Override
         protected void dispatchEvent(AWTEvent event) {
+            super.dispatchEvent(event);
+
             if (event.getID() == MouseEvent.MOUSE_RELEASED || event.getID() == MouseEvent.MOUSE_PRESSED) {
                 MouseEvent mouseEvent = (MouseEvent) event;
 
                 if (mouseEvent.isPopupTrigger()) {
+                    if (MenuSelectionManager.defaultManager().getSelectedPath().length > 0) {
+                        // Menu was already created
+                        return;
+                    }
+
                     for (ComponentPopupEventDispatcher dispatcher : clipboardEventDispatchers) {
                         if (dispatcher.dispatchMouseEvent(mouseEvent)) {
                             return;
@@ -301,25 +310,21 @@ public class DefaultPopupMenu {
                     }
 
                     if (component instanceof JTextComponent) {
-                        if (((JTextComponent) component).getComponentPopupMenu() == null) {
-                            activateMousePopup(mouseEvent, component, new TextComponentClipboardHandler((JTextComponent) component));
-                            return;
-                        }
+                        activateMousePopup(mouseEvent, component, new TextComponentClipboardHandler((JTextComponent) component));
                     } else if (component instanceof JList) {
-                        if (((JList) component).getComponentPopupMenu() == null) {
-                            activateMousePopup(mouseEvent, component, new ListClipboardHandler((JList) component));
-                            return;
-                        }
+                        activateMousePopup(mouseEvent, component, new ListClipboardHandler((JList) component));
                     } else if (component instanceof JTable) {
-                        if (((JTable) component).getComponentPopupMenu() == null) {
-                            activateMousePopup(mouseEvent, component, new TableClipboardHandler((JTable) component));
-                            return;
-                        }
+                        activateMousePopup(mouseEvent, component, new TableClipboardHandler((JTable) component));
                     }
                 }
             } else if (event.getID() == KeyEvent.KEY_PRESSED) {
                 KeyEvent keyEvent = (KeyEvent) event;
                 if (keyEvent.getKeyCode() == KeyEvent.VK_CONTEXT_MENU || (keyEvent.getKeyCode() == KeyEvent.VK_F10 && keyEvent.isShiftDown())) {
+                    if (MenuSelectionManager.defaultManager().getSelectedPath().length > 0) {
+                        // Menu was already created
+                        return;
+                    }
+
                     for (ComponentPopupEventDispatcher dispatcher : clipboardEventDispatchers) {
                         if (dispatcher.dispatchKeyEvent(keyEvent)) {
                             return;
@@ -329,43 +334,37 @@ public class DefaultPopupMenu {
                     Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 
                     if (component instanceof JTextComponent) {
-                        if (((JTextComponent) component).getComponentPopupMenu() == null) {
-                            // TODO Compute position of cursor
-                            // Point point = ((JTextComponent) component).getDocument().getCaret().
-                            activateKeyPopup(component, null, new TextComponentClipboardHandler((JTextComponent) component));
-                            return;
+                        Point point;
+                        try {
+                            Rectangle relativeRect = ((JTextComponent) component).modelToView(((JTextComponent) component).getCaretPosition());
+                            point = relativeRect == null ? null : new Point(relativeRect.x + relativeRect.width, relativeRect.y + relativeRect.height);
+                        } catch (BadLocationException ex) {
+                            point = null;
                         }
+                        activateKeyPopup(component, point, new TextComponentClipboardHandler((JTextComponent) component));
                     } else if (component instanceof JList) {
-                        if (((JList) component).getComponentPopupMenu() == null) {
-                            Point point = null;
-                            int selectedIndex = ((JList) component).getSelectedIndex();
-                            if (selectedIndex >= 0) {
-                                Rectangle cellBounds = ((JList) component).getCellBounds(selectedIndex, selectedIndex);
-                                point = new Point(component.getWidth() / 2, cellBounds.y);
-                            }
-                            activateKeyPopup(component, point, new ListClipboardHandler((JList) component));
-                            return;
+                        Point point = null;
+                        int selectedIndex = ((JList) component).getSelectedIndex();
+                        if (selectedIndex >= 0) {
+                            Rectangle cellBounds = ((JList) component).getCellBounds(selectedIndex, selectedIndex);
+                            point = new Point(component.getWidth() / 2, cellBounds.y);
                         }
+                        activateKeyPopup(component, point, new ListClipboardHandler((JList) component));
                     } else if (component instanceof JTable) {
-                        if (((JTable) component).getComponentPopupMenu() == null) {
-                            Point point = null;
-                            int selectedRow = ((JTable) component).getSelectedRow();
-                            if (selectedRow >= 0) {
-                                int selectedColumn = ((JTable) component).getSelectedColumn();
-                                if (selectedColumn < -1) {
-                                    selectedColumn = 0;
-                                }
-                                Rectangle cellBounds = ((JTable) component).getCellRect(selectedRow, selectedColumn, false);
-                                point = new Point(cellBounds.x, cellBounds.y);
+                        Point point = null;
+                        int selectedRow = ((JTable) component).getSelectedRow();
+                        if (selectedRow >= 0) {
+                            int selectedColumn = ((JTable) component).getSelectedColumn();
+                            if (selectedColumn < -1) {
+                                selectedColumn = 0;
                             }
-                            activateKeyPopup(component, point, new TableClipboardHandler((JTable) component));
-                            return;
+                            Rectangle cellBounds = ((JTable) component).getCellRect(selectedRow, selectedColumn, false);
+                            point = new Point(cellBounds.x, cellBounds.y);
                         }
+                        activateKeyPopup(component, point, new TableClipboardHandler((JTable) component));
                     }
                 }
             }
-
-            super.dispatchEvent(event);
         }
 
         private void activateMousePopup(MouseEvent mouseEvent, Component component, ClipboardActionsHandler clipboardHandler) {
@@ -376,11 +375,8 @@ public class DefaultPopupMenu {
             Point point = mouseEvent.getLocationOnScreen();
             Point locationOnScreen = component.getLocationOnScreen();
             point.translate(-locationOnScreen.x, -locationOnScreen.y);
-            if (clipboardHandler.isEditable()) {
-                defaultEditPopupMenu.show(component, (int) point.getX(), (int) point.getY());
-            } else {
-                defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
-            }
+
+            showPopupMenu(component, point, clipboardHandler.isEditable());
         }
 
         private void activateKeyPopup(Component component, Point point, ClipboardActionsHandler clipboardHandler) {
@@ -396,7 +392,12 @@ public class DefaultPopupMenu {
                     point = new Point(component.getWidth() / 2, component.getHeight() / 2);
                 }
             }
-            if (clipboardHandler.isEditable()) {
+
+            showPopupMenu(component, point, clipboardHandler.isEditable());
+        }
+
+        private void showPopupMenu(Component component, Point point, boolean editable) {
+            if (editable) {
                 defaultEditPopupMenu.show(component, (int) point.getX(), (int) point.getY());
             } else {
                 defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());

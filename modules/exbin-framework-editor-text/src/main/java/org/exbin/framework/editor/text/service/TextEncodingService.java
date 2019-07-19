@@ -19,11 +19,13 @@ package org.exbin.framework.editor.text.service;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.editor.text.TextEncodingStatusApi;
+import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 
 /**
  * Text encoding panel API.
  *
- * @version 0.2.1 2019/07/08
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -59,4 +61,16 @@ public interface TextEncodingService {
      */
     void setSelectedEncoding(String encoding);
 
+    void setTextEncodingStatus(TextEncodingStatusApi textEncodingStatus);
+
+    void loadFromPreferences(TextEncodingParameters preferences);
+
+    void setEncodingChangeListener(EncodingChangeListener listener);
+
+    public interface EncodingChangeListener {
+
+        void encodingListChanged();
+
+        void selectedEncodingChanged();
+    }
 }

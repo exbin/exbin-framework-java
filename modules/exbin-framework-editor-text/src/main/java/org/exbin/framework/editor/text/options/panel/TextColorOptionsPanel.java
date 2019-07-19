@@ -29,7 +29,7 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextColorService;
 
 /**
- * Text color panel.
+ * Text color options panel.
  *
  * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
@@ -38,12 +38,12 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
-    private final TextColorService frame;
+    private final TextColorService textColorService;
     private final TextColorPanel colorPanel;
 
-    public TextColorOptionsPanel(TextColorService frame) {
-        this.frame = frame;
-        colorPanel = new TextColorPanel(frame);
+    public TextColorOptionsPanel(TextColorService textColorService) {
+        this.textColorService = textColorService;
+        colorPanel = new TextColorPanel(textColorService);
         initComponents();
         init();
     }
@@ -148,7 +148,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     @Override
     public void applyPreferencesChanges() {
         if (defaultColorCheckBox.isSelected()) {
-            frame.setCurrentTextColors(frame.getDefaultTextColors());
+            textColorService.setCurrentTextColors(textColorService.getDefaultTextColors());
         } else {
             colorPanel.applyPreferencesChanges();
         }

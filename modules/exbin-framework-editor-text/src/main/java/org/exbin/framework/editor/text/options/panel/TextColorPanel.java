@@ -528,14 +528,14 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
         setColorsFromArray(handler.getDefaultTextColors());
         Integer rgb;
         try {
-            rgb = textColorParameters.getTextColorText();
+            rgb = textColorParameters.getTextColor();
             if (rgb != null) {
                 setTextColor(new Color(rgb));
             }
         } catch (NumberFormatException e) {
         }
         try {
-            rgb = textColorParameters.getTextColorBackground();
+            rgb = textColorParameters.getTextBackgroundColor();
             if (rgb != null) {
                 setTextBackgroundColor(new Color(rgb));
             }
@@ -567,8 +567,8 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
     @Override
     public void saveToPreferences(Preferences preferences) {
         TextColorParameters textColorParameters = new TextColorParameters(preferences);
-        textColorParameters.setTextColorText(getTextColor().getRGB());
-        textColorParameters.setTextColorBackground(getTextBackgroundColor().getRGB());
+        textColorParameters.setTextColor(getTextColor().getRGB());
+        textColorParameters.setTextBackgroundColor(getTextBackgroundColor().getRGB());
         textColorParameters.setSelectionTextColor(getSelectionTextColor().getRGB());
         textColorParameters.setSelectionBackgroundColor(getSelectionBackgroundColor().getRGB());
         textColorParameters.setFoundBackgroundColor(getFoundBackgroundColor().getRGB());
