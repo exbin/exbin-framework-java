@@ -23,13 +23,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.swing.extended.layout.DefaultExtendedCodeAreaLayoutProfile;
 
 /**
- * Layout parameters.
+ * Code area layout preferences.
  *
  * @version 0.2.0 2019/03/11
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class LayoutParameters {
+public class CodeAreaLayoutPreferences {
 
     public static final String PREFERENCES_LAYOUT_PROFILES_COUNT = "layoutProfilesCount";
     public static final String PREFERENCES_LAYOUT_PROFILE_SELECTED = "layoutProfileSelected";
@@ -50,7 +50,7 @@ public class LayoutParameters {
 
     private final Preferences preferences;
 
-    public LayoutParameters(Preferences preferences) {
+    public CodeAreaLayoutPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 
@@ -85,9 +85,9 @@ public class LayoutParameters {
     }
 
     @Nonnull
-    public DefaultExtendedCodeAreaLayoutProfile getLayoutProfile(int layoutIndex) {
+    public DefaultExtendedCodeAreaLayoutProfile getLayoutProfile(int profileIndex) {
         DefaultExtendedCodeAreaLayoutProfile layoutProfile = new DefaultExtendedCodeAreaLayoutProfile();
-        String layoutPrefix = PREFERENCES_LAYOUT_VALUE_PREFIX + String.valueOf(layoutIndex) + ".";
+        String layoutPrefix = PREFERENCES_LAYOUT_VALUE_PREFIX + String.valueOf(profileIndex) + ".";
         layoutProfile.setShowHeader(preferences.getBoolean(layoutPrefix + LAYOUT_SHOW_HEADER, layoutProfile.isShowHeader()));
         layoutProfile.setShowRowPosition(preferences.getBoolean(layoutPrefix + LAYOUT_SHOW_ROW_POSITION, layoutProfile.isShowRowPosition()));
 
@@ -103,8 +103,8 @@ public class LayoutParameters {
         return layoutProfile;
     }
 
-    public void setLayoutProfile(int layoutIndex, DefaultExtendedCodeAreaLayoutProfile layoutProfile) {
-        String layoutPrefix = PREFERENCES_LAYOUT_VALUE_PREFIX + String.valueOf(layoutIndex) + ".";
+    public void setLayoutProfile(int profileIndex, DefaultExtendedCodeAreaLayoutProfile layoutProfile) {
+        String layoutPrefix = PREFERENCES_LAYOUT_VALUE_PREFIX + String.valueOf(profileIndex) + ".";
         preferences.putBoolean(layoutPrefix + LAYOUT_SHOW_HEADER, layoutProfile.isShowHeader());
         preferences.putBoolean(layoutPrefix + LAYOUT_SHOW_ROW_POSITION, layoutProfile.isShowRowPosition());
 
@@ -118,8 +118,8 @@ public class LayoutParameters {
         preferences.putInt(layoutPrefix + LAYOUT_DOUBLE_SPACE_GROUP_SIZE, layoutProfile.getDoubleSpaceGroupSize());
     }
 
-    public void clearLayout(int layoutIndex) {
-        String layoutPrefix = PREFERENCES_LAYOUT_VALUE_PREFIX + String.valueOf(layoutIndex) + ".";
+    public void clearLayout(int profileIndex) {
+        String layoutPrefix = PREFERENCES_LAYOUT_VALUE_PREFIX + String.valueOf(profileIndex) + ".";
         preferences.remove(layoutPrefix + LAYOUT_SHOW_HEADER);
         preferences.remove(layoutPrefix + LAYOUT_SHOW_ROW_POSITION);
 

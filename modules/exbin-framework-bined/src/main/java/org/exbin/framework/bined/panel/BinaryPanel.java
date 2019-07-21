@@ -79,7 +79,7 @@ import org.exbin.xbup.core.type.XBData;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
-import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 
@@ -170,7 +170,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
         add(codeArea);
         foundTextBackgroundColor = Color.YELLOW;
-        codeArea.setCharset(Charset.forName(TextEncodingParameters.ENCODING_UTF8));
+        codeArea.setCharset(Charset.forName(TextEncodingPreferences.ENCODING_UTF8));
         defaultFont = codeArea.getFont();
 
         defaultColors = getCurrentColors();

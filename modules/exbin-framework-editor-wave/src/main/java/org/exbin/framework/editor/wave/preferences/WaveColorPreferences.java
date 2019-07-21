@@ -22,11 +22,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Wave editor color preferences.
  *
- * @version 0.2.0 2019/06/09
+ * @version 0.2.0 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class WaveColorParameters {
+public class WaveColorPreferences {
 
     public static final String PREFERENCES_WAVE_COLOR_DEFAULT = "waveColor.default";
     public static final String PREFERENCES_WAVE_COLOR_WAVE = "waveColor.wave";
@@ -38,11 +38,11 @@ public class WaveColorParameters {
 
     private final Preferences preferences;
 
-    public WaveColorParameters(Preferences preferences) {
+    public WaveColorPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 
-    public boolean useDefaultColors() {
+    public boolean isUseDefaultColors() {
         return preferences.getBoolean(PREFERENCES_WAVE_COLOR_DEFAULT, true);
     }
 
@@ -51,32 +51,32 @@ public class WaveColorParameters {
     }
 
     @Nullable
-    public Integer getWaveColorWave() {
+    public Integer getWaveColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_WAVE);
     }
 
     @Nullable
-    public Integer getWaveColorWaveFill() {
+    public Integer getWaveFillColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_WAVE_FILL);
     }
 
     @Nullable
-    public Integer getWaveColorBackground() {
+    public Integer getWaveBackgroundColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_BACKGROUND);
     }
 
     @Nullable
-    public Integer getWaveColorSelection() {
+    public Integer getWaveSelectionColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_SELECTION);
     }
 
     @Nullable
-    public Integer getWaveColorCursor() {
+    public Integer getWaveCursorColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_CURSOR);
     }
 
     @Nullable
-    public Integer getWaveColorCursorWave() {
+    public Integer getWaveCursorWaveColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_CURSOR_WAVE);
     }
 
@@ -86,27 +86,27 @@ public class WaveColorParameters {
         return value == null ? null : Integer.valueOf(value);
     }
 
-    public void setWaveColorWave(int color) {
+    public void setWaveColor(int color) {
         preferences.put(PREFERENCES_WAVE_COLOR_WAVE, Integer.toString(color));
     }
 
-    public void setWaveColorWaveFill(int color) {
+    public void setWaveFillColor(int color) {
         preferences.put(PREFERENCES_WAVE_COLOR_WAVE_FILL, Integer.toString(color));
     }
 
-    public void setWaveColorBackground(int color) {
+    public void setWaveBackgroundColor(int color) {
         preferences.put(PREFERENCES_WAVE_COLOR_BACKGROUND, Integer.toString(color));
     }
 
-    public void setWaveColorSelection(int color) {
+    public void setWaveSelectionColor(int color) {
         preferences.put(PREFERENCES_WAVE_COLOR_SELECTION, Integer.toString(color));
     }
 
-    public void setWaveColorCursor(int color) {
+    public void setWaveCursorColor(int color) {
         preferences.put(PREFERENCES_WAVE_COLOR_CURSOR, Integer.toString(color));
     }
 
-    public void setWaveColorCursorWave(int color) {
+    public void setWaveCursorWaveColor(int color) {
         preferences.put(PREFERENCES_WAVE_COLOR_CURSOR_WAVE, Integer.toString(color));
     }
 }

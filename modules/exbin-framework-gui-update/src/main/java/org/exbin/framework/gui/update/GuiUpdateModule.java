@@ -28,16 +28,19 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
+import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
+import org.exbin.framework.gui.update.options.CheckForUpdateOptions;
 import org.exbin.framework.gui.update.options.panel.ApplicationUpdateOptionsPanel;
 import org.exbin.framework.gui.update.panel.CheckForUpdatePanel;
-import org.exbin.framework.gui.update.preferences.CheckForUpdateParameters;
+import org.exbin.framework.gui.update.preferences.CheckForUpdatePreferences;
 import org.exbin.framework.gui.update.service.CheckForUpdateService;
 import org.exbin.framework.gui.update.service.impl.CheckForUpdateServiceImpl;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -46,11 +49,12 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.gui.options.api.DefaultOptionsPage;
 
 /**
  * Implementation of framework check update module.
  *
- * @version 0.2.1 2019/07/15
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -104,7 +108,6 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
                     WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle(), controlPanel);
                     frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
                     controlPanel.setHandler(dialog::close);
-                    dialog.center(dialog.getParent());
                     checkForUpdatePanel.setCheckForUpdateService(getCheckForUpdateService());
                     checkForUpdatePanel.checkForUpdate();
                     dialog.showCentered((Component) e.getSource());
@@ -127,7 +130,40 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
     @Override
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
-        optionsModule.addOptionsPanel(new ApplicationUpdateOptionsPanel());
+        optionsModule.addOptionsPage(new DefaultOptionsPage<CheckForUpdateOptions>() {
+            @Override
+            public OptionsCapable<CheckForUpdateOptions> createPanel() {
+                return new ApplicationUpdateOptionsPanel();
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(ApplicationUpdateOptionsPanel.class);
+            }
+
+            @Nonnull
+            @Override
+            public CheckForUpdateOptions createOptions() {
+                return new CheckForUpdateOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, CheckForUpdateOptions options) {
+                CheckForUpdatePreferences parameters = new CheckForUpdatePreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, CheckForUpdateOptions options) {
+                CheckForUpdatePreferences parameters = new CheckForUpdatePreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(CheckForUpdateOptions options) {
+            }
+        });
     }
 
     @Nonnull
@@ -183,7 +219,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
 
     @Override
     public void checkOnStart(Frame frame) {
-        CheckForUpdateParameters checkForUpdateParameters = new CheckForUpdateParameters(application.getAppPreferences());
+        CheckForUpdatePreferences checkForUpdateParameters = new CheckForUpdatePreferences(application.getAppPreferences());
         boolean checkOnStart = checkForUpdateParameters.isShouldCheckForUpdate();
 
         if (!checkOnStart) {
@@ -202,7 +238,6 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
             WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle(), controlPanel);
             frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
             controlPanel.setHandler(dialog::close);
-            dialog.center(dialog.getParent());
             checkForUpdatePanel.setCheckForUpdateService(checkForUpdateService);
             dialog.showCentered(frame);
             dialog.dispose();

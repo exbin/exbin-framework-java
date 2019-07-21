@@ -22,6 +22,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,6 +32,10 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.editor.text.options.TextAppearanceOptions;
+import org.exbin.framework.editor.text.options.TextColorOptions;
+import org.exbin.framework.editor.text.options.TextEncodingOptions;
+import org.exbin.framework.editor.text.options.TextFontOptions;
 import org.exbin.framework.editor.text.panel.AddEncodingPanel;
 import org.exbin.framework.editor.text.options.panel.TextAppearanceOptionsPanel;
 import org.exbin.framework.editor.text.options.panel.TextColorOptionsPanel;
@@ -39,8 +44,10 @@ import org.exbin.framework.editor.text.options.panel.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.text.panel.TextStatusPanel;
-import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
-import org.exbin.framework.editor.text.preferences.TextFontParameters;
+import org.exbin.framework.editor.text.preferences.TextAppearancePreferences;
+import org.exbin.framework.editor.text.preferences.TextColorPreferences;
+import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
+import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -65,6 +72,9 @@ import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.editor.text.service.TextFontService;
 import org.exbin.framework.editor.text.service.impl.TextEncodingServiceImpl;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.DefaultOptionsPage;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Text editor module.
@@ -145,7 +155,7 @@ public class EditorTextModule implements XBApplicationModule {
 
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
-        TextColorService textColorPanelFrame = new TextColorService() {
+        TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
                 return ((TextPanel) getEditorProvider()).getCurrentColors();
@@ -162,7 +172,59 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        optionsModule.addOptionsPanel(new TextColorOptionsPanel(textColorPanelFrame));
+        optionsModule.addOptionsPage(new DefaultOptionsPage<TextColorOptions>() {
+            private TextColorOptionsPanel panel;
+
+            @Override
+            public OptionsCapable<TextColorOptions> createPanel() {
+                if (panel == null) {
+                    panel = new TextColorOptionsPanel();
+                    panel.setTextColorService(textColorService);
+                }
+                return panel;
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
+            }
+
+            @Override
+            public TextColorOptions createOptions() {
+                return new TextColorOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, TextColorOptions options) {
+                options.loadFromParameters(new TextColorPreferences(preferences));
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, TextColorOptions options) {
+                options.saveToParameters(new TextColorPreferences(preferences));
+            }
+
+            @Override
+            public void applyPreferencesChanges(TextColorOptions options) {
+                if (options.isUseDefaultColors()) {
+                    textColorService.setCurrentTextColors(textColorService.getDefaultTextColors());
+                } else {
+                    Color[] colors = new Color[5];
+                    colors[0] = intToColor(options.getTextColor());
+                    colors[1] = intToColor(options.getTextBackgroundColor());
+                    colors[2] = intToColor(options.getSelectionTextColor());
+                    colors[3] = intToColor(options.getSelectionBackgroundColor());
+                    colors[4] = intToColor(options.getFoundBackgroundColor());
+                    textColorService.setCurrentTextColors(colors);
+                }
+            }
+
+            @Nullable
+            private Color intToColor(@Nullable Integer intValue) {
+                return intValue == null ? null : new Color(intValue);
+            }
+        });
 
         TextFontService textFontService = new TextFontService() {
             @Override
@@ -181,44 +243,84 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        TextFontOptionsPanel textFontOptionsPanel = new TextFontOptionsPanel();
-        textFontOptionsPanel.setTextFontService(textFontService);
-        textFontOptionsPanel.setFontChangeAction(new TextFontOptionsPanel.FontChangeAction() {
+        optionsModule.addOptionsPage(new DefaultOptionsPage<TextFontOptions>() {
+
+            private TextFontOptionsPanel panel;
+
             @Override
-            public Font changeFont(Font currentFont) {
-                final Result result = new Result();
-                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final TextFontPanel fontPanel = new TextFontPanel();
-                fontPanel.setStoredFont(currentFont);
-                OptionsControlPanel controlPanel = new OptionsControlPanel();
-                JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
-                final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
-                frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
-                controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-                    if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                        if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                            TextFontParameters textFontParameters = new TextFontParameters(application.getAppPreferences());
-                            textFontParameters.setUseDefaultFont(true);
-                            textFontParameters.setFont(fontPanel.getStoredFont());
+            public OptionsCapable<TextFontOptions> createPanel() {
+                if (panel == null) {
+                    panel = new TextFontOptionsPanel();
+                    panel.setTextFontService(textFontService);
+                    panel.setFontChangeAction(new TextFontOptionsPanel.FontChangeAction() {
+                        @Override
+                        public Font changeFont(Font currentFont) {
+                            final Result result = new Result();
+                            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                            final TextFontPanel fontPanel = new TextFontPanel();
+                            fontPanel.setStoredFont(currentFont);
+                            OptionsControlPanel controlPanel = new OptionsControlPanel();
+                            JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
+                            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                            WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
+                            frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
+                            controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
+                                if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+                                    if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                                        TextFontPreferences textFontParameters = new TextFontPreferences(application.getAppPreferences());
+                                        textFontParameters.setUseDefaultFont(true);
+                                        textFontParameters.setFont(fontPanel.getStoredFont());
+                                    }
+                                    result.font = fontPanel.getStoredFont();
+                                }
+
+                                dialog.close();
+                            });
+                            dialog.showCentered(frameModule.getFrame());
+                            dialog.dispose();
+
+                            return result.font;
                         }
-                        result.font = fontPanel.getStoredFont();
-                    }
 
-                    dialog.close();
-                });
-                dialog.showCentered(frameModule.getFrame());
-                dialog.dispose();
+                        class Result {
 
-                return result.font;
+                            Font font;
+                        }
+                    });
+                }
+                return panel;
             }
 
-            class Result {
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(TextFontOptionsPanel.class);
+            }
 
-                Font font;
+            @Override
+            public TextFontOptions createOptions() {
+                return new TextFontOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, TextFontOptions options) {
+                options.loadFromParameters(new TextFontPreferences(preferences));
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, TextFontOptions options) {
+                options.saveToParameters(new TextFontPreferences(preferences));
+            }
+
+            @Override
+            public void applyPreferencesChanges(TextFontOptions options) {
+                if (options.isUseDefaultFont()) {
+                    textFontService.setCurrentFont(textFontService.getDefaultFont());
+                } else {
+                    textFontService.setCurrentFont(options.getFont(textFontService.getDefaultFont()));
+                }
             }
         });
-        optionsModule.addOptionsPanel(textFontOptionsPanel);
 
         TextEncodingService textEncodingService = new TextEncodingServiceImpl();
         textEncodingService.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
@@ -246,43 +348,116 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        TextEncodingOptionsPanel textEncodingOptionsPanel = new TextEncodingOptionsPanel();
-        textEncodingOptionsPanel.setTextEncodingService(textEncodingService);
-        textEncodingOptionsPanel.setAddEncodingsOperation((List<String> usedEncodings) -> {
-            final List<String> result = new ArrayList<>();
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
-            addEncodingPanel.setUsedEncodings(usedEncodings);
-            DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
-            JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
-            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                    result.addAll(addEncodingPanel.getEncodings());
+        optionsModule.addOptionsPage(new DefaultOptionsPage<TextEncodingOptions>() {
+            private TextEncodingOptionsPanel panel;
+
+            @Override
+            public TextEncodingOptionsPanel createPanel() {
+                if (panel == null) {
+                    panel = new TextEncodingOptionsPanel();
+                    panel.setAddEncodingsOperation((List<String> usedEncodings) -> {
+                        final List<String> result = new ArrayList<>();
+                        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                        final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
+                        addEncodingPanel.setUsedEncodings(usedEncodings);
+                        DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
+                        JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
+                        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                                result.addAll(addEncodingPanel.getEncodings());
+                            }
+
+                            dialog.close();
+                        });
+                        frameModule.setDialogTitle(dialog, addEncodingPanel.getResourceBundle());
+                        dialog.showCentered(frameModule.getFrame());
+                        dialog.dispose();
+                        return result;
+                    });
                 }
 
-                dialog.close();
-            });
-            frameModule.setDialogTitle(dialog, addEncodingPanel.getResourceBundle());
-            dialog.showCentered(frameModule.getFrame());
-            dialog.dispose();
-            return result;
+                return panel;
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
+            }
+
+            @Override
+            public TextEncodingOptions createOptions() {
+                return new TextEncodingOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, TextEncodingOptions options) {
+                options.loadFromParameters(new TextEncodingPreferences(preferences));
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, TextEncodingOptions options) {
+                options.saveToParameters(new TextEncodingPreferences(preferences));
+            }
+
+            @Override
+            public void applyPreferencesChanges(TextEncodingOptions options) {
+                textEncodingService.setSelectedEncoding(options.getSelectedEncoding());
+                textEncodingService.setEncodings(options.getEncodings());
+            }
         });
-        optionsModule.addOptionsPanel(textEncodingOptionsPanel);
-        TextAppearanceOptionsPanel optionsPanel = new TextAppearanceOptionsPanel();
-        optionsPanel.setTextAppearanceService(textAppearanceService);
-        optionsModule.extendAppearanceOptionsPanel(optionsPanel);
+
+        optionsModule.extendAppearanceOptionsPage(new DefaultOptionsPage<TextAppearanceOptions>() {
+            private TextAppearanceOptionsPanel panel;
+
+            @Override
+            public OptionsCapable<TextAppearanceOptions> createPanel() {
+                if (panel == null) {
+                    panel = new TextAppearanceOptionsPanel();
+                }
+                return panel;
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
+            }
+
+            @Override
+            public TextAppearanceOptions createOptions() {
+                return new TextAppearanceOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, TextAppearanceOptions options) {
+                options.loadFromParameters(new TextAppearancePreferences(preferences));
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, TextAppearanceOptions options) {
+                options.saveToParameters(new TextAppearancePreferences(preferences));
+            }
+
+            @Override
+            public void applyPreferencesChanges(TextAppearanceOptions options) {
+                textAppearanceService.setWordWrapMode(options.isWordWrapping());
+            }
+        });
     }
 
     public void registerWordWrapping() {
         getWordWrappingHandler();
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class
+        );
         menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, wordWrappingHandler.getViewWordWrapAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
         getGoToLineHandler();
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class
+        );
         menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, goToLineHandler.getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
@@ -310,9 +485,11 @@ public class EditorTextModule implements XBApplicationModule {
 
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler(application); // (TextPanel) getEditorProvider(), 
-            encodingsHandler.setTextEncodingStatus(getTextStatusPanel());
-            // encodingsHandler.init();
+            encodingsHandler = new EncodingsHandler(); // (TextPanel) getEditorProvider(), 
+            if (textStatusPanel != null) {
+                encodingsHandler.setTextEncodingStatus(textStatusPanel);
+            }
+            encodingsHandler.init();
         }
 
         return encodingsHandler;
@@ -390,7 +567,7 @@ public class EditorTextModule implements XBApplicationModule {
     }
 
     public void loadFromPreferences(Preferences preferences) {
-        encodingsHandler.loadFromPreferences(new TextEncodingParameters(preferences));
+        encodingsHandler.loadFromPreferences(new TextEncodingPreferences(preferences));
     }
 
     @ParametersAreNonnullByDefault

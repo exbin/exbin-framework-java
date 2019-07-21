@@ -26,7 +26,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 /**
  * Interface for framework options module.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -41,43 +41,48 @@ public interface GuiOptionsModuleApi extends XBApplicationModule {
     /**
      * Adds options panel to given path.
      *
-     * @param optionsPanel options panel
+     * @param optionsPage options panel
      * @param path path to use for options panel tree
      */
-    void addOptionsPanel(OptionsCapable optionsPanel, List<OptionsPathItem> path);
+    void addOptionsPage(OptionsPage<?> optionsPage, List<OptionsPathItem> path);
 
     /**
      * Adds options panel to given path with default name.
      *
-     * @param optionsPanel options panel
+     * @param optionsPage options panel
      * @param parentPath path string to use for options panel tree with strings
      * separated by /
      */
-    void addOptionsPanel(OptionsCapable optionsPanel, String parentPath);
+    void addOptionsPage(OptionsPage<?> optionsPage, String parentPath);
 
     /**
      * Adds options panel to default path and name.
      *
-     * @param optionsPanel options panel
+     * @param optionsPage options panel
      */
-    void addOptionsPanel(OptionsCapable optionsPanel);
+    void addOptionsPage(OptionsPage<?> optionsPage);
 
     /**
      * Extends main options panel.
      *
-     * @param optionsPanel options panel
+     * @param optionsPage options panel
      */
-    void extendMainOptionsPanel(OptionsCapable optionsPanel);
+    void extendMainOptionsPage(OptionsPage<?> optionsPage);
 
     /**
      * Extends appearance options panel.
      *
-     * @param optionsPanel options panel
+     * @param optionsPage options panel
      */
-    void extendAppearanceOptionsPanel(OptionsCapable optionsPanel);
+    void extendAppearanceOptionsPage(OptionsPage<?> optionsPage);
 
     /**
      * Registers options menu action in default position.
      */
     void registerMenuAction();
+
+    /**
+     * Loads all settings from preferences and applies it.
+     */
+    void initialLoadFromPreferences();
 }

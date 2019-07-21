@@ -81,7 +81,6 @@ public class GoToPositionHandler {
 
                         dialog.close();
                     });
-                    dialog.center(dialog.getParent());
                     SwingUtilities.invokeLater(goToPanel::initFocus);
                     dialog.showCentered((Component) e.getSource());
                     dialog.dispose();

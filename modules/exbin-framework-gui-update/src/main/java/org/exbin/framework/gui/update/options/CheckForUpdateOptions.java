@@ -13,40 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text.options;
+package org.exbin.framework.gui.update.options;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.preferences.TextAppearancePreferences;
 import org.exbin.framework.gui.options.api.OptionsData;
+import org.exbin.framework.gui.update.preferences.CheckForUpdatePreferences;
 
 /**
- * Text appearance options.
+ * Check for update options.
  *
- * @version 0.2.1 2019/07/19
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceOptions implements OptionsData {
+public class CheckForUpdateOptions implements OptionsData {
 
-    private boolean wordWrapping;
+    private boolean checkForUpdate;
 
-    public boolean isWordWrapping() {
-        return wordWrapping;
+    public boolean isCheckForUpdate() {
+        return checkForUpdate;
     }
 
-    public void setWordWrapping(boolean wordWrapping) {
-        this.wordWrapping = wordWrapping;
+    public void setCheckForUpdate(boolean checkForUpdate) {
+        this.checkForUpdate = checkForUpdate;
     }
 
-    public void loadFromParameters(TextAppearancePreferences preferences) {
-        wordWrapping = preferences.isWordWrapping();
+    public void loadFromParameters(CheckForUpdatePreferences preferences) {
+        checkForUpdate = preferences.isShouldCheckForUpdate();
     }
 
-    public void saveToParameters(TextAppearancePreferences preferences) {
-        preferences.setWordWrapping(wordWrapping);
-    }
-
-    public void setOptions(TextAppearanceOptions options) {
-        wordWrapping = options.wordWrapping;
+    public void saveToParameters(CheckForUpdatePreferences preferences) {
+        preferences.setShouldCheckForUpdate(checkForUpdate);
     }
 }

@@ -16,37 +16,29 @@
  */
 package org.exbin.framework.gui.options.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.utils.ComponentResourceProvider;
+import org.exbin.framework.api.Preferences;
 
 /**
- * Interface for basic options panels.
+ * Interface for basic options page.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
- * @param <T> options data class
+ * @param <T> options data
  */
 @ParametersAreNonnullByDefault
-public interface OptionsCapable<T extends OptionsData> extends ComponentResourceProvider {
+public interface OptionsPage<T extends OptionsData> {
 
-    /**
-     * Loads configuration from given options data.
-     *
-     * @param options
-     */
-    void loadFromOptions(T options);
+    @Nonnull
+    OptionsCapable<T> createPanel();
 
-    /**
-     * Saves configuration from given options data.
-     *
-     * @param options
-     */
-    void saveToOptions(T options);
+    @Nonnull
+    T createOptions();
 
-    /**
-     * Registers listener for changes monitoring.
-     *
-     * @param listener modified options listener
-     */
-    void setOptionsModifiedListener(OptionsModifiedListener listener);
+    void loadFromPreferences(Preferences preferences, T options);
+
+    void saveToPreferences(Preferences preferences, T options);
+
+    void applyPreferencesChanges(T options);
 }

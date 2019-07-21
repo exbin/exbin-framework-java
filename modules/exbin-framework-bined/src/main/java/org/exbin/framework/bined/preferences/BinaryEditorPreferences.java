@@ -27,7 +27,7 @@ import org.exbin.bined.swing.extended.layout.ExtendedCodeAreaDecorations;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.options.CodeAreaOptions;
-import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 
 /**
  * Hexadecimal editor preferences.
@@ -43,24 +43,24 @@ public class BinaryEditorPreferences {
 
     private final Preferences preferences;
 
-    private final EditorParameters editorParameters;
-    private final StatusParameters statusParameters;
-    private final CodeAreaParameters codeAreaParameters;
-    private final TextEncodingParameters charsetParameters;
-    private final LayoutParameters layoutParameters;
-    private final ThemeParameters themeParameters;
-    private final ColorParameters colorParameters;
+    private final EditorPreferences editorParameters;
+    private final StatusPreferences statusParameters;
+    private final CodeAreaPreferences codeAreaParameters;
+    private final TextEncodingPreferences charsetParameters;
+    private final CodeAreaLayoutPreferences layoutParameters;
+    private final CodeAreaThemePreferences themeParameters;
+    private final CodeAreaColorPreferences colorParameters;
 
     public BinaryEditorPreferences(Preferences preferences) {
         this.preferences = preferences;
 
-        editorParameters = new EditorParameters(preferences);
-        statusParameters = new StatusParameters(preferences);
-        codeAreaParameters = new CodeAreaParameters(preferences);
-        charsetParameters = new TextEncodingParameters(preferences);
-        layoutParameters = new LayoutParameters(preferences);
-        themeParameters = new ThemeParameters(preferences);
-        colorParameters = new ColorParameters(preferences);
+        editorParameters = new EditorPreferences(preferences);
+        statusParameters = new StatusPreferences(preferences);
+        codeAreaParameters = new CodeAreaPreferences(preferences);
+        charsetParameters = new TextEncodingPreferences(preferences);
+        layoutParameters = new CodeAreaLayoutPreferences(preferences);
+        themeParameters = new CodeAreaThemePreferences(preferences);
+        colorParameters = new CodeAreaColorPreferences(preferences);
 
         final String legacyDef = "LEGACY";
         String storedVersion = preferences.get(PREFERENCES_VERSION, legacyDef);
@@ -80,36 +80,36 @@ public class BinaryEditorPreferences {
     }
 
     @Nonnull
-    public EditorParameters getEditorParameters() {
+    public EditorPreferences getEditorParameters() {
         return editorParameters;
     }
 
     @Nonnull
-    public StatusParameters getStatusParameters() {
+    public StatusPreferences getStatusParameters() {
         return statusParameters;
     }
 
     @Nonnull
-    public CodeAreaParameters getCodeAreaParameters() {
+    public CodeAreaPreferences getCodeAreaParameters() {
         return codeAreaParameters;
     }
 
-    public TextEncodingParameters getCharsetParameters() {
+    public TextEncodingPreferences getCharsetParameters() {
         return charsetParameters;
     }
 
     @Nonnull
-    public LayoutParameters getLayoutParameters() {
+    public CodeAreaLayoutPreferences getLayoutParameters() {
         return layoutParameters;
     }
 
     @Nonnull
-    public ThemeParameters getThemeParameters() {
+    public CodeAreaThemePreferences getThemeParameters() {
         return themeParameters;
     }
 
     @Nonnull
-    public ColorParameters getColorParameters() {
+    public CodeAreaColorPreferences getColorParameters() {
         return colorParameters;
     }
 
@@ -155,8 +155,8 @@ public class BinaryEditorPreferences {
         charsetParameters.setEncodings(new ArrayList<>(legacyPreferences.getEncodings()));
         Collection<String> legacyEncodings = legacyPreferences.getEncodings();
         List<String> encodings = new ArrayList<>(legacyEncodings);
-        if (!encodings.isEmpty() && !encodings.contains(TextEncodingParameters.ENCODING_UTF8)) {
-            encodings.add(TextEncodingParameters.ENCODING_UTF8);
+        if (!encodings.isEmpty() && !encodings.contains(TextEncodingPreferences.ENCODING_UTF8)) {
+            encodings.add(TextEncodingPreferences.ENCODING_UTF8);
         }
         charsetParameters.setEncodings(encodings);
 

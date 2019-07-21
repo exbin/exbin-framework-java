@@ -23,9 +23,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.editor.text.options.TextFontOptions;
-import org.exbin.framework.editor.text.preferences.TextFontParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -39,7 +37,7 @@ import org.exbin.framework.editor.text.service.TextFontService;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextFontOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private FontChangeAction fontChangeAction;
@@ -61,11 +59,13 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
         this.textFontService = textFontService;
     }
 
+    @Override
     public void saveToOptions(TextFontOptions options) {
         options.setUseDefaultFont(defaultFontCheckBox.isSelected());
         options.setFontAttributes(font != null ? (Map<TextAttribute, Object>) font.getAttributes() : null);
     }
 
+    @Override
     public void loadFromOptions(TextFontOptions options) {
         boolean useDefaultFont = options.isUseDefaultFont();
         defaultFontCheckBox.setSelected(useDefaultFont);
@@ -228,29 +228,6 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     private javax.swing.JButton fillDefaultFontButton;
     private javax.swing.JLabel fontPreviewLabel;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        TextFontOptions options = new TextFontOptions();
-        options.loadFromParameters(new TextFontParameters(preferences));
-        loadFromOptions(options);
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        TextFontOptions options = new TextFontOptions();
-        saveToOptions(options);
-        options.saveToParameters(new TextFontParameters(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-        if (defaultFontCheckBox.isSelected()) {
-            textFontService.setCurrentFont(textFontService.getDefaultFont());
-        } else {
-            textFontService.setCurrentFont(font);
-        }
-    }
 
     private void setModified(boolean b) {
         if (optionsModifiedListener != null) {

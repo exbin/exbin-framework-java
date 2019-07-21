@@ -42,7 +42,7 @@
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
             <TitledBorder title="Audio Output">
-              <ResourceString PropertyName="titleX" bundle="org/exbin/framework/editor/wave/panel/resources/AudioDevicesPanel.properties" key="audioOutputPanel.border.title" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString PropertyName="titleX" bundle="org/exbin/framework/editor/wave/options/panel/resources/AudioDevicesOptionsPanel.properties" key="audioOutputPanel.border.title" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -59,7 +59,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="outputSoundDeviceLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="outputSampleRateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="outputBufferSizejLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="outputBufferSizeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -89,7 +89,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="outputBufferSizejLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="outputBufferSizeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="outputBufferSizeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="18" max="32767" attributes="0"/>
@@ -103,7 +103,7 @@
         <Component class="javax.swing.JLabel" name="outputSoundDeviceLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/editor/wave/panel/resources/AudioDevicesPanel.properties" key="outputSoundDeviceLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/wave/options/panel/resources/AudioDevicesOptionsPanel.properties" key="outputSoundDeviceLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="outputSoundDeviceLabel" noResource="true"/>
           </Properties>
@@ -111,17 +111,17 @@
         <Component class="javax.swing.JLabel" name="outputSampleRateLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/editor/wave/panel/resources/AudioDevicesPanel.properties" key="outputSampleRateLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/wave/options/panel/resources/AudioDevicesOptionsPanel.properties" key="outputSampleRateLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="outputSampleRateLabel" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="outputBufferSizejLabel">
+        <Component class="javax.swing.JLabel" name="outputBufferSizeLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/editor/wave/panel/resources/AudioDevicesPanel.properties" key="outputBufferSizejLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/wave/options/panel/resources/AudioDevicesOptionsPanel.properties" key="outputBufferSizeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
-            <Property name="name" type="java.lang.String" value="outputBufferSizejLabel" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="outputBufferSizeLabel" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="outputSoundDeviceComboBox">
@@ -157,7 +157,7 @@
         <Component class="javax.swing.JButton" name="testAudioButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/editor/wave/panel/resources/AudioDevicesPanel.properties" key="testAudioButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/wave/options/panel/resources/AudioDevicesOptionsPanel.properties" key="testAudioButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="testAudioButton" noResource="true"/>
           </Properties>

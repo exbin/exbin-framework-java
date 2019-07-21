@@ -24,13 +24,13 @@ import org.exbin.bined.PositionCodeType;
 import org.exbin.framework.bined.options.StatusOptions;
 
 /**
- * Status panel parameters.
+ * Code area status panel preferences.
  *
  * @version 0.2.1 2019/07/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class StatusParameters {
+public class StatusPreferences {
 
     public static final String PREFERENCES_CURSOR_POSITION_CODE_TYPE = "statusCursorPositionFormat";
     public static final String PREFERENCES_CURSOR_POSITION_SHOW_OFFSET = "statusCursorShowOffset";
@@ -42,7 +42,7 @@ public class StatusParameters {
 
     private final Preferences preferences;
 
-    public StatusParameters(Preferences preferences) {
+    public StatusPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 
@@ -52,7 +52,7 @@ public class StatusParameters {
         try {
             return PositionCodeType.valueOf(preferences.get(PREFERENCES_CURSOR_POSITION_CODE_TYPE, defaultCodeType.name()));
         } catch (Exception ex) {
-            Logger.getLogger(StatusParameters.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StatusPreferences.class.getName()).log(Level.SEVERE, null, ex);
             return defaultCodeType;
         }
     }
@@ -75,7 +75,7 @@ public class StatusParameters {
         try {
             return PositionCodeType.valueOf(preferences.get(PREFERENCES_DOCUMENT_SIZE_CODE_TYPE, defaultCodeType.name()));
         } catch (Exception ex) {
-            Logger.getLogger(StatusParameters.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StatusPreferences.class.getName()).log(Level.SEVERE, null, ex);
             return defaultCodeType;
         }
     }

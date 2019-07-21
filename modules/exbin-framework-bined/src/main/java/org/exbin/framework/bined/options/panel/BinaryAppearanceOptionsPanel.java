@@ -16,11 +16,9 @@
  */
 package org.exbin.framework.bined.options.panel;
 
-import org.exbin.framework.bined.service.BinaryAppearanceService;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.bined.preferences.BinaryAppearanceParameters;
+import org.exbin.framework.bined.options.BinaryAppearanceOptions;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -29,18 +27,15 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 /**
  * Binary viewer/editor appearance options panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable<BinaryAppearanceOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryAppearanceOptionsPanel.class);
-    private final BinaryAppearanceService panelApi;
 
-    public BinaryAppearanceOptionsPanel(BinaryAppearanceService panelApi) {
-        this.panelApi = panelApi;
-
+    public BinaryAppearanceOptionsPanel() {
         initComponents();
     }
 
@@ -48,6 +43,20 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(BinaryAppearanceOptions options) {
+        lineWrapCheckBox.setSelected(options.isLineWrapping());
+        showValuesPanelCheckBox.setSelected(options.isShowValuesPanel());
+        multiTabModeCheckBox.setSelected(options.isMultiTabMode());
+    }
+
+    @Override
+    public void saveToOptions(BinaryAppearanceOptions options) {
+        options.setLineWrapping(lineWrapCheckBox.isSelected());
+        options.setShowValuesPanel(showValuesPanelCheckBox.isSelected());
+        options.setMultiTabMode(multiTabModeCheckBox.isSelected());
     }
 
     /**
@@ -108,36 +117,14 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new BinaryAppearanceOptionsPanel(null));
+        WindowUtils.invokeDialog(new BinaryAppearanceOptionsPanel());
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox lineWrapCheckBox;
     private javax.swing.JCheckBox multiTabModeCheckBox;
     private javax.swing.JCheckBox showValuesPanelCheckBox;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        BinaryAppearanceParameters binaryAppearanceParameters = new BinaryAppearanceParameters(preferences);
-        lineWrapCheckBox.setSelected(binaryAppearanceParameters.isTextWordWrapping());
-        showValuesPanelCheckBox.setSelected(binaryAppearanceParameters.showValuesPanel());
-        multiTabModeCheckBox.setSelected(binaryAppearanceParameters.isMultiTabMode());
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        BinaryAppearanceParameters binaryAppearanceParameters = new BinaryAppearanceParameters(preferences);
-        binaryAppearanceParameters.setTextWordWrapping(lineWrapCheckBox.isSelected());
-        binaryAppearanceParameters.setShowValuesPanel(showValuesPanelCheckBox.isSelected());
-        binaryAppearanceParameters.setMultiTabMode(multiTabModeCheckBox.isSelected());
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-        panelApi.setWordWrapMode(lineWrapCheckBox.isSelected());
-        panelApi.setShowValuesPanel(showValuesPanelCheckBox.isSelected());
-    }
 
     private void setModified(boolean modified) {
         if (optionsModifiedListener != null) {

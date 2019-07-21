@@ -23,8 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.editor.text.preferences.TextColorParameters;
+import org.exbin.framework.editor.text.options.TextColorOptions;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -34,25 +33,80 @@ import org.exbin.framework.editor.text.service.TextColorService;
 /**
  * Text color selection panel.
  *
- * @version 0.2.0 2019/07/14
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable {
+public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable<TextColorOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorPanel.class);
-    private final TextColorService handler;
+    private TextColorService textColorService;
 
-    public TextColorPanel(TextColorService handler) {
-        this.handler = handler;
+    public TextColorPanel() {
         initComponents();
+    }
+
+    public void setTextColorService(TextColorService textColorService) {
+        this.textColorService = textColorService;
+        fillCurrentButton.setEnabled(true);
+        fillDefaultButton.setEnabled(true);
     }
 
     @Nonnull
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(TextColorOptions options) {
+        setColorsFromArray(textColorService.getDefaultTextColors());
+        Integer rgb;
+        try {
+            rgb = options.getTextColor();
+            if (rgb != null) {
+                setTextColor(new Color(rgb));
+            }
+        } catch (NumberFormatException e) {
+        }
+        try {
+            rgb = options.getTextBackgroundColor();
+            if (rgb != null) {
+                setTextBackgroundColor(new Color(rgb));
+            }
+        } catch (NumberFormatException e) {
+        }
+        try {
+            rgb = options.getSelectionTextColor();
+            if (rgb != null) {
+                setSelectionTextColor(new Color(rgb));
+            }
+        } catch (NumberFormatException e) {
+        }
+        try {
+            rgb = options.getSelectionBackgroundColor();
+            if (rgb != null) {
+                setSelectionBackgroundColor(new Color(rgb));
+            }
+        } catch (NumberFormatException e) {
+        }
+        try {
+            rgb = options.getFoundBackgroundColor();
+            if (rgb != null) {
+                setFoundBackgroundColor(new Color(rgb));
+            }
+        } catch (NumberFormatException e) {
+        }
+    }
+
+    @Override
+    public void saveToOptions(TextColorOptions options) {
+        options.setTextColor(getTextColor().getRGB());
+        options.setTextBackgroundColor(getTextBackgroundColor().getRGB());
+        options.setSelectionTextColor(getSelectionTextColor().getRGB());
+        options.setSelectionBackgroundColor(getSelectionBackgroundColor().getRGB());
+        options.setFoundBackgroundColor(getFoundBackgroundColor().getRGB());
     }
 
     public Color getTextColor() {
@@ -112,8 +166,8 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
         selectSelectionBackgroundColorButton.setEnabled(enabled);
         selectTextColorButton.setEnabled(enabled);
         selectFoundBackgroundColorButton.setEnabled(enabled);
-        fillCurrentButton.setEnabled(enabled);
-        fillDefaultButton.setEnabled(enabled);
+        fillCurrentButton.setEnabled(enabled && textColorService != null);
+        fillDefaultButton.setEnabled(enabled && textColorService != null);
     }
 
     /**
@@ -308,6 +362,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
         controlButtonsPanel.setName("controlButtonsPanel"); // NOI18N
 
         fillCurrentButton.setText(resourceBundle.getString("TextColorPanel.fillCurrentButton.text")); // NOI18N
+        fillCurrentButton.setEnabled(false);
         fillCurrentButton.setName("fillCurrentButton"); // NOI18N
         fillCurrentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -316,6 +371,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
         });
 
         fillDefaultButton.setText(resourceBundle.getString("TextColorPanel.fillDefaultButton.text")); // NOI18N
+        fillDefaultButton.setEnabled(false);
         fillDefaultButton.setName("fillDefaultButton"); // NOI18N
         fillDefaultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -351,7 +407,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textColorsPreviewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                    .addComponent(textColorsPreviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textBackgroundColorPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -461,13 +517,13 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
     }//GEN-LAST:event_selectFoundBackgroundColorButtonActionPerformed
 
     private void fillCurrentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentButtonActionPerformed
-        Color[] currentColors = handler.getCurrentTextColors();
+        Color[] currentColors = textColorService.getCurrentTextColors();
         setColorsFromArray(currentColors);
         setModified(true);
     }//GEN-LAST:event_fillCurrentButtonActionPerformed
 
     private void fillDefaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultButtonActionPerformed
-        Color[] defaultColors = handler.getDefaultTextColors();
+        Color[] defaultColors = textColorService.getDefaultTextColors();
         setColorsFromArray(defaultColors);
         setModified(true);
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
@@ -478,22 +534,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new TextColorPanel(new TextColorService() {
-            @Override
-            public Color[] getCurrentTextColors() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public Color[] getDefaultTextColors() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setCurrentTextColors(Color[] colors) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        }));
+        WindowUtils.invokeDialog(new TextColorPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -521,63 +562,6 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
     private javax.swing.JPanel textColorPanel;
     private javax.swing.JPanel textColorsPreviewPanel;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        TextColorParameters textColorParameters = new TextColorParameters(preferences);
-        setColorsFromArray(handler.getDefaultTextColors());
-        Integer rgb;
-        try {
-            rgb = textColorParameters.getTextColor();
-            if (rgb != null) {
-                setTextColor(new Color(rgb));
-            }
-        } catch (NumberFormatException e) {
-        }
-        try {
-            rgb = textColorParameters.getTextBackgroundColor();
-            if (rgb != null) {
-                setTextBackgroundColor(new Color(rgb));
-            }
-        } catch (NumberFormatException e) {
-        }
-        try {
-            rgb = textColorParameters.getSelectionTextColor();
-            if (rgb != null) {
-                setSelectionTextColor(new Color(rgb));
-            }
-        } catch (NumberFormatException e) {
-        }
-        try {
-            rgb = textColorParameters.getSelectionBackgroundColor();
-            if (rgb != null) {
-                setSelectionBackgroundColor(new Color(rgb));
-            }
-        } catch (NumberFormatException e) {
-        }
-        try {
-            rgb = textColorParameters.getFoundBackgroundColor();
-            if (rgb != null) {
-                setFoundBackgroundColor(new Color(rgb));
-            }
-        } catch (NumberFormatException e) {
-        }
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        TextColorParameters textColorParameters = new TextColorParameters(preferences);
-        textColorParameters.setTextColor(getTextColor().getRGB());
-        textColorParameters.setTextBackgroundColor(getTextBackgroundColor().getRGB());
-        textColorParameters.setSelectionTextColor(getSelectionTextColor().getRGB());
-        textColorParameters.setSelectionBackgroundColor(getSelectionBackgroundColor().getRGB());
-        textColorParameters.setFoundBackgroundColor(getFoundBackgroundColor().getRGB());
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-        handler.setCurrentTextColors(getArrayFromColors());
-    }
 
     public void setColorsFromArray(Color[] colors) {
         setTextColor(colors[0]);

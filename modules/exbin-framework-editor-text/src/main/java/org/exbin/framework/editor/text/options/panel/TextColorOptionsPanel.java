@@ -20,8 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.editor.text.preferences.TextColorParameters;
+import org.exbin.framework.editor.text.options.TextColorOptions;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -31,19 +30,18 @@ import org.exbin.framework.editor.text.service.TextColorService;
 /**
  * Text color options panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class TextColorOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class TextColorOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextColorOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
-    private final TextColorService textColorService;
+    private TextColorService textColorService;
     private final TextColorPanel colorPanel;
 
-    public TextColorOptionsPanel(TextColorService textColorService) {
-        this.textColorService = textColorService;
-        colorPanel = new TextColorPanel(textColorService);
+    public TextColorOptionsPanel() {
+        colorPanel = new TextColorPanel();
         initComponents();
         init();
     }
@@ -53,10 +51,29 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
         super.add(colorPanel, BorderLayout.CENTER);
     }
 
+    public void setTextColorService(TextColorService textColorService) {
+        this.textColorService = textColorService;
+        colorPanel.setTextColorService(textColorService);
+    }
+
     @Nonnull
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(TextColorOptions options) {
+        boolean defaultColor = options.isUseDefaultColors();
+        defaultColorCheckBox.setSelected(defaultColor);
+        colorPanel.setEnabled(!defaultColor);
+        colorPanel.loadFromOptions(options);
+    }
+
+    @Override
+    public void saveToOptions(TextColorOptions options) {
+        options.setUseDefaultColors(defaultColorCheckBox.isSelected());
+        colorPanel.saveToOptions(options);
     }
 
     /**
@@ -120,7 +137,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new TextColorOptionsPanel(null));
+        WindowUtils.invokeDialog(new TextColorOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -128,31 +145,6 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     private javax.swing.JPanel defaultColorPanel;
     private javax.swing.JColorChooser jColorChooser1;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        TextColorParameters textColorParameters = new TextColorParameters(preferences);
-        boolean defaultColor = textColorParameters.useDefaultColor();
-        defaultColorCheckBox.setSelected(defaultColor);
-        colorPanel.setEnabled(!defaultColor);
-        colorPanel.loadFromPreferences(preferences);
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        TextColorParameters textColorParameters = new TextColorParameters(preferences);
-        textColorParameters.setUseDefaultColor(defaultColorCheckBox.isSelected());
-        colorPanel.saveToPreferences(preferences);
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-        if (defaultColorCheckBox.isSelected()) {
-            textColorService.setCurrentTextColors(textColorService.getDefaultTextColors());
-        } else {
-            colorPanel.applyPreferencesChanges();
-        }
-    }
 
     private void setModified(boolean b) {
         if (optionsModifiedListener != null) {

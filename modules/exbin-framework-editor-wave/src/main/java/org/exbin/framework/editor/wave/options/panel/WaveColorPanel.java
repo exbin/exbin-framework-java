@@ -21,8 +21,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.editor.wave.preferences.WaveColorParameters;
+import org.exbin.framework.editor.wave.options.WaveColorOptions;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -32,18 +31,71 @@ import org.exbin.framework.editor.wave.service.WaveColorService;
 /**
  * Wave editor color selection panel.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable {
+public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable<WaveColorOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
-    private final WaveColorService panelColorApi;
+    private WaveColorService waveColorService;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(WaveColorPanel.class);
 
-    public WaveColorPanel(WaveColorService panelColorApi) {
-        this.panelColorApi = panelColorApi;
+    public WaveColorPanel() {
         initComponents();
+    }
+
+    public void setWaveColorService(WaveColorService waveColorService) {
+        this.waveColorService = waveColorService;
+        fillCurrentButton.setEnabled(true);
+        fillDefaultButton.setEnabled(true);
+    }
+
+    @Override
+    public void loadFromOptions(WaveColorOptions options) {
+        Integer rgb;
+        try {
+            rgb = options.getWaveColor();
+            if (rgb != null) {
+                setWaveColor(new Color(rgb));
+            }
+        } catch (NumberFormatException e) {
+        }
+        try {
+            rgb = options.getWaveBackgroundColor();
+            if (rgb != null) {
+                setWaveBackgroundColor(new Color(rgb));
+            }
+        } catch (NumberFormatException e) {
+        }
+        try {
+            rgb = options.getWaveSelectionColor();
+            if (rgb != null) {
+                setWaveSelectionColor(new Color(rgb));
+            }
+        } catch (NumberFormatException e) {
+        }
+        try {
+            rgb = options.getWaveCursorColor();
+            if (rgb != null) {
+                setWaveCursorColor(new Color(rgb));
+            }
+        } catch (NumberFormatException e) {
+        }
+    }
+
+    @Override
+    public void saveToOptions(WaveColorOptions options) {
+        options.setWaveColor(getWaveColor().getRGB());
+        options.setWaveFillColor(getWaveFillColor().getRGB());
+        options.setWaveBackgroundColor(getWaveBackgroundColor().getRGB());
+        options.setWaveSelectionColor(getWaveSelectionColor().getRGB());
+        options.setWaveCursorColor(getWaveCursorColor().getRGB());
+        options.setWaveCursorWaveColor(getWaveCursorWaveColor().getRGB());
+    }
+
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     public Color getWaveColor() {
@@ -71,7 +123,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
     }
 
     public void setDefaultAudioPanelColors() {
-        setWaveColorsFromArray(panelColorApi.getDefaultWaveColors());
+        setWaveColorsFromArray(waveColorService.getDefaultWaveColors());
     }
 
     public void setWaveColor(Color color) {
@@ -109,6 +161,8 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
         waveCursorWaveColorButton.setEnabled(enabled);
         fillCurrentButton.setEnabled(enabled);
         fillDefaultButton.setEnabled(enabled);
+        fillCurrentButton.setEnabled(enabled && waveColorService != null);
+        fillDefaultButton.setEnabled(enabled && waveColorService != null);
     }
 
     /**
@@ -448,7 +502,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
     }//GEN-LAST:event_waveCursorColorButtonActionPerformed
 
     private void fillCurrentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentButtonActionPerformed
-        setWaveColorsFromArray(panelColorApi.getCurrentWaveColors());
+        setWaveColorsFromArray(waveColorService.getCurrentWaveColors());
     }//GEN-LAST:event_fillCurrentButtonActionPerformed
 
     private void fillDefaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultButtonActionPerformed
@@ -473,17 +527,13 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
         dialog.setVisible(true);
     }//GEN-LAST:event_waveCursorWaveColorButtonActionPerformed
 
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
-    }
-
     /**
      * Test method for this panel.
      *
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new WaveColorPanel(null));
+        WindowUtils.invokeDialog(new WaveColorPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -509,56 +559,6 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
     private javax.swing.JLabel waveSelectionColorLabel;
     private javax.swing.JPanel waveSelectionColorPanel;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        WaveColorParameters waveColorParameters = new WaveColorParameters(preferences);
-        Integer rgb;
-        try {
-            rgb = waveColorParameters.getWaveColorWave();
-            if (rgb != null) {
-                setWaveColor(new Color(rgb));
-            }
-        } catch (NumberFormatException e) {
-        }
-        try {
-            rgb = waveColorParameters.getWaveColorBackground();
-            if (rgb != null) {
-                setWaveBackgroundColor(new Color(rgb));
-            }
-        } catch (NumberFormatException e) {
-        }
-        try {
-            rgb = waveColorParameters.getWaveColorSelection();
-            if (rgb != null) {
-                setWaveSelectionColor(new Color(rgb));
-            }
-        } catch (NumberFormatException e) {
-        }
-        try {
-            rgb = waveColorParameters.getWaveColorCursor();
-            if (rgb != null) {
-                setWaveCursorColor(new Color(rgb));
-            }
-        } catch (NumberFormatException e) {
-        }
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        WaveColorParameters waveColorParameters = new WaveColorParameters(preferences);
-        waveColorParameters.setWaveColorWave(getWaveColor().getRGB());
-        waveColorParameters.setWaveColorWaveFill(getWaveFillColor().getRGB());
-        waveColorParameters.setWaveColorBackground(getWaveBackgroundColor().getRGB());
-        waveColorParameters.setWaveColorSelection(getWaveSelectionColor().getRGB());
-        waveColorParameters.setWaveColorCursor(getWaveCursorColor().getRGB());
-        waveColorParameters.setWaveColorCursorWave(getWaveCursorWaveColor().getRGB());
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-        panelColorApi.setCurrentWaveColors(panelColorApi.getDefaultWaveColors());
-    }
 
     public void setWaveColorsFromArray(Color[] colors) {
         setWaveColor(colors[0]);

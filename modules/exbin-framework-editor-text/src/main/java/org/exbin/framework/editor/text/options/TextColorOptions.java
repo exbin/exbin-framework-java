@@ -17,22 +17,32 @@ package org.exbin.framework.editor.text.options;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.preferences.TextColorParameters;
+import org.exbin.framework.editor.text.preferences.TextColorPreferences;
+import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
  * Text color options.
  *
- * @version 0.2.1 2019/07/19
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorOptions {
-
+public class TextColorOptions implements OptionsData {
+    
+    private boolean useDefaultColors;
     private Integer textColor;
     private Integer textBackgroundColor;
     private Integer selectionTextColor;
     private Integer selectionBackgroundColor;
     private Integer foundBackgroundColor;
+
+    public boolean isUseDefaultColors() {
+        return useDefaultColors;
+    }
+
+    public void setUseDefaultColors(boolean useDefaultColors) {
+        this.useDefaultColors = useDefaultColors;
+    }
 
     @Nullable
     public Integer getTextColor() {
@@ -79,23 +89,26 @@ public class TextColorOptions {
         this.foundBackgroundColor = foundBackgroundColor;
     }
 
-    public void loadFromParameters(TextColorParameters parameters) {
-        textColor = parameters.getTextColor();
-        textBackgroundColor = parameters.getTextBackgroundColor();
-        selectionTextColor = parameters.getSelectionTextColor();
-        selectionBackgroundColor = parameters.getSelectionBackgroundColor();
-        foundBackgroundColor = parameters.getFoundBackgroundColor();
+    public void loadFromParameters(TextColorPreferences preferences) {
+        useDefaultColors = preferences.isUseDefaultColors();
+        textColor = preferences.getTextColor();
+        textBackgroundColor = preferences.getTextBackgroundColor();
+        selectionTextColor = preferences.getSelectionTextColor();
+        selectionBackgroundColor = preferences.getSelectionBackgroundColor();
+        foundBackgroundColor = preferences.getFoundBackgroundColor();
     }
 
-    public void saveToParameters(TextColorParameters parameters) {
-        parameters.setTextColor(textColor);
-        parameters.setTextBackgroundColor(textBackgroundColor);
-        parameters.setSelectionTextColor(selectionTextColor);
-        parameters.setSelectionBackgroundColor(selectionBackgroundColor);
-        parameters.setFoundBackgroundColor(foundBackgroundColor);
+    public void saveToParameters(TextColorPreferences preferences) {
+        preferences.setUseDefaultColors(useDefaultColors);
+        preferences.setTextColor(textColor);
+        preferences.setTextBackgroundColor(textBackgroundColor);
+        preferences.setSelectionTextColor(selectionTextColor);
+        preferences.setSelectionBackgroundColor(selectionBackgroundColor);
+        preferences.setFoundBackgroundColor(foundBackgroundColor);
     }
 
     public void setOptions(TextColorOptions options) {
+        useDefaultColors = options.useDefaultColors;
         textColor = options.textColor;
         textBackgroundColor = options.textBackgroundColor;
         selectionTextColor = options.selectionTextColor;

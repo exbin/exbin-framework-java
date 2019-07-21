@@ -14,20 +14,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined.options.panel;
+package org.exbin.framework.bined.service;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.basic.EnterKeyHandlingMode;
 import org.exbin.framework.bined.FileHandlingMode;
 
 /**
- * Editor options panel api interface.
+ * Editor options service interface.
  *
- * @version 0.2.1 2019/07/17
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditorOptionsPanelApi {
+public interface EditorOptionsService {
 
     void setFileHandlingMode(FileHandlingMode fileHandlingMode);
 

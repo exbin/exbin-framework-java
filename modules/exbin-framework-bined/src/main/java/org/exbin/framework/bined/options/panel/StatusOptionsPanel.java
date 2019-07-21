@@ -17,34 +17,28 @@ package org.exbin.framework.bined.options.panel;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.PositionCodeType;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.options.StatusOptions;
 import org.exbin.framework.bined.StatusCursorPositionFormat;
 import org.exbin.framework.bined.StatusDocumentSizeFormat;
-import org.exbin.framework.bined.preferences.StatusParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 
 /**
- * Editor status panel options panel.
+ * Editor status bar options panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsCapable<StatusOptions> {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(StatusOptionsPanel.class);
 
-    private final StatusOptionsPanelApi statusOptionsPanelApi;
-
-    public StatusOptionsPanel(@Nullable StatusOptionsPanelApi statusOptionsPanelApi) {
-        this.statusOptionsPanelApi = statusOptionsPanelApi;
+    public StatusOptionsPanel() {
         initComponents();
     }
 
@@ -54,6 +48,7 @@ public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsCap
         return resourceBundle;
     }
 
+    @Override
     public void saveToOptions(StatusOptions options) {
         StatusCursorPositionFormat cursorPositionFormat = new StatusCursorPositionFormat();
         cursorPositionFormat.setCodeType(PositionCodeType.valueOf((String) cursorPositionCodeTypeComboBox.getSelectedItem()));
@@ -70,6 +65,7 @@ public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsCap
         options.setHexadecimalSpaceGroupSize((int) hexadecimalGroupSizeSpinner.getValue());
     }
 
+    @Override
     public void loadFromOptions(StatusOptions options) {
         StatusCursorPositionFormat cursorPositionFormat = options.getCursorPositionFormat();
         cursorPositionCodeTypeComboBox.setSelectedIndex(cursorPositionFormat.getCodeType().ordinal());
@@ -192,7 +188,7 @@ public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsCap
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new StatusOptionsPanel(null));
+        WindowUtils.invokeDialog(new StatusOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -211,32 +207,6 @@ public class StatusOptionsPanel extends javax.swing.JPanel implements OptionsCap
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void applyPreferencesChanges() {
-        if (statusOptionsPanelApi != null) {
-            StatusOptions statusOptions = new StatusOptions();
-            saveToOptions(statusOptions);
-            statusOptionsPanelApi.applyStatusOptions(statusOptions);
-        }
-    }
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        StatusParameters parameters = new StatusParameters(preferences);
-        StatusOptions statusOptions = new StatusOptions();
-        statusOptions.loadFromParameters(parameters);
-        loadFromOptions(statusOptions);
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        StatusParameters parameters = new StatusParameters(preferences);
-        StatusOptions statusOptions = new StatusOptions();
-        saveToOptions(statusOptions);
-        statusOptions.saveToParameters(parameters);
-    }
-
-    @Override
     public void setOptionsModifiedListener(OptionsModifiedListener listener) {
-
     }
 }

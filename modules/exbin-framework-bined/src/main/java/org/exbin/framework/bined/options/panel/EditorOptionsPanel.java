@@ -17,13 +17,10 @@ package org.exbin.framework.bined.options.panel;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.basic.EnterKeyHandlingMode;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.options.EditorOptions;
-import org.exbin.framework.bined.preferences.EditorParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -32,17 +29,15 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 /**
  * Editor preference parameters panel.
  *
- * @version 0.2.1 2019/07/17
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCapable<EditorOptions> {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditorOptionsPanel.class);
-    private final EditorOptionsPanelApi editorOptionsPanelApi;
 
-    public EditorOptionsPanel(@Nullable EditorOptionsPanelApi editorOptionsPanelApi) {
-        this.editorOptionsPanelApi = editorOptionsPanelApi;
+    public EditorOptionsPanel() {
         initComponents();
     }
 
@@ -52,12 +47,14 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCap
         return resourceBundle;
     }
 
+    @Override
     public void saveToOptions(EditorOptions options) {
         options.setFileHandlingMode(FileHandlingMode.valueOf((String) fileHandlingModeComboBox.getSelectedItem()));
         options.setIsShowValuesPanel(showValuesPanelCheckBox.isSelected());
         options.setEnterKeyHandlingMode(EnterKeyHandlingMode.valueOf((String) enterKeyHandlingModeComboBox.getSelectedItem()));
     }
 
+    @Override
     public void loadFromOptions(EditorOptions options) {
         fileHandlingModeComboBox.setSelectedIndex(options.getFileHandlingMode().ordinal());
         showValuesPanelCheckBox.setSelected(options.isIsShowValuesPanel());
@@ -129,7 +126,7 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCap
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new EditorOptionsPanel(null));
+        WindowUtils.invokeDialog(new EditorOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -139,33 +136,6 @@ public class EditorOptionsPanel extends javax.swing.JPanel implements OptionsCap
     private javax.swing.JLabel fileHandlingModeLabel;
     private javax.swing.JCheckBox showValuesPanelCheckBox;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void applyPreferencesChanges() {
-        if (editorOptionsPanelApi != null) {
-            EditorOptions editorOptions = new EditorOptions();
-            saveToOptions(editorOptions);
-            editorOptionsPanelApi.setFileHandlingMode(editorOptions.getFileHandlingMode());
-            editorOptionsPanelApi.setIsShowValuesPanel(editorOptions.isIsShowValuesPanel());
-            editorOptionsPanelApi.setEditorHandlingMode(editorOptions.getEnterKeyHandlingMode());
-        }
-    }
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        EditorParameters parameters = new EditorParameters(preferences);
-        EditorOptions editorOptions = new EditorOptions();
-        editorOptions.loadFromParameters(parameters);
-        loadFromOptions(editorOptions);
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        EditorParameters parameters = new EditorParameters(preferences);
-        EditorOptions editorOptions = new EditorOptions();
-        saveToOptions(editorOptions);
-        editorOptions.saveToParameters(parameters);
-    }
 
     @Override
     public void setOptionsModifiedListener(OptionsModifiedListener listener) {

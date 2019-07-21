@@ -25,7 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinaryAppearanceParameters {
+public class BinaryAppearancePreferences {
 
     public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
     public static final String PREFERENCES_SHOW_VALUES_PANEL = "showValuesPanel";
@@ -33,15 +33,15 @@ public class BinaryAppearanceParameters {
 
     private final Preferences preferences;
 
-    public BinaryAppearanceParameters(Preferences preferences) {
+    public BinaryAppearancePreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 
-    public boolean isTextWordWrapping() {
+    public boolean isLineWrapping() {
         return preferences.getBoolean(PREFERENCES_TEXT_WORD_WRAPPING, false);
     }
 
-    public boolean showValuesPanel() {
+    public boolean isShowValuesPanel() {
         return preferences.getBoolean(PREFERENCES_SHOW_VALUES_PANEL, true);
     }
 
@@ -49,7 +49,7 @@ public class BinaryAppearanceParameters {
         return preferences.getBoolean(PREFERENCES_MULTITAB_MODE, false);
     }
 
-    public void setTextWordWrapping(boolean wrapping) {
+    public void setLineWrapping(boolean wrapping) {
         preferences.putBoolean(PREFERENCES_TEXT_WORD_WRAPPING, wrapping);
     }
 

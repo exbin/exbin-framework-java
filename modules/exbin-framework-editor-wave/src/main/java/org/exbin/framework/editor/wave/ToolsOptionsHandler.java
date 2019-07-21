@@ -64,9 +64,10 @@ public class ToolsOptionsHandler {
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
 
-                WaveColorService textColorPanelApi = new WaveColorServiceImpl(editorProvider);
+                WaveColorService waveColorService = new WaveColorServiceImpl(editorProvider);
 
-                final WaveColorPanel waveColorPanel = new WaveColorPanel(textColorPanelApi);
+                final WaveColorPanel waveColorPanel = new WaveColorPanel();
+                waveColorPanel.setWaveColorService(waveColorService);
                 waveColorPanel.setWaveColorsFromArray(((AudioPanel) editorProvider).getAudioPanelColors());
                 DefaultControlPanel controlPanel = new DefaultControlPanel(waveColorPanel.getResourceBundle());
                 JPanel dialogPanel = WindowUtils.createDialogPanel(waveColorPanel, controlPanel);

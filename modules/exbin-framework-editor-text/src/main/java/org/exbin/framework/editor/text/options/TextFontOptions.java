@@ -15,12 +15,15 @@
  */
 package org.exbin.framework.editor.text.options;
 
+import java.awt.Font;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.preferences.TextFontParameters;
+import org.exbin.framework.editor.text.preferences.TextFontPreferences;
+import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
  * Text font options.
@@ -29,7 +32,7 @@ import org.exbin.framework.editor.text.preferences.TextFontParameters;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontOptions {
+public class TextFontOptions implements OptionsData {
 
     private boolean useDefaultFont = true;
     @Nullable
@@ -52,19 +55,26 @@ public class TextFontOptions {
         this.fontAttributes = fontAttributes;
     }
 
-    public void loadFromParameters(TextFontParameters parameters) {
-        useDefaultFont = parameters.isUseDefaultFont();
-        fontAttributes = parameters.getFontAttribs();
+    public void loadFromParameters(TextFontPreferences preferences) {
+        useDefaultFont = preferences.isUseDefaultFont();
+        fontAttributes = preferences.getFontAttribs();
     }
 
-    public void saveToParameters(TextFontParameters parameters) {
-        parameters.setUseDefaultFont(useDefaultFont);
-        parameters.setFontAttribs(fontAttributes);
+    public void saveToParameters(TextFontPreferences preferences) {
+        preferences.setUseDefaultFont(useDefaultFont);
+        preferences.setFontAttribs(fontAttributes);
     }
 
     public void setOptions(TextFontOptions options) {
         useDefaultFont = options.useDefaultFont;
         fontAttributes = new HashMap<>();
         fontAttributes.putAll(options.fontAttributes);
+    }
+
+    @Nonnull
+    public Font getFont(Font initialFont) {
+        Map<TextAttribute, Object> attribs = getFontAttributes();
+        Font font = initialFont.deriveFont(attribs);
+        return font;
     }
 }

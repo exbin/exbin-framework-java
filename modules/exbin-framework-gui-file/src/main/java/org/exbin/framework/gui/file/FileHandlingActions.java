@@ -44,7 +44,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.MultiFileHandlerApi;
-import org.exbin.framework.gui.file.preferences.RecentFilesParameters;
+import org.exbin.framework.gui.file.preferences.RecentFilesPreferences;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -355,7 +355,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     }
 
     private void loadState() {
-        RecentFilesParameters recentFilesParameters = new RecentFilesParameters(preferences);
+        RecentFilesPreferences recentFilesParameters = new RecentFilesPreferences(preferences);
         recentFiles.clear();
         int recent = 1;
         while (recent < 14) {
@@ -372,7 +372,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     }
 
     private void saveState() {
-        RecentFilesParameters recentFilesParameters = new RecentFilesParameters(preferences);
+        RecentFilesPreferences recentFilesParameters = new RecentFilesPreferences(preferences);
         for (int i = 0; i < recentFiles.size(); i++) {
             recentFilesParameters.setFilePath(recentFiles.get(i).getFileName(), i + 1);
             recentFilesParameters.setModuleName(recentFiles.get(i).getModuleName(), i + 1);

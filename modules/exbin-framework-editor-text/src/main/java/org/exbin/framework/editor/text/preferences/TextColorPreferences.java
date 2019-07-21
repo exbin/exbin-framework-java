@@ -20,13 +20,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
 
 /**
- * Text font parameters.
+ * Text color preferences.
  *
  * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorParameters {
+public class TextColorPreferences {
 
     public static final String PREFERENCES_TEXT_COLOR_DEFAULT = "textColor.default";
     public static final String PREFERENCES_TEXT_COLOR_TEXT = "textColor.text";
@@ -37,15 +37,15 @@ public class TextColorParameters {
 
     private final Preferences preferences;
 
-    public TextColorParameters(Preferences preferences) {
+    public TextColorPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 
-    public boolean useDefaultColor() {
+    public boolean isUseDefaultColors() {
         return preferences.getBoolean(PREFERENCES_TEXT_COLOR_DEFAULT, true);
     }
 
-    public void setUseDefaultColor(boolean useDefaultColor) {
+    public void setUseDefaultColors(boolean useDefaultColor) {
         preferences.putBoolean(PREFERENCES_TEXT_COLOR_DEFAULT, useDefaultColor);
     }
 

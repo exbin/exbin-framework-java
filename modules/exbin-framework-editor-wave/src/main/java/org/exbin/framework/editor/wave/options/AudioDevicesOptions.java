@@ -13,33 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text.preferences;
+package org.exbin.framework.editor.wave.options;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.wave.preferences.AudioDevicesPreferences;
+import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
- * Text appearance parameters.
+ * Audio devices options.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceParameters {
+public class AudioDevicesOptions implements OptionsData {
 
-    public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
-
-    private final Preferences preferences;
-
-    public TextAppearanceParameters(Preferences preferences) {
-        this.preferences = preferences;
+    public void loadFromParameters(AudioDevicesPreferences preferences) {
     }
 
-    public boolean isWordWrapping() {
-        return preferences.getBoolean(PREFERENCES_TEXT_WORD_WRAPPING, false);
-    }
-
-    public void setWordWrapping(boolean wordWrap) {
-        preferences.putBoolean(PREFERENCES_TEXT_WORD_WRAPPING, wordWrap);
+    public void saveToParameters(AudioDevicesPreferences preferences) {
     }
 }

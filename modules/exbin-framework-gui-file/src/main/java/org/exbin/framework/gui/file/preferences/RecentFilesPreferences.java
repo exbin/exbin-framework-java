@@ -20,13 +20,13 @@ import org.exbin.framework.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Wave editor color preferences.
+ * Recently opened files preferences.
  *
  * @version 0.2.0 2019/06/08
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class RecentFilesParameters {
+public class RecentFilesPreferences {
 
     public static final String PREFERENCES_RECENTFILE_PATH_PREFIX = "recentFile.path.";
     public static final String PREFEFRENCES_RECENTFILE_MODULE_PREFIX = "recentFile.module.";
@@ -34,7 +34,7 @@ public class RecentFilesParameters {
 
     private final Preferences preferences;
 
-    public RecentFilesParameters(Preferences preferences) {
+    public RecentFilesPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 

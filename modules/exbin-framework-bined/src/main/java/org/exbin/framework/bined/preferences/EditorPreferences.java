@@ -31,7 +31,7 @@ import org.exbin.framework.bined.FileHandlingMode;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorParameters {
+public class EditorPreferences {
 
     public static final String PREFERENCES_FILE_HANDLING_MODE = "fileHandlingMode";
     public static final String PREFERENCES_SHOW_VALUES_PANEL = "valuesPanel";
@@ -40,7 +40,7 @@ public class EditorParameters {
 
     private final Preferences preferences;
 
-    public EditorParameters(Preferences preferences) {
+    public EditorPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 
@@ -50,7 +50,7 @@ public class EditorParameters {
         try {
             return FileHandlingMode.valueOf(preferences.get(PREFERENCES_FILE_HANDLING_MODE, defaultFileHandlingMode.name()));
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(EditorParameters.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EditorPreferences.class.getName()).log(Level.SEVERE, null, ex);
             return defaultFileHandlingMode;
         }
     }

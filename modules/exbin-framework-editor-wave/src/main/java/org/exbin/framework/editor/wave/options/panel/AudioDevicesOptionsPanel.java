@@ -23,7 +23,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Control;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.Mixer;
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.wave.options.AudioDevicesOptions;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -32,16 +32,16 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 /**
  * Panel for choosing input and output audio devices.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsCapable {
+public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements OptionsCapable<AudioDevicesOptions> {
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AudioDevicesPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AudioDevicesOptionsPanel.class);
 
     @SuppressWarnings("unchecked")
-    public AudioDevicesPanel() {
+    public AudioDevicesOptionsPanel() {
         initComponents();
         init();
     }
@@ -78,9 +78,18 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsCapa
     }
 
     @Nonnull
-    @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(AudioDevicesOptions options) {
+        // options.
+    }
+
+    @Override
+    public void saveToOptions(AudioDevicesOptions options) {
+        // options.
     }
 
     /**
@@ -95,7 +104,7 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsCapa
         audioOutputPanel = new javax.swing.JPanel();
         outputSoundDeviceLabel = new javax.swing.JLabel();
         outputSampleRateLabel = new javax.swing.JLabel();
-        outputBufferSizejLabel = new javax.swing.JLabel();
+        outputBufferSizeLabel = new javax.swing.JLabel();
         outputSoundDeviceComboBox = new javax.swing.JComboBox();
         outputSampleRateComboBox = new javax.swing.JComboBox();
         outputBufferSizeComboBox = new javax.swing.JComboBox();
@@ -112,8 +121,8 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsCapa
         outputSampleRateLabel.setText(resourceBundle.getString("outputSampleRateLabel.text")); // NOI18N
         outputSampleRateLabel.setName("outputSampleRateLabel"); // NOI18N
 
-        outputBufferSizejLabel.setText(resourceBundle.getString("outputBufferSizejLabel.text")); // NOI18N
-        outputBufferSizejLabel.setName("outputBufferSizejLabel"); // NOI18N
+        outputBufferSizeLabel.setText(resourceBundle.getString("outputBufferSizeLabel.text")); // NOI18N
+        outputBufferSizeLabel.setName("outputBufferSizeLabel"); // NOI18N
 
         outputSoundDeviceComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<default>" }));
         outputSoundDeviceComboBox.setName("outputSoundDeviceComboBox"); // NOI18N
@@ -138,7 +147,7 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsCapa
                         .addGroup(audioOutputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(outputSoundDeviceLabel)
                             .addComponent(outputSampleRateLabel)
-                            .addComponent(outputBufferSizejLabel))
+                            .addComponent(outputBufferSizeLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(audioOutputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(outputSampleRateComboBox, 0, 347, Short.MAX_VALUE)
@@ -160,7 +169,7 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsCapa
                     .addComponent(outputSampleRateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(audioOutputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(outputBufferSizejLabel)
+                    .addComponent(outputBufferSizeLabel)
                     .addComponent(outputBufferSizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(testAudioButton)
@@ -191,34 +200,19 @@ public class AudioDevicesPanel extends javax.swing.JPanel implements OptionsCapa
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new AudioDevicesPanel());
+        WindowUtils.invokeDialog(new AudioDevicesOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JPanel audioOutputPanel;
     public javax.swing.JComboBox outputBufferSizeComboBox;
-    public javax.swing.JLabel outputBufferSizejLabel;
+    public javax.swing.JLabel outputBufferSizeLabel;
     public javax.swing.JComboBox outputSampleRateComboBox;
     public javax.swing.JLabel outputSampleRateLabel;
     public javax.swing.JComboBox outputSoundDeviceComboBox;
     public javax.swing.JLabel outputSoundDeviceLabel;
     public javax.swing.JButton testAudioButton;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        //throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        //throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-        //throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     @Override
     public void setOptionsModifiedListener(OptionsModifiedListener listener) {

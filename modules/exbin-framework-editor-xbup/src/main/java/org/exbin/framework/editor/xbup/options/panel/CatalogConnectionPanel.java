@@ -18,7 +18,7 @@ package org.exbin.framework.editor.xbup.options.panel;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.xbup.options.CatalogConnectionOptions;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
@@ -27,10 +27,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Catalog connection options panel.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogConnectionPanel extends javax.swing.JPanel implements OptionsCapable {
+public class CatalogConnectionPanel extends javax.swing.JPanel implements OptionsCapable<CatalogConnectionOptions> {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogConnectionPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
@@ -45,6 +45,31 @@ public class CatalogConnectionPanel extends javax.swing.JPanel implements Option
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(CatalogConnectionOptions options) {
+        if (options.isServiceConnectionAllowed() != serviceConnectionCheckBox.isSelected()) {
+            serviceConnectionCheckBox.doClick();
+        }
+
+        String serviceConnection = options.getServiceConnectionUrl();
+        serviceConnectionTextField.setText(serviceConnection);
+
+        if (options.isCatalogUpdateAllowed() != catalogUpdateConnectionCheckBox.isSelected()) {
+            catalogUpdateConnectionCheckBox.doClick();
+        }
+
+        String catalogUpdate = options.getCatalogUpdateUrl();
+        catalogUpdateConnectionTextField.setText(catalogUpdate);
+    }
+
+    @Override
+    public void saveToOptions(CatalogConnectionOptions options) {
+        options.setServiceConnectionAllowed(serviceConnectionCheckBox.isSelected());
+        options.setServiceConnectionUrl(serviceConnectionTextField.getText());
+        options.setCatalogUpdateAllowed(catalogUpdateConnectionCheckBox.isSelected());
+        options.setCatalogUpdateUrl(catalogUpdateConnectionTextField.getText());
     }
 
     /**
@@ -164,36 +189,6 @@ public class CatalogConnectionPanel extends javax.swing.JPanel implements Option
     private javax.swing.JLabel serviceConnectionLabel;
     private javax.swing.JTextField serviceConnectionTextField;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void applyPreferencesChanges() {
-        // throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        if (Boolean.parseBoolean(preferences.get("serviceConnectionAllowed", Boolean.toString(true))) != serviceConnectionCheckBox.isSelected()) {
-            serviceConnectionCheckBox.doClick();
-        }
-
-        String catalogConnection = preferences.get("serviceConnectionURL", "");
-        serviceConnectionTextField.setText(catalogConnection);
-
-        if (Boolean.parseBoolean(preferences.get("catalogUpdateAllowed", Boolean.toString(true))) != catalogUpdateConnectionCheckBox.isSelected()) {
-            catalogUpdateConnectionCheckBox.doClick();
-        }
-
-        String catalogUpdate = preferences.get("catalogUpdateURL", DEFAULT_CATALOG_UPDATE_CONNECTION);
-        catalogUpdateConnectionTextField.setText(catalogUpdate);
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        preferences.put("serviceConnectionAllowed", Boolean.toString(serviceConnectionCheckBox.isSelected()));
-        preferences.put("serviceConnectionURL", serviceConnectionTextField.getText());
-        preferences.put("catalogUpdateAllowed", Boolean.toString(catalogUpdateConnectionCheckBox.isSelected()));
-        preferences.put("catalogUpdateURL", catalogUpdateConnectionTextField.getText());
-    }
 
     @Override
     public void setOptionsModifiedListener(OptionsModifiedListener listener) {

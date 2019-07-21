@@ -16,12 +16,9 @@
  */
 package org.exbin.framework.editor.text.options.panel;
 
-import org.exbin.framework.editor.text.service.TextAppearanceService;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.editor.text.options.TextAppearanceOptions;
-import org.exbin.framework.editor.text.preferences.TextAppearanceParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -30,14 +27,13 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 /**
  * Text encoding options panel.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextAppearanceOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
-    private TextAppearanceService textAppearanceService;
 
     public TextAppearanceOptionsPanel() {
         initComponents();
@@ -49,14 +45,12 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
         return resourceBundle;
     }
 
-    public void setTextAppearanceService(TextAppearanceService textAppearanceService) {
-        this.textAppearanceService = textAppearanceService;
-    }
-
+    @Override
     public void saveToOptions(TextAppearanceOptions options) {
         options.setWordWrapping(wordWrapCheckBox.isSelected());
     }
 
+    @Override
     public void loadFromOptions(TextAppearanceOptions options) {
         wordWrapCheckBox.setSelected(options.isWordWrapping());
     }
@@ -116,25 +110,6 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox wordWrapCheckBox;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        TextAppearanceOptions options = new TextAppearanceOptions();
-        options.loadFromParameters(new TextAppearanceParameters(preferences));
-        loadFromOptions(options);
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        TextAppearanceOptions options = new TextAppearanceOptions();
-        saveToOptions(options);
-        options.saveToParameters(new TextAppearanceParameters(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-        textAppearanceService.setWordWrapMode(wordWrapCheckBox.isSelected());
-    }
 
     private void setModified(boolean b) {
         if (optionsModifiedListener != null) {

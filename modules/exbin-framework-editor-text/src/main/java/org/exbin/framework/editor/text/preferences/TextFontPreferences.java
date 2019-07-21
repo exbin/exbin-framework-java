@@ -24,13 +24,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
 
 /**
- * Text font parameters.
+ * Text font preferences.
  *
  * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontParameters {
+public class TextFontPreferences {
 
     public static final String PREFERENCES_TEXT_FONT_PREFIX = "textFont.";
     public static final String PREFERENCES_TEXT_FONT_DEFAULT = PREFERENCES_TEXT_FONT_PREFIX + "default";
@@ -45,7 +45,7 @@ public class TextFontParameters {
 
     private final Preferences preferences;
 
-    public TextFontParameters(Preferences preferences) {
+    public TextFontPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 

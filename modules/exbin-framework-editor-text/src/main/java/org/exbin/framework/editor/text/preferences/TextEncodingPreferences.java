@@ -28,7 +28,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingParameters {
+public class TextEncodingPreferences {
 
     public static final String ENCODING_UTF8 = "UTF-8";
 
@@ -38,7 +38,7 @@ public class TextEncodingParameters {
 
     private final Preferences preferences;
 
-    public TextEncodingParameters(Preferences preferences) {
+    public TextEncodingPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 

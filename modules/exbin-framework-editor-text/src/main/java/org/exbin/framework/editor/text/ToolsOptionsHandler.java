@@ -25,10 +25,12 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.text.options.TextColorOptions;
 import org.exbin.framework.editor.text.options.panel.TextColorPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
-import org.exbin.framework.editor.text.preferences.TextFontParameters;
+import org.exbin.framework.editor.text.preferences.TextColorPreferences;
+import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -42,7 +44,7 @@ import org.exbin.framework.editor.text.service.TextColorService;
 /**
  * Tools options action handler.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -77,7 +79,7 @@ public class ToolsOptionsHandler {
                 controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                         if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                            TextFontParameters parameters = new TextFontParameters(application.getAppPreferences());
+                            TextFontPreferences parameters = new TextFontPreferences(application.getAppPreferences());
                             parameters.setUseDefaultFont(false);
                             parameters.setFont(fontPanel.getStoredFont());
                         }
@@ -97,7 +99,7 @@ public class ToolsOptionsHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final TextColorService textColorPanelHandler = new TextColorService() {
+                final TextColorService textColorService = new TextColorService() {
                     @Override
                     public Color[] getCurrentTextColors() {
                         return ((TextPanel) editorProvider).getCurrentColors();
@@ -113,8 +115,9 @@ public class ToolsOptionsHandler {
                         ((TextPanel) editorProvider).setCurrentColors(colors);
                     }
                 };
-                final TextColorPanel colorPanel = new TextColorPanel(textColorPanelHandler);
-                colorPanel.setColorsFromArray(textColorPanelHandler.getCurrentTextColors());
+                final TextColorPanel colorPanel = new TextColorPanel();
+                colorPanel.setTextColorService(textColorService);
+                colorPanel.setColorsFromArray(textColorService.getCurrentTextColors());
                 OptionsControlPanel controlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(colorPanel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -123,9 +126,12 @@ public class ToolsOptionsHandler {
                 controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                         if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                            colorPanel.saveToPreferences(application.getAppPreferences());
+                            TextColorOptions options = new TextColorOptions();
+                            colorPanel.saveToOptions(options);
+                            TextColorPreferences textColorParameters = new TextColorPreferences(application.getAppPreferences());
+                            options.saveToParameters(textColorParameters);
                         }
-                        textColorPanelHandler.setCurrentTextColors(colorPanel.getArrayFromColors());
+                        textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());
                     }
 
                     dialog.close();

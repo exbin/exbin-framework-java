@@ -16,18 +16,16 @@
  */
 package org.exbin.framework.gui.options.panel;
 
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
@@ -37,15 +35,17 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsData;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 import org.exbin.framework.gui.options.api.OptionsPathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.options.api.OptionsPage;
 
 /**
  * Panel for application options and preferences setting.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -53,8 +53,8 @@ public class OptionsTreePanel extends javax.swing.JPanel {
 
     private Preferences preferences = null;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsTreePanel.class);
-    private Map<String, JPanel> optionPanels;
-    private JPanel currentOptionsPanel = null;
+    private Map<String, PageRecord<?>> optionPages;
+    private PageRecord<?> currentOptionsPanel = null;
     private OptionsModifiedListener optionsModifiedListener;
 
     private boolean modified;
@@ -63,6 +63,8 @@ public class OptionsTreePanel extends javax.swing.JPanel {
     private final ApplicationFrameHandler frame;
     private MainOptionsPanel mainOptionsPanel;
     private AppearanceOptionsPanel appearanceOptionsPanel;
+    private PageRecord<?> mainOptionsExtPage = null;
+    private PageRecord<?> appearanceOptionsExtPage = null;
 
     public OptionsTreePanel(ApplicationFrameHandler frame) {
         initComponents();
@@ -73,7 +75,7 @@ public class OptionsTreePanel extends javax.swing.JPanel {
     private void init() {
         initComponents();
 
-        optionPanels = new HashMap<>();
+        optionPages = new HashMap<>();
         modified = false;
         optionsModifiedListener = () -> {
             setModified(true);
@@ -105,68 +107,28 @@ public class OptionsTreePanel extends javax.swing.JPanel {
                     optionsAreaTitleLabel.setText(" " + (String) node.getUserObject());
                 }
                 if (currentOptionsPanel != null) {
-                    optionsAreaScrollPane.remove(currentOptionsPanel);
+                    optionsAreaScrollPane.remove((Component) currentOptionsPanel.panel);
                 }
                 if (caption != null) {
-                    currentOptionsPanel = optionPanels.get(caption);
-                    optionsAreaScrollPane.setViewportView(currentOptionsPanel);
+                    currentOptionsPanel = optionPages.get(caption);
+                    optionsAreaScrollPane.setViewportView((Component) currentOptionsPanel.panel);
                 } else {
                     currentOptionsPanel = null;
                     optionsAreaScrollPane.setViewportView(null);
                 }
             }
         });
-
-        mainOptionsPanel = new MainOptionsPanel();
-        addOptionsPanel(mainOptionsPanel, null);
-        appearanceOptionsPanel = new AppearanceOptionsPanel(frame);
-        {
-            ResourceBundle optionsResourceBundle = appearanceOptionsPanel.getResourceBundle();
-            List<OptionsPathItem> optionsPath = new ArrayList<>();
-            optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
-            addOptionsPanel(appearanceOptionsPanel, optionsPath);
-        }
-        optionsTree.setSelectionRow(0);
-
-        // Expand all nodes
-        expandJTree(optionsTree, -1);
     }
 
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
 
-    public void loadPreferences(Preferences preferences) {
-        for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
-            Object optionPanel = optionPanelsIterator.next();
-            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsCapable) {
-                ((org.exbin.framework.gui.options.api.OptionsCapable) optionPanel).loadFromPreferences(preferences);
-            }
-        }
-    }
+    public void pagesFinished() {
+        optionsTree.setSelectionRow(0);
 
-    public void savePreferences(Preferences preferences) {
-        for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
-            Object optionPanel = optionPanelsIterator.next();
-            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsCapable) {
-                ((org.exbin.framework.gui.options.api.OptionsCapable) optionPanel).saveToPreferences(preferences);
-            }
-        }
-
-        preferences.flush();
-    }
-
-    public void applyPreferencesChanges() {
-        for (Iterator optionPanelsIterator = optionPanels.values().iterator(); optionPanelsIterator.hasNext();) {
-            Object optionPanel = optionPanelsIterator.next();
-            if (optionPanel instanceof org.exbin.framework.gui.options.api.OptionsCapable) {
-                ((org.exbin.framework.gui.options.api.OptionsCapable) optionPanel).applyPreferencesChanges();
-            }
-        }
-    }
-
-    public void saveToPreferences() {
-        savePreferences(preferences);
+        // Expand all nodes
+        expandJTree(optionsTree, -1);
     }
 
     /**
@@ -244,7 +206,7 @@ public class OptionsTreePanel extends javax.swing.JPanel {
         // applyButton.setEnabled(modified);
     }
 
-    public void addOptionsPanel(OptionsCapable optionPanel, @Nullable List<OptionsPathItem> path) {
+    public void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path) {
         String panelKey;
         if (path == null) {
             panelKey = "options";
@@ -253,17 +215,67 @@ public class OptionsTreePanel extends javax.swing.JPanel {
             establishPath(path);
         }
 
-        optionPanels.put(panelKey, (JPanel) optionPanel);
-        optionPanel.setOptionsModifiedListener(optionsModifiedListener);
+        PageRecord<?> pageRecord = new PageRecord(optionPage);
+        if (pageRecord.panel instanceof MainOptionsPanel) {
+            mainOptionsPanel = (MainOptionsPanel) pageRecord.panel;
+        } else if (pageRecord.panel instanceof AppearanceOptionsPanel) {
+            appearanceOptionsPanel = (AppearanceOptionsPanel) pageRecord.panel;
+        }
+        optionPages.put(panelKey, pageRecord);
+        pageRecord.panel.setOptionsModifiedListener(optionsModifiedListener);
         optionsTree.setSelectionRow(0);
     }
 
-    public void extendMainOptionsPanel(OptionsCapable panel) {
-        mainOptionsPanel.addExtendedPanel(panel);
+    public void extendMainOptionsPage(OptionsPage<?> optionsPage) {
+        mainOptionsExtPage = new PageRecord<>(optionsPage);
+        mainOptionsPanel.addExtendedPanel(mainOptionsExtPage.panel);
     }
 
-    public void extendAppearanceOptionsPanel(OptionsCapable panel) {
-        appearanceOptionsPanel.addExtendedPanel(panel);
+    public void extendAppearanceOptionsPage(OptionsPage<?> optionsPage) {
+        appearanceOptionsExtPage = new PageRecord<>(optionsPage);
+        appearanceOptionsPanel.addExtendedPanel(appearanceOptionsExtPage.panel);
+    }
+
+    public void loadAllFromPreferences() {
+        optionPages.values().forEach((pageRecord) -> {
+            pageRecord.loadFromPreferences(preferences);
+        });
+
+        if (mainOptionsExtPage != null) {
+            mainOptionsExtPage.loadFromPreferences(preferences);
+        }
+
+        if (appearanceOptionsExtPage != null) {
+            appearanceOptionsExtPage.loadFromPreferences(preferences);
+        }
+    }
+
+    public void saveAndApplyAll() {
+        optionPages.values().forEach((pageRecord) -> {
+            pageRecord.saveAndApply(preferences);
+        });
+
+        if (mainOptionsExtPage != null) {
+            mainOptionsExtPage.saveAndApply(preferences);
+        }
+
+        if (appearanceOptionsExtPage != null) {
+            appearanceOptionsExtPage.saveAndApply(preferences);
+        }
+    }
+
+    public void applyPreferencesChanges() {
+        optionPages.values().forEach((pageRecord) -> {
+            pageRecord.applyPreferencesChanges(preferences);
+        });
+
+        if (mainOptionsExtPage != null) {
+            mainOptionsExtPage.applyPreferencesChanges(preferences);
+        }
+
+        if (appearanceOptionsExtPage != null) {
+            appearanceOptionsExtPage.applyPreferencesChanges(preferences);
+        }
     }
 
     private void establishPath(List<OptionsPathItem> path) {
@@ -318,7 +330,7 @@ public class OptionsTreePanel extends javax.swing.JPanel {
     }
 
     public void setLanguageLocales(Collection<Locale> locales) {
-        mainOptionsPanel.setLanguageLocales(locales);
+        // TODO (mainOptionsPage.createOptions()).setLanguageLocales(locales);
     }
 
     @ParametersAreNonnullByDefault
@@ -333,6 +345,42 @@ public class OptionsTreePanel extends javax.swing.JPanel {
 
         public String getName() {
             return name;
+        }
+    }
+
+    private static class PageRecord<T extends OptionsData> {
+
+        private final OptionsPage<T> page;
+        private final OptionsCapable<T> panel;
+
+        PageRecord(OptionsPage<T> page) {
+            this.page = page;
+            this.panel = page.createPanel();
+        }
+
+        void loadFromPreferences(Preferences preferences) {
+            T options = page.createOptions();
+            page.loadFromPreferences(preferences, options);
+            panel.loadFromOptions(options);
+        }
+
+        void saveToPreferences(Preferences preferences) {
+            T options = page.createOptions();
+            panel.saveToOptions(options);
+            page.saveToPreferences(preferences, options);
+        }
+
+        void saveAndApply(Preferences preferences) {
+            T options = page.createOptions();
+            panel.saveToOptions(options);
+            page.saveToPreferences(preferences, options);
+            page.applyPreferencesChanges(options);
+        }
+
+        void applyPreferencesChanges(Preferences preferences) {
+            T options = page.createOptions();
+            panel.saveToOptions(options);
+            page.applyPreferencesChanges(options);
         }
     }
 
@@ -391,13 +439,4 @@ public class OptionsTreePanel extends javax.swing.JPanel {
         }
         return row;
     } // expandJTreeNode()
-
-    @Override
-    public void setVisible(boolean visibility) {
-        if (visibility) {
-            loadPreferences(preferences);
-        }
-
-        super.setVisible(visibility);
-    }
 }

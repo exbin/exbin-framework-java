@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined.options.panel;
+package org.exbin.framework.gui.options.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.bined.options.StatusOptions;
+import org.exbin.framework.gui.utils.ComponentResourceProvider;
 
 /**
- * Status bar options panel api interface.
+ * Abstract class for default options page.
  *
- * @version 0.2.1 2019/06/17
+ * @version 0.2.1 2019/07/21
  * @author ExBin Project (http://exbin.org)
+ * @param <T> options data
  */
 @ParametersAreNonnullByDefault
-public interface StatusOptionsPanelApi {
+public interface DefaultOptionsPage<T extends OptionsData> extends OptionsPage<T>, ComponentResourceProvider {
 
-    void applyStatusOptions(StatusOptions statusOptions);
 }

@@ -21,8 +21,7 @@ import java.awt.event.ItemEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.editor.wave.preferences.WaveColorParameters;
+import org.exbin.framework.editor.wave.options.WaveColorOptions;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
@@ -32,30 +31,47 @@ import org.exbin.framework.editor.wave.service.WaveColorService;
 /**
  * Wave editor color selection panel.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class WaveColorOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class WaveColorOptionsPanel extends javax.swing.JPanel implements OptionsCapable<WaveColorOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(WaveColorOptionsPanel.class);
-    private final WaveColorService colorPanelApi;
+    private WaveColorService waveColorService;
     private final WaveColorPanel colorPanel;
 
-    public WaveColorOptionsPanel(WaveColorService colorPanelApi) {
-        this.colorPanelApi = colorPanelApi;
+    public WaveColorOptionsPanel() {
         initComponents();
 
-        colorPanel = new WaveColorPanel(colorPanelApi);
+        colorPanel = new WaveColorPanel();
         colorPanel.setEnabled(false);
         customColorsPanel.add(colorPanel, BorderLayout.CENTER);
     }
 
+    public void setWaveColorService(WaveColorService waveColorService) {
+        this.waveColorService = waveColorService;
+        colorPanel.setWaveColorService(waveColorService);
+    }
+
     @Nonnull
-    @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(WaveColorOptions options) {
+        boolean useDefaultColors = options.isUseDefaultColors();
+        defaultColorCheckBox.setSelected(useDefaultColors);
+        colorPanel.setEnabled(!useDefaultColors);
+        colorPanel.loadFromOptions(options);
+    }
+
+    @Override
+    public void saveToOptions(WaveColorOptions options) {
+        options.setUseDefaultColors(defaultColorCheckBox.isSelected());
+        colorPanel.saveToOptions(options);
     }
 
     /**
@@ -125,7 +141,7 @@ public class WaveColorOptionsPanel extends javax.swing.JPanel implements Options
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new WaveColorOptionsPanel(null));
+        WindowUtils.invokeDialog(new WaveColorOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -133,31 +149,6 @@ public class WaveColorOptionsPanel extends javax.swing.JPanel implements Options
     private javax.swing.JPanel customColorsPanel;
     private javax.swing.JCheckBox defaultColorCheckBox;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        WaveColorParameters waveColorParameters = new WaveColorParameters(preferences);
-        boolean useDefaultColors = waveColorParameters.useDefaultColors();
-        defaultColorCheckBox.setSelected(useDefaultColors);
-        colorPanel.setEnabled(!useDefaultColors);
-        colorPanel.loadFromPreferences(preferences);
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        WaveColorParameters waveColorParameters = new WaveColorParameters(preferences);
-        waveColorParameters.setUseDefaultColors(defaultColorCheckBox.isSelected());
-        colorPanel.saveToPreferences(preferences);
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-        if (defaultColorCheckBox.isSelected()) {
-            colorPanelApi.setCurrentWaveColors(colorPanelApi.getCurrentWaveColors());
-        } else {
-            colorPanel.applyPreferencesChanges();
-        }
-    }
 
     private void setModified() {
         if (optionsModifiedListener != null) {

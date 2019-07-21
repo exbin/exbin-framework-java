@@ -14,17 +14,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.bined.options.panel;
+package org.exbin.framework.gui.options.api;
 
-import org.exbin.bined.swing.extended.ExtCodeArea;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Code area options panel api interface.
+ * Interface for options page.
  *
- * @version 0.2.1 2019/06/16
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public interface CodeAreaOptionsPanelApi {
-
-    ExtCodeArea getCodeArea();
+@ParametersAreNonnullByDefault
+public interface OptionsData {
 }

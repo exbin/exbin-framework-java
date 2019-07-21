@@ -26,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ServiceConnectionParameters {
+public class ServiceConnectionPreferences {
 
     public static final String PREFERENCES_SERVICE_CONNECTION_ALLOWED = "serviceConnectionAllowed";
     public static final String PREFERENCES_SERVICE_CONNECTION_URL = "serviceConnectionURL";
@@ -35,7 +35,7 @@ public class ServiceConnectionParameters {
 
     private final Preferences preferences;
 
-    public ServiceConnectionParameters(Preferences preferences) {
+    public ServiceConnectionPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 

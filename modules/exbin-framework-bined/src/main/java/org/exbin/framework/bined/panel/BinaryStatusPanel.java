@@ -35,7 +35,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.options.StatusOptions;
-import org.exbin.framework.bined.preferences.StatusParameters;
+import org.exbin.framework.bined.preferences.StatusPreferences;
 
 /**
  * Binary editor status panel.
@@ -57,7 +57,7 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryStatusPanel.class);
 
-    private StatusParameters statusParameters;
+    private StatusPreferences statusParameters;
     private StatusControlHandler statusControlHandler;
 
     private StatusCursorPositionFormat cursorPositionFormat = new StatusCursorPositionFormat();
@@ -75,7 +75,7 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
         initComponents();
     }
 
-    public void loadFromPreferences(StatusParameters statusParameters) {
+    public void loadFromPreferences(StatusPreferences statusParameters) {
         this.statusParameters = statusParameters;
         cursorPositionFormat.setCodeType(statusParameters.getCursorPositionCodeType());
         cursorPositionFormat.setShowOffset(statusParameters.isCursorShowOffset());

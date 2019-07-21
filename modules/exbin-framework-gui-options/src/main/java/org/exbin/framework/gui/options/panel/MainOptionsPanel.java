@@ -23,32 +23,28 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.preferences.FrameworkParameters;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
+import org.exbin.framework.gui.options.options.FrameworkOptions;
 
 /**
  * Main options panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapable<FrameworkOptions> {
 
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
-    private OptionsCapable extendedPanel = null;
+    private OptionsCapable extendedOptionsPanel = null;
 
     private DefaultComboBoxModel<String> themesComboBoxModel;
     private DefaultComboBoxModel<Locale> languageComboBoxModel;
@@ -120,6 +116,22 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(FrameworkOptions options) {
+        Locale languageLocale = options.getLanguageLocale();
+        languageComboBox.setSelectedItem(languageLocale);
+
+        String laf = options.getLookAndFeel();
+        themeComboBox.setSelectedIndex(themes.indexOf(laf));
+    }
+
+    @Override
+    public void saveToOptions(FrameworkOptions options) {
+        options.setLookAndFeel(themes.get(themeComboBox.getSelectedIndex()));
+        Locale languageLocale = (Locale) languageComboBox.getSelectedItem();
+        options.setLanguageLocale(languageLocale);
     }
 
     /**
@@ -245,72 +257,17 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
     }
 
     @Override
-    public void applyPreferencesChanges() {
-        if (extendedPanel != null) {
-            extendedPanel.applyPreferencesChanges();
-        }
-
-        String selectedTheme = themes.get(themeComboBox.getSelectedIndex());
-        if (selectedTheme != null) {
-            if (selectedTheme.isEmpty()) {
-                String osName = System.getProperty("os.name").toLowerCase();
-                if (!osName.startsWith("windows") && !osName.startsWith("mac")) {
-                    try {
-                        // Try "GTK+" on linux
-                        UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-                        return;
-                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                    }
-                }
-                selectedTheme = UIManager.getSystemLookAndFeelClassName();
-            }
-
-            try {
-                UIManager.setLookAndFeel(selectedTheme);
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(MainOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        if (extendedPanel != null) {
-            extendedPanel.loadFromPreferences(preferences);
-        }
-
-        FrameworkParameters frameworkParameters = new FrameworkParameters(preferences);
-        Locale locale = frameworkParameters.getLocale();
-        languageComboBox.setSelectedItem(locale);
-
-        String laf = frameworkParameters.getLookAndFeel();
-        themeComboBox.setSelectedIndex(themes.indexOf(laf));
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        if (extendedPanel != null) {
-            extendedPanel.saveToPreferences(preferences);
-        }
-
-        FrameworkParameters frameworkParameters = new FrameworkParameters(preferences);
-        frameworkParameters.setLookAndFeel(themes.get(themeComboBox.getSelectedIndex()));
-        Locale locale = (Locale) languageComboBox.getSelectedItem();
-        frameworkParameters.setLocale(locale);
-    }
-
-    @Override
     public void setOptionsModifiedListener(OptionsModifiedListener listener) {
         optionsModifiedListener = listener;
     }
 
-    public void addExtendedPanel(OptionsCapable panel) {
-        if (extendedPanel != null) {
-            remove((Component) extendedPanel);
+    public void addExtendedPanel(OptionsCapable<?> optionsPanel) {
+        if (extendedOptionsPanel != null) {
+            remove((Component) extendedOptionsPanel);
         }
-        extendedPanel = panel;
-        add((Component) panel, BorderLayout.CENTER);
-        extendedPanel.setOptionsModifiedListener(optionsModifiedListener);
+        extendedOptionsPanel = optionsPanel;
+        add((Component) extendedOptionsPanel, BorderLayout.CENTER);
+        extendedOptionsPanel.setOptionsModifiedListener(optionsModifiedListener);
     }
 
     public void setLanguageLocales(Collection<Locale> locales) {

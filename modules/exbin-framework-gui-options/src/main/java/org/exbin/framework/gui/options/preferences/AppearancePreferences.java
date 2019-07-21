@@ -25,7 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceParameters {
+public class AppearancePreferences {
 
     public static final String PREFERENCES_TOOLBAR_VISIBLE = "toolBar.visible";
     public static final String PREFERENCES_TOOLBAR_CAPTIONS = "toolBar.captions";
@@ -33,7 +33,7 @@ public class AppearanceParameters {
 
     private final Preferences preferences;
 
-    public AppearanceParameters(Preferences preferences) {
+    public AppearancePreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 

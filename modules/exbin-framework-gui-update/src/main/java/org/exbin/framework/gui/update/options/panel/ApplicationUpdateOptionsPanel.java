@@ -19,21 +19,20 @@ package org.exbin.framework.gui.update.options.panel;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.gui.update.preferences.CheckForUpdateParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
+import org.exbin.framework.gui.update.options.CheckForUpdateOptions;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Application update options panel.
  *
- * @version 0.2.1 2018/06/09
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements OptionsCapable<CheckForUpdateOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ApplicationUpdateOptionsPanel.class);
@@ -46,6 +45,16 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(CheckForUpdateOptions options) {
+        checkForUpdatesOnStartCheckBox.setSelected(options.isCheckForUpdate());
+    }
+
+    @Override
+    public void saveToOptions(CheckForUpdateOptions options) {
+        options.setCheckForUpdate(checkForUpdatesOnStartCheckBox.isSelected());
     }
 
     /**
@@ -103,22 +112,6 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkForUpdatesOnStartCheckBox;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        CheckForUpdateParameters checkForUpdateParameters = new CheckForUpdateParameters(preferences);
-        checkForUpdatesOnStartCheckBox.setSelected(checkForUpdateParameters.isShouldCheckForUpdate());
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        CheckForUpdateParameters checkForUpdateParameters = new CheckForUpdateParameters(preferences);
-        checkForUpdateParameters.setShouldCheckForUpdate(checkForUpdatesOnStartCheckBox.isSelected());
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-    }
 
     private void setModified(boolean b) {
         if (optionsModifiedListener != null) {

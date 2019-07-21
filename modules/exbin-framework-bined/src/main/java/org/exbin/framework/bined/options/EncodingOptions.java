@@ -22,16 +22,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.capability.CharsetCapable;
 import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
+import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
  * Charset options.
  *
- * @version 0.2.0 2019/03/02
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EncodingOptions {
+public class EncodingOptions implements OptionsData {
 
     private String selectedEncoding = "UTF-8";
     private List<String> encodings = new ArrayList<>();
@@ -55,14 +56,14 @@ public class EncodingOptions {
         this.encodings = encodings;
     }
 
-    public void loadFromParameters(TextEncodingParameters parameters) {
-        selectedEncoding = parameters.getSelectedEncoding();
-        encodings = parameters.getEncodings();
+    public void loadFromParameters(TextEncodingPreferences preferences) {
+        selectedEncoding = preferences.getSelectedEncoding();
+        encodings = preferences.getEncodings();
     }
 
-    public void saveToParameters(TextEncodingParameters parameters) {
-        parameters.setSelectedEncoding(selectedEncoding);
-        parameters.setEncodings(encodings);
+    public void saveToParameters(TextEncodingPreferences preferences) {
+        preferences.setSelectedEncoding(selectedEncoding);
+        preferences.setEncodings(encodings);
     }
 
     public void applyFromCodeArea(ExtCodeArea codeArea) {

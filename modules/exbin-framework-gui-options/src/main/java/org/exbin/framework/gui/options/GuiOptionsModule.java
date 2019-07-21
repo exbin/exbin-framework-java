@@ -18,23 +18,31 @@ package org.exbin.framework.gui.options;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuGroup;
 import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
+import org.exbin.framework.gui.options.api.DefaultOptionsPage;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.OptionsData;
 import org.exbin.framework.gui.options.panel.OptionsTreePanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -42,14 +50,20 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
-import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsPathItem;
+import org.exbin.framework.gui.options.options.AppearanceOptions;
+import org.exbin.framework.gui.options.options.FrameworkOptions;
+import org.exbin.framework.gui.options.panel.AppearanceOptionsPanel;
+import org.exbin.framework.gui.options.panel.MainOptionsPanel;
+import org.exbin.framework.gui.options.preferences.AppearancePreferences;
 import org.exbin.framework.gui.utils.ComponentResourceProvider;
+import org.exbin.framework.preferences.FrameworkPreferences;
+import org.exbin.framework.gui.options.api.OptionsPage;
 
 /**
  * Implementation of framework options module.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -59,10 +73,9 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     private ResourceBundle resourceBundle;
 
     private Action optionsAction;
-    private OptionsTreePanel optionsTreePanel;
-    private final Map<List<OptionsPathItem>, OptionsCapable> optionsPanels = new HashMap<>();
-    private OptionsCapable mainOptionsExt = null;
-    private OptionsCapable appearanceOptionsExt = null;
+    private final List<OptionsPageRecord> optionsPages = new ArrayList<>();
+    private OptionsPage<?> mainOptionsExtPage = null;
+    private OptionsPage<?> appearanceOptionsExtPage = null;
 
     public GuiOptionsModule() {
     }
@@ -70,6 +83,106 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     @Override
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
+
+        OptionsPage<FrameworkOptions> mainOptionsPage = new DefaultOptionsPage<FrameworkOptions>() {
+            @Override
+            public OptionsCapable<FrameworkOptions> createPanel() {
+                return new MainOptionsPanel();
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
+            }
+
+            @Override
+            public FrameworkOptions createOptions() {
+                return new FrameworkOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, FrameworkOptions options) {
+                FrameworkPreferences prefs = new FrameworkPreferences(preferences);
+                options.loadFromParameters(prefs);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, FrameworkOptions options) {
+                FrameworkPreferences prefs = new FrameworkPreferences(preferences);
+                options.saveToParameters(prefs);
+            }
+
+            @Override
+            public void applyPreferencesChanges(FrameworkOptions options) {
+                String selectedTheme = options.getLookAndFeel();
+                if (selectedTheme != null) {
+                    if (selectedTheme.isEmpty()) {
+                        String osName = System.getProperty("os.name").toLowerCase();
+                        if (!osName.startsWith("windows") && !osName.startsWith("mac")) {
+                            try {
+                                // Try "GTK+" on linux
+                                UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+                                return;
+                            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                            }
+                        }
+                        selectedTheme = UIManager.getSystemLookAndFeelClassName();
+                    }
+
+                    try {
+                        UIManager.setLookAndFeel(selectedTheme);
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                        Logger.getLogger(FrameworkPreferences.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        };
+        optionsPages.add(new OptionsPageRecord(null, mainOptionsPage));
+
+        OptionsPage<AppearanceOptions> appearanceOptionsPage;
+        appearanceOptionsPage = new DefaultOptionsPage<AppearanceOptions>() {
+            @Override
+            public OptionsCapable<AppearanceOptions> createPanel() {
+                return new AppearanceOptionsPanel();
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
+            }
+
+            @Override
+            public AppearanceOptions createOptions() {
+                return new AppearanceOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, AppearanceOptions options) {
+                AppearancePreferences prefs = new AppearancePreferences(preferences);
+                options.loadFromParameters(prefs);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, AppearanceOptions options) {
+                AppearancePreferences prefs = new AppearancePreferences(preferences);
+                options.saveToParameters(prefs);
+            }
+
+            @Override
+            public void applyPreferencesChanges(AppearanceOptions options) {
+                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                ApplicationFrameHandler frame = frameModule.getFrameHandler();
+                frame.setToolBarVisible(options.isShowToolBar());
+                frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
+                frame.setStatusBarVisible(options.isShowStatusBar());
+            }
+        };
+        ResourceBundle optionsResourceBundle = LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
+        List<OptionsPathItem> optionsPath = new ArrayList<>();
+        optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
+        addOptionsPage(appearanceOptionsPage, optionsPath);
     }
 
     @Override
@@ -93,25 +206,24 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             optionsAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (optionsTreePanel == null) {
-                        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                        optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
-                        optionsPanels.entrySet().forEach((optionsPanel) -> {
-                            optionsTreePanel.addOptionsPanel(optionsPanel.getValue(), optionsPanel.getKey());
-                        });
-                        if (mainOptionsExt != null) {
-                            optionsTreePanel.extendMainOptionsPanel(mainOptionsExt);
-                        }
-                        if (appearanceOptionsExt != null) {
-                            optionsTreePanel.extendAppearanceOptionsPanel(appearanceOptionsExt);
-                        }
-                        optionsTreePanel.setLanguageLocales(application.getLanguageLocales());
+                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                    OptionsTreePanel optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
+                    optionsPages.forEach((record) -> {
+                        optionsTreePanel.addOptionsPage(record.optionsPage, record.path);
+                    });
+                    if (mainOptionsExtPage != null) {
+                        optionsTreePanel.extendMainOptionsPage(mainOptionsExtPage);
                     }
+                    if (appearanceOptionsExtPage != null) {
+                        optionsTreePanel.extendAppearanceOptionsPage(appearanceOptionsExtPage);
+                    }
+                    optionsTreePanel.setLanguageLocales(application.getLanguageLocales());
 
                     optionsTreePanel.setAppEditor(application);
                     optionsTreePanel.setPreferences(application.getAppPreferences());
+                    optionsTreePanel.pagesFinished();
+                    optionsTreePanel.loadAllFromPreferences();
 
-                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     OptionsControlPanel controlPanel = new OptionsControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(optionsTreePanel, controlPanel);
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -119,8 +231,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
                     controlPanel.setHandler((actionType) -> {
                         switch (actionType) {
                             case SAVE: {
-                                optionsTreePanel.applyPreferencesChanges();
-                                optionsTreePanel.saveToPreferences();
+                                optionsTreePanel.saveAndApplyAll();
                                 break;
                             }
                             case CANCEL: {
@@ -133,8 +244,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
                         }
                         dialog.close();
                     });
-                    dialog.center(dialog.getParent());
-                    dialog.show();
+                    dialog.showCentered(frameModule.getFrame());
                 }
             };
 
@@ -146,15 +256,12 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     }
 
     @Override
-    public void addOptionsPanel(OptionsCapable optionsPanel, List<OptionsPathItem> path) {
-        optionsPanels.put(path, optionsPanel);
-        if (optionsTreePanel != null) {
-            optionsTreePanel.addOptionsPanel(optionsPanel, path);
-        }
+    public void addOptionsPage(OptionsPage<?> optionsPage, List<OptionsPathItem> path) {
+        optionsPages.add(new OptionsPageRecord(path, optionsPage));
     }
 
     @Override
-    public void addOptionsPanel(OptionsCapable optionsPanel, String parentPath) {
+    public void addOptionsPage(OptionsPage<?> optionsPage, String parentPath) {
         ArrayList<OptionsPathItem> optionsPath = new ArrayList<>();
         String[] pathParts = parentPath.split("/");
         for (String pathPart : pathParts) {
@@ -162,41 +269,46 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
                 optionsPath.add(new OptionsPathItem(pathPart, null));
             }
         }
-        if (optionsPanel instanceof ComponentResourceProvider) {
-            ResourceBundle componentResourceBundle = ((ComponentResourceProvider) optionsPanel).getResourceBundle();
+        if (optionsPage instanceof ComponentResourceProvider) {
+            ResourceBundle componentResourceBundle = ((ComponentResourceProvider) optionsPage).getResourceBundle();
             String optionsDefaultName = componentResourceBundle.getString("options.name");
             String optionsDefaultCaption = componentResourceBundle.getString("options.caption");
             optionsPath.add(new OptionsPathItem(optionsDefaultName, optionsDefaultCaption));
         }
-        addOptionsPanel(optionsPanel, optionsPath);
+        addOptionsPage(optionsPage, optionsPath);
     }
 
     @Override
-    public void addOptionsPanel(OptionsCapable optionsPanel) {
+    public void addOptionsPage(OptionsPage<?> optionsPage) {
         String optionsDefaultPath;
-        if (optionsPanel instanceof ComponentResourceProvider) {
-            ResourceBundle componentResourceBundle = ((ComponentResourceProvider) optionsPanel).getResourceBundle();
+        if (optionsPage instanceof ComponentResourceProvider) {
+            ResourceBundle componentResourceBundle = ((ComponentResourceProvider) optionsPage).getResourceBundle();
             optionsDefaultPath = componentResourceBundle.getString("options.path");
         } else {
             optionsDefaultPath = null;
         }
 
-        addOptionsPanel(optionsPanel, optionsDefaultPath);
+        addOptionsPage(optionsPage, optionsDefaultPath);
     }
 
     @Override
-    public void extendMainOptionsPanel(OptionsCapable panel) {
-        mainOptionsExt = panel;
-        if (optionsTreePanel != null) {
-            optionsTreePanel.extendMainOptionsPanel(panel);
-        }
+    public void extendMainOptionsPage(OptionsPage<?> optionsPage) {
+        mainOptionsExtPage = optionsPage;
     }
 
     @Override
-    public void extendAppearanceOptionsPanel(OptionsCapable panel) {
-        appearanceOptionsExt = panel;
-        if (optionsTreePanel != null) {
-            optionsTreePanel.extendAppearanceOptionsPanel(panel);
+    public void extendAppearanceOptionsPage(OptionsPage<?> optionsPage) {
+        appearanceOptionsExtPage = optionsPage;
+    }
+
+    @Override
+    public void initialLoadFromPreferences() {
+        Preferences preferences = application.getAppPreferences();
+        for (OptionsPageRecord optionsPage : optionsPages) {
+            OptionsPage page = optionsPage.optionsPage;
+            OptionsData options = page.createOptions();
+            page.loadFromPreferences(preferences, options);
+            page.applyPreferencesChanges(options);
         }
     }
 
@@ -206,5 +318,16 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         menuModule.registerMenuGroup(GuiFrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.AROUND));
         getOptionsAction();
         menuModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
+    }
+
+    private static class OptionsPageRecord {
+
+        List<OptionsPathItem> path;
+        OptionsPage<?> optionsPage;
+
+        public OptionsPageRecord(@Nullable List<OptionsPathItem> path, OptionsPage<?> optionsPage) {
+            this.path = path;
+            this.optionsPage = optionsPage;
+        }
     }
 }

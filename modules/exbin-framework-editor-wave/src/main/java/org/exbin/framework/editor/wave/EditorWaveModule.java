@@ -16,18 +16,26 @@
  */
 package org.exbin.framework.editor.wave;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.util.ResourceBundle;
+import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
-import org.exbin.framework.editor.wave.options.panel.AudioDevicesPanel;
+import org.exbin.framework.editor.wave.options.AudioDevicesOptions;
+import org.exbin.framework.editor.wave.options.WaveColorOptions;
+import org.exbin.framework.editor.wave.options.panel.AudioDevicesOptionsPanel;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
 import org.exbin.framework.editor.wave.panel.AudioStatusPanel;
 import org.exbin.framework.editor.wave.options.panel.WaveColorOptionsPanel;
+import org.exbin.framework.editor.wave.preferences.AudioDevicesPreferences;
+import org.exbin.framework.editor.wave.preferences.WaveColorPreferences;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -43,11 +51,14 @@ import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.editor.wave.service.WaveColorService;
 import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.gui.options.api.DefaultOptionsPage;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * XBUP audio editor module.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 public class EditorWaveModule implements XBApplicationModule {
@@ -178,10 +189,92 @@ public class EditorWaveModule implements XBApplicationModule {
 
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
-        WaveColorService waveColorPanelFrame = new WaveColorServiceImpl(getEditorProvider());
+        WaveColorService waveColorService = new WaveColorServiceImpl(getEditorProvider());
 
-        optionsModule.addOptionsPanel(new WaveColorOptionsPanel(waveColorPanelFrame));
-        optionsModule.addOptionsPanel(new AudioDevicesPanel());
+        optionsModule.addOptionsPage(new DefaultOptionsPage<WaveColorOptions>() {
+            @Override
+            public OptionsCapable<WaveColorOptions> createPanel() {
+                WaveColorOptionsPanel panel = new WaveColorOptionsPanel();
+                panel.setWaveColorService(waveColorService);
+                return panel;
+            }
+
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(WaveColorOptionsPanel.class);
+            }
+
+            @Override
+            public WaveColorOptions createOptions() {
+                return new WaveColorOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, WaveColorOptions options) {
+                WaveColorPreferences parameters = new WaveColorPreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, WaveColorOptions options) {
+                WaveColorPreferences parameters = new WaveColorPreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(WaveColorOptions options) {
+                if (options.isUseDefaultColors()) {
+                    waveColorService.setCurrentWaveColors(waveColorService.getCurrentWaveColors());
+                } else {
+                    Color[] colors = new Color[6];
+                    colors[0] = intToColor(options.getWaveColor());
+                    colors[1] = intToColor(options.getWaveFillColor());
+                    colors[2] = intToColor(options.getWaveCursorColor());
+                    colors[3] = intToColor(options.getWaveCursorWaveColor());
+                    colors[4] = intToColor(options.getWaveBackgroundColor());
+                    colors[5] = intToColor(options.getWaveSelectionColor());
+                    waveColorService.setCurrentWaveColors(colors);
+                }
+            }
+
+            @Nullable
+            private Color intToColor(@Nullable Integer intValue) {
+                return intValue == null ? null : new Color(intValue);
+            }
+        });
+        optionsModule.addOptionsPage(new DefaultOptionsPage<AudioDevicesOptions>() {
+            @Override
+            public OptionsCapable<AudioDevicesOptions> createPanel() {
+                return new AudioDevicesOptionsPanel();
+            }
+
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(AudioDevicesOptionsPanel.class);
+            }
+
+            @Override
+            public AudioDevicesOptions createOptions() {
+                return new AudioDevicesOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, AudioDevicesOptions options) {
+                AudioDevicesPreferences parameters = new AudioDevicesPreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, AudioDevicesOptions options) {
+                AudioDevicesPreferences parameters = new AudioDevicesPreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(AudioDevicesOptions options) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
     }
 
     public void registerToolsOptionsMenuActions() {

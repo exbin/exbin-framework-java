@@ -21,7 +21,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
-import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 import org.exbin.framework.editor.text.service.*;
 
 /**
@@ -34,7 +34,7 @@ import org.exbin.framework.editor.text.service.*;
 public class TextEncodingServiceImpl implements TextEncodingService {
 
     private List<String> encodings = new ArrayList<>();
-    private String selectedEncoding = TextEncodingParameters.ENCODING_UTF8;
+    private String selectedEncoding = TextEncodingPreferences.ENCODING_UTF8;
     private TextEncodingStatusApi textEncodingStatus = null;
     private EncodingChangeListener encodingChangeListener = null;
 
@@ -61,7 +61,10 @@ public class TextEncodingServiceImpl implements TextEncodingService {
     @Override
     public void setSelectedEncoding(String encoding) {
         selectedEncoding = encoding;
-        textEncodingStatus.setEncoding(encoding);
+
+        if (textEncodingStatus != null) {
+            textEncodingStatus.setEncoding(encoding);
+        }
 
         if (encodingChangeListener != null) {
             encodingChangeListener.selectedEncodingChanged();
@@ -71,10 +74,11 @@ public class TextEncodingServiceImpl implements TextEncodingService {
     @Override
     public void setTextEncodingStatus(TextEncodingStatusApi textEncodingStatus) {
         this.textEncodingStatus = textEncodingStatus;
+        textEncodingStatus.setEncoding(selectedEncoding);
     }
 
     @Override
-    public void loadFromPreferences(TextEncodingParameters preferences) {
+    public void loadFromPreferences(TextEncodingPreferences preferences) {
         selectedEncoding = preferences.getSelectedEncoding();
         encodings.clear();
         encodings.addAll(preferences.getEncodings());

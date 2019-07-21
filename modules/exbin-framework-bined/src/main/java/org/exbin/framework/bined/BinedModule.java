@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
@@ -64,13 +65,22 @@ import org.exbin.bined.BasicCodeAreaZone;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.bined.basic.EnterKeyHandlingMode;
 import org.exbin.bined.delta.SegmentsRepository;
+import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.swing.CodeAreaCommandHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
+import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.bined.options.BinaryAppearanceOptions;
+import org.exbin.framework.bined.options.CodeAreaColorOptions;
+import org.exbin.framework.bined.options.CodeAreaLayoutOptions;
+import org.exbin.framework.bined.options.CodeAreaOptions;
+import org.exbin.framework.bined.options.CodeAreaThemeOptions;
+import org.exbin.framework.bined.options.EditorOptions;
 import org.exbin.framework.bined.options.StatusOptions;
 import org.exbin.framework.bined.options.panel.BinaryAppearanceOptionsPanel;
 import org.exbin.framework.bined.panel.BinaryPanel;
@@ -103,28 +113,36 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.bined.options.panel.CodeAreaOptionsPanel;
-import org.exbin.framework.bined.options.panel.CodeAreaOptionsPanelApi;
 import org.exbin.framework.bined.options.panel.ColorProfilesOptionsPanel;
 import org.exbin.framework.bined.options.panel.EditorOptionsPanel;
-import org.exbin.framework.bined.options.panel.EditorOptionsPanelApi;
 import org.exbin.framework.bined.options.panel.LayoutProfilesOptionsPanel;
 import org.exbin.framework.bined.options.panel.StatusOptionsPanel;
 import org.exbin.framework.bined.options.panel.ThemeProfilesOptionsPanel;
-import org.exbin.framework.bined.preferences.EditorParameters;
-import org.exbin.framework.bined.preferences.StatusParameters;
-import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
-import org.exbin.framework.editor.text.preferences.TextFontParameters;
+import org.exbin.framework.bined.preferences.BinaryAppearancePreferences;
+import org.exbin.framework.bined.preferences.CodeAreaColorPreferences;
+import org.exbin.framework.bined.preferences.CodeAreaLayoutPreferences;
+import org.exbin.framework.bined.preferences.CodeAreaPreferences;
+import org.exbin.framework.bined.preferences.CodeAreaThemePreferences;
+import org.exbin.framework.bined.preferences.EditorPreferences;
+import org.exbin.framework.bined.preferences.StatusPreferences;
+import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
+import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.bined.service.BinaryAppearanceService;
 import org.exbin.framework.bined.service.impl.BinaryAppearanceServiceImpl;
+import org.exbin.framework.editor.text.options.TextEncodingOptions;
+import org.exbin.framework.editor.text.options.TextFontOptions;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextFontService;
 import org.exbin.framework.editor.text.service.impl.TextEncodingServiceImpl;
+import org.exbin.framework.gui.options.api.OptionsCapable;
+import org.exbin.framework.bined.service.EditorOptionsService;
+import org.exbin.framework.gui.options.api.DefaultOptionsPage;
 
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2019/07/19
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -149,15 +167,15 @@ public class BinedModule implements XBApplicationModule {
     private XBApplication application;
     private BinaryEditorProvider editorProvider;
     private BinaryStatusPanel binaryStatusPanel;
-    private TextEncodingOptionsPanel textEncodingOptionsPanel;
-    private TextFontOptionsPanel textFontOptionsPanel;
-    private BinaryAppearanceOptionsPanel binaryAppearanceOptionsPanel;
-    private EditorOptionsPanel editorOptionsPanel;
-    private CodeAreaOptionsPanel codeAreaOptionsPanel;
-    private StatusOptionsPanel statusOptionsPanel;
-    private ThemeProfilesOptionsPanel themeProfilesOptionsPanel;
-    private LayoutProfilesOptionsPanel layoutProfilesOptionsPanel;
-    private ColorProfilesOptionsPanel colorProfilesOptionsPanel;
+    private DefaultOptionsPage<TextEncodingOptions> textEncodingOptionsPage;
+    private DefaultOptionsPage<TextFontOptions> textFontOptionsPage;
+    private DefaultOptionsPage<BinaryAppearanceOptions> binaryAppearanceOptionsPage;
+    private DefaultOptionsPage<EditorOptions> editorOptionsPage;
+    private DefaultOptionsPage<CodeAreaOptions> codeAreaOptionsPage;
+    private DefaultOptionsPage<StatusOptions> statusOptionsPage;
+    private DefaultOptionsPage<CodeAreaThemeOptions> themeProfilesOptionsPage;
+    private DefaultOptionsPage<CodeAreaLayoutOptions> layoutProfilesOptionsPage;
+    private DefaultOptionsPage<CodeAreaColorOptions> colorProfilesOptionsPage;
 
     private FindReplaceHandler findReplaceHandler;
     private ViewNonprintablesHandler viewNonprintablesHandler;
@@ -207,7 +225,7 @@ public class BinedModule implements XBApplicationModule {
 
     public BinaryEditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            EditorParameters editorParameters = new EditorParameters(application.getAppPreferences());
+            EditorPreferences editorParameters = new EditorPreferences(application.getAppPreferences());
 
             String deltaModeString = editorParameters.getMemoryMode();
             BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
@@ -302,8 +320,50 @@ public class BinedModule implements XBApplicationModule {
         BinaryAppearanceService binaryAppearanceService;
         binaryAppearanceService = new BinaryAppearanceServiceImpl(this);
 
-        binaryAppearanceOptionsPanel = new BinaryAppearanceOptionsPanel(binaryAppearanceService);
-        optionsModule.extendAppearanceOptionsPanel(binaryAppearanceOptionsPanel);
+        binaryAppearanceOptionsPage = new DefaultOptionsPage<BinaryAppearanceOptions>() {
+            private BinaryAppearanceOptionsPanel panel;
+
+            @Nonnull
+            @Override
+            public OptionsCapable<BinaryAppearanceOptions> createPanel() {
+                if (panel == null) {
+                    panel = new BinaryAppearanceOptionsPanel();
+                }
+
+                return panel;
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(BinaryAppearanceOptionsPanel.class);
+            }
+
+            @Nonnull
+            @Override
+            public BinaryAppearanceOptions createOptions() {
+                return new BinaryAppearanceOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, BinaryAppearanceOptions options) {
+                BinaryAppearancePreferences parameters = new BinaryAppearancePreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, BinaryAppearanceOptions options) {
+                BinaryAppearancePreferences parameters = new BinaryAppearancePreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(BinaryAppearanceOptions options) {
+                binaryAppearanceService.setWordWrapMode(options.isLineWrapping());
+                binaryAppearanceService.setShowValuesPanel(options.isShowValuesPanel());
+            }
+        };
+        optionsModule.extendAppearanceOptionsPage(binaryAppearanceOptionsPage);
 
         TextEncodingService textEncodingService = new TextEncodingServiceImpl();
         textEncodingService.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
@@ -318,29 +378,69 @@ public class BinedModule implements XBApplicationModule {
             }
         });
 
-        textEncodingOptionsPanel = new TextEncodingOptionsPanel();
-        textEncodingOptionsPanel.setTextEncodingService(textEncodingService);
-        textEncodingOptionsPanel.setAddEncodingsOperation((List<String> usedEncodings) -> {
-            final List<String> result = new ArrayList<>();
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
-            addEncodingPanel.setUsedEncodings(usedEncodings);
-            DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
-            JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
-            final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
-            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                    result.addAll(addEncodingPanel.getEncodings());
+        textEncodingOptionsPage = new DefaultOptionsPage<TextEncodingOptions>() {
+            private TextEncodingOptionsPanel panel;
+
+            @Override
+            public OptionsCapable<TextEncodingOptions> createPanel() {
+                if (panel == null) {
+                    panel = new TextEncodingOptionsPanel();
+                    panel.setTextEncodingService(textEncodingService);
+                    panel.setAddEncodingsOperation((List<String> usedEncodings) -> {
+                        final List<String> result = new ArrayList<>();
+                        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                        final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
+                        addEncodingPanel.setUsedEncodings(usedEncodings);
+                        DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
+                        JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
+                        final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
+                        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                                result.addAll(addEncodingPanel.getEncodings());
+                            }
+
+                            addEncodingDialog.close();
+                        });
+                        frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
+                        addEncodingDialog.showCentered(panel);
+                        addEncodingDialog.dispose();
+                        return result;
+                    });
                 }
 
-                addEncodingDialog.close();
-            });
-            frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
-            addEncodingDialog.showCentered(textEncodingOptionsPanel);
-            addEncodingDialog.dispose();
-            return result;
-        });
-        optionsModule.addOptionsPanel(textEncodingOptionsPanel);
+                return panel;
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
+            }
+
+            @Override
+            public TextEncodingOptions createOptions() {
+                return new TextEncodingOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, TextEncodingOptions options) {
+                TextEncodingPreferences parameters = new TextEncodingPreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, TextEncodingOptions options) {
+                TextEncodingPreferences parameters = new TextEncodingPreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(TextEncodingOptions options) {
+                textEncodingService.setSelectedEncoding(options.getSelectedEncoding());
+                textEncodingService.setEncodings(options.getEncodings());
+            }
+        };
+        optionsModule.addOptionsPage(textEncodingOptionsPage);
 
         TextFontService textFontService = new TextFontService() {
             @Override
@@ -358,46 +458,85 @@ public class BinedModule implements XBApplicationModule {
                 ((TextFontApi) getEditorProvider()).setCurrentFont(font);
             }
         };
-        textFontOptionsPanel = new TextFontOptionsPanel();
-        textFontOptionsPanel.setTextFontService(textFontService);
-        textFontOptionsPanel.setFontChangeAction(new TextFontOptionsPanel.FontChangeAction() {
+        textFontOptionsPage = new DefaultOptionsPage<TextFontOptions>() {
+            private TextFontOptionsPanel panel;
+
             @Override
-            public Font changeFont(Font currentFont) {
-                final Result result = new Result();
-                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final TextFontPanel fontPanel = new TextFontPanel();
-                fontPanel.setStoredFont(currentFont);
-                OptionsControlPanel controlPanel = new OptionsControlPanel();
-                JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
-                final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
-                frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
-                controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-                    if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                        if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                            TextFontParameters parameters = new TextFontParameters(application.getAppPreferences());
-                            parameters.setUseDefaultFont(false);
-                            parameters.setFont(fontPanel.getStoredFont());
+            public OptionsCapable<TextFontOptions> createPanel() {
+                if (panel == null) {
+                    panel = new TextFontOptionsPanel();
+                    panel.setTextFontService(textFontService);
+                    panel.setFontChangeAction(new TextFontOptionsPanel.FontChangeAction() {
+                        @Override
+                        public Font changeFont(Font currentFont) {
+                            final Result result = new Result();
+                            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                            final TextFontPanel fontPanel = new TextFontPanel();
+                            fontPanel.setStoredFont(currentFont);
+                            OptionsControlPanel controlPanel = new OptionsControlPanel();
+                            JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
+                            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                            WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
+                            frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
+                            controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
+                                if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+                                    if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                                        TextFontPreferences parameters = new TextFontPreferences(application.getAppPreferences());
+                                        parameters.setUseDefaultFont(false);
+                                        parameters.setFont(fontPanel.getStoredFont());
+                                    }
+                                    result.font = fontPanel.getStoredFont();
+                                }
+
+                                dialog.close();
+                            });
+                            dialog.showCentered(panel);
+                            dialog.dispose();
+
+                            return result.font;
                         }
-                        result.font = fontPanel.getStoredFont();
-                    }
 
-                    dialog.close();
-                });
-                dialog.showCentered(textFontOptionsPanel);
-                dialog.dispose();
+                        class Result {
 
-                return result.font;
+                            Font font;
+                        }
+                    });
+                }
+
+                return panel;
             }
 
-            class Result {
-
-                Font font;
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(TextFontOptionsPanel.class);
             }
-        });
-        optionsModule.addOptionsPanel(textFontOptionsPanel);
 
-        editorOptionsPanel = new EditorOptionsPanel(new EditorOptionsPanelApi() {
+            @Override
+            public TextFontOptions createOptions() {
+                return new TextFontOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, TextFontOptions options) {
+                TextFontPreferences parameters = new TextFontPreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, TextFontOptions options) {
+                TextFontPreferences parameters = new TextFontPreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(TextFontOptions options) {
+                textFontService.setCurrentFont(options.getFont(textFontService.getDefaultFont()));
+            }
+        };
+        optionsModule.addOptionsPage(textFontOptionsPage);
+
+        EditorOptionsService editorOptionsService = new EditorOptionsService() {
             @Override
             public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
                 getEditorProvider().setFileHandlingMode(fileHandlingMode);
@@ -420,24 +559,254 @@ public class BinedModule implements XBApplicationModule {
                 CodeAreaCommandHandler commandHandler = getEditorProvider().getCodeArea().getCommandHandler();
                 ((CodeAreaOperationCommandHandler) commandHandler).setEnterKeyHandlingMode(enterKeyHandlingMode);
             }
-        });
-        optionsModule.addOptionsPanel(editorOptionsPanel);
+        };
+        editorOptionsPage = new DefaultOptionsPage<EditorOptions>() {
+            private EditorOptionsPanel panel;
 
-        CodeAreaOptionsPanelApi codeAreaOptionsPanelApi = getEditorProvider()::getCodeArea;
-        codeAreaOptionsPanel = new CodeAreaOptionsPanel(codeAreaOptionsPanelApi);
-        optionsModule.addOptionsPanel(codeAreaOptionsPanel);
+            @Override
+            public OptionsCapable<EditorOptions> createPanel() {
+                if (panel == null) {
+                    panel = new EditorOptionsPanel();
+                }
 
-        statusOptionsPanel = new StatusOptionsPanel((StatusOptions statusOptions) -> {
-            statusOptionsPanel.loadFromOptions(statusOptions);
-        });
-        optionsModule.addOptionsPanel(statusOptionsPanel);
+                return panel;
+            }
 
-        themeProfilesOptionsPanel = new ThemeProfilesOptionsPanel(codeAreaOptionsPanelApi);
-        optionsModule.addOptionsPanel(themeProfilesOptionsPanel);
-        layoutProfilesOptionsPanel = new LayoutProfilesOptionsPanel(codeAreaOptionsPanelApi);
-        optionsModule.addOptionsPanel(layoutProfilesOptionsPanel);
-        colorProfilesOptionsPanel = new ColorProfilesOptionsPanel(codeAreaOptionsPanelApi);
-        optionsModule.addOptionsPanel(colorProfilesOptionsPanel);
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(EditorOptionsPanel.class);
+            }
+
+            @Override
+            public EditorOptions createOptions() {
+                return new EditorOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, EditorOptions options) {
+                EditorPreferences parameters = new EditorPreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, EditorOptions options) {
+                EditorPreferences parameters = new EditorPreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(EditorOptions options) {
+                editorOptionsService.setFileHandlingMode(options.getFileHandlingMode());
+                editorOptionsService.setIsShowValuesPanel(options.isIsShowValuesPanel());
+                editorOptionsService.setEditorHandlingMode(options.getEnterKeyHandlingMode());
+            }
+        };
+        optionsModule.addOptionsPage(editorOptionsPage);
+
+        codeAreaOptionsPage = new DefaultOptionsPage<CodeAreaOptions>() {
+            @Override
+            public OptionsCapable<CodeAreaOptions> createPanel() {
+                return new CodeAreaOptionsPanel();
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(CodeAreaOptionsPanel.class);
+            }
+
+            @Override
+            public CodeAreaOptions createOptions() {
+                return new CodeAreaOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, CodeAreaOptions options) {
+                CodeAreaPreferences parameters = new CodeAreaPreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, CodeAreaOptions options) {
+                CodeAreaPreferences parameters = new CodeAreaPreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(CodeAreaOptions options) {
+                options.applyToCodeArea(getEditorProvider().getCodeArea());
+            }
+        };
+        optionsModule.addOptionsPage(codeAreaOptionsPage);
+
+        statusOptionsPage = new DefaultOptionsPage<StatusOptions>() {
+            private StatusOptionsPanel panel;
+
+            @Override
+            public OptionsCapable<StatusOptions> createPanel() {
+                if (panel == null) {
+                    panel = new StatusOptionsPanel();
+                }
+
+                return panel;
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(StatusOptionsPanel.class);
+            }
+
+            @Override
+            public StatusOptions createOptions() {
+                return new StatusOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, StatusOptions options) {
+                StatusPreferences parameters = new StatusPreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, StatusOptions options) {
+                StatusPreferences parameters = new StatusPreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(StatusOptions options) {
+                // TODO getEditorProvider().get
+            }
+        };
+        optionsModule.addOptionsPage(statusOptionsPage);
+
+        themeProfilesOptionsPage = new DefaultOptionsPage<CodeAreaThemeOptions>() {
+            private ThemeProfilesOptionsPanel panel;
+
+            @Override
+            public OptionsCapable<CodeAreaThemeOptions> createPanel() {
+                if (panel == null) {
+                    panel = new ThemeProfilesOptionsPanel();
+                }
+
+                return panel;
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(ThemeProfilesOptionsPanel.class);
+            }
+
+            @Override
+            public CodeAreaThemeOptions createOptions() {
+                return new CodeAreaThemeOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, CodeAreaThemeOptions options) {
+                CodeAreaThemePreferences parameters = new CodeAreaThemePreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, CodeAreaThemeOptions options) {
+                CodeAreaThemePreferences parameters = new CodeAreaThemePreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(CodeAreaThemeOptions options) {
+                int selectedProfile = options.getSelectedProfile();
+                if (selectedProfile >= 0) {
+                    ExtendedCodeAreaThemeProfile profile = options.getThemeProfile(selectedProfile);
+                    getEditorProvider().getCodeArea().setThemeProfile(profile);
+                }
+            }
+        };
+        optionsModule.addOptionsPage(themeProfilesOptionsPage);
+
+        layoutProfilesOptionsPage = new DefaultOptionsPage<CodeAreaLayoutOptions>() {
+            @Override
+            public OptionsCapable<CodeAreaLayoutOptions> createPanel() {
+                return new LayoutProfilesOptionsPanel();
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(LayoutProfilesOptionsPanel.class);
+            }
+
+            @Override
+            public CodeAreaLayoutOptions createOptions() {
+                return new CodeAreaLayoutOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, CodeAreaLayoutOptions options) {
+                CodeAreaLayoutPreferences parameters = new CodeAreaLayoutPreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, CodeAreaLayoutOptions options) {
+                CodeAreaLayoutPreferences parameters = new CodeAreaLayoutPreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(CodeAreaLayoutOptions options) {
+                int selectedProfile = options.getSelectedProfile();
+                if (selectedProfile >= 0) {
+                    ExtendedCodeAreaLayoutProfile profile = options.getLayoutProfile(selectedProfile);
+                    getEditorProvider().getCodeArea().setLayoutProfile(profile);
+                }
+            }
+        };
+        optionsModule.addOptionsPage(layoutProfilesOptionsPage);
+
+        colorProfilesOptionsPage = new DefaultOptionsPage<CodeAreaColorOptions>() {
+            @Override
+            public OptionsCapable<CodeAreaColorOptions> createPanel() {
+                return new ColorProfilesOptionsPanel();
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return LanguageUtils.getResourceBundleByClass(ColorProfilesOptionsPanel.class);
+            }
+
+            @Override
+            public CodeAreaColorOptions createOptions() {
+                return new CodeAreaColorOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, CodeAreaColorOptions options) {
+                CodeAreaColorPreferences parameters = new CodeAreaColorPreferences(preferences);
+                options.loadFromParameters(parameters);
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, CodeAreaColorOptions options) {
+                CodeAreaColorPreferences parameters = new CodeAreaColorPreferences(preferences);
+                options.saveToParameters(parameters);
+            }
+
+            @Override
+            public void applyPreferencesChanges(CodeAreaColorOptions options) {
+                int selectedProfile = options.getSelectedProfile();
+                if (selectedProfile >= 0) {
+                    ExtendedCodeAreaColorProfile profile = options.getColorProfile(selectedProfile);
+                    getEditorProvider().getCodeArea().setColorsProfile(profile);
+                }
+            }
+        };
+        optionsModule.addOptionsPage(colorProfilesOptionsPage);
     }
 
     public void registerWordWrapping() {
@@ -452,6 +821,7 @@ public class BinedModule implements XBApplicationModule {
         menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, goToRowHandler.getGoToRowAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
+    @Nullable
     public BinaryStatusPanel getBinaryStatusPanel() {
         return binaryStatusPanel;
     }
@@ -529,9 +899,11 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler(application); // getEditorProvider(), 
-            encodingsHandler.setTextEncodingStatus(getBinaryStatusPanel());
-            // encodingsHandler.init();
+            encodingsHandler = new EncodingsHandler(); // getEditorProvider(), 
+            if (binaryStatusPanel != null) {
+                encodingsHandler.setTextEncodingStatus(binaryStatusPanel);
+            }
+            encodingsHandler.init();
         }
 
         return encodingsHandler;
@@ -1035,48 +1407,8 @@ public class BinedModule implements XBApplicationModule {
     }
 
     public void loadFromPreferences(Preferences preferences) {
-        encodingsHandler.loadFromPreferences(new TextEncodingParameters(preferences));
-        binaryStatusPanel.loadFromPreferences(new StatusParameters(preferences));
-
-        if (textFontOptionsPanel != null) {
-            textFontOptionsPanel.loadFromPreferences(preferences);
-            textFontOptionsPanel.applyPreferencesChanges();
-        }
-
-        if (binaryAppearanceOptionsPanel != null) {
-            binaryAppearanceOptionsPanel.loadFromPreferences(preferences);
-            binaryAppearanceOptionsPanel.applyPreferencesChanges();
-        }
-
-        if (editorOptionsPanel != null) {
-            editorOptionsPanel.loadFromPreferences(preferences);
-            editorOptionsPanel.applyPreferencesChanges();
-        }
-
-        if (codeAreaOptionsPanel != null) {
-            codeAreaOptionsPanel.loadFromPreferences(preferences);
-            codeAreaOptionsPanel.applyPreferencesChanges();
-        }
-
-        if (statusOptionsPanel != null) {
-            statusOptionsPanel.loadFromPreferences(preferences);
-            statusOptionsPanel.applyPreferencesChanges();
-        }
-
-        if (themeProfilesOptionsPanel != null) {
-            themeProfilesOptionsPanel.loadFromPreferences(preferences);
-            themeProfilesOptionsPanel.applyPreferencesChanges();
-        }
-
-        if (layoutProfilesOptionsPanel != null) {
-            layoutProfilesOptionsPanel.loadFromPreferences(preferences);
-            layoutProfilesOptionsPanel.applyPreferencesChanges();
-        }
-
-        if (colorProfilesOptionsPanel != null) {
-            colorProfilesOptionsPanel.loadFromPreferences(preferences);
-            colorProfilesOptionsPanel.applyPreferencesChanges();
-        }
+        encodingsHandler.loadFromPreferences(new TextEncodingPreferences(preferences));
+        binaryStatusPanel.loadFromPreferences(new StatusPreferences(preferences));
     }
 
     public CodeAreaPopupMenuHandler getCodeAreaPopupMenuHandler() {

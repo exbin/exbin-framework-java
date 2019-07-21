@@ -45,7 +45,7 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModuleRepository;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.preferences.FrameworkParameters;
+import org.exbin.framework.preferences.FrameworkPreferences;
 
 /**
  * Base application class.
@@ -124,7 +124,7 @@ public class XBBaseApplication implements XBApplication {
     }
 
     private void initByPreferences() {
-        FrameworkParameters frameworkParameters = new FrameworkParameters(appPreferences);
+        FrameworkPreferences frameworkParameters = new FrameworkPreferences(appPreferences);
 
         // Switching language
         Locale locale = frameworkParameters.getLocale();

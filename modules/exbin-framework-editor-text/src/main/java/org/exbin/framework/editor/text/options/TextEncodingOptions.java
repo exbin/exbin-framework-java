@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
+import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
+import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
  * Text encoding options.
@@ -28,9 +29,9 @@ import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingOptions {
+public class TextEncodingOptions implements OptionsData {
 
-    private String selectedEncoding = TextEncodingParameters.ENCODING_UTF8;
+    private String selectedEncoding = TextEncodingPreferences.ENCODING_UTF8;
     private List<String> encodings = new ArrayList<>();
 
     @Nonnull
@@ -52,14 +53,14 @@ public class TextEncodingOptions {
         this.encodings = encodings;
     }
 
-    public void loadFromParameters(TextEncodingParameters parameters) {
-        selectedEncoding = parameters.getSelectedEncoding();
-        encodings = parameters.getEncodings();
+    public void loadFromParameters(TextEncodingPreferences preferences) {
+        selectedEncoding = preferences.getSelectedEncoding();
+        encodings = preferences.getEncodings();
     }
 
-    public void saveToParameters(TextEncodingParameters parameters) {
-        parameters.setSelectedEncoding(selectedEncoding);
-        parameters.setEncodings(encodings);
+    public void saveToParameters(TextEncodingPreferences preferences) {
+        preferences.setSelectedEncoding(selectedEncoding);
+        preferences.setEncodings(encodings);
     }
 
     public void setOptions(TextEncodingOptions options) {

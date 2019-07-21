@@ -30,14 +30,14 @@ import org.exbin.framework.bined.panel.GoToBinaryPanel.GoToBinaryPositionMode;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class GoToPositionParameters {
+public class GoToPositionPreferences {
 
     public static final String PREFERENCES_GO_TO_BINARY_POSITION_MODE = "goToBinaryPositionMode";
     public static final String PREFERENCES_GO_TO_BINARY_POSITION_VALUE_TYPE = "goToBinaryPositionValueType";
 
     private final Preferences preferences;
 
-    public GoToPositionParameters(Preferences preferences) {
+    public GoToPositionPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 
@@ -47,7 +47,7 @@ public class GoToPositionParameters {
         try {
             return GoToBinaryPositionMode.valueOf(preferences.get(PREFERENCES_GO_TO_BINARY_POSITION_MODE, defaultMode.name()));
         } catch (Exception ex) {
-            Logger.getLogger(GoToPositionParameters.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GoToPositionPreferences.class.getName()).log(Level.SEVERE, null, ex);
             return defaultMode;
         }
     }
@@ -62,7 +62,7 @@ public class GoToPositionParameters {
         try {
             return PositionCodeType.valueOf(preferences.get(PREFERENCES_GO_TO_BINARY_POSITION_VALUE_TYPE, defaultCodeType.name()));
         } catch (Exception ex) {
-            Logger.getLogger(GoToPositionParameters.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GoToPositionPreferences.class.getName()).log(Level.SEVERE, null, ex);
             return defaultCodeType;
         }
     }

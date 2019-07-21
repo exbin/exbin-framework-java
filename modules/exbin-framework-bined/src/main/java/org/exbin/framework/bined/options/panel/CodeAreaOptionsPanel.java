@@ -18,7 +18,6 @@ package org.exbin.framework.bined.options.panel;
 import java.awt.Font;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.bined.CodeAreaViewMode;
@@ -26,9 +25,7 @@ import org.exbin.bined.CodeCharactersCase;
 import org.exbin.bined.CodeType;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.bined.capability.RowWrappingCapable;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.bined.options.CodeAreaOptions;
-import org.exbin.framework.bined.preferences.CodeAreaParameters;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -41,19 +38,17 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 /**
  * Code area preference parameters panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsCapable<CodeAreaOptions> {
 
     private Font codeFont = new Font(Font.MONOSPACED, Font.PLAIN, 12);
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CodeAreaOptionsPanel.class);
-    private final CodeAreaOptionsPanelApi codeAreaOptionsPanelApi;
 
-    public CodeAreaOptionsPanel(@Nullable CodeAreaOptionsPanelApi codeAreaOptionsPanelApi) {
-        this.codeAreaOptionsPanelApi = codeAreaOptionsPanelApi;
+    public CodeAreaOptionsPanel() {
         initComponents();
     }
 
@@ -63,6 +58,7 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
         return resourceBundle;
     }
 
+    @Override
     public void saveToOptions(CodeAreaOptions options) {
         options.setCodeFont(codeFont);
         options.setCodeType(CodeType.valueOf((String) codeTypeComboBox.getSelectedItem()));
@@ -78,6 +74,7 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
         options.setMaxRowPositionLength((Integer) maxRowPositionLengthSpinner.getValue());
     }
 
+    @Override
     public void loadFromOptions(CodeAreaOptions options) {
         codeFont = options.getCodeFont();
         updateFontTextField();
@@ -289,7 +286,7 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
         textFontPanel.setStoredFont(codeFont);
         textFontPanel.setVisible(true);
         JPanel dialogPanel = WindowUtils.createDialogPanel(textFontPanel, textFontControlPanel);
-        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, null, "Select Font", java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, WindowUtils.getWindow(this), "Select Font", java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         textFontControlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 codeFont = textFontPanel.getStoredFont();
@@ -309,7 +306,7 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new CodeAreaOptionsPanel(null));
+        WindowUtils.invokeDialog(new CodeAreaOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -350,31 +347,6 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
             fontStyleName = "Plain";
         }
         fontTextField.setText(codeFont.getFamily() + " " + String.valueOf(codeFont.getSize()) + " " + fontStyleName);
-    }
-
-    @Override
-    public void applyPreferencesChanges() {
-        if (codeAreaOptionsPanelApi != null) {
-            CodeAreaOptions codeAreaOptions = new CodeAreaOptions();
-            saveToOptions(codeAreaOptions);
-            codeAreaOptions.applyToCodeArea(codeAreaOptionsPanelApi.getCodeArea());
-        }
-    }
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        CodeAreaParameters parameters = new CodeAreaParameters(preferences);
-        CodeAreaOptions codeAreaOptions = new CodeAreaOptions();
-        codeAreaOptions.loadFromParameters(parameters);
-        loadFromOptions(codeAreaOptions);
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        CodeAreaParameters parameters = new CodeAreaParameters(preferences);
-        CodeAreaOptions codeAreaOptions = new CodeAreaOptions();
-        saveToOptions(codeAreaOptions);
-        codeAreaOptions.saveToParameters(parameters);
     }
 
     @Override

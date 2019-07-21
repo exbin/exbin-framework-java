@@ -21,31 +21,27 @@ import java.awt.Component;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.gui.options.preferences.AppearanceParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
+import org.exbin.framework.gui.options.options.AppearanceOptions;
 import org.exbin.framework.gui.utils.ComponentResourceProvider;
 
 /**
- * Toolbar apperance options panel.
+ * Toolbar appearance options panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable, ComponentResourceProvider {
+public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable<AppearanceOptions>, ComponentResourceProvider {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
-    private final ApplicationFrameHandler frame;
     private OptionsCapable extendedPanel = null;
 
-    public AppearanceOptionsPanel(ApplicationFrameHandler frame) {
-        this.frame = frame;
+    public AppearanceOptionsPanel() {
         initComponents();
     }
 
@@ -53,6 +49,20 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(AppearanceOptions options) {
+        showToolbarCheckBox.setSelected(options.isShowToolBar());
+        showCaptionsCheckBox.setSelected(options.isShowToolBarCaptions());
+        showStatusbarCheckBox.setSelected(options.isShowStatusBar());
+    }
+
+    @Override
+    public void saveToOptions(AppearanceOptions options) {
+        options.setShowToolBar(showToolbarCheckBox.isSelected());
+        options.setShowToolBarCaptions(showCaptionsCheckBox.isSelected());
+        options.setShowStatusBar(showStatusbarCheckBox.isSelected());
     }
 
     /**
@@ -139,7 +149,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new AppearanceOptionsPanel(null));
+        WindowUtils.invokeDialog(new AppearanceOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -156,51 +166,16 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     }
 
     @Override
-    public void applyPreferencesChanges() {
-        if (extendedPanel != null) {
-            extendedPanel.applyPreferencesChanges();
-        }
-
-        frame.setToolBarVisible(showToolbarCheckBox.isSelected());
-        frame.setToolBarCaptionsVisible(showCaptionsCheckBox.isSelected());
-        frame.setStatusBarVisible(showStatusbarCheckBox.isSelected());
-    }
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        if (extendedPanel != null) {
-            extendedPanel.loadFromPreferences(preferences);
-        }
-
-        AppearanceParameters appearanceParameters = new AppearanceParameters(preferences);
-        showToolbarCheckBox.setSelected(appearanceParameters.isShowToolBar());
-        showCaptionsCheckBox.setSelected(appearanceParameters.isShowToolBarCaptions());
-        showStatusbarCheckBox.setSelected(appearanceParameters.isShowStatusBar());
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        if (extendedPanel != null) {
-            extendedPanel.saveToPreferences(preferences);
-        }
-
-        AppearanceParameters appearanceParameters = new AppearanceParameters(preferences);
-        appearanceParameters.setShowToolBar(showToolbarCheckBox.isSelected());
-        appearanceParameters.setShowToolBarCaptions(showCaptionsCheckBox.isSelected());
-        appearanceParameters.setShowStatusBar(showStatusbarCheckBox.isSelected());
-    }
-
-    @Override
     public void setOptionsModifiedListener(OptionsModifiedListener listener) {
         optionsModifiedListener = listener;
     }
 
-    public void addExtendedPanel(OptionsCapable panel) {
+    public void addExtendedPanel(OptionsCapable<?> optionsPanel) {
         if (extendedPanel != null) {
             remove((Component) extendedPanel);
         }
-        extendedPanel = panel;
-        add((Component) panel, BorderLayout.CENTER);
+        extendedPanel = optionsPanel;
+        add((Component) extendedPanel, BorderLayout.CENTER);
         extendedPanel.setOptionsModifiedListener(optionsModifiedListener);
     }
 }

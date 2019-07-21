@@ -26,27 +26,23 @@ import javax.swing.AbstractListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.editor.text.options.TextEncodingOptions;
-import org.exbin.framework.editor.text.preferences.TextEncodingParameters;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
-import org.exbin.framework.editor.text.service.TextEncodingService;
 
 /**
  * Text encoding selection panel.
  *
- * @version 0.2.1 2019/07/19
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapable {
+public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapable<TextEncodingOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingPanel.class);
-    private TextEncodingService handler;
     private AddEncodingsOperation addEncodingsOperation = null;
 
     public TextEncodingPanel() {
@@ -96,16 +92,14 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
         return resourceBundle;
     }
 
+    @Override
     public void saveToOptions(TextEncodingOptions options) {
         options.setEncodings(getEncodingList());
     }
 
+    @Override
     public void loadFromOptions(TextEncodingOptions options) {
         setEncodingList(options.getEncodings());
-    }
-
-    public void setHandler(TextEncodingService handler) {
-        this.handler = handler;
     }
 
     /**
@@ -319,25 +313,6 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
     private javax.swing.JButton selectAllButton;
     private javax.swing.JButton upButton;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void applyPreferencesChanges() {
-        handler.setEncodings(getEncodingList());
-    }
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        TextEncodingOptions options = new TextEncodingOptions();
-        options.loadFromParameters(new TextEncodingParameters(preferences));
-        loadFromOptions(options);
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        TextEncodingOptions options = new TextEncodingOptions();
-        saveToOptions(options);
-        options.saveToParameters(new TextEncodingParameters(preferences));
-    }
 
     @Override
     public void setOptionsModifiedListener(OptionsModifiedListener optionsModifiedListener) {

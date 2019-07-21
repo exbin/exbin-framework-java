@@ -19,10 +19,7 @@ package org.exbin.framework.bined.options.panel;
 import java.awt.BorderLayout;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.bined.preferences.LayoutParameters;
+import org.exbin.framework.bined.options.CodeAreaLayoutOptions;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -31,20 +28,18 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 /**
  * Layout profiles options panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class LayoutProfilesOptionsPanel extends javax.swing.JPanel implements OptionsCapable {
+public class LayoutProfilesOptionsPanel extends javax.swing.JPanel implements OptionsCapable<CodeAreaLayoutOptions> {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(LayoutProfilesOptionsPanel.class);
 
-    private final CodeAreaOptionsPanelApi codeAreaOptionsPanelApi;
     private final ProfileSelectionPanel selectionPanel;
     private final LayoutProfilesPanel profilesPanel;
 
-    public LayoutProfilesOptionsPanel(@Nullable CodeAreaOptionsPanelApi codeAreaOptionsPanelApi) {
+    public LayoutProfilesOptionsPanel() {
         this.profilesPanel = new LayoutProfilesPanel();
-        this.codeAreaOptionsPanelApi = codeAreaOptionsPanelApi;
         selectionPanel = new ProfileSelectionPanel(profilesPanel);
         initComponents();
         init();
@@ -59,6 +54,18 @@ public class LayoutProfilesOptionsPanel extends javax.swing.JPanel implements Op
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    @Override
+    public void loadFromOptions(CodeAreaLayoutOptions options) {
+        profilesPanel.loadFromOptions(options);
+        selectionPanel.setDefaultProfile(options.getSelectedProfile());
+    }
+
+    @Override
+    public void saveToOptions(CodeAreaLayoutOptions options) {
+        profilesPanel.saveToOptions(options);
+        options.setSelectedProfile(selectionPanel.getDefaultProfile());
     }
 
     /**
@@ -79,36 +86,11 @@ public class LayoutProfilesOptionsPanel extends javax.swing.JPanel implements Op
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new LayoutProfilesOptionsPanel(null));
+        WindowUtils.invokeDialog(new LayoutProfilesOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    @Override
-    public void applyPreferencesChanges() {
-        if (codeAreaOptionsPanelApi != null) {
-            int defaultProfile = selectionPanel.getDefaultProfile();
-            if (defaultProfile >= 0) {
-                ExtendedCodeAreaLayoutProfile profile = profilesPanel.getProfile(defaultProfile);
-                codeAreaOptionsPanelApi.getCodeArea().setLayoutProfile(profile);
-            }
-        }
-    }
-
-    @Override
-    public void loadFromPreferences(Preferences preferences) {
-        LayoutParameters parameters = new LayoutParameters(preferences);
-        profilesPanel.loadFromParameters(parameters);
-        selectionPanel.setDefaultProfile(parameters.getSelectedProfile());
-    }
-
-    @Override
-    public void saveToPreferences(Preferences preferences) {
-        LayoutParameters parameters = new LayoutParameters(preferences);
-        profilesPanel.saveToParameters(parameters);
-        parameters.setSelectedProfile(selectionPanel.getDefaultProfile());
-    }
-
     @Override
     public void setOptionsModifiedListener(OptionsModifiedListener listener) {
 

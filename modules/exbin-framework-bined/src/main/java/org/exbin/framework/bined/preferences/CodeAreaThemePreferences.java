@@ -25,13 +25,13 @@ import org.exbin.bined.swing.extended.layout.ExtendedCodeAreaDecorations;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 
 /**
- * Theme parameters.
+ * Code area theme preferences.
  *
  * @version 0.2.0 2019/03/11
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ThemeParameters {
+public class CodeAreaThemePreferences {
 
     public static final String PREFERENCES_THEMES_COUNT = "themeProfilesCount";
     public static final String PREFERENCES_THEME_PROFILE_SELECTED = "themeProfilesSelected";
@@ -51,7 +51,7 @@ public class ThemeParameters {
 
     private final Preferences preferences;
 
-    public ThemeParameters(Preferences preferences) {
+    public CodeAreaThemePreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 
@@ -86,9 +86,9 @@ public class ThemeParameters {
     }
 
     @Nonnull
-    public ExtendedCodeAreaThemeProfile getThemeProfile(int themeIndex) {
+    public ExtendedCodeAreaThemeProfile getThemeProfile(int profileIndex) {
         ExtendedCodeAreaThemeProfile themeProfile = new ExtendedCodeAreaThemeProfile();
-        String themePrefix = PREFERENCES_THEME_VALUE_PREFIX + String.valueOf(themeIndex) + ".";
+        String themePrefix = PREFERENCES_THEME_VALUE_PREFIX + String.valueOf(profileIndex) + ".";
         themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.valueOf(preferences.get(themePrefix + THEME_BACKGROUND_PAINT_MODE, themeProfile.getBackgroundPaintMode().name())));
         themeProfile.setPaintRowPosBackground(preferences.getBoolean(themePrefix + THEME_PAINT_ROWPOS_BACKGROUND, themeProfile.isPaintRowPosBackground()));
         themeProfile.setVerticalLineByteGroupSize(preferences.getInt(themePrefix + THEME_VERTICAL_LINE_BYTE_GROUP_SIZE, themeProfile.getVerticalLineByteGroupSize()));
@@ -102,8 +102,8 @@ public class ThemeParameters {
         return themeProfile;
     }
 
-    public void setThemeProfile(int themeIndex, ExtendedCodeAreaThemeProfile themeProfile) {
-        String themePrefix = PREFERENCES_THEME_VALUE_PREFIX + String.valueOf(themeIndex) + ".";
+    public void setThemeProfile(int profileIndex, ExtendedCodeAreaThemeProfile themeProfile) {
+        String themePrefix = PREFERENCES_THEME_VALUE_PREFIX + String.valueOf(profileIndex) + ".";
         preferences.put(themePrefix + THEME_BACKGROUND_PAINT_MODE, themeProfile.getBackgroundPaintMode().name());
         preferences.putBoolean(themePrefix + THEME_PAINT_ROWPOS_BACKGROUND, themeProfile.isPaintRowPosBackground());
         preferences.putInt(themePrefix + THEME_VERTICAL_LINE_BYTE_GROUP_SIZE, themeProfile.getVerticalLineByteGroupSize());
@@ -114,8 +114,8 @@ public class ThemeParameters {
         preferences.putBoolean(themePrefix + THEME_DECORATION_GROUP_LINES, themeProfile.hasDecoration(ExtendedCodeAreaDecorations.GROUP_LINES));
     }
 
-    public void clearTheme(int themeIndex) {
-        String themePrefix = PREFERENCES_THEME_VALUE_PREFIX + String.valueOf(themeIndex) + ".";
+    public void clearTheme(int profileIndex) {
+        String themePrefix = PREFERENCES_THEME_VALUE_PREFIX + String.valueOf(profileIndex) + ".";
         preferences.remove(themePrefix + THEME_BACKGROUND_PAINT_MODE);
         preferences.remove(themePrefix + THEME_PAINT_ROWPOS_BACKGROUND);
         preferences.remove(themePrefix + THEME_VERTICAL_LINE_BYTE_GROUP_SIZE);

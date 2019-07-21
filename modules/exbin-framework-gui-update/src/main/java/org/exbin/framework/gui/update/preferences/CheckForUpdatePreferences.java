@@ -25,13 +25,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CheckForUpdateParameters {
+public class CheckForUpdatePreferences {
 
     public static final String PREFERENCES_CHECK_FOR_UPDATE_ON_START = "start.checkForUpdate";
 
     private final Preferences preferences;
 
-    public CheckForUpdateParameters(Preferences preferences) {
+    public CheckForUpdatePreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 

@@ -27,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FrameworkParameters {
+public class FrameworkPreferences {
 
     public static final String PREFERENCES_LOOK_AND_FEEL = "lookAndFeel";
     public static final String PREFERENCES_LOCALE_LANGUAGE = "locale.language";
@@ -36,7 +36,7 @@ public class FrameworkParameters {
 
     private final Preferences preferences;
 
-    public FrameworkParameters(Preferences preferences) {
+    public FrameworkPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 

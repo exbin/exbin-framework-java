@@ -30,13 +30,13 @@ import org.exbin.bined.highlight.swing.color.CodeAreaMatchColorType;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 
 /**
- * Color layout parameters.
+ * Color layout preferences.
  *
  * @version 0.2.0 2019/03/11
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ColorParameters {
+public class CodeAreaColorPreferences {
 
     public static final String PREFERENCES_COLOR_PROFILES_COUNT = "colorProfilesCount";
     public static final String PREFERENCES_COLOR_PROFILE_SELECTED = "colorProfileSelected";
@@ -70,7 +70,7 @@ public class ColorParameters {
 
     private final Preferences preferences;
 
-    public ColorParameters(Preferences preferences) {
+    public CodeAreaColorPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 
@@ -105,9 +105,9 @@ public class ColorParameters {
     }
 
     @Nonnull
-    public ExtendedCodeAreaColorProfile getColorsProfile(int themeIndex) {
+    public ExtendedCodeAreaColorProfile getColorsProfile(int profileIndex) {
         ExtendedCodeAreaColorProfile colorProfile = new ExtendedCodeAreaColorProfile();
-        String colorProfilePrefix = PREFERENCES_COLOR_VALUE_PREFIX + String.valueOf(themeIndex) + ".";
+        String colorProfilePrefix = PREFERENCES_COLOR_VALUE_PREFIX + String.valueOf(profileIndex) + ".";
 
         colorProfile.setColor(CodeAreaBasicColors.TEXT_COLOR, textAsColor(preferences.get(colorProfilePrefix + COLOR_TEXT_COLOR, null)));
         colorProfile.setColor(CodeAreaBasicColors.TEXT_BACKGROUND, textAsColor(preferences.get(colorProfilePrefix + COLOR_TEXT_BACKGROUND, null)));
@@ -137,8 +137,8 @@ public class ColorParameters {
         return colorProfile;
     }
 
-    public void setColorsProfile(int themeIndex, ExtendedCodeAreaColorProfile colorProfile) {
-        String colorProfilePrefix = PREFERENCES_COLOR_VALUE_PREFIX + String.valueOf(themeIndex) + ".";
+    public void setColorsProfile(int profileIndex, ExtendedCodeAreaColorProfile colorProfile) {
+        String colorProfilePrefix = PREFERENCES_COLOR_VALUE_PREFIX + String.valueOf(profileIndex) + ".";
 
         preferences.put(colorProfilePrefix + COLOR_TEXT_COLOR, colorAsText(colorProfile.getColor(CodeAreaBasicColors.TEXT_COLOR)));
         preferences.put(colorProfilePrefix + COLOR_TEXT_BACKGROUND, colorAsText(colorProfile.getColor(CodeAreaBasicColors.TEXT_BACKGROUND)));
@@ -166,8 +166,8 @@ public class ColorParameters {
         preferences.put(colorProfilePrefix + UNPRINTABLES_BACKGROUND, colorAsText(colorProfile.getColor(CodeAreaUnprintablesColorType.UNPRINTABLES_BACKGROUND)));
     }
 
-    public void clearColorsProfile(int themeIndex) {
-        String colorProfilePrefix = PREFERENCES_COLOR_VALUE_PREFIX + String.valueOf(themeIndex) + ".";
+    public void clearColorsProfile(int profileIndex) {
+        String colorProfilePrefix = PREFERENCES_COLOR_VALUE_PREFIX + String.valueOf(profileIndex) + ".";
 
         preferences.remove(colorProfilePrefix + COLOR_TEXT_COLOR);
         preferences.remove(colorProfilePrefix + COLOR_TEXT_BACKGROUND);
