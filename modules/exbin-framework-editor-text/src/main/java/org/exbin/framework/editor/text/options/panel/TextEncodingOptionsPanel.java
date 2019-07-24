@@ -35,7 +35,7 @@ import org.exbin.framework.editor.text.service.TextEncodingService;
 /**
  * Text encoding options panel.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2019/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class TextEncodingOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextEncodingOptions> {
@@ -56,7 +56,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     private void init() {
         encodingPanel.setEnabled(false);
         encodingPanel.setOptionsModifiedListener(() -> {
-            optionsModifiedListener.wasModified();
+            setModified(true);
             updateEncodings();
         });
         super.add(encodingPanel, BorderLayout.CENTER);
@@ -70,6 +70,8 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
 
     public void setTextEncodingService(TextEncodingService textEncodingService) {
         this.textEncodingService = textEncodingService;
+        fillCurrentEncodingButton.setEnabled(true);
+        fillCurrentEncodingsButton.setEnabled(true);
     }
 
     @Override
@@ -118,6 +120,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         defaultEncodingLabel.setName("defaultEncodingLabel"); // NOI18N
 
         fillCurrentEncodingButton.setText(resourceBundle.getString("fillCurrentEncodingButton.text")); // NOI18N
+        fillCurrentEncodingButton.setEnabled(false);
         fillCurrentEncodingButton.setName("fillCurrentEncodingButton"); // NOI18N
         fillCurrentEncodingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -155,6 +158,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         encodingsControlPanel.setName("encodingsControlPanel"); // NOI18N
 
         fillCurrentEncodingsButton.setText(resourceBundle.getString("fillCurrentEncodingsButton.text")); // NOI18N
+        fillCurrentEncodingsButton.setEnabled(false);
         fillCurrentEncodingsButton.setName("fillCurrentEncodingsButton"); // NOI18N
         fillCurrentEncodingsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

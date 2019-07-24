@@ -84,6 +84,7 @@
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="org/exbin/framework/editor/text/options/panel/resources/TextEncodingOptionsPanel.properties" key="fillCurrentEncodingButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="fillCurrentEncodingButton" noResource="true"/>
           </Properties>
           <Events>
@@ -127,6 +128,7 @@
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="org/exbin/framework/editor/text/options/panel/resources/TextEncodingOptionsPanel.properties" key="fillCurrentEncodingsButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="fillCurrentEncodingsButton" noResource="true"/>
           </Properties>
           <Events>

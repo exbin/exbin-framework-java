@@ -33,10 +33,10 @@ import org.exbin.bined.DataChangedListener;
 import org.exbin.bined.capability.EditationModeCapable;
 import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.BinaryDataOperationException;
-import org.exbin.bined.operation.swing.CodeAreaUndoHandler;
 import org.exbin.bined.operation.swing.command.HexCompoundCommand;
 import org.exbin.bined.operation.swing.command.InsertDataCommand;
 import org.exbin.bined.operation.swing.command.ModifyDataCommand;
+import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -65,7 +65,7 @@ public class ValuesPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ValuesPanel.class);
     private ExtCodeArea codeArea;
-    private CodeAreaUndoHandler undoHandler;
+    private BinaryDataUndoHandler undoHandler;
     private long dataPosition;
     private DataChangedListener dataChangedListener;
     private CaretMovedListener caretMovedListener;
@@ -712,7 +712,7 @@ public class ValuesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField wordTextField;
     // End of variables declaration//GEN-END:variables
 
-    public void setCodeArea(ExtCodeArea codeArea, CodeAreaUndoHandler undoHandler) {
+    public void setCodeArea(ExtCodeArea codeArea, BinaryDataUndoHandler undoHandler) {
         this.codeArea = codeArea;
         this.undoHandler = undoHandler;
     }

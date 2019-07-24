@@ -961,7 +961,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
     /**
      * Listener for panel closing.
      */
-    public static interface ClosePanelListener {
+    public interface ClosePanelListener {
 
         void panelClosed();
     }
