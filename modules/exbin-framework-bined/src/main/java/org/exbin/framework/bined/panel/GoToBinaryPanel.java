@@ -47,9 +47,9 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Go-to position panel for hexadecimal editor.
+ * Go-to position panel for binary editor.
  *
- * @version 0.2.1 2019/06/21
+ * @version 0.2.1 2019/07/25
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToBinaryPanel extends javax.swing.JPanel {
@@ -60,6 +60,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     private long maxPosition;
     private GoToBinaryPositionMode goToMode = GoToBinaryPositionMode.FROM_START;
     private final PositionSpinnerEditor positionSpinnerEditor;
+    private static final String SPINNER_PROPERTY = "value";
 
     public GoToBinaryPanel() {
         initComponents();
@@ -95,8 +96,6 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         hexadecimalMenuItem = new javax.swing.JMenuItem();
         currentPositionLabel = new javax.swing.JLabel();
         currentPositionTextField = new javax.swing.JTextField();
-        targetPositionLabel = new javax.swing.JLabel();
-        targetPositionTextField = new javax.swing.JTextField();
         goToPanel = new javax.swing.JPanel();
         fromStartRadioButton = new javax.swing.JRadioButton();
         fromEndRadioButton = new javax.swing.JRadioButton();
@@ -104,6 +103,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         positionLabel = new javax.swing.JLabel();
         positionSpinner = new javax.swing.JSpinner();
         positionTypeButton = new javax.swing.JButton();
+        targetPositionLabel = new javax.swing.JLabel();
+        targetPositionTextField = new javax.swing.JTextField();
 
         octalMenuItem.setText("OCT");
         octalMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -133,11 +134,6 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
         currentPositionTextField.setEditable(false);
         currentPositionTextField.setText("0"); // NOI18N
-
-        targetPositionLabel.setText(resourceBundle.getString("targetPositionLabel.text")); // NOI18N
-
-        targetPositionTextField.setEditable(false);
-        targetPositionTextField.setText("0"); // NOI18N
 
         goToPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("goToPanel.border.title"))); // NOI18N
 
@@ -176,6 +172,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         });
 
         positionTypeButton.setText("DEC");
+        positionTypeButton.setComponentPopupMenu(positionTypePopupMenu);
         positionTypeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 positionTypeButtonActionPerformed(evt);
@@ -214,6 +211,11 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                     .addComponent(positionTypeButton)))
         );
 
+        targetPositionLabel.setText(resourceBundle.getString("targetPositionLabel.text")); // NOI18N
+
+        targetPositionTextField.setEditable(false);
+        targetPositionTextField.setText("0"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -250,8 +252,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
     private void fromStartRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromStartRadioButtonActionPerformed
         if (goToMode != GoToBinaryPositionMode.FROM_START && fromStartRadioButton.isSelected()) {
-            goToMode = GoToBinaryPositionMode.FROM_START;
             long currentValue = getPositionValue();
+            goToMode = GoToBinaryPositionMode.FROM_START;
             setPositionValue(0l);
             ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(0l);
             ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition);
@@ -263,8 +265,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
     private void relativeRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relativeRadioButtonActionPerformed
         if (goToMode != GoToBinaryPositionMode.RELATIVE && relativeRadioButton.isSelected()) {
-            goToMode = GoToBinaryPositionMode.RELATIVE;
             long currentValue = getPositionValue();
+            goToMode = GoToBinaryPositionMode.RELATIVE;
             setPositionValue(0l);
             ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(-cursorPosition);
             ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition - cursorPosition);
@@ -279,9 +281,9 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_positionSpinnerStateChanged
 
     private void fromEndRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromEndRadioButtonActionPerformed
-        if (goToMode == GoToBinaryPositionMode.FROM_END && fromEndRadioButton.isSelected()) {
-            goToMode = GoToBinaryPositionMode.FROM_END;
+        if (goToMode != GoToBinaryPositionMode.FROM_END && fromEndRadioButton.isSelected()) {
             long currentValue = getPositionValue();
+            goToMode = GoToBinaryPositionMode.FROM_END;
             positionSpinner.setValue(0l);
             ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(0l);
             ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition);
@@ -384,8 +386,10 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     }
 
     private void setPositionValue(long value) {
-        positionSpinner.setValue(value);
-        positionSpinner.firePropertyChange("value", value, value);
+        positionSpinnerEditor.setPositionValue(value);
+        updateTargetPosition();
+//        positionSpinner.setValue(value);
+//        positionSpinner.firePropertyChange(SPINNER_PROPERTY, value, value);
     }
 
     /**
@@ -452,7 +456,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
             textField.setText(getPositionAsString((Long) spinner.getValue()));
             textField.addPropertyChangeListener(this);
             textField.getDocument().addDocumentListener(new DocumentListener() {
-                private final PropertyChangeEvent changeEvent = new PropertyChangeEvent(spinner, "text", null, null);
+                private final PropertyChangeEvent changeEvent = new PropertyChangeEvent(textField, SPINNER_PROPERTY, null, null);
 
                 @Override
                 public void changedUpdate(DocumentEvent e) {
@@ -499,8 +503,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            JSpinner sourceSpinner = (JSpinner) (e.getSource());
-            getTextField().setText(getPositionAsString((Long) sourceSpinner.getValue()));
+//            JSpinner sourceSpinner = (JSpinner) (e.getSource());
+//            textField.setText(getPositionAsString((Long) sourceSpinner.getValue()));
         }
 
         @Override
@@ -509,7 +513,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
             Object source = e.getSource();
             String name = e.getPropertyName();
-            if ((source instanceof JTextField) && "text".equals(name)) {
+            if ((source instanceof JTextField) && SPINNER_PROPERTY.equals(name)) {
                 Long lastValue = (Long) sourceSpinner.getValue();
 
                 // Try to set the new value
@@ -518,7 +522,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                 } catch (IllegalArgumentException iae) {
                     // SpinnerModel didn't like new value, reset
                     try {
-                        ((JTextField) source).setText(getPositionAsString(lastValue));
+                        sourceSpinner.setValue(lastValue);
                     } catch (IllegalArgumentException iae2) {
                         // Still bogus, nothing else we can do, the
                         // SpinnerModel and JFormattedTextField are now out
@@ -526,6 +530,13 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                     }
                 }
             }
+        }
+
+        public void setPositionValue(long positionValue) {
+            Long value = (Long) spinner.getValue();
+            textField.setText(getPositionAsString(value));
+//            spinner.setValue(positionValue);
+//            spinner.firePropertyChange(SPINNER_PROPERTY, value, positionValue);
         }
 
         @Override
