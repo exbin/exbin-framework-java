@@ -347,6 +347,25 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                 throw new IllegalStateException("Unexpected go to mode " + goToMode.name());
         }
     }
+    
+    public void setGoToPosition(long absolutePosition) {
+        if (absolutePosition < 0 || absolutePosition > maxPosition) {
+            throw new IllegalArgumentException("Position out of range");
+        }
+        switch (goToMode) {
+            case FROM_START:
+                setPositionValue(absolutePosition);
+                break;
+            case FROM_END:
+                setPositionValue(maxPosition - absolutePosition);
+                break;
+            case RELATIVE:
+                setPositionValue(absolutePosition - cursorPosition);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected go to mode " + goToMode.name());
+        }
+    }
 
     public long getCursorPosition() {
         return cursorPosition;
