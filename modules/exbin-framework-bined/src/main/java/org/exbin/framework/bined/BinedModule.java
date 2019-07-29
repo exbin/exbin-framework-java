@@ -900,6 +900,7 @@ public class BinedModule implements XBApplicationModule {
     public EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
             encodingsHandler = new EncodingsHandler(); // getEditorProvider(), 
+            encodingsHandler.setParentComponent(getEditorProvider().getPanel());
             if (binaryStatusPanel != null) {
                 encodingsHandler.setTextEncodingStatus(binaryStatusPanel);
             }

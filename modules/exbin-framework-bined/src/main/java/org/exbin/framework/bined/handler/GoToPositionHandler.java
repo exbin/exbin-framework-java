@@ -16,7 +16,7 @@
  */
 package org.exbin.framework.bined.handler;
 
-import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
@@ -70,7 +70,7 @@ public class GoToPositionHandler {
                     DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
                     JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                    final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getPanel(), "", Dialog.ModalityType.APPLICATION_MODAL);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle(), controlPanel);
                     frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
@@ -82,7 +82,7 @@ public class GoToPositionHandler {
                         dialog.close();
                     });
                     SwingUtilities.invokeLater(goToPanel::initFocus);
-                    dialog.showCentered((Component) e.getSource());
+                    dialog.showCentered(editorProvider.getPanel());
                     dialog.dispose();
                 }
             }
