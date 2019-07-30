@@ -76,7 +76,7 @@ public class GoToPositionHandler {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType == ControlActionType.OK) {
                             goToPanel.acceptInput();
-                            activePanel.goToPosition(goToPanel.getGoToPosition());
+                            activePanel.goToPosition(goToPanel.getTargetPosition());
                         }
 
                         dialog.close();

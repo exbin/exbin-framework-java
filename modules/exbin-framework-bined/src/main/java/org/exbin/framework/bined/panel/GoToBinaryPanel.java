@@ -49,13 +49,14 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Go-to position panel for binary editor.
  *
- * @version 0.2.1 2019/07/27
+ * @version 0.2.1 2019/07/30
  * @author ExBin Project (http://exbin.org)
  */
 public class GoToBinaryPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GoToBinaryPanel.class);
 
+    private boolean adjusting = false;
     private long cursorPosition;
     private long maxPosition;
     private GoToBinaryPositionMode goToMode = GoToBinaryPositionMode.FROM_START;
@@ -99,7 +100,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         goToPanel = new javax.swing.JPanel();
         fromStartRadioButton = new javax.swing.JRadioButton();
         fromEndRadioButton = new javax.swing.JRadioButton();
-        relativeRadioButton = new javax.swing.JRadioButton();
+        fromCursorRadioButton = new javax.swing.JRadioButton();
         positionLabel = new javax.swing.JLabel();
         positionSpinner = new javax.swing.JSpinner();
         positionTypeButton = new javax.swing.JButton();
@@ -140,25 +141,25 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         positionTypeButtonGroup.add(fromStartRadioButton);
         fromStartRadioButton.setSelected(true);
         fromStartRadioButton.setText(resourceBundle.getString("fromStartRadioButton.text")); // NOI18N
-        fromStartRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fromStartRadioButtonActionPerformed(evt);
+        fromStartRadioButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                fromStartRadioButtonItemStateChanged(evt);
             }
         });
 
         positionTypeButtonGroup.add(fromEndRadioButton);
         fromEndRadioButton.setText(resourceBundle.getString("fromEndRadioButton.text")); // NOI18N
-        fromEndRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fromEndRadioButtonActionPerformed(evt);
+        fromEndRadioButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                fromEndRadioButtonItemStateChanged(evt);
             }
         });
 
-        positionTypeButtonGroup.add(relativeRadioButton);
-        relativeRadioButton.setText(resourceBundle.getString("relativeRadioButton.text")); // NOI18N
-        relativeRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                relativeRadioButtonActionPerformed(evt);
+        positionTypeButtonGroup.add(fromCursorRadioButton);
+        fromCursorRadioButton.setText(resourceBundle.getString("fromCursorRadioButton.text")); // NOI18N
+        fromCursorRadioButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                fromCursorRadioButtonItemStateChanged(evt);
             }
         });
 
@@ -184,7 +185,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         goToPanelLayout.setHorizontalGroup(
             goToPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(fromStartRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(relativeRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+            .addComponent(fromCursorRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
             .addComponent(fromEndRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(goToPanelLayout.createSequentialGroup()
                 .addContainerGap()
@@ -202,7 +203,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fromEndRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(relativeRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fromCursorRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(positionLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -220,13 +221,13 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(currentPositionTextField)
-                    .addComponent(goToPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(targetPositionTextField)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(currentPositionTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(goToPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(targetPositionTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(currentPositionLabel)
                             .addComponent(targetPositionLabel))
@@ -250,27 +251,9 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void fromStartRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromStartRadioButtonActionPerformed
-        if (fromStartRadioButton.isSelected()) {
-            switchGoToMode(GoToBinaryPositionMode.FROM_START);
-        }
-    }//GEN-LAST:event_fromStartRadioButtonActionPerformed
-
-    private void relativeRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relativeRadioButtonActionPerformed
-        if (relativeRadioButton.isSelected()) {
-            switchGoToMode(GoToBinaryPositionMode.RELATIVE);
-        }
-    }//GEN-LAST:event_relativeRadioButtonActionPerformed
-
     private void positionSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_positionSpinnerStateChanged
         updateTargetPosition();
     }//GEN-LAST:event_positionSpinnerStateChanged
-
-    private void fromEndRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromEndRadioButtonActionPerformed
-        if (fromEndRadioButton.isSelected()) {
-            switchGoToMode(GoToBinaryPositionMode.FROM_END);
-        }
-    }//GEN-LAST:event_fromEndRadioButtonActionPerformed
 
     private void octalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_octalMenuItemActionPerformed
         switchNumBase(PositionCodeType.OCTAL);
@@ -304,8 +287,26 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_positionTypeButtonActionPerformed
 
+    private void fromStartRadioButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fromStartRadioButtonItemStateChanged
+        if (fromStartRadioButton.isSelected()) {
+            switchGoToMode(GoToBinaryPositionMode.FROM_START);
+        }
+    }//GEN-LAST:event_fromStartRadioButtonItemStateChanged
+
+    private void fromEndRadioButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fromEndRadioButtonItemStateChanged
+        if (fromEndRadioButton.isSelected()) {
+            switchGoToMode(GoToBinaryPositionMode.FROM_END);
+        }
+    }//GEN-LAST:event_fromEndRadioButtonItemStateChanged
+
+    private void fromCursorRadioButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fromCursorRadioButtonItemStateChanged
+        if (fromCursorRadioButton.isSelected()) {
+            switchGoToMode(GoToBinaryPositionMode.FROM_CURSOR);
+        }
+    }//GEN-LAST:event_fromCursorRadioButtonItemStateChanged
+
     private void updateTargetPosition() {
-        targetPositionTextField.setText(String.valueOf(getGoToPosition()));
+        targetPositionTextField.setText(String.valueOf(getTargetPosition()));
     }
 
     public void initFocus() {
@@ -313,21 +314,32 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         positionSpinnerEditor.getTextField().requestFocusInWindow();
     }
 
-    public long getGoToPosition() {
+    public long getTargetPosition() {
+        long absolutePosition;
         long position = getPositionValue();
         switch (goToMode) {
             case FROM_START:
-                return position;
+                absolutePosition = position;
+                break;
             case FROM_END:
-                return maxPosition - position;
-            case RELATIVE:
-                return cursorPosition + position;
+                absolutePosition = maxPosition - position;
+                break;
+            case FROM_CURSOR:
+                absolutePosition = cursorPosition + position;
+                break;
             default:
                 throw new IllegalStateException("Unexpected go to mode " + goToMode.name());
         }
+
+        if (absolutePosition < 0) {
+            absolutePosition = 0;
+        } else if (absolutePosition > maxPosition) {
+            absolutePosition = maxPosition;
+        }
+        return absolutePosition;
     }
 
-    public void setGoToPosition(long absolutePosition) {
+    public void setTargetPosition(long absolutePosition) {
         if (absolutePosition < 0) {
             absolutePosition = 0;
         } else if (absolutePosition > maxPosition) {
@@ -340,7 +352,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
             case FROM_END:
                 setPositionValue(maxPosition - absolutePosition);
                 break;
-            case RELATIVE:
+            case FROM_CURSOR:
                 setPositionValue(absolutePosition - cursorPosition);
                 break;
             default:
@@ -376,17 +388,21 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     }
 
     private void switchNumBase(PositionCodeType codeType) {
+        adjusting = true;
         long positionValue = getPositionValue();
         positionTypeButton.setText(codeType.name().substring(0, 3));
         positionSpinnerEditor.setPositionCodeType(codeType);
         setPositionValue(positionValue);
+        adjusting = false;
     }
 
     private void switchGoToMode(GoToBinaryPositionMode goToMode) {
         if (this.goToMode == goToMode) {
             return;
         }
-        long absolutePosition = getGoToPosition();
+
+        adjusting = true;
+        long absolutePosition = getTargetPosition();
         this.goToMode = goToMode;
         switch (goToMode) {
             case FROM_START: {
@@ -403,7 +419,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                 positionSpinner.revalidate();
                 break;
             }
-            case RELATIVE: {
+            case FROM_CURSOR: {
                 setPositionValue(0l);
                 ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(-cursorPosition);
                 ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition - cursorPosition);
@@ -413,7 +429,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
             default:
                 throw new IllegalStateException("Unexpected go to mode " + goToMode.name());
         }
-        setGoToPosition(absolutePosition);
+        setTargetPosition(absolutePosition);
+        adjusting = false;
     }
 
     private long getPositionValue() {
@@ -448,6 +465,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     private javax.swing.JLabel currentPositionLabel;
     private javax.swing.JTextField currentPositionTextField;
     private javax.swing.JMenuItem decimalMenuItem;
+    private javax.swing.JRadioButton fromCursorRadioButton;
     private javax.swing.JRadioButton fromEndRadioButton;
     private javax.swing.JRadioButton fromStartRadioButton;
     private javax.swing.JPanel goToPanel;
@@ -458,17 +476,12 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     private javax.swing.JButton positionTypeButton;
     private javax.swing.ButtonGroup positionTypeButtonGroup;
     private javax.swing.JPopupMenu positionTypePopupMenu;
-    private javax.swing.JRadioButton relativeRadioButton;
     private javax.swing.JLabel targetPositionLabel;
     private javax.swing.JTextField targetPositionTextField;
     // End of variables declaration//GEN-END:variables
 
-    public enum GoToBinaryPositionMode {
-        FROM_START, FROM_END, RELATIVE
-    }
-
     @ParametersAreNonnullByDefault
-    private static class PositionSpinnerEditor extends JPanel implements ChangeListener, PropertyChangeListener, LayoutManager {
+    private class PositionSpinnerEditor extends JPanel implements ChangeListener, PropertyChangeListener, LayoutManager {
 
         private static final int LENGTH_LIMIT = 21;
 
@@ -538,12 +551,22 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-//            JSpinner sourceSpinner = (JSpinner) (e.getSource());
-//            textField.setText(getPositionAsString((Long) sourceSpinner.getValue()));
+            if (adjusting) {
+                return;
+            }
+
+            JSpinner sourceSpinner = (JSpinner) (e.getSource());
+            SwingUtilities.invokeLater(() -> {
+                textField.setText(getPositionAsString((Long) sourceSpinner.getValue()));
+            });
         }
 
         @Override
         public void propertyChange(PropertyChangeEvent e) {
+            if (adjusting) {
+                return;
+            }
+
             JSpinner sourceSpinner = getSpinner();
 
             Object source = e.getSource();
@@ -568,10 +591,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         }
 
         public void setPositionValue(long positionValue) {
-            Long value = (Long) spinner.getValue();
-            textField.setText(getPositionAsString(value));
-//            spinner.setValue(positionValue);
-//            spinner.firePropertyChange(SPINNER_PROPERTY, value, positionValue);
+            textField.setText(getPositionAsString(positionValue));
+            spinner.setValue(positionValue);
         }
 
         @Override

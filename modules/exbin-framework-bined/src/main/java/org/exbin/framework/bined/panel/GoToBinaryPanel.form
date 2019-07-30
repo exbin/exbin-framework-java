@@ -52,9 +52,9 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="currentPositionTextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="goToPanel" alignment="0" max="32767" attributes="0"/>
                   <Component id="targetPositionTextField" alignment="0" max="32767" attributes="0"/>
@@ -117,7 +117,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="fromStartRadioButton" alignment="0" max="32767" attributes="0"/>
-              <Component id="relativeRadioButton" alignment="0" pref="337" max="32767" attributes="0"/>
+              <Component id="fromCursorRadioButton" alignment="0" pref="337" max="32767" attributes="0"/>
               <Component id="fromEndRadioButton" alignment="0" max="32767" attributes="0"/>
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
@@ -138,7 +138,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="fromEndRadioButton" min="-2" pref="22" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="relativeRadioButton" min="-2" pref="20" max="-2" attributes="0"/>
+                  <Component id="fromCursorRadioButton" min="-2" pref="20" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="positionLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -162,7 +162,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fromStartRadioButtonActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="fromStartRadioButtonItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="fromEndRadioButton">
@@ -175,20 +175,20 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fromEndRadioButtonActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="fromEndRadioButtonItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="relativeRadioButton">
+        <Component class="javax.swing.JRadioButton" name="fromCursorRadioButton">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="positionTypeButtonGroup"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/bined/panel/resources/GoToBinaryPanel.properties" key="relativeRadioButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/bined/panel/resources/GoToBinaryPanel.properties" key="fromCursorRadioButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="relativeRadioButtonActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="fromCursorRadioButtonItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="positionLabel">

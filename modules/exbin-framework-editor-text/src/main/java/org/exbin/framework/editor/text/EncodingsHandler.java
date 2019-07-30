@@ -17,6 +17,7 @@ package org.exbin.framework.editor.text;
 
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -97,6 +98,7 @@ public class EncodingsHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final TextEncodingPanel textEncodingPanel = new TextEncodingPanel();
+                textEncodingPanel.setPreferredSize(new Dimension(536, 358));
                 final OptionsControlPanel optionsControlPanel = new OptionsControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(textEncodingPanel, optionsControlPanel);
                 final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Manage Encodings", Dialog.ModalityType.APPLICATION_MODAL);
