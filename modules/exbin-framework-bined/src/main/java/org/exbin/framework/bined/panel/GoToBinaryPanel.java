@@ -16,33 +16,8 @@
  */
 package org.exbin.framework.bined.panel;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.LayoutManager;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.ParseException;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.JTextComponent;
-import org.exbin.bined.CodeAreaUtils;
-import org.exbin.bined.CodeCharactersCase;
-import org.exbin.bined.PositionCodeType;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -56,28 +31,15 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GoToBinaryPanel.class);
 
-    private boolean adjusting = false;
     private long cursorPosition;
     private long maxPosition;
     private GoToBinaryPositionMode goToMode = GoToBinaryPositionMode.FROM_START;
-    private final PositionSpinnerEditor positionSpinnerEditor;
-    private static final String SPINNER_PROPERTY = "value";
 
     public GoToBinaryPanel() {
         initComponents();
 
-        positionSpinnerEditor = new PositionSpinnerEditor(positionSpinner);
-        positionSpinner.setEditor(positionSpinnerEditor);
-
-        // Spinner selection workaround from http://forums.sun.com/thread.jspa?threadID=409748&forumID=57
-        positionSpinnerEditor.getTextField().addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (e.getSource() instanceof JTextComponent) {
-                    final JTextComponent textComponent = ((JTextComponent) e.getSource());
-                    SwingUtilities.invokeLater(textComponent::selectAll);
-                }
-            }
+        baseSwitchableSpinnerPanel.addChangeListener((javax.swing.event.ChangeEvent evt) -> {
+            updateTargetPosition();
         });
     }
 
@@ -91,10 +53,6 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         positionTypeButtonGroup = new javax.swing.ButtonGroup();
-        positionTypePopupMenu = new javax.swing.JPopupMenu();
-        octalMenuItem = new javax.swing.JMenuItem();
-        decimalMenuItem = new javax.swing.JMenuItem();
-        hexadecimalMenuItem = new javax.swing.JMenuItem();
         currentPositionLabel = new javax.swing.JLabel();
         currentPositionTextField = new javax.swing.JTextField();
         goToPanel = new javax.swing.JPanel();
@@ -102,34 +60,9 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         fromEndRadioButton = new javax.swing.JRadioButton();
         fromCursorRadioButton = new javax.swing.JRadioButton();
         positionLabel = new javax.swing.JLabel();
-        positionSpinner = new javax.swing.JSpinner();
-        positionTypeButton = new javax.swing.JButton();
+        baseSwitchableSpinnerPanel = new org.exbin.framework.bined.panel.BaseSwitchableSpinnerPanel();
         targetPositionLabel = new javax.swing.JLabel();
         targetPositionTextField = new javax.swing.JTextField();
-
-        octalMenuItem.setText("OCT");
-        octalMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                octalMenuItemActionPerformed(evt);
-            }
-        });
-        positionTypePopupMenu.add(octalMenuItem);
-
-        decimalMenuItem.setText("DEC");
-        decimalMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                decimalMenuItemActionPerformed(evt);
-            }
-        });
-        positionTypePopupMenu.add(decimalMenuItem);
-
-        hexadecimalMenuItem.setText("HEX");
-        hexadecimalMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hexadecimalMenuItemActionPerformed(evt);
-            }
-        });
-        positionTypePopupMenu.add(hexadecimalMenuItem);
 
         currentPositionLabel.setText(resourceBundle.getString("currentPositionLabel.text")); // NOI18N
 
@@ -165,35 +98,20 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
         positionLabel.setText(resourceBundle.getString("positionLabel.text")); // NOI18N
 
-        positionSpinner.setModel(new javax.swing.SpinnerNumberModel(0L, null, null, 1L));
-        positionSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                positionSpinnerStateChanged(evt);
-            }
-        });
-
-        positionTypeButton.setText("DEC");
-        positionTypeButton.setComponentPopupMenu(positionTypePopupMenu);
-        positionTypeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                positionTypeButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout goToPanelLayout = new javax.swing.GroupLayout(goToPanel);
         goToPanel.setLayout(goToPanelLayout);
         goToPanelLayout.setHorizontalGroup(
             goToPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(fromStartRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(fromCursorRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+            .addComponent(fromCursorRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
             .addComponent(fromEndRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(goToPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(goToPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(positionTypeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(positionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(positionSpinner)
+                .addGroup(goToPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(baseSwitchableSpinnerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(goToPanelLayout.createSequentialGroup()
+                        .addComponent(positionLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         goToPanelLayout.setVerticalGroup(
@@ -207,9 +125,8 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(positionLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(goToPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(positionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(positionTypeButton)))
+                .addComponent(baseSwitchableSpinnerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         targetPositionLabel.setText(resourceBundle.getString("targetPositionLabel.text")); // NOI18N
@@ -221,13 +138,13 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(currentPositionTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(goToPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(targetPositionTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(currentPositionTextField)
+                    .addComponent(goToPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(targetPositionTextField)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(currentPositionLabel)
                             .addComponent(targetPositionLabel))
@@ -243,49 +160,13 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
                 .addComponent(currentPositionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(goToPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(targetPositionLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(targetPositionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void positionSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_positionSpinnerStateChanged
-        updateTargetPosition();
-    }//GEN-LAST:event_positionSpinnerStateChanged
-
-    private void octalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_octalMenuItemActionPerformed
-        switchNumBase(PositionCodeType.OCTAL);
-    }//GEN-LAST:event_octalMenuItemActionPerformed
-
-    private void decimalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decimalMenuItemActionPerformed
-        switchNumBase(PositionCodeType.DECIMAL);
-    }//GEN-LAST:event_decimalMenuItemActionPerformed
-
-    private void hexadecimalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexadecimalMenuItemActionPerformed
-        switchNumBase(PositionCodeType.HEXADECIMAL);
-    }//GEN-LAST:event_hexadecimalMenuItemActionPerformed
-
-    private void positionTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_positionTypeButtonActionPerformed
-        PositionCodeType positionCodeType = positionSpinnerEditor.getPositionCodeType();
-        switch (positionCodeType) {
-            case OCTAL: {
-                switchNumBase(PositionCodeType.DECIMAL);
-                break;
-            }
-            case DECIMAL: {
-                switchNumBase(PositionCodeType.HEXADECIMAL);
-                break;
-            }
-            case HEXADECIMAL: {
-                switchNumBase(PositionCodeType.OCTAL);
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected position type " + positionCodeType.name());
-        }
-    }//GEN-LAST:event_positionTypeButtonActionPerformed
 
     private void fromStartRadioButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fromStartRadioButtonItemStateChanged
         if (fromStartRadioButton.isSelected()) {
@@ -310,8 +191,7 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     }
 
     public void initFocus() {
-        /* ((JSpinner.DefaultEditor) positionSpinner.getEditor()) */
-        positionSpinnerEditor.getTextField().requestFocusInWindow();
+        baseSwitchableSpinnerPanel.initFocus();
     }
 
     public long getTargetPosition() {
@@ -373,13 +253,12 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
 
     public void setMaxPosition(long maxPosition) {
         this.maxPosition = maxPosition;
-        ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition);
-        positionSpinner.revalidate();
+        baseSwitchableSpinnerPanel.setMaximum(maxPosition);
         updateTargetPosition();
     }
 
     public void setSelected() {
-        positionSpinner.requestFocusInWindow();
+        baseSwitchableSpinnerPanel.requestFocusInWindow();
     }
 
     @Nonnull
@@ -387,58 +266,47 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    private void switchNumBase(PositionCodeType codeType) {
-        adjusting = true;
-        long positionValue = getPositionValue();
-        positionTypeButton.setText(codeType.name().substring(0, 3));
-        positionSpinnerEditor.setPositionCodeType(codeType);
-        setPositionValue(positionValue);
-        adjusting = false;
-    }
-
     private void switchGoToMode(GoToBinaryPositionMode goToMode) {
         if (this.goToMode == goToMode) {
             return;
         }
 
-        adjusting = true;
         long absolutePosition = getTargetPosition();
         this.goToMode = goToMode;
         switch (goToMode) {
             case FROM_START: {
                 setPositionValue(0l);
-                ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(0l);
-                ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition);
-                positionSpinner.revalidate();
+                baseSwitchableSpinnerPanel.setMinimum(0l);
+                baseSwitchableSpinnerPanel.setMaximum(maxPosition);
+                baseSwitchableSpinnerPanel.revalidateSpinner();
                 break;
             }
             case FROM_END: {
-                positionSpinner.setValue(0l);
-                ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(0l);
-                ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition);
-                positionSpinner.revalidate();
+                setPositionValue(0l);
+                baseSwitchableSpinnerPanel.setMinimum(0l);
+                baseSwitchableSpinnerPanel.setMaximum(maxPosition);
+                baseSwitchableSpinnerPanel.revalidateSpinner();
                 break;
             }
             case FROM_CURSOR: {
                 setPositionValue(0l);
-                ((SpinnerNumberModel) positionSpinner.getModel()).setMinimum(-cursorPosition);
-                ((SpinnerNumberModel) positionSpinner.getModel()).setMaximum(maxPosition - cursorPosition);
-                positionSpinner.revalidate();
+                baseSwitchableSpinnerPanel.setMinimum(-cursorPosition);
+                baseSwitchableSpinnerPanel.setMaximum(maxPosition - cursorPosition);
+                baseSwitchableSpinnerPanel.revalidateSpinner();
                 break;
             }
             default:
                 throw new IllegalStateException("Unexpected go to mode " + goToMode.name());
         }
         setTargetPosition(absolutePosition);
-        adjusting = false;
     }
 
     private long getPositionValue() {
-        return (Long) positionSpinner.getValue();
+        return (Long) baseSwitchableSpinnerPanel.getValue();
     }
 
     private void setPositionValue(long value) {
-        positionSpinnerEditor.setPositionValue(value);
+        baseSwitchableSpinnerPanel.setValue(value);
         updateTargetPosition();
 //        positionSpinner.setValue(value);
 //        positionSpinner.firePropertyChange(SPINNER_PROPERTY, value, value);
@@ -454,226 +322,21 @@ public class GoToBinaryPanel extends javax.swing.JPanel {
     }
 
     public void acceptInput() {
-        try {
-            positionSpinner.commitEdit();
-        } catch (ParseException ex) {
-            // Ignore parse exception
-        }
+        baseSwitchableSpinnerPanel.acceptInput();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.exbin.framework.bined.panel.BaseSwitchableSpinnerPanel baseSwitchableSpinnerPanel;
     private javax.swing.JLabel currentPositionLabel;
     private javax.swing.JTextField currentPositionTextField;
-    private javax.swing.JMenuItem decimalMenuItem;
     private javax.swing.JRadioButton fromCursorRadioButton;
     private javax.swing.JRadioButton fromEndRadioButton;
     private javax.swing.JRadioButton fromStartRadioButton;
     private javax.swing.JPanel goToPanel;
-    private javax.swing.JMenuItem hexadecimalMenuItem;
-    private javax.swing.JMenuItem octalMenuItem;
     private javax.swing.JLabel positionLabel;
-    private javax.swing.JSpinner positionSpinner;
-    private javax.swing.JButton positionTypeButton;
     private javax.swing.ButtonGroup positionTypeButtonGroup;
-    private javax.swing.JPopupMenu positionTypePopupMenu;
     private javax.swing.JLabel targetPositionLabel;
     private javax.swing.JTextField targetPositionTextField;
     // End of variables declaration//GEN-END:variables
 
-    @ParametersAreNonnullByDefault
-    private class PositionSpinnerEditor extends JPanel implements ChangeListener, PropertyChangeListener, LayoutManager {
-
-        private static final int LENGTH_LIMIT = 21;
-
-        private PositionCodeType positionCodeType = PositionCodeType.DECIMAL;
-
-        private final char[] cache = new char[LENGTH_LIMIT];
-
-        private final JTextField textField;
-        private final JSpinner spinner;
-
-        public PositionSpinnerEditor(JSpinner spinner) {
-            this.spinner = spinner;
-            textField = new JTextField();
-
-            init();
-        }
-
-        private void init() {
-            textField.setName("Spinner.textField");
-            textField.setText(getPositionAsString((Long) spinner.getValue()));
-            textField.addPropertyChangeListener(this);
-            textField.getDocument().addDocumentListener(new DocumentListener() {
-                private final PropertyChangeEvent changeEvent = new PropertyChangeEvent(textField, SPINNER_PROPERTY, null, null);
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    notifyChanged();
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    notifyChanged();
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    notifyChanged();
-                }
-
-                public void notifyChanged() {
-                    propertyChange(changeEvent);
-                }
-            });
-            textField.setEditable(true);
-            textField.setInheritsPopupMenu(true);
-
-            String toolTipText = spinner.getToolTipText();
-            if (toolTipText != null) {
-                textField.setToolTipText(toolTipText);
-            }
-
-            add(textField);
-
-            setLayout(this);
-            spinner.addChangeListener(this);
-        }
-
-        @Nonnull
-        private JTextField getTextField() {
-            return textField;
-        }
-
-        @Nonnull
-        private JSpinner getSpinner() {
-            return spinner;
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            if (adjusting) {
-                return;
-            }
-
-            JSpinner sourceSpinner = (JSpinner) (e.getSource());
-            SwingUtilities.invokeLater(() -> {
-                textField.setText(getPositionAsString((Long) sourceSpinner.getValue()));
-            });
-        }
-
-        @Override
-        public void propertyChange(PropertyChangeEvent e) {
-            if (adjusting) {
-                return;
-            }
-
-            JSpinner sourceSpinner = getSpinner();
-
-            Object source = e.getSource();
-            String name = e.getPropertyName();
-            if ((source instanceof JTextField) && SPINNER_PROPERTY.equals(name)) {
-                Long lastValue = (Long) sourceSpinner.getValue();
-
-                // Try to set the new value
-                try {
-                    sourceSpinner.setValue(valueOfPosition(getTextField().getText()));
-                } catch (IllegalArgumentException iae) {
-                    // SpinnerModel didn't like new value, reset
-                    try {
-                        sourceSpinner.setValue(lastValue);
-                    } catch (IllegalArgumentException iae2) {
-                        // Still bogus, nothing else we can do, the
-                        // SpinnerModel and JFormattedTextField are now out
-                        // of sync.
-                    }
-                }
-            }
-        }
-
-        public void setPositionValue(long positionValue) {
-            textField.setText(getPositionAsString(positionValue));
-            spinner.setValue(positionValue);
-        }
-
-        @Override
-        public void addLayoutComponent(String name, Component comp) {
-        }
-
-        @Override
-        public void removeLayoutComponent(Component comp) {
-        }
-
-        /**
-         * Returns the size of the parents insets.
-         */
-        @Nonnull
-        private Dimension insetSize(Container parent) {
-            Insets insets = parent.getInsets();
-            int width = insets.left + insets.right;
-            int height = insets.top + insets.bottom;
-            return new Dimension(width, height);
-        }
-
-        @Nonnull
-        @Override
-        public Dimension preferredLayoutSize(Container parent) {
-            Dimension preferredSize = insetSize(parent);
-            if (parent.getComponentCount() > 0) {
-                Dimension childSize = getComponent(0).getPreferredSize();
-                preferredSize.width += childSize.width;
-                preferredSize.height += childSize.height;
-            }
-            return preferredSize;
-        }
-
-        @Nonnull
-        @Override
-        public Dimension minimumLayoutSize(Container parent) {
-            Dimension minimumSize = insetSize(parent);
-            if (parent.getComponentCount() > 0) {
-                Dimension childSize = getComponent(0).getMinimumSize();
-                minimumSize.width += childSize.width;
-                minimumSize.height += childSize.height;
-            }
-            return minimumSize;
-        }
-
-        @Override
-        public void layoutContainer(Container parent) {
-            if (parent.getComponentCount() > 0) {
-                Insets insets = parent.getInsets();
-                int width = parent.getWidth() - (insets.left + insets.right);
-                int height = parent.getHeight() - (insets.top + insets.bottom);
-                getComponent(0).setBounds(insets.left, insets.top, width, height);
-            }
-        }
-
-        @Nonnull
-        public PositionCodeType getPositionCodeType() {
-            return positionCodeType;
-        }
-
-        public void setPositionCodeType(PositionCodeType positionCodeType) {
-            this.positionCodeType = positionCodeType;
-        }
-
-        @Nonnull
-        private String getPositionAsString(long position) {
-            if (position < 0) {
-                return "-" + getNonNegativePostionAsString(-position);
-            }
-            return getNonNegativePostionAsString(position);
-        }
-
-        @Nonnull
-        private String getNonNegativePostionAsString(long position) {
-            Arrays.fill(cache, ' ');
-            CodeAreaUtils.longToBaseCode(cache, 0, position, positionCodeType.getBase(), LENGTH_LIMIT, false, CodeCharactersCase.LOWER);
-            return new String(cache).trim();
-        }
-
-        private long valueOfPosition(String position) {
-            return Long.parseLong(position, positionCodeType.getBase());
-        }
-    }
 }
