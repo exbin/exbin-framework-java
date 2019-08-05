@@ -30,9 +30,9 @@ import org.exbin.framework.bined.options.CodeAreaOptions;
 import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 
 /**
- * Hexadecimal editor preferences.
+ * Binary editor preferences.
  *
- * @version 0.2.1 2019/07/06
+ * @version 0.2.1 2019/07/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -46,7 +46,7 @@ public class BinaryEditorPreferences {
     private final EditorPreferences editorParameters;
     private final StatusPreferences statusParameters;
     private final CodeAreaPreferences codeAreaParameters;
-    private final TextEncodingPreferences charsetParameters;
+    private final TextEncodingPreferences encodingParameters;
     private final CodeAreaLayoutPreferences layoutParameters;
     private final CodeAreaThemePreferences themeParameters;
     private final CodeAreaColorPreferences colorParameters;
@@ -57,7 +57,7 @@ public class BinaryEditorPreferences {
         editorParameters = new EditorPreferences(preferences);
         statusParameters = new StatusPreferences(preferences);
         codeAreaParameters = new CodeAreaPreferences(preferences);
-        charsetParameters = new TextEncodingPreferences(preferences);
+        encodingParameters = new TextEncodingPreferences(preferences);
         layoutParameters = new CodeAreaLayoutPreferences(preferences);
         themeParameters = new CodeAreaThemePreferences(preferences);
         colorParameters = new CodeAreaColorPreferences(preferences);
@@ -80,36 +80,37 @@ public class BinaryEditorPreferences {
     }
 
     @Nonnull
-    public EditorPreferences getEditorParameters() {
+    public EditorPreferences getEditorPreferences() {
         return editorParameters;
     }
 
     @Nonnull
-    public StatusPreferences getStatusParameters() {
+    public StatusPreferences getStatusPreferences() {
         return statusParameters;
     }
 
     @Nonnull
-    public CodeAreaPreferences getCodeAreaParameters() {
+    public CodeAreaPreferences getCodeAreaPreferences() {
         return codeAreaParameters;
     }
 
-    public TextEncodingPreferences getCharsetParameters() {
-        return charsetParameters;
+    @Nonnull
+    public TextEncodingPreferences getEncodingPreferences() {
+        return encodingParameters;
     }
 
     @Nonnull
-    public CodeAreaLayoutPreferences getLayoutParameters() {
+    public CodeAreaLayoutPreferences getLayoutPreferences() {
         return layoutParameters;
     }
 
     @Nonnull
-    public CodeAreaThemePreferences getThemeParameters() {
+    public CodeAreaThemePreferences getThemePreferences() {
         return themeParameters;
     }
 
     @Nonnull
-    public CodeAreaColorPreferences getColorParameters() {
+    public CodeAreaColorPreferences getColorPreferences() {
         return colorParameters;
     }
 
@@ -151,14 +152,14 @@ public class BinaryEditorPreferences {
         themeParameters.setThemeProfile(0, themeProfile);
         themeParameters.setThemeProfilesList(themeProfiles);
 
-        charsetParameters.setSelectedEncoding(legacyPreferences.getSelectedEncoding());
-        charsetParameters.setEncodings(new ArrayList<>(legacyPreferences.getEncodings()));
+        encodingParameters.setSelectedEncoding(legacyPreferences.getSelectedEncoding());
+        encodingParameters.setEncodings(new ArrayList<>(legacyPreferences.getEncodings()));
         Collection<String> legacyEncodings = legacyPreferences.getEncodings();
         List<String> encodings = new ArrayList<>(legacyEncodings);
         if (!encodings.isEmpty() && !encodings.contains(TextEncodingPreferences.ENCODING_UTF8)) {
             encodings.add(TextEncodingPreferences.ENCODING_UTF8);
         }
-        charsetParameters.setEncodings(encodings);
+        encodingParameters.setEncodings(encodings);
 
         preferences.flush();
     }

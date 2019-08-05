@@ -236,6 +236,10 @@ public class EncodingsHandler {
         popupMenu.show((Component) mouseEvent.getSource(), mouseEvent.getX(), mouseEvent.getY());
     }
 
+    public void setEncodings(List<String> encodings) {
+        textEncodingService.setEncodings(encodings);
+    }
+
     public void setParentComponent(Component component) {
         parentComponent = component;
     }
