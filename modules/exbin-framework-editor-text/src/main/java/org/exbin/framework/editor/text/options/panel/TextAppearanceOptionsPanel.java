@@ -18,7 +18,7 @@ package org.exbin.framework.editor.text.options.panel;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import org.exbin.framework.editor.text.options.TextAppearanceOptions;
+import org.exbin.framework.editor.text.options.impl.TextAppearanceOptionsImpl;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -30,7 +30,7 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
  * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextAppearanceOptions> {
+public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextAppearanceOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
@@ -46,12 +46,12 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
     }
 
     @Override
-    public void saveToOptions(TextAppearanceOptions options) {
+    public void saveToOptions(TextAppearanceOptionsImpl options) {
         options.setWordWrapping(wordWrapCheckBox.isSelected());
     }
 
     @Override
-    public void loadFromOptions(TextAppearanceOptions options) {
+    public void loadFromOptions(TextAppearanceOptionsImpl options) {
         wordWrapCheckBox.setSelected(options.isWordWrapping());
     }
 

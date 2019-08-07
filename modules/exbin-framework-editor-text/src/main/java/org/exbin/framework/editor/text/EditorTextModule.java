@@ -32,10 +32,10 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
-import org.exbin.framework.editor.text.options.TextAppearanceOptions;
-import org.exbin.framework.editor.text.options.TextColorOptions;
-import org.exbin.framework.editor.text.options.TextEncodingOptions;
-import org.exbin.framework.editor.text.options.TextFontOptions;
+import org.exbin.framework.editor.text.options.impl.TextAppearanceOptionsImpl;
+import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
+import org.exbin.framework.editor.text.options.impl.TextEncodingOptionsImpl;
+import org.exbin.framework.editor.text.options.impl.TextFontOptionsImpl;
 import org.exbin.framework.editor.text.panel.AddEncodingPanel;
 import org.exbin.framework.editor.text.options.panel.TextAppearanceOptionsPanel;
 import org.exbin.framework.editor.text.options.panel.TextColorOptionsPanel;
@@ -172,11 +172,11 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        optionsModule.addOptionsPage(new DefaultOptionsPage<TextColorOptions>() {
+        optionsModule.addOptionsPage(new DefaultOptionsPage<TextColorOptionsImpl>() {
             private TextColorOptionsPanel panel;
 
             @Override
-            public OptionsCapable<TextColorOptions> createPanel() {
+            public OptionsCapable<TextColorOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new TextColorOptionsPanel();
                     panel.setTextColorService(textColorService);
@@ -191,22 +191,22 @@ public class EditorTextModule implements XBApplicationModule {
             }
 
             @Override
-            public TextColorOptions createOptions() {
-                return new TextColorOptions();
+            public TextColorOptionsImpl createOptions() {
+                return new TextColorOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, TextColorOptions options) {
+            public void loadFromPreferences(Preferences preferences, TextColorOptionsImpl options) {
                 options.loadFromParameters(new TextColorPreferences(preferences));
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, TextColorOptions options) {
+            public void saveToPreferences(Preferences preferences, TextColorOptionsImpl options) {
                 options.saveToParameters(new TextColorPreferences(preferences));
             }
 
             @Override
-            public void applyPreferencesChanges(TextColorOptions options) {
+            public void applyPreferencesChanges(TextColorOptionsImpl options) {
                 if (options.isUseDefaultColors()) {
                     textColorService.setCurrentTextColors(textColorService.getDefaultTextColors());
                 } else {
@@ -243,12 +243,12 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        optionsModule.addOptionsPage(new DefaultOptionsPage<TextFontOptions>() {
+        optionsModule.addOptionsPage(new DefaultOptionsPage<TextFontOptionsImpl>() {
 
             private TextFontOptionsPanel panel;
 
             @Override
-            public OptionsCapable<TextFontOptions> createPanel() {
+            public OptionsCapable<TextFontOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new TextFontOptionsPanel();
                     panel.setTextFontService(textFontService);
@@ -259,14 +259,14 @@ public class EditorTextModule implements XBApplicationModule {
                             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                             final TextFontPanel fontPanel = new TextFontPanel();
                             fontPanel.setStoredFont(currentFont);
-                            OptionsControlPanel controlPanel = new OptionsControlPanel();
+                            DefaultControlPanel controlPanel = new DefaultControlPanel();
                             JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
                             final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                             WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
                             frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
-                            controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-                                if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                                    if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                                if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
+                                    if (actionType == DefaultControlHandler.ControlActionType.OK) {
                                         TextFontPreferences textFontParameters = new TextFontPreferences(application.getAppPreferences());
                                         textFontParameters.setUseDefaultFont(true);
                                         textFontParameters.setFont(fontPanel.getStoredFont());
@@ -298,22 +298,22 @@ public class EditorTextModule implements XBApplicationModule {
             }
 
             @Override
-            public TextFontOptions createOptions() {
-                return new TextFontOptions();
+            public TextFontOptionsImpl createOptions() {
+                return new TextFontOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, TextFontOptions options) {
+            public void loadFromPreferences(Preferences preferences, TextFontOptionsImpl options) {
                 options.loadFromParameters(new TextFontPreferences(preferences));
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, TextFontOptions options) {
+            public void saveToPreferences(Preferences preferences, TextFontOptionsImpl options) {
                 options.saveToParameters(new TextFontPreferences(preferences));
             }
 
             @Override
-            public void applyPreferencesChanges(TextFontOptions options) {
+            public void applyPreferencesChanges(TextFontOptionsImpl options) {
                 if (options.isUseDefaultFont()) {
                     textFontService.setCurrentFont(textFontService.getDefaultFont());
                 } else {
@@ -348,7 +348,7 @@ public class EditorTextModule implements XBApplicationModule {
             }
         };
 
-        optionsModule.addOptionsPage(new DefaultOptionsPage<TextEncodingOptions>() {
+        optionsModule.addOptionsPage(new DefaultOptionsPage<TextEncodingOptionsImpl>() {
             private TextEncodingOptionsPanel panel;
 
             @Override
@@ -387,32 +387,32 @@ public class EditorTextModule implements XBApplicationModule {
             }
 
             @Override
-            public TextEncodingOptions createOptions() {
-                return new TextEncodingOptions();
+            public TextEncodingOptionsImpl createOptions() {
+                return new TextEncodingOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, TextEncodingOptions options) {
+            public void loadFromPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
                 options.loadFromParameters(new TextEncodingPreferences(preferences));
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, TextEncodingOptions options) {
+            public void saveToPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
                 options.saveToParameters(new TextEncodingPreferences(preferences));
             }
 
             @Override
-            public void applyPreferencesChanges(TextEncodingOptions options) {
+            public void applyPreferencesChanges(TextEncodingOptionsImpl options) {
                 textEncodingService.setSelectedEncoding(options.getSelectedEncoding());
                 textEncodingService.setEncodings(options.getEncodings());
             }
         });
 
-        optionsModule.extendAppearanceOptionsPage(new DefaultOptionsPage<TextAppearanceOptions>() {
+        optionsModule.extendAppearanceOptionsPage(new DefaultOptionsPage<TextAppearanceOptionsImpl>() {
             private TextAppearanceOptionsPanel panel;
 
             @Override
-            public OptionsCapable<TextAppearanceOptions> createPanel() {
+            public OptionsCapable<TextAppearanceOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new TextAppearanceOptionsPanel();
                 }
@@ -426,22 +426,22 @@ public class EditorTextModule implements XBApplicationModule {
             }
 
             @Override
-            public TextAppearanceOptions createOptions() {
-                return new TextAppearanceOptions();
+            public TextAppearanceOptionsImpl createOptions() {
+                return new TextAppearanceOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, TextAppearanceOptions options) {
+            public void loadFromPreferences(Preferences preferences, TextAppearanceOptionsImpl options) {
                 options.loadFromParameters(new TextAppearancePreferences(preferences));
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, TextAppearanceOptions options) {
+            public void saveToPreferences(Preferences preferences, TextAppearanceOptionsImpl options) {
                 options.saveToParameters(new TextAppearancePreferences(preferences));
             }
 
             @Override
-            public void applyPreferencesChanges(TextAppearanceOptions options) {
+            public void applyPreferencesChanges(TextAppearanceOptionsImpl options) {
                 textAppearanceService.setWordWrapMode(options.isWordWrapping());
             }
         });

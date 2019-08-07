@@ -20,7 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import org.exbin.framework.editor.text.options.TextColorOptions;
+import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -33,7 +33,7 @@ import org.exbin.framework.editor.text.service.TextColorService;
  * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class TextColorOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextColorOptions> {
+public class TextColorOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextColorOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
@@ -63,7 +63,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     }
 
     @Override
-    public void loadFromOptions(TextColorOptions options) {
+    public void loadFromOptions(TextColorOptionsImpl options) {
         boolean defaultColor = options.isUseDefaultColors();
         defaultColorCheckBox.setSelected(defaultColor);
         colorPanel.setEnabled(!defaultColor);
@@ -71,7 +71,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     }
 
     @Override
-    public void saveToOptions(TextColorOptions options) {
+    public void saveToOptions(TextColorOptionsImpl options) {
         options.setUseDefaultColors(defaultColorCheckBox.isSelected());
         colorPanel.saveToOptions(options);
     }

@@ -13,45 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.bined.options;
+package org.exbin.framework.editor.text.options.impl;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.bined.capability.CharsetCapable;
-import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.framework.editor.text.options.TextEncodingOptions;
 import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
- * Charset options.
+ * Text encoding options.
  *
- * @version 0.2.1 2019/07/20
+ * @version 0.2.1 2019/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EncodingOptions implements OptionsData {
+public class TextEncodingOptionsImpl implements TextEncodingOptions, OptionsData {
 
-    private String selectedEncoding = "UTF-8";
+    private String selectedEncoding = TextEncodingPreferences.ENCODING_UTF8;
     private List<String> encodings = new ArrayList<>();
 
     @Nonnull
+    @Override
     public String getSelectedEncoding() {
         return selectedEncoding;
     }
 
     @Nonnull
+    @Override
     public void setSelectedEncoding(String selectedEncoding) {
         this.selectedEncoding = selectedEncoding;
     }
 
     @Nonnull
+    @Override
     public List<String> getEncodings() {
         return encodings;
     }
 
+    @Override
     public void setEncodings(List<String> encodings) {
         this.encodings = encodings;
     }
@@ -66,17 +68,9 @@ public class EncodingOptions implements OptionsData {
         preferences.setEncodings(encodings);
     }
 
-    public void applyFromCodeArea(ExtCodeArea codeArea) {
-        selectedEncoding = ((CharsetCapable) codeArea).getCharset().name();
-    }
-
-    public void applyToCodeArea(ExtCodeArea codeArea) {
-        ((CharsetCapable) codeArea).setCharset(Charset.forName(selectedEncoding));
-    }
-
-    public void setOptions(EncodingOptions charsetOptions) {
-        selectedEncoding = charsetOptions.selectedEncoding;
+    public void setOptions(TextEncodingOptionsImpl options) {
+        selectedEncoding = options.selectedEncoding;
         encodings = new ArrayList<>();
-        encodings.addAll(charsetOptions.encodings);
+        encodings.addAll(options.encodings);
     }
 }

@@ -51,8 +51,8 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.options.api.OptionsPathItem;
-import org.exbin.framework.gui.options.options.AppearanceOptions;
-import org.exbin.framework.gui.options.options.FrameworkOptions;
+import org.exbin.framework.gui.options.options.impl.AppearanceOptionsImpl;
+import org.exbin.framework.gui.options.options.impl.FrameworkOptionsImpl;
 import org.exbin.framework.gui.options.panel.AppearanceOptionsPanel;
 import org.exbin.framework.gui.options.panel.MainOptionsPanel;
 import org.exbin.framework.gui.options.preferences.AppearancePreferences;
@@ -84,9 +84,9 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
 
-        OptionsPage<FrameworkOptions> mainOptionsPage = new DefaultOptionsPage<FrameworkOptions>() {
+        OptionsPage<FrameworkOptionsImpl> mainOptionsPage = new DefaultOptionsPage<FrameworkOptionsImpl>() {
             @Override
-            public OptionsCapable<FrameworkOptions> createPanel() {
+            public OptionsCapable<FrameworkOptionsImpl> createPanel() {
                 return new MainOptionsPanel();
             }
 
@@ -97,24 +97,24 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             }
 
             @Override
-            public FrameworkOptions createOptions() {
-                return new FrameworkOptions();
+            public FrameworkOptionsImpl createOptions() {
+                return new FrameworkOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, FrameworkOptions options) {
+            public void loadFromPreferences(Preferences preferences, FrameworkOptionsImpl options) {
                 FrameworkPreferences prefs = new FrameworkPreferences(preferences);
                 options.loadFromParameters(prefs);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, FrameworkOptions options) {
+            public void saveToPreferences(Preferences preferences, FrameworkOptionsImpl options) {
                 FrameworkPreferences prefs = new FrameworkPreferences(preferences);
                 options.saveToParameters(prefs);
             }
 
             @Override
-            public void applyPreferencesChanges(FrameworkOptions options) {
+            public void applyPreferencesChanges(FrameworkOptionsImpl options) {
                 String selectedTheme = options.getLookAndFeel();
                 if (selectedTheme != null) {
                     if (selectedTheme.isEmpty()) {
@@ -140,10 +140,10 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         };
         optionsPages.add(new OptionsPageRecord(null, mainOptionsPage));
 
-        OptionsPage<AppearanceOptions> appearanceOptionsPage;
-        appearanceOptionsPage = new DefaultOptionsPage<AppearanceOptions>() {
+        OptionsPage<AppearanceOptionsImpl> appearanceOptionsPage;
+        appearanceOptionsPage = new DefaultOptionsPage<AppearanceOptionsImpl>() {
             @Override
-            public OptionsCapable<AppearanceOptions> createPanel() {
+            public OptionsCapable<AppearanceOptionsImpl> createPanel() {
                 return new AppearanceOptionsPanel();
             }
 
@@ -154,24 +154,24 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             }
 
             @Override
-            public AppearanceOptions createOptions() {
-                return new AppearanceOptions();
+            public AppearanceOptionsImpl createOptions() {
+                return new AppearanceOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, AppearanceOptions options) {
+            public void loadFromPreferences(Preferences preferences, AppearanceOptionsImpl options) {
                 AppearancePreferences prefs = new AppearancePreferences(preferences);
                 options.loadFromParameters(prefs);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, AppearanceOptions options) {
+            public void saveToPreferences(Preferences preferences, AppearanceOptionsImpl options) {
                 AppearancePreferences prefs = new AppearancePreferences(preferences);
                 options.saveToParameters(prefs);
             }
 
             @Override
-            public void applyPreferencesChanges(AppearanceOptions options) {
+            public void applyPreferencesChanges(AppearanceOptionsImpl options) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 ApplicationFrameHandler frame = frameModule.getFrameHandler();
                 frame.setToolBarVisible(options.isShowToolBar());
@@ -303,6 +303,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
 
     @Override
     public void initialLoadFromPreferences() {
+        // TODO use preferences instead of options for initial apply
         Preferences preferences = application.getAppPreferences();
         for (OptionsPageRecord optionsPage : optionsPages) {
             OptionsPage page = optionsPage.optionsPage;

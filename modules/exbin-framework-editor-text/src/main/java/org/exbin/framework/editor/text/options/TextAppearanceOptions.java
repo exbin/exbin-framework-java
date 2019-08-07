@@ -16,8 +16,6 @@
 package org.exbin.framework.editor.text.options;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.preferences.TextAppearancePreferences;
-import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
  * Text appearance options.
@@ -26,27 +24,9 @@ import org.exbin.framework.gui.options.api.OptionsData;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceOptions implements OptionsData {
+public interface TextAppearanceOptions {
 
-    private boolean wordWrapping;
+    boolean isWordWrapping();
 
-    public boolean isWordWrapping() {
-        return wordWrapping;
-    }
-
-    public void setWordWrapping(boolean wordWrapping) {
-        this.wordWrapping = wordWrapping;
-    }
-
-    public void loadFromParameters(TextAppearancePreferences preferences) {
-        wordWrapping = preferences.isWordWrapping();
-    }
-
-    public void saveToParameters(TextAppearancePreferences preferences) {
-        preferences.setWordWrapping(wordWrapping);
-    }
-
-    public void setOptions(TextAppearanceOptions options) {
-        wordWrapping = options.wordWrapping;
-    }
+    void setWordWrapping(boolean wordWrapping);
 }

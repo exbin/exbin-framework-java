@@ -18,6 +18,7 @@ package org.exbin.framework.editor.wave.preferences;
 import javax.annotation.Nullable;
 import org.exbin.framework.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.editor.wave.options.WaveColorOptions;
 
 /**
  * Wave editor color preferences.
@@ -26,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class WaveColorPreferences {
+public class WaveColorPreferences implements WaveColorOptions {
 
     public static final String PREFERENCES_WAVE_COLOR_DEFAULT = "waveColor.default";
     public static final String PREFERENCES_WAVE_COLOR_WAVE = "waveColor.wave";
@@ -42,40 +43,48 @@ public class WaveColorPreferences {
         this.preferences = preferences;
     }
 
+    @Override
     public boolean isUseDefaultColors() {
         return preferences.getBoolean(PREFERENCES_WAVE_COLOR_DEFAULT, true);
     }
 
+    @Override
     public void setUseDefaultColors(boolean useDefault) {
         preferences.putBoolean(PREFERENCES_WAVE_COLOR_DEFAULT, useDefault);
     }
 
     @Nullable
+    @Override
     public Integer getWaveColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_WAVE);
     }
 
     @Nullable
+    @Override
     public Integer getWaveFillColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_WAVE_FILL);
     }
 
     @Nullable
+    @Override
     public Integer getWaveBackgroundColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_BACKGROUND);
     }
 
     @Nullable
+    @Override
     public Integer getWaveSelectionColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_SELECTION);
     }
 
     @Nullable
+    @Override
     public Integer getWaveCursorColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_CURSOR);
     }
 
     @Nullable
+    @Override
     public Integer getWaveCursorWaveColor() {
         return getColorAsInt(PREFERENCES_WAVE_COLOR_CURSOR_WAVE);
     }
@@ -86,27 +95,65 @@ public class WaveColorPreferences {
         return value == null ? null : Integer.valueOf(value);
     }
 
+    @Override
+    public void setWaveColor(@Nullable Integer color) {
+        setColor(PREFERENCES_WAVE_COLOR_WAVE, color);
+    }
+
     public void setWaveColor(int color) {
-        preferences.put(PREFERENCES_WAVE_COLOR_WAVE, Integer.toString(color));
+        preferences.putInt(PREFERENCES_WAVE_COLOR_WAVE, color);
+    }
+
+    @Override
+    public void setWaveFillColor(@Nullable Integer color) {
+        setColor(PREFERENCES_WAVE_COLOR_WAVE_FILL, color);
     }
 
     public void setWaveFillColor(int color) {
-        preferences.put(PREFERENCES_WAVE_COLOR_WAVE_FILL, Integer.toString(color));
+        preferences.putInt(PREFERENCES_WAVE_COLOR_WAVE_FILL, color);
+    }
+
+    @Override
+    public void setWaveBackgroundColor(@Nullable Integer color) {
+        setColor(PREFERENCES_WAVE_COLOR_BACKGROUND, color);
     }
 
     public void setWaveBackgroundColor(int color) {
-        preferences.put(PREFERENCES_WAVE_COLOR_BACKGROUND, Integer.toString(color));
+        preferences.putInt(PREFERENCES_WAVE_COLOR_BACKGROUND, color);
+    }
+
+    @Override
+    public void setWaveSelectionColor(@Nullable Integer color) {
+        setColor(PREFERENCES_WAVE_COLOR_SELECTION, color);
     }
 
     public void setWaveSelectionColor(int color) {
-        preferences.put(PREFERENCES_WAVE_COLOR_SELECTION, Integer.toString(color));
+        preferences.putInt(PREFERENCES_WAVE_COLOR_SELECTION, color);
+    }
+
+    @Override
+    public void setWaveCursorColor(@Nullable Integer color) {
+        setColor(PREFERENCES_WAVE_COLOR_CURSOR, color);
     }
 
     public void setWaveCursorColor(int color) {
-        preferences.put(PREFERENCES_WAVE_COLOR_CURSOR, Integer.toString(color));
+        preferences.putInt(PREFERENCES_WAVE_COLOR_CURSOR, color);
+    }
+
+    @Override
+    public void setWaveCursorWaveColor(@Nullable Integer color) {
+        setColor(PREFERENCES_WAVE_COLOR_CURSOR_WAVE, color);
     }
 
     public void setWaveCursorWaveColor(int color) {
-        preferences.put(PREFERENCES_WAVE_COLOR_CURSOR_WAVE, Integer.toString(color));
+        preferences.putInt(PREFERENCES_WAVE_COLOR_CURSOR_WAVE, color);
+    }
+
+    private void setColor(String preferenceName, @Nullable Integer color) {
+        if (color == null) {
+            preferences.remove(preferenceName);
+        } else {
+            preferences.putInt(preferenceName, color);
+        }
     }
 }

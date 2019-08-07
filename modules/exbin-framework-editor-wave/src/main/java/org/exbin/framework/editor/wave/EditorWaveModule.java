@@ -28,8 +28,8 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
-import org.exbin.framework.editor.wave.options.AudioDevicesOptions;
-import org.exbin.framework.editor.wave.options.WaveColorOptions;
+import org.exbin.framework.editor.wave.options.impl.AudioDevicesOptionsImpl;
+import org.exbin.framework.editor.wave.options.impl.WaveColorOptionsImpl;
 import org.exbin.framework.editor.wave.options.panel.AudioDevicesOptionsPanel;
 import org.exbin.framework.editor.wave.panel.AudioPanel;
 import org.exbin.framework.editor.wave.panel.AudioStatusPanel;
@@ -191,9 +191,9 @@ public class EditorWaveModule implements XBApplicationModule {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
         WaveColorService waveColorService = new WaveColorServiceImpl(getEditorProvider());
 
-        optionsModule.addOptionsPage(new DefaultOptionsPage<WaveColorOptions>() {
+        optionsModule.addOptionsPage(new DefaultOptionsPage<WaveColorOptionsImpl>() {
             @Override
-            public OptionsCapable<WaveColorOptions> createPanel() {
+            public OptionsCapable<WaveColorOptionsImpl> createPanel() {
                 WaveColorOptionsPanel panel = new WaveColorOptionsPanel();
                 panel.setWaveColorService(waveColorService);
                 return panel;
@@ -205,24 +205,24 @@ public class EditorWaveModule implements XBApplicationModule {
             }
 
             @Override
-            public WaveColorOptions createOptions() {
-                return new WaveColorOptions();
+            public WaveColorOptionsImpl createOptions() {
+                return new WaveColorOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, WaveColorOptions options) {
+            public void loadFromPreferences(Preferences preferences, WaveColorOptionsImpl options) {
                 WaveColorPreferences parameters = new WaveColorPreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, WaveColorOptions options) {
+            public void saveToPreferences(Preferences preferences, WaveColorOptionsImpl options) {
                 WaveColorPreferences parameters = new WaveColorPreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(WaveColorOptions options) {
+            public void applyPreferencesChanges(WaveColorOptionsImpl options) {
                 if (options.isUseDefaultColors()) {
                     waveColorService.setCurrentWaveColors(waveColorService.getCurrentWaveColors());
                 } else {
@@ -242,9 +242,9 @@ public class EditorWaveModule implements XBApplicationModule {
                 return intValue == null ? null : new Color(intValue);
             }
         });
-        optionsModule.addOptionsPage(new DefaultOptionsPage<AudioDevicesOptions>() {
+        optionsModule.addOptionsPage(new DefaultOptionsPage<AudioDevicesOptionsImpl>() {
             @Override
-            public OptionsCapable<AudioDevicesOptions> createPanel() {
+            public OptionsCapable<AudioDevicesOptionsImpl> createPanel() {
                 return new AudioDevicesOptionsPanel();
             }
 
@@ -254,24 +254,24 @@ public class EditorWaveModule implements XBApplicationModule {
             }
 
             @Override
-            public AudioDevicesOptions createOptions() {
-                return new AudioDevicesOptions();
+            public AudioDevicesOptionsImpl createOptions() {
+                return new AudioDevicesOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, AudioDevicesOptions options) {
+            public void loadFromPreferences(Preferences preferences, AudioDevicesOptionsImpl options) {
                 AudioDevicesPreferences parameters = new AudioDevicesPreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, AudioDevicesOptions options) {
+            public void saveToPreferences(Preferences preferences, AudioDevicesOptionsImpl options) {
                 AudioDevicesPreferences parameters = new AudioDevicesPreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(AudioDevicesOptions options) {
+            public void applyPreferencesChanges(AudioDevicesOptionsImpl options) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         });

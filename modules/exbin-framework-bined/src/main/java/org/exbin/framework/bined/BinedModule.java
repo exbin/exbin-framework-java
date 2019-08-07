@@ -75,13 +75,13 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
-import org.exbin.framework.bined.options.BinaryAppearanceOptions;
-import org.exbin.framework.bined.options.CodeAreaColorOptions;
-import org.exbin.framework.bined.options.CodeAreaLayoutOptions;
-import org.exbin.framework.bined.options.CodeAreaOptions;
-import org.exbin.framework.bined.options.CodeAreaThemeOptions;
-import org.exbin.framework.bined.options.EditorOptions;
-import org.exbin.framework.bined.options.StatusOptions;
+import org.exbin.framework.bined.options.impl.BinaryAppearanceOptionsImpl;
+import org.exbin.framework.bined.options.impl.CodeAreaColorOptionsImpl;
+import org.exbin.framework.bined.options.impl.CodeAreaLayoutOptionsImpl;
+import org.exbin.framework.bined.options.impl.CodeAreaOptionsImpl;
+import org.exbin.framework.bined.options.impl.CodeAreaThemeOptionsImpl;
+import org.exbin.framework.bined.options.impl.EditorOptionsImpl;
+import org.exbin.framework.bined.options.impl.StatusOptionsImpl;
 import org.exbin.framework.bined.options.panel.BinaryAppearanceOptionsPanel;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
@@ -108,9 +108,7 @@ import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
-import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.bined.options.panel.CodeAreaOptionsPanel;
 import org.exbin.framework.bined.options.panel.ColorProfilesOptionsPanel;
@@ -130,8 +128,8 @@ import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.bined.service.BinaryAppearanceService;
 import org.exbin.framework.bined.service.impl.BinaryAppearanceServiceImpl;
-import org.exbin.framework.editor.text.options.TextEncodingOptions;
-import org.exbin.framework.editor.text.options.TextFontOptions;
+import org.exbin.framework.editor.text.options.impl.TextEncodingOptionsImpl;
+import org.exbin.framework.editor.text.options.impl.TextFontOptionsImpl;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextFontService;
 import org.exbin.framework.editor.text.service.impl.TextEncodingServiceImpl;
@@ -167,15 +165,15 @@ public class BinedModule implements XBApplicationModule {
     private XBApplication application;
     private BinaryEditorProvider editorProvider;
     private BinaryStatusPanel binaryStatusPanel;
-    private DefaultOptionsPage<TextEncodingOptions> textEncodingOptionsPage;
-    private DefaultOptionsPage<TextFontOptions> textFontOptionsPage;
-    private DefaultOptionsPage<BinaryAppearanceOptions> binaryAppearanceOptionsPage;
-    private DefaultOptionsPage<EditorOptions> editorOptionsPage;
-    private DefaultOptionsPage<CodeAreaOptions> codeAreaOptionsPage;
-    private DefaultOptionsPage<StatusOptions> statusOptionsPage;
-    private DefaultOptionsPage<CodeAreaThemeOptions> themeProfilesOptionsPage;
-    private DefaultOptionsPage<CodeAreaLayoutOptions> layoutProfilesOptionsPage;
-    private DefaultOptionsPage<CodeAreaColorOptions> colorProfilesOptionsPage;
+    private DefaultOptionsPage<TextEncodingOptionsImpl> textEncodingOptionsPage;
+    private DefaultOptionsPage<TextFontOptionsImpl> textFontOptionsPage;
+    private DefaultOptionsPage<BinaryAppearanceOptionsImpl> binaryAppearanceOptionsPage;
+    private DefaultOptionsPage<EditorOptionsImpl> editorOptionsPage;
+    private DefaultOptionsPage<CodeAreaOptionsImpl> codeAreaOptionsPage;
+    private DefaultOptionsPage<StatusOptionsImpl> statusOptionsPage;
+    private DefaultOptionsPage<CodeAreaThemeOptionsImpl> themeProfilesOptionsPage;
+    private DefaultOptionsPage<CodeAreaLayoutOptionsImpl> layoutProfilesOptionsPage;
+    private DefaultOptionsPage<CodeAreaColorOptionsImpl> colorProfilesOptionsPage;
 
     private FindReplaceHandler findReplaceHandler;
     private ViewNonprintablesHandler viewNonprintablesHandler;
@@ -320,12 +318,12 @@ public class BinedModule implements XBApplicationModule {
         BinaryAppearanceService binaryAppearanceService;
         binaryAppearanceService = new BinaryAppearanceServiceImpl(this);
 
-        binaryAppearanceOptionsPage = new DefaultOptionsPage<BinaryAppearanceOptions>() {
+        binaryAppearanceOptionsPage = new DefaultOptionsPage<BinaryAppearanceOptionsImpl>() {
             private BinaryAppearanceOptionsPanel panel;
 
             @Nonnull
             @Override
-            public OptionsCapable<BinaryAppearanceOptions> createPanel() {
+            public OptionsCapable<BinaryAppearanceOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new BinaryAppearanceOptionsPanel();
                 }
@@ -341,24 +339,24 @@ public class BinedModule implements XBApplicationModule {
 
             @Nonnull
             @Override
-            public BinaryAppearanceOptions createOptions() {
-                return new BinaryAppearanceOptions();
+            public BinaryAppearanceOptionsImpl createOptions() {
+                return new BinaryAppearanceOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, BinaryAppearanceOptions options) {
+            public void loadFromPreferences(Preferences preferences, BinaryAppearanceOptionsImpl options) {
                 BinaryAppearancePreferences parameters = new BinaryAppearancePreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, BinaryAppearanceOptions options) {
+            public void saveToPreferences(Preferences preferences, BinaryAppearanceOptionsImpl options) {
                 BinaryAppearancePreferences parameters = new BinaryAppearancePreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(BinaryAppearanceOptions options) {
+            public void applyPreferencesChanges(BinaryAppearanceOptionsImpl options) {
                 binaryAppearanceService.setWordWrapMode(options.isLineWrapping());
                 binaryAppearanceService.setShowValuesPanel(options.isShowValuesPanel());
             }
@@ -378,11 +376,11 @@ public class BinedModule implements XBApplicationModule {
             }
         });
 
-        textEncodingOptionsPage = new DefaultOptionsPage<TextEncodingOptions>() {
+        textEncodingOptionsPage = new DefaultOptionsPage<TextEncodingOptionsImpl>() {
             private TextEncodingOptionsPanel panel;
 
             @Override
-            public OptionsCapable<TextEncodingOptions> createPanel() {
+            public OptionsCapable<TextEncodingOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new TextEncodingOptionsPanel();
                     panel.setTextEncodingService(textEncodingService);
@@ -418,24 +416,24 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public TextEncodingOptions createOptions() {
-                return new TextEncodingOptions();
+            public TextEncodingOptionsImpl createOptions() {
+                return new TextEncodingOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, TextEncodingOptions options) {
+            public void loadFromPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
                 TextEncodingPreferences parameters = new TextEncodingPreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, TextEncodingOptions options) {
+            public void saveToPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
                 TextEncodingPreferences parameters = new TextEncodingPreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(TextEncodingOptions options) {
+            public void applyPreferencesChanges(TextEncodingOptionsImpl options) {
                 textEncodingService.setSelectedEncoding(options.getSelectedEncoding());
                 textEncodingService.setEncodings(options.getEncodings());
             }
@@ -458,11 +456,11 @@ public class BinedModule implements XBApplicationModule {
                 ((TextFontApi) getEditorProvider()).setCurrentFont(font);
             }
         };
-        textFontOptionsPage = new DefaultOptionsPage<TextFontOptions>() {
+        textFontOptionsPage = new DefaultOptionsPage<TextFontOptionsImpl>() {
             private TextFontOptionsPanel panel;
 
             @Override
-            public OptionsCapable<TextFontOptions> createPanel() {
+            public OptionsCapable<TextFontOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new TextFontOptionsPanel();
                     panel.setTextFontService(textFontService);
@@ -473,14 +471,14 @@ public class BinedModule implements XBApplicationModule {
                             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                             final TextFontPanel fontPanel = new TextFontPanel();
                             fontPanel.setStoredFont(currentFont);
-                            OptionsControlPanel controlPanel = new OptionsControlPanel();
+                            DefaultControlPanel controlPanel = new DefaultControlPanel();
                             JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
                             final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                             WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
                             frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
-                            controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-                                if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                                    if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                                if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
+                                    if (actionType == DefaultControlHandler.ControlActionType.OK) {
                                         TextFontPreferences parameters = new TextFontPreferences(application.getAppPreferences());
                                         parameters.setUseDefaultFont(false);
                                         parameters.setFont(fontPanel.getStoredFont());
@@ -513,24 +511,24 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public TextFontOptions createOptions() {
-                return new TextFontOptions();
+            public TextFontOptionsImpl createOptions() {
+                return new TextFontOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, TextFontOptions options) {
+            public void loadFromPreferences(Preferences preferences, TextFontOptionsImpl options) {
                 TextFontPreferences parameters = new TextFontPreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, TextFontOptions options) {
+            public void saveToPreferences(Preferences preferences, TextFontOptionsImpl options) {
                 TextFontPreferences parameters = new TextFontPreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(TextFontOptions options) {
+            public void applyPreferencesChanges(TextFontOptionsImpl options) {
                 textFontService.setCurrentFont(options.getFont(textFontService.getDefaultFont()));
             }
         };
@@ -560,11 +558,11 @@ public class BinedModule implements XBApplicationModule {
                 ((CodeAreaOperationCommandHandler) commandHandler).setEnterKeyHandlingMode(enterKeyHandlingMode);
             }
         };
-        editorOptionsPage = new DefaultOptionsPage<EditorOptions>() {
+        editorOptionsPage = new DefaultOptionsPage<EditorOptionsImpl>() {
             private EditorOptionsPanel panel;
 
             @Override
-            public OptionsCapable<EditorOptions> createPanel() {
+            public OptionsCapable<EditorOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new EditorOptionsPanel();
                 }
@@ -579,34 +577,34 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public EditorOptions createOptions() {
-                return new EditorOptions();
+            public EditorOptionsImpl createOptions() {
+                return new EditorOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, EditorOptions options) {
+            public void loadFromPreferences(Preferences preferences, EditorOptionsImpl options) {
                 EditorPreferences parameters = new EditorPreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, EditorOptions options) {
+            public void saveToPreferences(Preferences preferences, EditorOptionsImpl options) {
                 EditorPreferences parameters = new EditorPreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(EditorOptions options) {
+            public void applyPreferencesChanges(EditorOptionsImpl options) {
                 editorOptionsService.setFileHandlingMode(options.getFileHandlingMode());
-                editorOptionsService.setIsShowValuesPanel(options.isIsShowValuesPanel());
+                editorOptionsService.setIsShowValuesPanel(options.isShowValuesPanel());
                 editorOptionsService.setEditorHandlingMode(options.getEnterKeyHandlingMode());
             }
         };
         optionsModule.addOptionsPage(editorOptionsPage);
 
-        codeAreaOptionsPage = new DefaultOptionsPage<CodeAreaOptions>() {
+        codeAreaOptionsPage = new DefaultOptionsPage<CodeAreaOptionsImpl>() {
             @Override
-            public OptionsCapable<CodeAreaOptions> createPanel() {
+            public OptionsCapable<CodeAreaOptionsImpl> createPanel() {
                 return new CodeAreaOptionsPanel();
             }
 
@@ -617,34 +615,34 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public CodeAreaOptions createOptions() {
-                return new CodeAreaOptions();
+            public CodeAreaOptionsImpl createOptions() {
+                return new CodeAreaOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, CodeAreaOptions options) {
+            public void loadFromPreferences(Preferences preferences, CodeAreaOptionsImpl options) {
                 CodeAreaPreferences parameters = new CodeAreaPreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, CodeAreaOptions options) {
+            public void saveToPreferences(Preferences preferences, CodeAreaOptionsImpl options) {
                 CodeAreaPreferences parameters = new CodeAreaPreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(CodeAreaOptions options) {
+            public void applyPreferencesChanges(CodeAreaOptionsImpl options) {
                 options.applyToCodeArea(getEditorProvider().getCodeArea());
             }
         };
         optionsModule.addOptionsPage(codeAreaOptionsPage);
 
-        statusOptionsPage = new DefaultOptionsPage<StatusOptions>() {
+        statusOptionsPage = new DefaultOptionsPage<StatusOptionsImpl>() {
             private StatusOptionsPanel panel;
 
             @Override
-            public OptionsCapable<StatusOptions> createPanel() {
+            public OptionsCapable<StatusOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new StatusOptionsPanel();
                 }
@@ -659,34 +657,34 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public StatusOptions createOptions() {
-                return new StatusOptions();
+            public StatusOptionsImpl createOptions() {
+                return new StatusOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, StatusOptions options) {
+            public void loadFromPreferences(Preferences preferences, StatusOptionsImpl options) {
                 StatusPreferences parameters = new StatusPreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, StatusOptions options) {
+            public void saveToPreferences(Preferences preferences, StatusOptionsImpl options) {
                 StatusPreferences parameters = new StatusPreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(StatusOptions options) {
+            public void applyPreferencesChanges(StatusOptionsImpl options) {
                 // TODO getEditorProvider().get
             }
         };
         optionsModule.addOptionsPage(statusOptionsPage);
 
-        themeProfilesOptionsPage = new DefaultOptionsPage<CodeAreaThemeOptions>() {
+        themeProfilesOptionsPage = new DefaultOptionsPage<CodeAreaThemeOptionsImpl>() {
             private ThemeProfilesOptionsPanel panel;
 
             @Override
-            public OptionsCapable<CodeAreaThemeOptions> createPanel() {
+            public OptionsCapable<CodeAreaThemeOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new ThemeProfilesOptionsPanel();
                 }
@@ -701,24 +699,24 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public CodeAreaThemeOptions createOptions() {
-                return new CodeAreaThemeOptions();
+            public CodeAreaThemeOptionsImpl createOptions() {
+                return new CodeAreaThemeOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, CodeAreaThemeOptions options) {
+            public void loadFromPreferences(Preferences preferences, CodeAreaThemeOptionsImpl options) {
                 CodeAreaThemePreferences parameters = new CodeAreaThemePreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, CodeAreaThemeOptions options) {
+            public void saveToPreferences(Preferences preferences, CodeAreaThemeOptionsImpl options) {
                 CodeAreaThemePreferences parameters = new CodeAreaThemePreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(CodeAreaThemeOptions options) {
+            public void applyPreferencesChanges(CodeAreaThemeOptionsImpl options) {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
                     ExtendedCodeAreaThemeProfile profile = options.getThemeProfile(selectedProfile);
@@ -728,9 +726,9 @@ public class BinedModule implements XBApplicationModule {
         };
         optionsModule.addOptionsPage(themeProfilesOptionsPage);
 
-        layoutProfilesOptionsPage = new DefaultOptionsPage<CodeAreaLayoutOptions>() {
+        layoutProfilesOptionsPage = new DefaultOptionsPage<CodeAreaLayoutOptionsImpl>() {
             @Override
-            public OptionsCapable<CodeAreaLayoutOptions> createPanel() {
+            public OptionsCapable<CodeAreaLayoutOptionsImpl> createPanel() {
                 return new LayoutProfilesOptionsPanel();
             }
 
@@ -741,24 +739,24 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public CodeAreaLayoutOptions createOptions() {
-                return new CodeAreaLayoutOptions();
+            public CodeAreaLayoutOptionsImpl createOptions() {
+                return new CodeAreaLayoutOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, CodeAreaLayoutOptions options) {
+            public void loadFromPreferences(Preferences preferences, CodeAreaLayoutOptionsImpl options) {
                 CodeAreaLayoutPreferences parameters = new CodeAreaLayoutPreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, CodeAreaLayoutOptions options) {
+            public void saveToPreferences(Preferences preferences, CodeAreaLayoutOptionsImpl options) {
                 CodeAreaLayoutPreferences parameters = new CodeAreaLayoutPreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(CodeAreaLayoutOptions options) {
+            public void applyPreferencesChanges(CodeAreaLayoutOptionsImpl options) {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
                     ExtendedCodeAreaLayoutProfile profile = options.getLayoutProfile(selectedProfile);
@@ -768,9 +766,9 @@ public class BinedModule implements XBApplicationModule {
         };
         optionsModule.addOptionsPage(layoutProfilesOptionsPage);
 
-        colorProfilesOptionsPage = new DefaultOptionsPage<CodeAreaColorOptions>() {
+        colorProfilesOptionsPage = new DefaultOptionsPage<CodeAreaColorOptionsImpl>() {
             @Override
-            public OptionsCapable<CodeAreaColorOptions> createPanel() {
+            public OptionsCapable<CodeAreaColorOptionsImpl> createPanel() {
                 return new ColorProfilesOptionsPanel();
             }
 
@@ -781,27 +779,27 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public CodeAreaColorOptions createOptions() {
-                return new CodeAreaColorOptions();
+            public CodeAreaColorOptionsImpl createOptions() {
+                return new CodeAreaColorOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, CodeAreaColorOptions options) {
+            public void loadFromPreferences(Preferences preferences, CodeAreaColorOptionsImpl options) {
                 CodeAreaColorPreferences parameters = new CodeAreaColorPreferences(preferences);
                 options.loadFromParameters(parameters);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, CodeAreaColorOptions options) {
+            public void saveToPreferences(Preferences preferences, CodeAreaColorOptionsImpl options) {
                 CodeAreaColorPreferences parameters = new CodeAreaColorPreferences(preferences);
                 options.saveToParameters(parameters);
             }
 
             @Override
-            public void applyPreferencesChanges(CodeAreaColorOptions options) {
+            public void applyPreferencesChanges(CodeAreaColorOptionsImpl options) {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
-                    ExtendedCodeAreaColorProfile profile = options.getColorProfile(selectedProfile);
+                    ExtendedCodeAreaColorProfile profile = options.getColorsProfile(selectedProfile);
                     getEditorProvider().getCodeArea().setColorsProfile(profile);
                 }
             }
@@ -1247,27 +1245,6 @@ public class BinedModule implements XBApplicationModule {
         final JMenuItem optionsMenuItem = new JMenuItem("Options...");
         optionsMenuItem.addActionListener((ActionEvent e) -> {
             optionsModule.getOptionsAction().actionPerformed(e);
-//            final BinEdOptionsPanelBorder optionsPanel = new BinEdOptionsPanelBorder();
-//            optionsPanel.load();
-//            optionsPanel.setApplyOptions(getApplyOptions());
-//            OptionsControlPanel optionsControlPanel = new OptionsControlPanel();
-//            JPanel dialogPanel = WindowUtils.createDialogPanel(optionsPanel, optionsControlPanel);
-//            DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, null, "Options", Dialog.ModalityType.MODELESS);
-//            optionsControlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-//                if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-//                    optionsPanel.store();
-//                }
-//                if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-//                    setApplyOptions(optionsPanel.getApplyOptions());
-//                    encodingsHandler.setEncodings(optionsPanel.getApplyOptions().getCharsetOptions().getEncodings());
-//                    codeArea.repaint();
-//                }
-//
-//                dialog.close();
-//            });
-//            WindowUtils.assignGlobalKeyListener(dialog.getWindow(), optionsControlPanel.createOkCancelListener());
-//            dialog.getWindow().setSize(650, 460);
-//            dialog.show();
         });
         popupMenu.add(optionsMenuItem);
 

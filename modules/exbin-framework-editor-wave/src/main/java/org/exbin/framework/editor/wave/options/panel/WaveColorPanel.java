@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
-import org.exbin.framework.editor.wave.options.WaveColorOptions;
+import org.exbin.framework.editor.wave.options.impl.WaveColorOptionsImpl;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -34,7 +34,7 @@ import org.exbin.framework.editor.wave.service.WaveColorService;
  * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable<WaveColorOptions> {
+public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable<WaveColorOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private WaveColorService waveColorService;
@@ -51,7 +51,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
     }
 
     @Override
-    public void loadFromOptions(WaveColorOptions options) {
+    public void loadFromOptions(WaveColorOptionsImpl options) {
         Integer rgb;
         try {
             rgb = options.getWaveColor();
@@ -84,7 +84,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
     }
 
     @Override
-    public void saveToOptions(WaveColorOptions options) {
+    public void saveToOptions(WaveColorOptionsImpl options) {
         options.setWaveColor(getWaveColor().getRGB());
         options.setWaveFillColor(getWaveFillColor().getRGB());
         options.setWaveBackgroundColor(getWaveBackgroundColor().getRGB());

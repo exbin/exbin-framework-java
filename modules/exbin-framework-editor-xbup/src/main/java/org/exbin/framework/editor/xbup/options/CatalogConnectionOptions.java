@@ -16,9 +16,6 @@
 package org.exbin.framework.editor.xbup.options;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.xbup.preferences.ServiceConnectionPreferences;
-import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
  * Catalog connection options.
@@ -26,59 +23,23 @@ import org.exbin.framework.gui.options.api.OptionsData;
  * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class CatalogConnectionOptions implements OptionsData {
-
-    private boolean serviceConnectionAllowed;
-    private String serviceConnectionUrl;
-    private boolean catalogUpdateAllowed;
-    private String catalogUpdateUrl;
-
-    public boolean isServiceConnectionAllowed() {
-        return serviceConnectionAllowed;
-    }
-
-    public void setServiceConnectionAllowed(boolean serviceConnectionAllowed) {
-        this.serviceConnectionAllowed = serviceConnectionAllowed;
-    }
+public interface CatalogConnectionOptions {
 
     @Nullable
-    public String getServiceConnectionUrl() {
-        return serviceConnectionUrl;
-    }
-
-    public void setServiceConnectionUrl(@Nullable String serviceConnectionUrl) {
-        this.serviceConnectionUrl = serviceConnectionUrl;
-    }
-
-    public boolean isCatalogUpdateAllowed() {
-        return catalogUpdateAllowed;
-    }
-
-    public void setCatalogUpdateAllowed(boolean catalogUpdateAllowed) {
-        this.catalogUpdateAllowed = catalogUpdateAllowed;
-    }
+    String getCatalogUpdateUrl();
 
     @Nullable
-    public String getCatalogUpdateUrl() {
-        return catalogUpdateUrl;
-    }
+    String getServiceConnectionUrl();
 
-    public void setCatalogUpdateUrl(@Nullable String catalogUpdateUrl) {
-        this.catalogUpdateUrl = catalogUpdateUrl;
-    }
+    boolean isCatalogUpdateAllowed();
 
-    public void loadFromParameters(ServiceConnectionPreferences preferences) {
-        serviceConnectionAllowed = preferences.getServiceConnectionAllowed();
-        serviceConnectionUrl = preferences.getServiceConnectionUrl();
-        catalogUpdateAllowed = preferences.getCatalogUpdateAllowed();
-        catalogUpdateUrl = preferences.getCatalogUpdateUrl();
-    }
+    boolean isServiceConnectionAllowed();
 
-    public void saveToParameters(ServiceConnectionPreferences preferences) {
-        preferences.setServiceConnectionAllowed(serviceConnectionAllowed);
-        preferences.setServiceConnectionUrl(serviceConnectionUrl);
-        preferences.setCatalogUpdateAllowed(catalogUpdateAllowed);
-        preferences.setCatalogUpdateUrl(catalogUpdateUrl);
-    }
+    void setCatalogUpdateAllowed(boolean catalogUpdateAllowed);
+
+    void setCatalogUpdateUrl(@Nullable String catalogUpdateUrl);
+
+    void setServiceConnectionAllowed(boolean serviceConnectionAllowed);
+
+    void setServiceConnectionUrl(@Nullable String serviceConnectionUrl);
 }

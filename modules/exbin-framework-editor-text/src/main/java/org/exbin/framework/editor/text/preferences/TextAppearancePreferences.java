@@ -17,6 +17,7 @@ package org.exbin.framework.editor.text.preferences;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
+import org.exbin.framework.editor.text.options.TextAppearanceOptions;
 
 /**
  * Text appearance preferences.
@@ -25,7 +26,7 @@ import org.exbin.framework.api.Preferences;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearancePreferences {
+public class TextAppearancePreferences implements TextAppearanceOptions {
 
     public static final String PREFERENCES_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
 
@@ -35,10 +36,12 @@ public class TextAppearancePreferences {
         this.preferences = preferences;
     }
 
+    @Override
     public boolean isWordWrapping() {
         return preferences.getBoolean(PREFERENCES_TEXT_WORD_WRAPPING, false);
     }
 
+    @Override
     public void setWordWrapping(boolean wordWrap) {
         preferences.putBoolean(PREFERENCES_TEXT_WORD_WRAPPING, wordWrap);
     }

@@ -18,7 +18,7 @@ package org.exbin.framework.editor.xbup.options.panel;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import org.exbin.framework.editor.xbup.options.CatalogConnectionOptions;
+import org.exbin.framework.editor.xbup.options.impl.CatalogConnectionOptionsImpl;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogConnectionPanel extends javax.swing.JPanel implements OptionsCapable<CatalogConnectionOptions> {
+public class CatalogConnectionPanel extends javax.swing.JPanel implements OptionsCapable<CatalogConnectionOptionsImpl> {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogConnectionPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
@@ -48,7 +48,7 @@ public class CatalogConnectionPanel extends javax.swing.JPanel implements Option
     }
 
     @Override
-    public void loadFromOptions(CatalogConnectionOptions options) {
+    public void loadFromOptions(CatalogConnectionOptionsImpl options) {
         if (options.isServiceConnectionAllowed() != serviceConnectionCheckBox.isSelected()) {
             serviceConnectionCheckBox.doClick();
         }
@@ -65,7 +65,7 @@ public class CatalogConnectionPanel extends javax.swing.JPanel implements Option
     }
 
     @Override
-    public void saveToOptions(CatalogConnectionOptions options) {
+    public void saveToOptions(CatalogConnectionOptionsImpl options) {
         options.setServiceConnectionAllowed(serviceConnectionCheckBox.isSelected());
         options.setServiceConnectionUrl(serviceConnectionTextField.getText());
         options.setCatalogUpdateAllowed(catalogUpdateConnectionCheckBox.isSelected());

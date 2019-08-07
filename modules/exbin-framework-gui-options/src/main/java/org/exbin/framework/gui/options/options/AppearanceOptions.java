@@ -16,8 +16,6 @@
 package org.exbin.framework.gui.options.options;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.options.api.OptionsData;
-import org.exbin.framework.gui.options.preferences.AppearancePreferences;
 
 /**
  * Appearance options.
@@ -26,45 +24,17 @@ import org.exbin.framework.gui.options.preferences.AppearancePreferences;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceOptions implements OptionsData {
+public interface AppearanceOptions {
 
-    private boolean showToolBar;
-    private boolean showToolBarCaptions;
-    private boolean showStatusBar;
+    boolean isShowStatusBar();
 
-    public boolean isShowToolBar() {
-        return showToolBar;
-    }
+    boolean isShowToolBar();
 
-    public void setShowToolBar(boolean showToolBar) {
-        this.showToolBar = showToolBar;
-    }
+    boolean isShowToolBarCaptions();
 
-    public boolean isShowToolBarCaptions() {
-        return showToolBarCaptions;
-    }
+    void setShowStatusBar(boolean showStatusBar);
 
-    public void setShowToolBarCaptions(boolean showToolBarCaptions) {
-        this.showToolBarCaptions = showToolBarCaptions;
-    }
+    void setShowToolBar(boolean showToolBar);
 
-    public boolean isShowStatusBar() {
-        return showStatusBar;
-    }
-
-    public void setShowStatusBar(boolean showStatusBar) {
-        this.showStatusBar = showStatusBar;
-    }
-
-    public void loadFromParameters(AppearancePreferences preferences) {
-        showToolBar = preferences.isShowToolBar();
-        showToolBarCaptions = preferences.isShowToolBarCaptions();
-        showStatusBar = preferences.isShowStatusBar();
-    }
-
-    public void saveToParameters(AppearancePreferences preferences) {
-        preferences.setShowToolBar(showToolBar);
-        preferences.setShowToolBarCaptions(showToolBarCaptions);
-        preferences.setShowStatusBar(showToolBar);
-    }
+    void setShowToolBarCaptions(boolean showToolBarCaptions);
 }

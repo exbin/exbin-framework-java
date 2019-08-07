@@ -18,6 +18,7 @@ package org.exbin.framework.editor.xbup.preferences;
 import javax.annotation.Nullable;
 import org.exbin.framework.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.editor.xbup.options.CatalogConnectionOptions;
 
 /**
  * Wave editor color preferences.
@@ -26,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ServiceConnectionPreferences {
+public class ServiceConnectionPreferences implements CatalogConnectionOptions {
 
     public static final String PREFERENCES_SERVICE_CONNECTION_ALLOWED = "serviceConnectionAllowed";
     public static final String PREFERENCES_SERVICE_CONNECTION_URL = "serviceConnectionURL";
@@ -39,36 +40,44 @@ public class ServiceConnectionPreferences {
         this.preferences = preferences;
     }
 
-    public boolean getServiceConnectionAllowed() {
+    @Override
+    public boolean isServiceConnectionAllowed() {
         return preferences.getBoolean(PREFERENCES_SERVICE_CONNECTION_ALLOWED, true);
     }
 
+    @Override
     public void setServiceConnectionAllowed(boolean allowed) {
         preferences.putBoolean(PREFERENCES_SERVICE_CONNECTION_ALLOWED, allowed);
     }
 
     @Nullable
+    @Override
     public String getServiceConnectionUrl() {
         return preferences.get(PREFERENCES_SERVICE_CONNECTION_URL);
     }
 
+    @Override
     public void setServiceConnectionUrl(String connectionUrl) {
         preferences.put(PREFERENCES_SERVICE_CONNECTION_URL, connectionUrl);
     }
 
-    public boolean getCatalogUpdateAllowed() {
+    @Override
+    public boolean isCatalogUpdateAllowed() {
         return preferences.getBoolean(PREFERENCES_CATALOG_UPDATE_ALLOWED, true);
     }
 
+    @Override
     public void setCatalogUpdateAllowed(boolean allowed) {
         preferences.putBoolean(PREFERENCES_CATALOG_UPDATE_ALLOWED, allowed);
     }
 
     @Nullable
+    @Override
     public String getCatalogUpdateUrl() {
         return preferences.get(PREFERENCES_CATALOG_UPDATE_URL);
     }
 
+    @Override
     public void setCatalogUpdateUrl(String updateUrl) {
         preferences.put(PREFERENCES_CATALOG_UPDATE_URL, updateUrl);
     }

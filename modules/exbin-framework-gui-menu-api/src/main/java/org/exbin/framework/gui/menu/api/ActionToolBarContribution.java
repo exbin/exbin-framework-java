@@ -38,6 +38,7 @@ public class ActionToolBarContribution implements ToolBarContribution {
         return action;
     }
 
+    @Override
     public ToolBarPosition getToolBarPosition() {
         return position;
     }

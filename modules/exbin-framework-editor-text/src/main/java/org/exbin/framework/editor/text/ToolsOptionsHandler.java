@@ -25,7 +25,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.text.options.TextColorOptions;
+import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
 import org.exbin.framework.editor.text.options.panel.TextColorPanel;
 import org.exbin.framework.editor.text.panel.TextFontPanel;
 import org.exbin.framework.editor.text.panel.TextPanel;
@@ -126,7 +126,7 @@ public class ToolsOptionsHandler {
                 controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                         if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                            TextColorOptions options = new TextColorOptions();
+                            TextColorOptionsImpl options = new TextColorOptionsImpl();
                             colorPanel.saveToOptions(options);
                             TextColorPreferences textColorParameters = new TextColorPreferences(application.getAppPreferences());
                             options.saveToParameters(textColorParameters);

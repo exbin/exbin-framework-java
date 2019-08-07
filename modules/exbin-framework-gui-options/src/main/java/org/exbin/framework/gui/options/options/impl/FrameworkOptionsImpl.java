@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.options.options;
+package org.exbin.framework.gui.options.options.impl;
 
 import java.util.Locale;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -27,23 +27,27 @@ import org.exbin.framework.preferences.FrameworkPreferences;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FrameworkOptions implements OptionsData {
+public class FrameworkOptionsImpl implements OptionsData, FrameworkOptions {
 
     private String lookAndFeel;
     private Locale languageLocale;
 
+    @Override
     public String getLookAndFeel() {
         return lookAndFeel;
     }
 
+    @Override
     public void setLookAndFeel(String lookAndFeel) {
         this.lookAndFeel = lookAndFeel;
     }
 
+    @Override
     public Locale getLanguageLocale() {
         return languageLocale;
     }
 
+    @Override
     public void setLanguageLocale(Locale languageLocale) {
         this.languageLocale = languageLocale;
     }

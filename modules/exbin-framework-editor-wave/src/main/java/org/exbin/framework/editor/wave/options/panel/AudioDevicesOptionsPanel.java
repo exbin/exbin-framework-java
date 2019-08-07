@@ -23,7 +23,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Control;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.Mixer;
-import org.exbin.framework.editor.wave.options.AudioDevicesOptions;
+import org.exbin.framework.editor.wave.options.impl.AudioDevicesOptionsImpl;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -36,7 +36,7 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements OptionsCapable<AudioDevicesOptions> {
+public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements OptionsCapable<AudioDevicesOptionsImpl> {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AudioDevicesOptionsPanel.class);
 
@@ -78,17 +78,18 @@ public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements Opti
     }
 
     @Nonnull
+    @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
 
     @Override
-    public void loadFromOptions(AudioDevicesOptions options) {
+    public void loadFromOptions(AudioDevicesOptionsImpl options) {
         // options.
     }
 
     @Override
-    public void saveToOptions(AudioDevicesOptions options) {
+    public void saveToOptions(AudioDevicesOptionsImpl options) {
         // options.
     }
 

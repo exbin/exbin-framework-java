@@ -16,8 +16,6 @@
 package org.exbin.framework.editor.wave.options;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.wave.preferences.AudioDevicesPreferences;
-import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
  * Audio devices options.
@@ -26,11 +24,5 @@ import org.exbin.framework.gui.options.api.OptionsData;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AudioDevicesOptions implements OptionsData {
-
-    public void loadFromParameters(AudioDevicesPreferences preferences) {
-    }
-
-    public void saveToParameters(AudioDevicesPreferences preferences) {
-    }
+public interface AudioDevicesOptions {
 }

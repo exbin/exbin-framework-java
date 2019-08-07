@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
-import org.exbin.framework.editor.text.options.TextColorOptions;
+import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -37,7 +37,7 @@ import org.exbin.framework.editor.text.service.TextColorService;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable<TextColorOptions> {
+public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable<TextColorOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorPanel.class);
@@ -60,7 +60,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
     }
 
     @Override
-    public void loadFromOptions(TextColorOptions options) {
+    public void loadFromOptions(TextColorOptionsImpl options) {
         setColorsFromArray(textColorService.getDefaultTextColors());
         Integer rgb;
         try {
@@ -101,7 +101,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
     }
 
     @Override
-    public void saveToOptions(TextColorOptions options) {
+    public void saveToOptions(TextColorOptionsImpl options) {
         options.setTextColor(getTextColor().getRGB());
         options.setTextBackgroundColor(getTextBackgroundColor().getRGB());
         options.setSelectionTextColor(getSelectionTextColor().getRGB());

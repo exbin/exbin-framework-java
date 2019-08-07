@@ -17,8 +17,6 @@ package org.exbin.framework.editor.wave.options;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.wave.preferences.WaveColorPreferences;
-import org.exbin.framework.gui.options.api.OptionsData;
 
 /**
  * Wave color options.
@@ -27,105 +25,39 @@ import org.exbin.framework.gui.options.api.OptionsData;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class WaveColorOptions implements OptionsData {
-
-    private boolean useDefaultColors;
-    private Integer waveColor;
-    private Integer waveFillColor;
-    private Integer waveBackgroundColor;
-    private Integer waveSelectionColor;
-    private Integer waveCursorColor;
-    private Integer waveCursorWaveColor;
-
-    public boolean isUseDefaultColors() {
-        return useDefaultColors;
-    }
-
-    public void setUseDefaultColors(boolean useDefaultColors) {
-        this.useDefaultColors = useDefaultColors;
-    }
+public interface WaveColorOptions {
 
     @Nullable
-    public Integer getWaveColor() {
-        return waveColor;
-    }
-
-    public void setWaveColor(@Nullable Integer waveColor) {
-        this.waveColor = waveColor;
-    }
+    Integer getWaveBackgroundColor();
 
     @Nullable
-    public Integer getWaveFillColor() {
-        return waveFillColor;
-    }
-
-    public void setWaveFillColor(@Nullable Integer waveFillColor) {
-        this.waveFillColor = waveFillColor;
-    }
+    Integer getWaveColor();
 
     @Nullable
-    public Integer getWaveBackgroundColor() {
-        return waveBackgroundColor;
-    }
-
-    public void setWaveBackgroundColor(@Nullable Integer waveBackgroundColor) {
-        this.waveBackgroundColor = waveBackgroundColor;
-    }
+    Integer getWaveCursorColor();
 
     @Nullable
-    public Integer getWaveSelectionColor() {
-        return waveSelectionColor;
-    }
-
-    public void setWaveSelectionColor(@Nullable Integer waveSelectionColor) {
-        this.waveSelectionColor = waveSelectionColor;
-    }
+    Integer getWaveCursorWaveColor();
 
     @Nullable
-    public Integer getWaveCursorColor() {
-        return waveCursorColor;
-    }
-
-    public void setWaveCursorColor(@Nullable Integer waveCursorColor) {
-        this.waveCursorColor = waveCursorColor;
-    }
+    Integer getWaveFillColor();
 
     @Nullable
-    public Integer getWaveCursorWaveColor() {
-        return waveCursorWaveColor;
-    }
+    Integer getWaveSelectionColor();
 
-    public void setWaveCursorWaveColor(@Nullable Integer waveCursorWaveColor) {
-        this.waveCursorWaveColor = waveCursorWaveColor;
-    }
+    boolean isUseDefaultColors();
 
-    public void loadFromParameters(WaveColorPreferences preferences) {
-        useDefaultColors = preferences.isUseDefaultColors();
-        waveColor = preferences.getWaveColor();
-        waveFillColor = preferences.getWaveFillColor();
-        waveBackgroundColor = preferences.getWaveBackgroundColor();
-        waveSelectionColor = preferences.getWaveSelectionColor();
-        waveCursorColor = preferences.getWaveCursorColor();
-        waveCursorWaveColor = preferences.getWaveCursorWaveColor();
-    }
+    void setUseDefaultColors(boolean useDefaultColors);
 
-    public void saveToParameters(WaveColorPreferences preferences) {
-        preferences.setUseDefaultColors(useDefaultColors);
-        preferences.setWaveColor(waveColor);
-        preferences.setWaveFillColor(waveFillColor);
-        preferences.setWaveBackgroundColor(waveBackgroundColor);
-        preferences.setWaveSelectionColor(waveSelectionColor);
-        preferences.setWaveCursorColor(waveCursorColor);
-        preferences.setWaveCursorWaveColor(waveCursorWaveColor);
-    }
+    void setWaveBackgroundColor(@Nullable Integer waveBackgroundColor);
 
-    public void setOptions(WaveColorOptions options) {
-        useDefaultColors = options.useDefaultColors;
-        waveColor = options.waveColor;
-        waveFillColor = options.waveFillColor;
-        waveBackgroundColor = options.waveBackgroundColor;
-        waveSelectionColor = options.waveSelectionColor;
-        waveCursorColor = options.waveCursorColor;
-        waveCursorWaveColor = options.waveCursorWaveColor;
-    }
+    void setWaveColor(@Nullable Integer waveColor);
+
+    void setWaveCursorColor(@Nullable Integer waveCursorColor);
+
+    void setWaveCursorWaveColor(@Nullable Integer waveCursorWaveColor);
+
+    void setWaveFillColor(@Nullable Integer waveFillColor);
+
+    void setWaveSelectionColor(@Nullable Integer waveSelectionColor);
 }

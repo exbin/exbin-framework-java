@@ -32,7 +32,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
-import org.exbin.framework.gui.options.options.FrameworkOptions;
+import org.exbin.framework.gui.options.options.impl.FrameworkOptionsImpl;
 
 /**
  * Main options panel.
@@ -40,7 +40,7 @@ import org.exbin.framework.gui.options.options.FrameworkOptions;
  * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapable<FrameworkOptions> {
+public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapable<FrameworkOptionsImpl> {
 
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
@@ -119,7 +119,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
     }
 
     @Override
-    public void loadFromOptions(FrameworkOptions options) {
+    public void loadFromOptions(FrameworkOptionsImpl options) {
         Locale languageLocale = options.getLanguageLocale();
         languageComboBox.setSelectedItem(languageLocale);
 
@@ -128,7 +128,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
     }
 
     @Override
-    public void saveToOptions(FrameworkOptions options) {
+    public void saveToOptions(FrameworkOptionsImpl options) {
         options.setLookAndFeel(themes.get(themeComboBox.getSelectedIndex()));
         Locale languageLocale = (Locale) languageComboBox.getSelectedItem();
         options.setLanguageLocale(languageLocale);

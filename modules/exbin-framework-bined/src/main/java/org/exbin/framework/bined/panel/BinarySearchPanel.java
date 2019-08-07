@@ -59,7 +59,7 @@ import org.exbin.framework.bined.service.BinarySearchService.FoundMatches;
 /**
  * Binary editor search panel.
  *
- * @version 0.2.1 2019/07/16
+ * @version 0.2.1 2019/08/07
  * @author ExBin Project (http://exbin.org)
  */
 public class BinarySearchPanel extends javax.swing.JPanel {
@@ -658,9 +658,9 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
                     multilineDialog.close();
                 });
-                multilineDialog.showCentered(BinarySearchPanel.this);
+                multilineDialog.showCentered(dialog.getWindow());
                 multilinePanel.detachMenu();
-                dialog.dispose();
+                multilineDialog.dispose();
                 return result.searchCondition;
             }
 
@@ -684,7 +684,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
             findBinaryPanel.detachMenu();
             dialog.close();
         });
-        dialog.showCentered(this);
+        dialog.showCentered(WindowUtils.getWindow(this));
         dialog.dispose();
     }//GEN-LAST:event_optionsButtonActionPerformed
 
