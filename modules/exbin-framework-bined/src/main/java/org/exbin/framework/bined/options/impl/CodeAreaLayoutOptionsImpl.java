@@ -113,7 +113,7 @@ public class CodeAreaLayoutOptionsImpl implements OptionsData, CodeAreaLayoutOpt
         profileRecords.add(new ProfileRecord(profileName, layoutProfile));
     }
 
-    public void loadFromParameters(CodeAreaLayoutPreferences preferences) {
+    public void loadFromPreferences(CodeAreaLayoutPreferences preferences) {
         this.preferences = preferences;
         profileRecords.clear();
         List<String> layoutProfilesList = preferences.getLayoutProfilesList();
@@ -123,7 +123,7 @@ public class CodeAreaLayoutOptionsImpl implements OptionsData, CodeAreaLayoutOpt
         selectedProfile = preferences.getSelectedProfile();
     }
 
-    public void saveToParameters(CodeAreaLayoutPreferences preferences) {
+    public void saveToPreferences(CodeAreaLayoutPreferences preferences) {
         preferences.setSelectedProfile(selectedProfile);
         preferences.setLayoutProfilesList(getProfileNames());
         for (int i = 0; i < profileRecords.size(); i++) {

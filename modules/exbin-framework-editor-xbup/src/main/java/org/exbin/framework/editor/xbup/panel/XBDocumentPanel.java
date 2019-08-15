@@ -763,9 +763,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             }
 
             dialog.close();
+            dialog.dispose();
         });
         dialog.showCentered(this);
-        dialog.dispose();
     }
 
     public void setSplitMode(boolean mode) {
@@ -1005,9 +1005,11 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        controlPanel.setHandler(dialog::close);
+        controlPanel.setHandler(() -> {
+            dialog.close();
+            dialog.dispose();
+        });
         dialog.showCentered(this);
-        dialog.dispose();
     }
 
     private class TreeDocument extends XBTTreeDocument implements OperationListener {

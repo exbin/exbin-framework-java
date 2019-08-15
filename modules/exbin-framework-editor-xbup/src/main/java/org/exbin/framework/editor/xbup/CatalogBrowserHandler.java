@@ -71,9 +71,11 @@ public class CatalogBrowserHandler {
                 CloseControlPanel controlPanel = new CloseControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                controlPanel.setHandler(dialog::close);
+                controlPanel.setHandler(() -> {
+                    dialog.close();
+                    dialog.dispose();
+                });
                 dialog.showCentered((Component) e.getSource());
-                dialog.dispose();
             }
         };
         ActionUtils.setupAction(catalogBrowserAction, resourceBundle, "catalogBrowserAction");

@@ -29,9 +29,9 @@ import org.exbin.framework.gui.options.api.OptionsData;
 @ParametersAreNonnullByDefault
 public class AudioDevicesOptionsImpl implements AudioDevicesOptions, OptionsData {
 
-    public void loadFromParameters(AudioDevicesPreferences preferences) {
+    public void loadFromPreferences(AudioDevicesPreferences preferences) {
     }
 
-    public void saveToParameters(AudioDevicesPreferences preferences) {
+    public void saveToPreferences(AudioDevicesPreferences preferences) {
     }
 }

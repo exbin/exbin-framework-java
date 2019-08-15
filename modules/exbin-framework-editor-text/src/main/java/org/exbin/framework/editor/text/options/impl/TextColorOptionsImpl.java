@@ -102,7 +102,7 @@ public class TextColorOptionsImpl implements OptionsData, TextColorOptions {
         this.foundBackgroundColor = foundBackgroundColor;
     }
 
-    public void loadFromParameters(TextColorPreferences preferences) {
+    public void loadFromPreferences(TextColorPreferences preferences) {
         useDefaultColors = preferences.isUseDefaultColors();
         textColor = preferences.getTextColor();
         textBackgroundColor = preferences.getTextBackgroundColor();
@@ -111,7 +111,7 @@ public class TextColorOptionsImpl implements OptionsData, TextColorOptions {
         foundBackgroundColor = preferences.getFoundBackgroundColor();
     }
 
-    public void saveToParameters(TextColorPreferences preferences) {
+    public void saveToPreferences(TextColorPreferences preferences) {
         preferences.setUseDefaultColors(useDefaultColors);
         preferences.setTextColor(textColor);
         preferences.setTextBackgroundColor(textBackgroundColor);

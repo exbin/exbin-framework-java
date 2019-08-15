@@ -113,7 +113,7 @@ public class CodeAreaThemeOptionsImpl implements OptionsData, CodeAreaThemeOptio
         profileRecords.add(new ProfileRecord(profileName, themeProfile));
     }
 
-    public void loadFromParameters(CodeAreaThemePreferences preferences) {
+    public void loadFromPreferences(CodeAreaThemePreferences preferences) {
         this.preferences = preferences;
         profileRecords.clear();
         List<String> themeProfilesList = preferences.getThemeProfilesList();
@@ -123,7 +123,7 @@ public class CodeAreaThemeOptionsImpl implements OptionsData, CodeAreaThemeOptio
         selectedProfile = preferences.getSelectedProfile();
     }
 
-    public void saveToParameters(CodeAreaThemePreferences preferences) {
+    public void saveToPreferences(CodeAreaThemePreferences preferences) {
         preferences.setSelectedProfile(selectedProfile);
         preferences.setThemeProfilesList(getProfileNames());
         for (int i = 0; i < profileRecords.size(); i++) {

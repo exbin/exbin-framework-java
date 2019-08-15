@@ -68,13 +68,13 @@ public class EditorOptionsImpl implements OptionsData, EditorOptions {
         this.enterKeyHandlingMode = enterKeyHandlingMode;
     }
 
-    public void loadFromParameters(EditorPreferences preferences) {
+    public void loadFromPreferences(EditorPreferences preferences) {
         fileHandlingMode = preferences.getFileHandlingMode();
         showValuesPanel = preferences.isShowValuesPanel();
         enterKeyHandlingMode = preferences.getEnterKeyHandlingMode();
     }
 
-    public void saveToParameters(EditorPreferences preferences) {
+    public void saveToPreferences(EditorPreferences preferences) {
         preferences.setFileHandlingMode(fileHandlingMode);
         preferences.setShowValuesPanel(showValuesPanel);
         preferences.setEnterKeyHandlingMode(enterKeyHandlingMode);

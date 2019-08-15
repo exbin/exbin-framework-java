@@ -113,7 +113,7 @@ public class CodeAreaColorOptionsImpl implements OptionsData, CodeAreaColorOptio
         profileRecords.add(new ProfileRecord(profileName, colorProfile));
     }
 
-    public void loadFromParameters(CodeAreaColorPreferences preferences) {
+    public void loadFromPreferences(CodeAreaColorPreferences preferences) {
         this.preferences = preferences;
         profileRecords.clear();
         List<String> colorProfilesList = preferences.getColorProfilesList();
@@ -123,7 +123,7 @@ public class CodeAreaColorOptionsImpl implements OptionsData, CodeAreaColorOptio
         selectedProfile = preferences.getSelectedProfile();
     }
 
-    public void saveToParameters(CodeAreaColorPreferences preferences) {
+    public void saveToPreferences(CodeAreaColorPreferences preferences) {
         preferences.setSelectedProfile(selectedProfile);
         preferences.setColorProfilesList(getProfileNames());
         for (int i = 0; i < profileRecords.size(); i++) {

@@ -135,7 +135,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         codeArea.setPainter(new ExtendedHighlightNonAsciiCodeAreaPainter(codeArea));
         setNewData();
         codeArea.setHandleClipboard(false);
-        codeArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        codeArea.setCodeFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         codeArea.addSelectionChangedListener((SelectionRange selection) -> {
             updateClipboardActionsStatus();
         });
@@ -171,7 +171,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         add(codeArea);
         foundTextBackgroundColor = Color.YELLOW;
         codeArea.setCharset(Charset.forName(TextEncodingPreferences.ENCODING_UTF8));
-        defaultFont = codeArea.getFont();
+        defaultFont = codeArea.getCodeFont();
 
         defaultColors = getCurrentColors();
 
@@ -384,12 +384,12 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
     @Override
     public void setCurrentFont(Font font) {
-        codeArea.setFont(font);
+        codeArea.setCodeFont(font);
     }
 
     @Override
     public Font getCurrentFont() {
-        return codeArea.getFont();
+        return codeArea.getCodeFont();
     }
 
     public Color getFoundTextBackgroundColor() {

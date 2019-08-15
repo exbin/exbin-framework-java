@@ -366,10 +366,12 @@ public class XBDocTreePanel extends javax.swing.JPanel {
                     updateItemStatus();
 
                     dialog.close();
+                    dialog.dispose();
                     break;
                 }
                 case CANCEL: {
                     dialog.close();
+                    dialog.dispose();
                     break;
                 }
                 case NEXT: {
@@ -381,7 +383,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
             }
         });
         dialog.showCentered(this);
-        dialog.dispose();
 
 //        addItemPanel.setLocationRelativeTo(addItemPanel.getParent());
 //        addItemPanel.setParentNode(node);

@@ -41,11 +41,11 @@ public class TextAppearanceOptionsImpl implements OptionsData, TextAppearanceOpt
         this.wordWrapping = wordWrapping;
     }
 
-    public void loadFromParameters(TextAppearancePreferences preferences) {
+    public void loadFromPreferences(TextAppearancePreferences preferences) {
         wordWrapping = preferences.isWordWrapping();
     }
 
-    public void saveToParameters(TextAppearancePreferences preferences) {
+    public void saveToPreferences(TextAppearancePreferences preferences) {
         preferences.setWordWrapping(wordWrapping);
     }
 

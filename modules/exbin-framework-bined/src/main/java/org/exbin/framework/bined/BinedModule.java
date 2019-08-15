@@ -345,14 +345,12 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, BinaryAppearanceOptionsImpl options) {
-                BinaryAppearancePreferences parameters = new BinaryAppearancePreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new BinaryAppearancePreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, BinaryAppearanceOptionsImpl options) {
-                BinaryAppearancePreferences parameters = new BinaryAppearancePreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new BinaryAppearancePreferences(preferences));
             }
 
             @Override
@@ -398,10 +396,10 @@ public class BinedModule implements XBApplicationModule {
                             }
 
                             addEncodingDialog.close();
+                            addEncodingDialog.dispose();
                         });
                         frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
                         addEncodingDialog.showCentered(panel);
-                        addEncodingDialog.dispose();
                         return result;
                     });
                 }
@@ -422,14 +420,12 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
-                TextEncodingPreferences parameters = new TextEncodingPreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new TextEncodingPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
-                TextEncodingPreferences parameters = new TextEncodingPreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new TextEncodingPreferences(preferences));
             }
 
             @Override
@@ -487,9 +483,9 @@ public class BinedModule implements XBApplicationModule {
                                 }
 
                                 dialog.close();
+                                dialog.dispose();
                             });
                             dialog.showCentered(panel);
-                            dialog.dispose();
 
                             return result.font;
                         }
@@ -517,14 +513,12 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, TextFontOptionsImpl options) {
-                TextFontPreferences parameters = new TextFontPreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new TextFontPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, TextFontOptionsImpl options) {
-                TextFontPreferences parameters = new TextFontPreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new TextFontPreferences(preferences));
             }
 
             @Override
@@ -583,14 +577,12 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, EditorOptionsImpl options) {
-                EditorPreferences parameters = new EditorPreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new EditorPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, EditorOptionsImpl options) {
-                EditorPreferences parameters = new EditorPreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new EditorPreferences(preferences));
             }
 
             @Override
@@ -621,19 +613,17 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, CodeAreaOptionsImpl options) {
-                CodeAreaPreferences parameters = new CodeAreaPreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new CodeAreaPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, CodeAreaOptionsImpl options) {
-                CodeAreaPreferences parameters = new CodeAreaPreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new CodeAreaPreferences(preferences));
             }
 
             @Override
             public void applyPreferencesChanges(CodeAreaOptionsImpl options) {
-                options.applyToCodeArea(getEditorProvider().getCodeArea());
+                CodeAreaOptionsImpl.applyToCodeArea(options, getEditorProvider().getCodeArea());
             }
         };
         optionsModule.addOptionsPage(codeAreaOptionsPage);
@@ -663,14 +653,12 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, StatusOptionsImpl options) {
-                StatusPreferences parameters = new StatusPreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new StatusPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, StatusOptionsImpl options) {
-                StatusPreferences parameters = new StatusPreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new StatusPreferences(preferences));
             }
 
             @Override
@@ -705,14 +693,12 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, CodeAreaThemeOptionsImpl options) {
-                CodeAreaThemePreferences parameters = new CodeAreaThemePreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new CodeAreaThemePreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, CodeAreaThemeOptionsImpl options) {
-                CodeAreaThemePreferences parameters = new CodeAreaThemePreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new CodeAreaThemePreferences(preferences));
             }
 
             @Override
@@ -745,14 +731,12 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, CodeAreaLayoutOptionsImpl options) {
-                CodeAreaLayoutPreferences parameters = new CodeAreaLayoutPreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new CodeAreaLayoutPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, CodeAreaLayoutOptionsImpl options) {
-                CodeAreaLayoutPreferences parameters = new CodeAreaLayoutPreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new CodeAreaLayoutPreferences(preferences));
             }
 
             @Override
@@ -785,14 +769,12 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, CodeAreaColorOptionsImpl options) {
-                CodeAreaColorPreferences parameters = new CodeAreaColorPreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new CodeAreaColorPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, CodeAreaColorOptionsImpl options) {
-                CodeAreaColorPreferences parameters = new CodeAreaColorPreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new CodeAreaColorPreferences(preferences));
             }
 
             @Override

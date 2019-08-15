@@ -183,7 +183,7 @@ public class CodeAreaOptionsImpl implements OptionsData, CodeAreaOptions {
         this.maxRowPositionLength = maxRowPositionLength;
     }
 
-    public void loadFromParameters(CodeAreaPreferences preferences) {
+    public void loadFromPreferences(CodeAreaPreferences preferences) {
         codeFont = preferences.getCodeFont();
         codeType = preferences.getCodeType();
         showUnprintables = preferences.isShowUnprintables();
@@ -198,7 +198,7 @@ public class CodeAreaOptionsImpl implements OptionsData, CodeAreaOptions {
         maxRowPositionLength = preferences.getMaxRowPositionLength();
     }
 
-    public void saveToParameters(CodeAreaPreferences preferences) {
+    public void saveToPreferences(CodeAreaPreferences preferences) {
         preferences.setCodeFont(codeFont);
         preferences.setCodeType(codeType);
         preferences.setShowUnprintables(showUnprintables);
@@ -213,32 +213,32 @@ public class CodeAreaOptionsImpl implements OptionsData, CodeAreaOptions {
         preferences.setMaxRowPositionLength(maxRowPositionLength);
     }
 
-    public void applyFromCodeArea(ExtCodeArea codeArea) {
-        codeFont = ((FontCapable) codeArea).getCodeFont();
-        codeType = ((CodeTypeCapable) codeArea).getCodeType();
-        showUnprintables = ((ShowUnprintablesCapable) codeArea).isShowUnprintables();
-        codeCharactersCase = ((CodeCharactersCaseCapable) codeArea).getCodeCharactersCase();
-        positionCodeType = ((PositionCodeTypeCapable) codeArea).getPositionCodeType();
-        viewMode = ((ViewModeCapable) codeArea).getViewMode();
-        codeColorization = ((ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter()).isNonAsciiHighlightingEnabled();
-        rowWrappingMode = codeArea.getRowWrapping();
-        maxBytesPerRow = codeArea.getMaxBytesPerRow();
-        minRowPositionLength = codeArea.getMinRowPositionLength();
-        maxRowPositionLength = codeArea.getMaxRowPositionLength();
+    public static void applyFromCodeArea(CodeAreaOptions codeAreaOptions, ExtCodeArea codeArea) {
+        codeAreaOptions.setCodeFont(((FontCapable) codeArea).getCodeFont());
+        codeAreaOptions.setCodeType(((CodeTypeCapable) codeArea).getCodeType());
+        codeAreaOptions.setShowUnprintables(((ShowUnprintablesCapable) codeArea).isShowUnprintables());
+        codeAreaOptions.setCodeCharactersCase(((CodeCharactersCaseCapable) codeArea).getCodeCharactersCase());
+        codeAreaOptions.setPositionCodeType(((PositionCodeTypeCapable) codeArea).getPositionCodeType());
+        codeAreaOptions.setViewMode(((ViewModeCapable) codeArea).getViewMode());
+        codeAreaOptions.setCodeColorization(((ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter()).isNonAsciiHighlightingEnabled());
+        codeAreaOptions.setRowWrappingMode(codeArea.getRowWrapping());
+        codeAreaOptions.setMaxBytesPerRow(codeArea.getMaxBytesPerRow());
+        codeAreaOptions.setMinRowPositionLength(codeArea.getMinRowPositionLength());
+        codeAreaOptions.setMaxRowPositionLength(codeArea.getMaxRowPositionLength());
     }
 
-    public void applyToCodeArea(ExtCodeArea codeArea) {
-        ((FontCapable) codeArea).setCodeFont(useDefaultFont ? CodeAreaPreferences.DEFAULT_FONT : codeFont);
-        ((CodeTypeCapable) codeArea).setCodeType(codeType);
-        ((ShowUnprintablesCapable) codeArea).setShowUnprintables(showUnprintables);
-        ((CodeCharactersCaseCapable) codeArea).setCodeCharactersCase(codeCharactersCase);
-        ((PositionCodeTypeCapable) codeArea).setPositionCodeType(positionCodeType);
-        ((ViewModeCapable) codeArea).setViewMode(viewMode);
-        ((ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter()).setNonAsciiHighlightingEnabled(codeColorization);
-        codeArea.setRowWrapping(rowWrappingMode);
-        codeArea.setMaxBytesPerRow(maxBytesPerRow);
-        codeArea.setMinRowPositionLength(minRowPositionLength);
-        codeArea.setMaxRowPositionLength(maxRowPositionLength);
+    public static void applyToCodeArea(CodeAreaOptions codeAreaOptions, ExtCodeArea codeArea) {
+        ((FontCapable) codeArea).setCodeFont(codeAreaOptions.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : codeAreaOptions.getCodeFont());
+        ((CodeTypeCapable) codeArea).setCodeType(codeAreaOptions.getCodeType());
+        ((ShowUnprintablesCapable) codeArea).setShowUnprintables(codeAreaOptions.isShowUnprintables());
+        ((CodeCharactersCaseCapable) codeArea).setCodeCharactersCase(codeAreaOptions.getCodeCharactersCase());
+        ((PositionCodeTypeCapable) codeArea).setPositionCodeType(codeAreaOptions.getPositionCodeType());
+        ((ViewModeCapable) codeArea).setViewMode(codeAreaOptions.getViewMode());
+        ((ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter()).setNonAsciiHighlightingEnabled(codeAreaOptions.isCodeColorization());
+        codeArea.setRowWrapping(codeAreaOptions.getRowWrappingMode());
+        codeArea.setMaxBytesPerRow(codeAreaOptions.getMaxBytesPerRow());
+        codeArea.setMinRowPositionLength(codeAreaOptions.getMinRowPositionLength());
+        codeArea.setMaxRowPositionLength(codeAreaOptions.getMaxRowPositionLength());
     }
 
     public void setOptions(CodeAreaOptionsImpl codeAreaOptions) {

@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.bined.CodeAreaViewMode;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.swing.extended.layout.DefaultExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.swing.extended.layout.ExtendedCodeAreaDecorations;
@@ -38,7 +39,7 @@ import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 public class BinaryEditorPreferences {
 
     private final static String PREFERENCES_VERSION = "version";
-    private final static String PREFERENCES_VERSION_VALUE = "0.2.0";
+    private final static String PREFERENCES_VERSION_VALUE = "0.2.1";
 
     private final Preferences preferences;
 
@@ -63,7 +64,9 @@ public class BinaryEditorPreferences {
 
         final String legacyDef = "LEGACY";
         String storedVersion = preferences.get(PREFERENCES_VERSION, legacyDef);
-        if (legacyDef.equals(storedVersion)) {
+        if ("0.2.0".equals(storedVersion)) {
+            convertPreferences_0_2_0();
+        } else if (legacyDef.equals(storedVersion)) {
             try {
                 importLegacyPreferences();
             } finally {
@@ -160,6 +163,16 @@ public class BinaryEditorPreferences {
         }
         encodingPreferences.setEncodings(encodings);
 
+        preferences.flush();
+    }
+
+    private void convertPreferences_0_2_0() {
+        String codeType = preferences.get(CodeAreaPreferences.PREFERENCES_VIEW_MODE);
+        if ("HEXADECIMAL".equals(codeType)) {
+            codeAreaPreferences.setViewMode(CodeAreaViewMode.CODE_MATRIX);
+        } else if ("PREVIEW".equals(codeType)) {
+            codeAreaPreferences.setViewMode(CodeAreaViewMode.TEXT_PREVIEW);
+        }
         preferences.flush();
     }
 }

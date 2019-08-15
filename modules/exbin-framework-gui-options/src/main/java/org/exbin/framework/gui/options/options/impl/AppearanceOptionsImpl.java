@@ -63,7 +63,7 @@ public class AppearanceOptionsImpl implements OptionsData, AppearanceOptions {
         this.showStatusBar = showStatusBar;
     }
 
-    public void loadFromParameters(AppearancePreferences preferences) {
+    public void loadFromPreferences(AppearancePreferences preferences) {
         showToolBar = preferences.isShowToolBar();
         showToolBarCaptions = preferences.isShowToolBarCaptions();
         showStatusBar = preferences.isShowStatusBar();

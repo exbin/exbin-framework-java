@@ -79,9 +79,9 @@ public class GoToPositionHandler {
                         }
 
                         dialog.close();
+                        dialog.dispose();
                     });
                     dialog.showCentered(frameModule.getFrame());
-                    dialog.dispose();
                 }
             }
         };

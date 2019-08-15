@@ -114,7 +114,7 @@ public class WaveColorOptionsImpl implements OptionsData, WaveColorOptions {
         this.waveCursorWaveColor = waveCursorWaveColor;
     }
 
-    public void loadFromParameters(WaveColorPreferences preferences) {
+    public void loadFromPreferences(WaveColorPreferences preferences) {
         useDefaultColors = preferences.isUseDefaultColors();
         waveColor = preferences.getWaveColor();
         waveFillColor = preferences.getWaveFillColor();
@@ -124,7 +124,7 @@ public class WaveColorOptionsImpl implements OptionsData, WaveColorOptions {
         waveCursorWaveColor = preferences.getWaveCursorWaveColor();
     }
 
-    public void saveToParameters(WaveColorPreferences preferences) {
+    public void saveToPreferences(WaveColorPreferences preferences) {
         preferences.setUseDefaultColors(useDefaultColors);
         preferences.setWaveColor(waveColor);
         preferences.setWaveFillColor(waveFillColor);

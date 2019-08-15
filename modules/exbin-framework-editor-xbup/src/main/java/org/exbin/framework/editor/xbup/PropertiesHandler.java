@@ -71,9 +71,11 @@ public class PropertiesHandler {
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle(), controlPanel);
                     frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
-                    controlPanel.setHandler(dialog::close);
+                    controlPanel.setHandler(() -> {
+                        dialog.close();
+                        dialog.dispose();
+                    });
                     dialog.showCentered((Component) e.getSource());
-                    dialog.dispose();
                 }
             }
         };
@@ -93,9 +95,11 @@ public class PropertiesHandler {
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    controlPanel.setHandler(dialog::close);
+                    controlPanel.setHandler(() -> {
+                        dialog.close();
+                        dialog.dispose();
+                    });
                     dialog.showCentered((Component) e.getSource());
-                    dialog.dispose();
                 }
             }
         };

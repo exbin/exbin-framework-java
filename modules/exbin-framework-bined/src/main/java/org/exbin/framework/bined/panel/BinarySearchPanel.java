@@ -657,10 +657,10 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                     }
 
                     multilineDialog.close();
+                    multilineDialog.dispose();
                 });
                 multilineDialog.showCentered(dialog.getWindow());
                 multilinePanel.detachMenu();
-                multilineDialog.dispose();
                 return result.searchCondition;
             }
 
@@ -683,9 +683,9 @@ public class BinarySearchPanel extends javax.swing.JPanel {
             }
             findBinaryPanel.detachMenu();
             dialog.close();
+            dialog.dispose();
         });
         dialog.showCentered(WindowUtils.getWindow(this));
-        dialog.dispose();
     }//GEN-LAST:event_optionsButtonActionPerformed
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed

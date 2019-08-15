@@ -286,11 +286,13 @@ public class AddBlockPanel extends javax.swing.JPanel {
                         contextTypeTextField.setText(targetCaption);
 
                         dialog.close();
+                        dialog.dispose();
                         break;
                     }
 
                     case CANCEL: {
                         dialog.close();
+                        dialog.dispose();
                         break;
                     }
                     default:
@@ -298,7 +300,6 @@ public class AddBlockPanel extends javax.swing.JPanel {
                 }
             });
             dialog.showCentered(this);
-            dialog.dispose();
         }
 
         updateActionState();
@@ -338,11 +339,13 @@ public class AddBlockPanel extends javax.swing.JPanel {
                         catalogTypeTextField.setText(targetCaption);
 
                         dialog.close();
+                        dialog.dispose();
                         break;
                     }
 
                     case CANCEL: {
                         dialog.close();
+                        dialog.dispose();
                         break;
                     }
                     default:
@@ -350,7 +353,6 @@ public class AddBlockPanel extends javax.swing.JPanel {
                 }
             });
             dialog.showCentered(this);
-            dialog.dispose();
         }
 
         updateActionState();

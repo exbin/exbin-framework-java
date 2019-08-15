@@ -150,14 +150,12 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
 
             @Override
             public void loadFromPreferences(Preferences preferences, CheckForUpdateOptions options) {
-                CheckForUpdatePreferences parameters = new CheckForUpdatePreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new CheckForUpdatePreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, CheckForUpdateOptions options) {
-                CheckForUpdatePreferences parameters = new CheckForUpdatePreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new CheckForUpdatePreferences(preferences));
             }
 
             @Override

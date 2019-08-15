@@ -69,9 +69,9 @@ public class PropertiesHandler {
                     frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
                     controlPanel.setHandler(() -> {
                         dialog.close();
+                        dialog.dispose();
                     });
                     dialog.showCentered((Component) e.getSource());
-                    dialog.dispose();
                 }
             }
         };

@@ -211,14 +211,12 @@ public class EditorWaveModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, WaveColorOptionsImpl options) {
-                WaveColorPreferences parameters = new WaveColorPreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new WaveColorPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, WaveColorOptionsImpl options) {
-                WaveColorPreferences parameters = new WaveColorPreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new WaveColorPreferences(preferences));
             }
 
             @Override
@@ -260,14 +258,12 @@ public class EditorWaveModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, AudioDevicesOptionsImpl options) {
-                AudioDevicesPreferences parameters = new AudioDevicesPreferences(preferences);
-                options.loadFromParameters(parameters);
+                options.loadFromPreferences(new AudioDevicesPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, AudioDevicesOptionsImpl options) {
-                AudioDevicesPreferences parameters = new AudioDevicesPreferences(preferences);
-                options.saveToParameters(parameters);
+                options.saveToPreferences(new AudioDevicesPreferences(preferences));
             }
 
             @Override

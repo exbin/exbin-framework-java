@@ -60,12 +60,12 @@ public class TextFontOptionsImpl implements TextFontOptions, OptionsData {
         this.fontAttributes = fontAttributes;
     }
 
-    public void loadFromParameters(TextFontPreferences preferences) {
+    public void loadFromPreferences(TextFontPreferences preferences) {
         useDefaultFont = preferences.isUseDefaultFont();
         fontAttributes = preferences.getFontAttributes();
     }
 
-    public void saveToParameters(TextFontPreferences preferences) {
+    public void saveToPreferences(TextFontPreferences preferences) {
         preferences.setUseDefaultFont(useDefaultFont);
         preferences.setFontAttributes(fontAttributes);
     }

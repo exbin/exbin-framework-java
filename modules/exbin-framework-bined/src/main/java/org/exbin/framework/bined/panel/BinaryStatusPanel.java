@@ -34,6 +34,7 @@ import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.bined.BinaryStatusApi;
+import org.exbin.framework.bined.options.StatusOptions;
 import org.exbin.framework.bined.options.impl.StatusOptionsImpl;
 import org.exbin.framework.bined.preferences.StatusPreferences;
 
@@ -130,7 +131,7 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
         documentSizeShowRelativeCheckBoxMenuItem.setSelected(documentSizeFormat.isShowRelative());
     }
 
-    public void setStatusOptions(StatusOptionsImpl statusOptions) {
+    public void setStatusOptions(StatusOptions statusOptions) {
         cursorPositionFormat = statusOptions.getCursorPositionFormat();
         documentSizeFormat = statusOptions.getDocumentSizeFormat();
         octalSpaceGroupSize = statusOptions.getOctalSpaceGroupSize();

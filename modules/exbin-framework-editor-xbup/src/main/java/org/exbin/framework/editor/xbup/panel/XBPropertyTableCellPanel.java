@@ -130,9 +130,9 @@ public class XBPropertyTableCellPanel extends PropertyTableCellPanel {
             }
 
             dialog.close();
+            dialog.dispose();
         });
         dialog.showCentered(this);
-        dialog.dispose();
     }
 
     public XBACatalog getCatalog() {

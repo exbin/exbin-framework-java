@@ -38,11 +38,11 @@ public class CheckForUpdateOptions implements OptionsData {
         this.checkForUpdate = checkForUpdate;
     }
 
-    public void loadFromParameters(CheckForUpdatePreferences preferences) {
+    public void loadFromPreferences(CheckForUpdatePreferences preferences) {
         checkForUpdate = preferences.isShouldCheckForUpdate();
     }
 
-    public void saveToParameters(CheckForUpdatePreferences preferences) {
+    public void saveToPreferences(CheckForUpdatePreferences preferences) {
         preferences.setShouldCheckForUpdate(checkForUpdate);
     }
 }

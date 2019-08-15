@@ -77,14 +77,14 @@ public class CatalogConnectionOptionsImpl implements OptionsData, CatalogConnect
         this.catalogUpdateUrl = catalogUpdateUrl;
     }
 
-    public void loadFromParameters(ServiceConnectionPreferences preferences) {
+    public void loadFromPreferences(ServiceConnectionPreferences preferences) {
         serviceConnectionAllowed = preferences.isServiceConnectionAllowed();
         serviceConnectionUrl = preferences.getServiceConnectionUrl();
         catalogUpdateAllowed = preferences.isCatalogUpdateAllowed();
         catalogUpdateUrl = preferences.getCatalogUpdateUrl();
     }
 
-    public void saveToParameters(ServiceConnectionPreferences preferences) {
+    public void saveToPreferences(ServiceConnectionPreferences preferences) {
         preferences.setServiceConnectionAllowed(serviceConnectionAllowed);
         preferences.setServiceConnectionUrl(serviceConnectionUrl);
         preferences.setCatalogUpdateAllowed(catalogUpdateAllowed);

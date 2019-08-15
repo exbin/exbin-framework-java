@@ -58,12 +58,12 @@ public class TextEncodingOptionsImpl implements TextEncodingOptions, OptionsData
         this.encodings = encodings;
     }
 
-    public void loadFromParameters(TextEncodingPreferences preferences) {
+    public void loadFromPreferences(TextEncodingPreferences preferences) {
         selectedEncoding = preferences.getSelectedEncoding();
         encodings = preferences.getEncodings();
     }
 
-    public void saveToParameters(TextEncodingPreferences preferences) {
+    public void saveToPreferences(TextEncodingPreferences preferences) {
         preferences.setSelectedEncoding(selectedEncoding);
         preferences.setEncodings(encodings);
     }

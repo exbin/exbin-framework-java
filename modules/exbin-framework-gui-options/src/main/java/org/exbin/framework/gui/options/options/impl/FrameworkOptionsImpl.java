@@ -52,7 +52,7 @@ public class FrameworkOptionsImpl implements OptionsData, FrameworkOptions {
         this.languageLocale = languageLocale;
     }
 
-    public void loadFromParameters(FrameworkPreferences preferences) {
+    public void loadFromPreferences(FrameworkPreferences preferences) {
         lookAndFeel = preferences.getLookAndFeel();
         languageLocale = preferences.getLocale();
     }

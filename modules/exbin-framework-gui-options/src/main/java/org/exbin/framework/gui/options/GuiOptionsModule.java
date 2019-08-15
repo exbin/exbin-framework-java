@@ -104,7 +104,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             @Override
             public void loadFromPreferences(Preferences preferences, FrameworkOptionsImpl options) {
                 FrameworkPreferences prefs = new FrameworkPreferences(preferences);
-                options.loadFromParameters(prefs);
+                options.loadFromPreferences(prefs);
             }
 
             @Override
@@ -161,7 +161,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             @Override
             public void loadFromPreferences(Preferences preferences, AppearanceOptionsImpl options) {
                 AppearancePreferences prefs = new AppearancePreferences(preferences);
-                options.loadFromParameters(prefs);
+                options.loadFromPreferences(prefs);
             }
 
             @Override

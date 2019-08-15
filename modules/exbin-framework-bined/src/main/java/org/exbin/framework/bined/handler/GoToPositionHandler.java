@@ -80,10 +80,10 @@ public class GoToPositionHandler {
                         }
 
                         dialog.close();
+                        dialog.dispose();
                     });
                     SwingUtilities.invokeLater(goToPanel::initFocus);
                     dialog.showCentered(editorProvider.getPanel());
-                    dialog.dispose();
                 }
             }
         };

@@ -87,9 +87,9 @@ public class ToolsOptionsHandler {
                     }
 
                     dialog.close();
+                    dialog.dispose();
                 });
                 dialog.showCentered(frameModule.getFrame());
-                dialog.dispose();
             }
         };
         ActionUtils.setupAction(toolsSetFontAction, resourceBundle, "toolsSetFontAction");
@@ -129,15 +129,15 @@ public class ToolsOptionsHandler {
                             TextColorOptionsImpl options = new TextColorOptionsImpl();
                             colorPanel.saveToOptions(options);
                             TextColorPreferences textColorParameters = new TextColorPreferences(application.getAppPreferences());
-                            options.saveToParameters(textColorParameters);
+                            options.saveToPreferences(textColorParameters);
                         }
                         textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());
                     }
 
                     dialog.close();
+                    dialog.dispose();
                 });
                 dialog.showCentered(frameModule.getFrame());
-                dialog.dispose();
             }
         };
         ActionUtils.setupAction(toolsSetColorAction, resourceBundle, "toolsSetColorAction");

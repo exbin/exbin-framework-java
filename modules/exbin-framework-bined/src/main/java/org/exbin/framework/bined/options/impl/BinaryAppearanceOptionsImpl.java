@@ -63,13 +63,13 @@ public class BinaryAppearanceOptionsImpl implements OptionsData, BinaryAppearanc
         this.multiTabMode = multiTabMode;
     }
 
-    public void loadFromParameters(BinaryAppearancePreferences preferences) {
+    public void loadFromPreferences(BinaryAppearancePreferences preferences) {
         lineWrapping = preferences.isLineWrapping();
         showValuesPanel = preferences.isShowValuesPanel();
         multiTabMode = preferences.isMultiTabMode();
     }
 
-    public void saveToParameters(BinaryAppearancePreferences preferences) {
+    public void saveToPreferences(BinaryAppearancePreferences preferences) {
         preferences.setLineWrapping(lineWrapping);
         preferences.setShowValuesPanel(showValuesPanel);
         preferences.setMultiTabMode(multiTabMode);

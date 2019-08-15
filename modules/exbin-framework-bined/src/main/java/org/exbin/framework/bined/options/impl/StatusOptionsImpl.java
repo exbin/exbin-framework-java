@@ -94,7 +94,7 @@ public class StatusOptionsImpl implements OptionsData, StatusOptions {
         this.hexadecimalSpaceGroupSize = hexadecimalSpaceGroupSize;
     }
 
-    public void loadFromParameters(StatusPreferences preferences) {
+    public void loadFromPreferences(StatusPreferences preferences) {
         cursorPositionFormat.setCodeType(preferences.getCursorPositionCodeType());
         cursorPositionFormat.setShowOffset(preferences.isCursorShowOffset());
         documentSizeFormat.setCodeType(preferences.getDocumentSizeCodeType());
@@ -104,7 +104,7 @@ public class StatusOptionsImpl implements OptionsData, StatusOptions {
         hexadecimalSpaceGroupSize = preferences.getHexadecimalSpaceGroupSize();
     }
 
-    public void saveToParameters(StatusPreferences preferences) {
+    public void saveToPreferences(StatusPreferences preferences) {
         preferences.setCursorPositionCodeType(cursorPositionFormat.getCodeType());
         preferences.setCursorShowOffset(cursorPositionFormat.isShowOffset());
         preferences.setDocumentSizeCodeType(documentSizeFormat.getCodeType());

@@ -197,12 +197,12 @@ public class EditorTextModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, TextColorOptionsImpl options) {
-                options.loadFromParameters(new TextColorPreferences(preferences));
+                options.loadFromPreferences(new TextColorPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, TextColorOptionsImpl options) {
-                options.saveToParameters(new TextColorPreferences(preferences));
+                options.saveToPreferences(new TextColorPreferences(preferences));
             }
 
             @Override
@@ -275,9 +275,9 @@ public class EditorTextModule implements XBApplicationModule {
                                 }
 
                                 dialog.close();
+                                dialog.dispose();
                             });
                             dialog.showCentered(frameModule.getFrame());
-                            dialog.dispose();
 
                             return result.font;
                         }
@@ -304,12 +304,12 @@ public class EditorTextModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, TextFontOptionsImpl options) {
-                options.loadFromParameters(new TextFontPreferences(preferences));
+                options.loadFromPreferences(new TextFontPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, TextFontOptionsImpl options) {
-                options.saveToParameters(new TextFontPreferences(preferences));
+                options.saveToPreferences(new TextFontPreferences(preferences));
             }
 
             @Override
@@ -369,10 +369,10 @@ public class EditorTextModule implements XBApplicationModule {
                             }
 
                             dialog.close();
+                            dialog.dispose();
                         });
                         frameModule.setDialogTitle(dialog, addEncodingPanel.getResourceBundle());
                         dialog.showCentered(frameModule.getFrame());
-                        dialog.dispose();
                         return result;
                     });
                 }
@@ -393,12 +393,12 @@ public class EditorTextModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
-                options.loadFromParameters(new TextEncodingPreferences(preferences));
+                options.loadFromPreferences(new TextEncodingPreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
-                options.saveToParameters(new TextEncodingPreferences(preferences));
+                options.saveToPreferences(new TextEncodingPreferences(preferences));
             }
 
             @Override
@@ -432,12 +432,12 @@ public class EditorTextModule implements XBApplicationModule {
 
             @Override
             public void loadFromPreferences(Preferences preferences, TextAppearanceOptionsImpl options) {
-                options.loadFromParameters(new TextAppearancePreferences(preferences));
+                options.loadFromPreferences(new TextAppearancePreferences(preferences));
             }
 
             @Override
             public void saveToPreferences(Preferences preferences, TextAppearanceOptionsImpl options) {
-                options.saveToParameters(new TextAppearancePreferences(preferences));
+                options.saveToPreferences(new TextAppearancePreferences(preferences));
             }
 
             @Override
