@@ -294,7 +294,8 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(namedProfilePanel, controlPanel);
 
-        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, WindowUtils.getWindow(this), "Add Layout Profile", Dialog.ModalityType.APPLICATION_MODAL);
+        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, this, "Add Layout Profile", Dialog.ModalityType.APPLICATION_MODAL);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), layoutProfilePanel.getClass(), layoutProfilePanel.getResourceBundle(), controlPanel);
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                 if (!isValidProfileName(namedProfilePanel.getProfileName())) {
@@ -345,7 +346,8 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(namedProfilePanel, controlPanel);
 
-        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, WindowUtils.getWindow(this), "Edit Layout Profile", Dialog.ModalityType.APPLICATION_MODAL);
+        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, this, "Edit Layout Profile", Dialog.ModalityType.APPLICATION_MODAL);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), layoutProfilePanel.getClass(), layoutProfilePanel.getResourceBundle(), controlPanel);
         namedProfilePanel.setProfileName(profileRecord.profileName);
         layoutProfilePanel.setLayoutProfile(profileRecord.layoutProfile);
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
@@ -382,7 +384,8 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(namedProfilePanel, controlPanel);
 
-        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, WindowUtils.getWindow(this), "Copy Layout Profile", Dialog.ModalityType.APPLICATION_MODAL);
+        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, this, "Copy Layout Profile", Dialog.ModalityType.APPLICATION_MODAL);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), layoutProfilePanel.getClass(), layoutProfilePanel.getResourceBundle(), controlPanel);
         layoutProfilePanel.setLayoutProfile(profileRecord.layoutProfile);
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {

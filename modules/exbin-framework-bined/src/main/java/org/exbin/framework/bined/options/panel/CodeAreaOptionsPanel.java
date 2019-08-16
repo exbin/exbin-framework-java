@@ -287,6 +287,7 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
         textFontPanel.setVisible(true);
         JPanel dialogPanel = WindowUtils.createDialogPanel(textFontPanel, textFontControlPanel);
         final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, WindowUtils.getWindow(this), "Select Font", java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), textFontPanel.getClass(), textFontPanel.getResourceBundle(), textFontControlPanel);
         textFontControlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 codeFont = textFontPanel.getStoredFont();

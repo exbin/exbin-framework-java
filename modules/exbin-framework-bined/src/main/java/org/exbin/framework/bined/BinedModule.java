@@ -20,7 +20,7 @@ import org.exbin.framework.bined.handler.BinaryEditorHandler;
 import org.exbin.framework.bined.handler.LayoutHandler;
 import org.exbin.framework.bined.handler.ClipboardCodeHandler;
 import org.exbin.framework.bined.handler.GoToPositionHandler;
-import org.exbin.framework.bined.handler.ViewValuesPanelHandler;
+import org.exbin.framework.bined.handler.ShowValuesPanelHandler;
 import org.exbin.framework.bined.handler.EncodingStatusHandler;
 import org.exbin.framework.bined.handler.CodeTypeHandler;
 import org.exbin.framework.bined.handler.ToolsOptionsHandler;
@@ -49,6 +49,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -57,6 +58,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
@@ -136,6 +138,7 @@ import org.exbin.framework.editor.text.service.impl.TextEncodingServiceImpl;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.bined.service.EditorOptionsService;
 import org.exbin.framework.gui.options.api.DefaultOptionsPage;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Binary data editor module.
@@ -177,7 +180,7 @@ public class BinedModule implements XBApplicationModule {
 
     private FindReplaceHandler findReplaceHandler;
     private ViewNonprintablesHandler viewNonprintablesHandler;
-    private ViewValuesPanelHandler viewValuesPanelHandler;
+    private ShowValuesPanelHandler viewValuesPanelHandler;
     private ToolsOptionsHandler toolsOptionsHandler;
     private RowWrappingHandler wordWrappingHandler;
     private EncodingsHandler encodingsHandler;
@@ -235,7 +238,7 @@ public class BinedModule implements XBApplicationModule {
             panel.setApplication(application);
             panel.setPopupMenu(createPopupMenu(panel.getId(), editorProvider.getCodeArea()));
             panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
-            panel.setGoToPositionAction(getGoToPositionHandler().getGoToRowAction());
+            panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
             panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
             panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
             panel.setEncodingsHandler(new EncodingStatusHandler() {
@@ -266,7 +269,7 @@ public class BinedModule implements XBApplicationModule {
             ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinaryPanel panel) -> {
                 panel.setPopupMenu(createPopupMenu(panel.getId(), editorProvider.getCodeArea()));
                 panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
-                panel.setGoToPositionAction(getGoToPositionHandler().getGoToRowAction());
+                panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
                 panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
                 panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
                 panel.setEncodingsHandler(new EncodingStatusHandler() {
@@ -315,10 +318,10 @@ public class BinedModule implements XBApplicationModule {
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
 
-        BinaryAppearanceService binaryAppearanceService;
-        binaryAppearanceService = new BinaryAppearanceServiceImpl(this);
+        BinaryAppearanceService binaryAppearanceService = new BinaryAppearanceServiceImpl(this);
 
         binaryAppearanceOptionsPage = new DefaultOptionsPage<BinaryAppearanceOptionsImpl>() {
+
             private BinaryAppearanceOptionsPanel panel;
 
             @Nonnull
@@ -523,7 +526,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(TextFontOptionsImpl options) {
-                textFontService.setCurrentFont(options.getFont(textFontService.getDefaultFont()));
+                textFontService.setCurrentFont(options.isUseDefaultFont() ? textFontService.getDefaultFont() : options.getFont(textFontService.getDefaultFont()));
             }
         };
         optionsModule.addOptionsPage(textFontOptionsPage);
@@ -535,15 +538,8 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public void setIsShowValuesPanel(boolean showValuesPanel) {
-                boolean valuesPanelVisible = getEditorProvider().isValuesPanelVisible();
-                if (valuesPanelVisible != showValuesPanel) {
-                    if (showValuesPanel) {
-                        getEditorProvider().showValuesPanel();
-                    } else {
-                        getEditorProvider().hideValuesPanel();
-                    }
-                }
+            public void setShowValuesPanel(boolean showValuesPanel) {
+                binaryAppearanceService.setShowValuesPanel(showValuesPanel);
             }
 
             @Override
@@ -588,7 +584,7 @@ public class BinedModule implements XBApplicationModule {
             @Override
             public void applyPreferencesChanges(EditorOptionsImpl options) {
                 editorOptionsService.setFileHandlingMode(options.getFileHandlingMode());
-                editorOptionsService.setIsShowValuesPanel(options.isShowValuesPanel());
+                editorOptionsService.setShowValuesPanel(options.isShowValuesPanel());
                 editorOptionsService.setEditorHandlingMode(options.getEnterKeyHandlingMode());
             }
         };
@@ -798,7 +794,7 @@ public class BinedModule implements XBApplicationModule {
     public void registerGoToLine() {
         getGoToPositionHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, goToRowHandler.getGoToRowAction(), new MenuPosition(PositionMode.BOTTOM));
+        menuModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, goToRowHandler.getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     @Nullable
@@ -827,9 +823,9 @@ public class BinedModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public ViewValuesPanelHandler getViewValuesPanelHandler() {
+    public ShowValuesPanelHandler getViewValuesPanelHandler() {
         if (viewValuesPanelHandler == null) {
-            viewValuesPanelHandler = new ViewValuesPanelHandler(application, getEditorProvider());
+            viewValuesPanelHandler = new ShowValuesPanelHandler(application, getEditorProvider());
             viewValuesPanelHandler.init();
         }
 
@@ -993,7 +989,7 @@ public class BinedModule implements XBApplicationModule {
         getViewValuesPanelHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_VALUES_PANEL_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewValuesPanelHandler.getViewValuesPanelAction(), new MenuPosition(VIEW_VALUES_PANEL_MENU_GROUP_ID));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewValuesPanelHandler.getShowValuesPanelAction(), new MenuPosition(VIEW_VALUES_PANEL_MENU_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
@@ -1080,7 +1076,13 @@ public class BinedModule implements XBApplicationModule {
         JPopupMenu popupMenu = new JPopupMenu() {
             @Override
             public void show(Component invoker, int x, int y) {
-                JPopupMenu popupMenu = codeAreaPopupMenuHandler.createPopupMenu(codeArea, popupMenuId, x, y);
+                int clickedX = x;
+                int clickedY = y;
+                if (invoker instanceof JViewport) {
+                    clickedX += ((JViewport) invoker).getParent().getX();
+                    clickedY += ((JViewport) invoker).getParent().getY();
+                }
+                JPopupMenu popupMenu = codeAreaPopupMenuHandler.createPopupMenu(codeArea, popupMenuId, clickedX, clickedY);
                 popupMenu.addPopupMenuListener(new PopupMenuListener() {
                     @Override
                     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -1127,16 +1129,14 @@ public class BinedModule implements XBApplicationModule {
                 break;
             }
             default: {
-                final JMenuItem cutMenuItem = new JMenuItem("Cut");
-                cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, metaMask));
+                final JMenuItem cutMenuItem = ActionUtils.actionToMenuItem(menuModule.getClipboardActions().getCutAction());
                 cutMenuItem.setEnabled(codeArea.hasSelection() && codeArea.isEditable());
                 cutMenuItem.addActionListener((ActionEvent e) -> {
                     codeArea.cut();
                 });
                 popupMenu.add(cutMenuItem);
 
-                final JMenuItem copyMenuItem = new JMenuItem("Copy");
-                copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, metaMask));
+                final JMenuItem copyMenuItem = ActionUtils.actionToMenuItem(menuModule.getClipboardActions().getCopyAction());
                 copyMenuItem.setEnabled(codeArea.hasSelection());
                 copyMenuItem.addActionListener((ActionEvent e) -> {
                     codeArea.copy();
@@ -1150,8 +1150,7 @@ public class BinedModule implements XBApplicationModule {
                 });
                 popupMenu.add(copyAsCodeMenuItem);
 
-                final JMenuItem pasteMenuItem = new JMenuItem("Paste");
-                pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, metaMask));
+                final JMenuItem pasteMenuItem = ActionUtils.actionToMenuItem(menuModule.getClipboardActions().getPasteAction());
                 pasteMenuItem.setEnabled(codeArea.canPaste() && codeArea.isEditable());
                 pasteMenuItem.addActionListener((ActionEvent e) -> {
                     codeArea.paste();
@@ -1169,8 +1168,7 @@ public class BinedModule implements XBApplicationModule {
                 });
                 popupMenu.add(pasteFromCodeMenuItem);
 
-                final JMenuItem deleteMenuItem = new JMenuItem("Delete");
-                deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+                final JMenuItem deleteMenuItem = ActionUtils.actionToMenuItem(menuModule.getClipboardActions().getDeleteAction());
                 deleteMenuItem.setEnabled(codeArea.hasSelection() && codeArea.isEditable());
                 deleteMenuItem.addActionListener((ActionEvent e) -> {
                     codeArea.delete();
@@ -1178,8 +1176,7 @@ public class BinedModule implements XBApplicationModule {
                 popupMenu.add(deleteMenuItem);
                 popupMenu.addSeparator();
 
-                final JMenuItem selectAllMenuItem = new JMenuItem("Select All");
-                selectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, metaMask));
+                final JMenuItem selectAllMenuItem = ActionUtils.actionToMenuItem(menuModule.getClipboardActions().getSelectAllAction());
                 selectAllMenuItem.addActionListener((ActionEvent e) -> {
                     codeArea.selectAll();
                 });
@@ -1189,19 +1186,10 @@ public class BinedModule implements XBApplicationModule {
                 JMenuItem goToMenuItem = createGoToMenuItem();
                 popupMenu.add(goToMenuItem);
 
-                final JMenuItem findMenuItem = new JMenuItem("Find...");
-                findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, metaMask));
-                findMenuItem.addActionListener((ActionEvent e) -> {
-                    getFindReplaceHandler().getEditFindAction().actionPerformed(e);
-                });
+                final JMenuItem findMenuItem = ActionUtils.actionToMenuItem(getFindReplaceHandler().getEditFindAction());
                 popupMenu.add(findMenuItem);
 
-                final JMenuItem replaceMenuItem = new JMenuItem("Replace...");
-                replaceMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, metaMask));
-                replaceMenuItem.setEnabled(codeArea.isEditable());
-                replaceMenuItem.addActionListener((ActionEvent e) -> {
-                    getFindReplaceHandler().getEditReplaceAction().actionPerformed(e);
-                });
+                final JMenuItem replaceMenuItem = ActionUtils.actionToMenuItem(getFindReplaceHandler().getEditReplaceAction());
                 popupMenu.add(replaceMenuItem);
             }
         }
@@ -1224,84 +1212,15 @@ public class BinedModule implements XBApplicationModule {
             }
         }
 
-        final JMenuItem optionsMenuItem = new JMenuItem("Options...");
-        optionsMenuItem.addActionListener((ActionEvent e) -> {
-            optionsModule.getOptionsAction().actionPerformed(e);
-        });
+        final JMenuItem optionsMenuItem = ActionUtils.actionToMenuItem(optionsModule.getOptionsAction());
         popupMenu.add(optionsMenuItem);
 
-//        final Action copyAsCodeAction = clipboardCodeHandler.createCopyAsCodeAction(codeArea);
-//        final Action pasteFromCodeAction = clipboardCodeHandler.createPasteFromCodeAction(codeArea);
-//        ClipboardActions clipboardActions = menuModule.createClipboardActions(new ClipboardActionsHandler() {
-//            @Override
-//            public void performCut() {
-//                codeArea.cut();
-//            }
-//
-//            @Override
-//            public void performCopy() {
-//                codeArea.copy();
-//            }
-//
-//            @Override
-//            public void performPaste() {
-//                codeArea.paste();
-//            }
-//
-//            @Override
-//            public void performDelete() {
-//                codeArea.delete();
-//            }
-//
-//            @Override
-//            public void performSelectAll() {
-//                codeArea.selectAll();
-//            }
-//
-//            @Override
-//            public boolean isSelection() {
-//                return codeArea.hasSelection();
-//            }
-//
-//            @Override
-//            public boolean isEditable() {
-//                return ((EditationModeCapable) codeArea).isEditable();
-//            }
-//
-//            @Override
-//            public boolean canSelectAll() {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean canPaste() {
-//                return codeArea.canPaste();
-//            }
-//
-//            @Override
-//            public void setUpdateListener(final ClipboardActionsUpdateListener updateListener) {
-//                ((SelectionCapable) codeArea).addSelectionChangedListener((SelectionRange sr) -> {
-//                    updateListener.stateChanged();
-//                    copyAsCodeAction.setEnabled(codeArea.hasSelection());
-//                    pasteFromCodeAction.setEnabled(codeArea.canPaste());
-//                });
-//                updateListener.stateChanged();
-//            }
-//        });
-//        menuModule.registerClipboardMenuItems(clipboardActions, CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, SeparationMode.AROUND);
-//        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, copyAsCodeAction, new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getCopyAction().getValue(Action.NAME)));
-//        menuModule.registerMenuItem(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID, pasteFromCodeAction, new MenuPosition(NextToMode.AFTER, (String) clipboardActions.getPasteAction().getValue(Action.NAME)));
-//
-//        menuModule.buildMenu(popupMenu, CODE_AREA_POPUP_MENU_ID + menuPostfix);
         return popupMenu;
     }
 
     @Nonnull
     private JMenuItem createGoToMenuItem() {
-        final JMenuItem goToMenuItem = new JMenuItem("Go To...");
-        goToMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, metaMask));
-        goToMenuItem.addActionListener(goToRowHandler.getGoToRowAction());
-        return goToMenuItem;
+        return ActionUtils.actionToMenuItem(goToRowHandler.getGoToLineAction());
     }
 
     @Nonnull

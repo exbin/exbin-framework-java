@@ -201,36 +201,7 @@ public class MenuHandler {
                             @Override
                             public void process() {
                                 Action action = ((ActionMenuContribution) next.contribution).getAction();
-                                ActionUtils.ActionType actionType = (ActionUtils.ActionType) action.getValue(ActionUtils.ACTION_TYPE);
-                                if (actionType != null) {
-                                    switch (actionType) {
-                                        case CHECK: {
-                                            menuItem = new JCheckBoxMenuItem(action);
-                                            break;
-                                        }
-                                        case RADIO: {
-                                            menuItem = new JRadioButtonMenuItem(action);
-                                            String radioGroup = (String) action.getValue(ActionUtils.ACTION_RADIO_GROUP);
-                                            ButtonGroup buttonGroup = buttonGroups.get(radioGroup);
-                                            if (buttonGroup == null) {
-                                                buttonGroup = new ButtonGroup();
-                                                buttonGroups.put(radioGroup, buttonGroup);
-                                            }
-                                            buttonGroup.add(menuItem);
-                                            break;
-                                        }
-                                        default: {
-                                            menuItem = new JMenuItem(action);
-                                        }
-                                    }
-                                } else {
-                                    menuItem = new JMenuItem(action);
-                                }
-
-                                Object dialogMode = action.getValue(ActionUtils.ACTION_DIALOG_MODE);
-                                if (dialogMode instanceof Boolean && ((Boolean) dialogMode)) {
-                                    menuItem.setText(menuItem.getText() + ActionUtils.DIALOG_MENUITEM_EXT);
-                                }
+                                menuItem = ActionUtils.actionToMenuItem(action, buttonGroups);
                             }
 
                             @Override

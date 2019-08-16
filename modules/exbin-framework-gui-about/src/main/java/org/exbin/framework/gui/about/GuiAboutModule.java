@@ -17,6 +17,7 @@
 package org.exbin.framework.gui.about;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -24,6 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.about.api.GuiAboutModuleApi;
@@ -42,9 +44,9 @@ import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
- * Implementation of XBUP framework about module.
+ * Implementation of framework about module.
  *
- * @version 0.2.0 2017/01/18
+ * @version 0.2.0 2019/08/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -91,6 +93,7 @@ public class GuiAboutModule implements GuiAboutModuleApi {
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
                     final DialogWrapper aboutDialog = frameModule.createDialog(dialogPanel);
+                    ((JDialog) aboutDialog.getWindow()).setTitle("About");
                     controlPanel.setHandler(aboutDialog::close);
                     aboutDialog.showCentered((Component) e.getSource());
                     aboutDialog.dispose();

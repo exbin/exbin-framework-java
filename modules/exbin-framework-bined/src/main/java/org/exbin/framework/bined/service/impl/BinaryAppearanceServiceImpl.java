@@ -61,6 +61,6 @@ public class BinaryAppearanceServiceImpl implements BinaryAppearanceService {
             }
         }
 
-        binedModule.getViewValuesPanelHandler().getViewValuesPanelAction().putValue(Action.SELECTED_KEY, showValuesPanel);
+        binedModule.getViewValuesPanelHandler().getShowValuesPanelAction().putValue(Action.SELECTED_KEY, showValuesPanel);
     }
 }

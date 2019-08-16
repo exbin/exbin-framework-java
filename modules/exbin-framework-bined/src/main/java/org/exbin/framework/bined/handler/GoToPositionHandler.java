@@ -92,7 +92,7 @@ public class GoToPositionHandler {
         goToLineAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
-    public Action getGoToRowAction() {
+    public Action getGoToLineAction() {
         return goToLineAction;
     }
 }

@@ -22,6 +22,7 @@ import java.awt.font.TextAttribute;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.options.impl.TextFontOptionsImpl;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -33,7 +34,7 @@ import org.exbin.framework.editor.text.service.TextFontService;
 /**
  * Text font options panel.
  *
- * @version 0.2.1 2019/07/19
+ * @version 0.2.1 2019/08/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -192,7 +193,8 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     }//GEN-LAST:event_defaultFontCheckBoxItemStateChanged
 
     private void fillDefaultFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultFontButtonActionPerformed
-        fontPreviewLabel.setFont(textFontService.getDefaultFont());
+        font = textFontService.getDefaultFont();
+        fontPreviewLabel.setFont(font);
         setModified(true);
     }//GEN-LAST:event_fillDefaultFontButtonActionPerformed
 
@@ -200,6 +202,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
         if (fontChangeAction != null) {
             Font resultFont = fontChangeAction.changeFont(fontPreviewLabel.getFont());
             if (resultFont != null) {
+                font = resultFont;
                 fontPreviewLabel.setFont(resultFont);
                 setModified(true);
             }
@@ -207,7 +210,8 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     }//GEN-LAST:event_changeFontButtonActionPerformed
 
     private void fillCurrentFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentFontButtonActionPerformed
-        fontPreviewLabel.setFont(textFontService.getCurrentFont());
+        font = textFontService.getCurrentFont();
+        fontPreviewLabel.setFont(font);
         setModified(true);
     }//GEN-LAST:event_fillCurrentFontButtonActionPerformed
 
@@ -244,8 +248,10 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
         this.fontChangeAction = fontChangeAction;
     }
 
+    @ParametersAreNonnullByDefault
     public static interface FontChangeAction {
 
+        @Nullable
         Font changeFont(Font currentFont);
     }
 }

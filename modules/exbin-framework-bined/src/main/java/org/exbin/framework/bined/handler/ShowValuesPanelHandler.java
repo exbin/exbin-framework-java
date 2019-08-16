@@ -31,26 +31,26 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * View values panel handler.
  *
- * @version 0.2.0 2017/10/15
+ * @version 0.2.0 2019/08/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ViewValuesPanelHandler {
+public class ShowValuesPanelHandler {
 
     private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private Action viewValuesPanelAction;
+    private Action showValuesPanelAction;
 
-    public ViewValuesPanelHandler(XBApplication application, BinaryEditorProvider editorProvider) {
+    public ShowValuesPanelHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
     }
 
     public void init() {
-        viewValuesPanelAction = new AbstractAction() {
+        showValuesPanelAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean valuesPanelShown = !editorProvider.isValuesPanelVisible();
@@ -59,15 +59,15 @@ public class ViewValuesPanelHandler {
                 } else {
                     editorProvider.hideValuesPanel();
                 }
-                viewValuesPanelAction.putValue(Action.SELECTED_KEY, valuesPanelShown);
+                showValuesPanelAction.putValue(Action.SELECTED_KEY, valuesPanelShown);
             }
         };
-        ActionUtils.setupAction(viewValuesPanelAction, resourceBundle, "viewValuesPanelAction");
-        viewValuesPanelAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
+        ActionUtils.setupAction(showValuesPanelAction, resourceBundle, "showValuesPanelAction");
+        showValuesPanelAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
     }
 
     @Nonnull
-    public Action getViewValuesPanelAction() {
-        return viewValuesPanelAction;
+    public Action getShowValuesPanelAction() {
+        return showValuesPanelAction;
     }
 }
