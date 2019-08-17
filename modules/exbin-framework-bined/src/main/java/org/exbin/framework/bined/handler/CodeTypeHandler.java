@@ -17,9 +17,13 @@
 package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.JPopupMenu;
 import org.exbin.bined.CodeType;
 import org.exbin.bined.capability.CodeTypeCapable;
 import org.exbin.framework.api.XBApplication;
@@ -33,7 +37,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Code type handler.
  *
- * @version 0.2.0 2016/07/18
+ * @version 0.2.0 2016/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class CodeTypeHandler {
@@ -48,6 +52,7 @@ public class CodeTypeHandler {
     private Action octalCodeTypeAction;
     private Action decimalCodeTypeAction;
     private Action hexadecimalCodeTypeAction;
+    private Action cycleCodeTypesAction;
 
     private CodeType codeType = CodeType.HEXADECIMAL;
 
@@ -110,12 +115,40 @@ public class CodeTypeHandler {
         hexadecimalCodeTypeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, CODE_TYPE_RADIO_GROUP_ID);
         hexadecimalCodeTypeAction.putValue(Action.SELECTED_KEY, codeType == CodeType.HEXADECIMAL);
 
+        cycleCodeTypesAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editorProvider instanceof BinaryEditorProvider) {
+                    int codeTypePos = codeType.ordinal();
+                    CodeType[] values = CodeType.values();
+                    CodeType next = codeTypePos + 1 >= values.length ? values[0] : values[codeTypePos + 1];
+                    setCodeType(next);
+                }
+            }
+        };
+        ActionUtils.setupAction(cycleCodeTypesAction, resourceBundle, "cycleCodeTypesAction");
+        cycleCodeTypesAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CYCLE);
+        ButtonGroup cycleButtonGroup = new ButtonGroup();
+        Map<String, ButtonGroup> buttonGroups = new HashMap<>();
+        buttonGroups.put(CODE_TYPE_RADIO_GROUP_ID, cycleButtonGroup);
+        JPopupMenu cycleCodeTypesPopupMenu = new JPopupMenu();
+        cycleCodeTypesPopupMenu.add(ActionUtils.actionToMenuItem(binaryCodeTypeAction, buttonGroups));
+        cycleCodeTypesPopupMenu.add(ActionUtils.actionToMenuItem(octalCodeTypeAction, buttonGroups));
+        cycleCodeTypesPopupMenu.add(ActionUtils.actionToMenuItem(decimalCodeTypeAction, buttonGroups));
+        cycleCodeTypesPopupMenu.add(ActionUtils.actionToMenuItem(hexadecimalCodeTypeAction, buttonGroups));
+        cycleCodeTypesAction.putValue(ActionUtils.CYCLE_POPUP_MENU, cycleCodeTypesPopupMenu);
+        updateCycleButtonName();
     }
 
     public void setCodeType(CodeType codeType) {
         this.codeType = codeType;
         BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
         ((CodeTypeCapable) activePanel.getCodeArea()).setCodeType(codeType);
+        updateCycleButtonName();
+    }
+    
+    private void updateCycleButtonName() {
+        cycleCodeTypesAction.putValue(Action.NAME, codeType.name().substring(0, 3));
     }
 
     public Action getBinaryCodeTypeAction() {
@@ -132,5 +165,9 @@ public class CodeTypeHandler {
 
     public Action getHexadecimalCodeTypeAction() {
         return hexadecimalCodeTypeAction;
+    }
+
+    public Action getCycleCodeTypesAction() {
+        return cycleCodeTypesAction;
     }
 }

@@ -32,15 +32,16 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.1 2019/07/15
  * @author ExBin Project (http://exbin.org)
  */
-public class ViewNonprintablesHandler {
+public class ShowNonprintablesHandler {
 
     private final BinaryEditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
     private Action viewNonprintablesAction;
+    private Action viewNonprintablesToolbarAction;
 
-    public ViewNonprintablesHandler(XBApplication application, BinaryEditorProvider editorProvider) {
+    public ShowNonprintablesHandler(XBApplication application, BinaryEditorProvider editorProvider) {
         this.application = application;
         this.editorProvider = editorProvider;
         resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
@@ -57,9 +58,23 @@ public class ViewNonprintablesHandler {
         ActionUtils.setupAction(viewNonprintablesAction, resourceBundle, "viewNonprintablesAction");
         viewNonprintablesAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
         viewNonprintablesAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, ActionUtils.getMetaMask()));
+
+        viewNonprintablesToolbarAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean showUnprintables = editorProvider.changeShowNonprintables();
+                viewNonprintablesAction.putValue(Action.SELECTED_KEY, showUnprintables);
+            }
+        };
+        ActionUtils.setupAction(viewNonprintablesToolbarAction, resourceBundle, "viewNonprintablesToolbarAction");
+        viewNonprintablesToolbarAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
     }
 
     public Action getViewNonprintablesAction() {
         return viewNonprintablesAction;
+    }
+
+    public Action getViewNonprintablesToolbarAction() {
+        return viewNonprintablesToolbarAction;
     }
 }

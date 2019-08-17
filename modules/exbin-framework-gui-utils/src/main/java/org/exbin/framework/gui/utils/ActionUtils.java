@@ -36,7 +36,7 @@ import javax.swing.text.JTextComponent;
 /**
  * Some simple static methods usable for actions, menus and toolbars.
  *
- * @version 0.2.1 2019/07/18
+ * @version 0.2.1 2019/08/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -68,6 +68,7 @@ public class ActionUtils {
     public static final String ACTION_SHORT_DESCRIPTION_POSTFIX = ".shortDescription";
     public static final String ACTION_SMALL_ICON_POSTFIX = ".smallIcon";
     public static final String ACTION_SMALL_LARGE_POSTFIX = ".largeIcon";
+    public static final String CYCLE_POPUP_MENU = "cyclePopupMenu";
 
     private ActionUtils() {
     }
@@ -199,6 +200,10 @@ public class ActionUtils {
          * Radion type checking, where only one item in radio group can be
          * checked.
          */
-        RADIO
+        RADIO,
+        /**
+         * Action to cycle thru list of options.
+         */
+        CYCLE
     }
 }

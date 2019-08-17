@@ -26,7 +26,10 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.exbin.framework.api.XBApplication;
@@ -211,6 +214,12 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         for (Component comp : comps) {
             if (comp instanceof JButton) {
                 ((JButton) comp).setHideActionText(!captionsVisible);
+            } else if (comp instanceof JToggleButton) {
+                ((JToggleButton) comp).setHideActionText(!captionsVisible);
+            } else if (comp instanceof JRadioButton) {
+                ((JRadioButton) comp).setHideActionText(!captionsVisible);
+            } else if (comp instanceof JCheckBoxMenuItem) {
+                ((JCheckBoxMenuItem) comp).setHideActionText(!captionsVisible);
             }
         }
     }

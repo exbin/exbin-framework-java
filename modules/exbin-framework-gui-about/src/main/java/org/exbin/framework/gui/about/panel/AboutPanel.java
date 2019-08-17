@@ -42,7 +42,7 @@ import org.exbin.xbup.plugin.XBModuleRecord;
 /**
  * Basic about panel.
  *
- * @version 0.2.0 2017/01/18
+ * @version 0.2.1 2019/08/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -149,6 +149,8 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        aboutHeaderImagePanel = new javax.swing.JPanel();
+        imageLabel = new javax.swing.JLabel();
         productTabbedPane = new javax.swing.JTabbedPane();
         applicationPanel = new javax.swing.JPanel();
         javax.swing.JLabel nameLabel = new javax.swing.JLabel();
@@ -174,10 +176,27 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         environmentScrollPane = new javax.swing.JScrollPane();
         environmentTable = new javax.swing.JTable();
         aboutHeaderPanel = new javax.swing.JPanel();
-        imageLabel = new javax.swing.JLabel();
-        appTitleLabel = new javax.swing.JLabel();
-        appDescLabel = new javax.swing.JLabel();
         headerSeparator = new javax.swing.JSeparator();
+        aboutHeaderTitlePanel = new javax.swing.JPanel();
+        appDescLabel = new javax.swing.JLabel();
+        appTitleLabel = new javax.swing.JLabel();
+
+        aboutHeaderImagePanel.setOpaque(false);
+
+        imageLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
+        javax.swing.GroupLayout aboutHeaderImagePanelLayout = new javax.swing.GroupLayout(aboutHeaderImagePanel);
+        aboutHeaderImagePanel.setLayout(aboutHeaderImagePanelLayout);
+        aboutHeaderImagePanelLayout.setHorizontalGroup(
+            aboutHeaderImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutHeaderImagePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+        );
+        aboutHeaderImagePanelLayout.setVerticalGroup(
+            aboutHeaderImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+        );
 
         setLayout(new java.awt.BorderLayout());
 
@@ -271,7 +290,7 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
                 .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(homepageLabel)
                     .addComponent(appHomepageLabel))
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
         productTabbedPane.addTab("Application", applicationPanel);
@@ -287,7 +306,7 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         );
         authorsPanelLayout.setVerticalGroup(
             authorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(authorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+            .addComponent(authorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
         );
 
         productTabbedPane.addTab("Authors", authorsPanel);
@@ -305,7 +324,7 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         );
         licensePanelLayout.setVerticalGroup(
             licensePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(licenseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+            .addComponent(licenseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
         );
 
         productTabbedPane.addTab("License", licensePanel);
@@ -322,7 +341,7 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         );
         modulesPanelLayout.setVerticalGroup(
             modulesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(modulesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+            .addComponent(modulesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
         );
 
         productTabbedPane.addTab("Modules", modulesPanel);
@@ -353,7 +372,7 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         );
         environmentPanelLayout.setVerticalGroup(
             environmentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(environmentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+            .addComponent(environmentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
         );
 
         productTabbedPane.addTab("Environment", environmentPanel);
@@ -361,43 +380,44 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         add(productTabbedPane, java.awt.BorderLayout.CENTER);
 
         aboutHeaderPanel.setBackground(new java.awt.Color(255, 255, 255));
+        aboutHeaderPanel.setLayout(new java.awt.BorderLayout());
+        aboutHeaderPanel.add(headerSeparator, java.awt.BorderLayout.SOUTH);
 
-        imageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        aboutHeaderTitlePanel.setOpaque(false);
+
+        appDescLabel.setForeground(java.awt.Color.black);
+        appDescLabel.setText("Description");
 
         appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
         appTitleLabel.setForeground(java.awt.Color.black);
         appTitleLabel.setText("Application Title");
 
-        appDescLabel.setForeground(java.awt.Color.black);
-        appDescLabel.setText("Description");
+        javax.swing.GroupLayout aboutHeaderTitlePanelLayout = new javax.swing.GroupLayout(aboutHeaderTitlePanel);
+        aboutHeaderTitlePanel.setLayout(aboutHeaderTitlePanelLayout);
+        aboutHeaderTitlePanelLayout.setHorizontalGroup(
+            aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(aboutHeaderTitlePanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(appTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addContainerGap()))
+        );
+        aboutHeaderTitlePanelLayout.setVerticalGroup(
+            aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 65, Short.MAX_VALUE)
+            .addGroup(aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(aboutHeaderTitlePanelLayout.createSequentialGroup()
+                    .addGap(18, 18, 18)
+                    .addComponent(appTitleLabel)
+                    .addGap(7, 7, 7)
+                    .addComponent(appDescLabel)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
 
-        javax.swing.GroupLayout aboutHeaderPanelLayout = new javax.swing.GroupLayout(aboutHeaderPanel);
-        aboutHeaderPanel.setLayout(aboutHeaderPanelLayout);
-        aboutHeaderPanelLayout.setHorizontalGroup(
-            aboutHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(aboutHeaderPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(imageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(aboutHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(appTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
-                .addContainerGap())
-            .addComponent(headerSeparator)
-        );
-        aboutHeaderPanelLayout.setVerticalGroup(
-            aboutHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(aboutHeaderPanelLayout.createSequentialGroup()
-                .addGroup(aboutHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(aboutHeaderPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(appTitleLabel)
-                        .addGap(7, 7, 7)
-                        .addComponent(appDescLabel))
-                    .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(headerSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        aboutHeaderPanel.add(aboutHeaderTitlePanel, java.awt.BorderLayout.CENTER);
 
         add(aboutHeaderPanel, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
@@ -418,9 +438,10 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         WindowUtils.invokeDialog(new AboutPanel());
     }
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel aboutHeaderImagePanel;
     private javax.swing.JPanel aboutHeaderPanel;
+    private javax.swing.JPanel aboutHeaderTitlePanel;
     private javax.swing.JLabel appDescLabel;
     private javax.swing.JLabel appHomepageLabel;
     private javax.swing.JLabel appTitleLabel;
@@ -500,6 +521,7 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         String aboutImagePath = appBundle.getString("Application.aboutImage");
         if (aboutImagePath != null) {
             imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(appBundle.getString("Application.aboutImage"))));
+            aboutHeaderPanel.add(aboutHeaderImagePanel, BorderLayout.WEST);
         }
         appTitleLabel.setText(appBundle.getString("Application.title"));
         appDescLabel.setText(appBundle.getString("Application.description"));

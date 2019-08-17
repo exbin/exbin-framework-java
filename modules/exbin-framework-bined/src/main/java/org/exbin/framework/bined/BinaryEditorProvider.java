@@ -61,6 +61,7 @@ public interface BinaryEditorProvider extends EditorProvider {
 
     void setWordWrapMode(boolean mode);
 
+    @Nonnull
     Charset getCharset();
 
     void setCharset(Charset forName);
@@ -75,12 +76,15 @@ public interface BinaryEditorProvider extends EditorProvider {
 
     boolean changeLineWrap();
 
+    @Nonnull
     BinaryPanel getDocument();
 
     void printFile();
 
+    @Nonnull
     BinaryDataUndoHandler getBinaryUndoHandler();
 
+    @Nonnull
     ExtCodeArea getCodeArea();
 
     void setFileHandlingMode(FileHandlingMode valueOf);

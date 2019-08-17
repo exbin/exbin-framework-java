@@ -26,7 +26,7 @@ import org.exbin.framework.bined.handler.CodeTypeHandler;
 import org.exbin.framework.bined.handler.ToolsOptionsHandler;
 import org.exbin.framework.bined.handler.ViewModeHandler;
 import org.exbin.framework.bined.handler.PrintHandler;
-import org.exbin.framework.bined.handler.ViewNonprintablesHandler;
+import org.exbin.framework.bined.handler.ShowNonprintablesHandler;
 import org.exbin.framework.bined.handler.RowWrappingHandler;
 import org.exbin.framework.bined.handler.PropertiesHandler;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
@@ -49,7 +49,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -59,7 +58,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JViewport;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -143,7 +141,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2019/07/20
+ * @version 0.2.1 2019/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -160,6 +158,7 @@ public class BinedModule implements XBApplicationModule {
     private static final String VIEW_NONPRINTABLES_MENU_GROUP_ID = MODULE_ID + ".viewNonprintablesMenuGroup";
     private static final String VIEW_VALUES_PANEL_MENU_GROUP_ID = MODULE_ID + ".viewValuesPanelMenuGroup";
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
+    private static final String BINED_TOOL_BAR_GROUP_ID = MODULE_ID + ".binedToolBarGroup";
 
     public static final String BINARY_STATUS_BAR_ID = "binaryStatusBar";
 
@@ -179,8 +178,8 @@ public class BinedModule implements XBApplicationModule {
     private DefaultOptionsPage<CodeAreaColorOptionsImpl> colorProfilesOptionsPage;
 
     private FindReplaceHandler findReplaceHandler;
-    private ViewNonprintablesHandler viewNonprintablesHandler;
-    private ShowValuesPanelHandler viewValuesPanelHandler;
+    private ShowNonprintablesHandler showNonprintablesHandler;
+    private ShowValuesPanelHandler showValuesPanelHandler;
     private ToolsOptionsHandler toolsOptionsHandler;
     private RowWrappingHandler wordWrappingHandler;
     private EncodingsHandler encodingsHandler;
@@ -813,23 +812,23 @@ public class BinedModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public ViewNonprintablesHandler getViewNonprintablesHandler() {
-        if (viewNonprintablesHandler == null) {
-            viewNonprintablesHandler = new ViewNonprintablesHandler(application, getEditorProvider());
-            viewNonprintablesHandler.init();
+    public ShowNonprintablesHandler getShowNonprintablesHandler() {
+        if (showNonprintablesHandler == null) {
+            showNonprintablesHandler = new ShowNonprintablesHandler(application, getEditorProvider());
+            showNonprintablesHandler.init();
         }
 
-        return viewNonprintablesHandler;
+        return showNonprintablesHandler;
     }
 
     @Nonnull
-    public ShowValuesPanelHandler getViewValuesPanelHandler() {
-        if (viewValuesPanelHandler == null) {
-            viewValuesPanelHandler = new ShowValuesPanelHandler(application, getEditorProvider());
-            viewValuesPanelHandler.init();
+    public ShowValuesPanelHandler getShowValuesPanelHandler() {
+        if (showValuesPanelHandler == null) {
+            showValuesPanelHandler = new ShowValuesPanelHandler(application, getEditorProvider());
+            showValuesPanelHandler.init();
         }
 
-        return viewValuesPanelHandler;
+        return showValuesPanelHandler;
     }
 
     @Nonnull
@@ -978,18 +977,32 @@ public class BinedModule implements XBApplicationModule {
         menuModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceHandler.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
+    public void registerCodeTypeToolBarActions() {
+        getCodeTypeHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(BINED_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.ABOVE));
+        menuModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, codeTypeHandler.getCycleCodeTypesAction(), new ToolBarPosition(BINED_TOOL_BAR_GROUP_ID));
+    }
+
+    public void registerShowNonprintablesToolBarActions() {
+        getShowNonprintablesHandler();
+        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        menuModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(BINED_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.NONE));
+        menuModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, showNonprintablesHandler.getViewNonprintablesToolbarAction(), new ToolBarPosition(BINED_TOOL_BAR_GROUP_ID));
+    }
+
     public void registerViewNonprintablesMenuActions() {
-        getViewNonprintablesHandler();
+        getShowNonprintablesHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_NONPRINTABLES_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewNonprintablesHandler.getViewNonprintablesAction(), new MenuPosition(VIEW_NONPRINTABLES_MENU_GROUP_ID));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, showNonprintablesHandler.getViewNonprintablesAction(), new MenuPosition(VIEW_NONPRINTABLES_MENU_GROUP_ID));
     }
 
     public void registerViewValuesPanelMenuActions() {
-        getViewValuesPanelHandler();
+        getShowValuesPanelHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_VALUES_PANEL_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewValuesPanelHandler.getShowValuesPanelAction(), new MenuPosition(VIEW_VALUES_PANEL_MENU_GROUP_ID));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, showValuesPanelHandler.getShowValuesPanelAction(), new MenuPosition(VIEW_VALUES_PANEL_MENU_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {

@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.gui.menu;
 
+import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -27,7 +28,9 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import org.exbin.framework.gui.menu.api.ActionToolBarContribution;
 import org.exbin.framework.gui.menu.api.PositionMode;
@@ -35,12 +38,13 @@ import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.menu.api.ToolBarContribution;
 import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
+import org.exbin.framework.gui.menu.component.DropDownButton;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
- * Tool bar handler.
+ * Toolbar handler.
  *
- * @version 0.2.0 2016/01/11
+ * @version 0.2.1 2019/08/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -159,11 +163,20 @@ public class ToolBarHandler {
                     if (actionType != null) {
                         switch (actionType) {
                             case CHECK: {
-                                JCheckBox newItem = new JCheckBox(action);
-                                newItem.setFocusable(false);
-                                newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                                newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                                toolBarItem = newItem;
+                                if (action.getValue(Action.SMALL_ICON) != null) {
+                                    JToggleButton newItem = new JToggleButton(action);
+                                    newItem.setFocusable(false);
+                                    newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                                    newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                                    toolBarItem = newItem;
+                                } else {
+                                    JCheckBox newItem = new JCheckBox(action);
+                                    newItem.setFocusable(false);
+                                    newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                                    newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                                    toolBarItem = newItem;
+                                }
+
                                 break;
                             }
                             case RADIO: {
@@ -172,6 +185,16 @@ public class ToolBarHandler {
                                 newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                                 newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
                                 toolBarItem = newItem;
+                                break;
+                            }
+                            case CYCLE: {
+                                JPopupMenu popupMenu = (JPopupMenu) action.getValue(ActionUtils.CYCLE_POPUP_MENU);
+                                DropDownButton dropDown = new DropDownButton(action, popupMenu);
+                                action.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                                    dropDown.setActionText((String) action.getValue(Action.NAME));
+                                });
+                                // createDefaultToolBarItem(action);
+                                toolBarItem = dropDown;
                                 break;
                             }
                             default: {
