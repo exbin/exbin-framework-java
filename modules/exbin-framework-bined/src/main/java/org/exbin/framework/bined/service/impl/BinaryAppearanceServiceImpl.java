@@ -18,7 +18,6 @@ package org.exbin.framework.bined.service.impl;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.bined.service.BinaryAppearanceService;
 
@@ -51,16 +50,6 @@ public class BinaryAppearanceServiceImpl implements BinaryAppearanceService {
 
     @Override
     public void setShowValuesPanel(boolean showValuesPanel) {
-        BinaryEditorProvider editorProvider = binedModule.getEditorProvider();
-        boolean valuesPanelVisible = editorProvider.isValuesPanelVisible();
-        if (valuesPanelVisible != showValuesPanel) {
-            if (showValuesPanel) {
-                editorProvider.showValuesPanel();
-            } else {
-                editorProvider.hideValuesPanel();
-            }
-        }
-
-        binedModule.getShowValuesPanelHandler().getShowValuesPanelAction().putValue(Action.SELECTED_KEY, showValuesPanel);
+        binedModule.getShowValuesPanelHandler().setShowValuesPanel(showValuesPanel);
     }
 }

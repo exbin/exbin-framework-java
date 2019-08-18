@@ -22,7 +22,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
@@ -30,7 +29,7 @@ import javax.swing.JPopupMenu;
 /**
  * Drop down button.
  *
- * @version 0.2.1 2019/08/17
+ * @version 0.2.1 2019/08/18
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -41,16 +40,16 @@ public class DropDownButton extends JButton {
 
     public DropDownButton(Action action, JPopupMenu popupMenu) {
         this.popupMenu = popupMenu;
-
         buttonPanel = new DropDownButtonPanel();
+
+        init(action);
+    }
+
+    private void init(Action action) {
         setFocusable(false);
         setActionText((String) action.getValue(Action.NAME));
         addActionListener(action);
 
-        init();
-    }
-
-    private void init() {
         setMargin(new Insets(0, 0, 0, 0));
         add(buttonPanel);
         JLabel actionButton = buttonPanel.getActionButton();
@@ -106,5 +105,10 @@ public class DropDownButton extends JButton {
 
     public void setActionText(String value) {
         buttonPanel.getActionButton().setText(" " + value + " ");
+    }
+
+    public void setActionTooltip(String text) {
+        buttonPanel.getActionButton().setToolTipText(text);
+        buttonPanel.getMenuButton().setToolTipText(text);
     }
 }

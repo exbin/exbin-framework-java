@@ -86,7 +86,7 @@ import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 /**
  * Binary editor panel.
  *
- * @version 0.2.1 2019/07/16
+ * @version 0.2.1 2019/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi {
@@ -189,7 +189,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         valuesPanel.setCodeArea(codeArea, undoHandler);
         valuesPanelScrollPane = new JScrollPane(valuesPanel);
         valuesPanelScrollPane.setBorder(null);
-        showValuesPanel();
+        setShowValuesPanel(true);
     }
 
     public void setApplication(XBApplication application) {
@@ -222,27 +222,24 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     @Override
-    public void showValuesPanel() {
-        if (!valuesPanelVisible) {
-            add(valuesPanelScrollPane, BorderLayout.EAST);
-            revalidate();
-            valuesPanelVisible = true;
-            valuesPanel.enableUpdate();
+    public void setShowValuesPanel(boolean show) {
+        if (valuesPanelVisible != show) {
+            if (show) {
+                add(valuesPanelScrollPane, BorderLayout.EAST);
+                revalidate();
+                valuesPanelVisible = true;
+                valuesPanel.enableUpdate();
+            } else {
+                valuesPanel.disableUpdate();
+                BinaryPanel.this.remove(valuesPanelScrollPane);
+                BinaryPanel.this.revalidate();
+                valuesPanelVisible = false;
+            }
         }
     }
 
     @Override
-    public void hideValuesPanel() {
-        if (valuesPanelVisible) {
-            valuesPanel.disableUpdate();
-            BinaryPanel.this.remove(valuesPanelScrollPane);
-            BinaryPanel.this.revalidate();
-            valuesPanelVisible = false;
-        }
-    }
-
-    @Override
-    public boolean isValuesPanelVisible() {
+    public boolean isShowValuesPanel() {
         return valuesPanelVisible;
     }
 
@@ -258,9 +255,13 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     @Override
-    public boolean changeShowNonprintables() {
-        codeArea.setShowUnprintables(!codeArea.isShowUnprintables());
+    public boolean isShowNonprintables() {
         return codeArea.isShowUnprintables();
+    }
+
+    @Override
+    public void setShowNonprintables(boolean show) {
+        codeArea.setShowUnprintables(show);
     }
 
     @Override

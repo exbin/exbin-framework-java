@@ -190,6 +190,7 @@ public class ToolBarHandler {
                             case CYCLE: {
                                 JPopupMenu popupMenu = (JPopupMenu) action.getValue(ActionUtils.CYCLE_POPUP_MENU);
                                 DropDownButton dropDown = new DropDownButton(action, popupMenu);
+                                dropDown.setActionTooltip((String) action.getValue(Action.SHORT_DESCRIPTION));
                                 action.addPropertyChangeListener((PropertyChangeEvent evt) -> {
                                     dropDown.setActionText((String) action.getValue(Action.NAME));
                                 });

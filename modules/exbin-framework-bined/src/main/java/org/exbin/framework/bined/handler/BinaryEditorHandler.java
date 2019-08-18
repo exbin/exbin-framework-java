@@ -271,28 +271,28 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
-    public boolean changeShowNonprintables() {
-        return activePanel.changeShowNonprintables();
+    public boolean isShowNonprintables() {
+        return activePanel.isShowNonprintables();
+    }
+
+    @Override
+    public void setShowNonprintables(boolean show) {
+        activePanel.setShowNonprintables(show);
+    }
+
+    @Override
+    public boolean isShowValuesPanel() {
+        return activePanel.isShowValuesPanel();
+    }
+
+    @Override
+    public void setShowValuesPanel(boolean show) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public boolean changeLineWrap() {
         return activePanel.changeLineWrap();
-    }
-
-    @Override
-    public void showValuesPanel() {
-        activePanel.showValuesPanel();
-    }
-
-    @Override
-    public void hideValuesPanel() {
-        activePanel.hideValuesPanel();
-    }
-
-    @Override
-    public boolean isValuesPanelVisible() {
-        return activePanel.isValuesPanelVisible();
     }
 
     @Override

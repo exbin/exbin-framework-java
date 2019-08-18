@@ -53,7 +53,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * File handling operations.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.0 2019/08/18
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -385,10 +385,23 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     private void rebuildRecentFilesMenu() {
         fileOpenRecentMenu.removeAll();
         for (int recentFileIndex = 0; recentFileIndex < recentFiles.size(); recentFileIndex++) {
-            File file = new File(recentFiles.get(recentFileIndex).getFileName());
+            String filename = recentFiles.get(recentFileIndex).getFileName();
+            File file = new File(filename);
             JMenuItem menuItem = new JMenuItem(file.getName());
-            menuItem.setToolTipText(recentFiles.get(recentFileIndex).getFileName());
-            menuItem.setIcon(FileSystemView.getFileSystemView().getSystemIcon(file));
+            menuItem.setToolTipText(filename);
+            {
+                URI fileUri;
+                try {
+                    fileUri = new URI(filename);
+                    try {
+                        menuItem.setIcon(FileSystemView.getFileSystemView().getSystemIcon(new File(fileUri)));
+                    } catch (Exception ex) {
+                        menuItem.setIcon(null);
+                    }
+                } catch (URISyntaxException ex) {
+                    Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             menuItem.addActionListener((ActionEvent e) -> {
                 if (e.getSource() instanceof JMenuItem) {
                     if (!releaseFile()) {

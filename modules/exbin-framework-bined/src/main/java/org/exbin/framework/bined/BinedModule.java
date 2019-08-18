@@ -64,10 +64,14 @@ import javax.swing.event.PopupMenuListener;
 import org.exbin.bined.BasicCodeAreaZone;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.bined.basic.EnterKeyHandlingMode;
+import org.exbin.bined.capability.CodeCharactersCaseCapable;
 import org.exbin.bined.delta.SegmentsRepository;
+import org.exbin.bined.extended.capability.PositionCodeTypeCapable;
 import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
+import org.exbin.bined.highlight.swing.extended.ExtendedHighlightNonAsciiCodeAreaPainter;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.swing.CodeAreaCommandHandler;
+import org.exbin.bined.swing.capability.FontCapable;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
@@ -141,7 +145,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2019/08/17
+ * @version 0.2.1 2019/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -194,16 +198,7 @@ public class BinedModule implements XBApplicationModule {
     private ClipboardCodeHandler clipboardCodeHandler;
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
 
-    private final int metaMask;
-
     public BinedModule() {
-        int metaMaskValue;
-        try {
-            metaMaskValue = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-        } catch (java.awt.HeadlessException ex) {
-            metaMaskValue = java.awt.Event.CTRL_MASK;
-        }
-        metaMask = metaMaskValue;
     }
 
     @Override
@@ -525,6 +520,8 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(TextFontOptionsImpl options) {
+                ExtCodeArea codeArea = getEditorProvider().getCodeArea();
+                ((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getFont(CodeAreaPreferences.DEFAULT_FONT));
                 textFontService.setCurrentFont(options.isUseDefaultFont() ? textFontService.getDefaultFont() : options.getFont(textFontService.getDefaultFont()));
             }
         };
@@ -618,7 +615,20 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(CodeAreaOptionsImpl options) {
-                CodeAreaOptionsImpl.applyToCodeArea(options, getEditorProvider().getCodeArea());
+                ExtCodeArea codeArea = getEditorProvider().getCodeArea();
+                codeTypeHandler.setCodeType(options.getCodeType());
+                // font
+                //((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getCodeFont());
+                showNonprintablesHandler.setShowNonprintables(options.isShowUnprintables());
+                hexCharactersCaseHandler.setHexCharactersCase(options.getCodeCharactersCase());
+                positionCodeTypeHandler.setCodeType(options.getPositionCodeType());
+                viewModeHandler.setViewMode(options.getViewMode());
+                ((ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter()).setNonAsciiHighlightingEnabled(options.isCodeColorization());
+                // codeArea.setRowWrapping(options.getRowWrappingMode());
+                codeArea.setMaxBytesPerRow(options.getMaxBytesPerRow());
+                codeArea.setMinRowPositionLength(options.getMinRowPositionLength());
+                codeArea.setMaxRowPositionLength(options.getMaxRowPositionLength());
+//                CodeAreaOptionsImpl.applyToCodeArea(options, getEditorProvider().getCodeArea());
             }
         };
         optionsModule.addOptionsPage(codeAreaOptionsPage);
@@ -658,7 +668,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(StatusOptionsImpl options) {
-                // TODO getEditorProvider().get
+                binaryStatusPanel.setStatusOptions(options);
             }
         };
         optionsModule.addOptionsPage(statusOptionsPage);

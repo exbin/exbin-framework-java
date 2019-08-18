@@ -66,13 +66,13 @@ public interface BinaryEditorProvider extends EditorProvider {
 
     void setCharset(Charset forName);
 
-    boolean changeShowNonprintables();
+    boolean isShowNonprintables();
+    
+    void setShowNonprintables(boolean show);
 
-    void showValuesPanel();
+    boolean isShowValuesPanel();
 
-    void hideValuesPanel();
-
-    boolean isValuesPanelVisible();
+    void setShowValuesPanel(boolean show);
 
     boolean changeLineWrap();
 

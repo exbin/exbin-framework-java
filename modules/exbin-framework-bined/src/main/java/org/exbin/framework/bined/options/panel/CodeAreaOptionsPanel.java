@@ -100,6 +100,11 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fontPanel = new javax.swing.JPanel();
+        useDefaultFontCheckBox = new javax.swing.JCheckBox();
+        fontLabel = new javax.swing.JLabel();
+        fontTextField = new javax.swing.JTextField();
+        selectFontButton = new javax.swing.JButton();
         codeCharactersModeComboBox = new javax.swing.JComboBox<>();
         viewModeComboBox = new javax.swing.JComboBox<>();
         showNonprintableCharactersCheckBox = new javax.swing.JCheckBox();
@@ -110,11 +115,6 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
         codeTypeScrollModeLabel = new javax.swing.JLabel();
         hexCharactersModeLabel = new javax.swing.JLabel();
         codeTypeComboBox = new javax.swing.JComboBox<>();
-        fontPanel = new javax.swing.JPanel();
-        useDefaultFontCheckBox = new javax.swing.JCheckBox();
-        fontLabel = new javax.swing.JLabel();
-        fontTextField = new javax.swing.JTextField();
-        selectFontButton = new javax.swing.JButton();
         maxBytesPerRowLabel = new javax.swing.JLabel();
         maxBytesPerRowSpinner = new javax.swing.JSpinner();
         minRowPositionLengthLabel = new javax.swing.JLabel();
@@ -122,28 +122,6 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
         maxRowPositionLengthLabel = new javax.swing.JLabel();
         maxRowPositionLengthSpinner = new javax.swing.JSpinner();
         rowWrappingModeCheckBox = new javax.swing.JCheckBox();
-
-        codeCharactersModeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LOWER", "UPPER" }));
-
-        viewModeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DUAL", "CODE_MATRIX", "TEXT_PREVIEW" }));
-
-        showNonprintableCharactersCheckBox.setText(resourceBundle.getString("showNonprintableCharactersCheckBox.text")); // NOI18N
-
-        viewModeScrollModeLabel.setText(resourceBundle.getString("viewModeScrollModeLabel.text")); // NOI18N
-
-        codeColorizationCheckBox.setText(resourceBundle.getString("codeColorizationCheckBox.text")); // NOI18N
-
-        positionCodeTypeLabel.setText(resourceBundle.getString("positionCodeTypeLabel.text")); // NOI18N
-
-        positionCodeTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OCTAL", "DECIMAL", "HEXADECIMAL" }));
-        positionCodeTypeComboBox.setSelectedIndex(2);
-
-        codeTypeScrollModeLabel.setText(resourceBundle.getString("codeTypeScrollModeLabel.text")); // NOI18N
-
-        hexCharactersModeLabel.setText(resourceBundle.getString("hexCharactersModeLabel.text")); // NOI18N
-
-        codeTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BINARY", "OCTAL", "DECIMAL", "HEXADECIMAL" }));
-        codeTypeComboBox.setSelectedIndex(3);
 
         fontPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceBundle.getString("fontPanel.border.title"))); // NOI18N
 
@@ -190,6 +168,28 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
                     .addComponent(selectFontButton)))
         );
 
+        codeCharactersModeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LOWER", "UPPER" }));
+
+        viewModeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DUAL", "CODE_MATRIX", "TEXT_PREVIEW" }));
+
+        showNonprintableCharactersCheckBox.setText(resourceBundle.getString("showNonprintableCharactersCheckBox.text")); // NOI18N
+
+        viewModeScrollModeLabel.setText(resourceBundle.getString("viewModeScrollModeLabel.text")); // NOI18N
+
+        codeColorizationCheckBox.setText(resourceBundle.getString("codeColorizationCheckBox.text")); // NOI18N
+
+        positionCodeTypeLabel.setText(resourceBundle.getString("positionCodeTypeLabel.text")); // NOI18N
+
+        positionCodeTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OCTAL", "DECIMAL", "HEXADECIMAL" }));
+        positionCodeTypeComboBox.setSelectedIndex(2);
+
+        codeTypeScrollModeLabel.setText(resourceBundle.getString("codeTypeScrollModeLabel.text")); // NOI18N
+
+        hexCharactersModeLabel.setText(resourceBundle.getString("hexCharactersModeLabel.text")); // NOI18N
+
+        codeTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BINARY", "OCTAL", "DECIMAL", "HEXADECIMAL" }));
+        codeTypeComboBox.setSelectedIndex(3);
+
         maxBytesPerRowLabel.setText(resourceBundle.getString("maxBytesPerRowLabel.text")); // NOI18N
 
         maxBytesPerRowSpinner.setModel(new javax.swing.SpinnerNumberModel(16, 0, null, 1));
@@ -213,13 +213,12 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(codeColorizationCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(showNonprintableCharactersCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(codeCharactersModeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(positionCodeTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(viewModeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(codeTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fontPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(codeColorizationCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(showNonprintableCharactersCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(maxBytesPerRowSpinner, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(minRowPositionLengthSpinner, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(maxRowPositionLengthSpinner, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -256,8 +255,6 @@ public class CodeAreaOptionsPanel extends javax.swing.JPanel implements OptionsC
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(codeCharactersModeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fontPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(showNonprintableCharactersCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(codeColorizationCheckBox)

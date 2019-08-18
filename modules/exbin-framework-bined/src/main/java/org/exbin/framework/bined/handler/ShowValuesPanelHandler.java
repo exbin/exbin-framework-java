@@ -29,9 +29,9 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
- * View values panel handler.
+ * Show values panel handler.
  *
- * @version 0.2.0 2019/08/16
+ * @version 0.2.0 2019/08/18
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -53,17 +53,16 @@ public class ShowValuesPanelHandler {
         showValuesPanelAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean valuesPanelShown = !editorProvider.isValuesPanelVisible();
-                if (valuesPanelShown) {
-                    editorProvider.showValuesPanel();
-                } else {
-                    editorProvider.hideValuesPanel();
-                }
-                showValuesPanelAction.putValue(Action.SELECTED_KEY, valuesPanelShown);
+                setShowValuesPanel(!editorProvider.isShowValuesPanel());
             }
         };
         ActionUtils.setupAction(showValuesPanelAction, resourceBundle, "showValuesPanelAction");
         showValuesPanelAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
+    }
+
+    public void setShowValuesPanel(boolean show) {
+        editorProvider.setShowValuesPanel(show);
+        showValuesPanelAction.putValue(Action.SELECTED_KEY, show);
     }
 
     @Nonnull

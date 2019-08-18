@@ -24,13 +24,15 @@ import java.util.regex.Pattern;
 /**
  * File preferences class.
  *
- * @version 0.2.0 2016/11/28
+ * @version 0.2.0 2019/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class FilePreferencesFactory implements PreferencesFactory {
 
     public static String preferenceFilename = "prefs.xml";
     public static String preferencesPath = null;
+    private static final String PREFERENCES_FACTORY_PROPERTY = "java.util.prefs.PreferencesFactory";
+    private static final String PREFERENCES_FACTORY_CLASS = "org.exbin.framework.preferences.FilePreferencesFactory";
     private Preferences userPreferences;
     private Preferences systemPreferences;
 
@@ -61,7 +63,7 @@ public class FilePreferencesFactory implements PreferencesFactory {
     }
 
     public FilePreferences userNodeForPackage(Class clazz) {
-        System.setProperty("java.util.prefs.PreferencesFactory", "org.exbin.framework.FilePreferencesFactory");
+        System.setProperty(PREFERENCES_FACTORY_PROPERTY, PREFERENCES_FACTORY_CLASS);
         FilePreferences preferences = (FilePreferences) userRoot();
         String[] packageComponents = clazz.getPackage().getName().split(Pattern.quote("."));
         for (String packageComponent : packageComponents) {

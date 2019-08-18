@@ -18,6 +18,7 @@ package org.exbin.framework.bined.handler;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
@@ -29,7 +30,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * View nonprintables handler.
  *
- * @version 0.2.1 2019/07/15
+ * @version 0.2.1 2019/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class ShowNonprintablesHandler {
@@ -51,8 +52,7 @@ public class ShowNonprintablesHandler {
         viewNonprintablesAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean showUnprintables = editorProvider.changeShowNonprintables();
-                viewNonprintablesAction.putValue(Action.SELECTED_KEY, showUnprintables);
+                setShowNonprintables(!editorProvider.isShowNonprintables());
             }
         };
         ActionUtils.setupAction(viewNonprintablesAction, resourceBundle, "viewNonprintablesAction");
@@ -62,18 +62,25 @@ public class ShowNonprintablesHandler {
         viewNonprintablesToolbarAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean showUnprintables = editorProvider.changeShowNonprintables();
-                viewNonprintablesAction.putValue(Action.SELECTED_KEY, showUnprintables);
+                setShowNonprintables(!editorProvider.isShowNonprintables());
             }
         };
         ActionUtils.setupAction(viewNonprintablesToolbarAction, resourceBundle, "viewNonprintablesToolbarAction");
         viewNonprintablesToolbarAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
     }
+    
+    public void setShowNonprintables(boolean showNonprintables) {
+        editorProvider.setShowNonprintables(showNonprintables);
+        viewNonprintablesAction.putValue(Action.SELECTED_KEY, showNonprintables);
+        viewNonprintablesToolbarAction.putValue(Action.SELECTED_KEY, showNonprintables);
+    }
 
+    @Nonnull
     public Action getViewNonprintablesAction() {
         return viewNonprintablesAction;
     }
 
+    @Nonnull
     public Action getViewNonprintablesToolbarAction() {
         return viewNonprintablesToolbarAction;
     }

@@ -142,11 +142,31 @@ public class CodeTypeHandler {
 
     public void setCodeType(CodeType codeType) {
         this.codeType = codeType;
+        switch (codeType) {
+            case BINARY: {
+                binaryCodeTypeAction.putValue(Action.SELECTED_KEY, Boolean.TRUE);
+                break;
+            }
+            case OCTAL: {
+                octalCodeTypeAction.putValue(Action.SELECTED_KEY, Boolean.TRUE);
+                break;
+            }
+            case DECIMAL: {
+                decimalCodeTypeAction.putValue(Action.SELECTED_KEY, Boolean.TRUE);
+                break;
+            }
+            case HEXADECIMAL: {
+                hexadecimalCodeTypeAction.putValue(Action.SELECTED_KEY, Boolean.TRUE);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Unexpected code tyoe " + codeType.name());
+        }
         BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
         ((CodeTypeCapable) activePanel.getCodeArea()).setCodeType(codeType);
         updateCycleButtonName();
     }
-    
+
     private void updateCycleButtonName() {
         cycleCodeTypesAction.putValue(Action.NAME, codeType.name().substring(0, 3));
     }
