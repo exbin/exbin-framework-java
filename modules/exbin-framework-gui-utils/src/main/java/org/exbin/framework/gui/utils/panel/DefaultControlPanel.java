@@ -54,6 +54,11 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
                 performClick(DefaultControlHandler.ControlActionType.CANCEL);
             }
         };
+        init();
+    }
+    
+    private void init() {
+        WindowUtils.assignGlobalKeyListener(this, okCancelListener);
     }
 
     public void setHandler(DefaultControlHandler handler) {

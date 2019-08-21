@@ -54,6 +54,11 @@ public class RemovalControlPanel extends javax.swing.JPanel implements RemovalCo
                 performClick(RemovalControlHandler.ControlActionType.CANCEL);
             }
         };
+        init();
+    }
+    
+    private void init() {
+        WindowUtils.assignGlobalKeyListener(this, okCancelListener);
     }
 
     public void setHandler(RemovalControlHandler handler) {

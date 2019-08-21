@@ -54,6 +54,11 @@ public class CloseControlPanel extends javax.swing.JPanel implements CloseContro
                 performCloseClick();
             }
         };
+        init();
+    }
+    
+    private void init() {
+        WindowUtils.assignGlobalKeyListener(this, okCancelListener);
     }
 
     public void setHandler(CloseControlHandler handler) {

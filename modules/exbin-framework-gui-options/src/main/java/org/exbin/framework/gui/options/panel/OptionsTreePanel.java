@@ -18,6 +18,7 @@ package org.exbin.framework.gui.options.panel;
 
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -41,21 +42,24 @@ import org.exbin.framework.gui.options.api.OptionsPathItem;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsPage;
+import org.exbin.framework.gui.utils.LazyComponentListener;
+import org.exbin.framework.gui.utils.LazyComponentsIssuable;
 
 /**
  * Panel for application options and preferences setting.
  *
- * @version 0.2.1 2019/07/21
+ * @version 0.2.1 2019/08/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class OptionsTreePanel extends javax.swing.JPanel {
+public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponentsIssuable {
 
     private Preferences preferences = null;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsTreePanel.class);
     private Map<String, PageRecord<?>> optionPages;
     private PageRecord<?> currentOptionsPanel = null;
     private OptionsModifiedListener optionsModifiedListener;
+    private final List<LazyComponentListener> listeners = new ArrayList<>();
 
     private boolean modified;
     private OptionsMutableTreeNode top;
@@ -331,6 +335,19 @@ public class OptionsTreePanel extends javax.swing.JPanel {
 
     public void setLanguageLocales(Collection<Locale> locales) {
         // TODO (mainOptionsPage.createOptions()).setLanguageLocales(locales);
+    }
+
+    @Override
+    public void addChildComponentListener(LazyComponentListener listener) {
+        listeners.add(listener);
+        for (PageRecord<?> pageRecord : optionPages.values()) {
+            listener.componentCreated((Component) pageRecord.panel);
+        }
+    }
+
+    @Override
+    public void removeChildComponentListener(LazyComponentListener listener) {
+        listeners.remove(listener);
     }
 
     @ParametersAreNonnullByDefault
