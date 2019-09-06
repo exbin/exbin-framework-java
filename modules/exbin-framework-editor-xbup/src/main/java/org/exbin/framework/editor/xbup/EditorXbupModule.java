@@ -208,9 +208,9 @@ public class EditorXbupModule implements XBApplicationModule {
         getViewModeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_MODE_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getTreeModeAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getPreviewModeAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
         menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getTextModeAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getHexModeAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getBinaryModeAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
     }
 
     public void registerStatusBar() {

@@ -52,7 +52,7 @@ public class PropertyPanelHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof XBDocumentPanel) {
-                    ((XBDocumentPanel) editorProvider).setSplitMode(((JMenuItem) e.getSource()).isSelected());
+                    ((XBDocumentPanel) editorProvider).setShowPropertiesPanel(((JMenuItem) e.getSource()).isSelected());
                 }
             }
         };

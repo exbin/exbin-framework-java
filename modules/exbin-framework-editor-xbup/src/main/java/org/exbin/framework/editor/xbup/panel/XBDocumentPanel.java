@@ -16,7 +16,6 @@
  */
 package org.exbin.framework.editor.xbup.panel;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -38,7 +37,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JTabbedPane;
 import javax.swing.event.TreeSelectionEvent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.panel.BinaryPanel;
@@ -85,7 +83,7 @@ import org.exbin.framework.editor.text.service.TextSearchService;
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.1 2019/07/17
+ * @version 0.2.1 2019/09/06
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -96,13 +94,14 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private URI fileUri = null;
     private FileType fileType = null;
     private XBACatalog catalog;
-    private boolean splitMode = false;
+    private boolean showPropertiesPanel = false;
 
-    private PanelMode mode = PanelMode.TREE;
+    private PanelMode mode = PanelMode.PREVIEW;
 
+    private final JPanel previewPanel = new JPanel();
     private final XBDocTreePanel treePanel;
     private final BinaryPanel binaryPanel;
-    private final BinaryStatusPanel hexStatusPanel;
+    private final BinaryStatusPanel binaryStatusPanel;
     private final TextPanel textPanel;
 
     private XBPropertyPanel propertyPanel;
@@ -122,9 +121,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
         binaryPanel = new BinaryPanel();
-        hexStatusPanel = new BinaryStatusPanel();
-        binaryPanel.registerBinaryStatus(hexStatusPanel);
-        // hexPanel.setNoBorder();
+        binaryStatusPanel = new BinaryStatusPanel();
+        binaryPanel.registerBinaryStatus(binaryStatusPanel);
+        // binaryPanel.setNoBorder();
         textPanel = new TextPanel();
         textPanel.setNoBorder();
 
@@ -152,8 +151,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             }
         });
 
-        changeSplitMode();
-        splitMode = true;
+        mainSplitPane.setLeftComponent(treePanel);
+        mainSplitPane.setRightComponent(mainTabbedPane);
+        setShowPropertiesPanel(true);
         //updateItem();
     }
 
@@ -183,14 +183,11 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         popupItemPropertiesMenuItem = new javax.swing.JMenuItem();
         mainTabbedPane = new javax.swing.JTabbedPane();
-        treeTabPanel = new javax.swing.JPanel();
-        sourceTabPanel = new javax.swing.JPanel();
-        hexTabPanel = new javax.swing.JPanel();
+        previewTabPanel = new javax.swing.JPanel();
+        textTabPanel = new javax.swing.JPanel();
+        binaryTabPanel = new javax.swing.JPanel();
+        viewSplitPane = new javax.swing.JSplitPane();
         mainSplitPane = new javax.swing.JSplitPane();
-        splitTabbedPane = new javax.swing.JTabbedPane();
-        treeTabPanel1 = new javax.swing.JPanel();
-        sourceTabPanel1 = new javax.swing.JPanel();
-        hexTabPanel1 = new javax.swing.JPanel();
 
         popupItemViewMenuItem.setText(resourceBundle.getString("popupItemViewMenuItem.text")); // NOI18N
         popupItemViewMenuItem.setToolTipText(resourceBundle.getString("popupItemViewMenuItem.toolTipText")); // NOI18N
@@ -221,8 +218,6 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         });
         popupMenu.add(popupItemPropertiesMenuItem);
 
-        setLayout(new java.awt.CardLayout());
-
         mainTabbedPane.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         mainTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -230,40 +225,21 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             }
         });
 
-        treeTabPanel.setLayout(new java.awt.BorderLayout());
-        mainTabbedPane.addTab("Tree", treeTabPanel);
+        previewTabPanel.setLayout(new java.awt.BorderLayout());
+        mainTabbedPane.addTab("Preview", previewTabPanel);
 
-        sourceTabPanel.setLayout(new java.awt.BorderLayout());
-        mainTabbedPane.addTab("Source", sourceTabPanel);
+        textTabPanel.setLayout(new java.awt.BorderLayout());
+        mainTabbedPane.addTab("Text", textTabPanel);
 
-        hexTabPanel.setLayout(new java.awt.BorderLayout());
-        mainTabbedPane.addTab("Hex", hexTabPanel);
+        binaryTabPanel.setLayout(new java.awt.BorderLayout());
+        mainTabbedPane.addTab("Binary", binaryTabPanel);
 
-        add(mainTabbedPane, "main");
+        setLayout(new java.awt.BorderLayout());
 
         mainSplitPane.setBorder(null);
         mainSplitPane.setDividerSize(8);
         mainSplitPane.setResizeWeight(1.0);
-
-        splitTabbedPane.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
-        splitTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                splitTabbedPaneStateChanged(evt);
-            }
-        });
-
-        treeTabPanel1.setLayout(new java.awt.BorderLayout());
-        splitTabbedPane.addTab("Tree", treeTabPanel1);
-
-        sourceTabPanel1.setLayout(new java.awt.BorderLayout());
-        splitTabbedPane.addTab("Source", sourceTabPanel1);
-
-        hexTabPanel1.setLayout(new java.awt.BorderLayout());
-        splitTabbedPane.addTab("Hex", hexTabPanel1);
-
-        mainSplitPane.setLeftComponent(splitTabbedPane);
-
-        add(mainSplitPane, "split");
+        add(mainSplitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void popupItemPropertiesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupItemPropertiesMenuItemActionPerformed
@@ -282,10 +258,6 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         setMode(PanelMode.values()[mainTabbedPane.getSelectedIndex()]);
     }//GEN-LAST:event_mainTabbedPaneStateChanged
 
-    private void splitTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_splitTabbedPaneStateChanged
-        setMode(PanelMode.values()[splitTabbedPane.getSelectedIndex()]);
-    }//GEN-LAST:event_splitTabbedPaneStateChanged
-
     public XBTTreeNode getSelectedItem() {
         return treePanel.getSelectedItem();
     }
@@ -300,11 +272,11 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     public boolean isEditEnabled() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 return treePanel.isEditEnabled();
             case TEXT:
                 return false;
-            case HEX:
+            case BINARY:
                 return false;
             default:
                 return false;
@@ -313,11 +285,11 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     public boolean isAddEnabled() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 return treePanel.isAddEnabled();
             case TEXT:
                 return false;
-            case HEX:
+            case BINARY:
                 return false;
             default:
                 return false;
@@ -357,13 +329,13 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public void performCut() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 treePanel.performCut();
                 break;
             case TEXT:
                 textPanel.performCut();
                 break;
-            case HEX:
+            case BINARY:
                 binaryPanel.performCut();
             default:
                 break;
@@ -373,13 +345,13 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public void performCopy() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 treePanel.performCopy();
                 break;
             case TEXT:
                 textPanel.performCopy();
                 break;
-            case HEX:
+            case BINARY:
                 binaryPanel.performCopy();
             default:
                 break;
@@ -389,13 +361,13 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public void performPaste() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 treePanel.performPaste();
                 break;
             case TEXT:
                 textPanel.performPaste();
                 break;
-            case HEX:
+            case BINARY:
                 binaryPanel.performPaste();
                 break;
             default:
@@ -406,13 +378,13 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public void performSelectAll() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 treePanel.performSelectAll();
                 break;
             case TEXT:
                 textPanel.performSelectAll();
                 break;
-            case HEX:
+            case BINARY:
                 binaryPanel.performSelectAll();
                 break;
             default:
@@ -427,13 +399,13 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public void performDelete() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 treePanel.performDelete();
                 break;
             case TEXT:
                 textPanel.performDelete();
                 break;
-            case HEX:
+            case BINARY:
                 binaryPanel.performDelete();
                 break;
             default:
@@ -444,12 +416,12 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     public void setMode(PanelMode mode) {
         if (this.mode != mode) {
             switch (this.mode) {
-                case TREE:
+                case PREVIEW:
                     break;
                 case TEXT: {
                     break;
                 }
-                case HEX: {
+                case BINARY: {
                     // TODO: Replace stupid buffer copy later
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                     try {
@@ -467,7 +439,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                     throw new InternalError("Unknown mode");
             }
             switch (mode) {
-                case TREE:
+                case PREVIEW:
                     break;
                 case TEXT: {
                     String text = "<!XBUP version=\"0.1\">\n";
@@ -477,7 +449,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                     textPanel.setText(text);
                     break;
                 }
-                case HEX: {
+                case BINARY: {
                     // TODO: Replace stupid buffer copy later
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                     try {
@@ -509,16 +481,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     public void showPanel() {
-        JTabbedPane tabPane;
-        if (splitMode) {
-            tabPane = splitTabbedPane;
-        } else {
-            tabPane = mainTabbedPane;
-        }
-
         int index = getMode().ordinal();
-        tabPane.setSelectedIndex(index);
-        ((JPanel) tabPane.getComponentAt(index)).add(getPanel(index));
+        mainTabbedPane.setSelectedIndex(index);
+        ((JPanel) mainTabbedPane.getComponentAt(index)).add(getPanel(index));
     }
 
     private StringBuffer nodeAsText(XBTTreeNode node, String prefix) {
@@ -557,8 +522,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel hexTabPanel;
-    private javax.swing.JPanel hexTabPanel1;
+    private javax.swing.JPanel binaryTabPanel;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JTabbedPane mainTabbedPane;
@@ -566,11 +530,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private javax.swing.JMenuItem popupItemPropertiesMenuItem;
     private javax.swing.JMenuItem popupItemViewMenuItem;
     private javax.swing.JPopupMenu popupMenu;
-    private javax.swing.JPanel sourceTabPanel;
-    private javax.swing.JPanel sourceTabPanel1;
-    private javax.swing.JTabbedPane splitTabbedPane;
-    private javax.swing.JPanel treeTabPanel;
-    private javax.swing.JPanel treeTabPanel1;
+    private javax.swing.JPanel previewTabPanel;
+    private javax.swing.JPanel textTabPanel;
+    private javax.swing.JSplitPane viewSplitPane;
     // End of variables declaration//GEN-END:variables
 
     public void setEditEnabled(boolean editEnabled) {
@@ -768,33 +730,24 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         dialog.showCentered(this);
     }
 
-    public void setSplitMode(boolean mode) {
-        if (mode != splitMode) {
-            changeSplitMode();
-            splitMode = mode;
-        }
-    }
+    public void setShowPropertiesPanel(boolean showPropertiesPanel) {
+        if (this.showPropertiesPanel != showPropertiesPanel) {
+            if (showPropertiesPanel) {
+                viewSplitPane.setLeftComponent(mainTabbedPane);
+                viewSplitPane.setRightComponent(propertyPanel);
+                mainSplitPane.setRightComponent(viewSplitPane);
+            } else {
+                mainSplitPane.setRightComponent(mainTabbedPane);
+            }
 
-    private void changeSplitMode() {
-        if (splitMode) {
-            ((CardLayout) getLayout()).show(this, "main");
-            int selectedIndex = splitTabbedPane.getSelectedIndex();
-            ((JPanel) mainTabbedPane.getComponentAt(selectedIndex)).add(getPanel(selectedIndex));
-            mainTabbedPane.setSelectedIndex(selectedIndex);
-        } else {
-            ((CardLayout) getLayout()).show(this, "split");
-            int selectedIndex = mainTabbedPane.getSelectedIndex();
-            ((JPanel) splitTabbedPane.getComponentAt(selectedIndex)).add(getPanel(selectedIndex));
-            splitTabbedPane.setSelectedIndex(selectedIndex);
+            this.showPropertiesPanel = showPropertiesPanel;
         }
-        splitMode = !splitMode;
-        showPanel();
     }
 
     private Component getPanel(int index) {
         switch (index) {
             case 0:
-                return treePanel;
+                return previewPanel;
             case 1:
                 return textPanel;
             case 2:
@@ -808,8 +761,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 //        int selectedIndex = mainTabbedPane.getSelectedIndex();
 //        return (ActivePanelActionHandling) getPanel(selectedIndex);
 //    }
-    public boolean isSplitMode() {
-        return splitMode;
+    public boolean isShowPropertiesPanel() {
+        return showPropertiesPanel;
     }
 
     public PanelMode getMode() {
@@ -859,12 +812,12 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     public boolean updateActionStatus(Component component) {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
 //                return treePanel.updateActionStatus(component);
             case TEXT: {
                 return false;
             }
-            case HEX: {
+            case BINARY: {
                 return false;
             }
         }
@@ -874,7 +827,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     public void releaseActionStatus() {
         switch (mode) {
-            case TREE: {
+            case PREVIEW: {
 //                treePanel.releaseActionStatus();
                 break;
             }
@@ -883,7 +836,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     public boolean performAction(String eventName, ActionEvent event) {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
 //                return treePanel.performAction(eventName, event);
         }
 
@@ -917,11 +870,11 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public boolean isSelection() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 return treePanel.isSelection();
             case TEXT:
                 return textPanel.isSelection();
-            case HEX:
+            case BINARY:
                 // TODO
                 return true;
             default:
@@ -932,11 +885,11 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public boolean isEditable() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 return treePanel.isEditEnabled();
             case TEXT:
                 return true;
-            case HEX:
+            case BINARY:
                 return binaryPanel.isEditable();
             default:
                 return false;
@@ -946,12 +899,12 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public boolean canSelectAll() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 // TODO Multiple selection in tree
                 return true;
             case TEXT:
                 return true;
-            case HEX:
+            case BINARY:
                 return true;
             default:
                 return false;
@@ -961,12 +914,12 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public boolean canPaste() {
         switch (mode) {
-            case TREE:
+            case PREVIEW:
                 return treePanel.isPasteEnabled();
             case TEXT:
                 // TODO Allow to paste text only
                 return true;
-            case HEX:
+            case BINARY:
                 return binaryPanel.canPaste();
             default:
                 return false;
@@ -986,9 +939,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     public enum PanelMode {
-        TREE,
+        PREVIEW,
         TEXT,
-        HEX
+        BINARY
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {
@@ -1032,7 +985,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             }
 
             if (operation instanceof XBTDocOperation) {
-                setMode(PanelMode.TREE);
+                setMode(PanelMode.PREVIEW);
             } else {
                 // TODO
             }

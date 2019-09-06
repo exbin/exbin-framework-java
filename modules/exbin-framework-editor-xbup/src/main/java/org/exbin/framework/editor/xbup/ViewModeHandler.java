@@ -18,6 +18,8 @@ package org.exbin.framework.editor.xbup;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
@@ -29,9 +31,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * View mode handler.
  *
- * @version 0.2.0 2016/02/11
+ * @version 0.2.1 2019/09/06
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ViewModeHandler {
 
     public static String VIEW_MODE_RADIO_GROUP_ID = "viewModeRadioGroup";
@@ -40,11 +43,11 @@ public class ViewModeHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private Action viewTreeModeAction;
+    private Action viewPreviewModeAction;
     private Action viewTextModeAction;
-    private Action viewHexModeAction;
+    private Action viewBinaryModeAction;
 
-    private XBDocumentPanel.PanelMode viewMode = XBDocumentPanel.PanelMode.TREE;
+    private XBDocumentPanel.PanelMode viewMode = XBDocumentPanel.PanelMode.PREVIEW;
 
     public ViewModeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -53,18 +56,18 @@ public class ViewModeHandler {
     }
 
     public void init() {
-        viewTreeModeAction = new AbstractAction() {
+        viewPreviewModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof XBDocumentPanel) {
-                    setViewMode(XBDocumentPanel.PanelMode.TREE);
+                    setViewMode(XBDocumentPanel.PanelMode.PREVIEW);
                 }
             }
         };
-        ActionUtils.setupAction(viewTreeModeAction, resourceBundle, "viewTreeModeAction");
-        viewTreeModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        viewTreeModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewTreeModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.TREE);
+        ActionUtils.setupAction(viewPreviewModeAction, resourceBundle, "viewPreviewModeAction");
+        viewPreviewModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
+        viewPreviewModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
+        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.PREVIEW);
 
         viewTextModeAction = new AbstractAction() {
             @Override
@@ -79,18 +82,18 @@ public class ViewModeHandler {
         viewTextModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
         viewTextModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.TEXT);
 
-        viewHexModeAction = new AbstractAction() {
+        viewBinaryModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof XBDocumentPanel) {
-                    setViewMode(XBDocumentPanel.PanelMode.HEX);
+                    setViewMode(XBDocumentPanel.PanelMode.BINARY);
                 }
             }
         };
-        ActionUtils.setupAction(viewHexModeAction, resourceBundle, "viewHexModeAction");
-        viewHexModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewHexModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        viewHexModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.HEX);
+        ActionUtils.setupAction(viewBinaryModeAction, resourceBundle, "viewBinaryModeAction");
+        viewBinaryModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
+        viewBinaryModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
+        viewBinaryModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.BINARY);
     }
 
     public void setViewMode(XBDocumentPanel.PanelMode viewMode) {
@@ -103,15 +106,18 @@ public class ViewModeHandler {
         return viewMode;
     }
 
-    public Action getTreeModeAction() {
-        return viewTreeModeAction;
+    @Nonnull
+    public Action getPreviewModeAction() {
+        return viewPreviewModeAction;
     }
 
+    @Nonnull
     public Action getTextModeAction() {
         return viewTextModeAction;
     }
 
-    public Action getHexModeAction() {
-        return viewHexModeAction;
+    @Nonnull
+    public Action getBinaryModeAction() {
+        return viewBinaryModeAction;
     }
 }

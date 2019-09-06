@@ -500,7 +500,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         if (activePanel == null) {
             return false;
         }
-        return activePanel.isEditEnabled() && (activePanel.getMode() == XBDocumentPanel.PanelMode.TREE);
+        return activePanel.isEditEnabled();
     }
 
     public boolean isPasteEnabled() {
