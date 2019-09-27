@@ -86,7 +86,7 @@ import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 /**
  * Binary editor panel.
  *
- * @version 0.2.1 2019/08/18
+ * @version 0.2.1 2019/09/26
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi {
@@ -453,7 +453,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         }
 
         try {
-            BinaryData oldData = codeArea.getContentData();
+            BinaryData oldData = Objects.requireNonNull(codeArea.getContentData());
             if (memoryMode) {
                 FileDataSource openFileSource = segmentsRepository.openFileSource(file);
                 DeltaDocument document = segmentsRepository.createDocument(openFileSource);
@@ -489,16 +489,17 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         try {
             if (codeArea.getContentData() instanceof DeltaDocument) {
                 // TODO freeze window / replace with progress bar
-                DeltaDocument document = (DeltaDocument) codeArea.getContentData();
-                if (document == null || !file.equals(document.getFileSource().getFile())) {
-                    FileDataSource fileSource = segmentsRepository.openFileSource(file);
+                DeltaDocument document = (DeltaDocument) Objects.requireNonNull(codeArea.getContentData());
+                FileDataSource fileSource = document.getFileSource();
+                if (fileSource == null || !file.equals(fileSource.getFile())) {
+                    fileSource = segmentsRepository.openFileSource(file);
                     document.setFileSource(fileSource);
                 }
                 segmentsRepository.saveDocument(document);
                 this.fileUri = fileUri;
             } else {
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                    codeArea.getContentData().saveToStream(outputStream);
+                    Objects.requireNonNull(codeArea.getContentData()).saveToStream(outputStream);
                     this.fileUri = fileUri;
                 }
             }
