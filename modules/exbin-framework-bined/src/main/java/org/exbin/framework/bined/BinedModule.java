@@ -475,7 +475,7 @@ public class BinedModule implements XBApplicationModule {
                             DefaultControlPanel controlPanel = new DefaultControlPanel();
                             JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
                             final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                            WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
+                            WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
                             frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                                 if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
@@ -696,7 +696,7 @@ public class BinedModule implements XBApplicationModule {
 
                     ThemeProfileResult result = new ThemeProfileResult();
                     final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Add Theme Profile", Dialog.ModalityType.APPLICATION_MODAL);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), themeProfilePanel.getClass(), themeProfilePanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), themeProfilePanel.getClass(), themeProfilePanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
@@ -724,7 +724,7 @@ public class BinedModule implements XBApplicationModule {
 
                     ThemeProfileResult result = new ThemeProfileResult();
                     final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Edit Theme Profile", Dialog.ModalityType.APPLICATION_MODAL);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), themeProfilePanel.getClass(), themeProfilePanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), themeProfilePanel.getClass(), themeProfilePanel.getResourceBundle());
                     namedProfilePanel.setProfileName(profileRecord.getProfileName());
                     themeProfilePanel.setThemeProfile(profileRecord.getThemeProfile());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
@@ -755,7 +755,7 @@ public class BinedModule implements XBApplicationModule {
 
                     ThemeProfileResult result = new ThemeProfileResult();
                     final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Copy Theme Profile", Dialog.ModalityType.APPLICATION_MODAL);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), themeProfilePanel.getClass(), themeProfilePanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), themeProfilePanel.getClass(), themeProfilePanel.getResourceBundle());
                     themeProfilePanel.setThemeProfile(profileRecord.getThemeProfile());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
@@ -834,7 +834,7 @@ public class BinedModule implements XBApplicationModule {
 
                     LayoutProfileResult result = new LayoutProfileResult();
                     final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Add Layout Profile", Dialog.ModalityType.APPLICATION_MODAL);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), layoutProfilePanel.getClass(), layoutProfilePanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), layoutProfilePanel.getClass(), layoutProfilePanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
@@ -862,7 +862,7 @@ public class BinedModule implements XBApplicationModule {
 
                     LayoutProfileResult result = new LayoutProfileResult();
                     final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Edit Layout Profile", Dialog.ModalityType.APPLICATION_MODAL);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), layoutProfilePanel.getClass(), layoutProfilePanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), layoutProfilePanel.getClass(), layoutProfilePanel.getResourceBundle());
                     namedProfilePanel.setProfileName(profileRecord.getProfileName());
                     layoutProfilePanel.setLayoutProfile(profileRecord.getLayoutProfile());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
@@ -893,7 +893,7 @@ public class BinedModule implements XBApplicationModule {
 
                     LayoutProfileResult result = new LayoutProfileResult();
                     final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Copy Layout Profile", Dialog.ModalityType.APPLICATION_MODAL);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), layoutProfilePanel.getClass(), layoutProfilePanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), layoutProfilePanel.getClass(), layoutProfilePanel.getResourceBundle());
                     layoutProfilePanel.setLayoutProfile(profileRecord.getLayoutProfile());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
@@ -972,7 +972,7 @@ public class BinedModule implements XBApplicationModule {
 
                     ColorProfileResult result = new ColorProfileResult();
                     final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Add Colors Profile", Dialog.ModalityType.APPLICATION_MODAL);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), colorProfilePanel.getClass(), colorProfilePanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), colorProfilePanel.getClass(), colorProfilePanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
@@ -999,7 +999,7 @@ public class BinedModule implements XBApplicationModule {
 
                     ColorProfileResult result = new ColorProfileResult();
                     final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Edit Colors Profile", Dialog.ModalityType.APPLICATION_MODAL);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), colorProfilePanel.getClass(), colorProfilePanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), colorProfilePanel.getClass(), colorProfilePanel.getResourceBundle());
                     namedProfilePanel.setProfileName(profileRecord.getProfileName());
                     colorProfilePanel.setColorProfile(profileRecord.getColorProfile());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
@@ -1030,7 +1030,7 @@ public class BinedModule implements XBApplicationModule {
 
                     ColorProfileResult result = new ColorProfileResult();
                     final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Copy Colors Profile", Dialog.ModalityType.APPLICATION_MODAL);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), colorProfilePanel.getClass(), colorProfilePanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), colorProfilePanel.getClass(), colorProfilePanel.getResourceBundle());
                     colorProfilePanel.setColorProfile(profileRecord.getColorProfile());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {

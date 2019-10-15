@@ -198,7 +198,7 @@ public class GuiUndoModule implements GuiUndoModuleApi {
             dialog.close();
             dialog.dispose();
         });
-        WindowUtils.addHeaderPanel(dialog.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle(), undoManagerControlPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
         dialog.showCentered(frameModule.getFrame());
     }
 

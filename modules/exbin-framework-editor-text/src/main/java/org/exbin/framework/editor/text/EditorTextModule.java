@@ -262,7 +262,7 @@ public class EditorTextModule implements XBApplicationModule {
                             DefaultControlPanel controlPanel = new DefaultControlPanel();
                             JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
                             final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                            WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle(), controlPanel);
+                            WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
                             frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                                 if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {

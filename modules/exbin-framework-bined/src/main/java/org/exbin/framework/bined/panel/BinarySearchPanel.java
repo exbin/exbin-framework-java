@@ -636,7 +636,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         DefaultControlPanel controlPanel = new DefaultControlPanel(findBinaryPanel.getResourceBundle());
         final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findBinaryPanel, controlPanel));
         frameModule.setDialogTitle(dialog, findBinaryPanel.getResourceBundle());
-        WindowUtils.addHeaderPanel(dialog.getWindow(), findBinaryPanel.getClass(), findBinaryPanel.getResourceBundle(), controlPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), findBinaryPanel.getClass(), findBinaryPanel.getResourceBundle());
         findBinaryPanel.setMultilineEditorListener(new FindBinaryPanel.MultilineEditorListener() {
             @Override
             public SearchCondition multilineEdit(SearchCondition condition) {
@@ -647,7 +647,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
                 JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 final DialogWrapper multilineDialog = frameModule.createDialog(dialog.getWindow(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
-                WindowUtils.addHeaderPanel(multilineDialog.getWindow(), multilinePanel.getClass(), multilinePanel.getResourceBundle(), controlPanel);
+                WindowUtils.addHeaderPanel(multilineDialog.getWindow(), multilinePanel.getClass(), multilinePanel.getResourceBundle());
                 frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
                 final SearchConditionResult result = new SearchConditionResult();
                 controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {

@@ -347,7 +347,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         MultiStepControlPanel controlPanel = new MultiStepControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(addItemPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, addItemPanel.getResourceBundle(), controlPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, addItemPanel.getResourceBundle());
         controlPanel.setHandler((MultiStepControlHandler.ControlActionType actionType) -> {
             switch (actionType) {
                 case FINISH: {

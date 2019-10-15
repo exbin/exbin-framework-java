@@ -72,7 +72,7 @@ public class ToolsOptionsHandler {
                 DefaultControlPanel controlPanel = new DefaultControlPanel(waveColorPanel.getResourceBundle());
                 JPanel dialogPanel = WindowUtils.createDialogPanel(waveColorPanel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), waveColorPanel.getClass(), waveColorPanel.getResourceBundle(), controlPanel);
+                WindowUtils.addHeaderPanel(dialog.getWindow(), waveColorPanel.getClass(), waveColorPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, waveColorPanel.getResourceBundle());
                 controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                     if (actionType == ControlActionType.OK) {

@@ -67,7 +67,7 @@ public class ToolsOptionsHandler {
                 DefaultControlPanel controlPanel = new DefaultControlPanel(toolColorPanel.getResourceBundle());
                 JPanel dialogPanel = WindowUtils.createDialogPanel(toolColorPanel, controlPanel);
                 final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                WindowUtils.addHeaderPanel(dialog.getWindow(), toolColorPanel.getClass(), toolColorPanel.getResourceBundle(), controlPanel);
+                WindowUtils.addHeaderPanel(dialog.getWindow(), toolColorPanel.getClass(), toolColorPanel.getResourceBundle());
                 frameModule.setDialogTitle(dialog, toolColorPanel.getResourceBundle());
                 controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                     if (actionType == ControlActionType.OK) {

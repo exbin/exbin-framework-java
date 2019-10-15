@@ -67,7 +67,7 @@ public class PropertiesHandler {
                     JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
 
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle(), controlPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
                     controlPanel.setHandler(dialog::close);
                     dialog.showCentered((Component) e.getSource());
