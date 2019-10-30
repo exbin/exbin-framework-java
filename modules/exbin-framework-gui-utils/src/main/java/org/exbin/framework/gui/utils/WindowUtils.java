@@ -43,10 +43,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
@@ -322,7 +324,7 @@ public class WindowUtils {
                 Window window = SwingUtilities.getWindowAncestor(event.getSource() instanceof JRootPane ? (JRootPane) event.getSource() : rootPane);
                 if (window != null) {
                     Component focusOwner = window.getFocusOwner();
-                    if (focusOwner instanceof JTextComponent) {
+                    if (focusOwner instanceof JTextArea || focusOwner instanceof JEditorPane) {
                         performOkAction = !((JTextComponent) focusOwner).isEditable();
                     }
                 }
