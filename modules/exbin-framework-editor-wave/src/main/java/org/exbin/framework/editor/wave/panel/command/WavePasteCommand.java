@@ -19,7 +19,7 @@ package org.exbin.framework.editor.wave.panel.command;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.util.Date;
-import org.exbin.utils.binary_data.BinaryData;
+import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.audio.wave.XBWave;
 import org.exbin.xbup.operation.AbstractCommand;

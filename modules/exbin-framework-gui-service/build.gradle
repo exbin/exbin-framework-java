@@ -37,7 +37,7 @@ dependencies {
     compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-tree')
     compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-command')
     compile moduleDep('XbupDataJava', 'org.exbin.xbup.data', 'xbup-data-visual')
-    compile moduleDep('ExbinUtilsJava', 'org.exbin.utils', 'simplyhtml')
+    compile moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'simplyhtml')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
     compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-api')
