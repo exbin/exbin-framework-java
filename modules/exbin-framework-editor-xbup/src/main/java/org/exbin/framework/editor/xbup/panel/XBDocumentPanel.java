@@ -234,11 +234,13 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         binaryTabPanel.setLayout(new java.awt.BorderLayout());
         mainTabbedPane.addTab("Binary", binaryTabPanel);
 
+        viewSplitPane.setDividerLocation(250);
+        viewSplitPane.setResizeWeight(1.0);
+
         setLayout(new java.awt.BorderLayout());
 
         mainSplitPane.setBorder(null);
-        mainSplitPane.setDividerSize(8);
-        mainSplitPane.setResizeWeight(1.0);
+        mainSplitPane.setDividerLocation(200);
         add(mainSplitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -689,7 +691,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), ModifyBlockPanel.class, panel.getResourceBundle(), controlPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), ModifyBlockPanel.class, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 XBTTreeNode newNode = panel.getNode();

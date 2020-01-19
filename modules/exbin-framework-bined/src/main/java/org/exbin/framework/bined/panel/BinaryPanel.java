@@ -75,6 +75,7 @@ import org.exbin.auxiliary.paged_data.EditableBinaryData;
 import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
 import org.exbin.auxiliary.paged_data.delta.FileDataSource;
 import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
+import org.exbin.bined.ClipboardHandlingMode;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
@@ -134,7 +135,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         codeArea = new ExtCodeArea();
         codeArea.setPainter(new ExtendedHighlightNonAsciiCodeAreaPainter(codeArea));
         setNewData();
-        codeArea.setHandleClipboard(false);
+        codeArea.setClipboardHandlingMode(ClipboardHandlingMode.IGNORE);
         codeArea.setCodeFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         codeArea.addSelectionChangedListener((SelectionRange selection) -> {
             updateClipboardActionsStatus();

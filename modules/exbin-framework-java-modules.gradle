@@ -105,6 +105,7 @@ def createSvnDownloadTask(def moduleName, def svnUrlValue, def targetDirValue) {
 // - otherwise module will be download to deps folder
 project.dependencies.ext.moduleDep = { depsName, packageName, moduleName ->
     if (depsName == ext.depsThis) {
+    	println 'Module name: ' + moduleName
         return project(":modules:" + moduleName)
     }
 
@@ -127,7 +128,7 @@ project.dependencies.ext.moduleDep = { depsName, packageName, moduleName ->
 
         createSvnDownloadTask(moduleName, githubModulePath, depModuleDir)
         tasks["svnDownload${moduleName}"].execute()
-
+        
         // Report as placeholder dependency
         if (!new File(depsDir + "_placeholder").exists()) {
             new File(depsDir + "_placeholder").mkdir()
