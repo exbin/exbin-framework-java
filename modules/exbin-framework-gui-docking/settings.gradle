@@ -1,3 +1,14 @@
 rootProject.name = 'exbin-framework-gui-docking'
 
+if (rootProject.path == ':') {
+    include ':modules:exbin-framework'
+    include ':modules:exbin-framework-api'
+    include ':modules:exbin-framework-gui-docking-api'
+    include ':modules:exbin-framework-gui-editor-api'
+    include ':modules:exbin-framework-gui-file-api'
+    include ':modules:exbin-framework-gui-frame-api'
+    include ':modules:exbin-framework-gui-menu-api'
+    include ':modules:exbin-framework-gui-utils'
+}
+
 apply from: '../exbin-framework-java-modules-settings.gradle'
