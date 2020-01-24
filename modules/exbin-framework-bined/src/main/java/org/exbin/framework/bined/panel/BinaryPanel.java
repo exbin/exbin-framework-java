@@ -636,12 +636,10 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     public void registerBinaryStatus(BinaryStatusApi binaryStatusApi) {
         this.binaryStatus = binaryStatusApi;
         attachCaretListener((CodeAreaCaretPosition caretPosition) -> {
-            SelectionRange selection = codeArea.getSelection();
-            binaryStatus.setCursorPosition(caretPosition, selection);
+            binaryStatus.setCursorPosition(caretPosition);
         });
-        codeArea.addSelectionChangedListener(selection -> {
-            CodeAreaCaretPosition caretPosition = codeArea.getCaretPosition();
-            binaryStatus.setCursorPosition(caretPosition, selection);
+        codeArea.addSelectionChangedListener(selectionRange -> {
+            binaryStatus.setSelectionRange(selectionRange);
         });
 
         attachEditationModeChangedListener((EditationMode mode, EditationOperation operation) -> {
@@ -728,8 +726,14 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     private void updateCurrentCaretPosition() {
         if (binaryStatus != null) {
             CodeAreaCaretPosition caretPosition = codeArea.getCaretPosition();
-            SelectionRange selection = codeArea.getSelection();
-            binaryStatus.setCursorPosition(caretPosition, selection);
+            binaryStatus.setCursorPosition(caretPosition);
+        }
+    }
+
+    private void updateCurrentSelectionRange() {
+        if (binaryStatus != null) {
+            SelectionRange selectionRange = codeArea.getSelection();
+            binaryStatus.setSelectionRange(selectionRange);
         }
     }
 
@@ -793,6 +797,7 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         if (binaryStatus != null) {
             updateCurrentDocumentSize();
             updateCurrentCaretPosition();
+            updateCurrentSelectionRange();
         }
 
         encodingStatus.setEncoding(codeArea.getCharset().name());
