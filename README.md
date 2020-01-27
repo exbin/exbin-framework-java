@@ -1,40 +1,33 @@
-ExBin Framework Library
-=======================
+ExBin Framework Libraries
+=========================
 
-Framework provides various modules for swing desktop applications support.
+Framework provides various libraries for swing desktop applications support.
 
 Homepage: http://exbin.org  
 
 Structure
 ---------
 
-As the project is currently in alpha stage, repository contains complete resources for distribution package with following folders:
+Project is constructed from multiple repositories.
 
- * doc - Documentation + related presentations
- * gradle - Gradle wrapper
- * src - Sources related to building distribution packages
- * modules - Libraries and other
- * deps - Storage for auxiliary dependency resolution modules
+  * modules - Sources split in separate modules
+  * src - Sources related to building distribution packages
+  * deps - Folder for downloading libraries for dependency resolution
+  * doc - Documentation + related presentations
+  * gradle - Gradle wrapper
 
 Compiling
 ---------
 
 Java Development Kit (JDK) version 8 or later is required to build this project.
 
-For project compiling Gradle build system is used. You can either download and install gradle and run "gradle build" command in project folder or gradlew or gradlew.bat scripts to download separate copy of gradle to perform the project build.
+For project compiling Gradle 6.0 build system is used: http://gradle.org
 
-Build system website: http://gradle.org
+You can either download and install gradle or use gradlew or gradlew.bat scripts to download separate copy of gradle to perform the project build.
 
-Development
------------
+Build commands: "gradle build" and "gradle distZip"
 
-The Gradle build system provides support for various IDEs. See gradle website for more information.
-
- * NetBeans 8.0 or later
-
-There is gradle support plugin, which can be used to some degree, but some projects need other way of handling as described in their readme files.
-
-Gradle support plugin website: http://plugins.netbeans.org/plugin/44510/gradle-support
+Dependecies are either downloaded or loaded from local maven repository. 
 
 License
 -------

@@ -859,12 +859,12 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         }
     }
 
-    public static interface CharsetChangeListener {
+    public interface CharsetChangeListener {
 
         void charsetChanged();
     }
 
-    public static interface ReleaseFileMethod {
+    public interface ReleaseFileMethod {
 
         boolean execute();
     }
