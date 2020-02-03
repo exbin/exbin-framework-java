@@ -30,9 +30,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface TableDataSource {
 
-    public List<ColumnDefinition> getColumns();
+    @Nonnull
+    List<ColumnDefinition> getColumns();
 
-    public int getRowCount();
+    int getRowCount();
 
     @Nullable
     Object getValueAt(int rowIndex, int columnIndex);

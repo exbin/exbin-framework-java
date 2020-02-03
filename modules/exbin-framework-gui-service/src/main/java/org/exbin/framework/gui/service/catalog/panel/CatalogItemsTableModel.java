@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogSearchTableModel.CatalogSearchTableItem;
-import org.exbin.xbup.catalog.entity.manager.XBItemWithDetail;
-import org.exbin.xbup.catalog.entity.service.XBEItemService;
+import org.exbin.xbup.core.catalog.base.service.XBItemWithDetail;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.service.XBCItemService;
@@ -61,7 +60,7 @@ public class CatalogItemsTableModel extends AbstractTableModel {
 
         List<XBItemWithDetail> page = itemPages.get(pageIndex);
         if (page == null) {
-            page = ((XBEItemService) itemService).findAllPaged(pageIndex * pageSize, pageSize, filterCondition, null, specType);
+            page = ((XBCItemService) itemService).findAllPaged(pageIndex * pageSize, pageSize, filterCondition, null, specType);
             itemPages.set(pageIndex, page);
         }
 
@@ -69,7 +68,7 @@ public class CatalogItemsTableModel extends AbstractTableModel {
     }
 
     public void performLoad() {
-        itemCount = ((XBEItemService) itemService).findAllPagedCount(filterCondition, specType);
+        itemCount = ((XBCItemService) itemService).findAllPagedCount(filterCondition, specType);
         itemPages.clear();
         for (int i = 0; i <= itemCount / pageSize; i++) {
             itemPages.add(null);

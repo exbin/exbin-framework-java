@@ -105,7 +105,6 @@ def createSvnDownloadTask(def moduleName, def svnUrlValue, def targetDirValue) {
 // - otherwise module will be download to deps folder
 project.dependencies.ext.moduleDep = { depsName, packageName, moduleName ->
     if (depsName == ext.depsThis) {
-    	println 'Module name: ' + moduleName
         return project(":modules:" + moduleName)
     }
 
