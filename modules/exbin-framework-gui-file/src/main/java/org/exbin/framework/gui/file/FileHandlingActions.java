@@ -88,7 +88,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     public void init(XBApplication application) {
         this.application = application;
 
-        metaMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        metaMask = ActionUtils.getMetaMask();
         openFileChooser = new JFileChooser();
         openFileChooser.setAcceptAllFileFilterUsed(false);
         saveFileChooser = new JFileChooser();

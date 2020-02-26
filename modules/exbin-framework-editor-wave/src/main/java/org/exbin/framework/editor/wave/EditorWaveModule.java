@@ -268,7 +268,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(AudioDevicesOptionsImpl options) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                // TODO
             }
         });
     }

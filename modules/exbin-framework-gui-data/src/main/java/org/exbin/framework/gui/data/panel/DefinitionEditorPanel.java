@@ -253,7 +253,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     }
 
     public void setEditItemsHandler(EditItemActionsHandler editItemActionsHandler, EditItemActions editItemActions) {
-        toolBarSidePanel.setEditItemsHandler(editItemActionsHandler, editItemActions);;
+        toolBarSidePanel.setEditItemsHandler(editItemActionsHandler, editItemActions);
     }
 
     public void setMoveItemsHandler(MoveItemActionsHandler moveItemActionsHandler, MoveItemActions moveItemActions) {

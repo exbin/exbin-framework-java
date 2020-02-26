@@ -47,7 +47,7 @@ public class ViewModeHandler {
     private Action viewTextModeAction;
     private Action viewBinaryModeAction;
 
-    private XBDocumentPanel.PanelMode viewMode = XBDocumentPanel.PanelMode.PREVIEW;
+    private XBDocumentPanel.PanelMode viewMode = XBDocumentPanel.PanelMode.VIEW;
 
     public ViewModeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -60,14 +60,14 @@ public class ViewModeHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof XBDocumentPanel) {
-                    setViewMode(XBDocumentPanel.PanelMode.PREVIEW);
+                    setViewMode(XBDocumentPanel.PanelMode.VIEW);
                 }
             }
         };
         ActionUtils.setupAction(viewPreviewModeAction, resourceBundle, "viewPreviewModeAction");
         viewPreviewModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         viewPreviewModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.PREVIEW);
+        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.VIEW);
 
         viewTextModeAction = new AbstractAction() {
             @Override

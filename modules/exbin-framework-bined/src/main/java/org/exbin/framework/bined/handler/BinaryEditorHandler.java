@@ -47,7 +47,7 @@ import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 
 /**
- * Hexadecimal editor provider.
+ * Binary editor provider.
  *
  * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
@@ -513,7 +513,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     /**
-     * Method for initialization of new hexadecimal panel.
+     * Method for initialization of new binary panel.
      */
     public static interface BinaryPanelInit {
 
