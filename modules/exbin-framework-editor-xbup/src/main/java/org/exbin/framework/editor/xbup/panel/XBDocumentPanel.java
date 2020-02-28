@@ -79,6 +79,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.editor.text.service.TextSearchService;
+import org.exbin.framework.editor.xbup.viewer.DocumentBinaryViewer;
 
 /**
  * Panel with XBUP document visualization.
@@ -97,11 +98,10 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private boolean showPropertiesPanel = false;
 
     private PanelMode mode = PanelMode.VIEW;
+    private final DocumentBinaryViewer binaryViewer;
 
     private final JPanel previewPanel = new JPanel();
     private final XBDocTreePanel treePanel;
-    private final BinaryPanel binaryPanel;
-    private final BinaryStatusPanel binaryStatusPanel;
     private final TextPanel textPanel;
 
     private XBPropertyPanel propertyPanel;
@@ -120,10 +120,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         mainSplitPane.setRightComponent(propertyPanel);
 
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
-        binaryPanel = new BinaryPanel();
-        binaryStatusPanel = new BinaryStatusPanel();
-        binaryPanel.registerBinaryStatus(binaryStatusPanel);
-        // binaryPanel.setNoBorder();
+        binaryViewer = new DocumentBinaryViewer();
         textPanel = new TextPanel();
         textPanel.setNoBorder();
 
@@ -338,7 +335,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performCut();
                 break;
             case BINARY:
-                binaryPanel.performCut();
+                binaryViewer.performCut();
             default:
                 break;
         }
@@ -354,7 +351,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performCopy();
                 break;
             case BINARY:
-                binaryPanel.performCopy();
+                binaryViewer.performCopy();
             default:
                 break;
         }
@@ -370,7 +367,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performPaste();
                 break;
             case BINARY:
-                binaryPanel.performPaste();
+                binaryViewer.performPaste();
                 break;
             default:
                 break;
@@ -387,7 +384,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performSelectAll();
                 break;
             case BINARY:
-                binaryPanel.performSelectAll();
+                binaryViewer.performSelectAll();
                 break;
             default:
                 break;
@@ -408,7 +405,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 textPanel.performDelete();
                 break;
             case BINARY:
-                binaryPanel.performDelete();
+                binaryViewer.performDelete();
                 break;
             default:
                 break;
@@ -429,7 +426,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                     // TODO: Replace stupid buffer copy later
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                     try {
-                        binaryPanel.saveToStream(buffer);
+                        binaryViewer.saveToStream(buffer);
                         mainDoc.fromStreamUB(new ByteArrayInputStream(buffer.toByteArray()));
                     } catch (XBProcessingException ex) {
                         Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -460,7 +457,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                     try {
                         mainDoc.toStreamUB(buffer);
-                        binaryPanel.loadFromStream(new ByteArrayInputStream(buffer.toByteArray()), buffer.size());
+                        binaryViewer.loadFromStream(new ByteArrayInputStream(buffer.toByteArray()), buffer.size());
                     } catch (IOException ex) {
                         Logger.getLogger(XBDocumentPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -757,7 +754,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             case 1:
                 return textPanel;
             case 2:
-                return binaryPanel;
+                return binaryViewer.getComponent();
         }
 
         return null;
@@ -896,7 +893,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
             case TEXT:
                 return true;
             case BINARY:
-                return binaryPanel.isEditable();
+                return binaryViewer.isEditable();
             default:
                 return false;
         }
@@ -926,7 +923,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                 // TODO Allow to paste text only
                 return true;
             case BINARY:
-                return binaryPanel.canPaste();
+                return binaryViewer.canPaste();
             default:
                 return false;
         }
