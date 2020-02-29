@@ -16,9 +16,7 @@
  */
 package org.exbin.framework.editor.xbup.panel;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -31,7 +29,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -39,9 +36,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.TreeSelectionEvent;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.BinaryPanel;
-import org.exbin.framework.bined.panel.BinaryStatusPanel;
-import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -78,13 +72,15 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
-import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.editor.xbup.viewer.DocumentBinaryViewer;
+import org.exbin.framework.editor.xbup.viewer.DocumentTextViewer;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
+import org.exbin.framework.editor.xbup.viewer.DocumentPropertiesViewer;
 
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.1 2020/02/26
+ * @version 0.2.1 2020/02/29
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -98,11 +94,13 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     private boolean showPropertiesPanel = false;
 
     private PanelMode mode = PanelMode.VIEW;
+    private DocumentViewer activeViewer;
     private final DocumentBinaryViewer binaryViewer;
+    private final DocumentTextViewer textViewer;
+    private final DocumentPropertiesViewer propertiesViewer;
 
     private final JPanel previewPanel = new JPanel();
     private final XBDocTreePanel treePanel;
-    private final TextPanel textPanel;
 
     private XBPropertyPanel propertyPanel;
     private XBPluginRepository pluginRepository;
@@ -121,11 +119,10 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
         binaryViewer = new DocumentBinaryViewer();
-        textPanel = new TextPanel();
-        textPanel.setNoBorder();
+        textViewer = new DocumentTextViewer();
+        propertiesViewer = new DocumentPropertiesViewer();
 
         treePanel.setPopupMenu(popupMenu);
-        textPanel.setPopupMenu(popupMenu);
 
         ((JPanel) mainTabbedPane.getComponentAt(0)).add(treePanel, java.awt.BorderLayout.CENTER);
 
@@ -270,16 +267,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     public boolean isEditEnabled() {
-        switch (mode) {
-            case VIEW:
-                return treePanel.isEditEnabled();
-            case TEXT:
-                return false;
-            case BINARY:
-                return false;
-            default:
-                return false;
-        }
+        return activeViewer.isEditable();
     }
 
     public boolean isAddEnabled() {
@@ -327,68 +315,22 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     @Override
     public void performCut() {
-        switch (mode) {
-            case VIEW:
-                treePanel.performCut();
-                break;
-            case TEXT:
-                textPanel.performCut();
-                break;
-            case BINARY:
-                binaryViewer.performCut();
-            default:
-                break;
-        }
+        activeViewer.performCut();
     }
 
     @Override
     public void performCopy() {
-        switch (mode) {
-            case VIEW:
-                treePanel.performCopy();
-                break;
-            case TEXT:
-                textPanel.performCopy();
-                break;
-            case BINARY:
-                binaryViewer.performCopy();
-            default:
-                break;
-        }
+        activeViewer.performCopy();
     }
 
     @Override
     public void performPaste() {
-        switch (mode) {
-            case VIEW:
-                treePanel.performPaste();
-                break;
-            case TEXT:
-                textPanel.performPaste();
-                break;
-            case BINARY:
-                binaryViewer.performPaste();
-                break;
-            default:
-                break;
-        }
+        activeViewer.performPaste();
     }
 
     @Override
     public void performSelectAll() {
-        switch (mode) {
-            case VIEW:
-                treePanel.performSelectAll();
-                break;
-            case TEXT:
-                textPanel.performSelectAll();
-                break;
-            case BINARY:
-                binaryViewer.performSelectAll();
-                break;
-            default:
-                break;
-        }
+        activeViewer.performSelectAll();
     }
 
     public void performAdd() {
@@ -397,19 +339,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     @Override
     public void performDelete() {
-        switch (mode) {
-            case VIEW:
-                treePanel.performDelete();
-                break;
-            case TEXT:
-                textPanel.performDelete();
-                break;
-            case BINARY:
-                binaryViewer.performDelete();
-                break;
-            default:
-                break;
-        }
+        activeViewer.performDelete();
     }
 
     public void setMode(PanelMode mode) {
@@ -449,8 +379,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
                     if (mainDoc.getRootBlock() != null) {
                         text += nodeAsText((XBTTreeNode) mainDoc.getRootBlock(), "").toString();
                     }
-                    textPanel.setText(text);
-                    break;
+                    throw new UnsupportedOperationException("Not supported yet.");
+                    // TODO textPanel.setText(text);
+                    // break;
                 }
                 case BINARY: {
                     // TODO: Replace stupid buffer copy later
@@ -484,9 +415,10 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     public void showPanel() {
-        int index = getMode().ordinal();
-        mainTabbedPane.setSelectedIndex(index);
-        ((JPanel) mainTabbedPane.getComponentAt(index)).add(getPanel(index));
+        throw new UnsupportedOperationException("Not supported yet.");
+//        int index = getMode().ordinal();
+//        mainTabbedPane.setSelectedIndex(index);
+//        ((JPanel) mainTabbedPane.getComponentAt(index)).add(getPanel(index));
     }
 
     private StringBuffer nodeAsText(XBTTreeNode node, String prefix) {
@@ -582,29 +514,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         return popupMenu;
     }
 
-    public Color[] getDefaultColors() {
-        return textPanel.getDefaultColors();
-    }
-
-    public void setCurrentColors(Color[] colors) {
-        textPanel.setCurrentColors(colors);
-    }
-
-    public Font getDefaultFont() {
-        return textPanel.getDefaultFont();
-    }
-
-    public void setCurrentFont(Font deriveFont) {
-        textPanel.setCurrentFont(deriveFont);
-    }
-
     @Override
     public boolean isModified() {
         return getDoc().wasModified();
-    }
-
-    public boolean changeLineWrap() {
-        return textPanel.changeLineWrap();
     }
 
     @Override
@@ -650,35 +562,8 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }
 
     public void printFile() {
-        textPanel.printFile();
-    }
-
-    public int getLineCount() {
-        return textPanel.getLineCount();
-    }
-
-    public void gotoRelative(int charPos) {
-        textPanel.gotoRelative(charPos);
-    }
-
-    public void gotoLine(int line) {
-        textPanel.gotoLine(line);
-    }
-
-    public void findText(TextSearchService.FindTextParameters findTextParameters) {
-        textPanel.findText(findTextParameters);
-    }
-
-    public void setCharset(Charset charset) {
-        textPanel.setCharset(charset);
-    }
-
-    public Color[] getCurrentColors() {
-        return textPanel.getCurrentColors();
-    }
-
-    public void setFileMode(int i) {
-        // TODO textPanel.setFileMode(getMode().ordinal());
+        throw new UnsupportedOperationException("Not supported yet.");
+        // textPanel.printFile();
     }
 
     public void performModify() {
@@ -745,19 +630,6 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 //
 //            this.showPropertiesPanel = showPropertiesPanel;
 //        }
-    }
-
-    private Component getPanel(int index) {
-        switch (index) {
-            case 0:
-                return previewPanel;
-            case 1:
-                return textPanel;
-            case 2:
-                return binaryViewer.getComponent();
-        }
-
-        return null;
     }
 
 //    public ActivePanelActionHandling getActivePanel() {
@@ -861,10 +733,6 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         return frameTitle;
     }
 
-    public Font getCurrentFont() {
-        return textPanel.getCurrentFont();
-    }
-
     @Override
     public JPanel getPanel() {
         return this;
@@ -872,68 +740,31 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
 
     @Override
     public boolean isSelection() {
-        switch (mode) {
-            case VIEW:
-                return treePanel.isSelection();
-            case TEXT:
-                return textPanel.isSelection();
-            case BINARY:
-                // TODO
-                return true;
-            default:
-                return false;
-        }
+        return activeViewer.isSelection();
     }
 
     @Override
     public boolean isEditable() {
-        switch (mode) {
-            case VIEW:
-                return treePanel.isEditEnabled();
-            case TEXT:
-                return true;
-            case BINARY:
-                return binaryViewer.isEditable();
-            default:
-                return false;
-        }
+        return activeViewer.isEditable();
     }
 
     @Override
     public boolean canSelectAll() {
-        switch (mode) {
-            case VIEW:
-                // TODO Multiple selection in tree
-                return true;
-            case TEXT:
-                return true;
-            case BINARY:
-                return true;
-            default:
-                return false;
-        }
+        return activeViewer.canSelectAll();
     }
 
     @Override
     public boolean canPaste() {
-        switch (mode) {
-            case VIEW:
-                return treePanel.isPasteEnabled();
-            case TEXT:
-                // TODO Allow to paste text only
-                return true;
-            case BINARY:
-                return binaryViewer.canPaste();
-            default:
-                return false;
-        }
+        return activeViewer.canPaste();
     }
 
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         clipboardActionsUpdateListener = updateListener;
         treePanel.setUpdateListener(updateListener);
-        textPanel.setUpdateListener(updateListener);
+        binaryViewer.setUpdateListener(updateListener);
+        textViewer.setUpdateListener(updateListener);
+        propertiesViewer.setUpdateListener(updateListener);
     }
 
     @Override
@@ -951,7 +782,7 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     public void setPopupMenu(JPopupMenu popupMenu) {
         this.popupMenu = popupMenu;
         treePanel.setPopupMenu(popupMenu);
-        textPanel.setPopupMenu(popupMenu);
+        // textPanel.setPopupMenu(popupMenu);
     }
 
     public void actionItemProperties() {

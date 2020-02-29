@@ -18,18 +18,75 @@ package org.exbin.framework.editor.xbup.viewer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import org.exbin.framework.bined.panel.PropertiesPanel;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 
 /**
- * Binary viewer of document.
+ * Properties viewer of document.
  *
- * @version 0.2.1 2020/02/27
+ * @version 0.2.1 2020/02/29
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DocumentPropertiesViewer implements DocumentViewer {
+    
+    private final PropertiesPanel propertiesPanel;
+
+    public DocumentPropertiesViewer() {
+        propertiesPanel = new PropertiesPanel();
+    }
 
     @Override
     public JComponent getComponent() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void performCut() {
+        // textPanel.performCut();
+    }
+
+    @Override
+    public void performCopy() {
+        // textPanel.performCopy();
+    }
+
+    @Override
+    public void performPaste() {
+        // textPanel.performPaste();
+    }
+
+    @Override
+    public void performDelete() {
+        // textPanel.performDelete();
+    }
+
+    @Override
+    public void performSelectAll() {
+        // textPanel.performSelectAll();
+    }
+
+    @Override
+    public boolean isSelection() {
+        return false;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
+
+    @Override
+    public boolean canSelectAll() {
+        return false;
+    }
+
+    @Override
+    public boolean canPaste() {
+        return false;
+    }
+
+    @Override
+    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
     }
 }

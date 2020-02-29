@@ -19,6 +19,7 @@ package org.exbin.framework.editor.xbup.viewer;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 
 /**
  * Interface for document tab.
@@ -27,7 +28,7 @@ import javax.swing.JComponent;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DocumentViewer {
+public interface DocumentViewer extends ClipboardActionsHandler {
     
     @Nonnull
     JComponent getComponent();

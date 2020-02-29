@@ -16,15 +16,20 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.editor.text.panel.TextPanel;
+import org.exbin.framework.editor.text.service.TextSearchService;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 
 /**
  * Text viewer of document.
  *
- * @version 0.2.1 2020/02/27
+ * @version 0.2.1 2020/02/29
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -34,11 +39,114 @@ public class DocumentTextViewer implements DocumentViewer {
 
     public DocumentTextViewer() {
         textPanel = new TextPanel();
+        textPanel.setNoBorder();
     }
 
     @Nonnull
     @Override
     public JComponent getComponent() {
         return textPanel;
+    }
+
+    @Override
+    public void performCut() {
+        textPanel.performCut();
+    }
+
+    @Override
+    public void performCopy() {
+        textPanel.performCopy();
+    }
+
+    @Override
+    public void performPaste() {
+        textPanel.performPaste();
+    }
+
+    @Override
+    public void performDelete() {
+        textPanel.performDelete();
+    }
+
+    @Override
+    public void performSelectAll() {
+        textPanel.performSelectAll();
+    }
+
+    @Override
+    public boolean isSelection() {
+        return textPanel.isSelection();
+    }
+
+    @Override
+    public boolean isEditable() {
+        return textPanel.isEditable();
+    }
+
+    @Override
+    public boolean canSelectAll() {
+        return textPanel.canSelectAll();
+    }
+
+    @Override
+    public boolean canPaste() {
+        return textPanel.canPaste();
+    }
+
+    @Override
+    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+        textPanel.setUpdateListener(updateListener);
+    }
+
+    public Color[] getDefaultColors() {
+        return textPanel.getDefaultColors();
+    }
+
+    public void setCurrentColors(Color[] colors) {
+        textPanel.setCurrentColors(colors);
+    }
+
+    public Font getDefaultFont() {
+        return textPanel.getDefaultFont();
+    }
+
+    public void setCurrentFont(Font deriveFont) {
+        textPanel.setCurrentFont(deriveFont);
+    }
+
+    public boolean changeLineWrap() {
+        return textPanel.changeLineWrap();
+    }
+
+    public int getLineCount() {
+        return textPanel.getLineCount();
+    }
+
+    public void gotoRelative(int charPos) {
+        textPanel.gotoRelative(charPos);
+    }
+
+    public void gotoLine(int line) {
+        textPanel.gotoLine(line);
+    }
+
+    public void findText(TextSearchService.FindTextParameters findTextParameters) {
+        textPanel.findText(findTextParameters);
+    }
+
+    public void setCharset(Charset charset) {
+        textPanel.setCharset(charset);
+    }
+
+    public Color[] getCurrentColors() {
+        return textPanel.getCurrentColors();
+    }
+
+    public void setFileMode(int i) {
+        // TODO textPanel.setFileMode(getMode().ordinal());
+    }
+
+    public Font getCurrentFont() {
+        return textPanel.getCurrentFont();
     }
 }

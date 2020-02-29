@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import javax.swing.JComponent;
 import org.exbin.framework.bined.panel.BinaryPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
-import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 
 /**
@@ -31,7 +30,7 @@ import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
  * @version 0.2.1 2020/02/28
  * @author ExBin Project (http://exbin.org)
  */
-public class DocumentBinaryViewer implements DocumentViewer, ClipboardActionsHandler {
+public class DocumentBinaryViewer implements DocumentViewer {
 
     private final BinaryPanel binaryPanel;
     private final BinaryStatusPanel binaryStatusPanel;
