@@ -16,56 +16,51 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import org.exbin.framework.bined.panel.PropertiesPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 
 /**
- * Properties viewer of document.
+ * Custom viewer of document.
  *
- * @version 0.2.1 2020/02/29
+ * @version 0.2.1 2020/03/01
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DocumentPropertiesViewer implements DocumentViewer {
-    
-    private final JPanel panel = new JPanel();
-    private final PropertiesPanel propertiesPanel;
+public class DocumentCustomViewer implements DocumentViewer {
 
-    public DocumentPropertiesViewer() {
-        propertiesPanel = new PropertiesPanel();
+    private JComponent customPanel;
+
+    public DocumentCustomViewer() {
+        customPanel = new JPanel();
     }
 
+    @Nonnull
     @Override
     public JComponent getComponent() {
-        return panel;
+        return customPanel;
     }
 
     @Override
     public void performCut() {
-        // textPanel.performCut();
     }
 
     @Override
     public void performCopy() {
-        // textPanel.performCopy();
     }
 
     @Override
     public void performPaste() {
-        // textPanel.performPaste();
     }
 
     @Override
     public void performDelete() {
-        // textPanel.performDelete();
     }
 
     @Override
     public void performSelectAll() {
-        // textPanel.performSelectAll();
     }
 
     @Override

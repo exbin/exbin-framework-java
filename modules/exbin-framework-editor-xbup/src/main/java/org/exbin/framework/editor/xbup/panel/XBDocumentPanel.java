@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.editor.xbup.panel;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -80,7 +81,7 @@ import org.exbin.framework.editor.xbup.viewer.DocumentPropertiesViewer;
 /**
  * Panel with XBUP document visualization.
  *
- * @version 0.2.1 2020/02/29
+ * @version 0.2.1 2020/03/01
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
@@ -111,6 +112,9 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     public XBDocumentPanel(XBACatalog catalog, XBUndoHandler undoHandler) {
         this.catalog = catalog;
         mainDoc = new TreeDocument(catalog);
+        propertiesViewer = new DocumentPropertiesViewer();
+        binaryViewer = new DocumentBinaryViewer();
+        textViewer = new DocumentTextViewer();
 
         initComponents();
 
@@ -118,10 +122,6 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         mainSplitPane.setRightComponent(propertyPanel);
 
         treePanel = new XBDocTreePanel(mainDoc, catalog, undoHandler, popupMenu);
-        binaryViewer = new DocumentBinaryViewer();
-        textViewer = new DocumentTextViewer();
-        propertiesViewer = new DocumentPropertiesViewer();
-
         treePanel.setPopupMenu(popupMenu);
 
         ((JPanel) mainTabbedPane.getComponentAt(0)).add(treePanel, java.awt.BorderLayout.CENTER);
@@ -149,6 +149,10 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
         mainSplitPane.setRightComponent(mainTabbedPane);
         setShowPropertiesPanel(true);
         //updateItem();
+
+        propertiesTabPanel.add(propertiesViewer.getComponent(), BorderLayout.CENTER);
+        textTabPanel.add(textViewer.getComponent(), BorderLayout.CENTER);
+        binaryTabPanel.add(binaryViewer.getComponent(), BorderLayout.CENTER);
     }
 
     public void postWindowOpened() {
@@ -251,7 +255,13 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     }//GEN-LAST:event_popupItemCopyMenuItemActionPerformed
 
     private void mainTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_mainTabbedPaneStateChanged
-        setMode(PanelMode.values()[mainTabbedPane.getSelectedIndex()]);
+        updateActiveViewer();
+//        JComponent viewerComponent = activeViewer.getComponent();
+//        viewerComponent.requestFocus();
+//        mainTabbedPane.setSelectedComponent(viewerComponent);
+
+//        mainTabbedPane.addT  setTabComponentAt(mainTabbedPane.getSelectedIndex(), viewerComponent);
+        // setMode(PanelMode.values()[mainTabbedPane.getSelectedIndex()]);
     }//GEN-LAST:event_mainTabbedPaneStateChanged
 
     public XBTTreeNode getSelectedItem() {
@@ -770,6 +780,24 @@ public class XBDocumentPanel extends javax.swing.JPanel implements EditorProvide
     @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
         // TODO
+    }
+
+    private void updateActiveViewer() {
+        int selectedIndex = mainTabbedPane.getSelectedIndex();
+        switch (selectedIndex) {
+            case 0: {
+                activeViewer = propertiesViewer;
+                break;
+            }
+            case 1: {
+                activeViewer = textViewer;
+                break;
+            }
+            case 2: {
+                activeViewer = binaryViewer;
+                break;
+            }
+        }
     }
 
     public enum PanelMode {
