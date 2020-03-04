@@ -15,21 +15,23 @@
  */
 package org.exbin.framework.editor.xbup.options;
 
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Catalog connection options.
  *
- * @version 0.2.1 2019/07/20
+ * @version 0.2.1 2020/03/02
  * @author ExBin Project (http://exbin.org)
  */
 public interface CatalogConnectionOptions {
 
-    @Nullable
-    String getCatalogUpdateUrl();
+    @Nonnull
+    Optional<String> getCatalogUpdateUrl();
 
-    @Nullable
-    String getServiceConnectionUrl();
+    @Nonnull
+    Optional<String> getServiceConnectionUrl();
 
     boolean isCatalogUpdateAllowed();
 

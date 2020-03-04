@@ -1,3 +1,0 @@
-====== XBUP Framework Service Library (Java) ======
-
-FIXME

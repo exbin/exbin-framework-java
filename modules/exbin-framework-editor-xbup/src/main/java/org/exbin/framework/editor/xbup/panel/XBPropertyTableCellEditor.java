@@ -34,7 +34,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Property table cell renderer.
  *
- * @version 0.2.1 2019/06/27
+ * @version 0.2.1 2020/03/02
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTableCellEditor extends DefaultCellEditor {
@@ -47,10 +47,9 @@ public class XBPropertyTableCellEditor extends DefaultCellEditor {
     private XBLineEditor lineEditor = null;
     private JComponent lineEditorComponent = null;
 
-    public XBPropertyTableCellEditor(XBACatalog catalog, XBPluginRepository pluginRepository, XBTTreeNode node, XBTTreeDocument doc) {
+    public XBPropertyTableCellEditor(XBPluginRepository pluginRepository, XBTTreeNode node, XBTTreeDocument doc) {
         super(new JTextField());
-        setClickCountToStart(0);
-        this.catalog = catalog;
+        super.setClickCountToStart(0);
         this.pluginRepository = pluginRepository;
         this.node = node;
         this.doc = doc;

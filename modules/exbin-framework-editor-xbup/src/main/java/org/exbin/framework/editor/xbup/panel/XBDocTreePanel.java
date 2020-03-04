@@ -73,12 +73,12 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 public class XBDocTreePanel extends javax.swing.JPanel {
 
     private XBApplication application;
-    private final XBTTreeDocument mainDoc;
+    private XBTTreeDocument mainDoc;
     private final XBDocTreeModel mainDocModel;
     private XBDocTreeCellRenderer cellRenderer;
 
     private XBACatalog catalog;
-    private final XBUndoHandler undoHandler;
+    private XBUndoHandler undoHandler;
     private final List<ActionListener> updateEventList;
     private boolean editEnabled;
     private boolean addEnabled;
@@ -89,18 +89,15 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     private Component lastFocusedComponent = null;
     private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
 
-    private AddBlockPanel addItemPanel = null;
-
-    public XBDocTreePanel(XBTTreeDocument mainDoc, XBACatalog catalog, XBUndoHandler undoHandler, JPopupMenu popupMenu) {
+    public XBDocTreePanel() {
         super();
-        this.mainDoc = mainDoc;
-        this.catalog = catalog;
-        this.undoHandler = undoHandler;
+        initComponents();
+
+        cellRenderer = new XBDocTreeCellRenderer();
+        mainTree.setCellRenderer(cellRenderer);
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         mainDocModel = new XBDocTreeModel(mainDoc);
         updateEventList = new ArrayList<>();
-
-        initComponents();
 
         mainTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
             updateItemStatus();
@@ -132,13 +129,29 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         mainTree.setDropMode(DropMode.USE_SELECTION);
 
         mainTree.setTransferHandler(new XBDocTreeTransferHandler(this));
-        cellRenderer = cellRenderer = new XBDocTreeCellRenderer(catalog);
-        mainTree.setCellRenderer(cellRenderer);
 //        mainTree.setDropTarget(new );
     }
 
     public void setApplication(XBApplication application) {
         this.application = application;
+    }
+
+    public void setMainDoc(XBTTreeDocument mainDoc) {
+        this.mainDoc = mainDoc;
+    }
+
+    public void setCatalog(XBACatalog catalog) {
+        this.catalog = catalog;
+
+        cellRenderer.setCatalog(catalog);
+        if (mainDoc != null) {
+            mainDoc.setCatalog(catalog);
+            mainDoc.processSpec();
+        }
+    }
+
+    public void setUndoHandler(XBUndoHandler undoHandler) {
+        this.undoHandler = undoHandler;
     }
 
     /**
@@ -181,34 +194,18 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
         mainTree.setModel(mainDocModel);
         mainTree.setAutoscrolls(true);
-        mainTree.setShowsRootHandles(true);
         mainTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                mainTreeMouseReleased(evt);
+                mainTreeMousePressed(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                mainTreeMouseReleased1(evt);
+                mainTreeMouseReleased(evt);
             }
         });
         mainScrollPane.setViewportView(mainTree);
 
         add(mainScrollPane);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void mainTreeMouseReleased1(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainTreeMouseReleased1
-        if (evt.isPopupTrigger()) {
-            mainTree.setSelectionPath(mainTree.getPathForLocation(evt.getX(), evt.getY()));
-            boolean availableItem = (mainTree.getLastSelectedPathComponent() != null);
-            setEditEnabled(availableItem);
-            boolean addPossible;
-            if (!availableItem) {
-                addPossible = mainDoc.getRootBlock() == null;
-            } else {
-                addPossible = ((XBTTreeNode) mainTree.getLastSelectedPathComponent()).getDataMode() == XBBlockDataMode.NODE_BLOCK;
-            }
-            setAddEnabled(addPossible);
-        }
-    }//GEN-LAST:event_mainTreeMouseReleased1
 
     private void mainTreeMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainTreeMouseReleased
         if (evt.isPopupTrigger()) {
@@ -224,6 +221,21 @@ public class XBDocTreePanel extends javax.swing.JPanel {
             setAddEnabled(addPossible);
         }
     }//GEN-LAST:event_mainTreeMouseReleased
+
+    private void mainTreeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainTreeMousePressed
+        if (evt.isPopupTrigger()) {
+            mainTree.setSelectionPath(mainTree.getPathForLocation(evt.getX(), evt.getY()));
+            boolean availableItem = (mainTree.getLastSelectedPathComponent() != null);
+            setEditEnabled(availableItem);
+            boolean addPossible;
+            if (!availableItem) {
+                addPossible = mainDoc.getRootBlock() == null;
+            } else {
+                addPossible = ((XBTTreeNode) mainTree.getLastSelectedPathComponent()).getDataMode() == XBBlockDataMode.NODE_BLOCK;
+            }
+            setAddEnabled(addPossible);
+        }
+    }//GEN-LAST:event_mainTreeMousePressed
 
     public XBTTreeNode getSelectedItem() {
         return (XBTTreeNode) mainTree.getLastSelectedPathComponent();
@@ -259,20 +271,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
     public XBACatalog getCatalog() {
         return catalog;
-    }
-
-    public void setCatalog(XBACatalog catalog) {
-        this.catalog = catalog;
-        cellRenderer.setCatalog(catalog);
-        if (mainDoc != null) {
-            mainDoc.setCatalog(catalog);
-            mainDoc.processSpec();
-        }
-
-        AddBlockPanel addBlockPanel = addItemPanel;
-        if (addBlockPanel != null) {
-            addBlockPanel.setCatalog(catalog);
-        }
     }
 
     public void performCut() {
@@ -336,74 +334,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         }
     }
 
-    public void performAdd() {
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        XBTTreeNode node = getSelectedItem();
-
-        addItemPanel = new AddBlockPanel();
-        addItemPanel.setApplication(application);
-        addItemPanel.setCatalog(catalog);
-        addItemPanel.setParentNode(node);
-        MultiStepControlPanel controlPanel = new MultiStepControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(addItemPanel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, addItemPanel.getResourceBundle());
-        controlPanel.setHandler((MultiStepControlHandler.ControlActionType actionType) -> {
-            switch (actionType) {
-                case FINISH: {
-                    XBTTreeNode newNode = addItemPanel.getWorkNode();
-                    try {
-                        long parentPosition = node == null ? -1 : node.getBlockIndex();
-                        int childIndex = node == null ? 0 : node.getChildCount();
-                        XBTDocCommand step = new XBTAddBlockCommand(mainDoc, parentPosition, childIndex, newNode);
-                        getUndoHandler().execute(step);
-                    } catch (Exception ex) {
-                        Logger.getLogger(XBDocTreePanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                    reportStructureChange(newNode);
-                    mainDoc.setModified(true);
-                    updateItemStatus();
-
-                    dialog.close();
-                    dialog.dispose();
-                    break;
-                }
-                case CANCEL: {
-                    dialog.close();
-                    dialog.dispose();
-                    break;
-                }
-                case NEXT: {
-                    break;
-                }
-                case PREVIOUS: {
-                    break;
-                }
-            }
-        });
-        dialog.showCentered(this);
-
-//        addItemPanel.setLocationRelativeTo(addItemPanel.getParent());
-//        addItemPanel.setParentNode(node);
-//        XBTTreeNode newNode = addItemPanel.showDialog();
-//        if (addItemPanel.getDialogOption() == JOptionPane.OK_OPTION) {
-//            try {
-//                long parentPosition = node == null ? -1 : node.getBlockIndex();
-//                int childIndex = node == null ? 0 : node.getChildCount();
-//                XBTDocCommand step = new XBTAddBlockCommand(mainDoc, parentPosition, childIndex, newNode);
-//                getUndoHandler().execute(step);
-//            } catch (Exception ex) {
-//                Logger.getLogger(XBDocTreePanel.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//
-//            reportStructureChange(newNode);
-//            mainDoc.setModified(true);
-//            updateItemStatus();
-//        }
-        addItemPanel = null;
-    }
-
     public void performDelete() {
         deleteNode(getSelectedItem());
     }
@@ -423,6 +353,15 @@ public class XBDocTreePanel extends javax.swing.JPanel {
             mainDocModel.fireTreeStructureChanged(parent);
         }
         mainDoc.setModified(true);
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new XBDocTreePanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

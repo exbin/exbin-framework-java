@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along this application.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exbin.framework.editor.xbup;
+package org.exbin.framework.editor.xbup.editor;
 
 import java.beans.PropertyChangeListener;
 import java.net.URI;
@@ -28,7 +28,7 @@ import org.exbin.framework.gui.file.api.FileType;
  * @version 0.2.0 2015/12/20
  * @author ExBin Project (http://exbin.org)
  */
-public class XbupEditorHandler implements EditorProvider {
+public class DocumentEditorProvider implements EditorProvider {
 
     @Override
     public JPanel getPanel() {

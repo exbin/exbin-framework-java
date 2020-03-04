@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.wave.preferences;
 
+import java.util.Optional;
 import javax.annotation.Nullable;
 import org.exbin.framework.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -91,8 +92,8 @@ public class WaveColorPreferences implements WaveColorOptions {
 
     @Nullable
     private Integer getColorAsInt(String key) {
-        String value = preferences.get(key);
-        return value == null ? null : Integer.valueOf(value);
+        Optional<String> value = preferences.get(key);
+        return value.isPresent() ? Integer.valueOf(value.get()) : null;
     }
 
     @Override

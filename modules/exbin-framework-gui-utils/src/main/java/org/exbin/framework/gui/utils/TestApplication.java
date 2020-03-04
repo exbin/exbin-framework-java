@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
@@ -75,7 +76,7 @@ public class TestApplication implements XBApplication {
             }
 
             @Override
-            public String get(String key) {
+            public Optional<String> get(String key) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 

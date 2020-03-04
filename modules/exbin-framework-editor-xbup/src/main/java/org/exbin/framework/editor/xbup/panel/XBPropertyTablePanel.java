@@ -30,6 +30,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -67,7 +68,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
 
     private XBApplication application;
     private XBACatalog catalog;
-    private XBDocumentPanel activePanel;
+    private DocumentViewer activeViewer;
     private final XBPropertyTableModel tableModel;
     private final XBPropertyTableCellRenderer valueCellRenderer;
     private final TableCellRenderer nameCellRenderer;
@@ -80,8 +81,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     private XBTTreeNode node;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBPropertyTablePanel.class);
 
-    public XBPropertyTablePanel(XBACatalog catalog) {
-        this.catalog = catalog;
+    public XBPropertyTablePanel() {
         tableModel = new XBPropertyTableModel();
 
         initComponents();
@@ -103,9 +103,9 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
 
         };
         columns.getColumn(0).setCellRenderer(nameCellRenderer);
-        valueCellRenderer = new XBPropertyTableCellRenderer(catalog, pluginRepository, null, null);
+        valueCellRenderer = new XBPropertyTableCellRenderer(pluginRepository, null, null);
         columns.getColumn(1).setCellRenderer(valueCellRenderer);
-        valueCellEditor = new XBPropertyTableCellEditor(catalog, pluginRepository, null, null);
+        valueCellEditor = new XBPropertyTableCellEditor(pluginRepository, null, null);
         columns.getColumn(1).setCellEditor(valueCellEditor);
 
         propertiesTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -248,6 +248,15 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         valueCellEditor.setApplication(application);
     }
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new XBPropertyTablePanel());
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator14;
@@ -289,12 +298,12 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         valueCellEditor.setCatalog(catalog);
     }
 
-    public XBDocumentPanel getActivePanel() {
-        return activePanel;
+    public DocumentViewer getActiveViewer() {
+        return activeViewer;
     }
 
-    public void setActivePanel(XBDocumentPanel activePanel) {
-        this.activePanel = activePanel;
+    public void setActiveViewer(DocumentViewer activePanel) {
+        this.activeViewer = activePanel;
     }
 
     private Thread getPropertyThread() {
@@ -435,37 +444,29 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     }
 
     public void actionEditSelectAll() {
-        activePanel.performSelectAll();
+        activeViewer.performSelectAll();
     }
 
     public void actionItemAdd() {
-        activePanel.performAdd();
+        throw new UnsupportedOperationException("Not supported yet.");
+        // activeViewer.performAdd();
     }
 
     public void actionItemModify() {
-        activePanel.performModify();
+        throw new UnsupportedOperationException("Not supported yet.");
+        // activeViewer.performModify();
     }
 
     public void actionItemProperties() {
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        BlockPropertiesPanel panel = new BlockPropertiesPanel();
-        panel.setCatalog(catalog);
-        panel.setTreeNode(activePanel.getSelectedItem());
-        CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        controlPanel.setHandler(() -> {
-            dialog.close();
-            dialog.dispose();
-        });
-        dialog.showCentered(this);
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void actionItemOpen() {
     }
 
     public boolean isStub1Enabled() {
-        return activePanel.getMode() == XBDocumentPanel.PanelMode.TEXT;
+        throw new UnsupportedOperationException("Not supported yet.");
+        // return activeViewer.getMode() == XBDocumentPanel.PanelMode.TEXT;
     }
 
     private boolean addEnabled = false;
@@ -497,17 +498,18 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     }
 
     public boolean isEditEnabled() {
-        if (activePanel == null) {
+        if (activeViewer == null) {
             return false;
         }
-        return activePanel.isEditEnabled();
+        throw new UnsupportedOperationException("Not supported yet.");
+        // return activeViewer.isEditEnabled();
     }
 
     public boolean isPasteEnabled() {
-        if (activePanel == null) {
+        if (activeViewer == null) {
             return false;
         }
-        return activePanel.isPasteEnabled();
+        return activeViewer.canPaste();
     }
 
     public boolean isFalse() {

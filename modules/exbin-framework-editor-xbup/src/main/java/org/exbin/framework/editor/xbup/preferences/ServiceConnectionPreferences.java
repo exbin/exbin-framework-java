@@ -15,7 +15,8 @@
  */
 package org.exbin.framework.editor.xbup.preferences;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.exbin.framework.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.xbup.options.CatalogConnectionOptions;
@@ -50,9 +51,9 @@ public class ServiceConnectionPreferences implements CatalogConnectionOptions {
         preferences.putBoolean(PREFERENCES_SERVICE_CONNECTION_ALLOWED, allowed);
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getServiceConnectionUrl() {
+    public Optional<String> getServiceConnectionUrl() {
         return preferences.get(PREFERENCES_SERVICE_CONNECTION_URL);
     }
 
@@ -71,9 +72,9 @@ public class ServiceConnectionPreferences implements CatalogConnectionOptions {
         preferences.putBoolean(PREFERENCES_CATALOG_UPDATE_ALLOWED, allowed);
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getCatalogUpdateUrl() {
+    public Optional<String> getCatalogUpdateUrl() {
         return preferences.get(PREFERENCES_CATALOG_UPDATE_URL);
     }
 

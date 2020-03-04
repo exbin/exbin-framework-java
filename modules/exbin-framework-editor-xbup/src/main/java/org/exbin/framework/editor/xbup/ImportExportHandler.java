@@ -16,12 +16,11 @@
  */
 package org.exbin.framework.editor.xbup;
 
-import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
+import org.exbin.framework.editor.xbup.action.ExportItemAsFileAction;
+import org.exbin.framework.editor.xbup.action.ImportFileAsItemAction;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -48,25 +47,11 @@ public class ImportExportHandler {
     }
 
     public void init() {
-        importItemAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    XBDocumentPanel activePanel = (XBDocumentPanel) editorProvider;
-                }
-            }
-        };
+        importItemAction = new ImportFileAsItemAction();
         ActionUtils.setupAction(importItemAction, resourceBundle, "importItemAction");
         importItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
 
-        exportItemAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    XBDocumentPanel activePanel = (XBDocumentPanel) editorProvider;
-                }
-            }
-        };
+        exportItemAction = new ExportItemAsFileAction();
         ActionUtils.setupAction(exportItemAction, resourceBundle, "exportItemAction");
         exportItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }

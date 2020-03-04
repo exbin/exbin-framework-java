@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.BlockPropertiesPanel;
 import org.exbin.framework.editor.xbup.panel.DocumentPropertiesPanel;
-import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -37,7 +37,7 @@ import org.exbin.framework.gui.utils.panel.CloseControlPanel;
 /**
  * Properties handler.
  *
- * @version 0.2.1 2019/06/22
+ * @version 0.2.1 2020/03/02
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesHandler {
@@ -60,12 +60,12 @@ public class PropertiesHandler {
         propertiesAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    XBDocumentPanel activePanel = (XBDocumentPanel) editorProvider;
+                if (editorProvider instanceof DocumentViewerProvider) {
+                    DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     DocumentPropertiesPanel propertiesPanel = new DocumentPropertiesPanel();
-                    propertiesPanel.setDocument(activePanel.getDoc());
-                    propertiesPanel.setDocumentUri(activePanel.getFileUri());
+                    propertiesPanel.setDocument(provider.getDoc());
+                    propertiesPanel.setDocumentUri(provider.getFileUri());
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -85,13 +85,13 @@ public class PropertiesHandler {
         itemPropertiesAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    XBDocumentPanel activePanel = (XBDocumentPanel) editorProvider;
+                if (editorProvider instanceof DocumentViewerProvider) {
+                    DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                     BlockPropertiesPanel panel = new BlockPropertiesPanel();
-                    panel.setCatalog(activePanel.getCatalog());
+                    panel.setCatalog(provider.getCatalog());
                     panel.setDevMode(devMode);
-                    panel.setTreeNode(activePanel.getSelectedItem());
+                    panel.setTreeNode(provider.getSelectedItem());
                     CloseControlPanel controlPanel = new CloseControlPanel();
                     JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
                     final DialogWrapper dialog = frameModule.createDialog(dialogPanel);

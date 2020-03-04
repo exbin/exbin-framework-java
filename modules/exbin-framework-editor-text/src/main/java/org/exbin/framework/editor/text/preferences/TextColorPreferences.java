@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.text.preferences;
 
+import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
@@ -84,8 +85,8 @@ public class TextColorPreferences implements TextColorOptions {
 
     @Nullable
     private Integer getColorAsInt(String key) {
-        String value = preferences.get(key);
-        return value == null ? null : Integer.valueOf(value);
+        Optional<String> value = preferences.get(key);
+        return value.isPresent() ? Integer.valueOf(value.get()) : null;
     }
 
     @Override

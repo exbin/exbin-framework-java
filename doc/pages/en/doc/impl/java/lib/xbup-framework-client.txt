@@ -1,8 +1,0 @@
-====== XBUP Framework Client Library (Java) ======
-
-Framework client library provides classes and interfaces for accessing framework service.
-
-===== Usage Example =====
-
-FIXME
-

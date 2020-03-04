@@ -15,14 +15,15 @@
  */
 package org.exbin.framework.gui.file.preferences;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.exbin.framework.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Recently opened files preferences.
  *
- * @version 0.2.0 2019/06/08
+ * @version 0.2.1 2020/03/02
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -38,18 +39,18 @@ public class RecentFilesPreferences {
         this.preferences = preferences;
     }
 
-    @Nullable
-    public String getFilePath(int index) {
+    @Nonnull
+    public Optional<String> getFilePath(int index) {
         return preferences.get(PREFERENCES_RECENTFILE_PATH_PREFIX + String.valueOf(index));
     }
 
-    @Nullable
-    public String getModuleName(int index) {
+    @Nonnull
+    public Optional<String> getModuleName(int index) {
         return preferences.get(PREFEFRENCES_RECENTFILE_MODULE_PREFIX + String.valueOf(index));
     }
 
-    @Nullable
-    public String getFileMode(int index) {
+    @Nonnull
+    public Optional<String> getFileMode(int index) {
         return preferences.get(PREFERENCES_RECENFILE_MODE_PREFIX + String.valueOf(index));
     }
 

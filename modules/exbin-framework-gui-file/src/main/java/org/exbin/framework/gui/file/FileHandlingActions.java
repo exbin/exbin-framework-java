@@ -359,9 +359,9 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         recentFiles.clear();
         int recent = 1;
         while (recent < 14) {
-            String filePath = recentFilesParameters.getFilePath(recent);
-            String moduleName = recentFilesParameters.getModuleName(recent);
-            String fileMode = recentFilesParameters.getFileMode(recent);
+            String filePath = recentFilesParameters.getFilePath(recent).orElse(null);
+            String moduleName = recentFilesParameters.getModuleName(recent).orElse(null);
+            String fileMode = recentFilesParameters.getFileMode(recent).orElse(null);
             if (filePath == null) {
                 break;
             }

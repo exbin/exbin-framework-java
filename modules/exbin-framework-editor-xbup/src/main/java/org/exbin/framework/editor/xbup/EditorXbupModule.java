@@ -25,6 +25,7 @@ import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.client.api.ClientConnectionListener;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -91,19 +92,19 @@ public class EditorXbupModule implements XBApplicationModule {
 
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            editorProvider = new XBDocumentPanel(catalog, undoHandler);
-            ((XBDocumentPanel) editorProvider).setApplication(application);
+            editorProvider = new DocumentViewerProvider(catalog, undoHandler);
+            ((DocumentViewerProvider) editorProvider).setApplication(application);
 
-            final XBDocumentPanel docPanel = (XBDocumentPanel) editorProvider;
+            final DocumentViewerProvider docPanel = (DocumentViewerProvider) editorProvider;
 
-            docPanel.setPopupMenu(createPopupMenu());
-            docPanel.addUpdateListener((ActionEvent e) -> {
-                if (docEditingHandler != null) {
-                    docEditingHandler.setAddEnabled(docPanel.isAddEnabled());
-                    docEditingHandler.setEditEnabled(docPanel.isEditEnabled());
-                    propertiesHandler.setEditEnabled(docPanel.isEditEnabled());
-                }
-            });
+//            docPanel.setPopupMenu(createPopupMenu());
+//            docPanel.addUpdateListener((ActionEvent e) -> {
+//                if (docEditingHandler != null) {
+//                    docEditingHandler.setAddEnabled(docPanel.isAddEnabled());
+//                    docEditingHandler.setEditEnabled(docPanel.isEditEnabled());
+//                    propertiesHandler.setEditEnabled(docPanel.isEditEnabled());
+//                }
+//            });
         }
 
         return editorProvider;
@@ -283,7 +284,7 @@ public class EditorXbupModule implements XBApplicationModule {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        ((XBDocumentPanel) editorProvider).setCatalog(catalog);
+        ((DocumentViewerProvider) editorProvider).setCatalog(catalog);
         if (catalogBrowserHandler != null) {
             catalogBrowserHandler.setCatalog(catalog);
         }
@@ -294,7 +295,7 @@ public class EditorXbupModule implements XBApplicationModule {
     }
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
-        ((XBDocumentPanel) editorProvider).setPluginRepository(pluginRepository);
+        ((DocumentViewerProvider) editorProvider).setPluginRepository(pluginRepository);
     }
 
     /**

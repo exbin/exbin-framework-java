@@ -26,9 +26,9 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
- * Property Table Cell Renderer.
+ * Property table cell renderer.
  *
- * @version 0.1.24 2015/01/16
+ * @version 0.2.1 2020/03/02
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTableCellRenderer implements TableCellRenderer {
@@ -38,8 +38,7 @@ public class XBPropertyTableCellRenderer implements TableCellRenderer {
     private XBTTreeNode node;
     private final XBTTreeDocument doc;
 
-    public XBPropertyTableCellRenderer(XBACatalog catalog, XBPluginRepository pluginRepository, XBTTreeNode node, XBTTreeDocument doc) {
-        this.catalog = catalog;
+    public XBPropertyTableCellRenderer(XBPluginRepository pluginRepository, XBTTreeNode node, XBTTreeDocument doc) {
         this.pluginRepository = pluginRepository;
         this.node = node;
         this.doc = doc;

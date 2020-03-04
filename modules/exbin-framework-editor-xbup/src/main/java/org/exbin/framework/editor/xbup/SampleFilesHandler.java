@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -55,17 +55,17 @@ public class SampleFilesHandler {
         sampleHtmlFileAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    XBDocumentPanel documentPanel = (XBDocumentPanel) editorProvider;
-                    documentPanel.newFile();
+                if (editorProvider instanceof DocumentViewerProvider) {
+                    DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
+                    provider.newFile();
                     try {
-                        documentPanel.getDoc().fromStreamUB(getClass().getResourceAsStream("/org/exbin/framework/editor/xbup/resources/samples/xhtml_example.xb"));
-                        documentPanel.getDoc().processSpec();
+                        provider.getDoc().fromStreamUB(getClass().getResourceAsStream("/org/exbin/framework/editor/xbup/resources/samples/xhtml_example.xb"));
+                        provider.getDoc().processSpec();
                     } catch (XBProcessingException | IOException ex) {
                         Logger.getLogger(SampleFilesHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    documentPanel.reportStructureChange(null);
-                    documentPanel.updateItem();
+                    provider.reportStructureChange(null);
+                    provider.updateItem();
                 }
             }
         };
@@ -74,17 +74,17 @@ public class SampleFilesHandler {
         samplePictureFileAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    XBDocumentPanel documentPanel = (XBDocumentPanel) editorProvider;
-                    documentPanel.newFile();
+                if (editorProvider instanceof DocumentViewerProvider) {
+                    DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
+                    provider.newFile();
                     try {
-                        documentPanel.getDoc().fromStreamUB(getClass().getResourceAsStream("/org/exbin/framework/editor/xbup/resources/samples/xblogo.xbp"));
-                        documentPanel.getDoc().processSpec();
+                        provider.getDoc().fromStreamUB(getClass().getResourceAsStream("/org/exbin/framework/editor/xbup/resources/samples/xblogo.xbp"));
+                        provider.getDoc().processSpec();
                     } catch (XBProcessingException | IOException ex) {
                         Logger.getLogger(SampleFilesHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    documentPanel.reportStructureChange(null);
-                    documentPanel.updateItem();
+                    provider.reportStructureChange(null);
+                    provider.updateItem();
                 }
             }
         };

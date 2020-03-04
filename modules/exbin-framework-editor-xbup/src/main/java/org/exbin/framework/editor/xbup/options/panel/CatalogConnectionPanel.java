@@ -53,14 +53,14 @@ public class CatalogConnectionPanel extends javax.swing.JPanel implements Option
             serviceConnectionCheckBox.doClick();
         }
 
-        String serviceConnection = options.getServiceConnectionUrl();
+        String serviceConnection = options.getServiceConnectionUrl().orElse(null);
         serviceConnectionTextField.setText(serviceConnection);
 
         if (options.isCatalogUpdateAllowed() != catalogUpdateConnectionCheckBox.isSelected()) {
             catalogUpdateConnectionCheckBox.doClick();
         }
 
-        String catalogUpdate = options.getCatalogUpdateUrl();
+        String catalogUpdate = options.getCatalogUpdateUrl().orElse(null);
         catalogUpdateConnectionTextField.setText(catalogUpdate);
     }
 

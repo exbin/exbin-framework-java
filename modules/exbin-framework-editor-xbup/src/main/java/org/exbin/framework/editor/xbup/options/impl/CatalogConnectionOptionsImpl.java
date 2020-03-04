@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.editor.xbup.options.impl;
 
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.xbup.preferences.ServiceConnectionPreferences;
@@ -45,10 +47,10 @@ public class CatalogConnectionOptionsImpl implements OptionsData, CatalogConnect
         this.serviceConnectionAllowed = serviceConnectionAllowed;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getServiceConnectionUrl() {
-        return serviceConnectionUrl;
+    public Optional<String> getServiceConnectionUrl() {
+        return Optional.ofNullable(serviceConnectionUrl);
     }
 
     @Override
@@ -66,10 +68,10 @@ public class CatalogConnectionOptionsImpl implements OptionsData, CatalogConnect
         this.catalogUpdateAllowed = catalogUpdateAllowed;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getCatalogUpdateUrl() {
-        return catalogUpdateUrl;
+    public Optional<String> getCatalogUpdateUrl() {
+        return Optional.ofNullable(catalogUpdateUrl);
     }
 
     @Override
@@ -79,9 +81,9 @@ public class CatalogConnectionOptionsImpl implements OptionsData, CatalogConnect
 
     public void loadFromPreferences(ServiceConnectionPreferences preferences) {
         serviceConnectionAllowed = preferences.isServiceConnectionAllowed();
-        serviceConnectionUrl = preferences.getServiceConnectionUrl();
+        serviceConnectionUrl = preferences.getServiceConnectionUrl().orElse(null);
         catalogUpdateAllowed = preferences.isCatalogUpdateAllowed();
-        catalogUpdateUrl = preferences.getCatalogUpdateUrl();
+        catalogUpdateUrl = preferences.getCatalogUpdateUrl().orElse(null);
     }
 
     public void saveToPreferences(ServiceConnectionPreferences preferences) {

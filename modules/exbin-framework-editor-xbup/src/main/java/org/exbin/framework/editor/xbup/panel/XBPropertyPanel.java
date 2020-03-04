@@ -17,6 +17,7 @@
 package org.exbin.framework.editor.xbup.panel;
 
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
@@ -45,15 +46,13 @@ public class XBPropertyPanel extends javax.swing.JPanel {
     private XBPropertyTablePanel propertiesPanel;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBPropertyPanel.class);
 
-    public XBPropertyPanel(XBACatalog catalog) {
-        this.catalog = catalog;
-
+    public XBPropertyPanel() {
         initComponents();
         init();
     }
 
     private void init() {
-        propertiesPanel = new XBPropertyTablePanel(catalog);
+        propertiesPanel = new XBPropertyTablePanel();
         add(propertiesPanel, java.awt.BorderLayout.CENTER);
     }
 
@@ -200,6 +199,11 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         this.application = application;
         propertiesPanel.setApplication(application);
     }
+    
+    public void setCatalog(XBACatalog catalog) {
+        this.catalog = catalog;
+        propertiesPanel.setCatalog(catalog);
+    }
 
     /**
      * Test method for this panel.
@@ -207,7 +211,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new XBPropertyPanel(null));
+        WindowUtils.invokeDialog(new XBPropertyPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -240,8 +244,8 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         descTextField.setText(getDescription(node));
     }
 
-    public void setActivePanel(XBDocumentPanel panel) {
-        propertiesPanel.setActivePanel(panel);
+    public void setActiveViewer(DocumentViewer viewer) {
+        propertiesPanel.setActiveViewer(viewer);
     }
 
     private String getCaption(XBTTreeNode node) {
@@ -284,11 +288,6 @@ public class XBPropertyPanel extends javax.swing.JPanel {
 
     public XBACatalog getCatalog() {
         return catalog;
-    }
-
-    public void setCatalog(XBACatalog catalog) {
-        this.catalog = catalog;
-        propertiesPanel.setCatalog(catalog);
     }
 
     void setPluginRepository(XBPluginRepository pluginRepository) {

@@ -23,7 +23,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider.PanelMode;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -31,7 +32,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * View mode handler.
  *
- * @version 0.2.1 2019/09/06
+ * @version 0.2.1 2020/03/03
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -47,7 +48,7 @@ public class ViewModeHandler {
     private Action viewTextModeAction;
     private Action viewBinaryModeAction;
 
-    private XBDocumentPanel.PanelMode viewMode = XBDocumentPanel.PanelMode.VIEW;
+    private PanelMode viewMode = PanelMode.VIEW;
 
     public ViewModeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -59,50 +60,50 @@ public class ViewModeHandler {
         viewPreviewModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    setViewMode(XBDocumentPanel.PanelMode.VIEW);
+                if (editorProvider instanceof DocumentViewerProvider) {
+                    setViewMode(PanelMode.VIEW);
                 }
             }
         };
         ActionUtils.setupAction(viewPreviewModeAction, resourceBundle, "viewPreviewModeAction");
         viewPreviewModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         viewPreviewModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.VIEW);
+        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewMode == PanelMode.VIEW);
 
         viewTextModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    setViewMode(XBDocumentPanel.PanelMode.TEXT);
+                if (editorProvider instanceof DocumentViewerProvider) {
+                    setViewMode(PanelMode.TEXT);
                 }
             }
         };
         ActionUtils.setupAction(viewTextModeAction, resourceBundle, "viewTextModeAction");
         viewTextModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         viewTextModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewTextModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.TEXT);
+        viewTextModeAction.putValue(Action.SELECTED_KEY, viewMode == PanelMode.TEXT);
 
         viewBinaryModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    setViewMode(XBDocumentPanel.PanelMode.BINARY);
+                if (editorProvider instanceof DocumentViewerProvider) {
+                    setViewMode(PanelMode.BINARY);
                 }
             }
         };
         ActionUtils.setupAction(viewBinaryModeAction, resourceBundle, "viewBinaryModeAction");
         viewBinaryModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
         viewBinaryModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        viewBinaryModeAction.putValue(Action.SELECTED_KEY, viewMode == XBDocumentPanel.PanelMode.BINARY);
+        viewBinaryModeAction.putValue(Action.SELECTED_KEY, viewMode == PanelMode.BINARY);
     }
 
-    public void setViewMode(XBDocumentPanel.PanelMode viewMode) {
+    public void setViewMode(PanelMode viewMode) {
         this.viewMode = viewMode;
-        XBDocumentPanel activePanel = (XBDocumentPanel) editorProvider;
+        DocumentViewerProvider activePanel = (DocumentViewerProvider) editorProvider;
         activePanel.setMode(viewMode);
     }
 
-    public XBDocumentPanel.PanelMode getViewMode() {
+    public PanelMode getViewMode() {
         return viewMode;
     }
 

@@ -46,9 +46,8 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
     private final Map<Long, String> captionCache;
     private final Map<Long, ImageIcon> iconCache;
 
-    public XBDocTreeCellRenderer(XBACatalog catalog) {
+    public XBDocTreeCellRenderer() {
         super();
-        this.catalog = catalog;
         captionCache = new HashMap<>();
         iconCache = new HashMap<>();
     }
