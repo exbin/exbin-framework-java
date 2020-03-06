@@ -16,21 +16,26 @@
  */
 package org.exbin.framework.editor.xbup.action;
 
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
+import org.exbin.framework.editor.xbup.panel.XBDocTreeTransferHandler;
+import org.exbin.framework.gui.utils.ClipboardUtils;
 
 /**
- * Import file as item action.
+ * Copy item to clipboard action.
  *
- * @version 0.2.0 2016/03/02
+ * @version 0.2.0 2016/03/06
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ImportFileAsItemAction extends AbstractAction {
+public class CopyItemAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        Clipboard clipboard = ClipboardUtils.getClipboard();
+//        XBDocTreeTransferHandler.XBTSelection selection = new XBDocTreeTransferHandler.XBTSelection(getSelectedItem());
+//        clipboard.setContents(selection, selection);
     }
 }

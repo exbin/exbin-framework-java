@@ -203,7 +203,7 @@ public class DocumentViewerProvider implements EditorProvider {
         undoHandler.clear();
         getDoc().clear();
         reportStructureChange(null);
-        updateItem();
+//        updateItem();
     }
 
     @Override
@@ -282,9 +282,9 @@ public class DocumentViewerProvider implements EditorProvider {
 //        }
     }
 
-    public boolean isPasteEnabled() {
-        return documentPanel.isPasteEnabled();
-    }
+//    public boolean isPasteEnabled() {
+//        return documentPanel.isPasteEnabled();
+//    }
 
     public void postWindowOpened() {
         documentPanel.postWindowOpened();
@@ -292,7 +292,7 @@ public class DocumentViewerProvider implements EditorProvider {
 
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
 //        clipboardActionsUpdateListener = updateListener;
-        documentPanel.setUpdateListener(updateListener);
+//        documentPanel.setUpdateListener(updateListener);
         binaryViewer.setUpdateListener(updateListener);
         textViewer.setUpdateListener(updateListener);
         propertiesViewer.setUpdateListener(updateListener);
@@ -311,9 +311,9 @@ public class DocumentViewerProvider implements EditorProvider {
         return documentPanel.getSelectedItem();
     }
 
-    public void updateItem() {
-        documentPanel.updateItem();
-    }
+//    public void updateItem() {
+//        documentPanel.updateItem();
+//    }
 
     public void setMode(PanelMode mode) {
         if (this.mode != mode) {
@@ -386,58 +386,6 @@ public class DocumentViewerProvider implements EditorProvider {
 //                clipboardActionsUpdateListener.stateChanged();
 //            }
         }
-    }
-
-    public void performModify() {
-        XBTTreeNode node = getSelectedItem();
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        ModifyBlockPanel panel = new ModifyBlockPanel();
-        panel.setApplication(application);
-        panel.setCatalog(catalog);
-        panel.setPluginRepository(pluginRepository);
-        panel.setNode(node, mainDoc);
-        DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), ModifyBlockPanel.class, panel.getResourceBundle());
-        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-            if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                XBTTreeNode newNode = panel.getNode();
-                XBTDocCommand undoStep;
-                if (node.getParent() == null) {
-                    undoStep = new XBTChangeBlockCommand(mainDoc);
-                    long position = node.getBlockIndex();
-                    XBTModifyBlockOperation modifyOperation = new XBTModifyBlockOperation(mainDoc, position, newNode);
-                    ((XBTChangeBlockCommand) undoStep).appendOperation(modifyOperation);
-                    XBData tailData = new XBData();
-                    panel.saveTailData(tailData.getDataOutputStream());
-                    XBTTailDataOperation extOperation = new XBTTailDataOperation(mainDoc, tailData);
-                    ((XBTChangeBlockCommand) undoStep).appendOperation(extOperation);
-                } else {
-                    undoStep = new XBTModifyBlockCommand(mainDoc, node, newNode);
-                }
-                // TODO: Optimized diff command later
-                //                if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
-                //                    undoStep = new XBTModDataBlockCommand(node, newNode);
-                //                } else if (newNode.getChildrenCount() > 0) {
-                //                } else {
-                //                    undoStep = new XBTModAttrBlockCommand(node, newNode);
-                //                }
-                try {
-                    undoHandler.execute(undoStep);
-                } catch (Exception ex) {
-                    Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                mainDoc.processSpec();
-                reportStructureChange(node);
-                getDoc().setModified(true);
-            }
-
-            dialog.close();
-            dialog.dispose();
-        });
-        dialog.showCentered(null);
     }
 
     public void actionItemProperties() {
@@ -545,7 +493,7 @@ public class DocumentViewerProvider implements EditorProvider {
             mainDoc.processSpec();
             reportStructureChange(null);
             // getDoc().setModified(true);
-            updateItem();
+//            updateItem();
 //            updateActionStatus(null);
 //            if (clipboardActionsUpdateListener != null) {
 //                clipboardActionsUpdateListener.stateChanged();

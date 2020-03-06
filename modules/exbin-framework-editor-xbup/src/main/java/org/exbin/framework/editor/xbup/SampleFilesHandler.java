@@ -65,7 +65,7 @@ public class SampleFilesHandler {
                         Logger.getLogger(SampleFilesHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     provider.reportStructureChange(null);
-                    provider.updateItem();
+//                    provider.updateItem();
                 }
             }
         };
@@ -84,7 +84,7 @@ public class SampleFilesHandler {
                         Logger.getLogger(SampleFilesHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     provider.reportStructureChange(null);
-                    provider.updateItem();
+//                    provider.updateItem();
                 }
             }
         };

@@ -17,6 +17,7 @@
 package org.exbin.framework.editor.xbup;
 
 import java.io.File;
+import javax.annotation.Nonnull;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
@@ -95,7 +96,7 @@ public class EditorXbupModule implements XBApplicationModule {
 
             final DocumentViewerProvider docPanel = (DocumentViewerProvider) editorProvider;
 
-//            docPanel.setPopupMenu(createPopupMenu());
+//            docPanel.getComponentPanel().setPopupMenu(createPopupMenu());
 //            docPanel.addUpdateListener((ActionEvent e) -> {
 //                if (docEditingHandler != null) {
 //                    docEditingHandler.setAddEnabled(docPanel.isAddEnabled());
@@ -256,7 +257,8 @@ public class EditorXbupModule implements XBApplicationModule {
         menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, propertyPanelHandler.getViewPropertyPanelAction(), new MenuPosition(PositionMode.MIDDLE));
     }
 
-    private JPopupMenu createPopupMenu() {
+    @Nonnull
+    public JPopupMenu createItemPopupMenu() {
         getPropertiesHandler();
         getDocEditingHandler();
         getImportExportHandler();

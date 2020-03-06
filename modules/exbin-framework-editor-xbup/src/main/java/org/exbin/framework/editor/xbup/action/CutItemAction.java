@@ -21,16 +21,17 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 
 /**
- * Import file as item action.
+ * Cut item to clipboard action.
  *
- * @version 0.2.0 2016/03/02
+ * @version 0.2.0 2016/03/06
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ImportFileAsItemAction extends AbstractAction {
+public class CutItemAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        performCopy();
+//        performDelete();
     }
 }

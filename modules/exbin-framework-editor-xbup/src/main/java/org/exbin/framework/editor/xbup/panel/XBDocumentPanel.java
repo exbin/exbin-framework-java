@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.TreeSelectionEvent;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.editor.xbup.EditorXbupModule;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBTBlock;
@@ -36,7 +36,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 /**
  * Panel for document visualization.
  *
- * @version 0.2.1 2020/03/03
+ * @version 0.2.1 2020/03/06
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel {
@@ -49,7 +49,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     private XBPropertyPanel propertyPanel;
     private XBPluginRepository pluginRepository;
-    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
+//    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
     public XBDocumentPanel() {
 
@@ -75,6 +75,9 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     public void setApplication(XBApplication application) {
         treePanel.setApplication(application);
         propertyPanel.setApplication(application);
+        
+        EditorXbupModule xbupModule = application.getModuleRepository().getModuleByInterface(EditorXbupModule.class);
+        setPopupMenu(xbupModule.createItemPopupMenu());
     }
 
     public void setCatalog(XBACatalog catalog) {
@@ -89,23 +92,23 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         treePanel.setUndoHandler(undoHandler);
     }
 
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-        clipboardActionsUpdateListener = updateListener;
-
-        treePanel.setUpdateListener(updateListener);
-    }
+//    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+//        clipboardActionsUpdateListener = updateListener;
+//
+//        treePanel.setUpdateListener(updateListener);
+//    }
 
     public void postWindowOpened() {
         mainSplitPane.setDividerLocation(getWidth() - 300 > 0 ? getWidth() - 300 : getWidth() / 3);
     }
 
-    /**
-     * Updating selected item available operations status, like add, edit,
-     * delete.
-     */
-    public void updateItem() {
-        treePanel.updateItemStatus();
-    }
+//    /**
+//     * Updating selected item available operations status, like add, edit,
+//     * delete.
+//     */
+//    public void updateItem() {
+//        treePanel.updateItemStatus();
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -216,21 +219,21 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         treePanel.reportStructureChange(block);
     }
 
-    public boolean isPasteEnabled() {
-        return treePanel.isPasteEnabled();
+//    public boolean isPasteEnabled() {
+//        return treePanel.isPasteEnabled();
+//    }
+
+    public void addUpdateListener(ActionListener listener) {
+        treePanel.addUpdateListener(listener);
     }
 
-    public void addUpdateListener(ActionListener tml) {
-        treePanel.addUpdateListener(tml);
+    public void removeUpdateListener(ActionListener listener) {
+        treePanel.removeUpdateListener(listener);
     }
 
-    public void removeUpdateListener(ActionListener tml) {
-        treePanel.removeUpdateListener(tml);
-    }
-
-    public void performAdd() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+//    public void performAdd() {
+//        throw new UnsupportedOperationException("Not supported yet.");
+//    }
 
     public void showPanel() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -262,13 +265,13 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane viewSplitPane;
     // End of variables declaration//GEN-END:variables
 
-    public void setEditEnabled(boolean editEnabled) {
-        treePanel.setEditEnabled(editEnabled);
-    }
-
-    public void setAddEnabled(boolean addEnabled) {
-        treePanel.setAddEnabled(addEnabled);
-    }
+//    public void setEditEnabled(boolean editEnabled) {
+//        treePanel.setEditEnabled(editEnabled);
+//    }
+//
+//    public void setAddEnabled(boolean addEnabled) {
+//        treePanel.setAddEnabled(addEnabled);
+//    }
 
     public void updateUndoAvailable() {
         firePropertyChange("undoAvailable", false, true);
@@ -285,17 +288,17 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     }
 
     public void setShowPropertiesPanel(boolean showPropertiesPanel) {
-//        if (this.showPropertiesPanel != showPropertiesPanel) {
-//            if (showPropertiesPanel) {
-//                viewSplitPane.setLeftComponent(mainTabbedPane);
-//                viewSplitPane.setRightComponent(propertyPanel);
-//                mainSplitPane.setRightComponent(viewSplitPane);
-//            } else {
-//                mainSplitPane.setRightComponent(mainTabbedPane);
-//            }
-//
-//            this.showPropertiesPanel = showPropertiesPanel;
-//        }
+        if (this.showPropertiesPanel != showPropertiesPanel) {
+            if (showPropertiesPanel) {
+                viewSplitPane.setLeftComponent(mainTabbedPane);
+                viewSplitPane.setRightComponent(propertyPanel);
+                mainSplitPane.setRightComponent(viewSplitPane);
+            } else {
+                mainSplitPane.setRightComponent(mainTabbedPane);
+            }
+
+            this.showPropertiesPanel = showPropertiesPanel;
+        }
     }
 
 //    public ActivePanelActionHandling getActivePanel() {

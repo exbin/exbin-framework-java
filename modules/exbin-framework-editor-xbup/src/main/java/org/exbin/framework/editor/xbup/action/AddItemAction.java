@@ -19,6 +19,7 @@ package org.exbin.framework.editor.xbup.action;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.editor.xbup.panel.AddBlockPanel;
@@ -36,6 +37,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
  * @version 0.2.0 2016/03/02
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class AddItemAction extends AbstractAction {
 
     private AddBlockPanel addItemPanel = null;

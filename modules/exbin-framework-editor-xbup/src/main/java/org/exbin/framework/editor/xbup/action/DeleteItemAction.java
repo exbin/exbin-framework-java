@@ -17,20 +17,39 @@
 package org.exbin.framework.editor.xbup.action;
 
 import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
+import org.exbin.framework.editor.xbup.panel.XBDocTreePanel;
+import org.exbin.xbup.operation.XBTDocCommand;
+import org.exbin.xbup.operation.basic.command.XBTDeleteBlockCommand;
+import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**
- * Import file as item action.
+ * Delete item action.
  *
- * @version 0.2.0 2016/03/02
+ * @version 0.2.0 2016/03/06
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ImportFileAsItemAction extends AbstractAction {
+public class DeleteItemAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        XBTTreeNode parent = (XBTTreeNode) node.getParent();
+//        try {
+//            XBTDocCommand command = new XBTDeleteBlockCommand(mainDoc, node);
+//            undoHandler.execute(command);
+//        } catch (Exception ex) {
+//            Logger.getLogger(XBDocTreePanel.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        if (parent == null) {
+//            mainDocModel.fireTreeChanged();
+//        } else {
+//            mainDocModel.fireTreeStructureChanged(parent);
+//        }
+//        mainDoc.setModified(true);
     }
 }
