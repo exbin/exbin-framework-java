@@ -25,7 +25,7 @@ import org.exbin.bined.capability.CodeCharactersCaseCapable;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -85,7 +85,7 @@ public class HexCharactersCaseHandler {
 
     public void setHexCharactersCase(CodeCharactersCase hexCharactersCase) {
         this.hexCharactersCase = hexCharactersCase;
-        BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
         ((CodeCharactersCaseCapable) activePanel.getCodeArea()).setCodeCharactersCase(hexCharactersCase);
     }
 

@@ -28,7 +28,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.bined.panel.GoToBinaryPanel;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -63,7 +63,7 @@ public class GoToPositionHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof BinaryEditorProvider) {
-                    final BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+                    final BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
                     final GoToBinaryPanel goToPanel = new GoToBinaryPanel();
                     goToPanel.setCursorPosition(((CaretCapable) activePanel.getCodeArea()).getCaret().getCaretPosition().getDataPosition());
                     goToPanel.setMaxPosition(activePanel.getCodeArea().getDataSize());

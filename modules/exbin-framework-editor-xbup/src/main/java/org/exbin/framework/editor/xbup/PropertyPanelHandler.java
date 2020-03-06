@@ -20,9 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JMenuItem;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -51,9 +49,10 @@ public class PropertyPanelHandler {
         viewPropertyPanelAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof XBDocumentPanel) {
-                    ((XBDocumentPanel) editorProvider).setShowPropertiesPanel(((JMenuItem) e.getSource()).isSelected());
-                }
+                throw new UnsupportedOperationException("Not supported yet.");
+//                if (editorProvider instanceof DocumentViewerProvider) {
+//                    ((DocumentViewerProvider) editorProvider).setShowPropertiesPanel(((JMenuItem) e.getSource()).isSelected());
+//                }
             }
         };
         ActionUtils.setupAction(viewPropertyPanelAction, resourceBundle, "viewPropertyPanelAction");

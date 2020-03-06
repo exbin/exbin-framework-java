@@ -25,7 +25,7 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -57,7 +57,7 @@ public class FindReplaceHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof BinaryEditorProvider) {
-                    BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+                    BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
                     activePanel.showSearchPanel(false);
                 }
             }
@@ -69,7 +69,7 @@ public class FindReplaceHandler {
         editFindAgainAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+                BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
                 activePanel.findAgain();
             }
         };
@@ -80,7 +80,7 @@ public class FindReplaceHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof BinaryEditorProvider) {
-                    BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+                    BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
                     activePanel.showSearchPanel(true);
                 }
             }

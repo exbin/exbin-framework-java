@@ -327,17 +327,17 @@ public class DocumentViewerProvider implements EditorProvider {
                 }
                 case BINARY: {
                     // TODO: Replace stupid buffer copy later
-                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                    try {
-                        binaryViewer.saveToStream(buffer);
-                        mainDoc.fromStreamUB(new ByteArrayInputStream(buffer.toByteArray()));
-                    } catch (XBProcessingException ex) {
-                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-                        throw new UnsupportedOperationException("Not supported yet.");
-                        // JOptionPane.showMessageDialog(WindowUtils.getFrame(this), ex.getMessage(), "Parsing Exception", JOptionPane.ERROR_MESSAGE);
-                    } catch (IOException ex) {
-                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+//                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+//                    try {
+//                        binaryViewer.saveToStream(buffer);
+//                        mainDoc.fromStreamUB(new ByteArrayInputStream(buffer.toByteArray()));
+//                    } catch (XBProcessingException ex) {
+//                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
+//                        throw new UnsupportedOperationException("Not supported yet.");
+//                        // JOptionPane.showMessageDialog(WindowUtils.getFrame(this), ex.getMessage(), "Parsing Exception", JOptionPane.ERROR_MESSAGE);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
                     break;
                 }
                 default:
@@ -359,13 +359,13 @@ public class DocumentViewerProvider implements EditorProvider {
                 }
                 case BINARY: {
                     // TODO: Replace stupid buffer copy later
-                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                    try {
-                        mainDoc.toStreamUB(buffer);
-                        binaryViewer.loadFromStream(new ByteArrayInputStream(buffer.toByteArray()), buffer.size());
-                    } catch (IOException ex) {
-                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+//                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+//                    try {
+//                        mainDoc.toStreamUB(buffer);
+//                        binaryViewer.loadFromStream(new ByteArrayInputStream(buffer.toByteArray()), buffer.size());
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
                     break;
                 }
                 default:

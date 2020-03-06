@@ -22,21 +22,21 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
- * Hexadecimal editor provider interface.
+ * Binary editor provider interface.
  *
- * @version 0.2.0 2019/06/16
+ * @version 0.2.0 2020/03/05
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface BinaryEditorProvider extends EditorProvider {
 
     /**
-     * Registers hex status method.
+     * Registers binary status method.
      *
      * @param binaryStatus hex status
      */
@@ -64,10 +64,12 @@ public interface BinaryEditorProvider extends EditorProvider {
     @Nonnull
     Charset getCharset();
 
-    void setCharset(Charset forName);
+    int getId();
+
+    void setCharset(Charset charset);
 
     boolean isShowNonprintables();
-    
+
     void setShowNonprintables(boolean show);
 
     boolean isShowValuesPanel();
@@ -77,7 +79,7 @@ public interface BinaryEditorProvider extends EditorProvider {
     boolean changeLineWrap();
 
     @Nonnull
-    BinaryPanel getDocument();
+    BinEdComponentPanel getComponentPanel();
 
     void printFile();
 
@@ -87,5 +89,5 @@ public interface BinaryEditorProvider extends EditorProvider {
     @Nonnull
     ExtCodeArea getCodeArea();
 
-    void setFileHandlingMode(FileHandlingMode valueOf);
+    void setFileHandlingMode(FileHandlingMode fileHandlingMode);
 }

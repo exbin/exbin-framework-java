@@ -26,11 +26,11 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.0 2016/12/23
  * @author ExBin Project (http://exbin.org)
  */
-public class BinaryPropertiesPanel extends javax.swing.JPanel {
+public class BinEdFilePropertiesPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryPropertiesPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinEdFilePropertiesPanel.class);
 
-    public BinaryPropertiesPanel() {
+    public BinEdFilePropertiesPanel() {
         initComponents();
     }
 
@@ -123,7 +123,7 @@ public class BinaryPropertiesPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new BinaryPropertiesPanel());
+        WindowUtils.invokeDialog(new BinEdFilePropertiesPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

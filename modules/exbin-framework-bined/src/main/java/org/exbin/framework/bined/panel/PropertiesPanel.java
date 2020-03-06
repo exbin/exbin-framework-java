@@ -25,6 +25,7 @@ import org.exbin.auxiliary.paged_data.delta.FileSegment;
 import org.exbin.auxiliary.paged_data.delta.MemorySegment;
 import org.exbin.auxiliary.paged_data.delta.list.DefaultDoublyLinkedList;
 import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -144,8 +145,9 @@ public class PropertiesPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane structureScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    public void setDocument(BinaryPanel panel) {
-        URI fileUri = panel.getFileUri();
+    public void setEditorProvider(BinaryEditorProvider editorProvider) {
+        URI fileUri = editorProvider.getFileUri();
+        BinEdComponentPanel panel = editorProvider.getComponentPanel();
         fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
         ExtCodeArea codeArea = panel.getCodeArea();
         fileSizeTextField.setText(Long.toString(codeArea.getDataSize()));

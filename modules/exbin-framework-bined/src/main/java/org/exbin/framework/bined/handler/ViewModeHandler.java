@@ -24,7 +24,7 @@ import org.exbin.bined.CodeAreaViewMode;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -97,7 +97,7 @@ public class ViewModeHandler {
 
     public void setViewMode(CodeAreaViewMode viewMode) {
         this.viewMode = viewMode;
-        BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
         activePanel.getCodeArea().setViewMode(viewMode);
     }
 

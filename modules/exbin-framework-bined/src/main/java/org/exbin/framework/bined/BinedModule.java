@@ -88,7 +88,7 @@ import org.exbin.framework.bined.options.impl.CodeAreaThemeOptionsImpl;
 import org.exbin.framework.bined.options.impl.EditorOptionsImpl;
 import org.exbin.framework.bined.options.impl.StatusOptionsImpl;
 import org.exbin.framework.bined.options.panel.BinaryAppearanceOptionsPanel;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.TextFontApi;
@@ -153,7 +153,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2019/08/20
+ * @version 0.2.1 2020/03/05
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -232,13 +232,14 @@ public class BinedModule implements XBApplicationModule {
 
             String deltaModeString = editorParameters.getMemoryMode();
             BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
-            BinaryPanel panel = new BinaryPanel();
-            panel.setSegmentsRepository(new SegmentsRepository());
-            panel.setMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
-            editorProvider = panel;
+            BinEdFile binEdEditorProvider = new BinEdFile();
+            binEdEditorProvider.setSegmentsRepository(new SegmentsRepository());
+            BinEdComponentPanel panel = binEdEditorProvider.getComponentPanel();
+            // TODO panel.setMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
+            editorProvider = binEdEditorProvider;
 
             panel.setApplication(application);
-            panel.setPopupMenu(createPopupMenu(panel.getId(), editorProvider.getCodeArea()));
+            panel.setPopupMenu(createPopupMenu(editorProvider.getId(), editorProvider.getCodeArea()));
             panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
             panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
             panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
@@ -268,8 +269,9 @@ public class BinedModule implements XBApplicationModule {
         if (editorProvider == null) {
             GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryEditorHandler();
-            ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinaryPanel panel) -> {
-                panel.setPopupMenu(createPopupMenu(panel.getId(), editorProvider.getCodeArea()));
+            ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinEdFile file) -> {
+                BinEdComponentPanel panel = file.getComponentPanel();
+                panel.setPopupMenu(createPopupMenu(editorProvider.getId(), editorProvider.getCodeArea()));
                 panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
                 panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
                 panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());

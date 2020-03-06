@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.JPanel;
 import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.operation.BinaryDataCommand;
@@ -33,10 +32,11 @@ import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
+import org.exbin.framework.bined.BinEdFile;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -49,16 +49,16 @@ import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 /**
  * Binary editor provider.
  *
- * @version 0.2.1 2019/07/16
+ * @version 0.2.1 2020/03/05
  * @author ExBin Project (http://exbin.org)
  */
 public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
 
     private BinaryPanelInit binaryPanelInit = null;
-    private final List<BinaryPanel> panels = new ArrayList<>();
+    private final List<BinEdFile> files = new ArrayList<>();
     private EditorViewHandling editorViewHandling = null;
     private SegmentsRepository segmentsRepository;
-    private BinaryPanel activePanel = null;
+    private BinEdFile activeFile = null;
     private int lastIndex = 0;
     private BinaryStatusApi binaryStatus = null;
     private TextEncodingStatusApi encodingStatus;
@@ -75,7 +75,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
                 editorModificationListener.modified();
             }
             if (editorViewHandling != null) {
-                editorViewHandling.updateEditorView(activePanel);
+                editorViewHandling.updateEditorView(activeFile);
             }
         };
 
@@ -97,75 +97,80 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
-    public JPanel getPanel() {
-        return activePanel.getPanel();
+    public BinEdComponentPanel getComponentPanel() {
+        return activeFile.getComponentPanel();
     }
 
     @Override
     public void setPropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
-        activePanel.setPropertyChangeListener((PropertyChangeEvent evt) -> {
-            editorViewHandling.addEditorView(activePanel);
+        activeFile.setPropertyChangeListener((PropertyChangeEvent evt) -> {
+            editorViewHandling.addEditorView(activeFile);
             propertyChangeListener.propertyChange(evt);
         });
     }
 
     @Override
     public String getWindowTitle(String frameTitle) {
-        return activePanel.getWindowTitle(frameTitle);
+        return activeFile.getWindowTitle(frameTitle);
     }
 
     @Override
     public void loadFromFile(URI fileUri, FileType fileType) {
-        BinaryPanel panel = createNewPanel();
-        panel.newFile();
-        panel.loadFromFile(fileUri, fileType);
-        editorViewHandling.updateEditorView(panel);
-        activePanel = panel;
+        BinEdFile createdFile = createNewFile();
+        createdFile.newFile();
+        createdFile.loadFromFile(fileUri, fileType);
+        editorViewHandling.updateEditorView(createdFile);
+        activeFile = createdFile;
     }
 
     @Override
     public void saveToFile(URI fileUri, FileType fileType) {
-        activePanel.saveToFile(fileUri, fileType);
-        editorViewHandling.updateEditorView(activePanel);
+        activeFile.saveToFile(fileUri, fileType);
+        editorViewHandling.updateEditorView(activeFile);
+    }
+
+    @Override
+    public int getId() {
+        return activeFile.getId();
     }
 
     @Override
     public URI getFileUri() {
-        return activePanel.getFileUri();
+        return activeFile.getFileUri();
     }
 
     @Override
     public String getFileName() {
-        return activePanel.getName();
+        return activeFile.getFileName();
     }
 
     @Override
     public FileType getFileType() {
-        return activePanel.getFileType();
+        return activeFile.getFileType();
     }
 
     @Override
     public void setFileType(FileType fileType) {
-        activePanel.setFileType(fileType);
+        activeFile.setFileType(fileType);
     }
 
     @Override
     public void newFile() {
-        BinaryPanel panel = createNewPanel();
-        panel.newFile();
-        activePanel = panel;
+        BinEdFile createdFile = createNewFile();
+        createdFile.newFile();
+        activeFile = createdFile;
     }
 
     @Override
     public boolean isModified() {
-        return activePanel.isModified();
+        return activeFile.isModified();
     }
 
     @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatusApi) {
         this.binaryStatus = binaryStatusApi;
-        if (!panels.isEmpty()) {
-            panels.forEach((panel) -> {
+        if (!files.isEmpty()) {
+            files.forEach((panel) -> {
                 panel.registerBinaryStatus(binaryStatusApi);
             });
         }
@@ -174,8 +179,8 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     @Override
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatusApi) {
         this.encodingStatus = encodingStatusApi;
-        if (!panels.isEmpty()) {
-            panels.forEach((panel) -> {
+        if (!files.isEmpty()) {
+            files.forEach((panel) -> {
                 panel.registerEncodingStatus(encodingStatusApi);
             });
         }
@@ -185,29 +190,29 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
         this.segmentsRepository = segmentsRepository;
     }
 
-    private synchronized BinaryPanel createNewPanel() {
-        BinaryPanel panel = new BinaryPanel(lastIndex);
-        panel.setSegmentsRepository(segmentsRepository);
+    private synchronized BinEdFile createNewFile() {
+        BinEdFile createdFile = new BinEdFile(lastIndex);
+        createdFile.setSegmentsRepository(segmentsRepository);
         lastIndex++;
-        panels.add(panel);
+        files.add(createdFile);
         if (binaryPanelInit != null) {
-            binaryPanelInit.init(panel);
+            binaryPanelInit.init(createdFile);
         }
         if (binaryStatus != null) {
-            panel.registerBinaryStatus(binaryStatus);
-            panel.registerEncodingStatus(encodingStatus);
+            createdFile.registerBinaryStatus(binaryStatus);
+            createdFile.registerEncodingStatus(encodingStatus);
         }
-        editorViewHandling.addEditorView(panel);
-        panel.setModificationListener(multiModificationListener);
-        panel.getBinaryUndoHandler().addUndoUpdateListener(multiUndoUpdateListener);
-        panel.setUpdateListener(multiClipboardUpdateListener);
+        editorViewHandling.addEditorView(createdFile);
+        createdFile.setModificationListener(multiModificationListener);
+        createdFile.getUndoHandler().addUndoUpdateListener(multiUndoUpdateListener);
+        createdFile.setUpdateListener(multiClipboardUpdateListener);
 
-        return panel;
+        return createdFile;
     }
 
     public void init() {
-        activePanel = createNewPanel();
-        activePanel.newFile();
+        activeFile = createNewFile();
+        activeFile.newFile();
     }
 
     public BinaryPanelInit getBinaryPanelInit() {
@@ -220,7 +225,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-        activePanel.setFileHandlingMode(fileHandlingMode);
+        activeFile.setFileHandlingMode(fileHandlingMode);
     }
 
     @Nullable
@@ -235,54 +240,54 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public ExtendedCodeAreaColorProfile getCurrentColors() {
-        return activePanel.getCurrentColors();
+        return activeFile.getCurrentColors();
     }
 
     @Nonnull
     @Override
     public ExtendedCodeAreaColorProfile getDefaultColors() {
-        return activePanel.getDefaultColors();
+        return activeFile.getDefaultColors();
     }
 
     @Nonnull
     @Override
     public void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile) {
-        activePanel.setCurrentColors(colorsProfile);
+        activeFile.setCurrentColors(colorsProfile);
     }
 
     @Override
     public boolean isWordWrapMode() {
-        return ((RowWrappingCapable) activePanel.getCodeArea()).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING;
+        return ((RowWrappingCapable) activeFile.getCodeArea()).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING;
     }
 
     @Override
     public void setWordWrapMode(boolean mode) {
-        ((RowWrappingCapable) activePanel.getCodeArea()).setRowWrapping(mode ? RowWrappingCapable.RowWrappingMode.WRAPPING : RowWrappingCapable.RowWrappingMode.NO_WRAPPING);
+        ((RowWrappingCapable) activeFile.getCodeArea()).setRowWrapping(mode ? RowWrappingCapable.RowWrappingMode.WRAPPING : RowWrappingCapable.RowWrappingMode.NO_WRAPPING);
     }
 
     @Override
     public Charset getCharset() {
-        return activePanel.getCharset();
+        return activeFile.getCharset();
     }
 
     @Override
     public void setCharset(Charset charset) {
-        activePanel.setCharset(charset);
+        activeFile.setCharset(charset);
     }
 
     @Override
     public boolean isShowNonprintables() {
-        return activePanel.isShowNonprintables();
+        return activeFile.isShowNonprintables();
     }
 
     @Override
     public void setShowNonprintables(boolean show) {
-        activePanel.setShowNonprintables(show);
+        activeFile.setShowNonprintables(show);
     }
 
     @Override
     public boolean isShowValuesPanel() {
-        return activePanel.isShowValuesPanel();
+        return activeFile.isShowValuesPanel();
     }
 
     @Override
@@ -292,30 +297,30 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public boolean changeLineWrap() {
-        return activePanel.changeLineWrap();
+        return activeFile.changeLineWrap();
     }
 
     @Override
-    public BinaryPanel getDocument() {
-        return activePanel;
+    public BinEdComponentPanel getPanel() {
+        return activeFile.getComponentPanel();
     }
 
     @Override
     public ExtCodeArea getCodeArea() {
-        return activePanel.getCodeArea();
+        return activeFile.getCodeArea();
     }
 
     @Override
     public void printFile() {
-        activePanel.printFile();
+        activeFile.printFile();
     }
 
     @Override
     public void setActiveEditor(EditorProvider editorProvider) {
-        if (editorProvider instanceof BinaryPanel) {
-            BinaryPanel binaryPanel = (BinaryPanel) editorProvider;
-            activePanel = binaryPanel;
-            binaryPanel.notifyListeners();
+        if (editorProvider instanceof BinEdFile) {
+            BinEdFile newActiveFile = (BinEdFile) editorProvider;
+            activeFile = newActiveFile;
+            // TODO newActiveFile.notifyListeners();
             notifyUndoChanged();
             notifyClipboardStateChanged();
         }
@@ -323,13 +328,13 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public void closeFile() {
-        closeFile(activePanel);
+        closeFile(activeFile);
     }
 
     @Override
-    public void closeFile(FileHandlerApi panel) {
-        panels.remove((BinaryPanel) panel);
-        editorViewHandling.removeEditorView((EditorProvider) panel);
+    public void closeFile(FileHandlerApi closedFile) {
+        files.remove((BinEdFile) closedFile);
+        editorViewHandling.removeEditorView((EditorProvider) closedFile);
     }
 
     @Override
@@ -342,97 +347,97 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
         return new BinaryDataUndoHandler() {
             @Override
             public boolean canRedo() {
-                return activePanel.getBinaryUndoHandler().canRedo();
+                return activeFile.getBinaryUndoHandler().canRedo();
             }
 
             @Override
             public boolean canUndo() {
-                return activePanel.getBinaryUndoHandler().canUndo();
+                return activeFile.getBinaryUndoHandler().canUndo();
             }
 
             @Override
             public void clear() {
-                activePanel.getBinaryUndoHandler().clear();
+                activeFile.getBinaryUndoHandler().clear();
             }
 
             @Override
             public void doSync() throws BinaryDataOperationException {
-                activePanel.getBinaryUndoHandler().doSync();
+                activeFile.getBinaryUndoHandler().doSync();
             }
 
             @Override
             public void execute(BinaryDataCommand cmnd) throws BinaryDataOperationException {
-                activePanel.getBinaryUndoHandler().execute(cmnd);
+                activeFile.getBinaryUndoHandler().execute(cmnd);
             }
 
             @Override
             public void addCommand(BinaryDataCommand cmnd) {
-                activePanel.getBinaryUndoHandler().addCommand(cmnd);
+                activeFile.getBinaryUndoHandler().addCommand(cmnd);
             }
 
             @Override
             public List<BinaryDataCommand> getCommandList() {
-                return activePanel.getBinaryUndoHandler().getCommandList();
+                return activeFile.getBinaryUndoHandler().getCommandList();
             }
 
             @Override
             public long getCommandPosition() {
-                return activePanel.getBinaryUndoHandler().getCommandPosition();
+                return activeFile.getBinaryUndoHandler().getCommandPosition();
             }
 
             @Override
             public long getMaximumUndo() {
-                return activePanel.getBinaryUndoHandler().getMaximumUndo();
+                return activeFile.getBinaryUndoHandler().getMaximumUndo();
             }
 
             @Override
             public long getSyncPoint() {
-                return activePanel.getBinaryUndoHandler().getSyncPoint();
+                return activeFile.getBinaryUndoHandler().getSyncPoint();
             }
 
             @Override
             public long getUndoMaximumSize() {
-                return activePanel.getBinaryUndoHandler().getUndoMaximumSize();
+                return activeFile.getBinaryUndoHandler().getUndoMaximumSize();
             }
 
             @Override
             public long getUsedSize() {
-                return activePanel.getBinaryUndoHandler().getUsedSize();
+                return activeFile.getBinaryUndoHandler().getUsedSize();
             }
 
             @Override
             public void performRedo() throws BinaryDataOperationException {
-                activePanel.getBinaryUndoHandler().performRedo();
+                activeFile.getBinaryUndoHandler().performRedo();
             }
 
             @Override
             public void performRedo(int i) throws BinaryDataOperationException {
-                activePanel.getBinaryUndoHandler().performRedo(i);
+                activeFile.getBinaryUndoHandler().performRedo(i);
             }
 
             @Override
             public void performUndo() throws BinaryDataOperationException {
-                activePanel.getBinaryUndoHandler().performUndo();
+                activeFile.getBinaryUndoHandler().performUndo();
             }
 
             @Override
             public void performUndo(int i) throws BinaryDataOperationException {
-                activePanel.getBinaryUndoHandler().performUndo(i);
+                activeFile.getBinaryUndoHandler().performUndo(i);
             }
 
             @Override
             public void setCommandPosition(long l) throws BinaryDataOperationException {
-                activePanel.getBinaryUndoHandler().setCommandPosition(l);
+                activeFile.getBinaryUndoHandler().setCommandPosition(l);
             }
 
             @Override
             public void setSyncPoint(long l) {
-                activePanel.getBinaryUndoHandler().setSyncPoint(l);
+                activeFile.getBinaryUndoHandler().setSyncPoint(l);
             }
 
             @Override
             public void setSyncPoint() {
-                activePanel.getBinaryUndoHandler().setSyncPoint();
+                activeFile.getBinaryUndoHandler().setSyncPoint();
             }
 
             @Override
@@ -452,7 +457,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
             listener.undoCommandPositionChanged();
         });
         if (editorViewHandling != null) {
-            editorViewHandling.updateEditorView(activePanel);
+            editorViewHandling.updateEditorView(activeFile);
         }
     }
 
@@ -464,47 +469,47 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public void performCut() {
-        activePanel.performCut();
+        activeFile.performCut();
     }
 
     @Override
     public void performCopy() {
-        activePanel.performCopy();
+        activeFile.performCopy();
     }
 
     @Override
     public void performPaste() {
-        activePanel.performPaste();
+        activeFile.performPaste();
     }
 
     @Override
     public void performDelete() {
-        activePanel.performDelete();
+        activeFile.performDelete();
     }
 
     @Override
     public void performSelectAll() {
-        activePanel.performSelectAll();
+        activeFile.performSelectAll();
     }
 
     @Override
     public boolean isSelection() {
-        return activePanel.isSelection();
+        return activeFile.isSelection();
     }
 
     @Override
     public boolean isEditable() {
-        return activePanel.isEditable();
+        return activeFile.isEditable();
     }
 
     @Override
     public boolean canSelectAll() {
-        return activePanel.canSelectAll();
+        return activeFile.canSelectAll();
     }
 
     @Override
     public boolean canPaste() {
-        return activePanel.canPaste();
+        return activeFile.canPaste();
     }
 
     @Override
@@ -517,6 +522,6 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
      */
     public static interface BinaryPanelInit {
 
-        void init(BinaryPanel panel);
+        void init(BinEdFile binEdFile);
     }
 }

@@ -59,7 +59,7 @@ public class PropertiesHandler {
             public void actionPerformed(ActionEvent e) {
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 PropertiesPanel propertiesPanel = new PropertiesPanel();
-                propertiesPanel.setDocument(editorProvider.getDocument());
+                propertiesPanel.setEditorProvider(editorProvider);
                 CloseControlPanel controlPanel = new CloseControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
 

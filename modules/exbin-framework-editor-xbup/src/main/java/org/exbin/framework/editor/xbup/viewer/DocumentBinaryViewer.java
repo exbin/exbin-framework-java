@@ -16,27 +16,24 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import javax.swing.JComponent;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 
 /**
  * Binary viewer of document.
  *
- * @version 0.2.1 2020/02/28
+ * @version 0.2.1 2020/03/06
  * @author ExBin Project (http://exbin.org)
  */
 public class DocumentBinaryViewer implements DocumentViewer {
 
-    private final BinaryPanel binaryPanel;
+    private final BinEdComponentPanel binaryPanel;
     private final BinaryStatusPanel binaryStatusPanel;
 
     public DocumentBinaryViewer() {
-        binaryPanel = new BinaryPanel();
+        binaryPanel = new BinEdComponentPanel();
         binaryStatusPanel = new BinaryStatusPanel();
         binaryPanel.registerBinaryStatus(binaryStatusPanel);
         // binaryPanel.setNoBorder();
@@ -95,13 +92,5 @@ public class DocumentBinaryViewer implements DocumentViewer {
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         binaryPanel.setUpdateListener(updateListener);
-    }
-
-    public void loadFromStream(InputStream stream, int size) throws IOException {
-        binaryPanel.loadFromStream(stream, size);
-    }
-
-    public void saveToStream(OutputStream stream) throws IOException {
-        binaryPanel.saveToStream(stream);
     }
 }

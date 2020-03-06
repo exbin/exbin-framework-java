@@ -24,7 +24,7 @@ import org.exbin.bined.PositionCodeType;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -99,7 +99,7 @@ public class PositionCodeTypeHandler {
 
     public void setCodeType(PositionCodeType codeType) {
         this.positionCodeType = codeType;
-        BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
         activePanel.getCodeArea().setPositionCodeType(codeType);
     }
 

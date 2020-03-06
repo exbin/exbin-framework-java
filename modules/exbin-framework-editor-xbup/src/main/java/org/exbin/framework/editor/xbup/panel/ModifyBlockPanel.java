@@ -40,7 +40,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.BinEdFile;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
@@ -98,11 +99,11 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     private XBTTreeNode srcNode;
     private XBTTreeNode newNode = null;
 
-    private final BinaryPanel binaryPanel;
+    private final BinEdFile binaryDataFile;
     private XBPanelEditor customPanel;
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
-    private BinaryPanel tailDataBinaryPanel = null;
+    private BinEdFile tailDataBinaryDataFile = null;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockPanel.class);
 
     private final String attributesPanelTitle;
@@ -118,9 +119,9 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     public ModifyBlockPanel() {
         initComponents();
 
-        binaryPanel = new BinaryPanel();
+        binaryDataFile = new BinEdFile();
         customPanel = null;
-        hexEditPanel.add(binaryPanel);
+        binaryEditPanel.add(binaryDataFile.getComponentPanel());
 
         attributesPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(attributesPanel));
         dataPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(dataPanel));
@@ -177,7 +178,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
                 }
                 dataChanged = false;
             } else if (extAreaEditorPanelTitle.equals(currentTitle)) {
-                if (tailDataBinaryPanel == null) {
+                if (tailDataBinaryDataFile == null) {
                     reloadTailData();
                 }
             }
@@ -273,9 +274,9 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         dataPanel = new javax.swing.JPanel();
         saveAsButton = new javax.swing.JButton();
         loadFromButton = new javax.swing.JButton();
-        hexEditPanel = new javax.swing.JPanel();
+        binaryEditPanel = new javax.swing.JPanel();
         tailDataPanel = new javax.swing.JPanel();
-        hexEditScrollPane = new javax.swing.JScrollPane();
+        binaryEditScrollPane = new javax.swing.JScrollPane();
         extLoadFromButton = new javax.swing.JButton();
         extSaveFromButto = new javax.swing.JButton();
 
@@ -389,8 +390,8 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             }
         });
 
-        hexEditPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        hexEditPanel.setLayout(new java.awt.BorderLayout());
+        binaryEditPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        binaryEditPanel.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout dataPanelLayout = new javax.swing.GroupLayout(dataPanel);
         dataPanel.setLayout(dataPanelLayout);
@@ -399,7 +400,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             .addGroup(dataPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(dataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(hexEditPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                    .addComponent(binaryEditPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
                     .addGroup(dataPanelLayout.createSequentialGroup()
                         .addComponent(loadFromButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -411,7 +412,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             dataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dataPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(hexEditPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                .addComponent(binaryEditPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(dataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveAsButton)
@@ -442,7 +443,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             .addGroup(tailDataPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(tailDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(hexEditScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                    .addComponent(binaryEditScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
                     .addGroup(tailDataPanelLayout.createSequentialGroup()
                         .addComponent(extLoadFromButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -454,7 +455,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             tailDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tailDataPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(hexEditScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                .addComponent(binaryEditScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tailDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(extSaveFromButto)
@@ -496,8 +497,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setAcceptAllFileFilterUsed(true);
         if (saveFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            binaryPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
-            binaryPanel.repaint();
+            binaryDataFile.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
         }
     }//GEN-LAST:event_saveAsButtonActionPerformed
 
@@ -505,8 +505,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         JFileChooser loadFileChooser = new JFileChooser();
         loadFileChooser.setAcceptAllFileFilterUsed(true);
         if (loadFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            binaryPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
-            binaryPanel.repaint();
+            binaryDataFile.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
         }
     }//GEN-LAST:event_loadFromButtonActionPerformed
 
@@ -514,8 +513,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         JFileChooser loadFileChooser = new JFileChooser();
         loadFileChooser.setAcceptAllFileFilterUsed(true);
         if (loadFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            tailDataBinaryPanel.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
-            tailDataBinaryPanel.repaint();
+            tailDataBinaryDataFile.loadFromFile(loadFileChooser.getSelectedFile().toURI(), null);
         }
     }//GEN-LAST:event_extLoadFromButtonActionPerformed
 
@@ -523,8 +521,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setAcceptAllFileFilterUsed(true);
         if (saveFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
-            tailDataBinaryPanel.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
-            tailDataBinaryPanel.repaint();
+            tailDataBinaryDataFile.saveToFile(saveFileChooser.getSelectedFile().toURI(), null);
         }
     }//GEN-LAST:event_extSaveFromButtoActionPerformed
 
@@ -543,11 +540,11 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane attributesScrollPane;
     private javax.swing.JTable attributesTable;
     private javax.swing.JPanel basicPanel;
+    private javax.swing.JPanel binaryEditPanel;
+    private javax.swing.JScrollPane binaryEditScrollPane;
     private javax.swing.JPanel dataPanel;
     private javax.swing.JButton extLoadFromButton;
     private javax.swing.JButton extSaveFromButto;
-    private javax.swing.JPanel hexEditPanel;
-    private javax.swing.JScrollPane hexEditScrollPane;
     private javax.swing.JButton loadFromButton;
     private javax.swing.JTabbedPane mainTabbedPane;
     private javax.swing.JPanel parametersPanel;
@@ -574,7 +571,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             mainTabbedPane.addTab(dataPanelTitle, dataPanel);
 
             try {
-                binaryPanel.loadFromStream(srcNode.getData(), srcNode.getDataSize());
+                binaryDataFile.loadFromStream(srcNode.getData(), srcNode.getDataSize());
             } catch (IOException ex) {
                 Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -605,7 +602,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
 
         if (srcNode.getParent() == null) {
             mainTabbedPane.addTab(extAreaEditorPanelTitle, tailDataPanel);
-            tailDataBinaryPanel = null;
+            tailDataBinaryDataFile = null;
         }
 
         mainTabbedPane.setSelectedIndex(1);
@@ -617,8 +614,8 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
 
     public void saveTailData(OutputStream stream) {
         try {
-            if (tailDataBinaryPanel != null) {
-                tailDataBinaryPanel.saveToStream(stream);
+            if (tailDataBinaryDataFile != null) {
+                tailDataBinaryDataFile.saveToStream(stream);
             }
         } catch (IOException ex) {
             Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -743,12 +740,12 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     }
 
     private void reloadTailData() {
-        tailDataBinaryPanel = new BinaryPanel();
-        hexEditScrollPane.setViewportView(tailDataBinaryPanel);
+        tailDataBinaryDataFile = new BinEdFile();
+        binaryEditScrollPane.setViewportView(tailDataBinaryDataFile.getComponentPanel());
 
         if (doc != null && doc.getTailDataSize() > 0) {
             try {
-                tailDataBinaryPanel.loadFromStream(doc.getTailData(), doc.getTailDataSize());
+                tailDataBinaryDataFile.loadFromStream(doc.getTailData(), doc.getTailDataSize());
             } catch (IOException ex) {
                 Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
             }

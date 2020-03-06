@@ -19,31 +19,18 @@ package org.exbin.framework.bined.panel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.event.MouseEvent;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import org.exbin.bined.CaretMovedListener;
@@ -67,42 +54,39 @@ import org.exbin.framework.bined.handler.EncodingStatusHandler;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextFontApi;
-import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.auxiliary.paged_data.BinaryData;
-import org.exbin.auxiliary.paged_data.EditableBinaryData;
 import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
-import org.exbin.auxiliary.paged_data.delta.FileDataSource;
-import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
 import org.exbin.bined.ClipboardHandlingMode;
-import org.exbin.xbup.core.type.XBData;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
+import org.exbin.framework.bined.preferences.BinaryEditorPreferences;
 import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
+import org.exbin.framework.gui.editor.api.EditorProvider.EditorModificationListener;
 
 /**
  * Binary editor panel.
  *
- * @version 0.2.1 2019/09/26
+ * @version 0.2.1 2020/03/06
  * @author ExBin Project (http://exbin.org)
  */
-public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvider, ClipboardActionsHandler, TextCharsetApi, TextFontApi {
+@ParametersAreNonnullByDefault
+public class BinEdComponentPanel extends javax.swing.JPanel implements ClipboardActionsHandler, TextCharsetApi, TextFontApi {
 
-    private int id = 0;
-    private SegmentsRepository segmentsRepository;
+    private static final FileHandlingMode DEFAULT_FILE_HANDLING_MODE = FileHandlingMode.DELTA;
+
+    private BinEdComponentFileApi fileApi = null;
+    private BinaryEditorPreferences preferences;
     private ExtCodeArea codeArea;
     private CodeAreaUndoHandler undoHandler;
-    private URI fileUri = null;
     private Color foundTextBackgroundColor;
     private Font defaultFont;
     private ExtendedCodeAreaColorProfile defaultColors;
     private BinaryStatusApi binaryStatus = null;
     private TextEncodingStatusApi encodingStatus = null;
-    private boolean memoryMode = false;
 
     private BinarySearchPanel binarySearchPanel;
     private boolean binarySearchPanelVisible = false;
@@ -115,44 +99,26 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     private EncodingStatusHandler encodingsHandler;
     private long documentOriginalSize;
 
+    private FileHandlingMode fileHandlingMode = DEFAULT_FILE_HANDLING_MODE;
+
     private PropertyChangeListener propertyChangeListener;
     private CharsetChangeListener charsetChangeListener = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
     private ReleaseFileMethod releaseFileMethod = null;
-    private XBApplication application;
+    private ModifiedStateListener modifiedChangeListener = null;
 
-    public BinaryPanel() {
+    public BinEdComponentPanel() {
         initComponents();
         init();
-    }
-
-    public BinaryPanel(int id) {
-        this();
-        this.id = id;
     }
 
     private void init() {
         codeArea = new ExtCodeArea();
         codeArea.setPainter(new ExtendedHighlightNonAsciiCodeAreaPainter(codeArea));
-        setNewData();
         codeArea.setClipboardHandlingMode(ClipboardHandlingMode.IGNORE);
         codeArea.setCodeFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         codeArea.addSelectionChangedListener((SelectionRange selection) -> {
             updateClipboardActionsStatus();
-        });
-
-        undoHandler = new CodeAreaUndoHandler(codeArea);
-        undoHandler.addUndoUpdateListener(new BinaryDataUndoUpdateListener() {
-            @Override
-            public void undoCommandPositionChanged() {
-                codeArea.repaint();
-                updateCurrentDocumentSize();
-            }
-
-            @Override
-            public void undoCommandAdded(BinaryDataCommand cmnd) {
-                updateCurrentDocumentSize();
-            }
         });
 
         CodeAreaOperationCommandHandler commandHandler = new CodeAreaOperationCommandHandler(codeArea, undoHandler);
@@ -194,12 +160,12 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     }
 
     public void setApplication(XBApplication application) {
-        this.application = application;
+        preferences = new BinaryEditorPreferences(application.getAppPreferences());
         binarySearchPanel.setApplication(application);
     }
 
-    public void setSegmentsRepository(SegmentsRepository segmentsRepository) {
-        this.segmentsRepository = segmentsRepository;
+    public void setFileApi(BinEdComponentFileApi fileApi) {
+        this.fileApi = fileApi;
     }
 
     public void showSearchPanel(boolean replace) {
@@ -216,13 +182,12 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         if (binarySearchPanelVisible) {
             binarySearchPanel.cancelSearch();
             binarySearchPanel.clearSearch();
-            BinaryPanel.this.remove(binarySearchPanel);
-            BinaryPanel.this.revalidate();
+            BinEdComponentPanel.this.remove(binarySearchPanel);
+            BinEdComponentPanel.this.revalidate();
             binarySearchPanelVisible = false;
         }
     }
 
-    @Override
     public void setShowValuesPanel(boolean show) {
         if (valuesPanelVisible != show) {
             if (show) {
@@ -232,46 +197,39 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
                 valuesPanel.enableUpdate();
             } else {
                 valuesPanel.disableUpdate();
-                BinaryPanel.this.remove(valuesPanelScrollPane);
-                BinaryPanel.this.revalidate();
+                BinEdComponentPanel.this.remove(valuesPanelScrollPane);
+                BinEdComponentPanel.this.revalidate();
                 valuesPanelVisible = false;
             }
         }
     }
 
-    @Override
     public boolean isShowValuesPanel() {
         return valuesPanelVisible;
     }
 
-    @Override
     public ExtCodeArea getCodeArea() {
         return codeArea;
     }
 
-    @Override
     public boolean changeLineWrap() {
         ((RowWrappingCapable) codeArea).setRowWrapping(((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING ? RowWrappingCapable.RowWrappingMode.NO_WRAPPING : RowWrappingCapable.RowWrappingMode.WRAPPING);
         return ((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING;
     }
 
-    @Override
     public boolean isShowNonprintables() {
         return codeArea.isShowUnprintables();
     }
 
-    @Override
     public void setShowNonprintables(boolean show) {
         codeArea.setShowUnprintables(show);
     }
 
-    @Override
     public boolean isWordWrapMode() {
         return false;
         // TODO codeArea.isWrapMode();
     }
 
-    @Override
     public void setWordWrapMode(boolean mode) {
         // TODO
 //        if (codeArea.isWrapMode() != mode) {
@@ -296,17 +254,14 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         }
     }
 
-    @Override
     public ExtendedCodeAreaColorProfile getCurrentColors() {
         return (ExtendedCodeAreaColorProfile) codeArea.getColorsProfile();
     }
 
-    @Override
     public ExtendedCodeAreaColorProfile getDefaultColors() {
         return defaultColors;
     }
 
-    @Override
     public void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile) {
         codeArea.setColorsProfile(colorsProfile);
     }
@@ -358,32 +313,6 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         return codeArea.hasSelection();
     }
 
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void printFile() {
-        PrinterJob job = PrinterJob.getPrinterJob();
-        if (job.printDialog()) {
-            try {
-//                PrintJob myJob = imageArea.getToolkit().getPrintJob(null, fileName, null);
-//                if (myJob != null) {
-                job.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
-                    codeArea.print(graphics);
-                    if (pageIndex == 0) {
-                        return Printable.PAGE_EXISTS;
-                    }
-                    return Printable.NO_SUCH_PAGE;
-                });
-                job.print();
-//                }
-            } catch (PrinterException ex) {
-                Logger.getLogger(BinaryPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
     @Override
     public void setCurrentFont(Font font) {
         codeArea.setCodeFont(font);
@@ -421,153 +350,54 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new BinaryPanel());
+        WindowUtils.invokeDialog(new BinEdComponentPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    @Override
     public boolean isModified() {
         return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();
     }
 
-    @Override
-    public CodeAreaUndoHandler getBinaryUndoHandler() {
+    public boolean releaseFile() {
+        if (releaseFileMethod != null) {
+            return releaseFileMethod.execute();
+        }
+
+        return true;
+    }
+
+    public CodeAreaUndoHandler getUndoHandler() {
         return undoHandler;
     }
 
-    public void setBinaryUndoHandler(CodeAreaUndoHandler binaryUndoHandler) {
-        this.undoHandler = binaryUndoHandler;
-    }
-
-    @Override
-    public void loadFromFile(URI fileUri, FileType fileType) {
-        File file = new File(fileUri);
-        if (!file.isFile()) {
-            JOptionPane.showOptionDialog(this,
-                    "File not found",
-                    "Unable to load file",
-                    JOptionPane.CLOSED_OPTION,
-                    JOptionPane.ERROR_MESSAGE,
-                    null, null, null);
-            return;
+    public void setUndoHandler(CodeAreaUndoHandler undoHandler) {
+        this.undoHandler = undoHandler;
+        CodeAreaOperationCommandHandler commandHandler = new CodeAreaOperationCommandHandler(codeArea, undoHandler);
+        codeArea.setCommandHandler(commandHandler);
+        if (valuesPanel != null) {
+            valuesPanel.setCodeArea(codeArea, undoHandler);
         }
+        // TODO set ENTER KEY mode in apply options
 
-        try {
-            BinaryData oldData = Objects.requireNonNull(codeArea.getContentData());
-            if (memoryMode) {
-                FileDataSource openFileSource = segmentsRepository.openFileSource(file);
-                DeltaDocument document = segmentsRepository.createDocument(openFileSource);
-                codeArea.setContentData(document);
-                this.fileUri = fileUri;
-                oldData.dispose();
-            } else {
-                try (FileInputStream fileStream = new FileInputStream(file)) {
-                    BinaryData data = codeArea.getContentData();
-                    if (!(data instanceof XBData)) {
-                        data = new XBData();
-                        oldData.dispose();
-                    }
-                    ((EditableBinaryData) data).loadFromStream(fileStream);
-                    codeArea.setContentData(data);
-                    this.fileUri = fileUri;
-                }
+        undoHandler.addUndoUpdateListener(new BinaryDataUndoUpdateListener() {
+            @Override
+            public void undoCommandPositionChanged() {
+                codeArea.repaint();
+                updateCurrentDocumentSize();
+                notifyModified();
             }
 
-            documentOriginalSize = codeArea.getDataSize();
-            updateCurrentDocumentSize();
-            updateCurrentMemoryMode();
-        } catch (IOException ex) {
-            Logger.getLogger(BinaryPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        undoHandler.clear();
-    }
-
-    @Override
-    public void saveToFile(URI fileUri, FileType fileType) {
-        File file = new File(fileUri);
-        try {
-            if (codeArea.getContentData() instanceof DeltaDocument) {
-                // TODO freeze window / replace with progress bar
-                DeltaDocument document = (DeltaDocument) Objects.requireNonNull(codeArea.getContentData());
-                FileDataSource fileSource = document.getFileSource();
-                if (fileSource == null || !file.equals(fileSource.getFile())) {
-                    fileSource = segmentsRepository.openFileSource(file);
-                    document.setFileSource(fileSource);
-                }
-                segmentsRepository.saveDocument(document);
-                this.fileUri = fileUri;
-            } else {
-                try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                    Objects.requireNonNull(codeArea.getContentData()).saveToStream(outputStream);
-                    this.fileUri = fileUri;
-                }
+            @Override
+            public void undoCommandAdded(@Nonnull final BinaryDataCommand command) {
+                updateCurrentDocumentSize();
+                notifyModified();
             }
-            documentOriginalSize = codeArea.getDataSize();
-            updateCurrentDocumentSize();
-            updateCurrentMemoryMode();
-        } catch (IOException ex) {
-            Logger.getLogger(BinaryPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        undoHandler.setSyncPoint();
-    }
-
-    @Override
-    public URI getFileUri() {
-        return fileUri;
-    }
-
-    @Override
-    public void newFile() {
-        if (codeArea.getContentData() instanceof DeltaDocument) {
-            segmentsRepository.dropDocument(Objects.requireNonNull((DeltaDocument) codeArea.getContentData()));
-        }
-        setNewData();
-        fileUri = null;
-        documentOriginalSize = codeArea.getDataSize();
-        codeArea.notifyDataChanged();
-        updateCurrentDocumentSize();
-        updateCurrentMemoryMode();
-        undoHandler.clear();
-        codeArea.repaint();
-    }
-
-    @Override
-    public String getFileName() {
-        if (fileUri != null) {
-            String path = fileUri.getPath();
-            int lastSegment = path.lastIndexOf("/");
-            return lastSegment < 0 ? path : path.substring(lastSegment + 1);
-        }
-
-        return null;
-    }
-
-    @Override
-    public FileType getFileType() {
-        return null;
+        });
     }
 
     public void setPopupMenu(JPopupMenu menu) {
         codeArea.setComponentPopupMenu(menu);
-    }
-
-    public void loadFromStream(InputStream stream) throws IOException {
-        EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) codeArea.getContentData());
-        data.loadFromStream(stream);
-    }
-
-    public void loadFromStream(InputStream stream, long dataSize) throws IOException {
-        EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) codeArea.getContentData());
-        data.clear();
-        data.insert(0, stream, dataSize);
-    }
-
-    public void saveToStream(OutputStream stream) throws IOException {
-        BinaryData data = Objects.requireNonNull((BinaryData) codeArea.getContentData());
-        data.saveToStream(stream);
     }
 
     public void attachCaretListener(CaretMovedListener listener) {
@@ -593,27 +423,8 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         return defaultFont;
     }
 
-    @Override
-    public void setFileType(FileType fileType) {
-    }
-
-    @Override
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         this.propertyChangeListener = propertyChangeListener;
-    }
-
-    @Override
-    public String getWindowTitle(String frameTitle) {
-        if (fileUri != null) {
-            String path = fileUri.getPath();
-            int lastIndexOf = path.lastIndexOf("/");
-            if (lastIndexOf < 0) {
-                return path + " - " + frameTitle;
-            }
-            return path.substring(lastIndexOf + 1) + " - " + frameTitle;
-        }
-
-        return frameTitle;
     }
 
     public void setCharsetChangeListener(CharsetChangeListener charsetChangeListener) {
@@ -627,12 +438,6 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         }
     }
 
-    @Override
-    public JPanel getPanel() {
-        return this;
-    }
-
-    @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatusApi) {
         this.binaryStatus = binaryStatusApi;
         attachCaretListener((CodeAreaCaretPosition caretPosition) -> {
@@ -676,18 +481,17 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
 
             @Override
             public void changeMemoryMode(BinaryStatusApi.MemoryMode memoryMode) {
-                boolean newDeltaMode = memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE;
-                switchMemoryMode(newDeltaMode);
+                FileHandlingMode newHandlingMode = memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY;
+                if (newHandlingMode != fileHandlingMode) {
+                    fileApi.switchFileHandlingMode(newHandlingMode);
+                    preferences.getEditorPreferences().setFileHandlingMode(newHandlingMode);
+                }
             }
         });
 
-        if (memoryMode) {
-            setNewData();
-        }
         updateCurrentMemoryMode();
     }
 
-    @Override
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatusApi) {
         this.encodingStatus = encodingStatusApi;
         setCharsetChangeListener(() -> {
@@ -737,8 +541,9 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         }
     }
 
-    public void setMemoryMode(boolean memoryMode) {
-        this.memoryMode = memoryMode;
+    @Nonnull
+    public FileHandlingMode getFileHandlingMode() {
+        return fileHandlingMode;
     }
 
     private void updateCurrentMemoryMode() {
@@ -778,9 +583,24 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         this.releaseFileMethod = releaseFileMethod;
     }
 
-    @Override
-    public BinaryPanel getDocument() {
-        return this;
+    @Nullable
+    public BinaryData getContentData() {
+        return codeArea.getContentData();
+    }
+
+    public void setContentData(BinaryData data) {
+        codeArea.setContentData(data);
+
+        documentOriginalSize = codeArea.getDataSize();
+        updateCurrentDocumentSize();
+        updateCurrentMemoryMode();
+
+        // Autodetect encoding using IDE mechanism
+//        final Charset charset = Charset.forName(FileEncodingQuery.getEncoding(dataObject.getPrimaryFile()).name());
+//        if (charsetChangeListener != null) {
+//            charsetChangeListener.charsetChanged();
+//        }
+//        codeArea.setCharset(charset);
     }
 
     /**
@@ -803,59 +623,22 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
         encodingStatus.setEncoding(codeArea.getCharset().name());
     }
 
-    @Override
     public void setModificationListener(final EditorModificationListener editorModificationListener) {
         codeArea.addDataChangedListener(editorModificationListener::modified);
     }
 
-    private void setNewData() {
-        if (memoryMode) {
-            codeArea.setContentData(segmentsRepository.createDocument());
-        } else {
-            codeArea.setContentData(new XBData());
-        }
-    }
-
-    @Override
     public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-        switchMemoryMode(fileHandlingMode == FileHandlingMode.DELTA);
+        this.fileHandlingMode = fileHandlingMode;
+        updateCurrentMemoryMode();
     }
 
-    private void switchMemoryMode(boolean newMemoryMode) {
-        if (newMemoryMode != memoryMode) {
-            // Switch memory mode
-            if (fileUri != null) {
-                // If document is connected to file, attempt to release first if modified and then simply reload
-                if (isModified()) {
-                    if (releaseFileMethod != null && releaseFileMethod.execute()) {
-                        memoryMode = newMemoryMode;
-                        loadFromFile(fileUri, null);
-                        codeArea.clearSelection();
-                        codeArea.setCaretPosition(0);
-                    }
-                } else {
-                    memoryMode = newMemoryMode;
-                    loadFromFile(fileUri, null);
-                }
-            } else {
-                // If document unsaved in memory, switch data in code area
-                BinaryData oldData = Objects.requireNonNull(codeArea.getContentData());
-                if (codeArea.getContentData() instanceof DeltaDocument) {
-                    XBData data = new XBData();
-                    data.insert(0, codeArea.getContentData());
-                    codeArea.setContentData(data);
-                } else {
-                    DeltaDocument document = segmentsRepository.createDocument();
-                    document.insert(0, oldData);
-                    codeArea.setContentData(document);
-                }
-                undoHandler.clear();
-                oldData.dispose();
-                codeArea.notifyDataChanged();
-                updateCurrentMemoryMode();
-                memoryMode = newMemoryMode;
-            }
-            memoryMode = newMemoryMode;
+    public void setModifiedChangeListener(ModifiedStateListener modifiedChangeListener) {
+        this.modifiedChangeListener = modifiedChangeListener;
+    }
+
+    private void notifyModified() {
+        if (modifiedChangeListener != null) {
+            modifiedChangeListener.modifiedChanged();
         }
     }
 
@@ -867,5 +650,10 @@ public class BinaryPanel extends javax.swing.JPanel implements BinaryEditorProvi
     public interface ReleaseFileMethod {
 
         boolean execute();
+    }
+
+    public interface ModifiedStateListener {
+
+        void modifiedChanged();
     }
 }

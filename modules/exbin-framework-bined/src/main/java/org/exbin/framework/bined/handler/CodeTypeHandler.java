@@ -29,7 +29,7 @@ import org.exbin.bined.capability.CodeTypeCapable;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -162,7 +162,7 @@ public class CodeTypeHandler {
             default:
                 throw new IllegalStateException("Unexpected code tyoe " + codeType.name());
         }
-        BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
         ((CodeTypeCapable) activePanel.getCodeArea()).setCodeType(codeType);
         updateCycleButtonName();
     }

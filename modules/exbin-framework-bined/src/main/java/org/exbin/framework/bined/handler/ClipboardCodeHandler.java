@@ -25,7 +25,7 @@ import org.exbin.bined.swing.CodeAreaCore;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.bined.panel.BinaryPanel;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -56,7 +56,7 @@ public class ClipboardCodeHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof BinaryEditorProvider) {
-                    BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+                    BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
                     activePanel.performCopyAsCode();
                 }
             }
@@ -67,7 +67,7 @@ public class ClipboardCodeHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof BinaryEditorProvider) {
-                    BinaryPanel activePanel = ((BinaryEditorProvider) editorProvider).getDocument();
+                    BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
                     activePanel.performPasteFromCode();
                 }
             }
