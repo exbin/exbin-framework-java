@@ -103,8 +103,17 @@ public class DocumentViewerProvider implements EditorProvider {
         textViewer = new DocumentTextViewer();
 
         documentPanel = new XBDocumentPanel();
+        documentPanel.addItemSelectionListener(new DocumentItemSelectionListener() {
+            @Override
+            public void itemSelected(XBTBlock item) {
+                activeViewer.setSelectedItem(item);
+            }
+        });
         mainDoc = new TreeDocument(catalog);
         documentPanel.setMainDoc(mainDoc);
+        documentPanel.setPropertiesTabComponent(propertiesViewer.getComponent());
+        documentPanel.setBinaryTabComponent(binaryViewer.getComponent());
+        documentPanel.setTextTabComponent(textViewer.getComponent());
     }
 
     @Nonnull

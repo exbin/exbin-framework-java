@@ -512,10 +512,6 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         return activeViewer.canPaste();
     }
 
-    public boolean isFalse() {
-        return false;
-    }
-
     public XBPluginRepository getPluginRepository() {
         return pluginRepository;
     }

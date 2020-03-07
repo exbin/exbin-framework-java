@@ -16,10 +16,12 @@
  */
 package org.exbin.framework.editor.xbup.panel;
 
+import java.awt.BorderLayout;
+import org.exbin.framework.editor.xbup.viewer.DocumentItemSelectionListener;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.event.TreeSelectionEvent;
 import org.exbin.framework.api.XBApplication;
@@ -36,7 +38,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 /**
  * Panel for document visualization.
  *
- * @version 0.2.1 2020/03/06
+ * @version 0.2.1 2020/03/07
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel {
@@ -49,6 +51,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     private XBPropertyPanel propertyPanel;
     private XBPluginRepository pluginRepository;
+
 //    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
     public XBDocumentPanel() {
@@ -60,22 +63,17 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
         treePanel = new XBDocTreePanel();
 
-        ((JPanel) mainTabbedPane.getComponentAt(0)).add(treePanel, java.awt.BorderLayout.CENTER);
-
+//        ((JPanel) mainTabbedPane.getComponentAt(0)).add(treePanel, java.awt.BorderLayout.CENTER);
         mainSplitPane.setLeftComponent(treePanel);
         mainSplitPane.setRightComponent(mainTabbedPane);
         setShowPropertiesPanel(true);
         //updateItem();
-
-//        propertiesTabPanel.add(propertiesViewer.getComponent(), BorderLayout.CENTER);
-//        textTabPanel.add(textViewer.getComponent(), BorderLayout.CENTER);
-//        binaryTabPanel.add(binaryViewer.getComponent(), BorderLayout.CENTER);
     }
 
     public void setApplication(XBApplication application) {
         treePanel.setApplication(application);
         propertyPanel.setApplication(application);
-        
+
         EditorXbupModule xbupModule = application.getModuleRepository().getModuleByInterface(EditorXbupModule.class);
         setPopupMenu(xbupModule.createItemPopupMenu());
     }
@@ -84,24 +82,28 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 //        this.catalog = catalog;
         treePanel.setCatalog(catalog);
         propertyPanel.setCatalog(catalog);
-        treePanel.setCatalog(catalog);
-        propertyPanel.setCatalog(catalog);
     }
 
     public void setUndoHandler(XBUndoHandler undoHandler) {
         treePanel.setUndoHandler(undoHandler);
     }
 
-//    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-//        clipboardActionsUpdateListener = updateListener;
-//
-//        treePanel.setUpdateListener(updateListener);
-//    }
-
     public void postWindowOpened() {
         mainSplitPane.setDividerLocation(getWidth() - 300 > 0 ? getWidth() - 300 : getWidth() / 3);
     }
+    
+    public void setBinaryTabComponent(JComponent component) {
+        binaryTabPanel.add(component, BorderLayout.CENTER);
+    }
 
+    public void setTextTabComponent(JComponent component) {
+        textTabPanel.add(component, BorderLayout.CENTER);
+    }
+
+    public void setPropertiesTabComponent(JComponent component) {
+        propertiesTabPanel.add(component, BorderLayout.CENTER);
+    }
+    
 //    /**
 //     * Updating selected item available operations status, like add, edit,
 //     * delete.
@@ -109,7 +111,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 //    public void updateItem() {
 //        treePanel.updateItemStatus();
 //    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -222,7 +223,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 //    public boolean isPasteEnabled() {
 //        return treePanel.isPasteEnabled();
 //    }
-
     public void addUpdateListener(ActionListener listener) {
         treePanel.addUpdateListener(listener);
     }
@@ -234,7 +234,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 //    public void performAdd() {
 //        throw new UnsupportedOperationException("Not supported yet.");
 //    }
-
     public void showPanel() {
         throw new UnsupportedOperationException("Not supported yet.");
 //        int index = getMode().ordinal();
@@ -272,7 +271,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 //    public void setAddEnabled(boolean addEnabled) {
 //        treePanel.setAddEnabled(addEnabled);
 //    }
-
     public void updateUndoAvailable() {
         firePropertyChange("undoAvailable", false, true);
         firePropertyChange("redoAvailable", false, true);
@@ -385,5 +383,13 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     public void setMainDoc(XBTTreeDocument mainDoc) {
         treePanel.setMainDoc(mainDoc);
+    }
+
+    public void addItemSelectionListener(DocumentItemSelectionListener listener) {
+        treePanel.addItemSelectionListener(listener);
+    }
+
+    public void removeItemSelectionListener(DocumentItemSelectionListener listener) {
+        treePanel.removeItemSelectionListener(listener);
     }
 }

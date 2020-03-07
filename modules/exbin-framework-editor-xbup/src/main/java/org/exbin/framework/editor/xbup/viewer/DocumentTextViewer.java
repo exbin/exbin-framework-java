@@ -25,6 +25,7 @@ import javax.swing.JComponent;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.xbup.core.block.XBTBlock;
 
 /**
  * Text viewer of document.
@@ -46,6 +47,11 @@ public class DocumentTextViewer implements DocumentViewer {
     @Override
     public JComponent getComponent() {
         return textPanel;
+    }
+
+    @Override
+    public void setSelectedItem(XBTBlock item) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

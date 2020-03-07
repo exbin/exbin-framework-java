@@ -25,8 +25,13 @@ import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DropMode;
 import javax.swing.JPopupMenu;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.basic.BasicTreeUI;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.xbup.viewer.DocumentItemSelectionListener;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBTBlock;
@@ -52,6 +57,8 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     private XBACatalog catalog;
     private XBUndoHandler undoHandler;
     private final List<ActionListener> updateEventList;
+
+    private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
 //    private boolean editEnabled;
 //    private boolean addEnabled;
 //    private final Clipboard clipboard;
@@ -59,7 +66,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
 //    private Component lastFocusedComponent = null;
 //    private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
-
     public XBDocTreePanel() {
         super();
         mainDocModel = new XBDocTreeModel();
@@ -68,6 +74,15 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         initComponents();
 
         mainTree.setCellRenderer(cellRenderer);
+        mainTree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                XBTTreeNode selectedItem = getSelectedItem();
+                itemSelectionListeners.forEach((listener) -> {
+                    listener.itemSelected(selectedItem);
+                });
+            }
+        });
 //        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         updateEventList = new ArrayList<>();
 
@@ -80,7 +95,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
          pasteAction.setEnabled(pasteAction.isEnabled());
          }
          });*/
-
 //        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> {
 //            performCut();
 //        });
@@ -96,7 +110,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> {
 //            performDelete();
 //        });
-
         mainTree.setDragEnabled(true);
         mainTree.setDropMode(DropMode.USE_SELECTION);
 
@@ -126,7 +139,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     public void setUndoHandler(XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
     }
-    
+
     public void addTreeSelectionListener(TreeSelectionListener listener) {
         mainTree.getSelectionModel().addTreeSelectionListener(listener);
     }
@@ -153,7 +166,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //
 ////        updateActionStatus(lastFocusedComponent);
 //    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -233,11 +245,9 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //    public boolean isAddEnabled() {
 //        return addEnabled;
 //    }
-
 //    public boolean isPasteEnabled() {
 //        return addEnabled && clipboard.isDataFlavorAvailable(XB_DATA_FLAVOR);
 //    }
-
     public void addUpdateListener(ActionListener listener) {
         updateEventList.add(listener);
     }
@@ -273,7 +283,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //            Logger.getLogger(XBDocTreePanel.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
-
     /**
      * Test method for this panel.
      *
@@ -307,7 +316,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //        firePropertyChange("undoAvailable", false, true);
 //        firePropertyChange("redoAvailable", false, true);
 //    }
-
     public XBUndoHandler getUndoHandler() {
         return undoHandler;
     }
@@ -320,10 +328,17 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         return getSelectedItem() != null;
     }
 
+    public void addItemSelectionListener(DocumentItemSelectionListener listener) {
+        itemSelectionListeners.add(listener);
+    }
+
+    public void removeItemSelectionListener(DocumentItemSelectionListener listener) {
+        itemSelectionListeners.remove(listener);
+    }
+
 //    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
 //        clipboardActionsUpdateListener = updateListener;
 //    }
-
 //    public boolean updateActionStatus(Component component) {
 //        if (component == mainTree) {
 //            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

@@ -16,23 +16,16 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
-import org.exbin.framework.gui.utils.ClipboardActionsHandler;
+import javax.annotation.Nullable;
 import org.exbin.xbup.core.block.XBTBlock;
 
 /**
- * Interface for document tab.
+ * Listener for item selection events.
  *
- * @version 0.2.1 2020/02/28
+ * @version 0.2.1 2020/03/07
  * @author ExBin Project (http://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface DocumentViewer extends ClipboardActionsHandler {
+public interface DocumentItemSelectionListener {
 
-    void setSelectedItem(XBTBlock item);
-
-    @Nonnull
-    JComponent getComponent();
+    void itemSelected(@Nullable XBTBlock item);
 }

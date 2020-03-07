@@ -20,11 +20,12 @@ import javax.swing.JComponent;
 import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.xbup.core.block.XBTBlock;
 
 /**
  * Binary viewer of document.
  *
- * @version 0.2.1 2020/03/06
+ * @version 0.2.1 2020/03/07
  * @author ExBin Project (http://exbin.org)
  */
 public class DocumentBinaryViewer implements DocumentViewer {
@@ -37,6 +38,11 @@ public class DocumentBinaryViewer implements DocumentViewer {
         binaryStatusPanel = new BinaryStatusPanel();
         binaryPanel.registerBinaryStatus(binaryStatusPanel);
         // binaryPanel.setNoBorder();
+    }
+
+    @Override
+    public void setSelectedItem(XBTBlock item) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

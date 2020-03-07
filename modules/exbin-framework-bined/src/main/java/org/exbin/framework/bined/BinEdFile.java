@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.bined;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -48,6 +49,7 @@ import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.panel.BinEdComponentFileApi;
 import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
+import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
@@ -60,7 +62,7 @@ import org.exbin.xbup.core.type.XBData;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, ClipboardActionsHandler {
+public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, ClipboardActionsHandler, TextFontApi {
 
     private SegmentsRepository segmentsRepository;
 
@@ -265,22 +267,12 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
             }
         } else {
             File file = new File(fileUri);
-            OutputStream stream;
-            try {
-                stream = new FileOutputStream(file);
-                try {
-                    BinaryData contentData = codeArea.getContentData();
-                    if (contentData != null) {
-                        contentData.saveToStream(stream);
-                    }
-                    stream.flush();
-                } catch (IOException ex) {
-                    Logger.getLogger(BinEdFile.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    if (stream != null) {
-                        stream.close();
-                    }
+            try (OutputStream stream = new FileOutputStream(file)) {
+                BinaryData contentData = codeArea.getContentData();
+                if (contentData != null) {
+                    contentData.saveToStream(stream);
                 }
+                stream.flush();
             } catch (IOException ex) {
                 Logger.getLogger(BinEdFile.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -454,7 +446,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
 
     @Override
     public BinaryDataUndoHandler getBinaryUndoHandler() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return undoHandler;
     }
 
     @Override
@@ -544,5 +536,20 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         componentPanel.setUpdateListener(updateListener);
+    }
+
+    @Override
+    public Font getCurrentFont() {
+        return componentPanel.getCurrentFont();
+    }
+
+    @Override
+    public Font getDefaultFont() {
+        return componentPanel.getDefaultFont();
+    }
+
+    @Override
+    public void setCurrentFont(Font font) {
+        componentPanel.setCurrentFont(font);
     }
 }

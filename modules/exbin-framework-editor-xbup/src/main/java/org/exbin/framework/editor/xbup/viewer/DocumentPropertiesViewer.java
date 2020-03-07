@@ -21,6 +21,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.exbin.framework.bined.panel.PropertiesPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.xbup.core.block.XBTBlock;
 
 /**
  * Properties viewer of document.
@@ -36,6 +37,11 @@ public class DocumentPropertiesViewer implements DocumentViewer {
 
     public DocumentPropertiesViewer() {
         propertiesPanel = new PropertiesPanel();
+    }
+
+    @Override
+    public void setSelectedItem(XBTBlock item) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

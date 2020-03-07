@@ -21,6 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.xbup.core.block.XBTBlock;
 
 /**
  * Custom viewer of document.
@@ -41,6 +42,11 @@ public class DocumentCustomViewer implements DocumentViewer {
     @Override
     public JComponent getComponent() {
         return customPanel;
+    }
+
+    @Override
+    public void setSelectedItem(XBTBlock item) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
