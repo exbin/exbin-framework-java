@@ -24,7 +24,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider.PanelMode;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider.ViewerTab;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -48,7 +48,7 @@ public class ViewModeHandler {
     private Action viewTextModeAction;
     private Action viewBinaryModeAction;
 
-    private PanelMode viewMode = PanelMode.VIEW;
+    private ViewerTab viewTab = ViewerTab.VIEW;
 
     public ViewModeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -61,50 +61,50 @@ public class ViewModeHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof DocumentViewerProvider) {
-                    setViewMode(PanelMode.VIEW);
+                    setViewerTab(ViewerTab.VIEW);
                 }
             }
         };
         ActionUtils.setupAction(viewPreviewModeAction, resourceBundle, "viewPreviewModeAction");
         viewPreviewModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         viewPreviewModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewMode == PanelMode.VIEW);
+        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.VIEW);
 
         viewTextModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof DocumentViewerProvider) {
-                    setViewMode(PanelMode.TEXT);
+                    setViewerTab(ViewerTab.TEXT);
                 }
             }
         };
         ActionUtils.setupAction(viewTextModeAction, resourceBundle, "viewTextModeAction");
         viewTextModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         viewTextModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewTextModeAction.putValue(Action.SELECTED_KEY, viewMode == PanelMode.TEXT);
+        viewTextModeAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.TEXT);
 
         viewBinaryModeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof DocumentViewerProvider) {
-                    setViewMode(PanelMode.BINARY);
+                    setViewerTab(ViewerTab.BINARY);
                 }
             }
         };
         ActionUtils.setupAction(viewBinaryModeAction, resourceBundle, "viewBinaryModeAction");
         viewBinaryModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
         viewBinaryModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        viewBinaryModeAction.putValue(Action.SELECTED_KEY, viewMode == PanelMode.BINARY);
+        viewBinaryModeAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.BINARY);
     }
 
-    public void setViewMode(PanelMode viewMode) {
-        this.viewMode = viewMode;
-        DocumentViewerProvider activePanel = (DocumentViewerProvider) editorProvider;
-        activePanel.setMode(viewMode);
+    public void setViewerTab(ViewerTab viewTab) {
+        this.viewTab = viewTab;
+        DocumentViewerProvider viewerProvider = (DocumentViewerProvider) editorProvider;
+        viewerProvider.setViewerTab(viewTab);
     }
 
-    public PanelMode getViewMode() {
-        return viewMode;
+    public ViewerTab getViewTab() {
+        return viewTab;
     }
 
     @Nonnull

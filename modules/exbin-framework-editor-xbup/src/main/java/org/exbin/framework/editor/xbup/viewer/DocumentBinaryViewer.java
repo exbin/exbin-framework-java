@@ -17,6 +17,8 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import javax.swing.JComponent;
+import org.exbin.auxiliary.paged_data.BinaryData;
+import org.exbin.auxiliary.paged_data.ByteArrayData;
 import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
@@ -42,7 +44,7 @@ public class DocumentBinaryViewer implements DocumentViewer {
 
     @Override
     public void setSelectedItem(XBTBlock item) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        binaryPanel.setContentData(new ByteArrayData(new byte[] { 64 }));
     }
 
     @Override

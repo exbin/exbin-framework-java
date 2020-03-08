@@ -17,8 +17,6 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,16 +30,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.BlockPropertiesPanel;
-import org.exbin.framework.editor.xbup.panel.ModifyBlockPanel;
 import org.exbin.framework.editor.xbup.panel.XBDocumentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
-import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.XBFBlockType;
@@ -53,16 +48,10 @@ import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.parser.token.XBAttribute;
-import org.exbin.xbup.core.type.XBData;
 import org.exbin.xbup.operation.Operation;
 import org.exbin.xbup.operation.OperationEvent;
 import org.exbin.xbup.operation.OperationListener;
-import org.exbin.xbup.operation.XBTDocCommand;
 import org.exbin.xbup.operation.XBTDocOperation;
-import org.exbin.xbup.operation.basic.XBTModifyBlockOperation;
-import org.exbin.xbup.operation.basic.XBTTailDataOperation;
-import org.exbin.xbup.operation.basic.command.XBTChangeBlockCommand;
-import org.exbin.xbup.operation.basic.command.XBTModifyBlockCommand;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
@@ -71,7 +60,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2020/03/02
+ * @version 0.2.1 2020/03/08
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -85,7 +74,7 @@ public class DocumentViewerProvider implements EditorProvider {
 
     private final XBDocumentPanel documentPanel;
 
-    private PanelMode mode = PanelMode.VIEW;
+    private ViewerTab viewerTab = ViewerTab.VIEW;
     private DocumentViewer activeViewer;
     private final DocumentBinaryViewer binaryViewer;
     private final DocumentTextViewer textViewer;
@@ -103,9 +92,9 @@ public class DocumentViewerProvider implements EditorProvider {
         textViewer = new DocumentTextViewer();
 
         documentPanel = new XBDocumentPanel();
-        documentPanel.addItemSelectionListener(new DocumentItemSelectionListener() {
-            @Override
-            public void itemSelected(XBTBlock item) {
+        documentPanel.addTabSwitchListener(this::setViewerTab);
+        documentPanel.addItemSelectionListener((item) -> {
+            if (activeViewer != null) {
                 activeViewer.setSelectedItem(item);
             }
         });
@@ -277,24 +266,9 @@ public class DocumentViewerProvider implements EditorProvider {
         return activeViewer.canPaste();
     }
 
-    public boolean isAddEnabled() {
-        return true;
-//        switch (mode) {
-//            case VIEW:
-//                return treePanel.isAddEnabled();
-//            case TEXT:
-//                return false;
-//            case BINARY:
-//                return false;
-//            default:
-//                return false;
-//        }
-    }
-
 //    public boolean isPasteEnabled() {
 //        return documentPanel.isPasteEnabled();
 //    }
-
     public void postWindowOpened() {
         documentPanel.postWindowOpened();
     }
@@ -323,19 +297,11 @@ public class DocumentViewerProvider implements EditorProvider {
 //    public void updateItem() {
 //        documentPanel.updateItem();
 //    }
-
-    public void setMode(PanelMode mode) {
-        if (this.mode != mode) {
-            switch (this.mode) {
-                case VIEW:
-                    break;
-                case PROPERTIES:
-                    break;
-                case TEXT: {
-                    break;
-                }
-                case BINARY: {
-                    // TODO: Replace stupid buffer copy later
+    public void setViewerTab(ViewerTab viewerTab) {
+        if (this.viewerTab != viewerTab) {
+            this.viewerTab = viewerTab;
+            // Save changes first
+            // TODO: Replace stupid buffer copy later
 //                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 //                    try {
 //                        binaryViewer.saveToStream(buffer);
@@ -347,17 +313,16 @@ public class DocumentViewerProvider implements EditorProvider {
 //                    } catch (IOException ex) {
 //                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
 //                    }
+            switch (viewerTab) {
+                case VIEW: {
                     break;
                 }
-                default:
-                    throw new InternalError("Unknown mode");
-            }
-            switch (mode) {
-                case VIEW:
+                case PROPERTIES: {
+                    activeViewer = propertiesViewer;
                     break;
-                case PROPERTIES:
-                    break;
+                }
                 case TEXT: {
+                    activeViewer = textViewer;
                     String text = "<!XBUP version=\"0.1\">\n";
                     if (mainDoc.getRootBlock() != null) {
                         text += nodeAsText((XBTTreeNode) mainDoc.getRootBlock(), "").toString();
@@ -367,6 +332,7 @@ public class DocumentViewerProvider implements EditorProvider {
                     // break;
                 }
                 case BINARY: {
+                    activeViewer = binaryViewer;
                     // TODO: Replace stupid buffer copy later
 //                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 //                    try {
@@ -380,7 +346,6 @@ public class DocumentViewerProvider implements EditorProvider {
                 default:
                     throw new InternalError("Unknown mode");
             }
-            this.mode = mode;
 
 //            mainFrame.getEditFindAction().setEnabled(mode != PanelMode.TREE);
 //            mainFrame.getEditFindAgainAction().setEnabled(mode == PanelMode.TEXT);
@@ -509,14 +474,14 @@ public class DocumentViewerProvider implements EditorProvider {
 //            }
 
             if (operation instanceof XBTDocOperation) {
-                setMode(PanelMode.VIEW);
+                setViewerTab(ViewerTab.VIEW);
             } else {
                 // TODO
             }
         }
     }
 
-    public enum PanelMode {
+    public enum ViewerTab {
         VIEW,
         PROPERTIES,
         TEXT,

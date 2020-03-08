@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Empty property column panel with operation button.
@@ -68,6 +69,15 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
         editorButton.setName("editorButton"); // NOI18N
         add(editorButton, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new PropertyTableCellPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton editorButton;

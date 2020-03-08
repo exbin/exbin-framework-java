@@ -21,11 +21,16 @@ import org.exbin.framework.editor.xbup.viewer.DocumentItemSelectionListener;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.TreeSelectionEvent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.EditorXbupModule;
+import org.exbin.framework.editor.xbup.viewer.DocumentTabSelectionListener;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider.ViewerTab;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBTBlock;
@@ -38,7 +43,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 /**
  * Panel for document visualization.
  *
- * @version 0.2.1 2020/03/07
+ * @version 0.2.1 2020/03/08
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel {
@@ -52,6 +57,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     private XBPropertyPanel propertyPanel;
     private XBPluginRepository pluginRepository;
 
+    private final List<DocumentTabSelectionListener> tabSwitchListeners = new ArrayList<>();
 //    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
     public XBDocumentPanel() {
@@ -67,6 +73,28 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         mainSplitPane.setLeftComponent(treePanel);
         mainSplitPane.setRightComponent(mainTabbedPane);
         setShowPropertiesPanel(true);
+        mainTabbedPane.addChangeListener((ChangeEvent e) -> {
+            int selectedIndex = mainTabbedPane.getSelectedIndex();
+            ViewerTab viewerTab = ViewerTab.VIEW;
+            switch (selectedIndex) {
+                case 0: {
+                    viewerTab = ViewerTab.PROPERTIES;
+                    break;
+                }
+                case 1: {
+                    viewerTab = ViewerTab.TEXT;
+                    break;
+                }
+                case 2: {
+                    viewerTab = ViewerTab.BINARY;
+                    break;
+                }
+            }
+
+            for (DocumentTabSelectionListener listener : tabSwitchListeners) {
+                listener.tabSelected(viewerTab);
+            }
+        });
         //updateItem();
     }
 
@@ -91,7 +119,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     public void postWindowOpened() {
         mainSplitPane.setDividerLocation(getWidth() - 300 > 0 ? getWidth() - 300 : getWidth() / 3);
     }
-    
+
     public void setBinaryTabComponent(JComponent component) {
         binaryTabPanel.add(component, BorderLayout.CENTER);
     }
@@ -103,7 +131,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     public void setPropertiesTabComponent(JComponent component) {
         propertiesTabPanel.add(component, BorderLayout.CENTER);
     }
-    
+
 //    /**
 //     * Updating selected item available operations status, like add, edit,
 //     * delete.
@@ -391,5 +419,13 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     public void removeItemSelectionListener(DocumentItemSelectionListener listener) {
         treePanel.removeItemSelectionListener(listener);
+    }
+
+    public void addTabSwitchListener(DocumentTabSelectionListener listener) {
+        tabSwitchListeners.add(listener);
+    }
+
+    public void removeTabSwitchListener(DocumentTabSelectionListener listener) {
+        tabSwitchListeners.remove(listener);
     }
 }

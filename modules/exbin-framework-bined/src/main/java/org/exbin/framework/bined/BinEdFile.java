@@ -74,6 +74,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
     public BinEdFile() {
         componentPanel = new BinEdComponentPanel();
         componentPanel.setFileApi(this);
+        componentPanel.setContentData(new ByteArrayData());
 
         undoHandler = new CodeAreaUndoHandler(componentPanel.getCodeArea());
         componentPanel.setUndoHandler(undoHandler);
@@ -456,7 +457,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
 
     @Override
     public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        componentPanel.setFileHandlingMode(fileHandlingMode);
     }
 
     @Override
