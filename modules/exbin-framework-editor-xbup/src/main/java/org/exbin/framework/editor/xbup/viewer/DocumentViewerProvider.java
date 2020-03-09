@@ -37,17 +37,10 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.panel.CloseControlPanel;
-import org.exbin.xbup.core.block.XBBlockDataMode;
-import org.exbin.xbup.core.block.XBBlockType;
-import org.exbin.xbup.core.block.XBFBlockType;
 import org.exbin.xbup.core.block.XBTBlock;
-import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.XBCatalog;
-import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
-import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.parser.XBProcessingException;
-import org.exbin.xbup.core.parser.token.XBAttribute;
 import org.exbin.xbup.operation.Operation;
 import org.exbin.xbup.operation.OperationEvent;
 import org.exbin.xbup.operation.OperationListener;
@@ -60,7 +53,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2020/03/08
+ * @version 0.2.1 2020/03/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -74,7 +67,8 @@ public class DocumentViewerProvider implements EditorProvider {
 
     private final XBDocumentPanel documentPanel;
 
-    private ViewerTab viewerTab = ViewerTab.VIEW;
+    private XBTBlock selectedItem = null;
+    private ViewerTab viewerTab = ViewerTab.PROPERTIES;
     private DocumentViewer activeViewer;
     private final DocumentBinaryViewer binaryViewer;
     private final DocumentTextViewer textViewer;
@@ -90,10 +84,12 @@ public class DocumentViewerProvider implements EditorProvider {
         propertiesViewer = new DocumentPropertiesViewer();
         binaryViewer = new DocumentBinaryViewer();
         textViewer = new DocumentTextViewer();
+        activeViewer = propertiesViewer;
 
         documentPanel = new XBDocumentPanel();
         documentPanel.addTabSwitchListener(this::setViewerTab);
         documentPanel.addItemSelectionListener((item) -> {
+            this.selectedItem = item;
             if (activeViewer != null) {
                 activeViewer.setSelectedItem(item);
             }
@@ -124,11 +120,20 @@ public class DocumentViewerProvider implements EditorProvider {
         documentPanel.setCatalog(catalog);
         mainDoc.setCatalog(catalog);
         mainDoc.processSpec();
+        textViewer.setCatalog(catalog);
+    }
+
+    public XBApplication getApplication() {
+        return application;
     }
 
     public void setApplication(XBApplication application) {
         this.application = application;
         documentPanel.setApplication(application);
+    }
+
+    public XBPluginRepository getPluginRepository() {
+        return pluginRepository;
     }
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
@@ -300,6 +305,9 @@ public class DocumentViewerProvider implements EditorProvider {
     public void setViewerTab(ViewerTab viewerTab) {
         if (this.viewerTab != viewerTab) {
             this.viewerTab = viewerTab;
+            if (activeViewer != null) {
+                activeViewer.setSelectedItem(null);
+            }
             // Save changes first
             // TODO: Replace stupid buffer copy later
 //                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -323,13 +331,7 @@ public class DocumentViewerProvider implements EditorProvider {
                 }
                 case TEXT: {
                     activeViewer = textViewer;
-                    String text = "<!XBUP version=\"0.1\">\n";
-                    if (mainDoc.getRootBlock() != null) {
-                        text += nodeAsText((XBTTreeNode) mainDoc.getRootBlock(), "").toString();
-                    }
-                    throw new UnsupportedOperationException("Not supported yet.");
-                    // TODO textPanel.setText(text);
-                    // break;
+                    break;
                 }
                 case BINARY: {
                     activeViewer = binaryViewer;
@@ -346,6 +348,7 @@ public class DocumentViewerProvider implements EditorProvider {
                 default:
                     throw new InternalError("Unknown mode");
             }
+            activeViewer.setSelectedItem(selectedItem);
 
 //            mainFrame.getEditFindAction().setEnabled(mode != PanelMode.TREE);
 //            mainFrame.getEditFindAgainAction().setEnabled(mode == PanelMode.TEXT);
@@ -377,6 +380,17 @@ public class DocumentViewerProvider implements EditorProvider {
         dialog.showCentered(null);
     }
 
+    public XBUndoHandler getUndoHandler() {
+        return undoHandler;
+    }
+
+    public void itemWasModified(XBTTreeNode newNode) {
+        reportStructureChange(newNode);
+        mainDoc.setModified(true);
+        mainDoc.processSpec();
+        // TODO updateItemStatus();
+    }
+
 //    private void updateActiveViewer() {
 //        int selectedIndex = mainTabbedPane.getSelectedIndex();
 //        switch (selectedIndex) {
@@ -397,63 +411,6 @@ public class DocumentViewerProvider implements EditorProvider {
 //            }
 //        }
 //    }
-    private StringBuffer nodeAsText(XBTTreeNode node, String prefix) {
-        StringBuffer result = new StringBuffer();
-        result.append(prefix);
-        if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
-            result.append("[");
-            for (long i = 0; i < node.getDataSize(); i++) {
-                byte b = node.getBlockData().getByte(i);
-                result.append(getHex(b));
-            }
-            result.append("]\n");
-        } else {
-            result.append("<").append(getCaption(node));
-            if (node.getAttributesCount() > 2) {
-                XBAttribute[] attributes = node.getAttributes();
-                for (int i = 0; i < attributes.length; i++) {
-                    XBAttribute attribute = attributes[i];
-                    result.append(" ").append(i + 1).append("=\"").append(attribute.getNaturalLong()).append("\"");
-                }
-            }
-
-            if (node.getChildren() != null) {
-                result.append(">\n");
-                XBTBlock[] children = node.getChildren();
-                for (XBTBlock child : children) {
-                    result.append(nodeAsText((XBTTreeNode) child, prefix + "  "));
-                }
-                result.append(prefix);
-                result.append("</").append(getCaption(node)).append(">\n");
-            } else {
-                result.append("/>\n");
-            }
-        }
-        return result;
-    }
-
-    public String getHex(byte b) {
-        byte low = (byte) (b & 0xf);
-        byte hi = (byte) (b >> 0x8);
-        return (Integer.toHexString(hi) + Integer.toHexString(low)).toUpperCase();
-    }
-
-    private String getCaption(XBTTreeNode node) {
-        if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
-            return "Data Block";
-        }
-        XBBlockType blockType = node.getBlockType();
-        if (catalog != null) {
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-            XBCBlockDecl blockDecl = (XBCBlockDecl) node.getBlockDecl();
-            if (blockDecl != null) {
-                XBCBlockSpec blockSpec = blockDecl.getBlockSpecRev().getParent();
-                return nameService.getDefaultText(blockSpec);
-            }
-        }
-        return "Unknown" + " (" + Integer.toString(((XBFBlockType) blockType).getGroupID().getInt()) + ", " + Integer.toString(((XBFBlockType) blockType).getBlockID().getInt()) + ")";
-    }
-
     private class TreeDocument extends XBTTreeDocument implements OperationListener {
 
         public TreeDocument(XBCatalog catalog) {

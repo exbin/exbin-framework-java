@@ -16,6 +16,7 @@
  */
 package org.exbin.framework.bined.panel;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.bined.FileHandlingMode;
 
 /**
@@ -24,13 +25,14 @@ import org.exbin.framework.bined.FileHandlingMode;
  * @author ExBin Project (http://exbin.org)
  * @version 0.2.1 2020/03/05
  */
+@ParametersAreNonnullByDefault
 public interface BinEdComponentFileApi {
-    
+
     boolean isSaveSupported();
 
     void saveDocument();
 
-    void switchFileHandlingMode(FileHandlingMode newHandlingMode);
+    void switchFileHandlingMode(FileHandlingMode fileHandlingMode);
 
     void closeData();
 }

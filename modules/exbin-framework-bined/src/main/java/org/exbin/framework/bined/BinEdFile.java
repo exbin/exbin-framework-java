@@ -73,11 +73,14 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
 
     public BinEdFile() {
         componentPanel = new BinEdComponentPanel();
-        componentPanel.setFileApi(this);
-        componentPanel.setContentData(new ByteArrayData());
-
         undoHandler = new CodeAreaUndoHandler(componentPanel.getCodeArea());
         componentPanel.setUndoHandler(undoHandler);
+        init();
+    }
+    
+    private void init() {
+        componentPanel.setFileApi(this);
+        componentPanel.setContentData(new ByteArrayData());
     }
 
     public BinEdFile(int id) {
@@ -131,6 +134,10 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
         File file = new File(fileUri);
         try {
             BinaryData contentData = componentPanel.getContentData();
+            if (contentData == null) {
+                newFile();
+                contentData = componentPanel.getContentData();
+            }
             if (contentData instanceof DeltaDocument) {
                 // TODO freeze window / replace with progress bar
                 DeltaDocument document = (DeltaDocument) contentData;
@@ -143,7 +150,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
                 this.fileUri = fileUri;
             } else {
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                    contentData.saveToStream(outputStream);
+                    Objects.requireNonNull(contentData).saveToStream(outputStream);
                     this.fileUri = fileUri;
                 }
             }
@@ -307,10 +314,10 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
     }
 
     @Override
-    public void switchFileHandlingMode(FileHandlingMode newHandlingMode) {
-        FileHandlingMode fileHandlingMode = componentPanel.getFileHandlingMode();
+    public void switchFileHandlingMode(FileHandlingMode handlingMode) {
+        FileHandlingMode oldFileHandlingMode = componentPanel.getFileHandlingMode();
         ExtCodeArea codeArea = componentPanel.getCodeArea();
-        if (newHandlingMode != fileHandlingMode) {
+        if (handlingMode != oldFileHandlingMode) {
             // Switch memory mode
             if (fileUri != null) {
                 // If document is connected to file, attempt to release first if modified and then simply reload
@@ -319,10 +326,10 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
                         loadFromFile(fileUri, null);
                         codeArea.clearSelection();
                         codeArea.setCaretPosition(0);
-                        componentPanel.setFileHandlingMode(newHandlingMode);
+                        componentPanel.setFileHandlingMode(handlingMode);
                     }
                 } else {
-                    componentPanel.setFileHandlingMode(newHandlingMode);
+                    componentPanel.setFileHandlingMode(handlingMode);
                     loadFromFile(fileUri, null);
                 }
             } else {
@@ -340,7 +347,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
 
                 undoHandler.clear();
                 oldData.dispose();
-                componentPanel.setFileHandlingMode(newHandlingMode);
+                componentPanel.setFileHandlingMode(handlingMode);
             }
         }
     }

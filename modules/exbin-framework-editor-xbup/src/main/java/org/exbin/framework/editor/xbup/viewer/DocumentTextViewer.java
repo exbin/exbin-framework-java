@@ -20,23 +20,34 @@ import java.awt.Color;
 import java.awt.Font;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.editor.text.panel.TextPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.xbup.core.block.XBBlockDataMode;
+import org.exbin.xbup.core.block.XBBlockType;
+import org.exbin.xbup.core.block.XBFBlockType;
 import org.exbin.xbup.core.block.XBTBlock;
+import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
+import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
+import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
+import org.exbin.xbup.core.parser.token.XBAttribute;
+import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**
  * Text viewer of document.
  *
- * @version 0.2.1 2020/02/29
+ * @version 0.2.1 2020/03/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DocumentTextViewer implements DocumentViewer {
 
     private final TextPanel textPanel;
+    private XBACatalog catalog;
 
     public DocumentTextViewer() {
         textPanel = new TextPanel();
@@ -51,7 +62,13 @@ public class DocumentTextViewer implements DocumentViewer {
 
     @Override
     public void setSelectedItem(XBTBlock item) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String text = "<!XBUP version=\"0.1\">\n";
+//        XBTBlock parent = item.getParent();
+//        if (parent == null) {
+//            text += nodeAsText((XBTTreeNode) parent, "").toString();
+//        }
+        text = nodeAsText((XBTTreeNode) item, "").toString();
+        textPanel.setText(text);
     }
 
     @Override
@@ -155,4 +172,70 @@ public class DocumentTextViewer implements DocumentViewer {
     public Font getCurrentFont() {
         return textPanel.getCurrentFont();
     }
+
+    private StringBuffer nodeAsText(@Nullable XBTTreeNode node, String prefix) {
+        StringBuffer result = new StringBuffer();
+        result.append(prefix);
+        if (node == null) {
+            return result;
+        }
+
+        if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
+            result.append("[");
+            for (long i = 0; i < node.getDataSize(); i++) {
+                byte b = node.getBlockData().getByte(i);
+                result.append(getHex(b));
+            }
+            result.append("]\n");
+        } else {
+            result.append("<").append(getCaption(node));
+            if (node.getAttributesCount() > 2) {
+                XBAttribute[] attributes = node.getAttributes();
+                for (int i = 0; i < attributes.length; i++) {
+                    XBAttribute attribute = attributes[i];
+                    result.append(" ").append(i + 1).append("=\"").append(attribute.getNaturalLong()).append("\"");
+                }
+            }
+
+            if (node.getChildren() != null) {
+                result.append(">\n");
+                XBTBlock[] children = node.getChildren();
+                for (XBTBlock child : children) {
+                    result.append(nodeAsText((XBTTreeNode) child, prefix + "  "));
+                }
+                result.append(prefix);
+                result.append("</").append(getCaption(node)).append(">\n");
+            } else {
+                result.append("/>\n");
+            }
+        }
+        return result;
+    }
+
+    public String getHex(byte b) {
+        byte low = (byte) (b & 0xf);
+        byte hi = (byte) (b >> 0x8);
+        return (Integer.toHexString(hi) + Integer.toHexString(low)).toUpperCase();
+    }
+
+    private String getCaption(XBTTreeNode node) {
+        if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
+            return "Data Block";
+        }
+        XBBlockType blockType = node.getBlockType();
+        if (catalog != null) {
+            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+            XBCBlockDecl blockDecl = (XBCBlockDecl) node.getBlockDecl();
+            if (blockDecl != null) {
+                XBCBlockSpec blockSpec = blockDecl.getBlockSpecRev().getParent();
+                return nameService.getDefaultText(blockSpec);
+            }
+        }
+        return "Unknown" + " (" + Integer.toString(((XBFBlockType) blockType).getGroupID().getInt()) + ", " + Integer.toString(((XBFBlockType) blockType).getBlockID().getInt()) + ")";
+    }
+
+    public void setCatalog(XBACatalog catalog) {
+        this.catalog = catalog;
+    }
+
 }

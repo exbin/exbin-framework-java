@@ -22,93 +22,85 @@ import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.panel.AddBlockPanel;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.MultiStepControlHandler;
 import org.exbin.framework.gui.utils.panel.MultiStepControlPanel;
+import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.operation.XBTDocCommand;
 import org.exbin.xbup.operation.basic.command.XBTAddBlockCommand;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**
  * Add item action.
  *
- * @version 0.2.0 2016/03/02
+ * @version 0.2.0 2016/03/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddItemAction extends AbstractAction {
 
     private AddBlockPanel addItemPanel = null;
+    private final DocumentViewerProvider viewerProvider;
+
+    public AddItemAction(DocumentViewerProvider viewerProvider) {
+        this.viewerProvider = viewerProvider;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-//        XBTTreeNode node = getSelectedItem();
-//
-//        addItemPanel = new AddBlockPanel();
-//        addItemPanel.setApplication(application);
-//        addItemPanel.setCatalog(catalog);
-//        addItemPanel.setParentNode(node);
-//        MultiStepControlPanel controlPanel = new MultiStepControlPanel();
-//        JPanel dialogPanel = WindowUtils.createDialogPanel(addItemPanel, controlPanel);
-//        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-//        WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, addItemPanel.getResourceBundle());
-//        controlPanel.setHandler((MultiStepControlHandler.ControlActionType actionType) -> {
-//            switch (actionType) {
-//                case FINISH: {
-//                    XBTTreeNode newNode = addItemPanel.getWorkNode();
-//                    try {
-//                        long parentPosition = node == null ? -1 : node.getBlockIndex();
-//                        int childIndex = node == null ? 0 : node.getChildCount();
-//                        XBTDocCommand step = new XBTAddBlockCommand(mainDoc, parentPosition, childIndex, newNode);
-//                        getUndoHandler().execute(step);
-//                    } catch (Exception ex) {
-//                        Logger.getLogger(AddItemAction.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//
-//                    reportStructureChange(newNode);
-//                    mainDoc.setModified(true);
-//                    updateItemStatus();
-//
-//                    dialog.close();
-//                    dialog.dispose();
-//                    break;
-//                }
-//                case CANCEL: {
-//                    dialog.close();
-//                    dialog.dispose();
-//                    break;
-//                }
-//                case NEXT: {
-//                    break;
-//                }
-//                case PREVIOUS: {
-//                    break;
-//                }
-//            }
-//        });
-//        dialog.showCentered(this);
-//
-//        addItemPanel.setLocationRelativeTo(addItemPanel.getParent());
-//        addItemPanel.setParentNode(node);
-//        XBTTreeNode newNode = addItemPanel.showDialog();
-//        if (addItemPanel.getDialogOption() == JOptionPane.OK_OPTION) {
-//            try {
-//                long parentPosition = node == null ? -1 : node.getBlockIndex();
-//                int childIndex = node == null ? 0 : node.getChildCount();
-//                XBTDocCommand step = new XBTAddBlockCommand(mainDoc, parentPosition, childIndex, newNode);
-//                getUndoHandler().execute(step);
-//            } catch (Exception ex) {
-//                Logger.getLogger(AddItemAction.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//
-//            reportStructureChange(newNode);
-//            mainDoc.setModified(true);
-//            updateItemStatus();
-//        }
-//        addItemPanel = null;
+        XBApplication application = viewerProvider.getApplication();
+        XBACatalog catalog = viewerProvider.getCatalog();
+        XBUndoHandler undoHandler = viewerProvider.getUndoHandler();
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        XBTTreeNode node = viewerProvider.getSelectedItem();
+
+        addItemPanel = new AddBlockPanel();
+        addItemPanel.setApplication(application);
+        addItemPanel.setCatalog(catalog);
+        addItemPanel.setParentNode(node);
+        MultiStepControlPanel controlPanel = new MultiStepControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(addItemPanel, controlPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, addItemPanel.getResourceBundle());
+        controlPanel.setHandler((MultiStepControlHandler.ControlActionType actionType) -> {
+            switch (actionType) {
+                case FINISH: {
+                    XBTTreeNode newNode = addItemPanel.getWorkNode();
+                    try {
+                        XBTTreeDocument mainDoc = viewerProvider.getDoc();
+                        long parentPosition = node == null ? -1 : node.getBlockIndex();
+                        int childIndex = node == null ? 0 : node.getChildCount();
+                        XBTDocCommand step = new XBTAddBlockCommand(mainDoc, parentPosition, childIndex, newNode);
+                        undoHandler.execute(step);
+                    } catch (Exception ex) {
+                        Logger.getLogger(AddItemAction.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    viewerProvider.itemWasModified(newNode);
+
+                    dialog.close();
+                    dialog.dispose();
+                    break;
+                }
+                case CANCEL: {
+                    dialog.close();
+                    dialog.dispose();
+                    break;
+                }
+                case NEXT: {
+                    break;
+                }
+                case PREVIOUS: {
+                    break;
+                }
+            }
+        });
+        dialog.showCentered(viewerProvider.getPanel());
     }
 }

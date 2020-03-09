@@ -20,7 +20,8 @@ import java.util.ResourceBundle;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.action.AddItemAction;
-import org.exbin.framework.editor.xbup.action.ModifyItemAction;
+import org.exbin.framework.editor.xbup.action.EditItemAction;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -28,7 +29,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Document editing handler.
  *
- * @version 0.2.1 2020/03/03
+ * @version 0.2.1 2020/03/09
  * @author ExBin Project (http://exbin.org)
  */
 public class DocEditingHandler {
@@ -38,7 +39,7 @@ public class DocEditingHandler {
     private final ResourceBundle resourceBundle;
 
     private Action addItemAction;
-    private Action modifyItemAction;
+    private Action editItemAction;
 
     public DocEditingHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -47,24 +48,24 @@ public class DocEditingHandler {
     }
 
     public void init() {
-        addItemAction = new AddItemAction();
+        addItemAction = new AddItemAction((DocumentViewerProvider) editorProvider);
         ActionUtils.setupAction(addItemAction, resourceBundle, "addItemAction");
         addItemAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PLUS, 0));
         addItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
 
-        modifyItemAction = new ModifyItemAction();
-        ActionUtils.setupAction(modifyItemAction, resourceBundle, "modifyItemAction");
-        modifyItemAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0));
-        modifyItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-        modifyItemAction.setEnabled(false);
+        editItemAction = new EditItemAction((DocumentViewerProvider) editorProvider);
+        ActionUtils.setupAction(editItemAction, resourceBundle, "editItemAction");
+        editItemAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0));
+        editItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        editItemAction.setEnabled(false);
     }
 
     public Action getAddItemAction() {
         return addItemAction;
     }
 
-    public Action getModifyItemAction() {
-        return modifyItemAction;
+    public Action getEditItemAction() {
+        return editItemAction;
     }
 
     void setAddEnabled(boolean addEnabled) {
@@ -72,6 +73,6 @@ public class DocEditingHandler {
     }
 
     void setEditEnabled(boolean editEnabled) {
-        modifyItemAction.setEnabled(editEnabled);
+        editItemAction.setEnabled(editEnabled);
     }
 }

@@ -38,7 +38,7 @@ import org.exbin.auxiliary.paged_data.EditableBinaryData;
  */
 public class BinaryMultilinePanel extends javax.swing.JPanel {
 
-    private static final String POPUP_MENU_POSTFIX = ".hexMultilineDialog";
+    private static final String POPUP_MENU_POSTFIX = ".binaryMultilineDialog";
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinaryMultilinePanel.class);
     private SearchCondition condition;

@@ -41,7 +41,7 @@ public class DocumentPropertiesViewer implements DocumentViewer {
 
     @Override
     public void setSelectedItem(XBTBlock item) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // TODO
     }
 
     @Override
