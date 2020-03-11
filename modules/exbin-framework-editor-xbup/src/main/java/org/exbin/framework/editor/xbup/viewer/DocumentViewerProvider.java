@@ -53,7 +53,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2020/03/09
+ * @version 0.2.1 2020/03/11
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -93,6 +93,9 @@ public class DocumentViewerProvider implements EditorProvider {
             if (activeViewer != null) {
                 activeViewer.setSelectedItem(item);
             }
+            
+            boolean itemSelected = item != null;
+            
         });
         mainDoc = new TreeDocument(catalog);
         documentPanel.setMainDoc(mainDoc);
@@ -120,6 +123,7 @@ public class DocumentViewerProvider implements EditorProvider {
         documentPanel.setCatalog(catalog);
         mainDoc.setCatalog(catalog);
         mainDoc.processSpec();
+        propertiesViewer.setCatalog(catalog);
         textViewer.setCatalog(catalog);
     }
 
@@ -129,6 +133,7 @@ public class DocumentViewerProvider implements EditorProvider {
 
     public void setApplication(XBApplication application) {
         this.application = application;
+        propertiesViewer.setApplication(application);
         documentPanel.setApplication(application);
     }
 
@@ -138,6 +143,7 @@ public class DocumentViewerProvider implements EditorProvider {
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
+        propertiesViewer.setPluginRepository(pluginRepository);
         documentPanel.setPluginRepository(pluginRepository);
     }
 

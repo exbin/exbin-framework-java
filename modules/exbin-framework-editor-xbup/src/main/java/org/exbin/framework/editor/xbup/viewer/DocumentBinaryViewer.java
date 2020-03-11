@@ -17,7 +17,6 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import javax.swing.JComponent;
-import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.ByteArrayData;
 import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
@@ -40,6 +39,11 @@ public class DocumentBinaryViewer implements DocumentViewer {
         binaryStatusPanel = new BinaryStatusPanel();
         binaryPanel.registerBinaryStatus(binaryStatusPanel);
         // binaryPanel.setNoBorder();
+        init();
+    }
+    
+    public void init() {
+        
     }
 
     @Override

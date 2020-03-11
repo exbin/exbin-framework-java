@@ -290,7 +290,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         return catalog;
     }
 
-    void setPluginRepository(XBPluginRepository pluginRepository) {
+    public void setPluginRepository(XBPluginRepository pluginRepository) {
         propertiesPanel.setPluginRepository(pluginRepository);
     }
 }

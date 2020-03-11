@@ -26,7 +26,6 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.TreeSelectionEvent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.EditorXbupModule;
 import org.exbin.framework.editor.xbup.viewer.DocumentTabSelectionListener;
@@ -43,7 +42,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 /**
  * Panel for document visualization.
  *
- * @version 0.2.1 2020/03/08
+ * @version 0.2.1 2020/03/11
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel {
@@ -54,7 +53,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     private final XBDocTreePanel treePanel;
 
-    private XBPropertyPanel propertyPanel;
     private XBPluginRepository pluginRepository;
 
     private final List<DocumentTabSelectionListener> tabSwitchListeners = new ArrayList<>();
@@ -63,9 +61,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     public XBDocumentPanel() {
 
         initComponents();
-
-        propertyPanel = new XBPropertyPanel();
-        mainSplitPane.setRightComponent(propertyPanel);
 
         treePanel = new XBDocTreePanel();
 
@@ -100,16 +95,13 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     public void setApplication(XBApplication application) {
         treePanel.setApplication(application);
-        propertyPanel.setApplication(application);
 
         EditorXbupModule xbupModule = application.getModuleRepository().getModuleByInterface(EditorXbupModule.class);
         setPopupMenu(xbupModule.createItemPopupMenu());
     }
 
     public void setCatalog(XBACatalog catalog) {
-//        this.catalog = catalog;
         treePanel.setCatalog(catalog);
-        propertyPanel.setCatalog(catalog);
     }
 
     public void setUndoHandler(XBUndoHandler undoHandler) {
@@ -152,7 +144,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         popupItemCopyMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         popupItemPropertiesMenuItem = new javax.swing.JMenuItem();
-        viewSplitPane = new javax.swing.JSplitPane();
         mainTabbedPane = new javax.swing.JTabbedPane();
         propertiesTabPanel = new javax.swing.JPanel();
         textTabPanel = new javax.swing.JPanel();
@@ -187,9 +178,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
             }
         });
         popupMenu.add(popupItemPropertiesMenuItem);
-
-        viewSplitPane.setDividerLocation(250);
-        viewSplitPane.setResizeWeight(1.0);
 
         mainTabbedPane.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         mainTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -289,7 +277,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     private javax.swing.JPopupMenu popupMenu;
     private javax.swing.JPanel propertiesTabPanel;
     private javax.swing.JPanel textTabPanel;
-    private javax.swing.JSplitPane viewSplitPane;
     // End of variables declaration//GEN-END:variables
 
 //    public void setEditEnabled(boolean editEnabled) {
@@ -315,13 +302,13 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     public void setShowPropertiesPanel(boolean showPropertiesPanel) {
         if (this.showPropertiesPanel != showPropertiesPanel) {
-            if (showPropertiesPanel) {
-                viewSplitPane.setLeftComponent(mainTabbedPane);
-                viewSplitPane.setRightComponent(propertyPanel);
-                mainSplitPane.setRightComponent(viewSplitPane);
-            } else {
+//            if (showPropertiesPanel) {
+//                viewSplitPane.setLeftComponent(mainTabbedPane);
+//                viewSplitPane.setRightComponent(propertyPanel);
+//                mainSplitPane.setRightComponent(viewSplitPane);
+//            } else {
                 mainSplitPane.setRightComponent(mainTabbedPane);
-            }
+//            }
 
             this.showPropertiesPanel = showPropertiesPanel;
         }
@@ -341,7 +328,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
-        propertyPanel.setPluginRepository(pluginRepository);
     }
 
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
@@ -350,12 +336,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
             firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
             if (propertyChangeListener != null) {
                 propertyChangeListener.propertyChange(evt);
-            }
-        });
-
-        treePanel.addTreeSelectionListener((TreeSelectionEvent e) -> {
-            if (propertyPanel.isEnabled()) {
-                propertyPanel.setActiveNode(treePanel.getSelectedItem());
             }
         });
 
