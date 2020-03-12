@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.service.panel;
 
+import org.exbin.framework.gui.utils.WindowUtils;
+
 /**
  * Catalog update panel.
  *
@@ -149,6 +151,14 @@ public class CatalogUpdateManagerPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogUpdateManagerPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox jComboBox1;

@@ -17,6 +17,7 @@
 package org.exbin.framework.gui.service.panel;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Panel for list of plugins.
@@ -52,6 +53,14 @@ public class PluginsManagerPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new PluginsManagerPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

@@ -16,23 +16,16 @@
  */
 package org.exbin.framework.editor.xbup.panel;
 
-import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DropMode;
 import javax.swing.JPopupMenu;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.plaf.basic.BasicTreeUI;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.viewer.DocumentItemSelectionListener;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -43,7 +36,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Panel with document tree visualization.
  *
- * @version 0.2.1 2020/03/06
+ * @version 0.2.1 2020/03/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -59,13 +52,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     private final List<ActionListener> updateEventList;
 
     private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
-//    private boolean editEnabled;
-//    private boolean addEnabled;
-//    private final Clipboard clipboard;
-//    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
-//    private Component lastFocusedComponent = null;
-//    private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
     public XBDocTreePanel() {
         super();
         mainDocModel = new XBDocTreeModel();
@@ -74,14 +61,11 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         initComponents();
 
         mainTree.setCellRenderer(cellRenderer);
-        mainTree.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                XBTTreeNode selectedItem = getSelectedItem();
-                itemSelectionListeners.forEach((listener) -> {
-                    listener.itemSelected(selectedItem);
-                });
-            }
+        mainTree.addTreeSelectionListener((TreeSelectionEvent e) -> {
+            XBTTreeNode selectedItem = getSelectedItem();
+            itemSelectionListeners.forEach((listener) -> {
+                listener.itemSelected(selectedItem);
+            });
         });
 //        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         updateEventList = new ArrayList<>();
@@ -95,21 +79,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
          pasteAction.setEnabled(pasteAction.isEnabled());
          }
          });*/
-//        actionListenerMap.put(DefaultEditorKit.cutAction, (ActionListener) (ActionEvent e) -> {
-//            performCut();
-//        });
-//        actionListenerMap.put(DefaultEditorKit.copyAction, (ActionListener) (ActionEvent e) -> {
-//            performCopy();
-//        });
-//        actionListenerMap.put(DefaultEditorKit.pasteAction, (ActionListener) (ActionEvent e) -> {
-//            performPaste();
-//        });
-//        actionListenerMap.put(DefaultEditorKit.deleteNextCharAction, (ActionListener) (ActionEvent e) -> {
-//            performDelete();
-//        });
-//        actionListenerMap.put("delete", (ActionListener) (ActionEvent e) -> {
-//            performDelete();
-//        });
         mainTree.setDragEnabled(true);
         mainTree.setDropMode(DropMode.USE_SELECTION);
 
@@ -238,13 +207,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
         }
     }
 
-//    public boolean isEditEnabled() {
-//        return editEnabled;
-//    }
-//
-//    public boolean isAddEnabled() {
-//        return addEnabled;
-//    }
 //    public boolean isPasteEnabled() {
 //        return addEnabled && clipboard.isDataFlavorAvailable(XB_DATA_FLAVOR);
 //    }
@@ -368,16 +330,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //        lastFocusedComponent = null;
 //        return false;
 //    }
-//    @Override
-//    public void releaseActionStatus() {
-//        mainFrame.getItemAddAction().setEnabled(false);
-//        mainFrame.getItemModifyAction().setEnabled(false);
-//        mainFrame.getItemPropertiesAction().setEnabled(false);
-//        mainFrame.getEditFindAction().setEnabled(false);
-//        mainFrame.getEditFindAgainAction().setEnabled(false);
-//        mainFrame.getEditReplaceAction().setEnabled(false);
-//        mainFrame.getEditGotoAction().setEnabled(false);
-//    }
 //
 //    @Override
 //    public boolean performAction(String eventName, ActionEvent event) {
@@ -390,10 +342,5 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //        }
 //
 //        return false;
-//    }
-//
-//    @Override
-//    public Object getUndoHandle() {
-//        return treeUndo;
 //    }
 }

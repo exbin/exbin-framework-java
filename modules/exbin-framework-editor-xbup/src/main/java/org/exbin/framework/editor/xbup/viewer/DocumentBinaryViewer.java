@@ -16,17 +16,22 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
-import org.exbin.auxiliary.paged_data.ByteArrayData;
+import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.bined.panel.BinaryStatusPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBTBlock;
+import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**
  * Binary viewer of document.
  *
- * @version 0.2.1 2020/03/07
+ * @version 0.2.1 2020/03/12
  * @author ExBin Project (http://exbin.org)
  */
 public class DocumentBinaryViewer implements DocumentViewer {
@@ -42,13 +47,21 @@ public class DocumentBinaryViewer implements DocumentViewer {
         init();
     }
     
-    public void init() {
+    private void init() {
         
     }
 
     @Override
     public void setSelectedItem(XBTBlock item) {
-        binaryPanel.setContentData(new ByteArrayData(new byte[] { 64 }));
+        ByteArrayEditableData byteArrayData = new ByteArrayEditableData();
+        
+        try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
+            ((XBTTreeNode) item).toStreamUB(dataOutputStream);
+        } catch (IOException ex) {
+            Logger.getLogger(DocumentBinaryViewer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        binaryPanel.setContentData(byteArrayData);
     }
 
     @Override

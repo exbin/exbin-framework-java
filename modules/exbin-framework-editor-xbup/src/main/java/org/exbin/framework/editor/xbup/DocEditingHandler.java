@@ -57,7 +57,6 @@ public class DocEditingHandler {
         ActionUtils.setupAction(editItemAction, resourceBundle, "editItemAction");
         editItemAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0));
         editItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-        editItemAction.setEnabled(false);
     }
 
     public Action getAddItemAction() {
