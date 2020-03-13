@@ -61,7 +61,7 @@ public class DocumentTextViewer implements DocumentViewer {
     }
 
     @Override
-    public void setSelectedItem(XBTBlock item) {
+    public void setSelectedItem(@Nullable XBTBlock item) {
         String text = "<!XBUP version=\"0.1\">\n";
 //        XBTBlock parent = item.getParent();
 //        if (parent == null) {

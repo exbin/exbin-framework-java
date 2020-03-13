@@ -29,7 +29,6 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.visual.xbplugins.XBPicturePanel;
-import static org.exbin.xbup.visual.xbplugins.XBPicturePanel.toBufferedImage;
 
 /**
  * XBManager icon editing panel.
@@ -84,7 +83,7 @@ public class CatalogEditIconPanel extends javax.swing.JPanel {
         if (imageIcon != null) {
             ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
             try {
-                ImageIO.write(toBufferedImage(((ImageIcon) imageIcon).getImage()), "png", arrayOutputStream);
+                ImageIO.write(XBPicturePanel.toBufferedImage(((ImageIcon) imageIcon).getImage()), "png", arrayOutputStream);
                 icon = arrayOutputStream.toByteArray();
             } catch (IOException ex) {
                 Logger.getLogger(CatalogEditIconPanel.class.getName()).log(Level.SEVERE, null, ex);

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.framework.bined.panel.BinEdComponentPanel;
@@ -46,21 +47,24 @@ public class DocumentBinaryViewer implements DocumentViewer {
         // binaryPanel.setNoBorder();
         init();
     }
-    
+
     private void init() {
-        
+
     }
 
     @Override
-    public void setSelectedItem(XBTBlock item) {
-        ByteArrayEditableData byteArrayData = new ByteArrayEditableData();
-        
-        try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
-            ((XBTTreeNode) item).toStreamUB(dataOutputStream);
-        } catch (IOException ex) {
-            Logger.getLogger(DocumentBinaryViewer.class.getName()).log(Level.SEVERE, null, ex);
+    public void setSelectedItem(@Nullable XBTBlock item) {
+        ByteArrayEditableData byteArrayData = null;
+        if (item != null) {
+            byteArrayData = new ByteArrayEditableData();
+
+            try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
+                ((XBTTreeNode) item).toStreamUB(dataOutputStream);
+            } catch (IOException ex) {
+                Logger.getLogger(DocumentBinaryViewer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
+
         binaryPanel.setContentData(byteArrayData);
     }
 

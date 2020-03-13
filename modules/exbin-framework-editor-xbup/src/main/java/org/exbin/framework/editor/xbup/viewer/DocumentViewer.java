@@ -17,6 +17,7 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
@@ -31,7 +32,7 @@ import org.exbin.xbup.core.block.XBTBlock;
 @ParametersAreNonnullByDefault
 public interface DocumentViewer extends ClipboardActionsHandler {
 
-    void setSelectedItem(XBTBlock item);
+    void setSelectedItem(@Nullable XBTBlock item);
 
     @Nonnull
     JComponent getComponent();

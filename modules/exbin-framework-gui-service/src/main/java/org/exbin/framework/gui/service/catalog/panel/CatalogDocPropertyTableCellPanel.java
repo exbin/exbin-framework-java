@@ -58,7 +58,8 @@ public class CatalogDocPropertyTableCellPanel extends PropertyTableCellPanel {
 
     public void performEditorAction() {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        CatalogEditDocumentationPanel docPanel = new CatalogEditDocumentationPanel(catalog, doc);
+        CatalogEditDocumentationPanel docPanel = new CatalogEditDocumentationPanel();
+        docPanel.setDocumentation(doc);
         RemovalControlPanel controlPanel = new RemovalControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(docPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);

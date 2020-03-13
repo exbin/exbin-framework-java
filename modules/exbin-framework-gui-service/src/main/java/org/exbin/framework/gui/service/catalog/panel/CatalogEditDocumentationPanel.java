@@ -31,7 +31,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * XBManager catalog specification selection panel.
@@ -45,9 +45,8 @@ public class CatalogEditDocumentationPanel extends javax.swing.JPanel {
     private final SHTMLPanel mainPanel;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogEditDocumentationPanel.class);
 
-    public CatalogEditDocumentationPanel(XBACatalog catalog, String documentation) {
+    public CatalogEditDocumentationPanel() {
         mainPanel = SHTMLPanel.createSHTMLPanel();
-        this.documentation = documentation;
         initComponents();
         init();
     }
@@ -67,7 +66,6 @@ public class CatalogEditDocumentationPanel extends javax.swing.JPanel {
             }
         });
 
-        mainPanel.setCurrentDocumentContent(documentation);
         add(mainPanel, java.awt.BorderLayout.CENTER);
     }
 
@@ -87,11 +85,24 @@ public class CatalogEditDocumentationPanel extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogEditDocumentationPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     public String getDocumentation() {
         return documentation;
+    }
+
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
+        mainPanel.setCurrentDocumentContent(documentation);
     }
 
     private static TextResources createResources() {

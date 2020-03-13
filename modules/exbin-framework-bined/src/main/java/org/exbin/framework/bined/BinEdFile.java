@@ -38,6 +38,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.ByteArrayData;
+import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.auxiliary.paged_data.EditableBinaryData;
 import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
 import org.exbin.auxiliary.paged_data.delta.FileDataSource;
@@ -77,7 +78,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
         componentPanel.setUndoHandler(undoHandler);
         init();
     }
-    
+
     private void init() {
         componentPanel.setFileApi(this);
         componentPanel.setContentData(new ByteArrayData());
@@ -166,12 +167,23 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
     }
 
     public void loadFromStream(InputStream stream) throws IOException {
-        EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) componentPanel.getContentData());
+        BinaryData contentData = componentPanel.getContentData();
+        if (!(contentData instanceof EditableBinaryData)) {
+            contentData = new ByteArrayEditableData();
+            // TODO: stream to binary data
+        }
+
+        EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) contentData);
         data.loadFromStream(stream);
     }
 
     public void loadFromStream(InputStream stream, long dataSize) throws IOException {
-        EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) componentPanel.getContentData());
+        BinaryData contentData = componentPanel.getContentData();
+        if (!(contentData instanceof EditableBinaryData)) {
+            contentData = new ByteArrayEditableData();
+        }
+
+        EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) contentData);
         data.clear();
         data.insert(0, stream, dataSize);
     }

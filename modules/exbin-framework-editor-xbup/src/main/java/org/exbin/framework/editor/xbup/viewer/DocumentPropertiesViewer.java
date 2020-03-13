@@ -17,12 +17,15 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import java.awt.BorderLayout;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.xbup.panel.DocumentViewerPanel;
 import org.exbin.framework.editor.xbup.panel.XBPropertyPanel;
+import org.exbin.framework.gui.service.catalog.panel.CatalogItemPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -32,16 +35,17 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Properties viewer of document.
  *
- * @version 0.2.1 2020/03/11
+ * @version 0.2.1 2020/03/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DocumentPropertiesViewer implements DocumentViewer {
 
     private final JPanel panel = new JPanel();
-    private final JPanel viewerPanel = new JPanel();
+    private final DocumentViewerPanel viewerPanel = new DocumentViewerPanel();
     private JSplitPane viewSplitPane;
     private final XBPropertyPanel propertiesPanel;
+    private final CatalogItemPanel typePanel;
 
     public DocumentPropertiesViewer() {
         propertiesPanel = new XBPropertyPanel();
@@ -54,11 +58,20 @@ public class DocumentPropertiesViewer implements DocumentViewer {
 
         panel.setLayout(new BorderLayout());
         panel.add(viewSplitPane, BorderLayout.CENTER);
+
+        typePanel = new CatalogItemPanel();
     }
 
     @Override
-    public void setSelectedItem(XBTBlock item) {
+    public void setSelectedItem(@Nullable XBTBlock item) {
         propertiesPanel.setActiveNode((XBTTreeNode) item);
+        viewerPanel.removeAllViews();
+        if (item != null) {
+            // TODO custom viewers
+
+            viewerPanel.addView("Type", typePanel);
+            // typePanel.setItem(item);
+        }
     }
 
     @Override
@@ -117,6 +130,7 @@ public class DocumentPropertiesViewer implements DocumentViewer {
 
     public void setCatalog(XBACatalog catalog) {
         propertiesPanel.setCatalog(catalog);
+        typePanel.setCatalog(catalog);
     }
 
     public void setApplication(XBApplication application) {
