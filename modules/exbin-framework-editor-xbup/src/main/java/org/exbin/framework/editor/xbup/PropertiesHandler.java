@@ -23,6 +23,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.xbup.action.ItemPropertiesAction;
 import org.exbin.framework.editor.xbup.panel.BlockPropertiesPanel;
 import org.exbin.framework.editor.xbup.panel.DocumentPropertiesPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
@@ -47,7 +48,7 @@ public class PropertiesHandler {
     private final ResourceBundle resourceBundle;
 
     private Action propertiesAction;
-    private Action itemPropertiesAction;
+    private ItemPropertiesAction itemPropertiesAction;
     private boolean devMode;
 
     public PropertiesHandler(XBApplication application, EditorProvider editorProvider) {
@@ -82,30 +83,10 @@ public class PropertiesHandler {
         ActionUtils.setupAction(propertiesAction, resourceBundle, "propertiesAction");
         propertiesAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
 
-        itemPropertiesAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof DocumentViewerProvider) {
-                    DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
-                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    BlockPropertiesPanel panel = new BlockPropertiesPanel();
-                    panel.setCatalog(provider.getCatalog());
-                    panel.setDevMode(devMode);
-                    panel.setTreeNode(provider.getSelectedItem());
-                    CloseControlPanel controlPanel = new CloseControlPanel();
-                    JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    controlPanel.setHandler(() -> {
-                        dialog.close();
-                        dialog.dispose();
-                    });
-                    dialog.showCentered((Component) e.getSource());
-                }
-            }
-        };
+        itemPropertiesAction = new ItemPropertiesAction((DocumentViewerProvider) editorProvider);
+        itemPropertiesAction.setDevMode(devMode);
         ActionUtils.setupAction(itemPropertiesAction, resourceBundle, "itemPropertiesAction");
         itemPropertiesAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-        itemPropertiesAction.setEnabled(false);
     }
 
     public Action getPropertiesAction() {

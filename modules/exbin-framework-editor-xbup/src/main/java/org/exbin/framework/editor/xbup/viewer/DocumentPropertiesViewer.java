@@ -28,7 +28,11 @@ import org.exbin.framework.editor.xbup.panel.XBPropertyPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBTBlock;
+import org.exbin.xbup.core.block.declaration.XBBlockDecl;
+import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
+import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
@@ -46,6 +50,7 @@ public class DocumentPropertiesViewer implements DocumentViewer {
     private JSplitPane viewSplitPane;
     private final XBPropertyPanel propertiesPanel;
     private final CatalogItemPanel typePanel;
+    private XBACatalog catalog;
 
     public DocumentPropertiesViewer() {
         propertiesPanel = new XBPropertyPanel();
@@ -69,9 +74,17 @@ public class DocumentPropertiesViewer implements DocumentViewer {
         if (item != null) {
             // TODO custom viewers
 
-            viewerPanel.addView("Type", typePanel);
-            // typePanel.setItem(item);
+            XBBlockDecl decl = item instanceof XBTTreeNode ? ((XBTTreeNode) item).getBlockDecl() : null;
+            if (decl instanceof XBCBlockDecl) {
+                XBCBlockSpec blockSpec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
+
+                typePanel.setItem(blockSpec);
+                viewerPanel.addView("Type", typePanel);
+            }
         }
+
+        viewerPanel.invalidate();
+        viewerPanel.repaint();
     }
 
     @Override
@@ -125,10 +138,12 @@ public class DocumentPropertiesViewer implements DocumentViewer {
     }
 
     @Override
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+    public void setUpdateListener(ClipboardActionsUpdateListener updateListener
+    ) {
     }
 
     public void setCatalog(XBACatalog catalog) {
+        this.catalog = catalog;
         propertiesPanel.setCatalog(catalog);
         typePanel.setCatalog(catalog);
     }
