@@ -16,6 +16,8 @@
  */
 package org.exbin.framework.gui.service.catalog.panel;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -25,6 +27,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogAddItemPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogAddItemPanel.class);
@@ -100,6 +103,7 @@ public class CatalogAddItemPanel extends javax.swing.JPanel {
     private javax.swing.JLabel itemTypeLabel;
     // End of variables declaration//GEN-END:variables
 
+    @Nullable
     public CatalogSpecItemType getItemType() {
         switch (itemTypeComboBox.getSelectedIndex()) {
             case 0:
@@ -115,6 +119,7 @@ public class CatalogAddItemPanel extends javax.swing.JPanel {
         return null;
     }
 
+    @Nullable
     public String getItemName() {
         return itemNameTextField.getText();
     }

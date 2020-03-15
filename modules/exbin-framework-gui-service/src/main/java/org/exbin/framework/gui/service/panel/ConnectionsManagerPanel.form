@@ -22,7 +22,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="connectionsScrollPane" pref="309" max="32767" attributes="1"/>
+              <Component id="connectionsScrollPane" pref="304" max="32767" attributes="1"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="connectionsControlPanel" min="-2" max="-2" attributes="0"/>
           </Group>
@@ -71,12 +71,12 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="modifyButton" alignment="1" pref="118" max="32767" attributes="0"/>
-                      <Component id="addButton" alignment="1" pref="118" max="32767" attributes="0"/>
-                      <Component id="removeButton" alignment="1" pref="118" max="32767" attributes="0"/>
-                      <Component id="selectAllButton" alignment="1" pref="118" max="32767" attributes="0"/>
-                      <Component id="downButton" alignment="1" pref="118" max="32767" attributes="1"/>
-                      <Component id="upButton" alignment="0" pref="118" max="32767" attributes="1"/>
+                      <Component id="modifyButton" alignment="1" max="32767" attributes="0"/>
+                      <Component id="addButton" alignment="1" max="32767" attributes="0"/>
+                      <Component id="removeButton" alignment="1" max="32767" attributes="0"/>
+                      <Component id="selectAllButton" alignment="1" max="32767" attributes="0"/>
+                      <Component id="downButton" alignment="1" max="32767" attributes="1"/>
+                      <Component id="upButton" alignment="0" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -129,11 +129,8 @@
         </Component>
         <Component class="javax.swing.JButton" name="addButton">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/panel/resources/ConnectionsManagerPanel.properties" key="addButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
-            </Property>
-            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/panel/resources/ConnectionsManagerPanel.properties" key="addButton.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="resourceBundle.getString(&quot;addButton.text&quot;) + ActionUtils.DIALOG_MENUITEM_EXT" type="code"/>
             </Property>
             <Property name="name" type="java.lang.String" value="addButton" noResource="true"/>
           </Properties>
@@ -167,8 +164,8 @@
         </Component>
         <Component class="javax.swing.JButton" name="modifyButton">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/panel/resources/ConnectionsManagerPanel.properties" key="modifyButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="resourceBundle.getString(&quot;modifyButton.text&quot;) + ActionUtils.DIALOG_MENUITEM_EXT" type="code"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="modifyButton" noResource="true"/>

@@ -17,29 +17,36 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.panel.BinEdComponentPanel;
 import org.exbin.framework.editor.xbup.panel.DocumentViewerPanel;
 import org.exbin.framework.editor.xbup.panel.XBPropertyPanel;
 import org.exbin.framework.gui.service.catalog.panel.CatalogItemPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
-import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
+import org.exbin.xbup.core.util.StreamUtils;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
  * Properties viewer of document.
  *
- * @version 0.2.1 2020/03/13
+ * @version 0.2.1 2020/03/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -50,13 +57,14 @@ public class DocumentPropertiesViewer implements DocumentViewer {
     private JSplitPane viewSplitPane;
     private final XBPropertyPanel propertiesPanel;
     private final CatalogItemPanel typePanel;
+    private final BinEdComponentPanel dataPanel;
     private XBACatalog catalog;
 
     public DocumentPropertiesViewer() {
         propertiesPanel = new XBPropertyPanel();
 
         viewSplitPane = new JSplitPane();
-        viewSplitPane.setDividerLocation(250);
+        viewSplitPane.setDividerLocation(200);
         viewSplitPane.setResizeWeight(1.0);
         viewSplitPane.setLeftComponent(viewerPanel);
         viewSplitPane.setRightComponent(propertiesPanel);
@@ -65,6 +73,7 @@ public class DocumentPropertiesViewer implements DocumentViewer {
         panel.add(viewSplitPane, BorderLayout.CENTER);
 
         typePanel = new CatalogItemPanel();
+        dataPanel = new BinEdComponentPanel();
     }
 
     @Override
@@ -74,12 +83,23 @@ public class DocumentPropertiesViewer implements DocumentViewer {
         if (item != null) {
             // TODO custom viewers
 
-            XBBlockDecl decl = item instanceof XBTTreeNode ? ((XBTTreeNode) item).getBlockDecl() : null;
-            if (decl instanceof XBCBlockDecl) {
-                XBCBlockSpec blockSpec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
+            if (item.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
+                ByteArrayEditableData byteArrayData = new ByteArrayEditableData();
+                try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
+                    StreamUtils.copyInputStreamToOutputStream(item.getData(), dataOutputStream);
+                } catch (IOException ex) {
+                    Logger.getLogger(DocumentBinaryViewer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                dataPanel.setContentData(byteArrayData);
+                viewerPanel.addView("Data", dataPanel);
+            } else {
+                XBBlockDecl decl = item instanceof XBTTreeNode ? ((XBTTreeNode) item).getBlockDecl() : null;
+                if (decl instanceof XBCBlockDecl) {
+                    XBCBlockSpec blockSpec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
 
-                typePanel.setItem(blockSpec);
-                viewerPanel.addView("Type", typePanel);
+                    typePanel.setItem(blockSpec);
+                    viewerPanel.addView("Type", typePanel);
+                }
             }
         }
 

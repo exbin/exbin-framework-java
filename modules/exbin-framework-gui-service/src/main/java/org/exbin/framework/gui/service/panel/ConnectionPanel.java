@@ -44,7 +44,7 @@ import org.exbin.xbup.client.XBCatalogServiceClient;
 /**
  * Service connection panel.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2020/03/15
  * @author ExBin Project (http://exbin.org)
  */
 public class ConnectionPanel extends javax.swing.JPanel {
@@ -106,7 +106,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         connectionPointLabel = new javax.swing.JLabel();
-        connectionComboBox = new javax.swing.JComboBox();
+        connectionComboBox = new javax.swing.JComboBox<>();
         connectionManageButton = new javax.swing.JButton();
         anonymousRadioButton = new javax.swing.JRadioButton();
         loginRadioButton = new javax.swing.JRadioButton();
@@ -232,7 +232,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
 
         connectionPointLabel.setText(resourceBundle.getString("connectionPointLabel.text")); // NOI18N
 
-        connectionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "localhost:22594" }));
+        connectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "localhost:22594" }));
 
         connectionManageButton.setText(resourceBundle.getString("connectionManageButton.text")); // NOI18N
         connectionManageButton.addActionListener(new java.awt.event.ActionListener() {
@@ -531,7 +531,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
     private javax.swing.JProgressBar busyProgressBar;
     private javax.swing.JPanel busyStatusPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JComboBox connectionComboBox;
+    private javax.swing.JComboBox<String> connectionComboBox;
     private javax.swing.JPanel connectionHeaderPanel;
     private javax.swing.JPanel connectionLoginPanel;
     private javax.swing.JButton connectionManageButton;
@@ -588,7 +588,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
     public void loadConnectionList(Preferences preferences) {
         ArrayList<String> connectionList = new ArrayList<>();
         long pos = 1;
-        while (preferences.get(PREFERENCES_PREFIX + String.valueOf(pos)) != null) {
+        while (preferences.exists(PREFERENCES_PREFIX + String.valueOf(pos))) {
             connectionList.add(preferences.get(PREFERENCES_PREFIX + String.valueOf(pos), ""));
             pos++;
         }

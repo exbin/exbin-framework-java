@@ -57,7 +57,6 @@ public class DocumentBinaryViewer implements DocumentViewer {
         ByteArrayEditableData byteArrayData = null;
         if (item != null) {
             byteArrayData = new ByteArrayEditableData();
-
             try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
                 ((XBTTreeNode) item).toStreamUB(dataOutputStream);
             } catch (IOException ex) {

@@ -26,6 +26,7 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
@@ -35,7 +36,7 @@ import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
 /**
  * Connection management panel.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2020/03/15
  * @author ExBin Project (http://exbin.org)
  */
 public class ConnectionsManagerPanel extends javax.swing.JPanel {
@@ -138,8 +139,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             }
         });
 
-        addButton.setText(resourceBundle.getString("addButton.text")); // NOI18N
-        addButton.setToolTipText(resourceBundle.getString("addButton.toolTipText")); // NOI18N
+        addButton.setText(resourceBundle.getString("addButton.text") + ActionUtils.DIALOG_MENUITEM_EXT);
         addButton.setName("addButton"); // NOI18N
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -165,7 +165,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             }
         });
 
-        modifyButton.setText(resourceBundle.getString("modifyButton.text")); // NOI18N
+        modifyButton.setText(resourceBundle.getString("modifyButton.text") + ActionUtils.DIALOG_MENUITEM_EXT);
         modifyButton.setEnabled(false);
         modifyButton.setName("modifyButton"); // NOI18N
         modifyButton.addActionListener(new java.awt.event.ActionListener() {
@@ -181,12 +181,12 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             .addGroup(connectionsControlPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(connectionsControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(modifyButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(addButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(removeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(selectAllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(downButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(upButton, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
+                    .addComponent(modifyButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(removeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(selectAllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(downButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(upButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         connectionsControlPanelLayout.setVerticalGroup(
@@ -213,7 +213,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(connectionsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                .addComponent(connectionsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(connectionsControlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
