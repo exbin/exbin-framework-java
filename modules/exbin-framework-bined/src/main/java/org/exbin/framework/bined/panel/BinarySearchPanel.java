@@ -38,7 +38,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import org.exbin.bined.ScrollBarVisibility;
-import org.exbin.bined.capability.RowWrappingCapable;
+import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
@@ -139,7 +139,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         themeProfile.setBackgroundPaintMode(ExtendedBackgroundPaintMode.PLAIN);
 
         codeArea.setLayoutProfile(layoutProfile);
-        codeArea.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        codeArea.setRowWrapping(RowWrappingMode.WRAPPING);
         codeArea.setWrappingBytesGroupSize(0);
         codeArea.setVerticalScrollBarVisibility(ScrollBarVisibility.NEVER);
         codeArea.setHorizontalScrollBarVisibility(ScrollBarVisibility.NEVER);

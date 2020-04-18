@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.EditationMode;
 import org.exbin.bined.SelectionRange;
-import org.exbin.bined.capability.RowWrappingCapable;
+import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.layout.DefaultExtendedCodeAreaLayoutProfile;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -70,7 +70,7 @@ public class LayoutProfilePanel extends javax.swing.JPanel {
             Logger.getLogger(LayoutProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         codeArea.setContentData(exampleData);
-        codeArea.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        codeArea.setRowWrapping(RowWrappingMode.WRAPPING);
         codeArea.setEnabled(false);
         codeArea.setSelection(new SelectionRange(200, 300));
     }

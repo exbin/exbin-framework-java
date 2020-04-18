@@ -64,7 +64,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
-import org.exbin.bined.BasicCodeAreaZone;
+import org.exbin.bined.basic.BasicCodeAreaZone;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.bined.basic.EnterKeyHandlingMode;
 import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;

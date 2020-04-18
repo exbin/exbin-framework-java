@@ -29,6 +29,7 @@ import org.exbin.bined.EditationMode;
 import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditationModeCapable;
 import org.exbin.bined.capability.RowWrappingCapable;
+import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.highlight.swing.extended.ExtendedHighlightCodeAreaPainter;
 import org.exbin.bined.highlight.swing.extended.ExtendedHighlightNonAsciiCodeAreaPainter;
 import org.exbin.bined.swing.extended.ExtCodeArea;
@@ -90,7 +91,7 @@ public class ColorProfilePanel extends javax.swing.JPanel {
             Logger.getLogger(ColorProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         codeArea.setContentData(exampleData);
-        ((RowWrappingCapable) codeArea).setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        ((RowWrappingCapable) codeArea).setRowWrapping(RowWrappingMode.WRAPPING);
         codeArea.setEnabled(false);
         codeArea.setShowUnprintables(true);
         codeArea.setSelection(new SelectionRange(200, 300));

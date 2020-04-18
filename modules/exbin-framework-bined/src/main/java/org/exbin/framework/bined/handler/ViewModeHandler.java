@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.bined.CodeAreaViewMode;
+import org.exbin.bined.basic.CodeAreaViewMode;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;

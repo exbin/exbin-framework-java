@@ -26,6 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.EditationMode;
 import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditationModeCapable;
+import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
@@ -73,7 +74,7 @@ public class ThemeProfilePanel extends javax.swing.JPanel {
             Logger.getLogger(ThemeProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         codeArea.setContentData(exampleData);
-        ((RowWrappingCapable) codeArea).setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        ((RowWrappingCapable) codeArea).setRowWrapping(RowWrappingMode.WRAPPING);
         codeArea.setEnabled(false);
         codeArea.setSelection(new SelectionRange(200, 300));
     }

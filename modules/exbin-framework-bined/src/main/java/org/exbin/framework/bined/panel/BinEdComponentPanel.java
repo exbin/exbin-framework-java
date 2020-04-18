@@ -41,6 +41,7 @@ import org.exbin.bined.EditationOperation;
 import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditationModeCapable;
 import org.exbin.bined.capability.RowWrappingCapable;
+import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.highlight.swing.extended.ExtendedHighlightNonAsciiCodeAreaPainter;
 import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
@@ -213,8 +214,8 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     }
 
     public boolean changeLineWrap() {
-        ((RowWrappingCapable) codeArea).setRowWrapping(((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING ? RowWrappingCapable.RowWrappingMode.NO_WRAPPING : RowWrappingCapable.RowWrappingMode.WRAPPING);
-        return ((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING;
+        ((RowWrappingCapable) codeArea).setRowWrapping(((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingMode.WRAPPING ? RowWrappingMode.NO_WRAPPING : RowWrappingMode.WRAPPING);
+        return ((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingMode.WRAPPING;
     }
 
     public boolean isShowNonprintables() {

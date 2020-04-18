@@ -36,7 +36,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import org.exbin.bined.ScrollBarVisibility;
-import org.exbin.bined.capability.RowWrappingCapable;
+import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
@@ -83,7 +83,7 @@ public class FindBinaryPanel extends javax.swing.JPanel {
             layoutProfile.setShowRowPosition(false);
             findCodeArea.setLayoutProfile(layoutProfile);
         }
-        findCodeArea.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        findCodeArea.setRowWrapping(RowWrappingMode.WRAPPING);
         findCodeArea.setWrappingBytesGroupSize(0);
         {
             ExtendedCodeAreaThemeProfile themeProfile = findCodeArea.getThemeProfile();
@@ -163,7 +163,7 @@ public class FindBinaryPanel extends javax.swing.JPanel {
             layoutProfile.setShowRowPosition(false);
             replaceCodeArea.setLayoutProfile(layoutProfile);
         }
-        replaceCodeArea.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        replaceCodeArea.setRowWrapping(RowWrappingMode.WRAPPING);
         replaceCodeArea.setWrappingBytesGroupSize(0);
         {
             ExtendedCodeAreaThemeProfile themeProfile = replaceCodeArea.getThemeProfile();

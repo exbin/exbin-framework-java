@@ -25,6 +25,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
+import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.BinaryDataOperationException;
@@ -257,12 +258,12 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public boolean isWordWrapMode() {
-        return ((RowWrappingCapable) activeFile.getCodeArea()).getRowWrapping() == RowWrappingCapable.RowWrappingMode.WRAPPING;
+        return ((RowWrappingCapable) activeFile.getCodeArea()).getRowWrapping() == RowWrappingMode.WRAPPING;
     }
 
     @Override
     public void setWordWrapMode(boolean mode) {
-        ((RowWrappingCapable) activeFile.getCodeArea()).setRowWrapping(mode ? RowWrappingCapable.RowWrappingMode.WRAPPING : RowWrappingCapable.RowWrappingMode.NO_WRAPPING);
+        ((RowWrappingCapable) activeFile.getCodeArea()).setRowWrapping(mode ? RowWrappingMode.WRAPPING : RowWrappingMode.NO_WRAPPING);
     }
 
     @Override

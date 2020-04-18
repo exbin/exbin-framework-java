@@ -30,7 +30,7 @@ import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.exbin.bined.ScrollBarVisibility;
-import org.exbin.bined.capability.RowWrappingCapable;
+import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.extended.theme.ExtendedBackgroundPaintMode;
 import org.exbin.bined.swing.extended.ExtCodeArea;
@@ -88,7 +88,7 @@ public class BinarySearchComboBoxPanel extends JPanel {
             layoutProfile.setShowRowPosition(false);
             codeArea.setLayoutProfile(layoutProfile);
         }
-        codeArea.setRowWrapping(RowWrappingCapable.RowWrappingMode.WRAPPING);
+        codeArea.setRowWrapping(RowWrappingMode.WRAPPING);
         codeArea.setWrappingBytesGroupSize(0);
         {
             ExtendedCodeAreaThemeProfile themeProfile = codeArea.getThemeProfile();
