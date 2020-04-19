@@ -275,7 +275,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
                         XBCBlockDecl blockDecl = (XBCBlockDecl) ((XBDeclBlockType) contextBlockType).getBlockDecl();
                         XBCBlockSpec blockSpec = blockDecl.getBlockSpecRev().getParent();
                         //new XBDeclBlockType(new XBCBlockDecl();
-                        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+                        XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
                         String targetCaption = nameService.getItemNamePath(blockSpec);
                         if (targetCaption == null) {
                             targetCaption = "";
@@ -328,7 +328,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
                     case OK: {
                         XBCRev blockRev = panel.getTarget();
                         catalogBlockType = new XBDeclBlockType(new XBCBlockDecl((XBCBlockRev) blockRev, catalog));
-                        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+                        XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
                         String targetCaption = nameService.getItemNamePath(blockRev.getParent());
                         if (targetCaption == null) {
                             targetCaption = "";
@@ -451,7 +451,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
             Long[] basicGroupPath = {0l, 0l};
             List<XBBlockDecl> list = catalog.getBlocks(((XBCGroupDecl) catalog.findGroupTypeByPath(basicGroupPath, 0)).getGroupSpecRev().getParent());
 
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
             for (XBBlockDecl decl : list) {
                 model.addElement(nameService.getDefaultText(((XBCBlockDecl) decl).getBlockSpecRev().getParent()));
             }

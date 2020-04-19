@@ -51,7 +51,7 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
         initComponents();
 
         if (catalog != null) {
-            revService = (XBCRevService) catalog.getCatalogService(XBCRevService.class);
+            revService = catalog.getCatalogService(XBCRevService.class);
         }
 
         init();

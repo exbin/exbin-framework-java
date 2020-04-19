@@ -151,13 +151,13 @@ public class CatalogNodesTreeModel implements TreeModel {
         }
 
         private void updateNode() {
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
             name = nameService.getDefaultText(node);
         }
 
         public List<CatalogNodesTreeItem> getChildren() {
             if (!loaded) {
-                XBCNodeService nodeService = (XBCNodeService) catalog.getCatalogService(XBCNodeService.class);
+                XBCNodeService nodeService = catalog.getCatalogService(XBCNodeService.class);
                 List<XBCNode> subNodes = nodeService.getSubNodes(((XBCNode) node));
                 for (XBCNode subNode : subNodes) {
                     CatalogNodesTreeItem subItem = new CatalogNodesTreeItem(subNode);

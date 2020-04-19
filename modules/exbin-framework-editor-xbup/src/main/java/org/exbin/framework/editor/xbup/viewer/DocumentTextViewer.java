@@ -224,7 +224,7 @@ public class DocumentTextViewer implements DocumentViewer {
         }
         XBBlockType blockType = node.getBlockType();
         if (catalog != null) {
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
             XBCBlockDecl blockDecl = (XBCBlockDecl) node.getBlockDecl();
             if (blockDecl != null) {
                 XBCBlockSpec blockSpec = blockDecl.getBlockSpecRev().getParent();

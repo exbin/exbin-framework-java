@@ -632,7 +632,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         if (srcNode.getBlockDecl() == null) {
             return null;
         }
-        XBCXPaneService paneService = (XBCXPaneService) catalog.getCatalogService(XBCXPaneService.class);
+        XBCXPaneService paneService = catalog.getCatalogService(XBCXPaneService.class);
         XBCBlockDecl decl = (XBCBlockDecl) srcNode.getBlockDecl();
         if (decl == null) {
             return null;
@@ -688,10 +688,10 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         }
 
         XBBlockDecl decl = srcNode.getBlockDecl();
-        XBCSpecService specService = (XBCSpecService) catalog.getCatalogService(XBCSpecService.class);
+        XBCSpecService specService = catalog.getCatalogService(XBCSpecService.class);
         if (decl instanceof XBCBlockDecl) {
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-            XBCXLineService lineService = (XBCXLineService) catalog.getCatalogService(XBCXLineService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+            XBCXLineService lineService = catalog.getCatalogService(XBCXLineService.class);
             XBCBlockSpec spec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
             if (spec != null) {
                 long bindCount = specService.getSpecDefsCount(spec);

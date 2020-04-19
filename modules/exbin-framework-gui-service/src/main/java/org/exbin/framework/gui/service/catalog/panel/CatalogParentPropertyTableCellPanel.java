@@ -92,7 +92,7 @@ public class CatalogParentPropertyTableCellPanel extends PropertyTableCellPanel 
     }
 
     private void setNodeLabel() {
-        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+        XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
         String targetCaption = parent == null ? null : nameService.getItemNamePath(parent);
         if (targetCaption == null) {
             targetCaption = "";

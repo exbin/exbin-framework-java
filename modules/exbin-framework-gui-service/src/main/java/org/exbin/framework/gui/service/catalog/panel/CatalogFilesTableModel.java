@@ -119,7 +119,7 @@ public class CatalogFilesTableModel extends AbstractTableModel {
     public void setCatalog(XBCatalog catalog) {
         this.catalog = catalog;
 
-        fileService = catalog == null ? null : (XBCXFileService) catalog.getCatalogService(XBCXFileService.class);
+        fileService = catalog == null ? null : catalog.getCatalogService(XBCXFileService.class);
     }
 
     public void persist() {

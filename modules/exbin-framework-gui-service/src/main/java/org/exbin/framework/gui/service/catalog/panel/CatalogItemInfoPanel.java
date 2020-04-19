@@ -75,10 +75,10 @@ public class CatalogItemInfoPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void setItem(XBCItem item) {
-        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-        XBCXDescService descService = (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
-        XBCXStriService striService = (XBCXStriService) catalog.getCatalogService(XBCXStriService.class);
-        XBCXHDocService hdocService = (XBCXHDocService) catalog.getCatalogService(XBCXHDocService.class);
+        XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+        XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
+        XBCXStriService striService = catalog.getCatalogService(XBCXStriService.class);
+        XBCXHDocService hdocService = catalog.getCatalogService(XBCXHDocService.class);
 
         String nameOrId = nameService.getDefaultText(item);
         if (nameOrId == null || nameOrId.isEmpty()) {

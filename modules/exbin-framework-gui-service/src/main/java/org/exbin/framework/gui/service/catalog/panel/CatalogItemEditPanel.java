@@ -175,9 +175,9 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
         this.catalogItem = catalogItem;
         DefaultTableModel tableModel = (DefaultTableModel) propertiesTable.getModel();
 
-        XBCXStriService striService = (XBCXStriService) catalog.getCatalogService(XBCXStriService.class);
-        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-        XBCXDescService descService = (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
+        XBCXStriService striService = catalog.getCatalogService(XBCXStriService.class);
+        XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+        XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
 
         // Remove all rows
         for (int i = tableModel.getRowCount() - 1; i > 0; i--) {
@@ -298,10 +298,10 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
             propertiesTable.getCellEditor().stopCellEditing();
         }
 
-        XBCXStriService striService = (XBCXStriService) catalog.getCatalogService(XBCXStriService.class);
-        XBCItemService itemService = (XBCItemService) catalog.getCatalogService(XBCItemService.class);
-        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-        XBCXDescService descService = (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
+        XBCXStriService striService = catalog.getCatalogService(XBCXStriService.class);
+        XBCItemService itemService = catalog.getCatalogService(XBCItemService.class);
+        XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+        XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
 
         DefaultTableModel tableModel = (DefaultTableModel) propertiesTable.getModel();
         ((XBEXNameService) nameService).setDefaultText(catalogItem, (String) tableModel.getValueAt(0, 1));
@@ -326,8 +326,8 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
 
         String document = docCellPanel.getDocument();
         if (document != null) {
-            XBCXFileService fileService = (XBCXFileService) catalog.getCatalogService(XBCXFileService.class);
-            XBCXHDocService hdocService = (XBCXHDocService) catalog.getCatalogService(XBCXHDocService.class);
+            XBCXFileService fileService = catalog.getCatalogService(XBCXFileService.class);
+            XBCXHDocService hdocService = catalog.getCatalogService(XBCXHDocService.class);
 
             XBCXHDoc itemHDoc = hdocService.getDocumentation(catalogItem);
 
@@ -339,7 +339,7 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
                 }
             } else {
                 if (itemHDoc == null) {
-                    XBCXLangService langService = (XBCXLangService) catalog.getCatalogService(XBCXLangService.class);
+                    XBCXLangService langService = catalog.getCatalogService(XBCXLangService.class);
                     XBCXLanguage defaultLanguage = langService.getDefaultLang();
                     itemHDoc = new XBEXHDoc();
                     ((XBEXHDoc) itemHDoc).setLang((XBEXLanguage) defaultLanguage);
@@ -372,8 +372,8 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
 
         byte[] bigIcon = bIconCellPanel.getIcon();
         if (bigIcon != null) {
-            XBCXFileService fileService = (XBCXFileService) catalog.getCatalogService(XBCXFileService.class);
-            XBCXIconService iconService = (XBCXIconService) catalog.getCatalogService(XBCXIconService.class);
+            XBCXFileService fileService = catalog.getCatalogService(XBCXFileService.class);
+            XBCXIconService iconService = catalog.getCatalogService(XBCXIconService.class);
 
             XBCXIcon itemIcon = iconService.getDefaultBigIcon(catalogItem);
             if (bigIcon.length == 0) {
@@ -408,8 +408,8 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
 
         byte[] smallIcon = sIconCellPanel.getIcon();
         if (smallIcon != null) {
-            XBCXFileService fileService = (XBCXFileService) catalog.getCatalogService(XBCXFileService.class);
-            XBCXIconService iconService = (XBCXIconService) catalog.getCatalogService(XBCXIconService.class);
+            XBCXFileService fileService = catalog.getCatalogService(XBCXFileService.class);
+            XBCXIconService iconService = catalog.getCatalogService(XBCXIconService.class);
 
             XBCXIcon itemIcon = iconService.getDefaultSmallIcon(catalogItem);
             if (smallIcon.length == 0) {

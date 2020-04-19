@@ -86,7 +86,7 @@ public class CatalogSIconPropertyTableCellPanel extends PropertyTableCellPanel {
     }
 
     public void setCatalogItem(XBCItem catalogItem) {
-        XBCXIconService iconService = (XBCXIconService) catalog.getCatalogService(XBCXIconService.class);
+        XBCXIconService iconService = catalog.getCatalogService(XBCXIconService.class);
         icon = iconService.getDefaultSmallIconData(catalogItem);
         setDocLabel();
     }

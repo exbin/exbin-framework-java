@@ -96,7 +96,7 @@ public class CatalogSpecsTableModel extends AbstractTableModel {
 
     public void setNode(XBCNode node) {
         this.node = node;
-        XBCSpecService specService = (XBCSpecService) catalog.getCatalogService(XBCSpecService.class);
+        XBCSpecService specService = catalog.getCatalogService(XBCSpecService.class);
 
         items = new ArrayList<>();
         if (node != null) {
@@ -130,7 +130,7 @@ public class CatalogSpecsTableModel extends AbstractTableModel {
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
 
-        nameService = catalog == null ? null : (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+        nameService = catalog == null ? null : catalog.getCatalogService(XBCXNameService.class);
     }
 
     public class CatalogSpecTableItem {

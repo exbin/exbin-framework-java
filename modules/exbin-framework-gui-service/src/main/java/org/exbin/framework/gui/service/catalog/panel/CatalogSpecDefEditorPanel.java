@@ -251,7 +251,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
         defItem.setOperation(operationCaption);
         defItem.setTarget(target);
 
-        XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+        XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
         defItem.setType(target != null ? nameService.getDefaultText(target.getParent()) : null);
         defItem.setTargetRevision(target != null ? target.getXBIndex() : null);
 
@@ -366,7 +366,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
     private void setTargetRev(XBCRev targetRev) {
         this.targetRev = targetRev;
         if (targetRev != null) {
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
             String targetCaption = nameService.getItemNamePath(targetRev.getParent());
             if (targetCaption == null) {
                 targetCaption = "";

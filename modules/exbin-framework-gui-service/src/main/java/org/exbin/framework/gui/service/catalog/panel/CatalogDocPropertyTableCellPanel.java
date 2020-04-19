@@ -87,7 +87,7 @@ public class CatalogDocPropertyTableCellPanel extends PropertyTableCellPanel {
     }
 
     public void setCatalogItem(XBCItem catalogItem) {
-        XBCXHDocService hDocService = (XBCXHDocService) catalog.getCatalogService(XBCXHDocService.class);
+        XBCXHDocService hDocService = catalog.getCatalogService(XBCXHDocService.class);
         doc = hDocService.getDocumentationText(catalogItem);
         setDocLabel();
     }

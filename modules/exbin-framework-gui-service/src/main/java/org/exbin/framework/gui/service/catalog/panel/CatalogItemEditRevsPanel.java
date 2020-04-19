@@ -261,8 +261,8 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
 
     public void persist() {
         updateList.forEach((revItem) -> {
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-            XBCXDescService descService = (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+            XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
 
             XBERev rev = (XBERev) revItem.getRev();
             if (rev == null) {
@@ -317,7 +317,7 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        revService = (XBCRevService) catalog.getCatalogService(XBCRevService.class);
+        revService = catalog.getCatalogService(XBCRevService.class);
         revsModel.setCatalog(catalog);
     }
 

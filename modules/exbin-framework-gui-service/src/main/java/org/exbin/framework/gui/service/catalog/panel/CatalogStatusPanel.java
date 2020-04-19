@@ -303,14 +303,14 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         XBCSpecService specService = null;
         XBCRevService revService = null;
         if (catalog != null) {
-            nodeService = ((XBCNodeService) catalog.getCatalogService(XBCNodeService.class));
-            specService = ((XBCSpecService) catalog.getCatalogService(XBCSpecService.class));
-            revService = ((XBCRevService) catalog.getCatalogService(XBCRevService.class));
+            nodeService = catalog.getCatalogService(XBCNodeService.class);
+            specService = catalog.getCatalogService(XBCSpecService.class);
+            revService = catalog.getCatalogService(XBCRevService.class);
         }
 
         lastUpdateNowButton.setEnabled(catalog instanceof XBECatalog);
 
-        Long count = catalog == null ? null : ((XBCItemService) catalog.getCatalogService(XBCItemService.class)).getItemsCount();
+        Long count = catalog == null ? null : catalog.getCatalogService(XBCItemService.class).getItemsCount();
         itemsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = nodeService == null ? null : nodeService.getItemsCount();
         nodesCountTextField.setText(count == null ? UNKNOWN : count.toString());

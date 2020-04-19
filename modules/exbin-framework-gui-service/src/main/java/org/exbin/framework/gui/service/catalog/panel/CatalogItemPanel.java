@@ -623,13 +623,13 @@ public class CatalogItemPanel extends javax.swing.JPanel {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        nodeService = catalog == null ? null : (XBCNodeService) catalog.getCatalogService(XBCNodeService.class);
-        striService = catalog == null ? null : (XBCXStriService) catalog.getCatalogService(XBCXStriService.class);
-        nameService = catalog == null ? null : (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-        descService = catalog == null ? null : (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
-        hDocService = catalog == null ? null : (XBCXHDocService) catalog.getCatalogService(XBCXHDocService.class);
-        fileService = catalog == null ? null : (XBCXFileService) catalog.getCatalogService(XBCXFileService.class);
-        iconService = catalog == null ? null : (XBCXIconService) catalog.getCatalogService(XBCXIconService.class);
+        nodeService = catalog == null ? null : catalog.getCatalogService(XBCNodeService.class);
+        striService = catalog == null ? null : catalog.getCatalogService(XBCXStriService.class);
+        nameService = catalog == null ? null : catalog.getCatalogService(XBCXNameService.class);
+        descService = catalog == null ? null : catalog.getCatalogService(XBCXDescService.class);
+        hDocService = catalog == null ? null : catalog.getCatalogService(XBCXHDocService.class);
+        fileService = catalog == null ? null : catalog.getCatalogService(XBCXFileService.class);
+        iconService = catalog == null ? null : catalog.getCatalogService(XBCXIconService.class);
 
         defsModel.setCatalog(catalog);
         revsModel.setCatalog(catalog);

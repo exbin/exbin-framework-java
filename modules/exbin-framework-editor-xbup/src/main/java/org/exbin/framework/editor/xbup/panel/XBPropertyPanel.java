@@ -258,7 +258,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
             if (blockDecl instanceof XBCBlockDecl) {
                 XBCBlockSpec blockSpec = ((XBCBlockDecl) blockDecl).getBlockSpecRev().getParent();
                 if (catalog != null) {
-                    XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+                    XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
                     return nameService.getDefaultText(blockSpec);
                 }
             }
@@ -277,7 +277,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
             XBBlockDecl decl = node.getBlockDecl();
             if (catalog != null && decl instanceof XBCBlockDecl) {
                 XBCBlockSpec spec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
-                XBCXDescService descService = (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
+                XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
                 XBCXDesc desc = descService.getDefaultItemDesc(spec);
                 return desc == null ? "" : desc.getText();
             }

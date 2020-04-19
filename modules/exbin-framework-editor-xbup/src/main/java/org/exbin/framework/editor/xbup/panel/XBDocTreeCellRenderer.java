@@ -118,7 +118,7 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
                 return captionCache.get(blockSpec.getId());
             }
 
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
             String caption = nameService.getDefaultText(blockSpec);
             captionCache.put(blockSpec.getId(), caption);
             return caption;
@@ -155,7 +155,7 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
             if (iconCache.containsKey(blockSpec.getId())) {
                 return iconCache.get(blockSpec.getId());
             }
-            XBCXIconService iconService = (XBCXIconService) catalog.getCatalogService(XBCXIconService.class);
+            XBCXIconService iconService = catalog.getCatalogService(XBCXIconService.class);
             ImageIcon icon = iconService.getDefaultImageIcon(blockSpec);
             if (icon == null) {
                 iconCache.put(blockSpec.getId(), icon);

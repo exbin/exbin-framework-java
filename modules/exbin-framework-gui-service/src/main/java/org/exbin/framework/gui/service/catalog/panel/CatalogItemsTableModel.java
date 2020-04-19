@@ -150,7 +150,7 @@ public class CatalogItemsTableModel extends AbstractTableModel {
     }
 
     public void setCatalog(XBACatalog catalog) {
-        itemService = catalog == null ? null : (XBCItemService) catalog.getCatalogService(XBCItemService.class);
+        itemService = catalog == null ? null : catalog.getCatalogService(XBCItemService.class);
     }
 
     void setSpecType(CatalogSpecItemType catalogSpecType) {

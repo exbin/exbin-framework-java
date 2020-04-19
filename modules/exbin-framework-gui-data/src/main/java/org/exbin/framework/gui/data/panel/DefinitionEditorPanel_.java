@@ -304,9 +304,9 @@ public class DefinitionEditorPanel_ extends javax.swing.JPanel {
 
     public void persist() {
         for (CatalogDefsTableItem defItem : updateList) {
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-            XBCXDescService descService = (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
-            XBCXStriService striService = (XBCXStriService) catalog.getCatalogService(XBCXStriService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+            XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
+            XBCXStriService striService = catalog.getCatalogService(XBCXStriService.class);
 
             XBESpecDef specDef = (XBESpecDef) defItem.getSpecDef();
             if (specDef != null && specDef.getType() != defItem.getDefType()) {
@@ -372,7 +372,7 @@ public class DefinitionEditorPanel_ extends javax.swing.JPanel {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        specService = (XBCSpecService) catalog.getCatalogService(XBCSpecService.class);
+        specService = catalog.getCatalogService(XBCSpecService.class);
         defsModel.setCatalog(catalog);
     }
 

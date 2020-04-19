@@ -61,8 +61,10 @@ import org.exbin.xbup.client.catalog.remote.service.XBRXPaneService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXPlugService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXStriService;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.XBCatalog;
 import org.exbin.xbup.core.catalog.base.XBCRoot;
 import org.exbin.xbup.core.catalog.base.service.XBCNodeService;
+import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 import org.exbin.xbup.core.catalog.base.service.XBCXHDocService;
@@ -188,7 +190,7 @@ public class ClientModule implements ClientModuleApi {
                 wsHandler.init();
                 wsHandler.getPort().getLanguageId("en");
                 catalogHandler.setUpdateHandler(wsHandler);
-                XBCNodeService nodeService = (XBCNodeService) catalogHandler.getCatalogService(XBCNodeService.class);
+                XBCNodeService nodeService = catalogHandler.getCatalogService(XBCNodeService.class);
                 XBCRoot catalogRoot = nodeService.getRoot();
                 if (catalogRoot != null) {
                     Date localLastUpdate = catalogRoot.getLastUpdate();

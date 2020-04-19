@@ -95,9 +95,9 @@ public class CatalogRevsTableModel extends AbstractTableModel {
     private void reloadItems() {
         revs.clear();
         if (spec != null && catalog != null) {
-            XBCRevService revService = (XBCRevService) catalog.getCatalogService(XBCRevService.class);
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-            XBCXDescService descService = (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
+            XBCRevService revService = catalog.getCatalogService(XBCRevService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+            XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
             List<XBCRev> revsList = revService.getRevs(spec);
             for (XBCRev rev : revsList) {
                 CatalogRevsTableItem item = new CatalogRevsTableItem();

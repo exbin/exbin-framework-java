@@ -105,10 +105,10 @@ public class CatalogDefsTableModel extends AbstractTableModel {
         this.catalogItem = item;
         items.clear();
         if (item instanceof XBCSpec) {
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-            XBCXDescService descService = (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
-            XBCXStriService striService = (XBCXStriService) catalog.getCatalogService(XBCXStriService.class);
-            XBCSpecService specService = (XBCSpecService) catalog.getCatalogService(XBCSpecService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+            XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
+            XBCXStriService striService = catalog.getCatalogService(XBCXStriService.class);
+            XBCSpecService specService = catalog.getCatalogService(XBCSpecService.class);
 
             spec = (XBCSpec) item;
             List<XBCSpecDef> specDefs = specService.getSpecDefs(spec);

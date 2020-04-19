@@ -280,7 +280,7 @@ public class BlockPropertiesPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void setTreeNode(XBTTreeNode srcNode) {
-        XBCSpecService specService = (XBCSpecService) catalog.getCatalogService(XBCSpecService.class);
+        XBCSpecService specService = catalog.getCatalogService(XBCSpecService.class);
         block = srcNode;
         nodeTypeTextField.setText(getCaption(block));
         dataModeTextField.setText(block.getDataMode() == XBBlockDataMode.DATA_BLOCK ? "DATA_BLOCK" : "NODE_BLOCK");
@@ -333,7 +333,7 @@ public class BlockPropertiesPanel extends javax.swing.JPanel {
 
         XBBlockType blockType = node.getBlockType();
         if (catalog != null) {
-            XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
 
             XBCBlockDecl blockDecl = node instanceof XBTTreeNode ? (XBCBlockDecl) ((XBTTreeNode) node).getBlockDecl() : null;
             if (blockDecl == null) {

@@ -292,7 +292,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
 
-        lineService = catalog == null ? null : (XBCXLineService) catalog.getCatalogService(XBCXLineService.class);
+        lineService = catalog == null ? null : catalog.getCatalogService(XBCXLineService.class);
 
         valueCellRenderer.setCatalog(catalog);
         valueCellEditor.setCatalog(catalog);
@@ -356,9 +356,9 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
                 return;
             }
 
-            XBCSpecService specService = (XBCSpecService) catalog.getCatalogService(XBCSpecService.class);
+            XBCSpecService specService = catalog.getCatalogService(XBCSpecService.class);
             if (decl instanceof XBCBlockDecl) {
-                XBCXNameService nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+                XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
                 XBCBlockSpec spec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
                 if (propertyThread != this) {
                     return;

@@ -47,7 +47,7 @@ public class ContextTypeChoicePanel extends javax.swing.JPanel {
         this.catalog = catalog;
         this.parentNode = parentNode;
 
-        nameService = (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
+        nameService = catalog.getCatalogService(XBCXNameService.class);
         initComponents();
         init();
     }

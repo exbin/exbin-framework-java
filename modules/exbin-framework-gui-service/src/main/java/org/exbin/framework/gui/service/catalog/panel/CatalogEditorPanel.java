@@ -599,12 +599,12 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
 
-        nodeService = catalog == null ? null : (XBCNodeService) catalog.getCatalogService(XBCNodeService.class);
-        specService = catalog == null ? null : (XBCSpecService) catalog.getCatalogService(XBCSpecService.class);
-        revService = catalog == null ? null : (XBCRevService) catalog.getCatalogService(XBCRevService.class);
-        nameService = catalog == null ? null : (XBCXNameService) catalog.getCatalogService(XBCXNameService.class);
-        descService = catalog == null ? null : (XBCXDescService) catalog.getCatalogService(XBCXDescService.class);
-        striService = catalog == null ? null : (XBCXStriService) catalog.getCatalogService(XBCXStriService.class);
+        nodeService = catalog == null ? null : catalog.getCatalogService(XBCNodeService.class);
+        specService = catalog == null ? null : catalog.getCatalogService(XBCSpecService.class);
+        revService = catalog == null ? null : catalog.getCatalogService(XBCRevService.class);
+        nameService = catalog == null ? null : catalog.getCatalogService(XBCXNameService.class);
+        descService = catalog == null ? null : catalog.getCatalogService(XBCXDescService.class);
+        striService = catalog == null ? null : catalog.getCatalogService(XBCXStriService.class);
 
         reloadNodesTree();
         specsModel.setCatalog(catalog);
