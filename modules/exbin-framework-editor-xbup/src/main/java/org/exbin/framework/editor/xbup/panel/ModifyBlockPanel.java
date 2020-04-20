@@ -745,7 +745,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
 
         if (doc != null && doc.getTailDataSize() > 0) {
             try {
-                tailDataBinaryDataFile.loadFromStream(doc.getTailData(), doc.getTailDataSize());
+                tailDataBinaryDataFile.loadFromStream(doc.getTailData().get(), doc.getTailDataSize());
             } catch (IOException ex) {
                 Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
             }

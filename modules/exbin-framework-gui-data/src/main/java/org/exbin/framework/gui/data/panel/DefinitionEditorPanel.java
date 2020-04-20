@@ -17,10 +17,7 @@
 package org.exbin.framework.gui.data.panel;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.exbin.framework.gui.component.GuiComponentModule;
 import org.exbin.framework.gui.component.api.EditItemActions;
 import org.exbin.framework.gui.component.api.EditItemActionsHandler;
@@ -28,7 +25,6 @@ import org.exbin.framework.gui.component.api.EditItemActionsHandlerEmpty;
 import org.exbin.framework.gui.component.api.MoveItemActions;
 import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
 import org.exbin.framework.gui.component.api.MoveItemActionsHandlerEmpty;
-import org.exbin.framework.gui.component.panel.ToolBarEditorPanel;
 import org.exbin.framework.gui.component.panel.ToolBarSidePanel;
 import org.exbin.framework.gui.menu.GuiMenuModule;
 import org.exbin.framework.gui.utils.ClipboardActions;
@@ -41,37 +37,26 @@ import org.exbin.framework.gui.undo.api.UndoActionsHandlerEmpty;
 import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.xbup.catalog.entity.XBERev;
-import org.exbin.xbup.catalog.entity.XBESpec;
-import org.exbin.xbup.catalog.entity.XBESpecDef;
-import org.exbin.xbup.catalog.entity.service.XBEXDescService;
-import org.exbin.xbup.catalog.entity.service.XBEXNameService;
-import org.exbin.xbup.catalog.entity.service.XBEXStriService;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
-import org.exbin.xbup.core.catalog.base.XBCSpec;
-import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
-import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
-import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
-import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 
 /**
  * Data type definition editor panel.
  *
- * @version 0.2.1 2017/02/21
+ * @version 0.2.1 2020/04/19
  * @author ExBin Project (http://exbin.org)
  */
 public class DefinitionEditorPanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
     private XBCItem catalogItem;
-    private XBCSpecService specService;
+//    private XBCSpecService specService;
     private final CatalogDefsTableModel defsModel = new CatalogDefsTableModel();
     private final CatalogDefsDetailTableModel detailModel = new CatalogDefsDetailTableModel();
-    private List<CatalogDefsTableItem> removeList;
-    private List<CatalogDefsTableItem> updateList;
+//    private List<CatalogDefsTableItem> removeList;
+//    private List<CatalogDefsTableItem> updateList;
 
-    private ToolBarEditorPanel toolBarEditorPanel;
+//    private ToolBarEditorPanel toolBarEditorPanel;
     private ToolBarSidePanel toolBarSidePanel;
 
     public DefinitionEditorPanel() {
@@ -81,24 +66,20 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        toolBarEditorPanel = new ToolBarEditorPanel();
-        add(toolBarEditorPanel, BorderLayout.CENTER);
-        toolBarEditorPanel.add(definitionControlSplitPane, BorderLayout.CENTER);
+//        toolBarEditorPanel = new ToolBarEditorPanel();
+        add(definitionControlSplitPane, BorderLayout.CENTER);
 
         toolBarSidePanel = new ToolBarSidePanel();
-        toolBarSidePanel.add(definitionScrollPane, BorderLayout.CENTER);
+        toolBarSidePanel.add(definitionScrollPane);
         definitionControlSplitPane.setLeftComponent(toolBarSidePanel);
         definitionControlSplitPane.setRightComponent(propertiesScrollPanel);
 
-        definitionsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    int selectedRow = definitionsTable.getSelectedRow();
-                    detailModel.setItem(selectedRow >= 0 ? defsModel.getRowItem(selectedRow) : null);
-                    propertiesTable.repaint();
-                    updateItemStatus();
-                }
+        definitionsTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = definitionsTable.getSelectedRow();
+                detailModel.setItem(selectedRow >= 0 ? defsModel.getRowItem(selectedRow) : null);
+                propertiesTable.repaint();
+                updateItemStatus();
             }
         });
 
@@ -166,40 +147,39 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTable propertiesTable;
     // End of variables declaration//GEN-END:variables
 
-    public void persist() {
-        for (CatalogDefsTableItem defItem : updateList) {
-            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
-            XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
-            XBCXStriService striService = catalog.getCatalogService(XBCXStriService.class);
-
-            XBESpecDef specDef = (XBESpecDef) defItem.getSpecDef();
-            if (specDef != null && specDef.getType() != defItem.getDefType()) {
-                specService.removeItem(specDef);
-                specDef = null;
-            }
-
-            if (specDef == null) {
-                specDef = (XBESpecDef) specService.createSpecDef((XBCSpec) catalogItem, defItem.getDefType());
-                specDef.setCatalogItem((XBESpec) catalogItem);
-            }
-
-            specDef.setXBIndex(defItem.getXbIndex());
-            specDef.setTarget((XBERev) defItem.getTarget());
-
-            specService.persistItem(specDef);
-
-            ((XBEXNameService) nameService).setDefaultText(specDef, defItem.getName());
-            ((XBEXDescService) descService).setDefaultText(specDef, defItem.getDescription());
-            ((XBEXStriService) striService).setItemStringIdText(specDef, defItem.getStringId());
-        }
-
-        for (CatalogDefsTableItem defItem : removeList) {
-            if (defItem.getSpecDef() != null) {
-                specService.removeItemDepth(defItem.getSpecDef());
-            }
-        }
-    }
-
+//    public void persist() {
+//        for (CatalogDefsTableItem defItem : updateList) {
+//            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+//            XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
+//            XBCXStriService striService = catalog.getCatalogService(XBCXStriService.class);
+//
+//            XBESpecDef specDef = (XBESpecDef) defItem.getSpecDef();
+//            if (specDef != null && specDef.getType() != defItem.getDefType()) {
+//                specService.removeItem(specDef);
+//                specDef = null;
+//            }
+//
+//            if (specDef == null) {
+//                specDef = (XBESpecDef) specService.createSpecDef((XBCSpec) catalogItem, defItem.getDefType());
+//                specDef.setCatalogItem((XBESpec) catalogItem);
+//            }
+//
+//            specDef.setXBIndex(defItem.getXbIndex());
+//            specDef.setTarget((XBERev) defItem.getTarget());
+//
+//            specService.persistItem(specDef);
+//
+//            ((XBEXNameService) nameService).setDefaultText(specDef, defItem.getName());
+//            ((XBEXDescService) descService).setDefaultText(specDef, defItem.getDescription());
+//            ((XBEXStriService) striService).setItemStringIdText(specDef, defItem.getStringId());
+//        }
+//
+//        for (CatalogDefsTableItem defItem : removeList) {
+//            if (defItem.getSpecDef() != null) {
+//                specService.removeItemDepth(defItem.getSpecDef());
+//            }
+//        }
+//    }
     private void updateItemStatus() {
 //        int selectedRow = itemDefinitionsTable.getSelectedRow();
 //        int rowsCount = defsModel.getRowCount();
@@ -221,8 +201,8 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         this.catalogItem = catalogItem;
 //        addButton.setEnabled(!(catalogItem instanceof XBCNode));
         defsModel.setCatalogItem(catalogItem);
-        updateList = new ArrayList<>();
-        removeList = new ArrayList<>();
+//        updateList = new ArrayList<>();
+//        removeList = new ArrayList<>();
         updateItemStatus();
     }
 
@@ -236,7 +216,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        specService = catalog.getCatalogService(XBCSpecService.class);
+//        specService = catalog.getCatalogService(XBCSpecService.class);
         defsModel.setCatalog(catalog);
     }
 
@@ -245,11 +225,11 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     }
 
     public void setUndoHandler(UndoActionsHandler undoHandler, UndoActions undoActions) {
-        toolBarEditorPanel.setUndoHandler(undoHandler, undoActions);
+        // toolBarEditorPanel.setUndoHandler(undoHandler, undoActions);
     }
 
     public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActions clipboardActions) {
-        toolBarEditorPanel.setClipboardHandler(clipboardHandler, clipboardActions);
+        // toolBarEditorPanel.setClipboardHandler(clipboardHandler, clipboardActions);
     }
 
     public void setEditItemsHandler(EditItemActionsHandler editItemActionsHandler, EditItemActions editItemActions) {

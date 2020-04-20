@@ -54,7 +54,6 @@ public class CatalogUpdateManagerPanel extends javax.swing.JPanel {
 
         jLabel2.setText("Schema");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox2.setEnabled(false);
 
         jPanel2.setLayout(new java.awt.CardLayout());
@@ -121,7 +120,6 @@ public class CatalogUpdateManagerPanel extends javax.swing.JPanel {
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE))
         );
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.setEnabled(false);
 
         jLabel1.setText("Update type");

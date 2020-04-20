@@ -174,7 +174,7 @@ public class DocumentViewerProvider implements EditorProvider {
         try (FileInputStream fileStream = new FileInputStream(file)) {
             getDoc().fromStreamUB(fileStream);
             getDoc().processSpec();
-            reportStructureChange((XBTTreeNode) getDoc().getRootBlock());
+            reportStructureChange((XBTTreeNode) getDoc().getRootBlock().get());
             performSelectAll();
             undoHandler.clear();
             this.fileUri = fileUri;
