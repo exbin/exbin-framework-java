@@ -47,7 +47,7 @@ public class XBDocTreeModel implements TreeModel {
     @Nullable
     @Override
     public Object getRoot() {
-        return treeDoc == null ? null : treeDoc.getRootBlock();
+        return treeDoc == null ? null : treeDoc.getRoot();
     }
 
     @Nullable
