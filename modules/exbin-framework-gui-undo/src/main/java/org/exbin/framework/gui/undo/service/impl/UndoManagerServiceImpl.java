@@ -20,6 +20,7 @@ import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.exbin.framework.gui.undo.service.*;
@@ -27,6 +28,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
 import org.exbin.framework.gui.undo.panel.UndoManagerPanel;
 import org.exbin.xbup.operation.Command;
+import org.exbin.xbup.operation.XBTDocOperation;
 import org.exbin.xbup.operation.XBTOpDocCommand;
 
 /**
@@ -48,7 +50,10 @@ public class UndoManagerServiceImpl implements UndoManagerService {
                 try {
                     fileStream = new FileOutputStream(exportFileChooser.getSelectedFile().getAbsolutePath());
                     try {
-                        ((XBTOpDocCommand) command).getOperation().getData().saveToStream(fileStream);
+                        Optional<XBTDocOperation> operation = ((XBTOpDocCommand) command).getOperation();
+                        if (operation.isPresent()) {
+                            operation.get().getData().saveToStream(fileStream);
+                        }
                     } finally {
                         fileStream.close();
                     }

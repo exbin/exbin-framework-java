@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.BinaryDataOperationException;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
@@ -210,8 +212,9 @@ public class UndoHandlerWrapper implements XBUndoHandler {
             command.dispose();
         }
 
+        @Nonnull
         @Override
-        public Date getExecutionTime() {
+        public Optional<Date> getExecutionTime() {
             return command.getExecutionTime();
         }
     }
@@ -275,8 +278,9 @@ public class UndoHandlerWrapper implements XBUndoHandler {
             }
         }
 
+        @Nonnull
         @Override
-        public Date getExecutionTime() {
+        public Optional<Date> getExecutionTime() {
             return command.getExecutionTime();
         }
     }

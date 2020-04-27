@@ -19,6 +19,8 @@ package org.exbin.framework.editor.wave.panel.command;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.util.Date;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.audio.wave.XBWave;
@@ -83,8 +85,9 @@ public class WavePasteCommand extends AbstractCommand {
     public void dispose() throws Exception {
     }
 
+    @Nonnull
     @Override
-    public Date getExecutionTime() {
-        return null;
+    public Optional<Date> getExecutionTime() {
+        return Optional.empty();
     }
 }

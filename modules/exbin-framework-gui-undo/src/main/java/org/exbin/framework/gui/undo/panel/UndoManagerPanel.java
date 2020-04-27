@@ -282,12 +282,12 @@ public class UndoManagerPanel extends javax.swing.JPanel {
 
         commandCaptionTextField.setText(command != null ? command.getCaption() : "");
         commandTypeTextField.setText(command instanceof XBDocCommand ? ((XBDocCommand) command).getBasicType().name() : "");
-        Date executionTime = command != null ? command.getExecutionTime() : null;
+        Date executionTime = command != null ? command.getExecutionTime().orElse(null) : null;
         executionTimeTextField.setText(executionTime != null ? executionTime.toString() : "");
 
         XBTDocOperation operation = null;
         if (command instanceof XBTOpDocCommand) {
-            operation = ((XBTOpDocCommand) command).getCurrentOperation();
+            operation = ((XBTOpDocCommand) command).getCurrentOperation().orElse(null);
         }
         operationCaptionTextField.setText(operation != null ? operation.getCaption() : "");
         operationTypeTextField.setText(operation != null ? operation.getBasicType().name() : "");

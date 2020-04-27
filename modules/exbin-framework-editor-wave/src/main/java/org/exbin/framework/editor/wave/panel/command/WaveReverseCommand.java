@@ -17,6 +17,8 @@
 package org.exbin.framework.editor.wave.panel.command;
 
 import java.util.Date;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.xbup.operation.AbstractCommand;
@@ -79,8 +81,9 @@ public class WaveReverseCommand extends AbstractCommand {
     public void dispose() throws Exception {
     }
 
+    @Nonnull
     @Override
-    public Date getExecutionTime() {
-        return null;
+    public Optional<Date> getExecutionTime() {
+        return Optional.empty();
     }
 }
