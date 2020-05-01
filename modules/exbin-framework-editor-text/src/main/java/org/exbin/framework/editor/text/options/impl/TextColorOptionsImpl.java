@@ -29,7 +29,7 @@ import org.exbin.framework.gui.options.api.OptionsData;
  */
 @ParametersAreNonnullByDefault
 public class TextColorOptionsImpl implements OptionsData, TextColorOptions {
-    
+
     private boolean useDefaultColors;
     private Integer textColor;
     private Integer textBackgroundColor;
