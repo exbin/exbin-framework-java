@@ -19,7 +19,7 @@ import org.exbin.framework.editor.wave.service.*;
 import java.awt.Color;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.wave.panel.AudioPanel;
+import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**

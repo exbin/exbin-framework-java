@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.client.api.ClientConnectionEvent;
 import org.exbin.framework.client.api.ClientConnectionListener;
-import org.exbin.framework.editor.xbup.panel.XBDocStatusPanel;
+import org.exbin.framework.editor.xbup.gui.XBDocStatusPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;

@@ -23,8 +23,8 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.action.ItemPropertiesAction;
-import org.exbin.framework.editor.xbup.panel.BlockPropertiesPanel;
-import org.exbin.framework.editor.xbup.panel.DocumentPropertiesPanel;
+import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
+import org.exbin.framework.editor.xbup.gui.DocumentPropertiesPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -32,7 +32,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.panel.CloseControlPanel;
+import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 
 /**
  * Properties handler.

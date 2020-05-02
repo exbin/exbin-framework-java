@@ -25,7 +25,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
-import org.exbin.framework.gui.editor.panel.SingleEditorPanel;
+import org.exbin.framework.gui.editor.gui.SingleEditorPanel;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;

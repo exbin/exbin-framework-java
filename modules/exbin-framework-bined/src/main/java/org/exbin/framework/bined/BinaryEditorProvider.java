@@ -21,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
-import org.exbin.framework.bined.panel.BinEdComponentPanel;
+import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 

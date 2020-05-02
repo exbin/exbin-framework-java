@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
-import org.exbin.framework.editor.text.panel.TextPanel;
+import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBBlockDataMode;

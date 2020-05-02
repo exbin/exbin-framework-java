@@ -25,7 +25,7 @@ import org.exbin.framework.gui.component.api.EditItemActionsHandler;
 import org.exbin.framework.gui.component.api.GuiComponentModuleApi;
 import org.exbin.framework.gui.component.api.MoveItemActions;
 import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
-import org.exbin.framework.gui.component.panel.DialogControlPanel;
+import org.exbin.framework.gui.component.gui.DialogControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**

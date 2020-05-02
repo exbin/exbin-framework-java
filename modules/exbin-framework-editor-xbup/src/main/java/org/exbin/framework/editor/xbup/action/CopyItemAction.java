@@ -19,7 +19,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.editor.xbup.panel.XBDocTreeTransferHandler;
+import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
 import org.exbin.framework.gui.utils.ClipboardUtils;
 
 /**

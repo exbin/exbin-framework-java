@@ -85,7 +85,7 @@ public class BasicUndoActions implements UndoActions {
                 }
             };
             ActionUtils.setupAction(redoAction, resourceBundle, "editRedoAction");
-            redoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_MASK | ActionUtils.getMetaMask()));
+            redoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_DOWN_MASK | ActionUtils.getMetaMask()));
             redoAction.setEnabled(false);
         }
         return redoAction;

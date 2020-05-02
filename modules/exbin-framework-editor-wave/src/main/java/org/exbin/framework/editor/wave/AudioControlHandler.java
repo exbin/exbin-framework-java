@@ -24,7 +24,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.wave.panel.AudioPanel;
+import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;

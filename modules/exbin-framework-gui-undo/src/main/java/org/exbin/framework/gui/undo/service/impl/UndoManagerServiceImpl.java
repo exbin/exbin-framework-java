@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import org.exbin.framework.gui.undo.service.*;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
-import org.exbin.framework.gui.undo.panel.UndoManagerPanel;
+import org.exbin.framework.gui.undo.gui.UndoManagerPanel;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.XBTDocOperation;
 import org.exbin.xbup.operation.XBTOpDocCommand;

@@ -16,7 +16,6 @@
 package org.exbin.framework.gui.utils;
 
 import java.awt.AWTEvent;
-import java.awt.Event;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -114,16 +113,17 @@ public class ActionUtils {
      *
      * @return down mask for meta keys
      */
+    @SuppressWarnings("deprecation")
     public static int getMetaMask() {
         try {
             switch (java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) {
-                case Event.CTRL_MASK:
+                case java.awt.Event.CTRL_MASK:
                     return KeyEvent.CTRL_DOWN_MASK;
-                case Event.META_MASK:
+                case java.awt.Event.META_MASK:
                     return KeyEvent.META_DOWN_MASK;
-                case Event.SHIFT_MASK:
+                case java.awt.Event.SHIFT_MASK:
                     return KeyEvent.SHIFT_DOWN_MASK;
-                case Event.ALT_MASK:
+                case java.awt.Event.ALT_MASK:
                     return KeyEvent.ALT_DOWN_MASK;
                 default:
                     return KeyEvent.CTRL_DOWN_MASK;

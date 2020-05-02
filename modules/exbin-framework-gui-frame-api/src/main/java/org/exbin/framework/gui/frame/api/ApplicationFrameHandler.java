@@ -19,7 +19,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
+import org.exbin.framework.gui.utils.gui.WindowHeaderPanel;
 
 /**
  * Interface for application frame.

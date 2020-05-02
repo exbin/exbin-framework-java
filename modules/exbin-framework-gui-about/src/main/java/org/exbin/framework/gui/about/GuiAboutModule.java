@@ -28,7 +28,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.about.api.GuiAboutModuleApi;
-import org.exbin.framework.gui.about.panel.AboutPanel;
+import org.exbin.framework.gui.about.gui.AboutPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuGroup;
@@ -39,7 +39,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.panel.CloseControlPanel;
+import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**

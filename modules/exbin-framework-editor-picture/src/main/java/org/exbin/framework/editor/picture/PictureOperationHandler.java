@@ -23,8 +23,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.picture.panel.ImagePanel;
-import org.exbin.framework.editor.picture.panel.ImageResizePanel;
+import org.exbin.framework.editor.picture.gui.ImagePanel;
+import org.exbin.framework.editor.picture.gui.ImageResizePanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -33,7 +33,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
-import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 
 /**
  * Picture operation handler.

@@ -36,7 +36,7 @@ import org.exbin.framework.bined.BinEdFile;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
-import org.exbin.framework.bined.panel.BinEdComponentPanel;
+import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.editor.api.EditorProvider;

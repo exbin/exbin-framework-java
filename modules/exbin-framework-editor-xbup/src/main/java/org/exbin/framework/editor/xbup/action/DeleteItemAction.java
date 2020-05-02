@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.editor.xbup.panel.XBDocTreePanel;
+import org.exbin.framework.editor.xbup.gui.XBDocTreePanel;
 import org.exbin.xbup.operation.XBTDocCommand;
 import org.exbin.xbup.operation.basic.command.XBTDeleteBlockCommand;
 import org.exbin.xbup.parser_tree.XBTTreeNode;

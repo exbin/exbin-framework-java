@@ -25,9 +25,9 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
-import org.exbin.framework.editor.text.options.panel.TextColorPanel;
-import org.exbin.framework.editor.text.panel.TextFontPanel;
-import org.exbin.framework.editor.text.panel.TextPanel;
+import org.exbin.framework.editor.text.options.gui.TextColorPanel;
+import org.exbin.framework.editor.text.gui.TextFontPanel;
+import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.preferences.TextColorPreferences;
 import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -37,7 +37,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
-import org.exbin.framework.gui.utils.panel.OptionsControlPanel;
+import org.exbin.framework.gui.utils.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
 
 /**

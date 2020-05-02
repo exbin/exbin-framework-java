@@ -23,8 +23,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.text.panel.TextGoToPanel;
-import org.exbin.framework.editor.text.panel.TextPanel;
+import org.exbin.framework.editor.text.gui.TextGoToPanel;
+import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -32,7 +32,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 
 /**
  * Go to line handler.

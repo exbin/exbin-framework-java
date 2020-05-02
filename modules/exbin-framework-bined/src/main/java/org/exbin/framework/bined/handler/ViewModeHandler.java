@@ -23,7 +23,7 @@ import org.exbin.bined.basic.CodeAreaViewMode;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.bined.panel.BinEdComponentPanel;
+import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 

@@ -37,7 +37,7 @@ import org.exbin.framework.gui.menu.api.SeparationMode;
 import org.exbin.framework.gui.menu.api.ToolBarContribution;
 import org.exbin.framework.gui.menu.api.ToolBarGroup;
 import org.exbin.framework.gui.menu.api.ToolBarPosition;
-import org.exbin.framework.gui.menu.component.DropDownButton;
+import org.exbin.framework.gui.menu.gui.DropDownButton;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**

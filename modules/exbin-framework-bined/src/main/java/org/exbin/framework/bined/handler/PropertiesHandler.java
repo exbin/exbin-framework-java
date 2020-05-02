@@ -24,13 +24,13 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.bined.panel.PropertiesPanel;
+import org.exbin.framework.bined.gui.PropertiesPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.panel.CloseControlPanel;
+import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 
 /**
  * Properties handler.

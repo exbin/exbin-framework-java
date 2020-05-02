@@ -26,8 +26,8 @@ import org.exbin.bined.capability.CaretCapable;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.bined.panel.GoToBinaryPanel;
-import org.exbin.framework.bined.panel.BinEdComponentPanel;
+import org.exbin.framework.bined.gui.GoToBinaryPanel;
+import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -35,7 +35,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
-import org.exbin.framework.gui.utils.panel.DefaultControlPanel;
+import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 
 /**
  * Go to line handler.

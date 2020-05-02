@@ -35,7 +35,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
-import org.exbin.framework.gui.utils.panel.WindowHeaderPanel;
+import org.exbin.framework.gui.utils.gui.WindowHeaderPanel;
 
 /**
  * Basic appplication frame.

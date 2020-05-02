@@ -18,7 +18,7 @@ package org.exbin.framework.gui.data;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.data.api.GuiDataModuleApi;
-import org.exbin.framework.gui.data.panel.TableEditPanel;
+import org.exbin.framework.gui.data.gui.TableEditPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
