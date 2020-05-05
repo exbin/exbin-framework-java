@@ -51,7 +51,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     private XBCItem catalogItem;
 //    private XBCSpecService specService;
     private final CatalogDefsTableModel defsModel = new CatalogDefsTableModel();
-    private final CatalogDefsDetailTableModel detailModel = new CatalogDefsDetailTableModel();
+    DefinitionPropertiesComponent propertiesComponent = new DefinitionPropertiesComponent();
 //    private List<CatalogDefsTableItem> removeList;
 //    private List<CatalogDefsTableItem> updateList;
 
@@ -71,13 +71,13 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         toolBarSidePanel = new ToolBarSidePanel();
         toolBarSidePanel.add(definitionScrollPane);
         definitionControlSplitPane.setLeftComponent(toolBarSidePanel);
-        definitionControlSplitPane.setRightComponent(propertiesScrollPanel);
+        definitionControlSplitPane.setRightComponent(propertiesComponent);
 
         definitionsTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = definitionsTable.getSelectedRow();
-                detailModel.setItem(selectedRow >= 0 ? defsModel.getRowItem(selectedRow) : null);
-                propertiesTable.repaint();
+                propertiesComponent.setItem(selectedRow >= 0 ? defsModel.getRowItem(selectedRow) : null);
+                propertiesComponent.repaint();
                 updateItemStatus();
             }
         });
@@ -96,16 +96,11 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
 
         definitionScrollPane = new javax.swing.JScrollPane();
         definitionsTable = new javax.swing.JTable();
-        propertiesScrollPanel = new javax.swing.JScrollPane();
-        propertiesTable = new javax.swing.JTable();
         definitionControlSplitPane = new javax.swing.JSplitPane();
 
         definitionsTable.setModel(defsModel);
         definitionsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         definitionScrollPane.setViewportView(definitionsTable);
-
-        propertiesTable.setModel(detailModel);
-        propertiesScrollPanel.setViewportView(propertiesTable);
 
         definitionControlSplitPane.setDividerLocation(400);
 
@@ -142,8 +137,6 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane definitionControlSplitPane;
     private javax.swing.JScrollPane definitionScrollPane;
     private javax.swing.JTable definitionsTable;
-    private javax.swing.JScrollPane propertiesScrollPanel;
-    private javax.swing.JTable propertiesTable;
     // End of variables declaration//GEN-END:variables
 
 //    public void persist() {
