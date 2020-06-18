@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Document viewer panel.
@@ -85,19 +86,29 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
         add(modeComboBox, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new DocumentViewerPanel());
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> modeComboBox;
     // End of variables declaration//GEN-END:variables
 
+    @ParametersAreNonnullByDefault
     private static final class ViewRecord {
+
+        String name;
+        JComponent component;
 
         public ViewRecord(String name, JComponent component) {
             this.name = name;
             this.component = component;
         }
-
-        String name;
-        JComponent component;
     }
 }

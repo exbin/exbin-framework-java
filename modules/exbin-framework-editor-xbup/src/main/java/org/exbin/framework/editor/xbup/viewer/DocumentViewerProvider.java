@@ -52,7 +52,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2020/03/11
+ * @version 0.2.1 2020/06/18
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -69,9 +69,11 @@ public class DocumentViewerProvider implements EditorProvider {
     private XBTBlock selectedItem = null;
     private ViewerTab viewerTab = ViewerTab.PROPERTIES;
     private DocumentViewer activeViewer;
-    private final DocumentBinaryViewer binaryViewer;
-    private final DocumentTextViewer textViewer;
-    private final DocumentPropertiesViewer propertiesViewer;
+
+    private final MainDocumentViewer mainViewer;
+    private final BinaryDocumentViewer binaryViewer;
+    private final TextDocumentViewer textViewer;
+    private final PropertiesDocumentViewer propertiesViewer;
 
     private XBApplication application;
     private XBUndoHandler undoHandler;
@@ -80,9 +82,11 @@ public class DocumentViewerProvider implements EditorProvider {
     public DocumentViewerProvider(XBACatalog catalog, XBUndoHandler undoHandler) {
         this.catalog = catalog;
         this.undoHandler = undoHandler;
-        propertiesViewer = new DocumentPropertiesViewer();
-        binaryViewer = new DocumentBinaryViewer();
-        textViewer = new DocumentTextViewer();
+
+        mainViewer = new MainDocumentViewer();
+        propertiesViewer = new PropertiesDocumentViewer();
+        binaryViewer = new BinaryDocumentViewer();
+        textViewer = new TextDocumentViewer();
         activeViewer = propertiesViewer;
 
         documentPanel = new XBDocumentPanel();
@@ -286,6 +290,7 @@ public class DocumentViewerProvider implements EditorProvider {
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
 //        clipboardActionsUpdateListener = updateListener;
 //        documentPanel.setUpdateListener(updateListener);
+        mainViewer.setUpdateListener(updateListener);
         binaryViewer.setUpdateListener(updateListener);
         textViewer.setUpdateListener(updateListener);
         propertiesViewer.setUpdateListener(updateListener);
@@ -327,7 +332,8 @@ public class DocumentViewerProvider implements EditorProvider {
 //                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
 //                    }
             switch (viewerTab) {
-                case VIEW: {
+                case MAIN: {
+                    activeViewer = mainViewer;
                     break;
                 }
                 case PROPERTIES: {
@@ -416,6 +422,8 @@ public class DocumentViewerProvider implements EditorProvider {
 //            }
 //        }
 //    }
+    
+    @ParametersAreNonnullByDefault
     private class TreeDocument extends XBTTreeDocument implements OperationListener {
 
         public TreeDocument(XBCatalog catalog) {
@@ -436,7 +444,7 @@ public class DocumentViewerProvider implements EditorProvider {
 //            }
 
             if (operation instanceof XBTDocOperation) {
-                setViewerTab(ViewerTab.VIEW);
+                setViewerTab(ViewerTab.MAIN);
             } else {
                 // TODO
             }
@@ -444,7 +452,7 @@ public class DocumentViewerProvider implements EditorProvider {
     }
 
     public enum ViewerTab {
-        VIEW,
+        MAIN,
         PROPERTIES,
         TEXT,
         BINARY

@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.gui.undo.gui;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.undo.handler.UndoManagerControlHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.OkCancelListener;
@@ -26,6 +28,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2019/07/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoManagerControlHandler.UndoManagerControlService {
 
     private final java.util.ResourceBundle resourceBundle;
@@ -136,9 +139,19 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
         }
     }
 
+    @Nonnull
     @Override
     public OkCancelListener getOkCancelListener() {
         return okCancelListener;
+    }
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new UndoManagerControlPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

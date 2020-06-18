@@ -34,12 +34,12 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
  * @version 0.2.1 2020/03/12
  * @author ExBin Project (http://exbin.org)
  */
-public class DocumentBinaryViewer implements DocumentViewer {
+public class BinaryDocumentViewer implements DocumentViewer {
 
     private final BinEdComponentPanel binaryPanel;
     private final BinaryStatusPanel binaryStatusPanel;
 
-    public DocumentBinaryViewer() {
+    public BinaryDocumentViewer() {
         binaryPanel = new BinEdComponentPanel();
         binaryStatusPanel = new BinaryStatusPanel();
         binaryPanel.registerBinaryStatus(binaryStatusPanel);
@@ -59,7 +59,7 @@ public class DocumentBinaryViewer implements DocumentViewer {
             try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
                 ((XBTTreeNode) item).toStreamUB(dataOutputStream);
             } catch (IOException ex) {
-                Logger.getLogger(DocumentBinaryViewer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BinaryDocumentViewer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

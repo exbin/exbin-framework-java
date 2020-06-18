@@ -288,7 +288,7 @@ public class BlockPropertiesPanel extends javax.swing.JPanel {
         attributesCountTextField.setText(String.valueOf(block.getAttributesCount()));
         childrenCountTextField.setText(String.valueOf(block.getChildrenCount()));
 
-        String catalogLink = devMode ? "http://catalog-dev.exbin.org/" : "http://catalog.exbin.org/";
+        String catalogLink = devMode ? "https://catalog-dev.exbin.org/" : "https://catalog.exbin.org/";
         XBBlockDecl decl = block instanceof XBTTreeNode ? ((XBTTreeNode) block).getBlockDecl() : null;
         if (decl instanceof XBCBlockDecl) {
             XBCBlockSpec spec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();

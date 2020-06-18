@@ -23,18 +23,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
@@ -56,6 +51,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBLineEditor;
 import org.exbin.xbup.plugin.XBPluginRepository;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
 
 /**
  * Panel for properties of the actual panel.

@@ -43,12 +43,12 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DocumentTextViewer implements DocumentViewer {
+public class TextDocumentViewer implements DocumentViewer {
 
     private final TextPanel textPanel;
     private XBACatalog catalog;
 
-    public DocumentTextViewer() {
+    public TextDocumentViewer() {
         textPanel = new TextPanel();
         textPanel.setNoBorder();
     }

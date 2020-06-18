@@ -29,11 +29,11 @@ import org.exbin.xbup.core.block.XBTBlock;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DocumentCustomViewer implements DocumentViewer {
+public class MainDocumentViewer implements DocumentViewer {
 
     private JComponent customPanel;
 
-    public DocumentCustomViewer() {
+    public MainDocumentViewer() {
         customPanel = new JPanel();
     }
 

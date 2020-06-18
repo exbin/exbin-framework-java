@@ -49,7 +49,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DocumentPropertiesViewer implements DocumentViewer {
+public class PropertiesDocumentViewer implements DocumentViewer {
 
     private final JPanel panel = new JPanel();
     private final DocumentViewerPanel viewerPanel = new DocumentViewerPanel();
@@ -59,7 +59,7 @@ public class DocumentPropertiesViewer implements DocumentViewer {
     private final BinEdComponentPanel dataPanel;
     private XBACatalog catalog;
 
-    public DocumentPropertiesViewer() {
+    public PropertiesDocumentViewer() {
         propertiesPanel = new XBPropertyPanel();
 
         viewSplitPane = new JSplitPane();
@@ -87,7 +87,7 @@ public class DocumentPropertiesViewer implements DocumentViewer {
                 try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
                     StreamUtils.copyInputStreamToOutputStream(item.getData(), dataOutputStream);
                 } catch (IOException ex) {
-                    Logger.getLogger(DocumentBinaryViewer.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(BinaryDocumentViewer.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 dataPanel.setContentData(byteArrayData);
                 viewerPanel.addView("Data", dataPanel);

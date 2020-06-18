@@ -47,7 +47,7 @@ public class ViewModeHandler {
     private Action viewTextModeAction;
     private Action viewBinaryModeAction;
 
-    private ViewerTab viewTab = ViewerTab.VIEW;
+    private ViewerTab viewTab = ViewerTab.MAIN;
 
     public ViewModeHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -60,14 +60,14 @@ public class ViewModeHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof DocumentViewerProvider) {
-                    setViewerTab(ViewerTab.VIEW);
+                    setViewerTab(ViewerTab.MAIN);
                 }
             }
         };
         ActionUtils.setupAction(viewPreviewModeAction, resourceBundle, "viewPreviewModeAction");
         viewPreviewModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
         viewPreviewModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.VIEW);
+        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.MAIN);
 
         viewTextModeAction = new AbstractAction() {
             @Override
@@ -102,6 +102,7 @@ public class ViewModeHandler {
         viewerProvider.setViewerTab(viewTab);
     }
 
+    @Nonnull
     public ViewerTab getViewTab() {
         return viewTab;
     }

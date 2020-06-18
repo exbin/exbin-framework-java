@@ -17,6 +17,8 @@ package org.exbin.framework.gui.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Data source definition.
@@ -24,6 +26,7 @@ import java.util.List;
  * @version 0.2.0 2016/03/07
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DataSourceDef {
 
     private List<DataFieldDef> fields = new ArrayList<>();
@@ -31,6 +34,7 @@ public class DataSourceDef {
     public DataSourceDef() {
     }
 
+    @Nonnull
     public List<DataFieldDef> getFields() {
         return fields;
     }

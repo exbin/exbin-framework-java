@@ -17,6 +17,9 @@ package org.exbin.framework.gui.data.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import org.exbin.framework.gui.data.TableDataSource;
@@ -30,6 +33,7 @@ import org.exbin.xbup.core.remote.XBServiceClient;
  * @version 0.2.0 2016/02/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TableModelSource implements TableModel {
 
     private final List<TableModelListener> listeners = new ArrayList<>();
@@ -55,11 +59,13 @@ public class TableModelSource implements TableModel {
         return dataSource.getColumns().size();
     }
 
+    @Nonnull
     @Override
     public String getColumnName(int columnIndex) {
         return dataSource.getColumns().get(columnIndex).getName();
     }
 
+    @Nonnull
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return dataSource.getColumns().get(columnIndex).getValueClass();
@@ -70,6 +76,7 @@ public class TableModelSource implements TableModel {
         return false;
     }
 
+    @Nullable
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         return dataSource.getValueAt(rowIndex, columnIndex);

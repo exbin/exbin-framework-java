@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.gui.data;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.data.api.GuiDataModuleApi;
@@ -27,6 +29,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
  * @version 0.2.0 2016/02/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiDataModule implements GuiDataModuleApi {
 
     private XBApplication application;
@@ -43,6 +46,7 @@ public class GuiDataModule implements GuiDataModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     @Override
     public JPanel getTableEditPanel() {
         return new TableEditPanel();

@@ -16,7 +16,6 @@
 package org.exbin.framework.editor.xbup.gui;
 
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
@@ -31,6 +30,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
 
 /**
  * Panel for properties of the actual panel.

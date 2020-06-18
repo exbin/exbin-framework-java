@@ -18,6 +18,7 @@ package org.exbin.framework.gui.undo.gui;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractListModel;
 import org.exbin.xbup.operation.Command;
@@ -37,6 +38,7 @@ public class UndoManagerModel extends AbstractListModel<String> {
     public UndoManagerModel() {
     }
 
+    @Nullable
     public XBUndoHandler getUndoHandler() {
         return undoHandler;
     }
@@ -55,6 +57,7 @@ public class UndoManagerModel extends AbstractListModel<String> {
         return undoHandler == null ? 0 : getList().size() + 1;
     }
 
+    @Nullable
     @Override
     public String getElementAt(int index) {
         return undoHandler == null ? null : (index == 0 ? "Initial" : getList().get(index - 1).getCaption())
@@ -62,6 +65,7 @@ public class UndoManagerModel extends AbstractListModel<String> {
                 + (undoHandler.getSyncPoint() == index ? " (saved)" : "");
     }
 
+    @Nullable
     public Command getItem(int index) {
         return undoHandler == null || index == 0 ? null : getList().get(index - 1);
     }
