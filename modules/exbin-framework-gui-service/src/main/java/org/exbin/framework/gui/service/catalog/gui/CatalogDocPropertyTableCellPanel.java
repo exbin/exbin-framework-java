@@ -33,7 +33,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXHDocService;
  * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogDocPropertyTableCellPanel extends PropertyTableCellPanel {
+public class CatalogDocPropertyTableCellPanel extends CatalogPropertyTableCellPanel {
 
     private XBApplication application;
     private XBACatalog catalog;

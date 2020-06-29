@@ -35,7 +35,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
  * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogParentPropertyTableCellPanel extends PropertyTableCellPanel {
+public class CatalogParentPropertyTableCellPanel extends CatalogPropertyTableCellPanel {
 
     private XBApplication application;
     private XBACatalog catalog;

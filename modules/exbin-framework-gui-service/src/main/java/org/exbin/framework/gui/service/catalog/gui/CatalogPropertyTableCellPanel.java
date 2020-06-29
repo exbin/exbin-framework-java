@@ -1,0 +1,54 @@
+/*
+ * Copyright (C) ExBin Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.exbin.framework.gui.service.catalog.gui;
+
+import java.awt.event.ActionListener;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JLabel;
+import org.exbin.framework.gui.data.gui.cell.PropertyTableCellPanel;
+
+/**
+ * Property column panel with label and extending button.
+ *
+ * @version 0.2.1 2019/06/26
+ * @author ExBin Project (http://exbin.org)
+ */
+@ParametersAreNonnullByDefault
+public class CatalogPropertyTableCellPanel extends PropertyTableCellPanel {
+
+    private int paramIndex;
+
+    public CatalogPropertyTableCellPanel() {
+        super();
+    }
+
+    @Override
+    public void setEditorAction(ActionListener actionListener) {
+        super.setEditorAction(actionListener);
+    }
+
+    public void setPropertyText(String text) {
+        ((JLabel) getCellComponent()).setText(text);
+    }
+
+    public int getParamIndex() {
+        return paramIndex;
+    }
+
+    public void setParamIndex(int paramIndex) {
+        this.paramIndex = paramIndex;
+    }
+}

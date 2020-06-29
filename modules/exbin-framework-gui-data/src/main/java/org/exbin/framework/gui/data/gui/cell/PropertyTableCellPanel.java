@@ -13,24 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.service.catalog.gui;
+package org.exbin.framework.gui.data.gui.cell;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Property column panel with label and extending button.
+ * Empty property column panel with operation button.
  *
- * @version 0.2.1 2019/06/26
+ * @version 0.2.1 2020/06/29
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PropertyTableCellPanel extends javax.swing.JPanel {
 
-    private int paramIndex;
+    private JComponent cellComponent;
 
     public PropertyTableCellPanel() {
+        this(new JLabel());
+    }
+
+    public PropertyTableCellPanel(JComponent cellComponent) {
+        this.cellComponent = cellComponent;
         initComponents();
+        init();
+    }
+
+    private void init() {
+        add(cellComponent, BorderLayout.CENTER);
+        // TODO Make button for more compact even for PLAFs with big border
+//        Border border = editorButton.getBorder();
+//        if (border instanceof CompoundBorder) {
+//           editorButton.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), new EmptyBorder(0, 0, 0, 0)));
+//           editorButton.setBorder(new CompoundBorder(((CompoundBorder) border).getOutsideBorder(), new EmptyBorder(0, 0, 0, 0)));
+//            Border insideBorder = ((CompoundBorder) border).getInsideBorder();
+//            if (insideBorder instanceof BasicBorders.MarginBorder) {
+//                // ((BasicBorders.MarginBorder) insideBorder).
+//                editorButton.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), new EmptyBorder(0, 0, 0, 0)));
+//            }
+//            Border outsideBorder = ((CompoundBorder) border).getOutsideBorder();
+//            if (outsideBorder instanceof Object) {
+//                
+//            }
+//        }
     }
 
     /**
@@ -43,7 +73,6 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         editorButton = new javax.swing.JButton();
-        propertyLabel = new javax.swing.JLabel();
 
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
@@ -52,11 +81,6 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
         editorButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
         editorButton.setName("editorButton"); // NOI18N
         add(editorButton, java.awt.BorderLayout.EAST);
-
-        propertyLabel.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.background"));
-        propertyLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        propertyLabel.setName("propertyLabel"); // NOI18N
-        add(propertyLabel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -70,26 +94,14 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton editorButton;
-    private javax.swing.JLabel propertyLabel;
     // End of variables declaration//GEN-END:variables
 
     public void setEditorAction(ActionListener actionListener) {
         editorButton.addActionListener(actionListener);
     }
 
-    public void setPropertyText(String text) {
-        propertyLabel.setText(text);
-    }
-
-    public int getParamIndex() {
-        return paramIndex;
-    }
-
-    public void setParamIndex(int paramIndex) {
-        this.paramIndex = paramIndex;
-    }
-
+    @Nonnull
     public JComponent getCellComponent() {
-        return propertyLabel;
+        return cellComponent;
     }
 }

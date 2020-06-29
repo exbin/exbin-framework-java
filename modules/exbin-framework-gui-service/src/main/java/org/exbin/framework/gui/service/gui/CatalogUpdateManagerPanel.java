@@ -59,7 +59,6 @@ public class CatalogUpdateManagerPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Server name");
 
-        jTextField1.setText("jTextField1");
         jTextField1.setEnabled(false);
 
         jSpinner1.setEnabled(false);

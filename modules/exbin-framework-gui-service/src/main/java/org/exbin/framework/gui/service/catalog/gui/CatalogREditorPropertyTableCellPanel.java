@@ -34,7 +34,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
  * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogREditorPropertyTableCellPanel extends PropertyTableCellPanel {
+public class CatalogREditorPropertyTableCellPanel extends CatalogPropertyTableCellPanel {
 
     private XBApplication application;
     private XBACatalog catalog;
