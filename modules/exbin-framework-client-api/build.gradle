@@ -26,8 +26,9 @@ repositories {
 }
 
 dependencies {
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
-    testCompile group : 'junit', name: 'junit', version: '4.10'
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    testImplementation group : 'junit', name: 'junit', version: '4.10'
 }

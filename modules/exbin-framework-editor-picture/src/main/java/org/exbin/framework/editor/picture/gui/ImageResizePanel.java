@@ -102,7 +102,7 @@ public class ImageResizePanel extends javax.swing.JPanel {
     }
 
     public Point getResolution() {
-        return new Point(new Integer(widthTextField.getText()), new Integer(heightTextField.getText()));
+        return new Point(Integer.valueOf(widthTextField.getText()), Integer.valueOf(heightTextField.getText()));
     }
 
     /**

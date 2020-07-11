@@ -89,7 +89,7 @@ if (!project.gradle.startParameter.projectProperties.containsKey("moduleDep")) {
                         into('lib') {
                             from p.jar.archivePath
                             include '*'
-                            from p.configurations.runtime
+                            from p.configurations.runtimeClasspath
                             include '*'
                         }
                     }

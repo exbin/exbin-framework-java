@@ -29,22 +29,26 @@ repositories {
 }
 
 dependencies {
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-catalog')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-operation')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-tree')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-command')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-bined')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-client')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-options-api')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-api')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-data')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-service')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-editor-text')
-    compile 'org.swinglabs:swing-layout:1.0.3'
-    testCompile group : 'junit', name: 'junit', version: '4.10'
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-catalog')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-operation')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-tree')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-command')
+    implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'paged_data')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-bined')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-client')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-options-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-file-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-menu-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-undo-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-data')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-service')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-editor-text')
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    testImplementation group : 'junit', name: 'junit', version: '4.10'
 }

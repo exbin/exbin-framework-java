@@ -29,24 +29,26 @@ repositories {
 }
 
 dependencies {
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-catalog')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-operation')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-client')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-tree')
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-command')
-    compile moduleDep('XbupDataJava', 'org.exbin.xbup.data', 'xbup-data-visual')
-    compile moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'simplyhtml')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-api')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-data-api')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-data')
-    compile moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
-    compile 'javax.persistence:persistence-api:1.0.2'
-    compile 'org.swinglabs:swing-layout:1.0.3'
-    runtime 'org.eclipse.persistence:javax.persistence:2.1.0'
-    runtime 'org.eclipse.persistence:eclipselink:2.5.1'
-    testCompile group : 'junit', name: 'junit', version: '4.10'
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-catalog')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-operation')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-client')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-tree')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-command')
+    implementation moduleDep('XbupDataJava', 'org.exbin.xbup.data', 'xbup-data-visual')
+    implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'simplyhtml')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-menu-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-file-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-data-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-data')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
+    implementation 'javax.persistence:persistence-api:1.0.2'
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    compileOnly 'org.eclipse.persistence:javax.persistence:2.1.0'
+    runtimeOnly 'org.eclipse.persistence:eclipselink:2.5.1'
+    testImplementation group : 'junit', name: 'junit', version: '4.10'
 }
