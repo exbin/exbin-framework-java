@@ -46,7 +46,7 @@ dependencies {
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-data-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-data')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
-    implementation 'javax.persistence:persistence-api:1.0.2'
+    compileOnly 'javax.persistence:persistence-api:1.0.2'
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     compileOnly 'org.eclipse.persistence:javax.persistence:2.1.0'
     runtimeOnly 'org.eclipse.persistence:eclipselink:2.5.1'
