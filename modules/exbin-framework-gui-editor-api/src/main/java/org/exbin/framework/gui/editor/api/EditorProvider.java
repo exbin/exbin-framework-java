@@ -54,11 +54,11 @@ public interface EditorProvider extends FileHandlerApi {
     /**
      * Gets window title related to last opened or saved file.
      *
-     * @param frameTitle title of frame
+     * @param parentTitle title of window/frame
      * @return title related to last opened file
      */
     @Nonnull
-    String getWindowTitle(String frameTitle);
+    String getWindowTitle(String parentTitle);
 
     /**
      * Interface for editor modifications listener.
