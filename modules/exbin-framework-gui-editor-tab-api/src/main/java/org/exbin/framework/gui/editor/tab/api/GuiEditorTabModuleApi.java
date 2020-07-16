@@ -22,7 +22,7 @@ import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
- * Interface for XBUP framework docking module.
+ * Interface for XBUP framework multi-tab editor module.
  *
  * @version 0.2.0 2016/08/14
  * @author ExBin Project (http://exbin.org)

@@ -17,6 +17,7 @@ package org.exbin.framework.gui.editor.tab;
 
 import java.awt.Component;
 import java.util.ResourceBundle;
+import javax.swing.JLabel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
@@ -27,7 +28,7 @@ import org.exbin.framework.gui.editor.tab.api.EditorViewHandling;
 import sun.jvm.hotspot.ui.EditorFactory;
 
 /**
- * Implementation of XBUP framework docking module.
+ * Implementation of XBUP framework multi-tab editor module.
  *
  * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
@@ -36,7 +37,7 @@ public class GuiEditorTabModule implements GuiEditorTabModuleApi {
 
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";
     public static final String VIEW_BARS_GROUP_ID = MODULE_ID + ".view";
-    public static final String EDITOR_FACTORY_ID = "editor";
+    public static final String TAB_EDITOR_FACTORY_ID = "tabEditor";
 
     private XBApplication application;
     private ResourceBundle resourceBundle;
@@ -60,7 +61,7 @@ public class GuiEditorTabModule implements GuiEditorTabModuleApi {
 
     @Override
     public Component getDockingPanel() {
-        return null;
+        return new JLabel("TEST");
     }
 
     @Override

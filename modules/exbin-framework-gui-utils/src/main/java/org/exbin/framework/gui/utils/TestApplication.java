@@ -202,13 +202,15 @@ public class TestApplication implements XBApplication {
             }
 
             @Override
+            @SuppressWarnings("unchecked")
             public <T extends XBModule> T getModuleByInterface(Class<T> interfaceClass) {
                 try {
                     Field declaredField = interfaceClass.getDeclaredField(MODULE_ID);
                     if (declaredField != null) {
                         Object interfaceModuleId = declaredField.get(null);
                         if (interfaceModuleId instanceof String) {
-                            return (T) modules.get((String) interfaceModuleId);
+                            XBApplicationModule module = modules.get((String) interfaceModuleId);
+                            return (T) module;
                         }
                     }
 

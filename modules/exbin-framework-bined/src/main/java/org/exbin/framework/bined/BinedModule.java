@@ -95,6 +95,7 @@ import org.exbin.framework.editor.text.gui.AddEncodingPanel;
 import org.exbin.framework.editor.text.options.gui.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.options.gui.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
+import org.exbin.framework.gui.editor.tab.api.GuiEditorTabModuleApi;
 import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -266,7 +267,8 @@ public class BinedModule implements XBApplicationModule {
 
     public BinaryEditorProvider getMultiEditorProvider() {
         if (editorProvider == null) {
-            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
+            GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
+//            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryEditorHandler();
             ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinEdFile file) -> {
                 BinEdComponentPanel panel = file.getComponentPanel();
@@ -287,7 +289,7 @@ public class BinedModule implements XBApplicationModule {
                     }
                 });
             });
-            ((BinaryEditorHandler) editorProvider).setEditorViewHandling(dockingModule.getEditorViewHandling());
+            ((BinaryEditorHandler) editorProvider).setEditorViewHandling(editorTabModule.getEditorViewHandling());
             ((BinaryEditorHandler) editorProvider).setSegmentsRepository(new SegmentsRepository());
             ((BinaryEditorHandler) editorProvider).init();
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
