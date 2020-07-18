@@ -58,7 +58,6 @@ import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
-import org.exbin.bined.ClipboardHandlingMode;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.preferences.BinaryEditorPreferences;
@@ -115,7 +114,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     private void init() {
         codeArea = new ExtCodeArea();
         codeArea.setPainter(new ExtendedHighlightNonAsciiCodeAreaPainter(codeArea));
-        codeArea.setClipboardHandlingMode(ClipboardHandlingMode.IGNORE);
         codeArea.setCodeFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         codeArea.addSelectionChangedListener((SelectionRange selection) -> {
             updateClipboardActionsStatus();

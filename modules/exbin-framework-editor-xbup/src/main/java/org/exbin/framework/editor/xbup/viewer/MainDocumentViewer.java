@@ -32,6 +32,7 @@ import org.exbin.xbup.core.block.XBTBlock;
 public class MainDocumentViewer implements DocumentViewer {
 
     private JComponent customPanel;
+    private XBTBlock selectedItem = null;
 
     public MainDocumentViewer() {
         customPanel = new JPanel();
@@ -45,7 +46,7 @@ public class MainDocumentViewer implements DocumentViewer {
 
     @Override
     public void setSelectedItem(XBTBlock item) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        selectedItem = item;
     }
 
     @Override

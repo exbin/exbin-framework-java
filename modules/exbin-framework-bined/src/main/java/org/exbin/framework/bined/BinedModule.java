@@ -270,8 +270,10 @@ public class BinedModule implements XBApplicationModule {
             GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
 //            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryEditorHandler();
+
             ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinEdFile file) -> {
                 BinEdComponentPanel panel = file.getComponentPanel();
+                panel.setApplication(application);
                 panel.setPopupMenu(createPopupMenu(editorProvider.getId(), editorProvider.getCodeArea()));
                 panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
                 panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
