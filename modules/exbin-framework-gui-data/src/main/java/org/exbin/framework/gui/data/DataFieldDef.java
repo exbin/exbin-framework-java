@@ -15,12 +15,16 @@
  */
 package org.exbin.framework.gui.data;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Data source field definition.
  *
  * @version 0.2.0 2016/03/07
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DataFieldDef {
 
     private Object fieldType;
@@ -28,6 +32,7 @@ public class DataFieldDef {
     public DataFieldDef() {
     }
 
+    @Nullable
     public Object getFieldType() {
         return fieldType;
     }

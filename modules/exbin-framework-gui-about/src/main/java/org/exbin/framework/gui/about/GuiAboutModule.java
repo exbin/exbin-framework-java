@@ -15,45 +15,32 @@
  */
 package org.exbin.framework.gui.about;
 
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.event.ActionEvent;
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.about.action.AboutAction;
 import org.exbin.framework.gui.about.api.GuiAboutModuleApi;
-import org.exbin.framework.gui.about.gui.AboutPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.menu.api.MenuGroup;
 import org.exbin.framework.gui.menu.api.MenuPosition;
 import org.exbin.framework.gui.menu.api.PositionMode;
 import org.exbin.framework.gui.menu.api.SeparationMode;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of framework about module.
  *
- * @version 0.2.0 2019/08/16
+ * @version 0.2.1 2020/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class GuiAboutModule implements GuiAboutModuleApi {
 
     private XBApplication application;
-    private java.util.ResourceBundle resourceBundle = null;
-    private Action aboutAction;
+    private AboutAction aboutAction;
     private JComponent sideComponent = null;
 
     public GuiAboutModule() {
@@ -69,37 +56,12 @@ public class GuiAboutModule implements GuiAboutModuleApi {
     }
 
     @Nonnull
-    private ResourceBundle getResourceBundle() {
-        if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(GuiAboutModule.class);
-        }
-
-        return resourceBundle;
-    }
-
-    @Nonnull
     @Override
     public Action getAboutAction() {
         if (aboutAction == null) {
-            getResourceBundle();
-            aboutAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    AboutPanel aboutPanel = new AboutPanel();
-                    aboutPanel.setApplication(application);
-                    aboutPanel.setSideComponent(sideComponent);
-                    CloseControlPanel controlPanel = new CloseControlPanel();
-                    JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
-                    final DialogWrapper aboutDialog = frameModule.createDialog(dialogPanel);
-                    ((JDialog) aboutDialog.getWindow()).setTitle("About");
-                    controlPanel.setHandler(aboutDialog::close);
-                    aboutDialog.showCentered((Component) e.getSource());
-                    aboutDialog.dispose();
-                }
-            };
-            ActionUtils.setupAction(aboutAction, resourceBundle, "aboutAction");
-            aboutAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+            aboutAction = new AboutAction();
+            aboutAction.setApplication(application);
+            aboutAction.setAboutDialogSideComponent(sideComponent);
         }
 
         return aboutAction;
@@ -115,5 +77,8 @@ public class GuiAboutModule implements GuiAboutModuleApi {
     @Override
     public void setAboutDialogSideComponent(JComponent sideComponent) {
         this.sideComponent = sideComponent;
+        if (aboutAction != null) {
+            aboutAction.setAboutDialogSideComponent(sideComponent);
+        }
     }
 }

@@ -15,24 +15,15 @@
  */
 package org.exbin.framework.editor.xbup;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.xbup.action.DocumentPropertiesAction;
 import org.exbin.framework.editor.xbup.action.ItemPropertiesAction;
-import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
-import org.exbin.framework.editor.xbup.gui.DocumentPropertiesPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 
 /**
  * Properties handler.
@@ -46,7 +37,7 @@ public class PropertiesHandler {
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private Action propertiesAction;
+    private DocumentPropertiesAction propertiesAction;
     private ItemPropertiesAction itemPropertiesAction;
     private boolean devMode;
 
@@ -57,35 +48,10 @@ public class PropertiesHandler {
     }
 
     public void init() {
-        propertiesAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof DocumentViewerProvider) {
-                    DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
-                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    DocumentPropertiesPanel propertiesPanel = new DocumentPropertiesPanel();
-                    propertiesPanel.setDocument(provider.getDoc());
-                    propertiesPanel.setDocumentUri(provider.getFileUri());
-                    CloseControlPanel controlPanel = new CloseControlPanel();
-                    JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
-                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
-                    frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
-                    controlPanel.setHandler(() -> {
-                        dialog.close();
-                        dialog.dispose();
-                    });
-                    dialog.showCentered((Component) e.getSource());
-                }
-            }
-        };
-        ActionUtils.setupAction(propertiesAction, resourceBundle, "propertiesAction");
-        propertiesAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        propertiesAction = new DocumentPropertiesAction((DocumentViewerProvider) editorProvider);
 
         itemPropertiesAction = new ItemPropertiesAction((DocumentViewerProvider) editorProvider);
         itemPropertiesAction.setDevMode(devMode);
-        ActionUtils.setupAction(itemPropertiesAction, resourceBundle, "itemPropertiesAction");
-        itemPropertiesAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
     public Action getPropertiesAction() {

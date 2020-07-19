@@ -13,41 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.xbup.action;
+package org.exbin.framework.gui.about.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.gui.about.gui.AboutPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
-import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
- * Item properties action.
+ * About application action.
  *
- * @version 0.2.1 2020/07/19
+ * @version 0.2.0 2020/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ItemPropertiesAction extends AbstractAction {
+public class AboutAction extends AbstractAction {
 
-    public static final String ACTION_ID = "itemPropertiesAction";
+    public static final String ACTION_ID = "aboutAction";
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ItemPropertiesAction.class);
-    private final DocumentViewerProvider viewerProvider;
-    private boolean devMode = false;
+    private XBApplication application;
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutAction.class);
+    private JComponent sideComponent = null;
 
-    public ItemPropertiesAction(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
+    public AboutAction() {
         init();
     }
 
@@ -56,26 +58,26 @@ public class ItemPropertiesAction extends AbstractAction {
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        XBApplication application = viewerProvider.getApplication();
-        XBACatalog catalog = viewerProvider.getCatalog();
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        BlockPropertiesPanel panel = new BlockPropertiesPanel();
-        panel.setCatalog(catalog);
-        panel.setDevMode(devMode);
-        panel.setTreeNode(viewerProvider.getSelectedItem());
-        CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        controlPanel.setHandler(() -> {
-            dialog.close();
-            dialog.dispose();
-        });
-        dialog.showCentered(viewerProvider.getPanel());
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
-    public void setDevMode(boolean devMode) {
-        this.devMode = devMode;
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        AboutPanel aboutPanel = new AboutPanel();
+        aboutPanel.setApplication(application);
+        aboutPanel.setSideComponent(sideComponent);
+        CloseControlPanel controlPanel = new CloseControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
+        final DialogWrapper aboutDialog = frameModule.createDialog(dialogPanel);
+        ((JDialog) aboutDialog.getWindow()).setTitle("About");
+        controlPanel.setHandler(aboutDialog::close);
+        aboutDialog.showCentered((Component) e.getSource());
+        aboutDialog.dispose();
+    }
+
+    public void setAboutDialogSideComponent(JComponent sideComponent) {
+        this.sideComponent = sideComponent;
     }
 }

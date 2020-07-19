@@ -16,6 +16,8 @@
 package org.exbin.framework.gui.service.gui;
 
 import java.awt.CardLayout;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
@@ -25,6 +27,7 @@ import org.exbin.xbup.core.catalog.XBACatalog;
  * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogAvailabilityPanel extends javax.swing.JPanel {
 
     public CatalogAvailabilityPanel() {
@@ -118,7 +121,7 @@ public class CatalogAvailabilityPanel extends javax.swing.JPanel {
         ((CardLayout) getLayout()).show(this, "notAvailable");
     }
 
-    public void setCatalog(XBACatalog catalog) {
+    public void setCatalog(@Nullable XBACatalog catalog) {
         if (catalog == null) {
             setNoCatalog();
         } else {

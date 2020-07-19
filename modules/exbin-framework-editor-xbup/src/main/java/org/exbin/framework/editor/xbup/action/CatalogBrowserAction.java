@@ -15,15 +15,16 @@
  */
 package org.exbin.framework.editor.xbup.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.gui.CatalogEditorWrapperPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -32,39 +33,44 @@ import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
- * Item properties action.
+ * Catalog browser action.
  *
  * @version 0.2.1 2020/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ItemPropertiesAction extends AbstractAction {
+public class CatalogBrowserAction extends AbstractAction {
 
-    public static final String ACTION_ID = "itemPropertiesAction";
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogBrowserAction.class);
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ItemPropertiesAction.class);
-    private final DocumentViewerProvider viewerProvider;
-    private boolean devMode = false;
+    private XBApplication application;
+    private XBACatalog catalog;
 
-    public ItemPropertiesAction(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
+    public CatalogBrowserAction() {
         init();
     }
 
     private void init() {
-        ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
+        ActionUtils.setupAction(this, resourceBundle, "catalogBrowserAction");
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
+
+    public void setCatalog(XBACatalog catalog) {
+        this.catalog = catalog;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        XBApplication application = viewerProvider.getApplication();
-        XBACatalog catalog = viewerProvider.getCatalog();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        BlockPropertiesPanel panel = new BlockPropertiesPanel();
+        ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
+        CatalogEditorWrapperPanel panel = new CatalogEditorWrapperPanel();
+        panel.setApplication(application);
+        panel.setMenuManagement(managerModule.getDefaultMenuManagement());
         panel.setCatalog(catalog);
-        panel.setDevMode(devMode);
-        panel.setTreeNode(viewerProvider.getSelectedItem());
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -72,10 +78,6 @@ public class ItemPropertiesAction extends AbstractAction {
             dialog.close();
             dialog.dispose();
         });
-        dialog.showCentered(viewerProvider.getPanel());
-    }
-
-    public void setDevMode(boolean devMode) {
-        this.devMode = devMode;
+        dialog.showCentered((Component) e.getSource());
     }
 }

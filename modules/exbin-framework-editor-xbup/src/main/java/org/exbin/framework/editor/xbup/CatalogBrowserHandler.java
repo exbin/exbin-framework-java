@@ -15,30 +15,20 @@
  */
 package org.exbin.framework.editor.xbup;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.gui.CatalogEditorWrapperPanel;
+import org.exbin.framework.editor.xbup.action.CatalogBrowserAction;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.service.ServiceManagerModule;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * Catalog browser handler.
  *
- * @version 0.2.1 2019/07/15
+ * @version 0.2.1 2020/07/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -49,7 +39,7 @@ public class CatalogBrowserHandler {
     private final ResourceBundle resourceBundle;
     private XBACatalog catalog;
 
-    private Action catalogBrowserAction;
+    private CatalogBrowserAction catalogBrowserAction = null;
 
     public CatalogBrowserHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -58,35 +48,22 @@ public class CatalogBrowserHandler {
     }
 
     public void init() {
-        catalogBrowserAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
-                CatalogEditorWrapperPanel panel = new CatalogEditorWrapperPanel();
-                panel.setApplication(application);
-                panel.setMenuManagement(managerModule.getDefaultMenuManagement());
-                panel.setCatalog(catalog);
-                CloseControlPanel controlPanel = new CloseControlPanel();
-                JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-                final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                controlPanel.setHandler(() -> {
-                    dialog.close();
-                    dialog.dispose();
-                });
-                dialog.showCentered((Component) e.getSource());
-            }
-        };
-        ActionUtils.setupAction(catalogBrowserAction, resourceBundle, "catalogBrowserAction");
-        catalogBrowserAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
     @Nonnull
     public Action getCatalogBrowserAction() {
+        if (catalogBrowserAction == null) {
+            catalogBrowserAction = new CatalogBrowserAction();
+            catalogBrowserAction.setApplication(application);
+            catalogBrowserAction.setCatalog(catalog);
+        }
         return catalogBrowserAction;
     }
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
+        if (catalogBrowserAction != null) {
+            catalogBrowserAction.setCatalog(catalog);
+        }
     }
 }

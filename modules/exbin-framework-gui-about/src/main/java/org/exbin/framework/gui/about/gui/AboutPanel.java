@@ -30,7 +30,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
@@ -45,7 +44,7 @@ import org.exbin.xbup.plugin.XBModuleRecord;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener {
+public class AboutPanel extends javax.swing.JPanel {
 
     private XBApplication application;
     private ResourceBundle appBundle;
@@ -125,18 +124,6 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
                 return canEdit[columnIndex];
             }
         });
-    }
-
-    /**
-     * Opens hyperlink in external browser.
-     *
-     * @param event hyperlink event
-     */
-    @Override
-    public void hyperlinkUpdate(HyperlinkEvent event) {
-        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            BareBonesBrowserLaunch.openURL(event.getURL().toExternalForm());
-        }
     }
 
     /**
@@ -482,19 +469,17 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
         if (application != null) {
             appBundle = application.getAppBundle();
 
-            if (application.getModuleRepository() != null) {
-                DefaultTableModel modulesTableModel = (DefaultTableModel) modulesTable.getModel();
-                List<XBModuleRecord> modulesList = application.getModuleRepository().getModulesList();
-                for (XBModuleRecord moduleRecord : modulesList) {
-                    String moduleName;
-                    if (moduleRecord.getName() == null || moduleRecord.getName().isEmpty()) {
-                        moduleName = moduleRecord.getModuleId();
-                    } else {
-                        moduleName = moduleRecord.getName();
-                    }
-                    String[] newRow = {moduleName, moduleRecord.getDescription()};
-                    modulesTableModel.addRow(newRow);
+            DefaultTableModel modulesTableModel = (DefaultTableModel) modulesTable.getModel();
+            List<XBModuleRecord> modulesList = application.getModuleRepository().getModulesList();
+            for (XBModuleRecord moduleRecord : modulesList) {
+                String moduleName;
+                if (moduleRecord.getName().isEmpty()) {
+                    moduleName = moduleRecord.getModuleId();
+                } else {
+                    moduleName = moduleRecord.getName();
                 }
+                String[] newRow = {moduleName, moduleRecord.getDescription()};
+                modulesTableModel.addRow(newRow);
             }
         } else {
             appBundle = resourceBundle;
@@ -506,7 +491,11 @@ public class AboutPanel extends javax.swing.JPanel implements HyperlinkListener 
             if (licenseFilePath != null && !licenseFilePath.isEmpty()) {
                 licenseEditorPane.setPage(getClass().getResource(licenseFilePath));
             }
-            licenseEditorPane.addHyperlinkListener(this);
+            licenseEditorPane.addHyperlinkListener((HyperlinkEvent event) -> {
+                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
+                }
+            });
         } catch (IOException ex) {
             Logger.getLogger(AboutPanel.class.getName()).log(Level.SEVERE, null, ex);
         }

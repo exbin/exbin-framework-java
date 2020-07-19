@@ -47,7 +47,7 @@ public class ParametersTableCellEditor extends DefaultCellEditor {
 
     public ParametersTableCellEditor(XBACatalog catalog, XBPluginRepository pluginRepository, XBTTreeNode node, XBTTreeDocument doc) {
         super(new JTextField());
-        setClickCountToStart(0);
+        super.setClickCountToStart(0);
         this.catalog = catalog;
         this.pluginRepository = pluginRepository;
         this.node = node;
