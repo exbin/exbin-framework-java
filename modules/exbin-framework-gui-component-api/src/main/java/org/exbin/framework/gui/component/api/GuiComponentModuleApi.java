@@ -15,6 +15,10 @@
  */
 package org.exbin.framework.gui.component.api;
 
+import org.exbin.framework.gui.component.api.toolbar.MoveItemActions;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActions;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;

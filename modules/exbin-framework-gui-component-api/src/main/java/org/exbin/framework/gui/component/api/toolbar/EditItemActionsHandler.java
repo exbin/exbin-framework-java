@@ -13,38 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.component.api;
+package org.exbin.framework.gui.component.api.toolbar;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for clipboard handler for visual component / context menu.
  *
- * @version 0.2.1 2017/02/21
+ * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface MoveItemActionsHandler {
+public interface EditItemActionsHandler {
 
     /**
-     * Moves selected items one level up.
+     * Adds new item.
      */
-    void performMoveUp();
+    void performAddItem();
 
     /**
-     * Moves selected items one level down.
+     * Edits currently selected item.
      */
-    void performMoveDown();
+    void performEditItem();
 
     /**
-     * Moves selected items top.
+     * Deletes currently selected item(s).
      */
-    void performMoveTop();
-
-    /**
-     * Moves selected items bottom.
-     */
-    void performMoveBottom();
+    void performDeleteItem();
 
     /**
      * Returns if selection for clipboard operation is available.
@@ -54,9 +49,9 @@ public interface MoveItemActionsHandler {
     boolean isSelection();
 
     /**
-     * Returns true if it is possible to move currently selected item.
+     * Returns true if it is possible to edit currently selected item.
      *
-     * @return true if component is editable
+     * @return true if item is editable
      */
     boolean isEditable();
 
@@ -65,5 +60,5 @@ public interface MoveItemActionsHandler {
      *
      * @param updateListener update listener
      */
-    void setUpdateListener(MoveItemActionsUpdateListener updateListener);
+    void setUpdateListener(EditItemActionsUpdateListener updateListener);
 }

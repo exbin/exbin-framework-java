@@ -13,54 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.component.api;
+package org.exbin.framework.gui.component.api.toolbar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import org.exbin.framework.gui.component.api.ActionsProvider;
 
 /**
  * Interface for item movement action set.
  *
- * @version 0.2.1 2019/07/16
+ * @version 0.2.0 2016/03/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditItemActions {
+public interface MoveItemActions extends ActionsProvider {
 
     /**
-     * Sets edit action handler.
+     * Sets move action handler.
      *
      * @param actionsHandler actions handler
      */
-    void setEditItemActionsHandler(EditItemActionsHandler actionsHandler);
+    void setMoveItemActionsHandler(MoveItemActionsHandler actionsHandler);
 
     /**
-     * Returns add item action.
+     * Returns move up action.
      *
-     * @return add item action
+     * @return move up action
      */
     @Nonnull
-    Action getAddItemAction();
+    Action getMoveUpAction();
 
     /**
-     * Returns edit item action.
+     * Returns move down action.
      *
-     * @return edit item action
+     * @return move down action
      */
     @Nonnull
-    Action getEditItemAction();
+    Action getMoveDownAction();
 
     /**
-     * Returns delete item action.
+     * Returns move top action.
      *
-     * @return delete item action
+     * @return move top action
      */
     @Nonnull
-    Action getDeleteItemAction();
+    Action getMoveTopAction();
+
+    /**
+     * Returns move bottom action.
+     *
+     * @return move bottom action
+     */
+    @Nonnull
+    Action getMoveBottomAction();
 
     /**
      * Updates state of these actions according to handler.
      */
-    void updateEditItemActions();
+    void updateMoveItemActions();
 }

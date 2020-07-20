@@ -27,8 +27,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JFileChooser;
@@ -190,6 +192,11 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
 
     public void setApplication(XBApplication application) {
         this.application = application;
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     /**

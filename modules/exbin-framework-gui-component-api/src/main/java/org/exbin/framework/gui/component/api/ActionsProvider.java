@@ -15,16 +15,18 @@
  */
 package org.exbin.framework.gui.component.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.gui.component.api.toolbar.SideToolBar;
+
 /**
- * Move actions update listener.
+ * Interface for actions provider.
  *
- * @version 0.2.0 2016/02/20
+ * @version 0.2.0 2020/07/20
  * @author ExBin Project (http://exbin.org)
  */
-public interface MoveItemActionsUpdateListener {
+@ParametersAreNonnullByDefault
+public interface ActionsProvider {
 
-    /**
-     * Notify about change in movement state.
-     */
-    void stateChanged();
+    void registerActions(SideToolBar sideToolBar);
+
 }

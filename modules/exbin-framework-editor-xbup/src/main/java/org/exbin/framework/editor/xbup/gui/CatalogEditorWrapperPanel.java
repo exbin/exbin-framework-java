@@ -17,6 +17,7 @@ package org.exbin.framework.editor.xbup.gui;
 
 import java.awt.BorderLayout;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.catalog.gui.CatalogEditorPanel;
@@ -38,7 +39,6 @@ public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements Cat
     private final CatalogEditorPanel catalogEditorPanel;
     private final CatalogAvailabilityPanel catalogAvailabilityPanel;
     private XBACatalog catalog = null;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogEditorWrapperPanel.class);
 
     public CatalogEditorWrapperPanel() {
         initComponents();
@@ -54,6 +54,11 @@ public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements Cat
     public void setApplication(XBApplication application) {
         this.application = application;
         catalogEditorPanel.setApplication(application);
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return catalogEditorPanel.getResourceBundle();
     }
 
     /**

@@ -15,15 +15,20 @@
  */
 package org.exbin.framework.gui.component.gui;
 
+import org.exbin.framework.gui.component.api.ActionsProvider;
+import org.exbin.framework.gui.component.api.toolbar.SideToolBar;
 import java.awt.BorderLayout;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.gui.component.GuiComponentModule;
-import org.exbin.framework.gui.component.api.EditItemActions;
-import org.exbin.framework.gui.component.api.EditItemActionsHandler;
-import org.exbin.framework.gui.component.api.EditItemActionsHandlerEmpty;
-import org.exbin.framework.gui.component.api.MoveItemActions;
-import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
-import org.exbin.framework.gui.component.api.MoveItemActionsHandlerEmpty;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActions;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandlerEmpty;
+import org.exbin.framework.gui.component.api.toolbar.MoveItemActions;
+import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandlerEmpty;
 import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -34,12 +39,11 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
-public class ToolBarSidePanel extends javax.swing.JPanel {
+@ParametersAreNonnullByDefault
+public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar {
 
-    private MoveItemActionsHandler moveItemActionsHandler = null;
-    private EditItemActionsHandler editItemActionsHandler = null;
     private JToolBar toolBar = null;
-    private ToolBarPosition toolBarPosisition = ToolBarPosition.LEFT;
+    private ToolBarPosition toolBarPosition = ToolBarPosition.LEFT;
 
     public ToolBarSidePanel() {
         initComponents();
@@ -71,32 +75,30 @@ public class ToolBarSidePanel extends javax.swing.JPanel {
 
         ToolBarSidePanel toolBarSidePanel = new ToolBarSidePanel();
         MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
-        toolBarSidePanel.setMoveItemsHandler(moveItemActionsHandler, guiComponentModule.createMoveItemActions(moveItemActionsHandler));
+        MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
+        toolBarSidePanel.addActions(moveItemActions);
+        toolBarSidePanel.addSeparator();
+        
         EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
-        toolBarSidePanel.setEditItemsHandler(editItemActionsHandler, guiComponentModule.createEditItemActions(editItemActionsHandler));
+        EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
+        toolBarSidePanel.addActions(editItemActions);
         WindowUtils.invokeDialog(toolBarSidePanel);
     }
 
-    public void setEditItemsHandler(EditItemActionsHandler editItemActionsHandler, EditItemActions editItemActions) {
-        this.editItemActionsHandler = editItemActionsHandler;
+    @Override
+    public void addAction(Action action) {
         initToolBar();
-        toolBar.add(editItemActions.getAddItemAction());
-        toolBar.add(editItemActions.getEditItemAction());
-        toolBar.add(editItemActions.getDeleteItemAction());
-        editItemActions.updateEditItemActions();
+        toolBar.add(action);
     }
 
-    public void setMoveItemsHandler(MoveItemActionsHandler moveItemActionsHandler, MoveItemActions moveItemActions) {
-        this.moveItemActionsHandler = moveItemActionsHandler;
+    @Override
+    public void addSeparator() {
         initToolBar();
-        if (editItemActionsHandler != null) {
-            toolBar.addSeparator();
-        }
-        toolBar.add(moveItemActions.getMoveTopAction());
-        toolBar.add(moveItemActions.getMoveUpAction());
-        toolBar.add(moveItemActions.getMoveDownAction());
-        toolBar.add(moveItemActions.getMoveBottomAction());
-        moveItemActions.updateMoveItemActions();
+        toolBar.addSeparator();
+    }
+
+    public void addActions(ActionsProvider actionsProvider) {
+        actionsProvider.registerActions(this);
     }
 
     private void initToolBar() {
@@ -104,19 +106,21 @@ public class ToolBarSidePanel extends javax.swing.JPanel {
             toolBar = new JToolBar();
             toolBar.setOrientation(JToolBar.VERTICAL);
             toolBar.setFloatable(false);
-            add(toolBar, toolBarPosisition == ToolBarPosition.LEFT ? BorderLayout.WEST : BorderLayout.EAST);
+            add(toolBar, toolBarPosition == ToolBarPosition.LEFT ? BorderLayout.WEST : BorderLayout.EAST);
         }
     }
 
-    public ToolBarPosition getToolBarPosisition() {
-        return toolBarPosisition;
+    @Nonnull
+    public ToolBarPosition getToolBarPosition() {
+        return toolBarPosition;
     }
 
-    public void setToolBarPosisition(ToolBarPosition toolBarPosisition) {
-        this.toolBarPosisition = toolBarPosisition;
+    public void setToolBarPosition(ToolBarPosition toolBarPosition) {
+        this.toolBarPosition = toolBarPosition;
     }
 
     public enum ToolBarPosition {
         LEFT, RIGHT
     }
+
 }

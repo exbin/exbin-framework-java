@@ -20,11 +20,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.component.api.DialogControlPanelHandler;
-import org.exbin.framework.gui.component.api.EditItemActions;
-import org.exbin.framework.gui.component.api.EditItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActions;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
 import org.exbin.framework.gui.component.api.GuiComponentModuleApi;
-import org.exbin.framework.gui.component.api.MoveItemActions;
-import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.MoveItemActions;
+import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandler;
 import org.exbin.framework.gui.component.gui.DialogControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 

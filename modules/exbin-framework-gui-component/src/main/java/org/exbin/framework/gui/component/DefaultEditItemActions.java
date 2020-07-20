@@ -21,8 +21,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.gui.component.api.EditItemActions;
-import org.exbin.framework.gui.component.api.EditItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActions;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.SideToolBar;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -109,5 +110,13 @@ public class DefaultEditItemActions implements EditItemActions {
         if (deleteItemAction != null) {
             deleteItemAction.setEnabled(actionsHandler.isSelection() && actionsHandler.isEditable());
         }
+    }
+
+    @Override
+    public void registerActions(SideToolBar sideToolBar) {
+        sideToolBar.addAction(getAddItemAction());
+        sideToolBar.addAction(getEditItemAction());
+        sideToolBar.addAction(getDeleteItemAction());
+        updateEditItemActions();
     }
 }

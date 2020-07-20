@@ -21,8 +21,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.gui.component.api.MoveItemActions;
-import org.exbin.framework.gui.component.api.MoveItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.MoveItemActions;
+import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.SideToolBar;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -130,5 +131,14 @@ public class DefaultMoveItemActions implements MoveItemActions {
         if (moveBottomAction != null) {
             moveBottomAction.setEnabled(enabled);
         }
+    }
+
+    @Override
+    public void registerActions(SideToolBar sideToolBar) {
+        sideToolBar.addAction(getMoveTopAction());
+        sideToolBar.addAction(getMoveUpAction());
+        sideToolBar.addAction(getMoveDownAction());
+        sideToolBar.addAction(getMoveBottomAction());
+        updateMoveItemActions();
     }
 }

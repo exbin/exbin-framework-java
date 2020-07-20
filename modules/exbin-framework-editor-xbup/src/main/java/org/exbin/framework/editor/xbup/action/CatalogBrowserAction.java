@@ -22,9 +22,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.gui.CatalogEditorWrapperPanel;
+import org.exbin.framework.editor.xbup.CatalogsBrowser;
+import org.exbin.framework.editor.xbup.gui.CatalogsBrowserPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -41,6 +41,8 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 @ParametersAreNonnullByDefault
 public class CatalogBrowserAction extends AbstractAction {
 
+    public static final String ACTION_ID = "catalogBrowserAction";
+
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogBrowserAction.class);
 
     private XBApplication application;
@@ -51,7 +53,7 @@ public class CatalogBrowserAction extends AbstractAction {
     }
 
     private void init() {
-        ActionUtils.setupAction(this, resourceBundle, "catalogBrowserAction");
+        ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
@@ -65,12 +67,11 @@ public class CatalogBrowserAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        CatalogsBrowser catalogsBrowser = new CatalogsBrowser();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
-        CatalogEditorWrapperPanel panel = new CatalogEditorWrapperPanel();
-        panel.setApplication(application);
-        panel.setMenuManagement(managerModule.getDefaultMenuManagement());
-        panel.setCatalog(catalog);
+        catalogsBrowser.setApplication(application);
+        catalogsBrowser.setCatalog(catalog);
+        CatalogsBrowserPanel panel = catalogsBrowser.getBrowserPanel();
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -78,6 +79,7 @@ public class CatalogBrowserAction extends AbstractAction {
             dialog.close();
             dialog.dispose();
         });
+        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         dialog.showCentered((Component) e.getSource());
     }
 }
