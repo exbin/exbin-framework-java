@@ -21,24 +21,28 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.RemovalControlHandler;
-import org.exbin.framework.gui.utils.gui.RemovalControlPanel;
+import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCBlockRev;
+import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCItem;
-import org.exbin.xbup.core.catalog.base.service.XBCXIconService;
+import org.exbin.xbup.core.catalog.base.XBCRev;
+import org.exbin.xbup.core.catalog.base.XBCXBlockLine;
+import org.exbin.xbup.core.catalog.base.service.XBCRevService;
 import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
 
 /**
- * Catalog big icon property cell panel.
+ * Catalog row panel editor property cell panel.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2020/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogREditorPropertyTableCellPanel extends CatalogPropertyTableCellPanel {
 
     private XBApplication application;
     private XBACatalog catalog;
-    private byte[] icon;
+    private long lineId;
 
     public CatalogREditorPropertyTableCellPanel(XBACatalog catalog) {
         super();
@@ -58,24 +62,21 @@ public class CatalogREditorPropertyTableCellPanel extends CatalogPropertyTableCe
 
     public void performEditorAction() {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        CatalogEditIconPanel iconPanel = new CatalogEditIconPanel(catalog, icon);
-        RemovalControlPanel controlPanel = new RemovalControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(iconPanel, controlPanel);
+        CatalogSelectLinePanel lineSelectPanel = new CatalogSelectLinePanel();
+        lineSelectPanel.setCatalog(catalog);
+        lineSelectPanel.setLineId(lineId);
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(lineSelectPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        frameModule.setDialogTitle(dialog, iconPanel.getResourceBundle());
-        controlPanel.setHandler((RemovalControlHandler.ControlActionType actionType) -> {
+//        frameModule.setDialogTitle(dialog, lineSelectPanel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             switch (actionType) {
                 case OK: {
-                    icon = iconPanel.getIcon();
+                    lineId = lineSelectPanel.getLineId();
                     setPropertyLabel();
                     break;
                 }
                 case CANCEL: {
-                    break;
-                }
-                case REMOVE: {
-                    icon = new byte[0];
-                    setPropertyLabel();
                     break;
                 }
             }
@@ -87,16 +88,21 @@ public class CatalogREditorPropertyTableCellPanel extends CatalogPropertyTableCe
 
     public void setCatalogItem(XBCItem catalogItem) {
         XBCXLineService lineService = catalog.getCatalogService(XBCXLineService.class);
-        icon = null; //lineService.getLines(catalogItem);
+        XBCRevService revService = catalog.getCatalogService(XBCRevService.class);
+        long maxRev = revService.findMaxRevXB((XBCBlockSpec) catalogItem);
+        XBCRev blockRev = revService.findRevByXB((XBCBlockSpec) catalogItem, maxRev);
+        XBCXBlockLine linePanel = lineService.findLineByPR((XBCBlockRev) blockRev, 0);
+        
+        lineId = linePanel != null ? linePanel.getId() : 0;
         setPropertyLabel();
     }
 
     private void setPropertyLabel() {
-        setPropertyText(icon == null || icon.length == 0 ? "" : "[" + icon.length + " bytes]");
+        setPropertyText(lineId > 0 ? String.valueOf(lineId) : "");
     }
 
-    public byte[] getLineEditors() {
-        return icon;
+    public long getLineId() {
+        return lineId;
     }
 
     public XBACatalog getCatalog() {

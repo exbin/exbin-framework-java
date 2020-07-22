@@ -18,7 +18,7 @@ package org.exbin.framework.gui.service.catalog.gui;
 import java.awt.event.ActionListener;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JLabel;
-import org.exbin.framework.gui.data.gui.cell.PropertyTableCellPanel;
+import org.exbin.framework.gui.data.gui.cell.ComponentPropertyTableCellPanel;
 
 /**
  * Property column panel with label and extending button.
@@ -27,7 +27,7 @@ import org.exbin.framework.gui.data.gui.cell.PropertyTableCellPanel;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CatalogPropertyTableCellPanel extends PropertyTableCellPanel {
+public class CatalogPropertyTableCellPanel extends ComponentPropertyTableCellPanel {
 
     private int paramIndex;
 

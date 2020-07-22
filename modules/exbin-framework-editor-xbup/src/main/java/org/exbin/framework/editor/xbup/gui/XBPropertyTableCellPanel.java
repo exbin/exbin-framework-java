@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.data.gui.cell.PropertyTableCellPanel;
+import org.exbin.framework.gui.data.gui.cell.ComponentPropertyTableCellPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
@@ -44,7 +44,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
-public class XBPropertyTableCellPanel extends PropertyTableCellPanel {
+public class XBPropertyTableCellPanel extends ComponentPropertyTableCellPanel {
 
     private XBApplication application;
     private XBACatalog catalog;

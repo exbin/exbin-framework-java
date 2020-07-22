@@ -29,7 +29,7 @@ import org.exbin.xbup.core.catalog.base.XBCSpec;
 /**
  * XBManager catalog item editation panel.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2020/07/22
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditItemPanel extends javax.swing.JPanel {
@@ -41,6 +41,7 @@ public class CatalogEditItemPanel extends javax.swing.JPanel {
     private CatalogItemEditRevsPanel revisionsPanel;
     private CatalogItemEditDefinitionPanel definitionPanel;
     private CatalogItemEditFilesPanel filesPanel;
+    private CatalogItemEditPluginsPanel pluginsPanel;
     private MenuManagement menuManagement;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogEditItemPanel.class);
 
@@ -88,6 +89,17 @@ public class CatalogEditItemPanel extends javax.swing.JPanel {
 
             initComponent(filesPanel);
             mainTabbedPane.add(filesPanel, "Files");
+
+            pluginsPanel = new CatalogItemEditPluginsPanel();
+            pluginsPanel.setApplication(application);
+            pluginsPanel.setCatalog(catalog);
+            pluginsPanel.setNode((XBCNode) item);
+            if (menuManagement != null) {
+                pluginsPanel.setMenuManagement(menuManagement);
+            }
+
+            initComponent(pluginsPanel);
+            mainTabbedPane.add(pluginsPanel, "Plugins");
         }
     }
 

@@ -23,28 +23,29 @@ import org.exbin.xbup.catalog.entity.XBEXFile;
 import org.exbin.xbup.core.catalog.XBCatalog;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCXFile;
-import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
+import org.exbin.xbup.core.catalog.base.XBCXPlugin;
+import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 
 /**
- * Table model for catalog node files.
+ * Table model for catalog plugins.
  *
- * @version 0.1.24 2015/01/14
+ * @version 0.2.1 2020/07/22
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogFilesTableModel extends AbstractTableModel {
+public class CatalogPluginsTableModel extends AbstractTableModel {
 
     private XBCatalog catalog;
-    private XBCXFileService fileService;
+    private XBCXPlugService pluginService;
     private XBCNode node;
 
-    private final String[] columnNames = new String[]{"Filename", "Size"};
+    private final String[] columnNames = new String[]{"Index", "Filename", "Line Editors", "Pane Editors"};
     private final Class[] columnClasses = new Class[]{
-        java.lang.String.class, java.lang.Long.class
+        java.lang.Long.class, java.lang.String.class, java.lang.Long.class, java.lang.Long.class
     };
 
-    private List<FileItemRecord> items = new ArrayList<>();
+    private List<PluginItemRecord> items = new ArrayList<>();
 
-    public CatalogFilesTableModel() {
+    public CatalogPluginsTableModel() {
         node = null;
     }
 
@@ -55,22 +56,23 @@ public class CatalogFilesTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 4;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0: {
-                return items.get(rowIndex).fileName;
+                return items.get(rowIndex).index;
             }
             case 1: {
-                byte[] data = items.get(rowIndex).modifiedData;
-                if (data == null) {
-                    data = ((XBCXFile) items.get(rowIndex).file).getContent();
-                }
-
-                return data == null ? 0 : data.length;
+                return items.get(rowIndex).fileName;
+            }
+            case 2: {
+                return items.get(rowIndex).lineEditors;
+            }
+            case 3: {
+                return items.get(rowIndex).paneEditors;
             }
         }
         return "";
@@ -94,8 +96,8 @@ public class CatalogFilesTableModel extends AbstractTableModel {
         this.node = node;
         items = new ArrayList<>();
         if (node != null) {
-            for (XBCXFile file : ((List<XBCXFile>) fileService.findFilesForNode(node))) {
-                items.add(new FileItemRecord(file));
+            for (XBCXPlugin plugin : ((List<XBCXPlugin>) pluginService.findPluginsForNode(node))) {
+                // TODO items.add(new PluginItemRecord(plugin));
             }
         }
     }
@@ -105,8 +107,9 @@ public class CatalogFilesTableModel extends AbstractTableModel {
     }
 
     public void addItem(String fileName, byte[] data) {
-        items.add(new FileItemRecord(fileName, data));
-        fireTableDataChanged();
+        throw new UnsupportedOperationException("Not supported yet.");
+//        items.add(new PluginItemRecord(fileName, data));
+//        fireTableDataChanged();
     }
 
     public XBCXFile removeItem(int rowIndex) {
@@ -118,43 +121,42 @@ public class CatalogFilesTableModel extends AbstractTableModel {
     public void setCatalog(XBCatalog catalog) {
         this.catalog = catalog;
 
-        fileService = catalog == null ? null : catalog.getCatalogService(XBCXFileService.class);
+        pluginService = catalog == null ? null : catalog.getCatalogService(XBCXPlugService.class);
     }
 
     public void persist() {
-        for (FileItemRecord itemRecord : items) {
-            if (itemRecord.file == null) {
-                XBEXFile file = new XBEXFile();
-                file.setNode((XBENode) node);
-                file.setFilename(itemRecord.fileName);
-            }
-
-            if (itemRecord.modifiedData != null) {
-                ((XBEXFile) itemRecord.file).setContent(itemRecord.modifiedData);
-                fileService.persistItem(itemRecord.file);
-            }
+        for (PluginItemRecord itemRecord : items) {
+//            if (itemRecord.file == null) {
+//                XBEXFile file = new XBEXFile();
+//                file.setNode((XBENode) node);
+//                file.setFilename(itemRecord.fileName);
+//            }
+//
+//            if (itemRecord.modifiedData != null) {
+//                ((XBEXFile) itemRecord.file).setContent(itemRecord.modifiedData);
+//                pluginService.persistItem(itemRecord.file);
+//            }
         }
     }
 
     public void setItemData(int rowIndex, byte[] fileContent) {
-        items.get(rowIndex).modifiedData = fileContent;
+//        items.get(rowIndex).modifiedData = fileContent;
         fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
-    private class FileItemRecord {
+    private class PluginItemRecord {
 
+        public long index;
         public XBCXFile file = null;
         public String fileName = null;
-        public byte[] modifiedData = null;
+        public long lineEditors;
+        public long paneEditors;
 
-        public FileItemRecord(String fileName, byte[] data) {
+        public PluginItemRecord(long index, String fileName, long lineEditors, long paneEditors) {
+            this.index = index;
             this.fileName = fileName;
-            modifiedData = data;
-        }
-
-        public FileItemRecord(XBCXFile file) {
-            this.file = file;
-            fileName = file.getFilename();
+            this.lineEditors = lineEditors;
+            this.paneEditors = paneEditors;
         }
     }
 }

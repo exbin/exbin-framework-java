@@ -15,30 +15,36 @@
  */
 package org.exbin.framework.gui.data.gui.cell;
 
+import com.bulenkov.darcula.ui.DarculaButtonPainter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.plaf.basic.BasicBorders;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Empty property column panel with operation button.
  *
- * @version 0.2.1 2020/06/29
+ * @version 0.2.1 2020/07/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class PropertyTableCellPanel extends javax.swing.JPanel {
+public class ComponentPropertyTableCellPanel extends javax.swing.JPanel {
 
     private JComponent cellComponent;
 
-    public PropertyTableCellPanel() {
-        this(new JLabel());
+    public ComponentPropertyTableCellPanel() {
+        this(createEmptyCellComponent());
     }
 
-    public PropertyTableCellPanel(JComponent cellComponent) {
+    public ComponentPropertyTableCellPanel(JComponent cellComponent) {
         this.cellComponent = cellComponent;
         initComponents();
         init();
@@ -46,21 +52,6 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
 
     private void init() {
         add(cellComponent, BorderLayout.CENTER);
-        // TODO Make button for more compact even for PLAFs with big border
-//        Border border = editorButton.getBorder();
-//        if (border instanceof CompoundBorder) {
-//           editorButton.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), new EmptyBorder(0, 0, 0, 0)));
-//           editorButton.setBorder(new CompoundBorder(((CompoundBorder) border).getOutsideBorder(), new EmptyBorder(0, 0, 0, 0)));
-//            Border insideBorder = ((CompoundBorder) border).getInsideBorder();
-//            if (insideBorder instanceof BasicBorders.MarginBorder) {
-//                // ((BasicBorders.MarginBorder) insideBorder).
-//                editorButton.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), new EmptyBorder(0, 0, 0, 0)));
-//            }
-//            Border outsideBorder = ((CompoundBorder) border).getOutsideBorder();
-//            if (outsideBorder instanceof Object) {
-//                
-//            }
-//        }
     }
 
     /**
@@ -72,7 +63,36 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        editorButton = new javax.swing.JButton();
+        editorButton = new JButton() {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+
+                // Make button more compact even for PLAFs with big borders
+                Border border = getBorder();
+                if (border instanceof CompoundBorder) {
+                    // setBorder(new CompoundBorder(((CompoundBorder) border).getOutsideBorder(), new EmptyBorder(0, 0, 0, 0)));
+                    Border insideBorder = ((CompoundBorder) border).getInsideBorder();
+                    if (insideBorder instanceof BasicBorders.MarginBorder) {
+                        // ((BasicBorders.MarginBorder) insideBorder).
+                        // setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), new EmptyBorder(0, 0, 0, 0)));
+                    }
+                    Border outsideBorder = ((CompoundBorder) border).getOutsideBorder();
+                    if (outsideBorder instanceof Object) {
+
+                    }
+                } else {
+                    try {
+                        Class.forName("com.bulenkov.darcula.ui.DarculaButtonPainter");
+                        if (border instanceof DarculaButtonPainter) {
+                            putClientProperty("JButton.buttonType", "square");
+                        }
+                    } catch( ClassNotFoundException e ) {
+                        // ignore
+                    }
+                }
+            }
+        };
 
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
@@ -89,7 +109,19 @@ public class PropertyTableCellPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new PropertyTableCellPanel());
+        WindowUtils.invokeDialog(new ComponentPropertyTableCellPanel());
+    }
+
+    @Nonnull
+    public static JLabel createEmptyCellComponent() {
+        JLabel label = new JLabel() {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                setFont(UIManager.getDefaults().getFont("TextField.font"));
+            }
+        };
+        return label;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

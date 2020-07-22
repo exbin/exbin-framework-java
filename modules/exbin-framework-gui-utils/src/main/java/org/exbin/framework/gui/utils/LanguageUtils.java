@@ -68,7 +68,7 @@ public class LanguageUtils {
      * @param targetClass target class
      * @return resource bundle
      */
-    @Nullable
+    @Nonnull
     public static ResourceBundle getResourceBundleByClass(Class<?> targetClass) {
         if (languageClassLoader == null) {
             return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass));
@@ -84,7 +84,7 @@ public class LanguageUtils {
      * @param targetClass target class
      * @return base name string
      */
-    @Nullable
+    @Nonnull
     public static String getResourceBaseNameBundleByClass(Class<?> targetClass) {
         String classNamePath = getClassNamePath(targetClass);
         int classNamePos = classNamePath.lastIndexOf("/");

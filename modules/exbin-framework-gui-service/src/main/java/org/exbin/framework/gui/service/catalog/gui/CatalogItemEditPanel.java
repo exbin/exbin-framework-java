@@ -24,6 +24,7 @@ import java.io.OutputStreamWriter;
 import java.util.EventObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -48,6 +49,7 @@ import org.exbin.xbup.catalog.entity.service.XBEXNameService;
 import org.exbin.xbup.catalog.entity.service.XBEXStriService;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBase;
+import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCXFile;
@@ -71,6 +73,7 @@ import sun.swing.DefaultLookup;
  * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogItemEditPanel extends javax.swing.JPanel {
 
     private XBApplication application;
@@ -210,8 +213,10 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
         tableModel.addRow(new String[]{"Big Icon (32x32)", ""});
         tableModel.addRow(new String[]{"Small Icon (16x16)", ""});
 
-        tableModel.addRow(new String[]{"Row editor", ""});
-        tableModel.addRow(new String[]{"Panel editor", ""});
+        if (catalogItem instanceof XBCBlockSpec) {
+            tableModel.addRow(new String[]{"Row editor", ""});
+            tableModel.addRow(new String[]{"Panel editor", ""});
+        }
 
         TableColumnModel columns = propertiesTable.getColumnModel();
         docCellPanel = new CatalogDocPropertyTableCellPanel(catalog);
@@ -226,12 +231,14 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
         sIconCellPanel = new CatalogSIconPropertyTableCellPanel(catalog);
         sIconCellPanel.setApplication(application);
         sIconCellPanel.setCatalogItem(catalogItem);
-        rEditorCellPanel = new CatalogREditorPropertyTableCellPanel(catalog);
-        rEditorCellPanel.setApplication(application);
-        rEditorCellPanel.setCatalogItem(catalogItem);
-        pEditorCellPanel = new CatalogPEditorPropertyTableCellPanel(catalog);
-        pEditorCellPanel.setApplication(application);
-        pEditorCellPanel.setCatalogItem(catalogItem);
+        if (catalogItem instanceof XBCBlockSpec) {
+            rEditorCellPanel = new CatalogREditorPropertyTableCellPanel(catalog);
+            rEditorCellPanel.setApplication(application);
+            rEditorCellPanel.setCatalogItem(catalogItem);
+            pEditorCellPanel = new CatalogPEditorPropertyTableCellPanel(catalog);
+            pEditorCellPanel.setApplication(application);
+            pEditorCellPanel.setCatalogItem(catalogItem);
+        }
 
         columns.getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
             @Override

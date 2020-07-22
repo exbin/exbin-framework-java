@@ -21,23 +21,28 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.RemovalControlHandler;
-import org.exbin.framework.gui.utils.gui.RemovalControlPanel;
+import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCBlockRev;
+import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCItem;
-import org.exbin.xbup.core.catalog.base.service.XBCXIconService;
+import org.exbin.xbup.core.catalog.base.XBCRev;
+import org.exbin.xbup.core.catalog.base.XBCXBlockPane;
+import org.exbin.xbup.core.catalog.base.service.XBCRevService;
+import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
 
 /**
- * Catalog big icon property cell panel.
+ * Catalog panel editor property cell panel.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2020/07/21
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogPEditorPropertyTableCellPanel extends CatalogPropertyTableCellPanel {
 
     private XBApplication application;
     private XBACatalog catalog;
-    private byte[] icon;
+    private long paneId;
 
     public CatalogPEditorPropertyTableCellPanel(XBACatalog catalog) {
         super();
@@ -57,24 +62,21 @@ public class CatalogPEditorPropertyTableCellPanel extends CatalogPropertyTableCe
 
     public void performEditorAction() {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        CatalogEditIconPanel iconPanel = new CatalogEditIconPanel(catalog, icon);
-        RemovalControlPanel controlPanel = new RemovalControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(iconPanel, controlPanel);
+        CatalogSelectPanePanel paneSelectPanel = new CatalogSelectPanePanel();
+        paneSelectPanel.setCatalog(catalog);
+        paneSelectPanel.setPaneId(paneId);
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(paneSelectPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        frameModule.setDialogTitle(dialog, iconPanel.getResourceBundle());
-        controlPanel.setHandler((RemovalControlHandler.ControlActionType actionType) -> {
+//        frameModule.setDialogTitle(dialog, paneSelectPanel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             switch (actionType) {
                 case OK: {
-                    icon = iconPanel.getIcon();
+                    paneId = paneSelectPanel.getPaneId();
                     setPropertyLabel();
                     break;
                 }
                 case CANCEL: {
-                    break;
-                }
-                case REMOVE: {
-                    icon = new byte[0];
-                    setPropertyLabel();
                     break;
                 }
             }
@@ -85,17 +87,22 @@ public class CatalogPEditorPropertyTableCellPanel extends CatalogPropertyTableCe
     }
 
     public void setCatalogItem(XBCItem catalogItem) {
-        XBCXIconService iconService = catalog.getCatalogService(XBCXIconService.class);
-        icon = null; // iconService.getDefaultBigIconData(catalogItem);
+        XBCXPaneService lineService = catalog.getCatalogService(XBCXPaneService.class);
+        XBCRevService revService = catalog.getCatalogService(XBCRevService.class);
+        long maxRev = revService.findMaxRevXB((XBCBlockSpec) catalogItem);
+        XBCRev blockRev = revService.findRevByXB((XBCBlockSpec) catalogItem, maxRev);
+        XBCXBlockPane panePanel = lineService.findPaneByPR((XBCBlockRev) blockRev, 0);
+        
+        paneId = panePanel != null ? panePanel.getId() : 0;
         setPropertyLabel();
     }
 
     private void setPropertyLabel() {
-        setPropertyText(icon == null || icon.length == 0 ? "" : "[" + icon.length + " bytes]");
+        setPropertyText(paneId > 0 ? String.valueOf(paneId) : "");
     }
 
-    public byte[] getIcon() {
-        return icon;
+    public long getPaneId() {
+        return paneId;
     }
 
     public XBACatalog getCatalog() {
