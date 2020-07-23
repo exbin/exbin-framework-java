@@ -29,6 +29,7 @@ import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
+import org.exbin.framework.editor.xbup.gui.SimpleMessagePanel;
 import org.exbin.framework.editor.xbup.gui.XBPropertyPanel;
 import org.exbin.framework.gui.service.catalog.gui.CatalogItemPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
@@ -73,6 +74,8 @@ public class PropertiesDocumentViewer implements DocumentViewer {
 
         typePanel = new CatalogItemPanel();
         dataPanel = new BinEdComponentPanel();
+        SimpleMessagePanel messagePanel = new SimpleMessagePanel();
+        viewerPanel.setBorderComponent(messagePanel);
     }
 
     @Override
@@ -157,8 +160,7 @@ public class PropertiesDocumentViewer implements DocumentViewer {
     }
 
     @Override
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener
-    ) {
+    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
     }
 
     public void setCatalog(XBACatalog catalog) {

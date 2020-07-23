@@ -51,7 +51,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Panel for showing information about document block.
  *
- * @version 0.2.1 2019/06/21
+ * @version 0.2.1 2020/07/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -278,9 +278,9 @@ public class BlockPropertiesPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane webCatalogLinkScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    public void setTreeNode(XBTTreeNode srcNode) {
+    public void setBlock(XBTBlock block) {
         XBCSpecService specService = catalog.getCatalogService(XBCSpecService.class);
-        block = srcNode;
+        this.block = block;
         nodeTypeTextField.setText(getCaption(block));
         dataModeTextField.setText(block.getDataMode() == XBBlockDataMode.DATA_BLOCK ? "DATA_BLOCK" : "NODE_BLOCK");
         terminationModeTextField.setText(block.getTerminationMode() == XBBlockTerminationMode.TERMINATED_BY_ZERO ? "TERMINATED_BY_ZERO" : "SIZE_SPECIFIED");

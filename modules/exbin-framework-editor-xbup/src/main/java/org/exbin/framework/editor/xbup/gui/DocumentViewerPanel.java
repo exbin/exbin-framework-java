@@ -34,6 +34,7 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
 
     private final List<ViewRecord> viewRecords = new ArrayList<>();
     private int activeView = 0;
+    private JComponent borderComponent = null;
 
     public DocumentViewerPanel() {
         initComponents();
@@ -56,6 +57,10 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
     public void addView(String name, JComponent component) {
         if (viewRecords.isEmpty()) {
             add(component, BorderLayout.CENTER);
+            
+            if (borderComponent != null) {
+                remove(borderComponent);
+            }
         }
 
         viewRecords.add(new ViewRecord(name, component));
@@ -68,7 +73,19 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
             remove(prevRecord.component);
             modeComboBox.removeAllItems();
             viewRecords.clear();
+
+            if (borderComponent != null) {
+                add(borderComponent, BorderLayout.CENTER);
+            }
         }
+    }
+    
+    public void setBorderComponent(JComponent component) {
+        if (borderComponent != null) {
+            remove(borderComponent);
+        }
+        add(component, BorderLayout.CENTER);
+        borderComponent = component;
     }
 
     /**

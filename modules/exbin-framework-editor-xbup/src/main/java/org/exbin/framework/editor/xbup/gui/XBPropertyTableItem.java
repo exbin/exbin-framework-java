@@ -17,7 +17,7 @@ package org.exbin.framework.editor.xbup.gui;
 
 import org.exbin.xbup.core.block.definition.XBParamType;
 import org.exbin.xbup.core.catalog.base.XBCSpecDef;
-import org.exbin.xbup.plugin.XBLineEditor;
+import org.exbin.xbup.plugin.XBRowEditor;
 
 /**
  * Parameters list table item record.
@@ -30,9 +30,9 @@ public class XBPropertyTableItem {
     private XBCSpecDef specDef;
     private String valueName;
     private String typeName;
-    private XBLineEditor lineEditor;
+    private XBRowEditor lineEditor;
 
-    public XBPropertyTableItem(XBCSpecDef specDef, String valueName, String typeName, XBLineEditor lineEditor) {
+    public XBPropertyTableItem(XBCSpecDef specDef, String valueName, String typeName, XBRowEditor lineEditor) {
         this.specDef = specDef;
         this.valueName = valueName;
         this.typeName = typeName;
@@ -67,11 +67,11 @@ public class XBPropertyTableItem {
         this.typeName = typeName;
     }
 
-    public XBLineEditor getLineEditor() {
+    public XBRowEditor getLineEditor() {
         return lineEditor;
     }
 
-    public void setLineEditor(XBLineEditor lineEditor) {
+    public void setLineEditor(XBRowEditor lineEditor) {
         this.lineEditor = lineEditor;
     }
 

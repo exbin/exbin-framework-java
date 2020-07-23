@@ -49,9 +49,9 @@ import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.parser_tree.XBATreeParamExtractor;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
-import org.exbin.xbup.plugin.XBLineEditor;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
+import org.exbin.xbup.plugin.XBRowEditor;
 
 /**
  * Panel for properties of the actual panel.
@@ -374,7 +374,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
                                 XBPropertyTableItem row;
                                 XBCSpecDef def = specService.getSpecDefByOrder(spec, parameterIndex);
                                 XBCBlockSpec rowSpec;
-                                XBLineEditor lineEditor = null;
+                                XBRowEditor lineEditor = null;
                                 if (def != null) {
                                     try {
                                         rowNameText = nameService.getDefaultText(def);
@@ -414,7 +414,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         }
     }
 
-    private XBLineEditor getCustomEditor(XBCBlockRev rev) {
+    private XBRowEditor getCustomEditor(XBCBlockRev rev) {
         if (rev == null || catalog == null) {
             return null;
         }
@@ -515,13 +515,13 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         this.pluginRepository = pluginRepository;
     }
 
-    private class LineEditorChangeListener implements XBLineEditor.ChangeListener {
+    private class LineEditorChangeListener implements XBRowEditor.ChangeListener {
 
         private final XBATreeParamExtractor paramExtractor;
         private final int parameterIndex;
-        private final XBLineEditor lineEditor;
+        private final XBRowEditor lineEditor;
 
-        private LineEditorChangeListener(XBLineEditor lineEditor, XBATreeParamExtractor paramExtractor, int parameterIndex) {
+        private LineEditorChangeListener(XBRowEditor lineEditor, XBATreeParamExtractor paramExtractor, int parameterIndex) {
             this.lineEditor = lineEditor;
             this.paramExtractor = paramExtractor;
             this.parameterIndex = parameterIndex;

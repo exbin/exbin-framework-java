@@ -16,37 +16,63 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
+import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
+import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
+import org.exbin.framework.editor.xbup.gui.SimpleMessagePanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBTBlock;
+import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * Custom viewer of document.
  *
- * @version 0.2.1 2020/03/01
+ * @version 0.2.1 2020/07/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MainDocumentViewer implements DocumentViewer {
 
+    private DocumentViewerPanel viewerPanel = new DocumentViewerPanel();
+    private BlockPropertiesPanel propertiesPanel = new BlockPropertiesPanel();
     private JComponent customPanel;
     private XBTBlock selectedItem = null;
 
     public MainDocumentViewer() {
-        customPanel = new JPanel();
+
+//        customPanel = new JPanel();
+//        customPanel.setBackground(Color.RED);
+//        viewerPanel.addView("Test", customPanel);
+        SimpleMessagePanel messagePanel = new SimpleMessagePanel();
+        viewerPanel.setBorderComponent(messagePanel);
     }
 
     @Nonnull
     @Override
     public JComponent getComponent() {
-        return customPanel;
+        return viewerPanel;
+    }
+
+    public void setCatalog(XBACatalog catalog) {
+        propertiesPanel.setCatalog(catalog);
     }
 
     @Override
-    public void setSelectedItem(XBTBlock item) {
-        selectedItem = item;
+    public void setSelectedItem(@Nullable XBTBlock block) {
+        if (block == null) {
+            viewerPanel.removeAllViews();
+        } else {
+            if (selectedItem == null) {
+                viewerPanel.addView("Information", propertiesPanel);
+            }
+
+            propertiesPanel.setBlock(block);
+        }
+        selectedItem = block;
+        viewerPanel.invalidate();
+        viewerPanel.repaint();
     }
 
     @Override

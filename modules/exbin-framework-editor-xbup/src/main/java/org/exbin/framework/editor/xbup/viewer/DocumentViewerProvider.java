@@ -25,6 +25,7 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
@@ -79,15 +80,13 @@ public class DocumentViewerProvider implements EditorProvider {
     private XBUndoHandler undoHandler;
     private XBPluginRepository pluginRepository;
 
-    public DocumentViewerProvider(XBACatalog catalog, XBUndoHandler undoHandler) {
-        this.catalog = catalog;
+    public DocumentViewerProvider(XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
 
         mainViewer = new MainDocumentViewer();
         propertiesViewer = new PropertiesDocumentViewer();
         binaryViewer = new BinaryDocumentViewer();
         textViewer = new TextDocumentViewer();
-        activeViewer = propertiesViewer;
 
         documentPanel = new XBDocumentPanel();
         documentPanel.addTabSwitchListener(this::setViewerTab);
@@ -100,11 +99,13 @@ public class DocumentViewerProvider implements EditorProvider {
             boolean itemSelected = item != null;
 
         });
-        mainDoc = new TreeDocument(catalog);
+        mainDoc = new TreeDocument(null);
         documentPanel.setMainDoc(mainDoc);
+        documentPanel.setMainTabComponent(mainViewer.getComponent());
         documentPanel.setPropertiesTabComponent(propertiesViewer.getComponent());
         documentPanel.setBinaryTabComponent(binaryViewer.getComponent());
         documentPanel.setTextTabComponent(textViewer.getComponent());
+        activeViewer = mainViewer;
     }
 
     @Nonnull
@@ -126,6 +127,7 @@ public class DocumentViewerProvider implements EditorProvider {
         documentPanel.setCatalog(catalog);
         mainDoc.setCatalog(catalog);
         mainDoc.processSpec();
+        mainViewer.setCatalog(catalog);
         propertiesViewer.setCatalog(catalog);
         textViewer.setCatalog(catalog);
     }
@@ -380,7 +382,7 @@ public class DocumentViewerProvider implements EditorProvider {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         BlockPropertiesPanel panel = new BlockPropertiesPanel();
         panel.setCatalog(catalog);
-        panel.setTreeNode(getSelectedItem());
+        panel.setBlock(getSelectedItem());
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -426,7 +428,7 @@ public class DocumentViewerProvider implements EditorProvider {
     @ParametersAreNonnullByDefault
     private class TreeDocument extends XBTTreeDocument implements OperationListener {
 
-        public TreeDocument(XBCatalog catalog) {
+        public TreeDocument(@Nullable XBCatalog catalog) {
             super(catalog);
         }
 

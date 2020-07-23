@@ -27,8 +27,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
-import org.exbin.xbup.plugin.XBLineEditor;
 import org.exbin.xbup.plugin.XBPluginRepository;
+import org.exbin.xbup.plugin.XBRowEditor;
 
 /**
  * Property table cell renderer.
@@ -43,7 +43,7 @@ public class XBPropertyTableCellEditor extends DefaultCellEditor {
     private final XBPluginRepository pluginRepository;
     private final XBTTreeDocument doc;
     private XBTTreeNode node;
-    private XBLineEditor lineEditor = null;
+    private XBRowEditor lineEditor = null;
     private JComponent lineEditorComponent = null;
 
     public XBPropertyTableCellEditor(XBPluginRepository pluginRepository, XBTTreeNode node, XBTTreeDocument doc) {

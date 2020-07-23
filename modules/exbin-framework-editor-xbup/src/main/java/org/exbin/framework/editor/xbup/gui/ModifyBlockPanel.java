@@ -76,9 +76,9 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.parser_tree.XBTTreeWriter;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
-import org.exbin.xbup.plugin.XBLineEditor;
-import org.exbin.xbup.plugin.XBPanelEditor;
 import org.exbin.xbup.plugin.XBPluginRepository;
+import org.exbin.xbup.plugin.XBRowEditor;
+import org.exbin.xbup.plugin.XBComponentEditor;
 
 /**
  * Panel for modifying item attributes or data.
@@ -99,7 +99,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     private XBTTreeNode newNode = null;
 
     private final BinEdFile binaryDataFile;
-    private XBPanelEditor customPanel;
+    private XBComponentEditor customPanel;
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
     private BinEdFile tailDataBinaryDataFile = null;
@@ -588,7 +588,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
 
             customPanel = getCustomPanel(srcNode);
             if (customPanel != null) {
-                ((XBPanelEditor) customPanel).attachChangeListener(() -> {
+                ((XBComponentEditor) customPanel).attachChangeListener(() -> {
                     dataChanged = true;
                 });
 
@@ -632,7 +632,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         }
     }
 
-    private XBPanelEditor getCustomPanel(XBTTreeNode srcNode) {
+    private XBComponentEditor getCustomPanel(XBTTreeNode srcNode) {
         if (catalog == null) {
             return null;
         }
@@ -712,7 +712,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
                     XBCSpecDef specDef = specService.getSpecDefByOrder(spec, paramIndex);
                     String specName = "";
                     String specType = "";
-                    XBLineEditor lineEditor = null;
+                    XBRowEditor lineEditor = null;
 
                     if (specDef != null) {
                         XBCXName specDefName = nameService.getDefaultItemName(specDef);
@@ -772,7 +772,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         }
     }
 
-    private XBLineEditor getCustomEditor(XBCBlockRev rev, XBCXLineService lineService) {
+    private XBRowEditor getCustomEditor(XBCBlockRev rev, XBCXLineService lineService) {
         if (rev == null || catalog == null) {
             return null;
         }
@@ -796,13 +796,13 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         return pluginHandler.getLineEditor(plugLine.getLineIndex());
     }
 
-    private class LineEditorChangeListener implements XBLineEditor.ChangeListener {
+    private class LineEditorChangeListener implements XBRowEditor.ChangeListener {
 
         private final XBATreeParamExtractor paramExtractor;
         private final int parameterIndex;
-        private final XBLineEditor lineEditor;
+        private final XBRowEditor lineEditor;
 
-        private LineEditorChangeListener(XBLineEditor lineEditor, XBATreeParamExtractor paramExtractor, int parameterIndex) {
+        private LineEditorChangeListener(XBRowEditor lineEditor, XBATreeParamExtractor paramExtractor, int parameterIndex) {
             this.lineEditor = lineEditor;
             this.paramExtractor = paramExtractor;
             this.parameterIndex = parameterIndex;
