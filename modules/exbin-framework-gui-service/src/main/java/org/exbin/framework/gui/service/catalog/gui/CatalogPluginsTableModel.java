@@ -17,19 +17,20 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 import javax.swing.table.AbstractTableModel;
-import org.exbin.xbup.catalog.entity.XBENode;
-import org.exbin.xbup.catalog.entity.XBEXFile;
 import org.exbin.xbup.core.catalog.XBCatalog;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCXFile;
 import org.exbin.xbup.core.catalog.base.XBCXPlugin;
+import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
+import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 
 /**
  * Table model for catalog plugins.
  *
- * @version 0.2.1 2020/07/22
+ * @version 0.2.1 2020/07/23
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogPluginsTableModel extends AbstractTableModel {
@@ -63,7 +64,8 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0: {
-                return items.get(rowIndex).index;
+                XBCXPlugin plugin = items.get(rowIndex).plugin;
+                return plugin == null ? 0 : plugin.getId();
             }
             case 1: {
                 return items.get(rowIndex).fileName;
@@ -94,26 +96,41 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
 
     public void setNode(XBCNode node) {
         this.node = node;
+
+        XBCXLineService lineService = catalog.getCatalogService(XBCXLineService.class);
+        XBCXPaneService paneService = catalog.getCatalogService(XBCXPaneService.class);
+
         items = new ArrayList<>();
         if (node != null) {
             for (XBCXPlugin plugin : ((List<XBCXPlugin>) pluginService.findPluginsForNode(node))) {
-                // TODO items.add(new PluginItemRecord(plugin));
+                long lineEditors = lineService.getPlugLinesCount(plugin);
+                long paneEditors = paneService.getPlugPanesCount(plugin);
+                items.add(new PluginItemRecord(plugin, plugin.getPluginFile(), lineEditors, paneEditors));
             }
         }
     }
 
-    public XBCXFile getItem(int rowIndex) {
-        return items.get(rowIndex).file;
+    public XBCXPlugin getItem(int rowIndex) {
+        return items.get(rowIndex).plugin;
+    }
+    
+    public void updateItem(int rowIndex, XBCXPlugin plugin, long lineEditors, long paneEditors) {
+        PluginItemRecord record = items.get(rowIndex);
+        record.plugin = plugin;
+        record.file = plugin.getPluginFile();
+        record.fileName = record.file == null ? "" : record.file.getFilename();
+        record.lineEditors = lineEditors;
+        record.paneEditors = paneEditors;
+        fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
-    public void addItem(String fileName, byte[] data) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        items.add(new PluginItemRecord(fileName, data));
-//        fireTableDataChanged();
+    public void addItem(XBCXPlugin plugin, XBCXFile file, long lineEditors, long paneEditors) {
+        items.add(new PluginItemRecord(plugin, file, lineEditors, paneEditors));
+        fireTableDataChanged();
     }
 
-    public XBCXFile removeItem(int rowIndex) {
-        XBCXFile result = items.remove(rowIndex).file;
+    public XBCXPlugin removeItem(int rowIndex) {
+        XBCXPlugin result = items.remove(rowIndex).plugin;
         fireTableDataChanged();
         return result;
     }
@@ -124,37 +141,18 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
         pluginService = catalog == null ? null : catalog.getCatalogService(XBCXPlugService.class);
     }
 
-    public void persist() {
-        for (PluginItemRecord itemRecord : items) {
-//            if (itemRecord.file == null) {
-//                XBEXFile file = new XBEXFile();
-//                file.setNode((XBENode) node);
-//                file.setFilename(itemRecord.fileName);
-//            }
-//
-//            if (itemRecord.modifiedData != null) {
-//                ((XBEXFile) itemRecord.file).setContent(itemRecord.modifiedData);
-//                pluginService.persistItem(itemRecord.file);
-//            }
-        }
-    }
-
-    public void setItemData(int rowIndex, byte[] fileContent) {
-//        items.get(rowIndex).modifiedData = fileContent;
-        fireTableRowsUpdated(rowIndex, rowIndex);
-    }
-
     private class PluginItemRecord {
 
-        public long index;
-        public XBCXFile file = null;
+        public XBCXPlugin plugin = null;
+        public XBCXFile file;
         public String fileName = null;
         public long lineEditors;
         public long paneEditors;
 
-        public PluginItemRecord(long index, String fileName, long lineEditors, long paneEditors) {
-            this.index = index;
-            this.fileName = fileName;
+        public PluginItemRecord(@Nullable XBCXPlugin plugin, XBCXFile file, long lineEditors, long paneEditors) {
+            this.plugin = plugin;
+            this.file = file;
+            this.fileName = file == null ? "" : file.getFilename();
             this.lineEditors = lineEditors;
             this.paneEditors = paneEditors;
         }

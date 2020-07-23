@@ -16,24 +16,22 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lineEditorsTextField" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Component id="fileTextField" pref="390" max="32767" attributes="0"/>
+                  <Component id="filesScrollPane" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="nodeTextField" pref="293" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="fileSelectButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="nodeSelectButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="fileLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="lineEditorsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="panelEditorsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="nodeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="filesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="panelEditorsTextField" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -43,54 +41,61 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="fileLabel" min="-2" max="-2" attributes="0"/>
+              <Component id="nodeLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="fileTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="fileSelectButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nodeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nodeSelectButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="panelEditorsLabel" min="-2" max="-2" attributes="0"/>
+              <Component id="filesLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="lineEditorsTextField" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="lineEditorsLabel" min="-2" max="-2" attributes="0"/>
+              <Component id="filesScrollPane" pref="209" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="panelEditorsTextField" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="fileLabel">
+    <Component class="javax.swing.JLabel" name="nodeLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="File"/>
+        <Property name="text" type="java.lang.String" value="Node"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="fileTextField">
+    <Component class="javax.swing.JTextField" name="nodeTextField">
     </Component>
-    <Component class="javax.swing.JButton" name="fileSelectButton">
+    <Component class="javax.swing.JButton" name="nodeSelectButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Select..."/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fileSelectButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nodeSelectButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="lineEditorsLabel">
+    <Component class="javax.swing.JLabel" name="filesLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Panel Editors"/>
+        <Property name="text" type="java.lang.String" value="Files"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="lineEditorsTextField">
-    </Component>
-    <Component class="javax.swing.JLabel" name="panelEditorsLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Line Editors"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="panelEditorsTextField">
-    </Component>
+    <Container class="javax.swing.JScrollPane" name="filesScrollPane">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JList" name="filesList">
+          <Properties>
+            <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new DefaultListModel&lt;String&gt;()" type="code"/>
+            </Property>
+            <Property name="selectionMode" type="int" value="0"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

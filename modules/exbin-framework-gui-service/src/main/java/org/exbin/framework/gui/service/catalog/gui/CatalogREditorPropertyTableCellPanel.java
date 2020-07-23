@@ -16,6 +16,8 @@
 package org.exbin.framework.gui.service.catalog.gui;
 
 import java.awt.event.ActionEvent;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -23,12 +25,16 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.xbup.catalog.XBECatalog;
+import org.exbin.xbup.catalog.entity.XBEBlockRev;
+import org.exbin.xbup.catalog.entity.XBEXBlockLine;
+import org.exbin.xbup.catalog.entity.XBEXPlugLine;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBlockRev;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCItem;
-import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.core.catalog.base.XBCXBlockLine;
+import org.exbin.xbup.core.catalog.base.XBCXPlugLine;
 import org.exbin.xbup.core.catalog.base.service.XBCRevService;
 import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
 
@@ -43,6 +49,8 @@ public class CatalogREditorPropertyTableCellPanel extends CatalogPropertyTableCe
     private XBApplication application;
     private XBACatalog catalog;
     private long lineId;
+    private XBCBlockRev blockRev;
+    private XBCXPlugLine plugLine;
 
     public CatalogREditorPropertyTableCellPanel(XBACatalog catalog) {
         super();
@@ -62,9 +70,10 @@ public class CatalogREditorPropertyTableCellPanel extends CatalogPropertyTableCe
 
     public void performEditorAction() {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        CatalogSelectLinePanel lineSelectPanel = new CatalogSelectLinePanel();
+        CatalogSelectRowEditorPanel lineSelectPanel = new CatalogSelectRowEditorPanel();
+        lineSelectPanel.setApplication(application);
         lineSelectPanel.setCatalog(catalog);
-        lineSelectPanel.setLineId(lineId);
+        lineSelectPanel.setPlugLine(plugLine);
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(lineSelectPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -72,7 +81,22 @@ public class CatalogREditorPropertyTableCellPanel extends CatalogPropertyTableCe
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             switch (actionType) {
                 case OK: {
-                    lineId = lineSelectPanel.getLineId();
+                    plugLine = lineSelectPanel.getPlugLine();
+
+                    XBEXBlockLine blockLine = new XBEXBlockLine();
+                    blockLine.setBlockRev((XBEBlockRev) blockRev);
+                    blockLine.setLine((XBEXPlugLine) plugLine);
+                    blockLine.setPriority(0l);
+                    
+                    EntityManager em = ((XBECatalog) catalog).getEntityManager();
+                    EntityTransaction transaction = em.getTransaction();
+                    transaction.begin();
+                    em.persist(blockLine);
+
+                    em.flush();
+                    transaction.commit();
+
+                    lineId = blockLine.getId();
                     setPropertyLabel();
                     break;
                 }
@@ -90,10 +114,11 @@ public class CatalogREditorPropertyTableCellPanel extends CatalogPropertyTableCe
         XBCXLineService lineService = catalog.getCatalogService(XBCXLineService.class);
         XBCRevService revService = catalog.getCatalogService(XBCRevService.class);
         long maxRev = revService.findMaxRevXB((XBCBlockSpec) catalogItem);
-        XBCRev blockRev = revService.findRevByXB((XBCBlockSpec) catalogItem, maxRev);
-        XBCXBlockLine linePanel = lineService.findLineByPR((XBCBlockRev) blockRev, 0);
-        
-        lineId = linePanel != null ? linePanel.getId() : 0;
+        blockRev = (XBCBlockRev) revService.findRevByXB((XBCBlockSpec) catalogItem, maxRev);
+        XBCXBlockLine blockLine = lineService.findLineByPR(blockRev, 0);
+        plugLine = blockLine == null ? null : blockLine.getLine();
+        lineId = blockLine == null ? 0 : blockLine.getId();
+
         setPropertyLabel();
     }
 

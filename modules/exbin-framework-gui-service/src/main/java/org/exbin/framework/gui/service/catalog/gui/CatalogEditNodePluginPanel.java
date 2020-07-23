@@ -15,6 +15,18 @@
  */
 package org.exbin.framework.gui.service.catalog.gui;
 
+import javax.annotation.Nullable;
+import javax.swing.JPanel;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCNode;
+import org.exbin.xbup.core.catalog.base.XBCXFile;
+import org.exbin.xbup.core.catalog.base.XBCXPlugin;
+
 /**
  * Catalog edit plugin panel.
  *
@@ -23,8 +35,64 @@ package org.exbin.framework.gui.service.catalog.gui;
  */
 public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
 
+    private XBApplication application;
+    private XBACatalog catalog;
+
+    private XBCXFile file;
+    private XBCNode node;
+    private XBCXPlugin plugin;
+
     public CatalogEditNodePluginPanel() {
         initComponents();
+    }
+
+    public void setApplication(XBApplication application) {
+        this.application = application;
+    }
+
+    public void setCatalog(XBACatalog catalog) {
+        this.catalog = catalog;
+    }
+
+    public void setNode(XBCNode node) {
+        this.node = node;
+    }
+
+    public XBCXPlugin getPlugin() {
+        return plugin;
+    }
+
+    public void setPlugin(XBCXPlugin plugin) {
+        this.plugin = plugin;
+        file = plugin == null ? null : plugin.getPluginFile();
+        fileTextField.setText(file == null ? "" : file.getFilename());
+    }
+
+    public XBCXFile getFile() {
+        return file;
+    }
+
+    public void setFile(@Nullable XBCXFile file) {
+        this.file = file;
+        fileTextField.setText(file == null ? "" : file.getFilename());
+    }
+
+    public long getLineEditors() {
+        String text = lineEditorsTextField.getText();
+        return text.isEmpty() ? 0 : Long.valueOf(text);
+    }
+
+    public void setLineEditors(long oldLineEditors) {
+        lineEditorsTextField.setText(String.valueOf(oldLineEditors));
+    }
+
+    public long getPaneEditors() {
+        String text = panelEditorsTextField.getText();
+        return text.isEmpty() ? 0 : Long.valueOf(text);
+    }
+
+    public void setPaneEditors(long oldPaneEditors) {
+        panelEditorsTextField.setText(String.valueOf(oldPaneEditors));
     }
 
     /**
@@ -36,19 +104,100 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fileLabel = new javax.swing.JLabel();
+        fileTextField = new javax.swing.JTextField();
+        fileSelectButton = new javax.swing.JButton();
+        lineEditorsLabel = new javax.swing.JLabel();
+        lineEditorsTextField = new javax.swing.JTextField();
+        panelEditorsLabel = new javax.swing.JLabel();
+        panelEditorsTextField = new javax.swing.JTextField();
+
+        fileLabel.setText("File");
+
+        fileSelectButton.setText("Select...");
+        fileSelectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileSelectButtonActionPerformed(evt);
+            }
+        });
+
+        lineEditorsLabel.setText("Panel Editors");
+
+        panelEditorsLabel.setText("Line Editors");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lineEditorsTextField)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(fileTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fileSelectButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fileLabel)
+                            .addComponent(lineEditorsLabel)
+                            .addComponent(panelEditorsLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(panelEditorsTextField, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(fileLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fileSelectButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelEditorsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lineEditorsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lineEditorsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelEditorsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void fileSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileSelectButtonActionPerformed
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        CatalogSelectFilePanel selectPanel = new CatalogSelectFilePanel();
+        selectPanel.setApplication(application);
+//        editPanel.setMenuManagement(menuManagement);
+        selectPanel.setCatalog(catalog);
+        selectPanel.setNode(node);
+
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(selectPanel, controlPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+//        WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                setFile(selectPanel.getFile());
+            }
+            dialog.close();
+        });
+        dialog.showCentered(this);
+        dialog.dispose();
+    }//GEN-LAST:event_fileSelectButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel fileLabel;
+    private javax.swing.JButton fileSelectButton;
+    private javax.swing.JTextField fileTextField;
+    private javax.swing.JLabel lineEditorsLabel;
+    private javax.swing.JTextField lineEditorsTextField;
+    private javax.swing.JLabel panelEditorsLabel;
+    private javax.swing.JTextField panelEditorsTextField;
     // End of variables declaration//GEN-END:variables
+
 }

@@ -40,7 +40,7 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
 
     private XBCXNameService nameService = null;
     private CatalogSelectSpecTreeModel treeModel;
-    private SelectionListener selectionListener;
+    private SelectionListener selectionListener = null;
     private XBCItem selectedItem;
     private final CatalogSpecItemType specType;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogSelectSpecPanel.class);
@@ -95,12 +95,16 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
             if (item == null) {
                 if (selectedItem != null) {
                     selectedItem = null;
-                    selectionListener.selectedItem(selectedItem);
+                    if (selectionListener != null) {
+                        selectionListener.selectedItem(selectedItem);
+                    }
                 }
             } else {
                 if (selectedItem != item) {
                     selectedItem = item;
-                    selectionListener.selectedItem(selectedItem);
+                    if (selectionListener != null) {
+                        selectionListener.selectedItem(selectedItem);
+                    }
                 }
             }
         });
