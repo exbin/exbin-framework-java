@@ -593,7 +593,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
                 });
 
                 reloadCustomEditor();
-                mainTabbedPane.addTab(customEditorPanelTitle, customPanel.getPanel());
+                mainTabbedPane.addTab(customEditorPanelTitle, customPanel.getEditor());
             }
 
             mainTabbedPane.addTab(parametersPanelTitle, parametersPanel);
@@ -671,7 +671,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             return null;
         }
 
-        return pluginHandler.getPanelEditor(plugPane.getPaneIndex());
+        return pluginHandler.getComponentEditor(plugPane.getPaneIndex());
     }
 
     private void reloadBasic() {
@@ -793,7 +793,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             return null;
         }
 
-        return pluginHandler.getLineEditor(plugLine.getLineIndex());
+        return pluginHandler.getRowEditor(plugLine.getLineIndex());
     }
 
     private class LineEditorChangeListener implements XBRowEditor.ChangeListener {

@@ -435,7 +435,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
             return null;
         }
 
-        return pluginHandler.getLineEditor(plugLine.getLineIndex());
+        return pluginHandler.getRowEditor(plugLine.getLineIndex());
     }
 
     public void actionEditSelectAll() {

@@ -148,6 +148,7 @@ public class DocumentViewerProvider implements EditorProvider {
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
+        mainViewer.setPluginRepository(pluginRepository);
         propertiesViewer.setPluginRepository(pluginRepository);
         documentPanel.setPluginRepository(pluginRepository);
     }

@@ -82,7 +82,7 @@ public class XBPropertyTableCellEditor extends DefaultCellEditor {
     public boolean stopCellEditing() {
         if (lineEditor != null) {
             try {
-                lineEditor.finishEditor(lineEditorComponent);
+                lineEditor.finishEditor();
             } catch (Exception ex) {
                 Logger.getLogger(XBPropertyTableCellEditor.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(editorComponent, ex.toString(), "Cell Input", JOptionPane.ERROR_MESSAGE);

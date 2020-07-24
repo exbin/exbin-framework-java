@@ -53,7 +53,7 @@ public class ParametersTableCellRenderer implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         ParametersTableItem tableItem = ((ParametersTableModel) table.getModel()).getRow(row);
-        JComponent component = tableItem.getLineEditor() == null ? null : tableItem.getLineEditor().getComponent();
+        JComponent component = tableItem.getLineEditor() == null ? null : tableItem.getLineEditor().getViewer();
         XBPropertyTableCellPanel cellPanel = component == null ? new XBPropertyTableCellPanel(catalog, pluginRepository, node, doc, row) : new XBPropertyTableCellPanel(component, catalog, pluginRepository, node, doc, row);
         cellPanel.setApplication(application);
         cellPanel.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());

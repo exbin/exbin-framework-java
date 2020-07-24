@@ -50,6 +50,8 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
                 ViewRecord record = viewRecords.get(selectedIndex);
                 add(record.component, BorderLayout.CENTER);
                 activeView = selectedIndex;
+                revalidate();
+                repaint();
             }
         });
     }

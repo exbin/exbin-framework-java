@@ -24,7 +24,17 @@ import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
 import org.exbin.framework.editor.xbup.gui.SimpleMessagePanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBTBlock;
+import org.exbin.xbup.core.block.declaration.XBBlockDecl;
+import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCBlockRev;
+import org.exbin.xbup.core.catalog.base.XBCXBlockPane;
+import org.exbin.xbup.core.catalog.base.XBCXPlugPane;
+import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
+import org.exbin.xbup.parser_tree.XBTTreeNode;
+import org.exbin.xbup.plugin.XBCatalogPlugin;
+import org.exbin.xbup.plugin.XBComponentEditor;
+import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
  * Custom viewer of document.
@@ -35,10 +45,13 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 @ParametersAreNonnullByDefault
 public class MainDocumentViewer implements DocumentViewer {
 
+    private XBPluginRepository pluginRepository;
+
     private DocumentViewerPanel viewerPanel = new DocumentViewerPanel();
     private BlockPropertiesPanel propertiesPanel = new BlockPropertiesPanel();
-    private JComponent customPanel;
+    private JComponent customPanel = null;
     private XBTBlock selectedItem = null;
+    private XBACatalog catalog;
 
     public MainDocumentViewer() {
 
@@ -56,23 +69,46 @@ public class MainDocumentViewer implements DocumentViewer {
     }
 
     public void setCatalog(XBACatalog catalog) {
+        this.catalog = catalog;
         propertiesPanel.setCatalog(catalog);
+    }
+    
+    public void setPluginRepository(XBPluginRepository pluginRepository) {
+        this.pluginRepository = pluginRepository;
     }
 
     @Override
     public void setSelectedItem(@Nullable XBTBlock block) {
-        if (block == null) {
-            viewerPanel.removeAllViews();
-        } else {
-            if (selectedItem == null) {
-                viewerPanel.addView("Information", propertiesPanel);
+        viewerPanel.removeAllViews();
+        if (block != null) {
+            XBCXPaneService paneService = catalog.getCatalogService(XBCXPaneService.class);
+            XBBlockDecl decl = block instanceof XBTTreeNode ? ((XBTTreeNode) block).getBlockDecl() : null;
+            if (decl instanceof XBCBlockDecl) {
+                XBCBlockRev blockSpecRev = ((XBCBlockDecl) decl).getBlockSpecRev();
+
+                XBCXBlockPane blockPane = paneService.findPaneByPR(blockSpecRev, 0);
+                if (blockPane != null) {
+                    XBCXPlugPane pane = blockPane.getPane();
+                    Long paneIndex = pane.getPaneIndex();
+                    //pane.getPlugin().getPluginFile();
+                    XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(pane.getPlugin());
+                    if (pluginHandler != null) {
+                        XBComponentEditor panelEditor = pluginHandler.getComponentEditor(paneIndex);
+
+                        if (panelEditor != null) {
+                            viewerPanel.addView("Plugin " + String.valueOf(pane.getId()), panelEditor.getEditor());
+                        }
+                    }
+                }
             }
 
+            viewerPanel.addView("Information", propertiesPanel);
             propertiesPanel.setBlock(block);
         }
         selectedItem = block;
-        viewerPanel.invalidate();
+        viewerPanel.revalidate();
         viewerPanel.repaint();
+
     }
 
     @Override

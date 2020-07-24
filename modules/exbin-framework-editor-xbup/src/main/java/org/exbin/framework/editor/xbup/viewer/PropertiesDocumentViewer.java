@@ -105,7 +105,7 @@ public class PropertiesDocumentViewer implements DocumentViewer {
             }
         }
 
-        viewerPanel.invalidate();
+        viewerPanel.revalidate();
         viewerPanel.repaint();
     }
 

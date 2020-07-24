@@ -307,14 +307,14 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
                         return sIconCellPanel;
                     }
                     case 8: {
-                        rEditorCellPanel.setBackground(table.getSelectionBackground());
-                        rEditorCellPanel.getCellComponent().setBorder(DefaultLookup.getBorder(rEditorCellPanel.getCellComponent(), ui, "Table.focusCellHighlightBorder"));
-                        return rEditorCellPanel;
-                    }
-                    case 9: {
                         cEditorCellPanel.setBackground(table.getSelectionBackground());
                         cEditorCellPanel.getCellComponent().setBorder(DefaultLookup.getBorder(cEditorCellPanel.getCellComponent(), ui, "Table.focusCellHighlightBorder"));
                         return cEditorCellPanel;
+                    }
+                    case 9: {
+                        rEditorCellPanel.setBackground(table.getSelectionBackground());
+                        rEditorCellPanel.getCellComponent().setBorder(DefaultLookup.getBorder(rEditorCellPanel.getCellComponent(), ui, "Table.focusCellHighlightBorder"));
+                        return rEditorCellPanel;
                     }
                 }
                 return super.getTableCellEditorComponent(table, value, isSelected, row, column);

@@ -81,7 +81,7 @@ public class ParametersTableCellEditor extends DefaultCellEditor {
     public boolean stopCellEditing() {
         if (lineEditor != null) {
             try {
-                lineEditor.finishEditor(lineEditorComponent);
+                lineEditor.finishEditor();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(editorComponent, ex.toString(), "Cell Input", JOptionPane.ERROR_MESSAGE);
             }
