@@ -697,6 +697,11 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
+    public boolean canDelete() {
+        return isEditable();
+    }
+
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         this.clipboardActionsUpdateListener = updateListener;
     }

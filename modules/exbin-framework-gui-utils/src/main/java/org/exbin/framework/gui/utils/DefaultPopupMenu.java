@@ -174,7 +174,7 @@ public class DefaultPopupMenu {
 
             @Override
             protected void postTextComponentInitialize() {
-                setEnabled(clipboardHandler.isEditable() && clipboardHandler.isSelection());
+                setEnabled(clipboardHandler.canDelete() && clipboardHandler.isSelection());
             }
         };
         ActionUtils.setupAction(defaultDeleteAction, resourceBundle, resourceClass, "editDeleteAction");
@@ -466,6 +466,11 @@ public class DefaultPopupMenu {
             public boolean canPaste() {
                 return true;
             }
+
+            @Override
+            public boolean canDelete() {
+                return true;
+            }
         }
 
         private class ListClipboardHandler implements ClipboardActionsHandler {
@@ -536,6 +541,11 @@ public class DefaultPopupMenu {
 
             @Override
             public boolean canPaste() {
+                return true;
+            }
+
+            @Override
+            public boolean canDelete() {
                 return true;
             }
         }
@@ -631,6 +641,11 @@ public class DefaultPopupMenu {
             @Override
             public boolean canPaste() {
                 return true;
+            }
+
+            @Override
+            public boolean canDelete() {
+                return false;
             }
         }
     }

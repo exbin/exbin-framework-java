@@ -160,6 +160,11 @@ public class PropertiesDocumentViewer implements DocumentViewer {
     }
 
     @Override
+    public boolean canDelete() {
+        return false;
+    }
+
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
     }
 

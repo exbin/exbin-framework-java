@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -52,6 +54,7 @@ public class MainDocumentViewer implements DocumentViewer {
     private JComponent customPanel = null;
     private XBTBlock selectedItem = null;
     private XBACatalog catalog;
+    private ClipboardActionsUpdateListener updateListener;
 
     public MainDocumentViewer() {
 
@@ -72,7 +75,7 @@ public class MainDocumentViewer implements DocumentViewer {
         this.catalog = catalog;
         propertiesPanel.setCatalog(catalog);
     }
-    
+
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
     }
@@ -91,13 +94,18 @@ public class MainDocumentViewer implements DocumentViewer {
                     XBCXPlugPane pane = blockPane.getPane();
                     Long paneIndex = pane.getPaneIndex();
                     //pane.getPlugin().getPluginFile();
-                    XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(pane.getPlugin());
-                    if (pluginHandler != null) {
-                        XBComponentEditor panelEditor = pluginHandler.getComponentEditor(paneIndex);
 
-                        if (panelEditor != null) {
-                            viewerPanel.addView("Plugin " + String.valueOf(pane.getId()), panelEditor.getEditor());
+                    try {
+                        XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(pane.getPlugin());
+                        if (pluginHandler != null) {
+                            XBComponentEditor panelEditor = pluginHandler.getComponentEditor(paneIndex);
+
+                            if (panelEditor != null) {
+                                viewerPanel.addView("Plugin " + String.valueOf(pane.getId()), panelEditor.getEditor());
+                            }
                         }
+                    } catch (Exception ex) {
+                        Logger.getLogger(MainDocumentViewer.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
@@ -152,6 +160,12 @@ public class MainDocumentViewer implements DocumentViewer {
     }
 
     @Override
+    public boolean canDelete() {
+        return false;
+    }
+
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+        this.updateListener = updateListener;
     }
 }

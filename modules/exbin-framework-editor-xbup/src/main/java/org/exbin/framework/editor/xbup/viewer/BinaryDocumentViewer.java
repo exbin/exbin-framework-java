@@ -117,6 +117,11 @@ public class BinaryDocumentViewer implements DocumentViewer {
     }
 
     @Override
+    public boolean canDelete() {
+        return binaryPanel.canDelete();
+    }
+
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         binaryPanel.setUpdateListener(updateListener);
     }

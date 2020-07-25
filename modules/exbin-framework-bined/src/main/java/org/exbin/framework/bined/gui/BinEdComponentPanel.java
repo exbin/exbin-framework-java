@@ -518,6 +518,11 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         return codeArea.canPaste();
     }
 
+    @Override
+    public boolean canDelete() {
+        return true;
+    }
+
     private void updateCurrentDocumentSize() {
         if (binaryStatus != null) {
             long dataSize = codeArea.getDataSize();

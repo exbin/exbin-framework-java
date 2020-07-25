@@ -68,6 +68,11 @@ public class ClipboardActionsHandlerEmpty implements ClipboardActionsHandler {
     }
 
     @Override
+    public boolean canDelete() {
+        return false;
+    }
+
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
     }
 }

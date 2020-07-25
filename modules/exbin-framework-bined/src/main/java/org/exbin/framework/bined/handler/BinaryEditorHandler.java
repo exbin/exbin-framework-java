@@ -513,6 +513,11 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
+    public boolean canDelete() {
+        return activeFile.canDelete();
+    }
+
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         this.clipboardUpdateListener = updateListener;
     }

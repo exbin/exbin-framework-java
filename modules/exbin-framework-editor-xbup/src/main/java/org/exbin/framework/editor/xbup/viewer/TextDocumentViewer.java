@@ -116,6 +116,11 @@ public class TextDocumentViewer implements DocumentViewer {
     }
 
     @Override
+    public boolean canDelete() {
+        return textPanel.canDelete();
+    }
+
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         textPanel.setUpdateListener(updateListener);
     }

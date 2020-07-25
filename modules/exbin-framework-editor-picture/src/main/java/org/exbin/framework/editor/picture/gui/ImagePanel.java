@@ -706,6 +706,11 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
+    public boolean canDelete() {
+        return false;
+    }
+
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
     }
 

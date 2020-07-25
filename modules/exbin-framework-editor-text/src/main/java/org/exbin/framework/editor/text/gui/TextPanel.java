@@ -679,6 +679,11 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     }
 
     @Override
+    public boolean canDelete() {
+        return true;
+    }
+
+    @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
         // TODO
     }

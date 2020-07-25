@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Interface for clipboard handler for visual component / context menu.
  *
- * @version 0.2.0 2016/01/24
+ * @version 0.2.1 2020/07/24
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -79,6 +79,13 @@ public interface ClipboardActionsHandler {
      * @return true if can perform paste
      */
     boolean canPaste();
+
+    /**
+     * Returns whether it is possible to perform delete.
+     *
+     * @return true, if delete operation is allowed.
+     */
+    boolean canDelete();
 
     /**
      * Sets listener for clipboard actions related updates.

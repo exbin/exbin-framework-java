@@ -141,6 +141,15 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
                     return true;
                 }
+
+                @Override
+                public boolean canDelete() {
+                    if (activeEditor instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) activeEditor).canDelete();
+                    }
+
+                    return isEditable();
+                }
             });
         }
 

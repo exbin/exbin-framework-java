@@ -554,6 +554,11 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
     }
 
     @Override
+    public boolean canDelete() {
+        return componentPanel.canDelete();
+    }
+
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         componentPanel.setUpdateListener(updateListener);
     }
