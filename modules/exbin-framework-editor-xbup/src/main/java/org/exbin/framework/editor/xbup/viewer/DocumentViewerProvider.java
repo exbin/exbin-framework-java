@@ -53,7 +53,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2020/06/18
+ * @version 0.2.1 2020/07/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -68,7 +68,7 @@ public class DocumentViewerProvider implements EditorProvider {
     private final XBDocumentPanel documentPanel;
 
     private XBTBlock selectedItem = null;
-    private ViewerTab viewerTab = ViewerTab.PROPERTIES;
+    private ViewerTab viewerTab;
     private DocumentViewer activeViewer;
 
     private final MainDocumentViewer mainViewer;
@@ -105,6 +105,8 @@ public class DocumentViewerProvider implements EditorProvider {
         documentPanel.setPropertiesTabComponent(propertiesViewer.getComponent());
         documentPanel.setBinaryTabComponent(binaryViewer.getComponent());
         documentPanel.setTextTabComponent(textViewer.getComponent());
+
+        viewerTab = ViewerTab.MAIN;
         activeViewer = mainViewer;
     }
 
@@ -425,7 +427,6 @@ public class DocumentViewerProvider implements EditorProvider {
 //            }
 //        }
 //    }
-    
     @ParametersAreNonnullByDefault
     private class TreeDocument extends XBTTreeDocument implements OperationListener {
 

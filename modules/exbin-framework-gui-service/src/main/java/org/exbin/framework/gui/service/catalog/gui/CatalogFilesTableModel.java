@@ -141,6 +141,11 @@ public class CatalogFilesTableModel extends AbstractTableModel {
         fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
+    public void setFileName(int selectedRow, String fileName) {
+        items.get(selectedRow).fileName = fileName;
+        fireTableRowsUpdated(selectedRow, selectedRow);
+    }
+
     private class FileItemRecord {
 
         public XBCXFile file = null;

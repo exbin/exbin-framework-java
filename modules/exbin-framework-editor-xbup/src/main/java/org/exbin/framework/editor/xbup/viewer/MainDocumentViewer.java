@@ -99,10 +99,7 @@ public class MainDocumentViewer implements DocumentViewer {
                         XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(pane.getPlugin());
                         if (pluginHandler != null) {
                             XBComponentEditor panelEditor = pluginHandler.getComponentEditor(paneIndex);
-
-                            if (panelEditor != null) {
-                                viewerPanel.addView("Plugin " + String.valueOf(pane.getId()), panelEditor.getEditor());
-                            }
+                            viewerPanel.addView("Plugin " + String.valueOf(pane.getId()), panelEditor.getEditor());
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(MainDocumentViewer.class.getName()).log(Level.SEVERE, null, ex);

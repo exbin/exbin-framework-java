@@ -23,22 +23,30 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.xbup.catalog.XBECatalog;
+import org.exbin.xbup.catalog.entity.XBEXFile;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCXFile;
 import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 
 /**
- * Catalog Specification Panel.
+ * Catalog item files editation panel.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.0 2020/07/26
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
@@ -88,6 +96,7 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
         popupAddFileMenuItem = new javax.swing.JMenuItem();
         popupImportItemMenuItem = new javax.swing.JMenuItem();
         popupExportItemMenuItem = new javax.swing.JMenuItem();
+        popupRenameFileMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         popupPropertiesMenuItem = new javax.swing.JMenuItem();
@@ -127,6 +136,15 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
             }
         });
         filePopupMenu.add(popupExportItemMenuItem);
+
+        popupRenameFileMenuItem.setText("Rename...");
+        popupRenameFileMenuItem.setName("popupRenameFileMenuItem"); // NOI18N
+        popupRenameFileMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popupRenameFileMenuItemActionPerformed(evt);
+            }
+        });
+        filePopupMenu.add(popupRenameFileMenuItem);
 
         jSeparator1.setName("jSeparator1"); // NOI18N
         filePopupMenu.add(jSeparator1);
@@ -221,6 +239,39 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_popupAddFileMenuItemActionPerformed
 
+    private void popupRenameFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupRenameFileMenuItemActionPerformed
+        int selectedRow = catalogFilesListTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            XBCXFile file = filesModel.getItem(selectedRow);
+            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            RenamePanel renamePanel = new RenamePanel();
+            renamePanel.setNameText(file.getFilename());
+
+            DefaultControlPanel controlPanel = new DefaultControlPanel();
+            JPanel dialogPanel = WindowUtils.createDialogPanel(renamePanel, controlPanel);
+            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            //        WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
+            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                    String fileName = renamePanel.getNameText();
+                    ((XBEXFile) file).setFilename(fileName);
+
+                    EntityManager em = ((XBECatalog) catalog).getEntityManager();
+                    EntityTransaction transaction = em.getTransaction();
+                    transaction.begin();
+                    em.persist(file);
+                    em.flush();
+                    transaction.commit();
+                    
+                    filesModel.setFileName(selectedRow, fileName);
+                }
+                dialog.close();
+            });
+            dialog.showCentered(this);
+            dialog.dispose();
+        }
+    }//GEN-LAST:event_popupRenameFileMenuItemActionPerformed
+
     public void setNode(XBCNode node) {
         currentNode = node;
         filesModel.setNode(node);
@@ -251,6 +302,7 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
     private javax.swing.JMenuItem popupExportItemMenuItem;
     private javax.swing.JMenuItem popupImportItemMenuItem;
     private javax.swing.JMenuItem popupPropertiesMenuItem;
+    private javax.swing.JMenuItem popupRenameFileMenuItem;
     // End of variables declaration//GEN-END:variables
 
     public JPopupMenu getPopupMenu() {
@@ -266,7 +318,7 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
     }
 
     public void setMenuManagement(MenuManagement menuManagement) {
-        menuManagement.insertMainPopupMenu(filePopupMenu, 4);
+        menuManagement.insertMainPopupMenu(filePopupMenu, 5);
     }
 
     public void persist() {
