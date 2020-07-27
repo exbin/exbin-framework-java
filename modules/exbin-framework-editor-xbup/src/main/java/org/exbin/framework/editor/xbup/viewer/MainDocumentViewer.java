@@ -36,6 +36,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBComponentEditor;
+import org.exbin.xbup.plugin.XBComponentEditorCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
@@ -98,7 +99,7 @@ public class MainDocumentViewer implements DocumentViewer {
                     try {
                         XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(pane.getPlugin());
                         if (pluginHandler != null) {
-                            XBComponentEditor panelEditor = pluginHandler.getComponentEditor(paneIndex);
+                            XBComponentEditor panelEditor = ((XBComponentEditorCatalogPlugin) pluginHandler).getComponentEditor(paneIndex);
                             viewerPanel.addView("Plugin " + String.valueOf(pane.getId()), panelEditor.getEditor());
                         }
                     } catch (Exception ex) {

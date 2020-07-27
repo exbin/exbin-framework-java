@@ -79,6 +79,8 @@ import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.xbup.plugin.XBRowEditor;
 import org.exbin.xbup.plugin.XBComponentEditor;
+import org.exbin.xbup.plugin.XBComponentEditorCatalogPlugin;
+import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
 
 /**
  * Panel for modifying item attributes or data.
@@ -586,16 +588,19 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             parametersTableCellRenderer.setApplication(application);
             column.setCellRenderer(parametersTableCellRenderer);
 
-            customPanel = getCustomPanel(srcNode);
-            if (customPanel != null) {
-                ((XBComponentEditor) customPanel).attachChangeListener(() -> {
-                    dataChanged = true;
-                });
+            try {
+                customPanel = getCustomPanel(srcNode);
+                if (customPanel != null) {
+                    ((XBComponentEditor) customPanel).attachChangeListener(() -> {
+                        dataChanged = true;
+                    });
 
-                reloadCustomEditor();
-                mainTabbedPane.addTab(customEditorPanelTitle, customPanel.getEditor());
+                    reloadCustomEditor();
+                    mainTabbedPane.addTab(customEditorPanelTitle, customPanel.getEditor());
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             mainTabbedPane.addTab(parametersPanelTitle, parametersPanel);
             mainTabbedPane.addTab(attributesPanelTitle, attributesPanel);
         }
@@ -616,7 +621,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
                 Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            
+
         }
 
         return newNode;
@@ -671,7 +676,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             return null;
         }
 
-        return pluginHandler.getComponentEditor(plugPane.getPaneIndex());
+        return ((XBComponentEditorCatalogPlugin) pluginHandler).getComponentEditor(plugPane.getPaneIndex());
     }
 
     private void reloadBasic() {
@@ -723,17 +728,17 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
                         XBCRev rowRev = specDef.getTarget();
                         if (rowRev != null) {
                             XBCSpec rowSpec = rowRev.getParent();
-                            lineEditor = getCustomEditor((XBCBlockRev) rowRev, lineService);
-                            if (lineEditor != null) {
-                                paramExtractor.setParameterIndex(paramIndex);
-                                XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);
-                                try {
+                            try {
+                                lineEditor = getCustomEditor((XBCBlockRev) rowRev, lineService);
+                                if (lineEditor != null) {
+                                    paramExtractor.setParameterIndex(paramIndex);
+                                    XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);
                                     serialReader.read(lineEditor);
-                                } catch (XBProcessingException | IOException ex) {
-                                    Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
-                                }
 
-                                lineEditor.attachChangeListener(new LineEditorChangeListener(lineEditor, paramExtractor, paramIndex));
+                                    lineEditor.attachChangeListener(new LineEditorChangeListener(lineEditor, paramExtractor, paramIndex));
+                                }
+                            } catch (Exception ex) {
+                                Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
                             }
 
                             XBCXName typeName = nameService.getDefaultItemName(rowSpec);
@@ -793,7 +798,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             return null;
         }
 
-        return pluginHandler.getRowEditor(plugLine.getLineIndex());
+        return ((XBRowEditorCatalogPlugin) pluginHandler).getRowEditor(plugLine.getLineIndex());
     }
 
     private class LineEditorChangeListener implements XBRowEditor.ChangeListener {

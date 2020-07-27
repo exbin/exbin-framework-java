@@ -52,6 +52,7 @@ import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
 import org.exbin.xbup.plugin.XBRowEditor;
+import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
 
 /**
  * Panel for properties of the actual panel.
@@ -435,7 +436,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
             return null;
         }
 
-        return pluginHandler.getRowEditor(plugLine.getLineIndex());
+        return ((XBRowEditorCatalogPlugin) pluginHandler).getRowEditor(plugLine.getLineIndex());
     }
 
     public void actionEditSelectAll() {
