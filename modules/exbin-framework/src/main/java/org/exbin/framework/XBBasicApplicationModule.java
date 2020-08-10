@@ -101,27 +101,27 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         return plugin;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public String getName() {
-        return name;
+        return name == null ? "" : name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public String getDescription() {
-        return description;
+        return description == null ? "" : description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public List<String> getOptionalModuleIds() {
         return optionalModuleIds;
@@ -131,7 +131,7 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         this.optionalModuleIds.addAll(optionalModuleIds);
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public List<String> getDependencyModuleIds() {
         return dependencyModuleIds;
@@ -173,6 +173,7 @@ public class XBBasicApplicationModule implements XBPSequenceSerializable, XBAppl
         serial.end();
     }
 
+    @Nonnull
     @Override
     public XBModule getModule() {
         throw new UnsupportedOperationException("Not supported yet.");
