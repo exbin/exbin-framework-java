@@ -18,6 +18,7 @@ package org.exbin.framework.editor.xbup.gui;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +52,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
+import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.plugin.XBRowEditor;
 import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
 
@@ -379,15 +381,15 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
                                 if (def != null) {
                                     try {
                                         rowNameText = nameService.getDefaultText(def);
-                                        XBCBlockRev rowRev = (XBCBlockRev) def.getTarget();
-                                        if (rowRev != null) {
-                                            rowSpec = rowRev.getParent();
+                                        Optional<XBCRev> rowRev = def.getTargetRev();
+                                        if (rowRev.isPresent()) {
+                                            rowSpec = (XBCBlockSpec) rowRev.get().getParent();
                                             typeNameText = nameService.getDefaultText(rowSpec);
                                             if (rowNameText.isEmpty()) {
                                                 rowNameText = typeNameText;
                                             }
 
-                                            lineEditor = getCustomEditor(rowRev);
+                                            lineEditor = getCustomEditor((XBCBlockRev) rowRev.get());
                                             if (lineEditor != null) {
                                                 paramExtractor.setParameterIndex(parameterIndex);
                                                 XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);

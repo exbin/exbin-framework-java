@@ -169,7 +169,7 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
         if (rev != null) {
             specification = rev.getParent();
             revsModel.setRevs(revService.getRevs((XBCSpec) specification));
-            targetRevisionComboBox.setSelectedIndex(rev.getXBIndex().intValue());
+            targetRevisionComboBox.setSelectedIndex((int) rev.getXBIndex());
         } else {
             specification = null;
         }

@@ -139,7 +139,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
                     XBCNode node = ((CatalogNodesTreeItem) value).getNode();
                     String nodeName = ((CatalogNodesTreeItem) value).getName();
                     if (nodeName == null) {
-                        retValue.setText("node [" + node.getId().toString() + "]");
+                        retValue.setText("node [" + String.valueOf(node.getId()) + "]");
                     } else {
                         retValue.setText(nodeName);
                     }
@@ -460,7 +460,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
                     EntityTransaction transaction = em.getTransaction();
                     transaction.begin();
 
-                    XBENode node = (XBENode) (currentItem instanceof XBCNode ? currentItem : currentItem.getParent());
+                    XBENode node = (XBENode) (currentItem instanceof XBCNode ? currentItem : currentItem.getParentItem().orElse(null));
                     XBEItem item = null;
                     switch (panel.getItemType()) {
                         case NODE: {
@@ -495,7 +495,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
                     if (item == null) {
                         throw new IllegalStateException();
                     }
-                    item.setParent(node);
+                    item.setParentItem(node);
                     if (item instanceof XBCNode) {
                         nodeService.persistItem(item);
                     } else {
@@ -527,7 +527,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         if (invoker == catalogTree) {
             reloadNodesTree();
         } else {
-            setNode((XBCNode) (currentItem == null || currentItem instanceof XBCNode ? currentItem : currentItem.getParent()));
+            setNode((XBCNode) (currentItem == null || currentItem instanceof XBCNode ? currentItem : currentItem.getParentItem().orElse(null)));
         }
     }//GEN-LAST:event_popupRefreshMenuItemActionPerformed
 

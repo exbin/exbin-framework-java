@@ -26,7 +26,6 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
-import org.exbin.xbup.catalog.entity.XBEItem;
 import org.exbin.xbup.catalog.entity.XBERev;
 import org.exbin.xbup.catalog.entity.service.XBEXDescService;
 import org.exbin.xbup.catalog.entity.service.XBEXNameService;
@@ -266,7 +265,7 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
             XBERev rev = (XBERev) revItem.getRev();
             if (rev == null) {
                 rev = (XBERev) revService.createRev((XBCSpec) catalogItem);
-                rev.setParent((XBEItem) catalogItem);
+                rev.setParent((XBCSpec) catalogItem);
                 rev.setXBIndex(revItem.getXbIndex());
             }
 

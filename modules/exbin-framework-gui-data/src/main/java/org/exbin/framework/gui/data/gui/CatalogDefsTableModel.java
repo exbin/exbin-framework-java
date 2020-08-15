@@ -17,9 +17,11 @@ package org.exbin.framework.gui.data.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
+import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.core.catalog.base.XBCSpec;
 import org.exbin.xbup.core.catalog.base.XBCSpecDef;
 import org.exbin.xbup.core.catalog.base.XBCXName;
@@ -119,14 +121,13 @@ public class CatalogDefsTableModel extends AbstractTableModel {
                 tableItem.setDefType(specDef.getType());
 
                 tableItem.setType("");
-                tableItem.setTarget(specDef.getTarget());
-                if (specDef.getTarget() != null) {
-                    XBCSpec targetSpec = (XBCSpec) specDef.getTarget().getParent();
-                    if (targetSpec != null) {
-                        XBCXName name = nameService.getDefaultItemName(targetSpec);
-                        if (name != null) {
-                            tableItem.setType(name.getText());
-                        }
+                Optional<XBCRev> targetRev = specDef.getTargetRev();
+                if (targetRev.isPresent()) {
+                    tableItem.setTarget(targetRev.get());
+                    XBCSpec targetSpec = (XBCSpec) targetRev.get().getParent();
+                    XBCXName name = nameService.getDefaultItemName(targetSpec);
+                    if (name != null) {
+                        tableItem.setType(name.getText());
                     }
                 }
 

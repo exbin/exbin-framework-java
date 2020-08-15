@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.Date;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JList;
@@ -250,7 +251,8 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
             ((XBENodeService) nodeService).setLastUpdateToNow();
             transaction.commit();
             em.refresh(nodeService.getRoot());
-            lastUpdateTextField.setText(nodeService.getLastUpdate().toString());
+            Optional<Date> lastUpdate = nodeService.getLastUpdate();
+            lastUpdateTextField.setText(lastUpdate.isPresent() ? lastUpdate.toString() : "");
         }
     }//GEN-LAST:event_lastUpdateNowButtonActionPerformed
 
@@ -327,7 +329,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         revsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = revService == null ? null : revService.getItemsCount();
         revsCountTextField.setText(count == null ? UNKNOWN : count.toString());
-        Date date = nodeService == null ? null : nodeService.getLastUpdate();
+        Date date = nodeService == null ? null : ((Optional<Date>) nodeService.getLastUpdate()).orElse(null);
         lastUpdateTextField.setText(date == null ? UNKNOWN : date.toString());
     }
 }

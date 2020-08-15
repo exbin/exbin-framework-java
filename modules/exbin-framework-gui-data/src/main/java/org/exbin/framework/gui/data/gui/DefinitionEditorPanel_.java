@@ -315,11 +315,11 @@ public class DefinitionEditorPanel_ extends javax.swing.JPanel {
 
             if (specDef == null) {
                 specDef = (XBESpecDef) specService.createSpecDef((XBCSpec) catalogItem, defItem.getDefType());
-                specDef.setCatalogItem((XBESpec) catalogItem);
+                specDef.setSpec((XBESpec) catalogItem);
             }
 
             specDef.setXBIndex(defItem.getXbIndex());
-            specDef.setTarget((XBERev) defItem.getTarget());
+            specDef.setTargetRev((XBERev) defItem.getTarget());
 
             specService.persistItem(specDef);
 

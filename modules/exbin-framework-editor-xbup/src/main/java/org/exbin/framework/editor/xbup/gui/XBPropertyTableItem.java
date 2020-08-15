@@ -77,7 +77,7 @@ public class XBPropertyTableItem {
 
     public String getDefTypeName() {
         String defTypeName = "";
-        if (specDef.getTarget() == null) {
+        if (!specDef.getTargetRev().isPresent()) {
             switch (specDef.getType()) {
                 case CONSIST:
                 case LIST_CONSIST: {

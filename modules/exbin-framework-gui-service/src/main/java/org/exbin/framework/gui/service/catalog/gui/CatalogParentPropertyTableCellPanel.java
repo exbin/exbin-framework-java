@@ -86,7 +86,7 @@ public class CatalogParentPropertyTableCellPanel extends CatalogPropertyTableCel
     }
 
     public void setCatalogItem(XBCItem catalogItem) {
-        parent = (XBCNode) catalogItem.getParent();
+        parent = (XBCNode) catalogItem.getParentItem().orElse(null);
         setNodeLabel();
     }
 

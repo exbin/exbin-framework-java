@@ -125,14 +125,12 @@ public class CatalogDefsTableModel extends AbstractTableModel {
                 tableItem.setDefType(specDef.getType());
 
                 tableItem.setType("");
-                tableItem.setTarget(specDef.getTarget());
-                if (specDef.getTarget() != null) {
-                    XBCSpec targetSpec = (XBCSpec) specDef.getTarget().getParent();
-                    if (targetSpec != null) {
-                        XBCXName name = nameService.getDefaultItemName(targetSpec);
-                        if (name != null) {
-                            tableItem.setType(name.getText());
-                        }
+                tableItem.setTarget(specDef.getTargetRev().orElse(null));
+                if (specDef.getTargetRev().isPresent()) {
+                    XBCSpec targetSpec = (XBCSpec) specDef.getTargetRev().get().getParent();
+                    XBCXName name = nameService.getDefaultItemName(targetSpec);
+                    if (name != null) {
+                        tableItem.setType(name.getText());
                     }
                 }
 
@@ -152,17 +150,17 @@ public class CatalogDefsTableModel extends AbstractTableModel {
     public String getOperation(XBCSpecDef specDef) {
         CatalogDefOperationType operation;
         if (specDef instanceof XBCBlockJoin) {
-            operation = specDef.getTarget() == null
-                    ? CatalogDefOperationType.ATTRIBUTE : CatalogDefOperationType.JOIN;
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.JOIN : CatalogDefOperationType.ATTRIBUTE;
         } else if (specDef instanceof XBCBlockCons) {
-            operation = specDef.getTarget() == null
-                    ? CatalogDefOperationType.ANY : CatalogDefOperationType.CONSIST;
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.CONSIST : CatalogDefOperationType.ANY;
         } else if (specDef instanceof XBCBlockListJoin) {
-            operation = specDef.getTarget() == null
-                    ? CatalogDefOperationType.ATTRIBUTE_LIST : CatalogDefOperationType.JOIN_LIST;
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.JOIN_LIST : CatalogDefOperationType.ATTRIBUTE_LIST;
         } else if (specDef instanceof XBCBlockListCons) {
-            operation = specDef.getTarget() == null
-                    ? CatalogDefOperationType.ANY_LIST : CatalogDefOperationType.CONSIST_LIST;
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.CONSIST_LIST : CatalogDefOperationType.ANY_LIST;
         } else if (specDef instanceof XBCJoinDef) {
             operation = CatalogDefOperationType.JOIN;
         } else if (specDef instanceof XBCConsDef) {

@@ -110,17 +110,17 @@ public class CatalogDefsDetailTableModel extends AbstractTableModel {
     public String getOperation(XBCSpecDef specDef) {
         CatalogDefOperationType operation;
         if (specDef instanceof XBCBlockJoin) {
-            operation = specDef.getTarget() == null
-                    ? CatalogDefOperationType.ATTRIBUTE : CatalogDefOperationType.JOIN;
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.JOIN : CatalogDefOperationType.ATTRIBUTE;
         } else if (specDef instanceof XBCBlockCons) {
-            operation = specDef.getTarget() == null
-                    ? CatalogDefOperationType.ANY : CatalogDefOperationType.CONSIST;
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.CONSIST : CatalogDefOperationType.ANY;
         } else if (specDef instanceof XBCBlockListJoin) {
-            operation = specDef.getTarget() == null
-                    ? CatalogDefOperationType.ATTRIBUTE_LIST : CatalogDefOperationType.JOIN_LIST;
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.JOIN_LIST : CatalogDefOperationType.ATTRIBUTE_LIST;
         } else if (specDef instanceof XBCBlockListCons) {
-            operation = specDef.getTarget() == null
-                    ? CatalogDefOperationType.ANY_LIST : CatalogDefOperationType.CONSIST_LIST;
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.CONSIST_LIST : CatalogDefOperationType.ANY_LIST;
         } else if (specDef instanceof XBCJoinDef) {
             operation = CatalogDefOperationType.JOIN;
         } else if (specDef instanceof XBCConsDef) {

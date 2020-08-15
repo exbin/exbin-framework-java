@@ -189,8 +189,8 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
         }
 
         String parentId = "";
-        if (catalogItem.getParent() != null) {
-            parentId = catalogItem.getParent().getId().toString();
+        if (catalogItem.getParentItem().isPresent()) {
+            parentId = String.valueOf(catalogItem.getParentItem().get().getId());
         }
         tableModel.addRow(new String[]{"Name", nameService.getDefaultText(catalogItem)});
         tableModel.addRow(new String[]{"Description", descService.getDefaultText(catalogItem)});
@@ -348,12 +348,12 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
             if (xbIndex != null) {
                 ((XBEItem) catalogItem).setXBIndex(Long.parseLong(xbIndex));
             } else {
-                ((XBEItem) catalogItem).setXBIndex(null);
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             XBCNode parentNode = parentCellPanel.getParentNode();
-            if (((XBEItem) catalogItem).getParent() != parentNode) {
-                ((XBEItem) catalogItem).setParent((XBENode) parentNode);
+            if (parentNode.equals(((XBEItem) catalogItem).getParentItem().orElse(null))) {
+                ((XBEItem) catalogItem).setParentItem((XBENode) parentNode);
             }
 
             itemService.persistItem((XBCBase) catalogItem);
@@ -389,7 +389,7 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
                     String itemPath = stringId == null ? "" : stringId.getText();
                     itemHDocFile = (XBCXFile) fileService.createItem();
                     ((XBEXFile) itemHDocFile).setFilename("hdoc-" + itemPath);
-                    ((XBEXFile) itemHDocFile).setNode((XBENode) catalogItem.getParent());
+                    ((XBEXFile) itemHDocFile).setNode((XBENode) catalogItem.getParentItem().get());
                     ((XBEXHDoc) itemHDoc).setDocFile((XBEXFile) itemHDocFile);
                 }
 
@@ -432,7 +432,7 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
                     String itemPath = stringId == null ? "" : stringId.getText();
                     itemIconFile = (XBCXFile) fileService.createItem();
                     ((XBEXFile) itemIconFile).setFilename("bicon-" + itemPath);
-                    ((XBEXFile) itemIconFile).setNode((XBENode) catalogItem.getParent());
+                    ((XBEXFile) itemIconFile).setNode((XBENode) catalogItem.getParentItem().get());
                     ((XBEXIcon) itemIcon).setIconFile((XBEXFile) itemIconFile);
                 }
 
@@ -468,7 +468,7 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
                     String itemPath = stringId == null ? "" : stringId.getText();
                     itemIconFile = (XBCXFile) fileService.createItem();
                     ((XBEXFile) itemIconFile).setFilename("sicon-" + itemPath);
-                    ((XBEXFile) itemIconFile).setNode((XBENode) catalogItem.getParent());
+                    ((XBEXFile) itemIconFile).setNode((XBENode) catalogItem.getParentItem().get());
                     ((XBEXIcon) itemIcon).setIconFile((XBEXFile) itemIconFile);
                 }
 

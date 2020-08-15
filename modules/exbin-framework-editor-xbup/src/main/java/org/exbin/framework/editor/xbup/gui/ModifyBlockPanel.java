@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventObject;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,7 +86,7 @@ import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
 /**
  * Panel for modifying item attributes or data.
  *
- * @version 0.2.1 2019/06/27
+ * @version 0.2.1 2020/08/13
  * @author ExBin Project (http://exbin.org)
  */
 public class ModifyBlockPanel extends javax.swing.JPanel {
@@ -708,48 +709,46 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
             XBCXLineService lineService = catalog.getCatalogService(XBCXLineService.class);
             XBCBlockSpec spec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
-            if (spec != null) {
-                long bindCount = specService.getSpecDefsCount(spec);
-                XBATreeParamExtractor paramExtractor = new XBATreeParamExtractor(srcNode, catalog);
-                // TODO: if (desc != null) descTextField.setText(desc.getText());
-                for (int paramIndex = 0; paramIndex < bindCount; paramIndex++) {
-                    // TODO: Exclusive lock
-                    XBCSpecDef specDef = specService.getSpecDefByOrder(spec, paramIndex);
-                    String specName = "";
-                    String specType = "";
-                    XBRowEditor lineEditor = null;
+            long bindCount = specService.getSpecDefsCount(spec);
+            XBATreeParamExtractor paramExtractor = new XBATreeParamExtractor(srcNode, catalog);
+            // TODO: if (desc != null) descTextField.setText(desc.getText());
+            for (int paramIndex = 0; paramIndex < bindCount; paramIndex++) {
+                // TODO: Exclusive lock
+                XBCSpecDef specDef = specService.getSpecDefByOrder(spec, paramIndex);
+                String specName = "";
+                String specType = "";
+                XBRowEditor lineEditor = null;
 
-                    if (specDef != null) {
-                        XBCXName specDefName = nameService.getDefaultItemName(specDef);
-                        if (specDefName != null) {
-                            specName = specDefName.getText();
-                        }
-
-                        XBCRev rowRev = specDef.getTarget();
-                        if (rowRev != null) {
-                            XBCSpec rowSpec = rowRev.getParent();
-                            try {
-                                lineEditor = getCustomEditor((XBCBlockRev) rowRev, lineService);
-                                if (lineEditor != null) {
-                                    paramExtractor.setParameterIndex(paramIndex);
-                                    XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);
-                                    serialReader.read(lineEditor);
-
-                                    lineEditor.attachChangeListener(new LineEditorChangeListener(lineEditor, paramExtractor, paramIndex));
-                                }
-                            } catch (Exception ex) {
-                                Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-
-                            XBCXName typeName = nameService.getDefaultItemName(rowSpec);
-                            specType = typeName.getText();
-                        }
+                if (specDef != null) {
+                    XBCXName specDefName = nameService.getDefaultItemName(specDef);
+                    if (specDefName != null) {
+                        specName = specDefName.getText();
                     }
 
-                    ParametersTableItem itemRecord = new ParametersTableItem(specDef, specName, specType, lineEditor);
-                    itemRecord.setTypeName(itemRecord.getDefTypeName());
-                    parametersTableModel.addRow(itemRecord);
+                    Optional<XBCRev> rowRev = specDef.getTargetRev();
+                    if (rowRev.isPresent()) {
+                        XBCSpec rowSpec = rowRev.get().getParent();
+                        try {
+                            lineEditor = getCustomEditor((XBCBlockRev) rowRev.get(), lineService);
+                            if (lineEditor != null) {
+                                paramExtractor.setParameterIndex(paramIndex);
+                                XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);
+                                serialReader.read(lineEditor);
+
+                                lineEditor.attachChangeListener(new LineEditorChangeListener(lineEditor, paramExtractor, paramIndex));
+                            }
+                        } catch (IOException | XBProcessingException ex) {
+                            Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        XBCXName typeName = nameService.getDefaultItemName(rowSpec);
+                        specType = typeName.getText();
+                    }
                 }
+
+                ParametersTableItem itemRecord = new ParametersTableItem(specDef, specName, specType, lineEditor);
+                itemRecord.setTypeName(itemRecord.getDefTypeName());
+                parametersTableModel.addRow(itemRecord);
             }
         }
     }

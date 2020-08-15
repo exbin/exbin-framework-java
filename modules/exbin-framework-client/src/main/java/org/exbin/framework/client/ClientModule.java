@@ -18,6 +18,7 @@ package org.exbin.framework.client;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -60,10 +61,8 @@ import org.exbin.xbup.client.catalog.remote.service.XBRXPaneService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXPlugService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXStriService;
 import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.core.catalog.XBCatalog;
 import org.exbin.xbup.core.catalog.base.XBCRoot;
 import org.exbin.xbup.core.catalog.base.service.XBCNodeService;
-import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 import org.exbin.xbup.core.catalog.base.service.XBCXHDocService;
@@ -192,9 +191,9 @@ public class ClientModule implements ClientModuleApi {
                 XBCNodeService nodeService = catalogHandler.getCatalogService(XBCNodeService.class);
                 XBCRoot catalogRoot = nodeService.getRoot();
                 if (catalogRoot != null) {
-                    Date localLastUpdate = catalogRoot.getLastUpdate();
+                    Optional<Date> localLastUpdate = catalogRoot.getLastUpdate();
                     Date lastUpdate = wsHandler.getPort().getRootLastUpdate();
-                    if (localLastUpdate == null || localLastUpdate.before(lastUpdate)) {
+                    if (!localLastUpdate.isPresent() || localLastUpdate.get().before(lastUpdate)) {
                         connectionStatusChanged(ConnectionStatus.UPDATING);
                         // TODO: As there is currently no diff update available - wipe out entire database instead
                         em.close();

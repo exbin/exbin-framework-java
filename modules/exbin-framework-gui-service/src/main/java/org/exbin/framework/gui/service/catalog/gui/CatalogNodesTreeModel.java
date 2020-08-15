@@ -109,7 +109,7 @@ public class CatalogNodesTreeModel implements TreeModel {
             Long specPathIndex = specPath[specPathDepth];
             List<CatalogNodesTreeItem> children = node.getChildren();
             for (CatalogNodesTreeItem child : children) {
-                if (child.getNode().getXBIndex().equals(specPathIndex)) {
+                if (child.getNode().getXBIndex() == specPathIndex) {
                     nodePath[specPathDepth] = child;
                     node = child;
                     break;
