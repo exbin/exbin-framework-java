@@ -43,6 +43,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.exbin.xbup.core.util.StringUtils;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -282,7 +283,7 @@ public class FilePreferences extends AbstractPreferences {
             // an OutputStream object embedded, creating a Writer object on top of that
             // OutputStream object however works.
             t.transform(new DOMSource(doc),
-                    new StreamResult(new BufferedWriter(new OutputStreamWriter(out, "UTF-8"))));
+                    new StreamResult(new BufferedWriter(new OutputStreamWriter(out, StringUtils.ENCODING_UTF8))));
         } catch (TransformerException e) {
             throw new AssertionError(e);
         }

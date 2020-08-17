@@ -25,16 +25,17 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCNode;
-import org.exbin.xbup.core.catalog.base.XBCXPlugLine;
+import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
 import org.exbin.xbup.core.catalog.base.XBCXPlugin;
-import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
+import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 
 /**
  * Panel for plugin row editor selection.
  *
- * @version 0.2.1 2020/07/23
+ * @version 0.2.1 2020/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSelectPlugLinePanel extends javax.swing.JPanel {
@@ -43,7 +44,7 @@ public class CatalogSelectPlugLinePanel extends javax.swing.JPanel {
     private XBApplication application;
     private XBCNode node;
     private List<XBCXPlugin> plugins;
-    private List<XBCXPlugLine> plugLines;
+    private List<XBCXPlugUi> plugUis;
 
     public CatalogSelectPlugLinePanel() {
         initComponents();
@@ -72,9 +73,9 @@ public class CatalogSelectPlugLinePanel extends javax.swing.JPanel {
     }
     
     @Nullable
-    public XBCXPlugLine getPlugLine() {
+    public XBCXPlugUi getPlugUi() {
         int selectedIndex = hooksList.getSelectedIndex();
-        return selectedIndex < 0 ? null : plugLines.get(selectedIndex);
+        return selectedIndex < 0 ? null : plugUis.get(selectedIndex);
     }
 
     /**
@@ -188,13 +189,13 @@ public class CatalogSelectPlugLinePanel extends javax.swing.JPanel {
 
     private void pluginsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_pluginsListValueChanged
         XBCXPlugin plugin = plugins.get(pluginsList.getSelectedIndex());
-        XBCXLineService lineService = catalog.getCatalogService(XBCXLineService.class);
-        plugLines = lineService.getPlugLines(plugin);
+        XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
+        plugUis = uiService.getPlugUis(plugin, XBPlugUiType.ROW_EDITOR);
         DefaultListModel<String> model = (DefaultListModel<String>) hooksList.getModel();
         model.removeAllElements();
-        if (plugLines != null) {
-            for (XBCXPlugLine plugLine : plugLines) {
-                model.addElement(String.valueOf(plugLine.getId()) + ": " + plugLine.getLineIndex());
+        if (plugUis != null) {
+            for (XBCXPlugUi plugUi : plugUis) {
+                model.addElement(String.valueOf(plugUi.getId()) + ": " + plugUi.getMethodIndex());
             }
         }
     }//GEN-LAST:event_pluginsListValueChanged

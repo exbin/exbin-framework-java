@@ -42,9 +42,8 @@ import org.exbin.xbup.catalog.entity.service.XBEXFileService;
 import org.exbin.xbup.catalog.entity.service.XBEXHDocService;
 import org.exbin.xbup.catalog.entity.service.XBEXIconService;
 import org.exbin.xbup.catalog.entity.service.XBEXLangService;
-import org.exbin.xbup.catalog.entity.service.XBEXLineService;
+import org.exbin.xbup.catalog.entity.service.XBEXUiService;
 import org.exbin.xbup.catalog.entity.service.XBEXNameService;
-import org.exbin.xbup.catalog.entity.service.XBEXPaneService;
 import org.exbin.xbup.catalog.entity.service.XBEXPlugService;
 import org.exbin.xbup.catalog.entity.service.XBEXStriService;
 import org.exbin.xbup.client.XBCatalogServiceClient;
@@ -54,9 +53,8 @@ import org.exbin.xbup.client.catalog.remote.service.XBRXFileService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXHDocService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXIconService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXLangService;
-import org.exbin.xbup.client.catalog.remote.service.XBRXLineService;
+import org.exbin.xbup.client.catalog.remote.service.XBRXUiService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXNameService;
-import org.exbin.xbup.client.catalog.remote.service.XBRXPaneService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXPlugService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXStriService;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -65,9 +63,8 @@ import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 import org.exbin.xbup.core.catalog.base.service.XBCXHDocService;
 import org.exbin.xbup.core.catalog.base.service.XBCXIconService;
 import org.exbin.xbup.core.catalog.base.service.XBCXLangService;
-import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
+import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
-import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 
@@ -183,8 +180,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
                 ((XBAECatalog) connectedCatalog).addCatalogService(XBCXFileService.class, new XBEXFileService((XBAECatalog) connectedCatalog));
                 ((XBAECatalog) connectedCatalog).addCatalogService(XBCXIconService.class, new XBEXIconService((XBAECatalog) connectedCatalog));
                 ((XBAECatalog) connectedCatalog).addCatalogService(XBCXPlugService.class, new XBEXPlugService((XBAECatalog) connectedCatalog));
-                ((XBAECatalog) connectedCatalog).addCatalogService(XBCXLineService.class, new XBEXLineService((XBAECatalog) connectedCatalog));
-                ((XBAECatalog) connectedCatalog).addCatalogService(XBCXPaneService.class, new XBEXPaneService((XBAECatalog) connectedCatalog));
+                ((XBAECatalog) connectedCatalog).addCatalogService(XBCXUiService.class, new XBEXUiService((XBAECatalog) connectedCatalog));
                 ((XBAECatalog) connectedCatalog).addCatalogService(XBCXHDocService.class, new XBEXHDocService((XBAECatalog) connectedCatalog));
             } catch (Exception ex) {
                 Logger.getLogger(ServiceManagerPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -202,8 +198,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
             ((XBARCatalog) connectedCatalog).addCatalogService(XBCXFileService.class, new XBRXFileService((XBARCatalog) connectedCatalog));
             ((XBARCatalog) connectedCatalog).addCatalogService(XBCXIconService.class, new XBRXIconService((XBARCatalog) connectedCatalog));
             ((XBARCatalog) connectedCatalog).addCatalogService(XBCXPlugService.class, new XBRXPlugService((XBARCatalog) connectedCatalog));
-            ((XBARCatalog) connectedCatalog).addCatalogService(XBCXLineService.class, new XBRXLineService((XBARCatalog) connectedCatalog));
-            ((XBARCatalog) connectedCatalog).addCatalogService(XBCXPaneService.class, new XBRXPaneService((XBARCatalog) connectedCatalog));
+            ((XBARCatalog) connectedCatalog).addCatalogService(XBCXUiService.class, new XBRXUiService((XBARCatalog) connectedCatalog));
             ((XBARCatalog) connectedCatalog).addCatalogService(XBCXHDocService.class, new XBRXHDocService((XBARCatalog) connectedCatalog));
         }
 

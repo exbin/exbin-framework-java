@@ -20,17 +20,17 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.xbup.core.catalog.XBCatalog;
+import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCXFile;
 import org.exbin.xbup.core.catalog.base.XBCXPlugin;
-import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
-import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
+import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 
 /**
  * Table model for catalog plugins.
  *
- * @version 0.2.1 2020/07/23
+ * @version 0.2.1 2020/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogPluginsTableModel extends AbstractTableModel {
@@ -71,10 +71,10 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
                 return items.get(rowIndex).fileName;
             }
             case 2: {
-                return items.get(rowIndex).lineEditors;
+                return items.get(rowIndex).rowEditorsCount;
             }
             case 3: {
-                return items.get(rowIndex).paneEditors;
+                return items.get(rowIndex).panelViewersCount;
             }
         }
         return "";
@@ -97,15 +97,14 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
     public void setNode(XBCNode node) {
         this.node = node;
 
-        XBCXLineService lineService = catalog.getCatalogService(XBCXLineService.class);
-        XBCXPaneService paneService = catalog.getCatalogService(XBCXPaneService.class);
+        XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
 
         items = new ArrayList<>();
         if (node != null) {
             for (XBCXPlugin plugin : ((List<XBCXPlugin>) pluginService.findPluginsForNode(node))) {
-                long lineEditors = lineService.getPlugLinesCount(plugin);
-                long paneEditors = paneService.getPlugPanesCount(plugin);
-                items.add(new PluginItemRecord(plugin, plugin.getPluginFile(), lineEditors, paneEditors));
+                long rowEditorsCount = uiService.getPlugUisCount(plugin, XBPlugUiType.ROW_EDITOR);
+                long panelViewersCount = uiService.getPlugUisCount(plugin, XBPlugUiType.PANEL_VIEWER);
+                items.add(new PluginItemRecord(plugin, plugin.getPluginFile(), rowEditorsCount, panelViewersCount));
             }
         }
     }
@@ -114,13 +113,13 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
         return items.get(rowIndex).plugin;
     }
     
-    public void updateItem(int rowIndex, XBCXPlugin plugin, long lineEditors, long paneEditors) {
+    public void updateItem(int rowIndex, XBCXPlugin plugin, long rowEditorsCount, long panelViewersCount) {
         PluginItemRecord record = items.get(rowIndex);
         record.plugin = plugin;
         record.file = plugin.getPluginFile();
         record.fileName = record.file == null ? "" : record.file.getFilename();
-        record.lineEditors = lineEditors;
-        record.paneEditors = paneEditors;
+        record.rowEditorsCount = rowEditorsCount;
+        record.panelViewersCount = panelViewersCount;
         fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
@@ -146,15 +145,15 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
         public XBCXPlugin plugin = null;
         public XBCXFile file;
         public String fileName = null;
-        public long lineEditors;
-        public long paneEditors;
+        public long rowEditorsCount;
+        public long panelViewersCount;
 
-        public PluginItemRecord(@Nullable XBCXPlugin plugin, XBCXFile file, long lineEditors, long paneEditors) {
+        public PluginItemRecord(@Nullable XBCXPlugin plugin, XBCXFile file, long rowEditorsCount, long panelEditorsCount) {
             this.plugin = plugin;
             this.file = file;
             this.fileName = file == null ? "" : file.getFilename();
-            this.lineEditors = lineEditors;
-            this.paneEditors = paneEditors;
+            this.rowEditorsCount = rowEditorsCount;
+            this.panelViewersCount = panelEditorsCount;
         }
     }
 }

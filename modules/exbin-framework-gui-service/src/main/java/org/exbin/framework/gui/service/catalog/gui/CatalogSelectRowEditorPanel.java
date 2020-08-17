@@ -23,18 +23,18 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.core.catalog.base.XBCXPlugLine;
+import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
 
 /**
  * Editor for line panel selection.
  *
- * @version 0.2.1 2020/07/23
+ * @version 0.2.1 2020/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSelectRowEditorPanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
-    private XBCXPlugLine plugLine;
+    private XBCXPlugUi plugUi;
     private XBApplication application;
 
     public CatalogSelectRowEditorPanel() {
@@ -128,9 +128,9 @@ public class CatalogSelectRowEditorPanel extends javax.swing.JPanel {
         //        WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                plugLine = selectPanel.getPlugLine();
+                plugUi = selectPanel.getPlugUi();
                 editorRadioButton.setSelected(true);
-                editorTextField.setText(String.valueOf(plugLine.getId()));
+                editorTextField.setText(String.valueOf(plugUi.getId()));
             }
             dialog.close();
         });
@@ -138,18 +138,18 @@ public class CatalogSelectRowEditorPanel extends javax.swing.JPanel {
         dialog.dispose();
     }//GEN-LAST:event_selectEditorButtonActionPerformed
 
-    public XBCXPlugLine getPlugLine() {
-        return noEditorRadioButton.isSelected() ? null : plugLine;
+    public XBCXPlugUi getPlugUi() {
+        return noEditorRadioButton.isSelected() ? null : plugUi;
     }
 
-    public void setPlugLine(@Nullable XBCXPlugLine plugLine) {
-        this.plugLine = plugLine;
-        if (plugLine == null) {
+    public void setPlugUi(@Nullable XBCXPlugUi plugUi) {
+        this.plugUi = plugUi;
+        if (plugUi == null) {
             noEditorRadioButton.setSelected(true);
             editorTextField.setText("");
         } else {
             editorRadioButton.setSelected(true);
-            editorTextField.setText(String.valueOf(plugLine.getId()));
+            editorTextField.setText(String.valueOf(plugUi.getId()));
         }
     }
 

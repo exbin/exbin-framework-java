@@ -38,11 +38,11 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCBlockRev;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCSpecDef;
-import org.exbin.xbup.core.catalog.base.XBCXBlockLine;
-import org.exbin.xbup.core.catalog.base.XBCXPlugLine;
+import org.exbin.xbup.core.catalog.base.XBCXBlockUi;
+import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
 import org.exbin.xbup.core.catalog.base.XBCXPlugin;
 import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
-import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
+import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.serial.XBPSerialReader;
@@ -52,6 +52,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
+import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.plugin.XBRowEditor;
 import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
@@ -59,7 +60,7 @@ import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
 /**
  * Panel for properties of the actual panel.
  *
- * @version 0.2.1 2019/06/29
+ * @version 0.2.1 2020/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTablePanel extends javax.swing.JPanel {
@@ -71,7 +72,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     private final XBPropertyTableCellRenderer valueCellRenderer;
     private final TableCellRenderer nameCellRenderer;
     private final XBPropertyTableCellEditor valueCellEditor;
-    private XBCXLineService lineService = null;
+    private XBCXUiService uiService = null;
     private XBPluginRepository pluginRepository = null;
 
     private Thread propertyThread;
@@ -290,7 +291,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
 
-        lineService = catalog == null ? null : catalog.getCatalogService(XBCXLineService.class);
+        uiService = catalog == null ? null : catalog.getCatalogService(XBCXUiService.class);
 
         valueCellRenderer.setCatalog(catalog);
         valueCellEditor.setCatalog(catalog);
@@ -422,15 +423,15 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
             return null;
         }
 
-        XBCXBlockLine blockLine = lineService.findLineByPR(rev, 0);
-        if (blockLine == null) {
+        XBCXBlockUi blockUi = uiService.findUiByPR(rev, XBPlugUiType.ROW_EDITOR, 0);
+        if (blockUi == null) {
             return null;
         }
-        XBCXPlugLine plugLine = blockLine.getLine();
-        if (plugLine == null) {
+        XBCXPlugUi plugUi = blockUi.getUi();
+        if (plugUi == null) {
             return null;
         }
-        XBCXPlugin plugin = plugLine.getPlugin();
+        XBCXPlugin plugin = plugUi.getPlugin();
         XBCatalogPlugin pluginHandler;
 
         pluginHandler = pluginRepository.getPluginHandler(plugin);
@@ -438,7 +439,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
             return null;
         }
 
-        return ((XBRowEditorCatalogPlugin) pluginHandler).getRowEditor(plugLine.getLineIndex());
+        return ((XBRowEditorCatalogPlugin) pluginHandler).getRowEditor(plugUi.getMethodIndex());
     }
 
     public void actionEditSelectAll() {

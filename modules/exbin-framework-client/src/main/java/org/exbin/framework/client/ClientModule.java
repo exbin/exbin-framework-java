@@ -41,13 +41,11 @@ import org.exbin.xbup.catalog.entity.service.XBEXFileService;
 import org.exbin.xbup.catalog.entity.service.XBEXHDocService;
 import org.exbin.xbup.catalog.entity.service.XBEXIconService;
 import org.exbin.xbup.catalog.entity.service.XBEXLangService;
-import org.exbin.xbup.catalog.entity.service.XBEXLineService;
+import org.exbin.xbup.catalog.entity.service.XBEXUiService;
 import org.exbin.xbup.catalog.entity.service.XBEXNameService;
-import org.exbin.xbup.catalog.entity.service.XBEXPaneService;
 import org.exbin.xbup.catalog.entity.service.XBEXPlugService;
 import org.exbin.xbup.catalog.entity.service.XBEXStriService;
 import org.exbin.xbup.catalog.update.XBCUpdateListener;
-import org.exbin.xbup.catalog.update.XBCUpdatePHPHandler;
 import org.exbin.xbup.client.XBCatalogNetServiceClient;
 import org.exbin.xbup.client.catalog.XBARCatalog;
 import org.exbin.xbup.client.catalog.remote.service.XBRXDescService;
@@ -55,9 +53,8 @@ import org.exbin.xbup.client.catalog.remote.service.XBRXFileService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXHDocService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXIconService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXLangService;
-import org.exbin.xbup.client.catalog.remote.service.XBRXLineService;
+import org.exbin.xbup.client.catalog.remote.service.XBRXUiService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXNameService;
-import org.exbin.xbup.client.catalog.remote.service.XBRXPaneService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXPlugService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXStriService;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -68,9 +65,8 @@ import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 import org.exbin.xbup.core.catalog.base.service.XBCXHDocService;
 import org.exbin.xbup.core.catalog.base.service.XBCXIconService;
 import org.exbin.xbup.core.catalog.base.service.XBCXLangService;
-import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
+import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
-import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 import org.exbin.xbup.plugin.XBModuleHandler;
@@ -136,8 +132,7 @@ public class ClientModule implements ClientModuleApi {
             catalogHandler.addCatalogService(XBCXFileService.class, new XBRXFileService(catalogHandler));
             catalogHandler.addCatalogService(XBCXIconService.class, new XBRXIconService(catalogHandler));
             catalogHandler.addCatalogService(XBCXPlugService.class, new XBRXPlugService(catalogHandler));
-            catalogHandler.addCatalogService(XBCXLineService.class, new XBRXLineService(catalogHandler));
-            catalogHandler.addCatalogService(XBCXPaneService.class, new XBRXPaneService(catalogHandler));
+            catalogHandler.addCatalogService(XBCXUiService.class, new XBRXUiService(catalogHandler));
             catalogHandler.addCatalogService(XBCXHDocService.class, new XBRXHDocService(catalogHandler));
 
             if ("localhost".equals(serviceClient.getHost()) || "127.0.0.1".equals(serviceClient.getHost())) {
@@ -184,27 +179,30 @@ public class ClientModule implements ClientModuleApi {
             }
 
             try {
-                XBCUpdatePHPHandler wsHandler = new XBCUpdatePHPHandler(catalogHandler);
-                wsHandler.init();
-                wsHandler.getPort().getLanguageId("en");
-                catalogHandler.setUpdateHandler(wsHandler);
+//                XBCUpdatePHPHandler wsHandler = new XBCUpdatePHPHandler(catalogHandler);
+//                wsHandler.init();
+//                wsHandler.getPort().getLanguageId("en");
+//                catalogHandler.setUpdateHandler(wsHandler);
                 XBCNodeService nodeService = catalogHandler.getCatalogService(XBCNodeService.class);
                 XBCRoot catalogRoot = nodeService.getRoot();
                 if (catalogRoot != null) {
                     Optional<Date> localLastUpdate = catalogRoot.getLastUpdate();
-                    Date lastUpdate = wsHandler.getPort().getRootLastUpdate();
-                    if (!localLastUpdate.isPresent() || localLastUpdate.get().before(lastUpdate)) {
-                        connectionStatusChanged(ConnectionStatus.UPDATING);
-                        // TODO: As there is currently no diff update available - wipe out entire database instead
-                        em.close();
-                        EntityManagerFactory emfDrop = Persistence.createEntityManagerFactory("XBEditorPU-drop");
-                        EntityManager emDrop = emfDrop.createEntityManager();
-                        emDrop.setFlushMode(FlushModeType.AUTO);
-                        catalogHandler = createInternalCatalog(emDrop);
-                        catalogHandler.initCatalog();
-                        nodeService = (XBCNodeService) catalogHandler.getCatalogService(XBCNodeService.class);
-                        performUpdate(catalogHandler, (XBERoot) nodeService.getRoot(), lastUpdate);
+                    if (!localLastUpdate.isPresent()) {
+                        throw new UnsupportedOperationException("Not supported yet.");
                     }
+//                    Date lastUpdate = wsHandler.getPort().getRootLastUpdate();
+//                    if (!localLastUpdate.isPresent() || localLastUpdate.get().before(lastUpdate)) {
+//                        connectionStatusChanged(ConnectionStatus.UPDATING);
+//                        // TODO: As there is currently no diff update available - wipe out entire database instead
+//                        em.close();
+//                        EntityManagerFactory emfDrop = Persistence.createEntityManagerFactory("XBEditorPU-drop");
+//                        EntityManager emDrop = emfDrop.createEntityManager();
+//                        emDrop.setFlushMode(FlushModeType.AUTO);
+//                        catalogHandler = createInternalCatalog(emDrop);
+//                        catalogHandler.initCatalog();
+//                        nodeService = (XBCNodeService) catalogHandler.getCatalogService(XBCNodeService.class);
+//                        performUpdate(catalogHandler, (XBERoot) nodeService.getRoot(), lastUpdate);
+//                    }
                     initializePlugins(catalogHandler);
                     connectionStatusChanged(ConnectionStatus.INTERNET);
                 }
@@ -265,35 +263,34 @@ public class ClientModule implements ClientModuleApi {
         createdCatalog.addCatalogService(XBCXFileService.class, new XBEXFileService(createdCatalog));
         createdCatalog.addCatalogService(XBCXIconService.class, new XBEXIconService(createdCatalog));
         createdCatalog.addCatalogService(XBCXPlugService.class, new XBEXPlugService(createdCatalog));
-        createdCatalog.addCatalogService(XBCXLineService.class, new XBEXLineService(createdCatalog));
-        createdCatalog.addCatalogService(XBCXPaneService.class, new XBEXPaneService(createdCatalog));
+        createdCatalog.addCatalogService(XBCXUiService.class, new XBEXUiService(createdCatalog));
         createdCatalog.addCatalogService(XBCXHDocService.class, new XBEXHDocService(createdCatalog));
         return createdCatalog;
     }
 
     private void performUpdate(XBAECatalog catalogHandler, XBERoot catalogRoot, Date lastUpdate) {
-        XBCUpdatePHPHandler wsHandler = new XBCUpdatePHPHandler(catalogHandler);
-        wsHandler.init();
-        wsHandler.getPort().getLanguageId("en");
-
-        wsHandler.fireUsageEvent(false);
-        wsHandler.addWSListener(new XBCUpdateListener() {
-            private boolean toolBarVisibleTemp;
-
-            @Override
-            public void webServiceUsage(boolean status) {
-//                        if (status == true) {
-//                            toolBarVisibleTemp = getStatusBar().isVisible();
-//                            ((CardLayout) statusPanel.getLayout()).show(statusPanel, "updateCat");
-//                            activityProgressBar.setString(resourceBundle.getString("main_updatecat") + "...");
-//                            getStatusBar().setVisible(true);
-//                        } else {
-//                            ((CardLayout) statusPanel.getLayout()).first(statusPanel);
-//                            //                                statusBar.setVisible(toolBarVisibleTemp);
-//                        }
-            }
-        });
-        wsHandler.updateCatalog(catalogRoot, lastUpdate);
+//        XBCUpdatePHPHandler wsHandler = new XBCUpdatePHPHandler(catalogHandler);
+//        wsHandler.init();
+//        wsHandler.getPort().getLanguageId("en");
+//
+//        wsHandler.fireUsageEvent(false);
+//        wsHandler.addWSListener(new XBCUpdateListener() {
+//            private boolean toolBarVisibleTemp;
+//
+//            @Override
+//            public void webServiceUsage(boolean status) {
+////                        if (status == true) {
+////                            toolBarVisibleTemp = getStatusBar().isVisible();
+////                            ((CardLayout) statusPanel.getLayout()).show(statusPanel, "updateCat");
+////                            activityProgressBar.setString(resourceBundle.getString("main_updatecat") + "...");
+////                            getStatusBar().setVisible(true);
+////                        } else {
+////                            ((CardLayout) statusPanel.getLayout()).first(statusPanel);
+////                            //                                statusBar.setVisible(toolBarVisibleTemp);
+////                        }
+//            }
+//        });
+//        wsHandler.updateCatalog(catalogRoot, lastUpdate);
     }
 
     public void setCatalog(XBACatalog catalog) {

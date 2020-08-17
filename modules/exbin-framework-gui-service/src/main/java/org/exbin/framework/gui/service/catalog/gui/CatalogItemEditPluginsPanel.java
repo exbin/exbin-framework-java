@@ -28,20 +28,20 @@ import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.XBENode;
 import org.exbin.xbup.catalog.entity.XBEXFile;
-import org.exbin.xbup.catalog.entity.XBEXPlugLine;
-import org.exbin.xbup.catalog.entity.XBEXPlugPane;
+import org.exbin.xbup.catalog.entity.XBEXPlugUi;
+import org.exbin.xbup.catalog.entity.XBEXPlugUiType;
 import org.exbin.xbup.catalog.entity.XBEXPlugin;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCXFile;
 import org.exbin.xbup.core.catalog.base.XBCXPlugin;
-import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
-import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
+import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 
 /**
  * Catalog item plugin panel.
  *
- * @version 0.2.0 2020/07/23
+ * @version 0.2.0 2020/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemEditPluginsPanel extends javax.swing.JPanel {
@@ -143,9 +143,10 @@ public class CatalogItemEditPluginsPanel extends javax.swing.JPanel {
 //        WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
                 XBCXFile file = editPanel.getFile();
-                long lineEditors = editPanel.getLineEditors();
-                long paneEditors = editPanel.getPaneEditors();
+                long rowEditorsCount = editPanel.getRowEditorsCount();
+                long panelViewersCount = editPanel.getPanelViewersCount();
                 XBEXPlugin plugin = new XBEXPlugin();
                 plugin.setOwner((XBENode) node);
                 plugin.setPluginFile((XBEXFile) file);
@@ -156,22 +157,26 @@ public class CatalogItemEditPluginsPanel extends javax.swing.JPanel {
                 transaction.begin();
                 em.persist(plugin);
 
-                for (long i = 0; i < lineEditors; i++) {
-                    XBEXPlugLine plugLine = new XBEXPlugLine();
-                    plugLine.setPlugin(plugin);
-                    plugLine.setLineIndex(i);
-                    em.persist(plugLine);
+                XBEXPlugUiType rowEditorType = (XBEXPlugUiType) uiService.findTypeById(XBPlugUiType.ROW_EDITOR.getDbIndex());
+                for (long i = 0; i < rowEditorsCount; i++) {
+                    XBEXPlugUi plugUi = new XBEXPlugUi();
+                    plugUi.setPlugin(plugin);
+                    plugUi.setUiType(rowEditorType);
+                    plugUi.setMethodIndex(i);
+                    em.persist(plugUi);
                 }
-                for (long i = 0; i < paneEditors; i++) {
-                    XBEXPlugPane plugPane = new XBEXPlugPane();
-                    plugPane.setPlugin(plugin);
-                    plugPane.setPaneIndex(i);
-                    em.persist(plugPane);
+                XBEXPlugUiType panelViewerType = (XBEXPlugUiType) uiService.findTypeById(XBPlugUiType.ROW_EDITOR.getDbIndex());
+                for (long i = 0; i < panelViewersCount; i++) {
+                    XBEXPlugUi plugUi = new XBEXPlugUi();
+                    plugUi.setPlugin(plugin);
+                    plugUi.setUiType(panelViewerType);
+                    plugUi.setMethodIndex(i);
+                    em.persist(plugUi);
                 }
 
                 em.flush();
                 transaction.commit();
-                pluginsModel.addItem(plugin, file, editPanel.getLineEditors(), editPanel.getPaneEditors());
+                pluginsModel.addItem(plugin, file, editPanel.getRowEditorsCount(), editPanel.getPanelViewersCount());
             }
             dialog.close();
         });
@@ -185,12 +190,11 @@ public class CatalogItemEditPluginsPanel extends javax.swing.JPanel {
             throw new IllegalStateException("Missing selected plugin");
         }
 
-        XBCXLineService lineService = catalog.getCatalogService(XBCXLineService.class);
-        XBCXPaneService paneService = catalog.getCatalogService(XBCXPaneService.class);
+        XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
         XBCXPlugin editedPlugin = pluginsModel.getItem(selectedRow);
 
-        long oldLineEditors = lineService.getPlugLinesCount(editedPlugin);
-        long oldPaneEditors = paneService.getPlugPanesCount(editedPlugin);
+        long oldRowEditorsCount = uiService.getPlugUisCount(editedPlugin, XBPlugUiType.ROW_EDITOR);
+        long oldPanelViewersCount = uiService.getPlugUisCount(editedPlugin, XBPlugUiType.PANEL_VIEWER);
 
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         CatalogEditNodePluginPanel editPanel = new CatalogEditNodePluginPanel();
@@ -198,8 +202,8 @@ public class CatalogItemEditPluginsPanel extends javax.swing.JPanel {
 //        editPanel.setMenuManagement(menuManagement);
         editPanel.setCatalog(catalog);
         editPanel.setPlugin(editedPlugin);
-        editPanel.setLineEditors(oldLineEditors);
-        editPanel.setPaneEditors(oldPaneEditors);
+        editPanel.setRowEditorsCount(oldRowEditorsCount);
+        editPanel.setPanelViewersCount(oldPanelViewersCount);
 
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
@@ -209,8 +213,8 @@ public class CatalogItemEditPluginsPanel extends javax.swing.JPanel {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 XBEXPlugin plugin = (XBEXPlugin) editPanel.getPlugin();
                 XBCXFile file = editPanel.getFile();
-                long lineEditors = editPanel.getLineEditors();
-                long paneEditors = editPanel.getPaneEditors();
+                long rowEditorsCount = editPanel.getRowEditorsCount();
+                long panelViewersCount = editPanel.getPanelViewersCount();
                 plugin.setPluginFile((XBEXFile) file);
 
                 EntityManager em = ((XBECatalog) catalog).getEntityManager();
@@ -218,35 +222,40 @@ public class CatalogItemEditPluginsPanel extends javax.swing.JPanel {
                 transaction.begin();
                 em.persist(plugin);
 
-                if (lineEditors > oldLineEditors) {
-                    for (long i = oldLineEditors; i < lineEditors; i++) {
-                        XBEXPlugLine plugLine = new XBEXPlugLine();
-                        plugLine.setPlugin(plugin);
-                        plugLine.setLineIndex(i);
-                        em.persist(plugLine);
+                if (rowEditorsCount > oldRowEditorsCount) {
+                    XBEXPlugUiType rowEditorType = (XBEXPlugUiType) uiService.findTypeById(XBPlugUiType.ROW_EDITOR.getDbIndex());
+                    for (long i = oldRowEditorsCount; i < rowEditorsCount; i++) {
+                        XBEXPlugUi plugUi = new XBEXPlugUi();
+                        plugUi.setPlugin(plugin);
+                        plugUi.setUiType(rowEditorType);
+                        plugUi.setMethodIndex(i);
+                        em.persist(plugUi);
                     }
                 } else {
-                    for (long i = oldLineEditors - 1; i >= lineEditors; i--) {
-                        em.remove(lineService.getPlugLine(plugin, i));
+                    for (long i = oldRowEditorsCount - 1; i >= rowEditorsCount; i--) {
+                        em.remove(uiService.getPlugUi(plugin, XBPlugUiType.ROW_EDITOR, i));
                     }
                 }
-                if (paneEditors > oldPaneEditors) {
-                    for (long i = oldPaneEditors; i < paneEditors; i++) {
-                        XBEXPlugPane plugPane = new XBEXPlugPane();
-                        plugPane.setPlugin(plugin);
-                        plugPane.setPaneIndex(i);
-                        em.persist(plugPane);
+
+                if (panelViewersCount > oldPanelViewersCount) {
+                    XBEXPlugUiType panelViewerType = (XBEXPlugUiType) uiService.findTypeById(XBPlugUiType.ROW_EDITOR.getDbIndex());
+                    for (long i = oldPanelViewersCount; i < panelViewersCount; i++) {
+                        XBEXPlugUi plugUi = new XBEXPlugUi();
+                        plugUi.setPlugin(plugin);
+                        plugUi.setUiType(panelViewerType);
+                        plugUi.setMethodIndex(i);
+                        em.persist(plugUi);
                     }
                 } else {
-                    for (long i = oldPaneEditors - 1; i >= paneEditors; i--) {
-                        em.remove(paneService.getPlugPane(plugin, i));
+                    for (long i = oldPanelViewersCount - 1; i >= panelViewersCount; i--) {
+                        em.remove(uiService.getPlugUi(plugin, XBPlugUiType.ROW_EDITOR, i));
                     }
                 }
 
                 em.flush();
                 transaction.commit();
-                
-                pluginsModel.updateItem(selectedRow, plugin, lineEditors, paneEditors);
+
+                pluginsModel.updateItem(selectedRow, plugin, rowEditorsCount, panelViewersCount);
             }
             dialog.close();
         });

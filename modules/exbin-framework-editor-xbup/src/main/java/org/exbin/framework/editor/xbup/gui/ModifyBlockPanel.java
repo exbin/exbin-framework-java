@@ -50,21 +50,19 @@ import org.exbin.xbup.core.block.XBFixedBlockType;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCBlockRev;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.core.catalog.base.XBCSpec;
 import org.exbin.xbup.core.catalog.base.XBCSpecDef;
-import org.exbin.xbup.core.catalog.base.XBCXBlockLine;
-import org.exbin.xbup.core.catalog.base.XBCXBlockPane;
+import org.exbin.xbup.core.catalog.base.XBCXBlockUi;
 import org.exbin.xbup.core.catalog.base.XBCXName;
-import org.exbin.xbup.core.catalog.base.XBCXPlugLine;
-import org.exbin.xbup.core.catalog.base.XBCXPlugPane;
+import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
 import org.exbin.xbup.core.catalog.base.XBCXPlugin;
 import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
-import org.exbin.xbup.core.catalog.base.service.XBCXLineService;
+import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
-import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.parser.token.XBAttribute;
 import org.exbin.xbup.core.parser.token.pull.convert.XBTProviderToPullProvider;
@@ -86,7 +84,7 @@ import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
 /**
  * Panel for modifying item attributes or data.
  *
- * @version 0.2.1 2020/08/13
+ * @version 0.2.1 2020/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class ModifyBlockPanel extends javax.swing.JPanel {
@@ -648,7 +646,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         if (srcNode.getBlockDecl() == null) {
             return null;
         }
-        XBCXPaneService paneService = catalog.getCatalogService(XBCXPaneService.class);
+        XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
         XBCBlockDecl decl = (XBCBlockDecl) srcNode.getBlockDecl();
         if (decl == null) {
             return null;
@@ -657,15 +655,15 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         if (rev == null) {
             return null;
         }
-        XBCXBlockPane pane = paneService.findPaneByPR(rev, 0);
-        if (pane == null) {
+        XBCXBlockUi blockUi = uiService.findUiByPR(rev, XBPlugUiType.COMPONENT_EDITOR, 0);
+        if (blockUi == null) {
             return null;
         }
-        XBCXPlugPane plugPane = pane.getPane();
-        if (plugPane == null) {
+        XBCXPlugUi plugUi = blockUi.getUi();
+        if (plugUi == null) {
             return null;
         }
-        XBCXPlugin plugin = plugPane.getPlugin();
+        XBCXPlugin plugin = plugUi.getPlugin();
         XBCatalogPlugin pluginHandler;
 
         // This part is stub for Java Webstart, uncomment it if needed
@@ -677,7 +675,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             return null;
         }
 
-        return ((XBComponentEditorCatalogPlugin) pluginHandler).getComponentEditor(plugPane.getPaneIndex());
+        return ((XBComponentEditorCatalogPlugin) pluginHandler).getComponentEditor(plugUi.getMethodIndex());
     }
 
     private void reloadBasic() {
@@ -707,7 +705,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         XBCSpecService specService = catalog.getCatalogService(XBCSpecService.class);
         if (decl instanceof XBCBlockDecl) {
             XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
-            XBCXLineService lineService = catalog.getCatalogService(XBCXLineService.class);
+            XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
             XBCBlockSpec spec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
             long bindCount = specService.getSpecDefsCount(spec);
             XBATreeParamExtractor paramExtractor = new XBATreeParamExtractor(srcNode, catalog);
@@ -729,7 +727,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
                     if (rowRev.isPresent()) {
                         XBCSpec rowSpec = rowRev.get().getParent();
                         try {
-                            lineEditor = getCustomEditor((XBCBlockRev) rowRev.get(), lineService);
+                            lineEditor = getCustomEditor((XBCBlockRev) rowRev.get(), uiService);
                             if (lineEditor != null) {
                                 paramExtractor.setParameterIndex(paramIndex);
                                 XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);
@@ -776,20 +774,20 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         }
     }
 
-    private XBRowEditor getCustomEditor(XBCBlockRev rev, XBCXLineService lineService) {
+    private XBRowEditor getCustomEditor(XBCBlockRev rev, XBCXUiService uiService) {
         if (rev == null || catalog == null) {
             return null;
         }
 
-        XBCXBlockLine blockLine = lineService.findLineByPR(rev, 0);
-        if (blockLine == null) {
+        XBCXBlockUi blockUi = uiService.findUiByPR(rev, XBPlugUiType.ROW_EDITOR, 0);
+        if (blockUi == null) {
             return null;
         }
-        XBCXPlugLine plugLine = blockLine.getLine();
-        if (plugLine == null) {
+        XBCXPlugUi plugUi = blockUi.getUi();
+        if (plugUi == null) {
             return null;
         }
-        XBCXPlugin plugin = plugLine.getPlugin();
+        XBCXPlugin plugin = plugUi.getPlugin();
         XBCatalogPlugin pluginHandler;
 
         pluginHandler = pluginRepository.getPluginHandler(plugin);
@@ -797,7 +795,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             return null;
         }
 
-        return ((XBRowEditorCatalogPlugin) pluginHandler).getRowEditor(plugLine.getLineIndex());
+        return ((XBRowEditorCatalogPlugin) pluginHandler).getRowEditor(plugUi.getMethodIndex());
     }
 
     private class LineEditorChangeListener implements XBRowEditor.ChangeListener {

@@ -29,10 +29,11 @@ import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCBlockRev;
-import org.exbin.xbup.core.catalog.base.XBCXBlockPane;
-import org.exbin.xbup.core.catalog.base.XBCXPlugPane;
-import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
+import org.exbin.xbup.core.catalog.base.XBCXBlockUi;
+import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
+import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBComponentEditor;
@@ -42,7 +43,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Custom viewer of document.
  *
- * @version 0.2.1 2020/07/23
+ * @version 0.2.1 2020/08/18
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -85,22 +86,22 @@ public class MainDocumentViewer implements DocumentViewer {
     public void setSelectedItem(@Nullable XBTBlock block) {
         viewerPanel.removeAllViews();
         if (block != null) {
-            XBCXPaneService paneService = catalog.getCatalogService(XBCXPaneService.class);
+            XBCXUiService paneService = catalog.getCatalogService(XBCXUiService.class);
             XBBlockDecl decl = block instanceof XBTTreeNode ? ((XBTTreeNode) block).getBlockDecl() : null;
             if (decl instanceof XBCBlockDecl) {
                 XBCBlockRev blockSpecRev = ((XBCBlockDecl) decl).getBlockSpecRev();
 
-                XBCXBlockPane blockPane = paneService.findPaneByPR(blockSpecRev, 0);
-                if (blockPane != null) {
-                    XBCXPlugPane pane = blockPane.getPane();
-                    Long paneIndex = pane.getPaneIndex();
+                XBCXBlockUi blockUi = paneService.findUiByPR(blockSpecRev, XBPlugUiType.COMPONENT_VIEWER, 0);
+                if (blockUi != null) {
+                    XBCXPlugUi plugUi = blockUi.getUi();
+                    Long methodIndex = plugUi.getMethodIndex();
                     //pane.getPlugin().getPluginFile();
 
                     try {
-                        XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(pane.getPlugin());
+                        XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(plugUi.getPlugin());
                         if (pluginHandler != null) {
-                            XBComponentEditor panelEditor = ((XBComponentEditorCatalogPlugin) pluginHandler).getComponentEditor(paneIndex);
-                            viewerPanel.addView("Plugin " + String.valueOf(pane.getId()), panelEditor.getEditor());
+                            XBComponentEditor panelEditor = ((XBComponentEditorCatalogPlugin) pluginHandler).getComponentEditor(methodIndex);
+                            viewerPanel.addView("Plugin " + String.valueOf(plugUi.getId()), panelEditor.getEditor());
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(MainDocumentViewer.class.getName()).log(Level.SEVERE, null, ex);

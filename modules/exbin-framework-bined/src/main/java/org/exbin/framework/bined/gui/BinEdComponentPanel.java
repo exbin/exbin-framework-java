@@ -61,10 +61,10 @@ import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.preferences.BinaryEditorPreferences;
-import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 import org.exbin.framework.gui.editor.api.EditorProvider.EditorModificationListener;
+import org.exbin.xbup.core.util.StringUtils;
 
 /**
  * Binary editor panel.
@@ -135,7 +135,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
 
         add(codeArea);
         foundTextBackgroundColor = Color.YELLOW;
-        codeArea.setCharset(Charset.forName(TextEncodingPreferences.ENCODING_UTF8));
+        codeArea.setCharset(Charset.forName(StringUtils.ENCODING_UTF8));
         defaultFont = codeArea.getCodeFont();
 
         defaultColors = getCurrentColors();

@@ -25,16 +25,17 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCNode;
-import org.exbin.xbup.core.catalog.base.XBCXPlugPane;
+import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
 import org.exbin.xbup.core.catalog.base.XBCXPlugin;
-import org.exbin.xbup.core.catalog.base.service.XBCXPaneService;
+import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 
 /**
  * Panel for plugin component editor selection.
  *
- * @version 0.2.1 2020/07/23
+ * @version 0.2.1 2020/08/17
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
@@ -43,7 +44,7 @@ public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
     private XBApplication application;
     private XBCNode node;
     private List<XBCXPlugin> plugins;
-    private List<XBCXPlugPane> plugPanes;
+    private List<XBCXPlugUi> plugUis;
 
     public CatalogSelectPlugPanePanel() {
         initComponents();
@@ -72,9 +73,9 @@ public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
     }
 
     @Nullable
-    public XBCXPlugPane getPlugPane() {
+    public XBCXPlugUi getPlugUi() {
         int selectedIndex = hooksList.getSelectedIndex();
-        return selectedIndex < 0 ? null : plugPanes.get(selectedIndex);
+        return selectedIndex < 0 ? null : plugUis.get(selectedIndex);
     }
 
     /**
@@ -188,13 +189,13 @@ public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
 
     private void pluginsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_pluginsListValueChanged
         XBCXPlugin plugin = plugins.get(pluginsList.getSelectedIndex());
-        XBCXPaneService paneService = catalog.getCatalogService(XBCXPaneService.class);
-        plugPanes = paneService.getPlugPanes(plugin);
+        XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
+        plugUis = uiService.getPlugUis(plugin, XBPlugUiType.PANEL_EDITOR);
         DefaultListModel<String> model = (DefaultListModel<String>) hooksList.getModel();
         model.removeAllElements();
-        if (plugPanes != null) {
-            for (XBCXPlugPane plugPane : plugPanes) {
-                model.addElement(String.valueOf(plugPane.getId()) + ": " + plugPane.getPaneIndex());
+        if (plugUis != null) {
+            for (XBCXPlugUi plugUi : plugUis) {
+                model.addElement(String.valueOf(plugUi.getId()) + ": " + plugUi.getMethodIndex());
             }
         }
     }//GEN-LAST:event_pluginsListValueChanged

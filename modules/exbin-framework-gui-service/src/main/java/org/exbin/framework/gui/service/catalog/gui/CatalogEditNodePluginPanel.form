@@ -19,7 +19,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lineEditorsTextField" max="32767" attributes="0"/>
+                  <Component id="rowEditorsCountTextField" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="fileTextField" pref="390" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -28,12 +28,12 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="fileLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="lineEditorsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="panelEditorsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="rowEditorsCountLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="panelViewersCountLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="panelEditorsTextField" alignment="1" max="32767" attributes="0"/>
+                  <Component id="panelViewersCountTextField" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -50,13 +50,13 @@
                   <Component id="fileSelectButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="panelEditorsLabel" min="-2" max="-2" attributes="0"/>
+              <Component id="panelViewersCountLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="lineEditorsTextField" min="-2" max="-2" attributes="0"/>
+              <Component id="rowEditorsCountTextField" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="lineEditorsLabel" min="-2" max="-2" attributes="0"/>
+              <Component id="rowEditorsCountLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="panelEditorsTextField" min="-2" max="-2" attributes="0"/>
+              <Component id="panelViewersCountTextField" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -78,19 +78,19 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fileSelectButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="lineEditorsLabel">
+    <Component class="javax.swing.JLabel" name="rowEditorsCountLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Panel Editors"/>
+        <Property name="text" type="java.lang.String" value="Panel Viewers Count"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="lineEditorsTextField">
+    <Component class="javax.swing.JTextField" name="rowEditorsCountTextField">
     </Component>
-    <Component class="javax.swing.JLabel" name="panelEditorsLabel">
+    <Component class="javax.swing.JLabel" name="panelViewersCountLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Line Editors"/>
+        <Property name="text" type="java.lang.String" value="Row Editors Count"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="panelEditorsTextField">
+    <Component class="javax.swing.JTextField" name="panelViewersCountTextField">
     </Component>
   </SubComponents>
 </Form>

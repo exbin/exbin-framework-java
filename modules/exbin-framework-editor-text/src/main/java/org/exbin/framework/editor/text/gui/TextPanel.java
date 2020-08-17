@@ -54,7 +54,6 @@ import javax.swing.undo.UndoableEdit;
 import org.exbin.framework.editor.text.EditorTextModule;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextFontApi;
-import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
@@ -79,6 +78,7 @@ import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
 import org.exbin.framework.editor.text.service.TextSearchService;
+import org.exbin.xbup.core.util.StringUtils;
 
 /**
  * Text editor panel.
@@ -112,7 +112,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     private void init() {
         highlight = null;
         foundTextBackgroundColor = Color.YELLOW;
-        charset = Charset.forName(TextEncodingPreferences.ENCODING_UTF8);
+        charset = Charset.forName(StringUtils.ENCODING_UTF8);
         defaultFont = textArea.getFont();
         defaultColors = new Color[5];
         defaultColors[0] = new Color(textArea.getForeground().getRGB());

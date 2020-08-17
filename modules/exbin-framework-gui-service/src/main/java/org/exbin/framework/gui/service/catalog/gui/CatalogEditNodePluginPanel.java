@@ -77,22 +77,22 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
         fileTextField.setText(file == null ? "" : file.getFilename());
     }
 
-    public long getLineEditors() {
-        String text = lineEditorsTextField.getText();
+    public long getRowEditorsCount() {
+        String text = rowEditorsCountTextField.getText();
         return text.isEmpty() ? 0 : Long.valueOf(text);
     }
 
-    public void setLineEditors(long oldLineEditors) {
-        lineEditorsTextField.setText(String.valueOf(oldLineEditors));
+    public void setRowEditorsCount(long oldRowEditorsCount) {
+        rowEditorsCountTextField.setText(String.valueOf(oldRowEditorsCount));
     }
 
-    public long getPaneEditors() {
-        String text = panelEditorsTextField.getText();
+    public long getPanelViewersCount() {
+        String text = panelViewersCountTextField.getText();
         return text.isEmpty() ? 0 : Long.valueOf(text);
     }
 
-    public void setPaneEditors(long oldPaneEditors) {
-        panelEditorsTextField.setText(String.valueOf(oldPaneEditors));
+    public void setPanelViewersCount(long oldPanelViewersCount) {
+        panelViewersCountTextField.setText(String.valueOf(oldPanelViewersCount));
     }
 
     /**
@@ -107,10 +107,10 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
         fileLabel = new javax.swing.JLabel();
         fileTextField = new javax.swing.JTextField();
         fileSelectButton = new javax.swing.JButton();
-        lineEditorsLabel = new javax.swing.JLabel();
-        lineEditorsTextField = new javax.swing.JTextField();
-        panelEditorsLabel = new javax.swing.JLabel();
-        panelEditorsTextField = new javax.swing.JTextField();
+        rowEditorsCountLabel = new javax.swing.JLabel();
+        rowEditorsCountTextField = new javax.swing.JTextField();
+        panelViewersCountLabel = new javax.swing.JLabel();
+        panelViewersCountTextField = new javax.swing.JTextField();
 
         fileLabel.setText("File");
 
@@ -121,9 +121,9 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
             }
         });
 
-        lineEditorsLabel.setText("Panel Editors");
+        rowEditorsCountLabel.setText("Panel Viewers Count");
 
-        panelEditorsLabel.setText("Line Editors");
+        panelViewersCountLabel.setText("Row Editors Count");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -132,7 +132,7 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lineEditorsTextField)
+                    .addComponent(rowEditorsCountTextField)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(fileTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -140,10 +140,10 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fileLabel)
-                            .addComponent(lineEditorsLabel)
-                            .addComponent(panelEditorsLabel))
+                            .addComponent(rowEditorsCountLabel)
+                            .addComponent(panelViewersCountLabel))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelEditorsTextField, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(panelViewersCountTextField, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -156,13 +156,13 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
                     .addComponent(fileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fileSelectButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelEditorsLabel)
+                .addComponent(panelViewersCountLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lineEditorsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rowEditorsCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lineEditorsLabel)
+                .addComponent(rowEditorsCountLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelEditorsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelViewersCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -194,10 +194,10 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
     private javax.swing.JLabel fileLabel;
     private javax.swing.JButton fileSelectButton;
     private javax.swing.JTextField fileTextField;
-    private javax.swing.JLabel lineEditorsLabel;
-    private javax.swing.JTextField lineEditorsTextField;
-    private javax.swing.JLabel panelEditorsLabel;
-    private javax.swing.JTextField panelEditorsTextField;
+    private javax.swing.JLabel panelViewersCountLabel;
+    private javax.swing.JTextField panelViewersCountTextField;
+    private javax.swing.JLabel rowEditorsCountLabel;
+    private javax.swing.JTextField rowEditorsCountTextField;
     // End of variables declaration//GEN-END:variables
 
 }
