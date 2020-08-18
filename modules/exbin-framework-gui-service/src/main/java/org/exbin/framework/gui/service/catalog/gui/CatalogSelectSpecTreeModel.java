@@ -20,18 +20,15 @@ import java.util.List;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import static org.exbin.framework.gui.service.catalog.gui.CatalogSpecItemType.BLOCK;
-import static org.exbin.framework.gui.service.catalog.gui.CatalogSpecItemType.FORMAT;
-import static org.exbin.framework.gui.service.catalog.gui.CatalogSpecItemType.GROUP;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.service.XBCNodeService;
 import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 
 /**
- * Table Model for Catalog Tree.
+ * Table model for catalog tree.
  *
- * @version 0.1.24 2014/12/12
+ * @version 0.2.1 2020/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogSelectSpecTreeModel implements TreeModel {
@@ -50,7 +47,7 @@ public class CatalogSelectSpecTreeModel implements TreeModel {
 
     @Override
     public Object getRoot() {
-        return nodeService == null ? null : nodeService.getRootNode();
+        return nodeService == null ? null : nodeService.getMainRootNode();
     }
 
     @Override

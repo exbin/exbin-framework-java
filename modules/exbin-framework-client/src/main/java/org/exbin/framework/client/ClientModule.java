@@ -45,7 +45,6 @@ import org.exbin.xbup.catalog.entity.service.XBEXUiService;
 import org.exbin.xbup.catalog.entity.service.XBEXNameService;
 import org.exbin.xbup.catalog.entity.service.XBEXPlugService;
 import org.exbin.xbup.catalog.entity.service.XBEXStriService;
-import org.exbin.xbup.catalog.update.XBCUpdateListener;
 import org.exbin.xbup.client.XBCatalogNetServiceClient;
 import org.exbin.xbup.client.catalog.XBARCatalog;
 import org.exbin.xbup.client.catalog.remote.service.XBRXDescService;
@@ -58,8 +57,7 @@ import org.exbin.xbup.client.catalog.remote.service.XBRXNameService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXPlugService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXStriService;
 import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.core.catalog.base.XBCRoot;
-import org.exbin.xbup.core.catalog.base.service.XBCNodeService;
+import org.exbin.xbup.core.catalog.base.service.XBCRootService;
 import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 import org.exbin.xbup.core.catalog.base.service.XBCXHDocService;
@@ -183,10 +181,9 @@ public class ClientModule implements ClientModuleApi {
 //                wsHandler.init();
 //                wsHandler.getPort().getLanguageId("en");
 //                catalogHandler.setUpdateHandler(wsHandler);
-                XBCNodeService nodeService = catalogHandler.getCatalogService(XBCNodeService.class);
-                XBCRoot catalogRoot = nodeService.getRoot();
-                if (catalogRoot != null) {
-                    Optional<Date> localLastUpdate = catalogRoot.getLastUpdate();
+                XBCRootService rootService = catalogHandler.getCatalogService(XBCRootService.class);
+                if (rootService.isMainPresent()) {
+                    Optional<Date> localLastUpdate = rootService.getMainLastUpdate();
                     if (!localLastUpdate.isPresent()) {
                         throw new UnsupportedOperationException("Not supported yet.");
                     }

@@ -23,16 +23,18 @@ import javax.swing.JList;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.service.XBENodeService;
+import org.exbin.xbup.catalog.entity.service.XBERootService;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.service.XBCItemService;
 import org.exbin.xbup.core.catalog.base.service.XBCNodeService;
 import org.exbin.xbup.core.catalog.base.service.XBCRevService;
+import org.exbin.xbup.core.catalog.base.service.XBCRootService;
 import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 
 /**
  * Panel for catalog status.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2020/08/18
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogStatusPanel extends javax.swing.JPanel {
@@ -243,15 +245,16 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lastUpdateNowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastUpdateNowButtonActionPerformed
+        XBCRootService rootService = catalog == null ? null : ((XBCRootService) catalog.getCatalogService(XBCRootService.class));
         XBCNodeService nodeService = catalog == null ? null : ((XBCNodeService) catalog.getCatalogService(XBCNodeService.class));
-        if (nodeService instanceof XBENodeService) {
+        if (rootService instanceof XBERootService && nodeService instanceof XBENodeService) {
             EntityManager em = ((XBECatalog) catalog).getEntityManager();
             EntityTransaction transaction = em.getTransaction();
             transaction.begin();
-            ((XBENodeService) nodeService).setLastUpdateToNow();
+            ((XBERootService) rootService).setMainLastUpdateToNow();
             transaction.commit();
-            em.refresh(nodeService.getRoot());
-            Optional<Date> lastUpdate = nodeService.getLastUpdate();
+            em.refresh(rootService.getMainRoot());
+            Optional<Date> lastUpdate = rootService.getMainLastUpdate();
             lastUpdateTextField.setText(lastUpdate.isPresent() ? lastUpdate.toString() : "");
         }
     }//GEN-LAST:event_lastUpdateNowButtonActionPerformed
@@ -300,10 +303,12 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
 
     private void updateCatalog() {
         extModel.setCatalog(catalog);
+        XBCRootService rootService = null;
         XBCNodeService nodeService = null;
         XBCSpecService specService = null;
         XBCRevService revService = null;
         if (catalog != null) {
+            rootService = catalog.getCatalogService(XBCRootService.class);
             nodeService = catalog.getCatalogService(XBCNodeService.class);
             specService = catalog.getCatalogService(XBCSpecService.class);
             revService = catalog.getCatalogService(XBCRevService.class);
@@ -329,7 +334,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         revsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = revService == null ? null : revService.getItemsCount();
         revsCountTextField.setText(count == null ? UNKNOWN : count.toString());
-        Date date = nodeService == null ? null : ((Optional<Date>) nodeService.getLastUpdate()).orElse(null);
+        Date date = nodeService == null ? null : ((Optional<Date>) rootService.getMainLastUpdate()).orElse(null);
         lastUpdateTextField.setText(date == null ? UNKNOWN : date.toString());
     }
 }

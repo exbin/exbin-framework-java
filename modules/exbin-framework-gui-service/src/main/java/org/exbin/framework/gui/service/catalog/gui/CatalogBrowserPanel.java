@@ -352,7 +352,8 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
     }
 
     private void reloadNodesTree() {
-        XBCNode rootNode = nodeService.getRootNode();
+        XBCNode rootNode = nodeService.getMainRootNode();
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private void updateItem() {

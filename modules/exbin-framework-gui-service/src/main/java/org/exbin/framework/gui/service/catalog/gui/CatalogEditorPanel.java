@@ -709,7 +709,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     }
 
     private void reloadNodesTree() {
-        nodesModel = new CatalogNodesTreeModel(catalog == null ? null : nodeService.getRootNode());
+        nodesModel = new CatalogNodesTreeModel(catalog == null ? null : nodeService.getMainRootNode());
         nodesModel.setCatalog(catalog);
         catalogTree.setModel(nodesModel);
     }
