@@ -15,10 +15,10 @@
  */
 package org.exbin.framework.client;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -45,7 +45,11 @@ import org.exbin.xbup.catalog.entity.service.XBEXUiService;
 import org.exbin.xbup.catalog.entity.service.XBEXNameService;
 import org.exbin.xbup.catalog.entity.service.XBEXPlugService;
 import org.exbin.xbup.catalog.entity.service.XBEXStriService;
+import org.exbin.xbup.catalog.update.XBCatalogServiceUpdateHandler;
+import org.exbin.xbup.client.XBCallException;
+import org.exbin.xbup.client.update.XBCUpdateListener;
 import org.exbin.xbup.client.XBCatalogNetServiceClient;
+import org.exbin.xbup.client.XBTCPServiceClient;
 import org.exbin.xbup.client.catalog.XBARCatalog;
 import org.exbin.xbup.client.catalog.remote.service.XBRXDescService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXFileService;
@@ -56,6 +60,7 @@ import org.exbin.xbup.client.catalog.remote.service.XBRXUiService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXNameService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXPlugService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXStriService;
+import org.exbin.xbup.client.update.XBCUpdateHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.service.XBCRootService;
 import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
@@ -73,7 +78,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Implementation of XBUP framework client module.
  *
- * @version 0.2.0 2016/02/15
+ * @version 0.2.1 2020/08/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -103,8 +108,7 @@ public class ClientModule implements ClientModuleApi {
         connectionStatusChanged(ConnectionStatus.DISCONNECTED);
         setCatalog(null);
 
-        // is 0x5842 (XB)
-        int defaultPort = devMode ? 22595 : 22594;
+        int defaultPort = devMode ? XBTCPServiceClient.DEFAULT_DEV_PORT : XBTCPServiceClient.DEFAULT_PORT;
 
         String catalogConnection = "localhost:" + defaultPort;
         String catalogHost;
@@ -155,7 +159,7 @@ public class ClientModule implements ClientModuleApi {
     }
 
     @Override
-    public boolean connectToFallbackService() {
+    public boolean runLocalCatalog() {
         connectionStatusChanged(ConnectionStatus.CONNECTING);
         Preferences preferences = application.getAppPreferences();
         try {
@@ -169,46 +173,50 @@ public class ClientModule implements ClientModuleApi {
             EntityManager em = emf.createEntityManager();
             em.setFlushMode(FlushModeType.AUTO);
 
-            XBAECatalog catalogHandler = createInternalCatalog(em);
+            XBAECatalog xbCatalog = createInternalCatalog(em);
 
-            if (catalogHandler.isShallInit()) {
+            if (xbCatalog.isShallInit()) {
                 connectionStatusChanged(ConnectionStatus.INITIALIZING);
-                catalogHandler.initCatalog();
+                xbCatalog.initCatalog();
             }
 
             try {
-//                XBCUpdatePHPHandler wsHandler = new XBCUpdatePHPHandler(catalogHandler);
-//                wsHandler.init();
-//                wsHandler.getPort().getLanguageId("en");
-//                catalogHandler.setUpdateHandler(wsHandler);
-                XBCRootService rootService = catalogHandler.getCatalogService(XBCRootService.class);
-                if (rootService.isMainPresent()) {
-                    Optional<Date> localLastUpdate = rootService.getMainLastUpdate();
-                    if (!localLastUpdate.isPresent()) {
-                        throw new UnsupportedOperationException("Not supported yet.");
+                int defaultPort = devMode ? XBTCPServiceClient.DEFAULT_DEV_PORT : XBTCPServiceClient.DEFAULT_PORT;
+                String mainCatalogHost = devMode ? XBTCPServiceClient.MAIN_DEV_CATALOG_HOST : XBTCPServiceClient.MAIN_CATALOG_HOST;
+                XBCatalogNetServiceClient mainClient = new XBCatalogNetServiceClient(mainCatalogHost, defaultPort);
+                XBCatalogServiceUpdateHandler updateHandler = new XBCatalogServiceUpdateHandler(xbCatalog, mainClient);
+                xbCatalog.setUpdateHandler(updateHandler);
+                XBCRootService rootService = xbCatalog.getCatalogService(XBCRootService.class);
+                try {
+                    if (!rootService.isMainPresent() || updateHandler.getMainLastUpdate().before((Date) rootService.getMainLastUpdate().get())) {
+                        connectionStatusChanged(ConnectionStatus.UPDATING);
+                        // TODO: As there is currently no diff update available - wipe out entire database instead
+                        em.close();
+                        EntityManagerFactory emfDrop = Persistence.createEntityManagerFactory("XBEditorPU-drop");
+                        EntityManager emDrop = emfDrop.createEntityManager();
+                        emDrop.setFlushMode(FlushModeType.AUTO);
+                        xbCatalog = createInternalCatalog(emDrop);
+                        xbCatalog.initCatalog();
+                        performUpdate(xbCatalog, (XBERoot) rootService.getMainRoot());
+
+                        initializePlugins(xbCatalog);
+                        connectionStatusChanged(ConnectionStatus.INTERNET);
                     }
-//                    Date lastUpdate = wsHandler.getPort().getRootLastUpdate();
-//                    if (!localLastUpdate.isPresent() || localLastUpdate.get().before(lastUpdate)) {
-//                        connectionStatusChanged(ConnectionStatus.UPDATING);
-//                        // TODO: As there is currently no diff update available - wipe out entire database instead
-//                        em.close();
-//                        EntityManagerFactory emfDrop = Persistence.createEntityManagerFactory("XBEditorPU-drop");
-//                        EntityManager emDrop = emfDrop.createEntityManager();
-//                        emDrop.setFlushMode(FlushModeType.AUTO);
-//                        catalogHandler = createInternalCatalog(emDrop);
-//                        catalogHandler.initCatalog();
-//                        nodeService = (XBCNodeService) catalogHandler.getCatalogService(XBCNodeService.class);
-//                        performUpdate(catalogHandler, (XBERoot) nodeService.getRoot(), lastUpdate);
-//                    }
-                    initializePlugins(catalogHandler);
-                    connectionStatusChanged(ConnectionStatus.INTERNET);
+                } catch (XBCallException ex) {
+                    if (!(ex.getCause() instanceof ConnectException)) {
+                        Logger.getLogger(ClientModule.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    connectionStatusChanged(ConnectionStatus.FAILED);
+                } catch (Exception ex) {
+                    Logger.getLogger(ClientModule.class.getName()).log(Level.SEVERE, null, ex);
+                    connectionStatusChanged(ConnectionStatus.FAILED);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(ClientModule.class.getName()).log(Level.SEVERE, null, ex);
                 return false;
             }
 
-            catalog = catalogHandler;
+            this.catalog = xbCatalog;
             return true;
         } catch (Exception ex) {
             Logger.getLogger(ClientModule.class.getName()).log(Level.SEVERE, null, ex);
@@ -217,8 +225,32 @@ public class ClientModule implements ClientModuleApi {
         return false;
     }
 
+    private void performUpdate(XBAECatalog catalog, XBERoot catalogRoot) {
+        XBCUpdateHandler updateHandler = catalog.getUpdateHandler();
+        XBCUpdateListener updateListener = new XBCUpdateListener() {
+            private boolean toolBarVisibleTemp;
+
+            @Override
+            public void webServiceUsage(boolean status) {
+//                if (status == true) {
+//                    toolBarVisbleTemp = getStatusBar().isVisible();
+//                    ((CardLayout) statusPanel.getLayout()).show(statusPanel, "updateCat");
+//                    activityProgressBar.setString(resourceBundle.getString("main_updatecat") + "...");
+//                    getStatusBar().setVisible(true);
+//                } else {
+//                    ((CardLayout) statusPanel.getLayout()).first(statusPanel);
+//                    //                                statusBar.setVisible(toolBarVisibleTemp);
+//                }
+            }
+        };
+
+        updateHandler.addUpdateListener(updateListener);
+        updateHandler.performUpdateMain();
+        updateHandler.removeUpdateListener(updateListener);
+    }
+
     @Override
-    public void useBuildInService() {
+    public void useBuildInCatalog() {
         Preferences preferences = application.getAppPreferences();
         // Database Initialization
         String derbyHome = System.getProperty("user.home") + "/.java/.userPrefs/" + ((PreferencesWrapper) preferences).getInnerPreferences().absolutePath();
@@ -263,31 +295,6 @@ public class ClientModule implements ClientModuleApi {
         createdCatalog.addCatalogService(XBCXUiService.class, new XBEXUiService(createdCatalog));
         createdCatalog.addCatalogService(XBCXHDocService.class, new XBEXHDocService(createdCatalog));
         return createdCatalog;
-    }
-
-    private void performUpdate(XBAECatalog catalogHandler, XBERoot catalogRoot, Date lastUpdate) {
-//        XBCUpdatePHPHandler wsHandler = new XBCUpdatePHPHandler(catalogHandler);
-//        wsHandler.init();
-//        wsHandler.getPort().getLanguageId("en");
-//
-//        wsHandler.fireUsageEvent(false);
-//        wsHandler.addWSListener(new XBCUpdateListener() {
-//            private boolean toolBarVisibleTemp;
-//
-//            @Override
-//            public void webServiceUsage(boolean status) {
-////                        if (status == true) {
-////                            toolBarVisibleTemp = getStatusBar().isVisible();
-////                            ((CardLayout) statusPanel.getLayout()).show(statusPanel, "updateCat");
-////                            activityProgressBar.setString(resourceBundle.getString("main_updatecat") + "...");
-////                            getStatusBar().setVisible(true);
-////                        } else {
-////                            ((CardLayout) statusPanel.getLayout()).first(statusPanel);
-////                            //                                statusBar.setVisible(toolBarVisibleTemp);
-////                        }
-//            }
-//        });
-//        wsHandler.updateCatalog(catalogRoot, lastUpdate);
     }
 
     public void setCatalog(XBACatalog catalog) {

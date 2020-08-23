@@ -45,12 +45,12 @@ public interface ClientModuleApi extends XBApplicationModule {
      *
      * @return true if connection was established
      */
-    boolean connectToFallbackService();
+    boolean runLocalCatalog();
 
     /**
      * Run internal service.
      */
-    void useBuildInService();
+    void useBuildInCatalog();
 
     @Nonnull
     XBACatalog getCatalog();
