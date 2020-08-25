@@ -167,7 +167,7 @@ public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
 
     private void nodeSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nodeSelectButtonActionPerformed
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        CatalogSelectSpecPanel selectPanel = new CatalogSelectSpecPanel(CatalogSpecItemType.NODE);
+        CatalogSelectSpecPanel selectPanel = new CatalogSelectSpecPanel(CatalogItemType.NODE);
         //selectPanel.setApplication(application);
         //        editPanel.setMenuManagement(menuManagement);
         selectPanel.setCatalog(catalog);

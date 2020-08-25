@@ -99,21 +99,21 @@ public class CatalogSpecsTableModel extends AbstractTableModel {
 
         items = new ArrayList<>();
         if (node != null) {
-            items.add(new CatalogSpecTableItem(node, CatalogSpecItemType.NODE));
+            items.add(new CatalogSpecTableItem(node, CatalogItemType.NODE));
 
             List<XBCFormatSpec> formatSpecs = specService.getFormatSpecs(node);
             for (XBCFormatSpec spec : formatSpecs) {
-                items.add(new CatalogSpecTableItem(spec, CatalogSpecItemType.FORMAT));
+                items.add(new CatalogSpecTableItem(spec, CatalogItemType.FORMAT));
             }
 
             List<XBCGroupSpec> groupSpecs = specService.getGroupSpecs(node);
             for (XBCGroupSpec spec : groupSpecs) {
-                items.add(new CatalogSpecTableItem(spec, CatalogSpecItemType.GROUP));
+                items.add(new CatalogSpecTableItem(spec, CatalogItemType.GROUP));
             }
 
             List<XBCBlockSpec> blockSpecs = specService.getBlockSpecs(node);
             for (XBCBlockSpec spec : blockSpecs) {
-                items.add(new CatalogSpecTableItem(spec, CatalogSpecItemType.BLOCK));
+                items.add(new CatalogSpecTableItem(spec, CatalogItemType.BLOCK));
             }
         }
     }
@@ -139,10 +139,10 @@ public class CatalogSpecsTableModel extends AbstractTableModel {
         private String type;
 
         public CatalogSpecTableItem(XBCItem item) {
-            this(item, CatalogSpecItemType.NODE);
+            this(item, CatalogItemType.NODE);
         }
 
-        public CatalogSpecTableItem(XBCItem item, CatalogSpecItemType itemType) {
+        public CatalogSpecTableItem(XBCItem item, CatalogItemType itemType) {
             this.item = item;
             switch (itemType) {
                 case NODE: {
@@ -166,7 +166,7 @@ public class CatalogSpecsTableModel extends AbstractTableModel {
                 }
             }
 
-            if (itemType == CatalogSpecItemType.NODE) {
+            if (itemType == CatalogItemType.NODE) {
                 name = ".";
             } else if (nameService != null) {
                 if (item == null) {

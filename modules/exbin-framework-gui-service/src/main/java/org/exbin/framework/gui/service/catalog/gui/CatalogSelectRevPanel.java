@@ -43,7 +43,7 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
     private boolean selectEnabled;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogSelectRevPanel.class);
 
-    public CatalogSelectRevPanel(XBACatalog catalog, CatalogSpecItemType specType) {
+    public CatalogSelectRevPanel(XBACatalog catalog, CatalogItemType specType) {
         revsModel = new CatalogRevsComboBoxModel();
         selectSpecPanel = new CatalogItemsSearchPanel();
         selectSpecPanel.setCatalog(catalog);
@@ -140,7 +140,7 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new CatalogSelectRevPanel(null, CatalogSpecItemType.NODE));
+        WindowUtils.invokeDialog(new CatalogSelectRevPanel(null, CatalogItemType.NODE));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -64,7 +64,7 @@ public class CatalogParentPropertyTableCellPanel extends CatalogPropertyTableCel
         }
 
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        CatalogSelectSpecPanel panel = new CatalogSelectSpecPanel(CatalogSpecItemType.NODE);
+        CatalogSelectSpecPanel panel = new CatalogSelectSpecPanel(CatalogItemType.NODE);
         panel.setCatalog(catalog);
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         DefaultControlHandler.DefaultControlEnablementListener enablementListener = controlPanel.createEnablementListener();

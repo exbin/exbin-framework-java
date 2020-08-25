@@ -36,9 +36,9 @@ public class CatalogSelectSpecTreeModel implements TreeModel {
     private XBCNodeService nodeService = null;
     private XBCSpecService specService = null;
     private final List<TreeModelListener> treeModelListeners = new ArrayList<>();
-    private final CatalogSpecItemType specType;
+    private final CatalogItemType specType;
 
-    public CatalogSelectSpecTreeModel(XBACatalog catalog, CatalogSpecItemType specType) {
+    public CatalogSelectSpecTreeModel(XBACatalog catalog, CatalogItemType specType) {
         this.specType = specType;
 
         nodeService = catalog == null ? null : catalog.getCatalogService(XBCNodeService.class);

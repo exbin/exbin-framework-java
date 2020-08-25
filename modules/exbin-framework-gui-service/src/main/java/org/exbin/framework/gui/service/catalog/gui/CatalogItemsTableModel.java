@@ -152,7 +152,7 @@ public class CatalogItemsTableModel extends AbstractTableModel {
         itemService = catalog == null ? null : catalog.getCatalogService(XBCItemService.class);
     }
 
-    void setSpecType(CatalogSpecItemType catalogSpecType) {
+    void setSpecType(CatalogItemType catalogSpecType) {
         switch (catalogSpecType) {
             case FORMAT: {
                 specType = "XBFormatSpec";

@@ -42,10 +42,10 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
     private CatalogSelectSpecTreeModel treeModel;
     private SelectionListener selectionListener = null;
     private XBCItem selectedItem;
-    private final CatalogSpecItemType specType;
+    private final CatalogItemType specType;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogSelectSpecPanel.class);
 
-    public CatalogSelectSpecPanel(final CatalogSpecItemType specType) {
+    public CatalogSelectSpecPanel(final CatalogItemType specType) {
         this.specType = specType;
         treeModel = new CatalogSelectSpecTreeModel(null, specType);
         selectedItem = null;
@@ -89,7 +89,7 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
 
         specSelectTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
             XBCItem item = (XBCItem) specSelectTree.getLastSelectedPathComponent();
-            if ((item instanceof XBCNode) && (specType != CatalogSpecItemType.NODE)) {
+            if ((item instanceof XBCNode) && (specType != CatalogItemType.NODE)) {
                 item = null;
             }
             if (item == null) {
@@ -153,7 +153,7 @@ public class CatalogSelectSpecPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new CatalogSelectSpecPanel(CatalogSpecItemType.NODE));
+        WindowUtils.invokeDialog(new CatalogSelectSpecPanel(CatalogItemType.NODE));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

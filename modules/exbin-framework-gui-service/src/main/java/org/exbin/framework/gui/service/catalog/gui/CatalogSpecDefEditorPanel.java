@@ -48,7 +48,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
 
     private XBCSpec spec;
     private CatalogDefsTableItem defItem;
-    private CatalogSpecItemType targetType = CatalogSpecItemType.BLOCK;
+    private CatalogItemType targetType = CatalogItemType.BLOCK;
     private XBCRev targetRev = null;
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogSpecDefEditorPanel.class);
@@ -219,13 +219,13 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
         this.spec = spec;
         if (spec instanceof XBCBlockSpec) {
             operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(CatalogDefOperationType.getAsArray()));
-            switchSpecDefType(CatalogSpecItemType.BLOCK);
+            switchSpecDefType(CatalogItemType.BLOCK);
         } else {
             operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(CatalogDefOperationType.getAsArray(2)));
             if (spec instanceof XBCGroupSpec) {
-                switchSpecDefType(CatalogSpecItemType.BLOCK);
+                switchSpecDefType(CatalogItemType.BLOCK);
             } else {
-                switchSpecDefType(CatalogSpecItemType.GROUP);
+                switchSpecDefType(CatalogItemType.GROUP);
             }
         }
     }
@@ -328,7 +328,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
         }
     }
 
-    private void switchSpecDefType(CatalogSpecItemType newType) {
+    private void switchSpecDefType(CatalogItemType newType) {
         definitionTargetTextField.setText("");
         targetType = newType;
         targetRev = null;
@@ -339,19 +339,19 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
         if (spec instanceof XBCBlockSpec) {
             if (!getOperationRequireTarget(operation)) {
                 // Used to clear target type value
-                switchSpecDefType(CatalogSpecItemType.BLOCK);
+                switchSpecDefType(CatalogItemType.BLOCK);
             }
         } else if (spec instanceof XBCGroupSpec) {
             if (operation == CatalogDefOperationType.CONSIST) {
-                switchSpecDefType(CatalogSpecItemType.BLOCK);
+                switchSpecDefType(CatalogItemType.BLOCK);
             } else {
-                switchSpecDefType(CatalogSpecItemType.GROUP);
+                switchSpecDefType(CatalogItemType.GROUP);
             }
         } else if (spec instanceof XBCFormatSpec) {
             if (operation == CatalogDefOperationType.CONSIST) {
-                switchSpecDefType(CatalogSpecItemType.GROUP);
+                switchSpecDefType(CatalogItemType.GROUP);
             } else {
-                switchSpecDefType(CatalogSpecItemType.FORMAT);
+                switchSpecDefType(CatalogItemType.FORMAT);
             }
         }
 

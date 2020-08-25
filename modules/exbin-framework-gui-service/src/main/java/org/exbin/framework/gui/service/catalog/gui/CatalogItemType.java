@@ -21,7 +21,7 @@ package org.exbin.framework.gui.service.catalog.gui;
  * @version 0.1.22 2013/05/19
  * @author ExBin Project (http://exbin.org)
  */
-public enum CatalogSpecItemType {
+public enum CatalogItemType {
 
     NODE, FORMAT, GROUP, BLOCK
 }

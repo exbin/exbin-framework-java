@@ -54,13 +54,14 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.xbup.catalog.XBECatalog;
+import org.exbin.xbup.catalog.convert.XBCatalogXb;
 import org.exbin.xbup.catalog.entity.XBEItem;
 import org.exbin.xbup.catalog.entity.XBENode;
 import org.exbin.xbup.catalog.entity.XBESpec;
 import org.exbin.xbup.catalog.entity.XBEXDesc;
 import org.exbin.xbup.catalog.entity.XBEXName;
 import org.exbin.xbup.catalog.entity.service.XBEXNameService;
-import org.exbin.xbup.catalog.yaml.XBCatalogYaml;
+import org.exbin.xbup.catalog.convert.XBCatalogYaml;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCFormatDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCGroupDecl;
@@ -215,6 +216,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         popupImportItemMenuItem = new javax.swing.JMenuItem();
         popupExportItemMenuItem = new javax.swing.JMenuItem();
+        popupExportXbMenuItem = new javax.swing.JMenuItem();
         panelSplitPane = new javax.swing.JSplitPane();
         catalogTreeScrollPane = new javax.swing.JScrollPane();
         catalogTree = new javax.swing.JTree();
@@ -279,6 +281,15 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
             }
         });
         catalogTreePopupMenu.add(popupExportItemMenuItem);
+
+        popupExportXbMenuItem.setText("Test XB");
+        popupExportXbMenuItem.setName("popupExportXbMenuItem"); // NOI18N
+        popupExportXbMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popupExportXbMenuItemActionPerformed(evt);
+            }
+        });
+        catalogTreePopupMenu.add(popupExportXbMenuItem);
 
         setName("Form"); // NOI18N
         setLayout(new java.awt.BorderLayout());
@@ -531,6 +542,27 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         }
     }//GEN-LAST:event_popupRefreshMenuItemActionPerformed
 
+    private void popupExportXbMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupExportXbMenuItemActionPerformed
+        JFileChooser exportFileChooser = new JFileChooser();
+        XBFileType xbFileType = new XBFileType();
+        exportFileChooser.addChoosableFileFilter(xbFileType);
+        exportFileChooser.setAcceptAllFileFilterUsed(true);
+        if (exportFileChooser.showSaveDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
+            XBCatalogXb catalogXb = new XBCatalogXb();
+            catalogXb.setCatalog(catalog);
+            FileOutputStream fileOutputStream;
+            try {
+                fileOutputStream = new FileOutputStream(exportFileChooser.getSelectedFile());
+                catalogXb.exportToXb(fileOutputStream);
+                fileOutputStream.close();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(CatalogEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(CatalogEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_popupExportXbMenuItemActionPerformed
+
     public void setNode(XBCNode node) {
         setItem(node);
         specsModel.setNode(node);
@@ -597,6 +629,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     private javax.swing.JMenuItem popupAddMenuItem;
     private javax.swing.JMenuItem popupEditMenuItem;
     private javax.swing.JMenuItem popupExportItemMenuItem;
+    private javax.swing.JMenuItem popupExportXbMenuItem;
     private javax.swing.JMenuItem popupImportItemMenuItem;
     private javax.swing.JMenuItem popupRefreshMenuItem;
     // End of variables declaration//GEN-END:variables

@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.catalog.gui.CatalogSelectRevPanel;
-import org.exbin.framework.gui.service.catalog.gui.CatalogSpecItemType;
+import org.exbin.framework.gui.service.catalog.gui.CatalogItemType;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
@@ -316,7 +316,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
     private void catalogTypeSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_catalogTypeSelectButtonActionPerformed
         if (catalog != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final CatalogSelectRevPanel panel = new CatalogSelectRevPanel(catalog, CatalogSpecItemType.BLOCK);
+            final CatalogSelectRevPanel panel = new CatalogSelectRevPanel(catalog, CatalogItemType.BLOCK);
             panel.setApplication(application);
 
             DefaultControlPanel controlPanel = new DefaultControlPanel();

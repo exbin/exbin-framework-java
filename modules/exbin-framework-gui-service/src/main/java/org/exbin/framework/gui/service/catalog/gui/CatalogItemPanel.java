@@ -464,14 +464,14 @@ public class CatalogItemPanel extends javax.swing.JPanel {
         reloadItem();
     }
 
-    private CatalogSpecItemType getItemType() {
-        CatalogSpecItemType itemType = CatalogSpecItemType.NODE;
+    private CatalogItemType getItemType() {
+        CatalogItemType itemType = CatalogItemType.NODE;
         if (item instanceof XBCBlockSpec) {
-            itemType = CatalogSpecItemType.BLOCK;
+            itemType = CatalogItemType.BLOCK;
         } else if (item instanceof XBCGroupSpec) {
-            itemType = CatalogSpecItemType.GROUP;
+            itemType = CatalogItemType.GROUP;
         } else if (item instanceof XBCFormatSpec) {
-            itemType = CatalogSpecItemType.FORMAT;
+            itemType = CatalogItemType.FORMAT;
         }
 
         return itemType;

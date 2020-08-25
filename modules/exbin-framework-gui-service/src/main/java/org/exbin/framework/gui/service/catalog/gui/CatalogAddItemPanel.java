@@ -103,16 +103,16 @@ public class CatalogAddItemPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     @Nullable
-    public CatalogSpecItemType getItemType() {
+    public CatalogItemType getItemType() {
         switch (itemTypeComboBox.getSelectedIndex()) {
             case 0:
-                return CatalogSpecItemType.NODE;
+                return CatalogItemType.NODE;
             case 1:
-                return CatalogSpecItemType.BLOCK;
+                return CatalogItemType.BLOCK;
             case 2:
-                return CatalogSpecItemType.GROUP;
+                return CatalogItemType.GROUP;
             case 3:
-                return CatalogSpecItemType.FORMAT;
+                return CatalogItemType.FORMAT;
         }
 
         return null;

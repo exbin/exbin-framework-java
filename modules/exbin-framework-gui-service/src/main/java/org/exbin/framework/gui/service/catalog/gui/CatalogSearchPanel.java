@@ -39,7 +39,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.XBEXDesc;
 import org.exbin.xbup.catalog.entity.XBEXName;
-import org.exbin.xbup.catalog.yaml.XBCatalogYaml;
+import org.exbin.xbup.catalog.convert.XBCatalogYaml;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;

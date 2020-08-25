@@ -50,7 +50,7 @@ import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.xbup.catalog.XBECatalog;
 import org.exbin.xbup.catalog.entity.XBEXDesc;
-import org.exbin.xbup.catalog.yaml.XBCatalogYaml;
+import org.exbin.xbup.catalog.convert.XBCatalogYaml;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;
@@ -151,7 +151,7 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
         this.application = application;
     }
 
-    public void switchToSpecTypeMode(CatalogSpecItemType specType) {
+    public void switchToSpecTypeMode(CatalogItemType specType) {
         itemsModel.setSpecType(specType);
         catalogItemsListTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         catalogSearchTable.changeSelection(0, 0, false, false);
