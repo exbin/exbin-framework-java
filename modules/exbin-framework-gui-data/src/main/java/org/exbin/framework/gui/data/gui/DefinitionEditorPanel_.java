@@ -309,7 +309,7 @@ public class DefinitionEditorPanel_ extends javax.swing.JPanel {
 
             XBESpecDef specDef = (XBESpecDef) defItem.getSpecDef();
             if (specDef != null && specDef.getType() != defItem.getDefType()) {
-                specService.removeItem(specDef);
+                specService.removeSpecDef(specDef);
                 specDef = null;
             }
 
@@ -321,7 +321,7 @@ public class DefinitionEditorPanel_ extends javax.swing.JPanel {
             specDef.setXBIndex(defItem.getXbIndex());
             specDef.setTargetRev((XBERev) defItem.getTarget());
 
-            specService.persistItem(specDef);
+            specService.persistSpecDef(specDef);
 
             ((XBEXNameService) nameService).setDefaultText(specDef, defItem.getName());
             ((XBEXDescService) descService).setDefaultText(specDef, defItem.getDescription());

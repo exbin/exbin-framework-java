@@ -58,8 +58,6 @@ import org.exbin.xbup.catalog.convert.XBCatalogXb;
 import org.exbin.xbup.catalog.entity.XBEItem;
 import org.exbin.xbup.catalog.entity.XBENode;
 import org.exbin.xbup.catalog.entity.XBESpec;
-import org.exbin.xbup.catalog.entity.XBEXDesc;
-import org.exbin.xbup.catalog.entity.XBEXName;
 import org.exbin.xbup.catalog.entity.service.XBEXNameService;
 import org.exbin.xbup.catalog.convert.XBCatalogYaml;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
@@ -76,6 +74,8 @@ import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.core.catalog.base.XBCSpec;
+import org.exbin.xbup.core.catalog.base.XBCXDesc;
+import org.exbin.xbup.core.catalog.base.XBCXName;
 import org.exbin.xbup.core.catalog.base.XBCXStri;
 import org.exbin.xbup.core.catalog.base.service.XBCNodeService;
 import org.exbin.xbup.core.catalog.base.service.XBCRevService;
@@ -508,9 +508,9 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
                     }
                     item.setParentItem(node);
                     if (item instanceof XBCNode) {
-                        nodeService.persistItem(item);
+                        nodeService.persistItem((XBCNode) item);
                     } else {
-                        specService.persistItem(item);
+                        specService.persistItem((XBCSpec) item);
                     }
                     ((XBEXNameService) nameService).setDefaultText(item, panel.getItemName());
                     em.flush();
@@ -695,13 +695,13 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
             EntityManager em = ((XBECatalog) catalog).getEntityManager();
             EntityTransaction transaction = em.getTransaction();
             transaction.begin();
-            List<XBEXName> names = nameService.getItemNames(currentItem);
-            for (XBEXName name : names) {
+            List<XBCXName> names = nameService.getItemNames(currentItem);
+            for (XBCXName name : names) {
                 nameService.removeItem(name);
             }
 
-            List<XBEXDesc> descs = descService.getItemDescs(currentItem);
-            for (XBEXDesc desc : descs) {
+            List<XBCXDesc> descs = descService.getItemDescs(currentItem);
+            for (XBCXDesc desc : descs) {
                 descService.removeItem(desc);
             }
 
@@ -711,9 +711,9 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
             }
 
             if (currentItem instanceof XBCNode) {
-                nodeService.removeItem(currentItem);
+                nodeService.removeItem((XBCNode) currentItem);
             } else {
-                specService.removeItem(currentItem);
+                specService.removeItem((XBCSpec) currentItem);
             }
             em.flush();
             transaction.commit();
@@ -742,7 +742,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     }
 
     private void reloadNodesTree() {
-        nodesModel = new CatalogNodesTreeModel(catalog == null ? null : nodeService.getMainRootNode());
+        nodesModel = new CatalogNodesTreeModel(catalog == null ? null : nodeService.getMainRootNode().get());
         nodesModel.setCatalog(catalog);
         catalogTree.setModel(nodesModel);
     }

@@ -36,11 +36,12 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.xbup.catalog.XBECatalog;
-import org.exbin.xbup.catalog.entity.XBEXDesc;
-import org.exbin.xbup.catalog.entity.XBEXName;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;
+import org.exbin.xbup.core.catalog.base.XBCSpec;
+import org.exbin.xbup.core.catalog.base.XBCXDesc;
+import org.exbin.xbup.core.catalog.base.XBCXName;
 import org.exbin.xbup.core.catalog.base.XBCXStri;
 import org.exbin.xbup.core.catalog.base.service.XBCNodeService;
 import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
@@ -291,13 +292,13 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
             EntityManager em = ((XBECatalog) catalog).getEntityManager();
             EntityTransaction transaction = em.getTransaction();
             transaction.begin();
-            List<XBEXName> names = nameService.getItemNames(currentItem);
-            for (XBEXName name : names) {
+            List<XBCXName> names = nameService.getItemNames(currentItem);
+            for (XBCXName name : names) {
                 nameService.removeItem(name);
             }
 
-            List<XBEXDesc> descs = descService.getItemDescs(currentItem);
-            for (XBEXDesc desc : descs) {
+            List<XBCXDesc> descs = descService.getItemDescs(currentItem);
+            for (XBCXDesc desc : descs) {
                 descService.removeItem(desc);
             }
 
@@ -307,9 +308,9 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
             }
 
             if (currentItem instanceof XBCNode) {
-                nodeService.removeItem(currentItem);
+                nodeService.removeItem((XBCNode) currentItem);
             } else {
-                specService.removeItem(currentItem);
+                specService.removeItem((XBCSpec) currentItem);
             }
             em.flush();
             transaction.commit();
@@ -352,7 +353,7 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
     }
 
     private void reloadNodesTree() {
-        XBCNode rootNode = nodeService.getMainRootNode();
+//        XBCNode rootNode = nodeService.getMainRootNode().get();
 //        throw new UnsupportedOperationException("Not supported yet.");
     }
 

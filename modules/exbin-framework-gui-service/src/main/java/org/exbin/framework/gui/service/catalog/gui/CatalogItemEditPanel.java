@@ -48,7 +48,6 @@ import org.exbin.xbup.catalog.entity.service.XBEXIconService;
 import org.exbin.xbup.catalog.entity.service.XBEXNameService;
 import org.exbin.xbup.catalog.entity.service.XBEXStriService;
 import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.core.catalog.base.XBCBase;
 import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;
@@ -356,7 +355,7 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
                 ((XBEItem) catalogItem).setParentItem((XBENode) parentNode);
             }
 
-            itemService.persistItem((XBCBase) catalogItem);
+            itemService.persistItem((XBCItem) catalogItem);
         }
 
         ((XBEXStriService) striService).setItemStringIdText(catalogItem, (String) tableModel.getValueAt(4, 1));
