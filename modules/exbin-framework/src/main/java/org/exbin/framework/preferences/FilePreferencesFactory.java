@@ -19,13 +19,16 @@ import java.io.File;
 import java.util.prefs.Preferences;
 import java.util.prefs.PreferencesFactory;
 import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * File preferences class.
  *
- * @version 0.2.0 2019/08/18
+ * @version 0.2.1 2020/09/01
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class FilePreferencesFactory implements PreferencesFactory {
 
     public static String preferenceFilename = "prefs.xml";
@@ -35,6 +38,7 @@ public class FilePreferencesFactory implements PreferencesFactory {
     private Preferences userPreferences;
     private Preferences systemPreferences;
 
+    @Nonnull
     @Override
     public Preferences systemRoot() {
         if (systemPreferences == null) {
@@ -44,6 +48,7 @@ public class FilePreferencesFactory implements PreferencesFactory {
         return systemPreferences;
     }
 
+    @Nonnull
     @Override
     public Preferences userRoot() {
         if (userPreferences == null) {
@@ -53,6 +58,7 @@ public class FilePreferencesFactory implements PreferencesFactory {
         return userPreferences;
     }
 
+    @Nonnull
     public static File getPreferencesFile(String absolutePath) {
         if (preferencesPath == null) {
             preferencesPath = System.getProperty("user.home") + File.separator + ".java" + File.separator + ".userPrefs";
@@ -61,6 +67,7 @@ public class FilePreferencesFactory implements PreferencesFactory {
         return new File(preferencesPath + absolutePath.replace('/', File.separatorChar) + File.separator + preferenceFilename);
     }
 
+    @Nonnull
     public FilePreferences userNodeForPackage(Class clazz) {
         System.setProperty(PREFERENCES_FACTORY_PROPERTY, PREFERENCES_FACTORY_CLASS);
         FilePreferences preferences = (FilePreferences) userRoot();

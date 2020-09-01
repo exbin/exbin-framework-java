@@ -94,7 +94,7 @@ import org.exbin.xbup.core.serial.XBSerializable;
 /**
  * Catalog editor panel.
  *
- * @version 0.2.1 2019/06/27
+ * @version 0.2.1 2020/09/01
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
@@ -110,12 +110,12 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     private XBCatalogYaml catalogYaml;
 
     // Cached values
-    private XBCNodeService nodeService;
-    private XBCSpecService specService;
-    private XBCRevService revService;
-    private XBCXNameService nameService;
-    private XBCXDescService descService;
-    private XBCXStriService striService;
+    private XBCNodeService<XBCNode> nodeService;
+    private XBCSpecService<XBCSpec> specService;
+    private XBCRevService<XBCRev> revService;
+    private XBCXNameService<XBCXName> nameService;
+    private XBCXDescService<XBCXDesc> descService;
+    private XBCXStriService<XBCXStri> striService;
 
     private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
     private MenuManagement menuManagement;
@@ -216,6 +216,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         popupImportItemMenuItem = new javax.swing.JMenuItem();
         popupExportItemMenuItem = new javax.swing.JMenuItem();
+        popupImportXbMenuItem = new javax.swing.JMenuItem();
         popupExportXbMenuItem = new javax.swing.JMenuItem();
         panelSplitPane = new javax.swing.JSplitPane();
         catalogTreeScrollPane = new javax.swing.JScrollPane();
@@ -282,7 +283,16 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         });
         catalogTreePopupMenu.add(popupExportItemMenuItem);
 
-        popupExportXbMenuItem.setText("Test XB");
+        popupImportXbMenuItem.setText("Test Import XB");
+        popupImportXbMenuItem.setName("popupImportXbMenuItem"); // NOI18N
+        popupImportXbMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popupImportXbMenuItemActionPerformed(evt);
+            }
+        });
+        catalogTreePopupMenu.add(popupImportXbMenuItem);
+
+        popupExportXbMenuItem.setText("Test Export XB");
         popupExportXbMenuItem.setName("popupExportXbMenuItem"); // NOI18N
         popupExportXbMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -512,7 +522,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
                     } else {
                         specService.persistItem((XBCSpec) item);
                     }
-                    ((XBEXNameService) nameService).setDefaultText(item, panel.getItemName());
+                    ((XBEXNameService) (XBCXNameService<?>) nameService).setDefaultText(item, panel.getItemName());
                     em.flush();
                     transaction.commit();
 
@@ -562,6 +572,27 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
             }
         }
     }//GEN-LAST:event_popupExportXbMenuItemActionPerformed
+
+    private void popupImportXbMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupImportXbMenuItemActionPerformed
+        JFileChooser importFileChooser = new JFileChooser();
+        XBFileType xbFileType = new XBFileType();
+        importFileChooser.addChoosableFileFilter(xbFileType);
+        importFileChooser.setAcceptAllFileFilterUsed(true);
+        if (importFileChooser.showOpenDialog(WindowUtils.getFrame(this)) == JFileChooser.APPROVE_OPTION) {
+            XBCatalogXb catalogXb = new XBCatalogXb();
+            catalogXb.setCatalog(catalog);
+            FileInputStream fileInputStream;
+            try {
+                fileInputStream = new FileInputStream(importFileChooser.getSelectedFile());
+                catalogXb.importFromXb(fileInputStream);
+                fileInputStream.close();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(CatalogEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(CatalogEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_popupImportXbMenuItemActionPerformed
 
     public void setNode(XBCNode node) {
         setItem(node);
@@ -631,6 +662,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     private javax.swing.JMenuItem popupExportItemMenuItem;
     private javax.swing.JMenuItem popupExportXbMenuItem;
     private javax.swing.JMenuItem popupImportItemMenuItem;
+    private javax.swing.JMenuItem popupImportXbMenuItem;
     private javax.swing.JMenuItem popupRefreshMenuItem;
     // End of variables declaration//GEN-END:variables
 

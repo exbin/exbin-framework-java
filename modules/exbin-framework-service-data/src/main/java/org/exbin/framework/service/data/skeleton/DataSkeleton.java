@@ -17,13 +17,13 @@ package org.exbin.framework.service.data.skeleton;
 
 import java.util.Optional;
 import org.exbin.xbup.catalog.XBAECatalog;
+import org.exbin.xbup.catalog.entity.XBEItem;
 import org.exbin.xbup.catalog.entity.service.XBEItemService;
 import org.exbin.xbup.catalog.entity.service.XBEXInfoService;
 import org.exbin.xbup.client.stub.XBPInfoStub;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.XBTEmptyBlock;
 import org.exbin.xbup.core.block.declaration.XBDeclBlockType;
-import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCXItemInfo;
 import org.exbin.xbup.core.catalog.base.service.XBCItemService;
@@ -61,7 +61,7 @@ public class DataSkeleton {
 
             XBEItemService itemService = (XBEItemService) catalog.getCatalogService(XBCItemService.class);
             XBEXInfoService infoService = (XBEXInfoService) catalog.getCatalogService(XBCXInfoService.class);
-            Optional<XBCItem> node = itemService.getItem(index.getNaturalLong());
+            Optional<XBEItem> node = itemService.getItem(index.getNaturalLong());
             XBCXItemInfo info = infoService.getNodeInfo((XBCNode) node.get());
 
             XBPListenerSerialHandler listener = new XBPListenerSerialHandler(resultInput);
