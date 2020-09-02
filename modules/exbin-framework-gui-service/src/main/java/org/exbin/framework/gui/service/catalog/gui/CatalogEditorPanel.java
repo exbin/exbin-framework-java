@@ -110,12 +110,12 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     private XBCatalogYaml catalogYaml;
 
     // Cached values
-    private XBCNodeService<XBCNode> nodeService;
-    private XBCSpecService<XBCSpec> specService;
-    private XBCRevService<XBCRev> revService;
-    private XBCXNameService<XBCXName> nameService;
-    private XBCXDescService<XBCXDesc> descService;
-    private XBCXStriService<XBCXStri> striService;
+    private XBCNodeService nodeService;
+    private XBCSpecService specService;
+    private XBCRevService revService;
+    private XBCXNameService nameService;
+    private XBCXDescService descService;
+    private XBCXStriService striService;
 
     private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
     private MenuManagement menuManagement;
@@ -522,7 +522,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
                     } else {
                         specService.persistItem((XBCSpec) item);
                     }
-                    ((XBEXNameService) (XBCXNameService<?>) nameService).setDefaultText(item, panel.getItemName());
+                    ((XBEXNameService) nameService).setDefaultText(item, panel.getItemName());
                     em.flush();
                     transaction.commit();
 
