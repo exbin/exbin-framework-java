@@ -563,7 +563,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
             FileOutputStream fileOutputStream;
             try {
                 fileOutputStream = new FileOutputStream(exportFileChooser.getSelectedFile());
-                catalogXb.exportToXb(fileOutputStream);
+                catalogXb.exportToXbFile(fileOutputStream);
                 fileOutputStream.close();
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(CatalogEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -584,7 +584,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
             FileInputStream fileInputStream;
             try {
                 fileInputStream = new FileInputStream(importFileChooser.getSelectedFile());
-                catalogXb.importFromXb(fileInputStream);
+                catalogXb.importFromXbFile(fileInputStream, catalog);
                 fileInputStream.close();
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(CatalogEditorPanel.class.getName()).log(Level.SEVERE, null, ex);

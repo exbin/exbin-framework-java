@@ -364,7 +364,6 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
 
             if (specDef == null) {
                 specDef = (XBESpecDef) specService.createSpecDef((XBCSpec) catalogItem, defItem.getDefType());
-                specDef.setSpec((XBESpec) catalogItem);
             }
 
             specDef.setXBIndex(defItem.getXbIndex());

@@ -265,7 +265,6 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
             XBERev rev = (XBERev) revItem.getRev();
             if (rev == null) {
                 rev = (XBERev) revService.createRev((XBCSpec) catalogItem);
-                rev.setParent((XBCSpec) catalogItem);
                 rev.setXBIndex(revItem.getXbIndex());
             }
 
