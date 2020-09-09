@@ -19,6 +19,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -188,7 +189,8 @@ public class ClientModule implements ClientModuleApi {
                 xbCatalog.setUpdateHandler(updateHandler);
                 XBCRootService rootService = xbCatalog.getCatalogService(XBCRootService.class);
                 try {
-                    if (!rootService.isMainPresent() || updateHandler.getMainLastUpdate().before((Date) rootService.getMainLastUpdate().get())) {
+                    Optional<Date> localLastUpdate = rootService.getMainLastUpdate();
+                    if (!rootService.isMainPresent() || localLastUpdate.isEmpty() || localLastUpdate.get().before((Date) updateHandler.getMainLastUpdate())) {
                         connectionStatusChanged(ConnectionStatus.UPDATING);
                         // TODO: As there is currently no diff update available - wipe out entire database instead
                         em.close();
@@ -196,12 +198,15 @@ public class ClientModule implements ClientModuleApi {
                         EntityManager emDrop = emfDrop.createEntityManager();
                         emDrop.setFlushMode(FlushModeType.AUTO);
                         xbCatalog = createInternalCatalog(emDrop);
+                        xbCatalog.setUpdateHandler(updateHandler);
                         xbCatalog.initCatalog();
+                        rootService = xbCatalog.getCatalogService(XBCRootService.class);
                         performUpdate(xbCatalog, (XBERoot) rootService.getMainRoot());
 
                         initializePlugins(xbCatalog);
-                        connectionStatusChanged(ConnectionStatus.INTERNET);
                     }
+
+                    connectionStatusChanged(ConnectionStatus.INTERNET);
                 } catch (XBCallException ex) {
                     if (!(ex.getCause() instanceof ConnectException)) {
                         Logger.getLogger(ClientModule.class.getName()).log(Level.SEVERE, null, ex);
