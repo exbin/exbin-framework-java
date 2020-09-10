@@ -359,38 +359,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     }
 
-//    public boolean updateActionStatus(Component component) {
-//        switch (mode) {
-//            case VIEW:
-////                return treePanel.updateActionStatus(component);
-//            case TEXT: {
-//                return false;
-//            }
-//            case BINARY: {
-//                return false;
-//            }
-//        }
-//
-//        return false;
-//    }
-//
-//    public void releaseActionStatus() {
-//        switch (mode) {
-//            case VIEW: {
-////                treePanel.releaseActionStatus();
-//                break;
-//            }
-//        }
-//    }
-//
-//    public boolean performAction(String eventName, ActionEvent event) {
-//        switch (mode) {
-//            case VIEW:
-////                return treePanel.performAction(eventName, event);
-//        }
-//
-//        return false;
-//    }
     public JPopupMenu getPopupMenu() {
         return popupMenu;
     }
@@ -398,7 +366,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     public void setPopupMenu(JPopupMenu popupMenu) {
         this.popupMenu = popupMenu;
         treePanel.setPopupMenu(popupMenu);
-        // textPanel.setPopupMenu(popupMenu);
     }
 
     public void setMainDoc(XBTTreeDocument mainDoc) {
@@ -419,5 +386,17 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 
     public void removeTabSwitchListener(DocumentTabSelectionListener listener) {
         tabSwitchListeners.remove(listener);
+    }
+
+    public boolean isActive() {
+        return treePanel.isActive();
+    }
+
+    public void performSelectAll() {
+        treePanel.performSelectAll();
+    }
+    
+    public boolean hasSelection() {
+        return treePanel.hasSelection();
     }
 }

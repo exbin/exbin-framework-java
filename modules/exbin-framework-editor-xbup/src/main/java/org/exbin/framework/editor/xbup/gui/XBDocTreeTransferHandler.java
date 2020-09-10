@@ -47,7 +47,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
  */
 public class XBDocTreeTransferHandler extends TransferHandler {
 
-    private static final DataFlavor XB_DATA_FLAVOR = new DataFlavor(XBHead.XBUP_MIME_TYPE, "XBUP Document");
+    public static final DataFlavor XB_DATA_FLAVOR = new DataFlavor(XBHead.XBUP_MIME_TYPE, "XBUP Document");
 
     private final XBDocTreePanel docTreePanel;
     private XBTTreeNode sourceNode;

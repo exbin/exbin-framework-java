@@ -21,34 +21,53 @@ import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreePanel;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.xbup.operation.XBTDocCommand;
 import org.exbin.xbup.operation.basic.command.XBTDeleteBlockCommand;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**
  * Delete item action.
  *
- * @version 0.2.0 2016/03/06
+ * @version 0.2.1 2020/09/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DeleteItemAction extends AbstractAction {
 
+    public static final String ACTION_ID = "deleteItemAction";
+
+    private final DocumentViewerProvider viewerProvider;
+
+    public DeleteItemAction(DocumentViewerProvider viewerProvider) {
+        this.viewerProvider = viewerProvider;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-//        XBTTreeNode parent = (XBTTreeNode) node.getParent();
-//        try {
-//            XBTDocCommand command = new XBTDeleteBlockCommand(mainDoc, node);
-//            undoHandler.execute(command);
-//        } catch (Exception ex) {
-//            Logger.getLogger(XBDocTreePanel.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
+        DeleteItemAction.performDelete(viewerProvider);
+    }
+
+    static void performDelete(DocumentViewerProvider viewerProvider) {
+        XBTTreeNode node = viewerProvider.getSelectedItem();
+        XBTTreeDocument mainDoc = viewerProvider.getDoc();
+        XBUndoHandler undoHandler = viewerProvider.getUndoHandler();
+        
+        XBTTreeNode parent = (XBTTreeNode) node.getParent();
+        try {
+            XBTDocCommand command = new XBTDeleteBlockCommand(mainDoc, node);
+            undoHandler.execute(command);
+        } catch (Exception ex) {
+            Logger.getLogger(XBDocTreePanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
 //        if (parent == null) {
 //            mainDocModel.fireTreeChanged();
 //        } else {
 //            mainDocModel.fireTreeStructureChanged(parent);
 //        }
-//        mainDoc.setModified(true);
+        mainDoc.setModified(true);
     }
 }

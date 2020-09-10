@@ -16,6 +16,10 @@
 package org.exbin.framework.editor.xbup.gui;
 
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -35,7 +39,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Panel with document tree visualization.
  *
- * @version 0.2.1 2020/03/12
+ * @version 0.2.1 2020/09/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -48,7 +52,8 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
     private XBUndoHandler undoHandler;
-    private final List<ActionListener> updateEventList;
+    private final List<ActionListener> updateListeners;
+    private boolean active = false;
 
     private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
 
@@ -67,11 +72,22 @@ public class XBDocTreePanel extends javax.swing.JPanel {
             });
         });
 //        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        updateEventList = new ArrayList<>();
+        updateListeners = new ArrayList<>();
 
-//        mainTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
-//            updateItemStatus();
-//        });
+        mainTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent event) -> {
+            notifyUpdate();
+        });
+        mainTree.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                notifyUpdate();
+            }
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                notifyUpdate();
+            }
+        });
         /*clipboard.addFlavorListener(new FlavorListener() {
          @Override
          public void flavorsChanged(FlavorEvent e) {
@@ -83,6 +99,12 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
         mainTree.setTransferHandler(new XBDocTreeTransferHandler(this));
 //        mainTree.setDropTarget(new );
+    }
+
+    private void notifyUpdate() {
+        updateListeners.forEach(updateListener -> {
+            updateListener.actionPerformed(null);
+        });
     }
 
     public void setApplication(XBApplication application) {
@@ -210,11 +232,11 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //        return addEnabled && clipboard.isDataFlavorAvailable(XB_DATA_FLAVOR);
 //    }
     public void addUpdateListener(ActionListener listener) {
-        updateEventList.add(listener);
+        updateListeners.add(listener);
     }
 
     public void removeUpdateListener(ActionListener listener) {
-        updateEventList.remove(listener);
+        updateListeners.remove(listener);
     }
 
     public XBACatalog getCatalog() {
@@ -283,6 +305,17 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
     public void setPopupMenu(JPopupMenu popupMenu) {
         mainTree.setComponentPopupMenu(popupMenu);
+        popupMenu.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                active = true;
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                active = false;
+            }
+        });
     }
 
     boolean isSelection() {
@@ -342,4 +375,11 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //
 //        return false;
 //    }
+    public boolean isActive() {
+        return mainTree.hasFocus() || mainTree.getComponentPopupMenu().isShowing() || active;
+    }
+
+    public boolean hasSelection() {
+        return !mainTree.isSelectionEmpty();
+    }
 }

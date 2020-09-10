@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
+import java.awt.datatransfer.Clipboard;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,12 +30,19 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.xbup.action.CopyItemAction;
+import org.exbin.framework.editor.xbup.action.CutItemAction;
+import org.exbin.framework.editor.xbup.action.DeleteItemAction;
+import org.exbin.framework.editor.xbup.action.PasteItemAction;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
+import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
 import org.exbin.framework.editor.xbup.gui.XBDocumentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.block.XBTBlock;
@@ -53,11 +61,11 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2020/07/26
+ * @version 0.2.1 2020/09/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DocumentViewerProvider implements EditorProvider {
+public class DocumentViewerProvider implements EditorProvider, ClipboardActionsHandler {
 
     private URI fileUri = null;
     private FileType fileType = null;
@@ -249,56 +257,120 @@ public class DocumentViewerProvider implements EditorProvider {
         return getDoc().wasModified();
     }
 
+    @Override
     public void performCut() {
+        if (documentPanel.isActive()) {
+            CutItemAction action = new CutItemAction(this);
+            action.actionPerformed(null);
+            return;
+        }
+
         activeViewer.performCut();
     }
 
+    @Override
     public void performCopy() {
+        if (documentPanel.isActive()) {
+            CopyItemAction action = new CopyItemAction(this);
+            action.actionPerformed(null);
+            return;
+        }
+
         activeViewer.performCopy();
     }
 
+    @Override
     public void performPaste() {
+        if (documentPanel.isActive()) {
+            PasteItemAction action = new PasteItemAction(this);
+            action.actionPerformed(null);
+            return;
+        }
+
         activeViewer.performPaste();
     }
 
+    @Override
     public void performDelete() {
+        if (documentPanel.isActive()) {
+            DeleteItemAction action = new DeleteItemAction(this);
+            action.actionPerformed(null);
+            return;
+        }
+
         activeViewer.performDelete();
     }
 
+    @Override
     public void performSelectAll() {
+        if (documentPanel.isActive()) {
+            documentPanel.performSelectAll();
+            return;
+        }
+
         activeViewer.performSelectAll();
     }
 
+    @Override
     public boolean isSelection() {
+        if (documentPanel.isActive()) {
+            return documentPanel.hasSelection();
+        }
+
         return activeViewer.isSelection();
     }
 
+    @Override
     public boolean isEditable() {
+        if (documentPanel.isActive()) {
+            return documentPanel.hasSelection();
+        }
+
         return activeViewer.isEditable();
     }
 
+    @Override
     public boolean canSelectAll() {
+        if (documentPanel.isActive()) {
+            return true;
+        }
+
         return activeViewer.canSelectAll();
     }
 
+    @Override
     public boolean canPaste() {
+        if (documentPanel.isActive()) {
+            Clipboard clipboard = ClipboardUtils.getClipboard();
+            return clipboard.isDataFlavorAvailable(XBDocTreeTransferHandler.XB_DATA_FLAVOR);
+        }
+
         return activeViewer.canPaste();
     }
 
-//    public boolean isPasteEnabled() {
-//        return documentPanel.isPasteEnabled();
-//    }
-    public void postWindowOpened() {
-        documentPanel.postWindowOpened();
+    @Override
+    public boolean canDelete() {
+        if (documentPanel.isActive()) {
+            return documentPanel.hasSelection();
+        }
+
+        return activeViewer.canDelete();
     }
 
+    @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
 //        clipboardActionsUpdateListener = updateListener;
-//        documentPanel.setUpdateListener(updateListener);
+        documentPanel.addUpdateListener((e) -> {
+            updateListener.stateChanged();
+        });
         mainViewer.setUpdateListener(updateListener);
         binaryViewer.setUpdateListener(updateListener);
         textViewer.setUpdateListener(updateListener);
         propertiesViewer.setUpdateListener(updateListener);
+    }
+
+    public void postWindowOpened() {
+        documentPanel.postWindowOpened();
     }
 
     @Override

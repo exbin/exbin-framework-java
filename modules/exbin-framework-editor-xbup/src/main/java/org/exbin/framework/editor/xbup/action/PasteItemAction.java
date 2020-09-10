@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.xbup.action;
 
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
@@ -24,46 +25,61 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.editor.xbup.gui.XBDocTreePanel;
+import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.operation.XBTDocCommand;
 import org.exbin.xbup.operation.basic.command.XBTAddBlockCommand;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**
  * Paste item from clipboard action.
  *
- * @version 0.2.0 2016/03/06
+ * @version 0.2.1 2020/09/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class PasteItemAction extends AbstractAction {
 
+    public static final String ACTION_ID = "pasteItemAction";
+
+    private final DocumentViewerProvider viewerProvider;
+
+    public PasteItemAction(DocumentViewerProvider viewerProvider) {
+        this.viewerProvider = viewerProvider;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-//        if (clipboard.isDataFlavorAvailable(XB_DATA_FLAVOR)) {
-//            try {
-//                ByteArrayOutputStream stream = (ByteArrayOutputStream) clipboard.getData(XB_DATA_FLAVOR);
-//                XBTTreeNode node = getSelectedItem();
-//                XBTTreeNode newNode = new XBTTreeNode(node);
-//                try {
-//                    newNode.fromStreamUB(new ByteArrayInputStream(stream.toByteArray()));
-//                    try {
-//                        long parentPosition = node == null ? -1 : node.getBlockIndex();
-//                        int childIndex = node == null ? 0 : node.getChildCount();
-//                        XBTDocCommand step = new XBTAddBlockCommand(mainDoc, parentPosition, childIndex, newNode);
-//                        getUndoHandler().execute(step);
-//                        reportStructureChange(node);
+        Clipboard clipboard = ClipboardUtils.getClipboard();
+        if (clipboard.isDataFlavorAvailable(XBDocTreeTransferHandler.XB_DATA_FLAVOR)) {
+            XBUndoHandler undoHandler = viewerProvider.getUndoHandler();
+            XBTTreeDocument mainDoc = viewerProvider.getDoc();
+            try {
+                ByteArrayOutputStream stream = (ByteArrayOutputStream) clipboard.getData(XBDocTreeTransferHandler.XB_DATA_FLAVOR);
+                XBTTreeNode node = viewerProvider.getSelectedItem();
+                XBTTreeNode newNode = new XBTTreeNode(node);
+                try {
+                    newNode.fromStreamUB(new ByteArrayInputStream(stream.toByteArray()));
+                    try {
+                        long parentPosition = node == null ? -1 : node.getBlockIndex();
+                        int childIndex = node == null ? 0 : node.getChildCount();
+                        XBTDocCommand step = new XBTAddBlockCommand(mainDoc, parentPosition, childIndex, newNode);
+                        undoHandler.execute(step);
+                        viewerProvider.reportStructureChange(node);
 //                        updateItemStatus();
-//                    } catch (Exception ex) {
-//                        Logger.getLogger(XBDocTreePanel.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                } catch (IOException | XBProcessingException ex) {
-//                    Logger.getLogger(XBDocTreePanel.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            } catch (UnsupportedFlavorException | IOException ex) {
-//                Logger.getLogger(XBDocTreePanel.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
+                    } catch (Exception ex) {
+                        Logger.getLogger(PasteItemAction.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } catch (IOException | XBProcessingException ex) {
+                    Logger.getLogger(PasteItemAction.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } catch (UnsupportedFlavorException | IOException ex) {
+                Logger.getLogger(PasteItemAction.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

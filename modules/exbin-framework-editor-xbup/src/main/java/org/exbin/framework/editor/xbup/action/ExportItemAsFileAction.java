@@ -22,7 +22,7 @@ import javax.swing.AbstractAction;
 /**
  * Export item as file action.
  *
- * @version 0.2.0 2016/03/02
+ * @version 0.2.1 2020/09/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault

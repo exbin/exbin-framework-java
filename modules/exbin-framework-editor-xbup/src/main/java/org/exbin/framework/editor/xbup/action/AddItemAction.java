@@ -16,6 +16,7 @@
 package org.exbin.framework.editor.xbup.action;
 
 import java.awt.event.ActionEvent;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -25,6 +26,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.AddBlockPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.MultiStepControlHandler;
 import org.exbin.framework.gui.utils.gui.MultiStepControlPanel;
@@ -38,17 +41,27 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Add item action.
  *
- * @version 0.2.0 2016/03/09
+ * @version 0.2.1 2020/09/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddItemAction extends AbstractAction {
 
-    private AddBlockPanel addItemPanel = null;
+    public static final String ACTION_ID = "addItemAction";
+
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AddItemAction.class);
+
     private final DocumentViewerProvider viewerProvider;
+    private AddBlockPanel addItemPanel = null;
 
     public AddItemAction(DocumentViewerProvider viewerProvider) {
         this.viewerProvider = viewerProvider;
+        init();
+    }
+
+    private void init() {
+        ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
+        putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
     @Override

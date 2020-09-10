@@ -17,6 +17,7 @@ package org.exbin.framework.editor.xbup.gui;
 
 import java.awt.CardLayout;
 import java.util.ResourceBundle;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import org.exbin.framework.client.api.ConnectionStatus;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -25,9 +26,10 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Status panel for XB document editor.
  *
- * @version 0.2.1 2019/06/27
+ * @version 0.2.1 2020/09/10
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBDocStatusPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBDocStatusPanel.class);

@@ -20,21 +20,34 @@ import java.awt.event.ActionEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
+import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.utils.ClipboardUtils;
 
 /**
  * Copy item to clipboard action.
  *
- * @version 0.2.0 2016/03/06
+ * @version 0.2.1 2020/09/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CopyItemAction extends AbstractAction {
 
+    public static final String ACTION_ID = "copyItemAction";
+
+    private final DocumentViewerProvider viewerProvider;
+
+    public CopyItemAction(DocumentViewerProvider viewerProvider) {
+        this.viewerProvider = viewerProvider;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-//        Clipboard clipboard = ClipboardUtils.getClipboard();
-//        XBDocTreeTransferHandler.XBTSelection selection = new XBDocTreeTransferHandler.XBTSelection(getSelectedItem());
-//        clipboard.setContents(selection, selection);
+        CopyItemAction.performCopy(viewerProvider);
+    }
+    
+    static void performCopy(DocumentViewerProvider viewerProvider) {
+        Clipboard clipboard = ClipboardUtils.getClipboard();
+        XBDocTreeTransferHandler.XBTSelection selection = new XBDocTreeTransferHandler.XBTSelection(viewerProvider.getSelectedItem());
+        clipboard.setContents(selection, selection);
     }
 }
