@@ -69,6 +69,8 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBTProviderToPullProvider;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.serial.XBSerializable;
+import org.exbin.xbup.core.ubnumber.UBNatural;
+import org.exbin.xbup.core.ubnumber.type.UBENat32;
 import org.exbin.xbup.core.ubnumber.type.UBNat32;
 import org.exbin.xbup.parser_tree.XBATreeParamExtractor;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
@@ -620,7 +622,21 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
                 Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-
+            // TODO: Update tabs on changes
+            int attributesCount = attributes.size();
+            UBNatural groupId = attributesCount == 0 ? new UBNat32().convertToNatural() : attributes.get(0).convertToNatural();
+            UBNatural blockId = attributesCount < 2 ? new UBNat32().convertToNatural() : attributes.get(1).convertToNatural();
+            XBFixedBlockType fixedBlockType = new XBFixedBlockType(groupId, blockId);
+            newNode.setFixedBlockType(fixedBlockType);
+            if (attributesCount > 2) {
+                XBAttribute[] attribs = new XBAttribute[attributesCount - 2];
+                for (int i = 0; i < attributesCount - 2; i++) {
+                    attribs[i] = attributes.get(i + 2);
+                }
+                newNode.setAttributes(attribs);
+            } else {
+                newNode.clearAttributes();
+            }
         }
 
         return newNode;

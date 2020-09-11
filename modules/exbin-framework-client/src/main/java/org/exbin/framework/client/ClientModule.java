@@ -198,7 +198,7 @@ public class ClientModule implements ClientModuleApi {
                         EntityManager emDrop = emfDrop.createEntityManager();
                         emDrop.setFlushMode(FlushModeType.AUTO);
                         xbCatalog = createInternalCatalog(emDrop);
-                        xbCatalog.setUpdateHandler(updateHandler);
+                        xbCatalog.setUpdateHandler(new XBCatalogServiceUpdateHandler(xbCatalog, mainClient));
                         xbCatalog.initCatalog();
                         rootService = xbCatalog.getCatalogService(XBCRootService.class);
                         performUpdate(xbCatalog, (XBERoot) rootService.getMainRoot());

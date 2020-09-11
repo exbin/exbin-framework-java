@@ -584,7 +584,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
             FileInputStream fileInputStream;
             try {
                 fileInputStream = new FileInputStream(importFileChooser.getSelectedFile());
-                catalogXb.importFromXbFile(fileInputStream, catalog);
+                catalogXb.importFromXbFile(fileInputStream);
                 fileInputStream.close();
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(CatalogEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
