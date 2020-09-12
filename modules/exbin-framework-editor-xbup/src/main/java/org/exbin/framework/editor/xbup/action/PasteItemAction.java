@@ -28,6 +28,7 @@ import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.utils.ClipboardUtils;
+import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.operation.XBTDocCommand;
 import org.exbin.xbup.operation.basic.command.XBTAddBlockCommand;
@@ -60,7 +61,12 @@ public class PasteItemAction extends AbstractAction {
             XBTTreeDocument mainDoc = viewerProvider.getDoc();
             try {
                 ByteArrayOutputStream stream = (ByteArrayOutputStream) clipboard.getData(XBDocTreeTransferHandler.XB_DATA_FLAVOR);
-                XBTTreeNode node = viewerProvider.getSelectedItem();
+                XBTBlock block = viewerProvider.getSelectedItem().get();
+                if (!(block instanceof XBTTreeNode)) {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+
+                XBTTreeNode node = (XBTTreeNode) block;
                 XBTTreeNode newNode = new XBTTreeNode(node);
                 try {
                     newNode.fromStreamUB(new ByteArrayInputStream(stream.toByteArray()));

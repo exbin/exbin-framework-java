@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreePanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.operation.XBTDocCommand;
 import org.exbin.xbup.operation.basic.command.XBTDeleteBlockCommand;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
@@ -51,7 +52,12 @@ public class DeleteItemAction extends AbstractAction {
     }
 
     static void performDelete(DocumentViewerProvider viewerProvider) {
-        XBTTreeNode node = viewerProvider.getSelectedItem();
+        XBTBlock block = viewerProvider.getSelectedItem().get();
+        if (!(block instanceof XBTTreeNode)) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        XBTTreeNode node = (XBTTreeNode) block;
         XBTTreeDocument mainDoc = viewerProvider.getDoc();
         XBUndoHandler undoHandler = viewerProvider.getUndoHandler();
         

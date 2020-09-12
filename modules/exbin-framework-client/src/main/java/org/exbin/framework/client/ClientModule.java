@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import org.exbin.framework.preferences.PreferencesWrapper;
@@ -63,6 +64,7 @@ import org.exbin.xbup.client.catalog.remote.service.XBRXPlugService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXStriService;
 import org.exbin.xbup.client.update.XBCUpdateHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCRoot;
 import org.exbin.xbup.core.catalog.base.service.XBCRootService;
 import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
@@ -190,7 +192,8 @@ public class ClientModule implements ClientModuleApi {
                 XBCRootService rootService = xbCatalog.getCatalogService(XBCRootService.class);
                 try {
                     Optional<Date> localLastUpdate = rootService.getMainLastUpdate();
-                    if (!rootService.isMainPresent() || localLastUpdate.isEmpty() || localLastUpdate.get().before((Date) updateHandler.getMainLastUpdate())) {
+                    Date remoteLastUpdate = (Date) updateHandler.getMainLastUpdate();
+                    if (!rootService.isMainPresent() || localLastUpdate.isEmpty() || localLastUpdate.get().before(remoteLastUpdate)) {
                         connectionStatusChanged(ConnectionStatus.UPDATING);
                         // TODO: As there is currently no diff update available - wipe out entire database instead
                         em.close();
@@ -201,7 +204,7 @@ public class ClientModule implements ClientModuleApi {
                         xbCatalog.setUpdateHandler(new XBCatalogServiceUpdateHandler(xbCatalog, mainClient));
                         xbCatalog.initCatalog();
                         rootService = xbCatalog.getCatalogService(XBCRootService.class);
-                        performUpdate(xbCatalog, (XBERoot) rootService.getMainRoot());
+                        performUpdate(xbCatalog, rootService, remoteLastUpdate);
 
                         initializePlugins(xbCatalog);
                     }
@@ -230,7 +233,7 @@ public class ClientModule implements ClientModuleApi {
         return false;
     }
 
-    private void performUpdate(XBAECatalog catalog, XBERoot catalogRoot) {
+    private void performUpdate(XBAECatalog catalog, XBCRootService rootService, Date remoteLastUpdate) {
         XBCUpdateHandler updateHandler = catalog.getUpdateHandler();
         XBCUpdateListener updateListener = new XBCUpdateListener() {
             private boolean toolBarVisibleTemp;
@@ -251,6 +254,15 @@ public class ClientModule implements ClientModuleApi {
 
         updateHandler.addUpdateListener(updateListener);
         updateHandler.performUpdateMain();
+
+        EntityManager em = catalog.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        XBCRoot mainRoot = rootService.getMainRoot();
+        ((XBERoot) mainRoot).setLastUpdate(remoteLastUpdate);
+        rootService.persistItem(mainRoot);
+        tx.commit();
+
         updateHandler.removeUpdateListener(updateListener);
     }
 

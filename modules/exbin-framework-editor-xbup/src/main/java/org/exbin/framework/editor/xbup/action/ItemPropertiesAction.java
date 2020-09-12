@@ -64,7 +64,7 @@ public class ItemPropertiesAction extends AbstractAction {
         BlockPropertiesPanel panel = new BlockPropertiesPanel();
         panel.setCatalog(catalog);
         panel.setDevMode(devMode);
-        panel.setBlock(viewerProvider.getSelectedItem());
+        panel.setBlock(viewerProvider.getSelectedItem().get());
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);

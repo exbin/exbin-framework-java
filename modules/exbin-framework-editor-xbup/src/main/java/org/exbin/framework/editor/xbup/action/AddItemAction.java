@@ -31,6 +31,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.MultiStepControlHandler;
 import org.exbin.framework.gui.utils.gui.MultiStepControlPanel;
+import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.operation.XBTDocCommand;
 import org.exbin.xbup.operation.basic.command.XBTAddBlockCommand;
@@ -70,7 +71,12 @@ public class AddItemAction extends AbstractAction {
         XBACatalog catalog = viewerProvider.getCatalog();
         XBUndoHandler undoHandler = viewerProvider.getUndoHandler();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        XBTTreeNode node = viewerProvider.getSelectedItem();
+        XBTBlock block = viewerProvider.getSelectedItem().orElse(null);
+        if (!(block instanceof XBTTreeNode) && block != null) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        XBTTreeNode node = (XBTTreeNode) block;
 
         addItemPanel = new AddBlockPanel();
         addItemPanel.setApplication(application);

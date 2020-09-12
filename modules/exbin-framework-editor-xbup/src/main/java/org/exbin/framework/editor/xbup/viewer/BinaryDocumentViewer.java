@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
@@ -31,9 +33,10 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Binary viewer of document.
  *
- * @version 0.2.1 2020/03/12
+ * @version 0.2.1 2020/09/12
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class BinaryDocumentViewer implements DocumentViewer {
 
     private final BinEdComponentPanel binaryPanel;
@@ -66,6 +69,7 @@ public class BinaryDocumentViewer implements DocumentViewer {
         binaryPanel.setContentData(byteArrayData);
     }
 
+    @Nonnull
     @Override
     public JComponent getComponent() {
         return binaryPanel;

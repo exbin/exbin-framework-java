@@ -22,6 +22,8 @@ import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.utils.ClipboardUtils;
+import org.exbin.xbup.core.block.XBTBlock;
+import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**
  * Copy item to clipboard action.
@@ -46,8 +48,14 @@ public class CopyItemAction extends AbstractAction {
     }
     
     static void performCopy(DocumentViewerProvider viewerProvider) {
+        XBTBlock block = viewerProvider.getSelectedItem().get();
+        if (!(block instanceof XBTTreeNode)) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        XBTTreeNode node = (XBTTreeNode) block;
         Clipboard clipboard = ClipboardUtils.getClipboard();
-        XBDocTreeTransferHandler.XBTSelection selection = new XBDocTreeTransferHandler.XBTSelection(viewerProvider.getSelectedItem());
+        XBDocTreeTransferHandler.XBTSelection selection = new XBDocTreeTransferHandler.XBTSelection(node);
         clipboard.setContents(selection, selection);
     }
 }

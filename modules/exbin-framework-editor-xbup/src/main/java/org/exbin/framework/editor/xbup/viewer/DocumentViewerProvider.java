@@ -23,6 +23,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -87,6 +90,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     private XBApplication application;
     private XBUndoHandler undoHandler;
     private XBPluginRepository pluginRepository;
+    private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
 
     public DocumentViewerProvider(XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
@@ -104,8 +108,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
                 activeViewer.setSelectedItem(item);
             }
 
-            boolean itemSelected = item != null;
-
+            notifyItemSelectionChanged();
         });
         mainDoc = new TreeDocument(null);
         documentPanel.setMainDoc(mainDoc);
@@ -382,8 +385,9 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         documentPanel.reportStructureChange(block);
     }
 
-    public XBTTreeNode getSelectedItem() {
-        return documentPanel.getSelectedItem();
+    @Nonnull
+    public Optional<XBTBlock> getSelectedItem() {
+        return Optional.ofNullable(selectedItem);
     }
 
 //    public void updateItem() {
@@ -457,7 +461,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         BlockPropertiesPanel panel = new BlockPropertiesPanel();
         panel.setCatalog(catalog);
-        panel.setBlock(getSelectedItem());
+        panel.setBlock(getSelectedItem().orElse(null));
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -477,6 +481,20 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         mainDoc.setModified(true);
         mainDoc.processSpec();
         // TODO updateItemStatus();
+    }
+
+    public void addItemSelectionListener(DocumentItemSelectionListener listener) {
+        itemSelectionListeners.add(listener);
+    }
+
+    public void removeItemSelectionListener(DocumentItemSelectionListener listener) {
+        itemSelectionListeners.remove(listener);
+    }
+
+    public void notifyItemSelectionChanged() {
+        itemSelectionListeners.forEach(listener -> {
+            listener.itemSelected(selectedItem);
+        });
     }
 
 //    private void updateActiveViewer() {

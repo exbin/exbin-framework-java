@@ -20,7 +20,6 @@ import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -31,12 +30,7 @@ import javax.swing.TransferHandler;
 import static javax.swing.TransferHandler.COPY;
 import static javax.swing.TransferHandler.COPY_OR_MOVE;
 import static javax.swing.TransferHandler.MOVE;
-import javax.swing.tree.TreePath;
-import org.exbin.xbup.core.block.XBBlockDataMode;
-import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.parser.basic.XBHead;
-import org.exbin.xbup.operation.XBTDocCommand;
-import org.exbin.xbup.operation.basic.command.XBTAddBlockCommand;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 
 /**

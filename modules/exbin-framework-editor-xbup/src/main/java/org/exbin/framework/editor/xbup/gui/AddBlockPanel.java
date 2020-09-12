@@ -18,6 +18,7 @@ package org.exbin.framework.editor.xbup.gui;
 import java.awt.CardLayout;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nullable;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
@@ -428,7 +429,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
         }
     }
 
-    public void setParentNode(XBTTreeNode parentNode) {
+    public void setParentNode(@Nullable XBTTreeNode parentNode) {
         this.parentNode = parentNode;
         contextTypeRadioButton.setEnabled(parentNode != null && parentNode.getContext().getGroupsCount() > 1);
     }
