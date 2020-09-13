@@ -749,7 +749,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
                                 XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);
                                 serialReader.read(lineEditor);
 
-                                lineEditor.attachChangeListener(new LineEditorChangeListener(lineEditor, paramExtractor, paramIndex));
+                                lineEditor.attachChangeListener(new ComponentEditorChangeListener(lineEditor, paramExtractor, paramIndex));
                             }
                         } catch (IOException | XBProcessingException ex) {
                             Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -814,13 +814,13 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         return ((XBRowEditorCatalogPlugin) pluginHandler).getRowEditor(plugUi.getMethodIndex());
     }
 
-    private class LineEditorChangeListener implements XBRowEditor.ChangeListener {
+    private class ComponentEditorChangeListener implements XBRowEditor.ChangeListener {
 
         private final XBATreeParamExtractor paramExtractor;
         private final int parameterIndex;
         private final XBRowEditor lineEditor;
 
-        private LineEditorChangeListener(XBRowEditor lineEditor, XBATreeParamExtractor paramExtractor, int parameterIndex) {
+        private ComponentEditorChangeListener(XBRowEditor lineEditor, XBATreeParamExtractor paramExtractor, int parameterIndex) {
             this.lineEditor = lineEditor;
             this.paramExtractor = paramExtractor;
             this.parameterIndex = parameterIndex;

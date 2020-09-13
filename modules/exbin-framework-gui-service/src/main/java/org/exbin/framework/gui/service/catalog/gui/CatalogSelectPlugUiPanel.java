@@ -17,6 +17,7 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.List;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
@@ -29,24 +30,28 @@ import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
 import org.exbin.xbup.core.catalog.base.XBCXPlugin;
+import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 
 /**
- * Panel for plugin component editor selection.
+ * Panel for plugin row editor selection.
  *
- * @version 0.2.1 2020/08/17
+ * @version 0.2.1 2020/09/13
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
+@ParametersAreNonnullByDefault
+public class CatalogSelectPlugUiPanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
     private XBApplication application;
     private XBCNode node;
     private List<XBCXPlugin> plugins;
     private List<XBCXPlugUi> plugUis;
+    private final XBPlugUiType plugUiType;
 
-    public CatalogSelectPlugPanePanel() {
+    public CatalogSelectPlugUiPanel(XBPlugUiType plugUiType) {
+        this.plugUiType = plugUiType;
         initComponents();
     }
 
@@ -98,6 +103,8 @@ public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
         hooksList = new javax.swing.JList<>();
 
         nodeLabel.setText("Node");
+
+        nodeTextField.setEditable(false);
 
         nodeSelectButton.setText("Select...");
         nodeSelectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -179,7 +186,11 @@ public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
         //        WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                setNode((XBCNode) selectPanel.getSpec());
+                XBCNode selectedNode = (XBCNode) selectPanel.getSpec();
+                setNode(selectedNode);
+
+                XBCXNameService nodeService = catalog.getCatalogService(XBCXNameService.class);
+                nodeTextField.setText(nodeService.getItemNamePath(selectedNode));
             }
             dialog.close();
         });
@@ -190,7 +201,7 @@ public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
     private void pluginsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_pluginsListValueChanged
         XBCXPlugin plugin = plugins.get(pluginsList.getSelectedIndex());
         XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
-        plugUis = uiService.getPlugUis(plugin, XBPlugUiType.PANEL_EDITOR);
+        plugUis = uiService.getPlugUis(plugin, plugUiType);
         DefaultListModel<String> model = (DefaultListModel<String>) hooksList.getModel();
         model.removeAllElements();
         if (plugUis != null) {
@@ -200,6 +211,14 @@ public class CatalogSelectPlugPanePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_pluginsListValueChanged
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogSelectPlugUiPanel(XBPlugUiType.ROW_EDITOR));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel hooksLabel;

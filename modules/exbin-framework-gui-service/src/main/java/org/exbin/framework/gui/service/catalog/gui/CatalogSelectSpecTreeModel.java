@@ -17,6 +17,8 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -28,9 +30,10 @@ import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 /**
  * Table model for catalog tree.
  *
- * @version 0.2.1 2020/08/18
+ * @version 0.2.1 2020/09/13
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogSelectSpecTreeModel implements TreeModel {
 
     private XBCNodeService nodeService = null;
@@ -47,11 +50,11 @@ public class CatalogSelectSpecTreeModel implements TreeModel {
 
     @Override
     public Object getRoot() {
-        return nodeService == null ? null : nodeService.getMainRootNode();
+        return nodeService == null ? null : nodeService.getMainRootNode().get();
     }
 
     @Override
-    public Object getChild(Object parent, int index) {
+    public Object getChild(@Nullable Object parent, int index) {
         if (parent == null) {
             return null;
         }
@@ -76,7 +79,7 @@ public class CatalogSelectSpecTreeModel implements TreeModel {
     }
 
     @Override
-    public int getChildCount(Object parent) {
+    public int getChildCount(@Nullable Object parent) {
         if (parent == null) {
             throw new NullPointerException("No parent");
         }
@@ -133,12 +136,12 @@ public class CatalogSelectSpecTreeModel implements TreeModel {
     }
 
     @Override
-    public void addTreeModelListener(TreeModelListener tml) {
-        treeModelListeners.add(tml);
+    public void addTreeModelListener(TreeModelListener listener) {
+        treeModelListeners.add(listener);
     }
 
     @Override
-    public void removeTreeModelListener(TreeModelListener tml) {
-        treeModelListeners.remove(tml);
+    public void removeTreeModelListener(TreeModelListener listener) {
+        treeModelListeners.remove(listener);
     }
 }

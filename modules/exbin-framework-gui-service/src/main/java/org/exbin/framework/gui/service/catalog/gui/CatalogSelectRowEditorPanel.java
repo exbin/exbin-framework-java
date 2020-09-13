@@ -23,6 +23,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
 
 /**
@@ -116,7 +117,7 @@ public class CatalogSelectRowEditorPanel extends javax.swing.JPanel {
 
     private void selectEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectEditorButtonActionPerformed
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        CatalogSelectPlugLinePanel selectPanel = new CatalogSelectPlugLinePanel();
+        CatalogSelectPlugUiPanel selectPanel = new CatalogSelectPlugUiPanel(XBPlugUiType.ROW_EDITOR);
         selectPanel.setApplication(application);
         //        editPanel.setMenuManagement(menuManagement);
         selectPanel.setCatalog(catalog);

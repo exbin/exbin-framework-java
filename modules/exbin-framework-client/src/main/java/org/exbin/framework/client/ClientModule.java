@@ -194,6 +194,15 @@ public class ClientModule implements ClientModuleApi {
                     Optional<Date> localLastUpdate = rootService.getMainLastUpdate();
                     Date remoteLastUpdate = (Date) updateHandler.getMainLastUpdate();
                     if (!rootService.isMainPresent() || localLastUpdate.isEmpty() || localLastUpdate.get().before(remoteLastUpdate)) {
+                        System.out.print("Update due to: ");
+                        if (!rootService.isMainPresent()) {
+                            System.out.print("Missing main root");
+                        } else if (localLastUpdate.isEmpty()) {
+                            System.out.print("No last update date");
+                        } else {
+                            System.out.print("Never update available");
+                        }
+                        
                         connectionStatusChanged(ConnectionStatus.UPDATING);
                         // TODO: As there is currently no diff update available - wipe out entire database instead
                         em.close();

@@ -16,8 +16,11 @@
 package org.exbin.framework.editor.xbup.gui;
 
 import java.awt.BorderLayout;
+import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.component.DefaultEditItemActions;
@@ -27,6 +30,8 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.component.gui.ToolBarSidePanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCRoot;
+import org.exbin.xbup.core.catalog.base.service.XBCRootService;
 
 /**
  * Panel for list of catalogs.
@@ -34,6 +39,7 @@ import org.exbin.xbup.core.catalog.XBACatalog;
  * @version 0.2.1 2020/07/20
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogsBrowserPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogsBrowserPanel.class);
@@ -65,7 +71,11 @@ public class CatalogsBrowserPanel extends javax.swing.JPanel {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        ((DefaultTableModel) catalogsTable.getModel()).addRow(new Object[]{"Main", "(build-in)", ""});
+        XBCRootService catalogService = catalog.getCatalogService(XBCRootService.class);
+        XBCRoot mainRoot = catalogService.getMainRoot();
+        Optional<Date> lastUpdate = mainRoot.getLastUpdate();
+        String lastUpdateText = lastUpdate.isPresent() ? lastUpdate.get().toString() : "";
+        ((DefaultTableModel) catalogsTable.getModel()).addRow(new Object[]{"Main", "(build-in)", lastUpdateText});
     }
 
     public XBACatalog getSelectedItem() {
