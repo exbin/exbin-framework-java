@@ -17,7 +17,9 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.xbup.core.catalog.XBCatalog;
 import org.exbin.xbup.core.catalog.XBPlugUiType;
@@ -30,16 +32,17 @@ import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 /**
  * Table model for catalog plugins.
  *
- * @version 0.2.1 2020/08/17
+ * @version 0.2.1 2020/09/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogPluginsTableModel extends AbstractTableModel {
 
     private XBCatalog catalog;
     private XBCXPlugService pluginService;
     private XBCNode node;
 
-    private final String[] columnNames = new String[]{"Index", "Filename", "Line Editors", "Pane Editors"};
+    private final String[] columnNames = new String[]{"Index", "Filename", "Row Editors", "Panel Viewers"};
     private final Class[] columnClasses = new Class[]{
         java.lang.Long.class, java.lang.String.class, java.lang.Long.class, java.lang.Long.class
     };
@@ -80,21 +83,24 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
         return "";
     }
 
+    @Nonnull
     @Override
     public String getColumnName(int columnIndex) {
         return columnNames[columnIndex];
     }
 
+    @Nonnull
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return columnClasses[columnIndex];
     }
 
+    @Nullable
     public XBCNode getNode() {
         return node;
     }
 
-    public void setNode(XBCNode node) {
+    public void setNode(@Nullable XBCNode node) {
         this.node = node;
 
         XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
@@ -112,7 +118,7 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
     public XBCXPlugin getItem(int rowIndex) {
         return items.get(rowIndex).plugin;
     }
-    
+
     public void updateItem(int rowIndex, XBCXPlugin plugin, long rowEditorsCount, long panelViewersCount) {
         PluginItemRecord record = items.get(rowIndex);
         record.plugin = plugin;
@@ -140,7 +146,8 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
         pluginService = catalog == null ? null : catalog.getCatalogService(XBCXPlugService.class);
     }
 
-    private class PluginItemRecord {
+    @ParametersAreNonnullByDefault
+    private static class PluginItemRecord {
 
         public XBCXPlugin plugin = null;
         public XBCXFile file;

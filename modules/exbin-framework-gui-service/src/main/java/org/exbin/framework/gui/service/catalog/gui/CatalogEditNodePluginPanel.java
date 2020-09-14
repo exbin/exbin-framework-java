@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.service.catalog.gui;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -30,9 +31,10 @@ import org.exbin.xbup.core.catalog.base.XBCXPlugin;
 /**
  * Catalog edit plugin panel.
  *
- * @version 0.2.0 2020/07/22
+ * @version 0.2.0 2020/09/14
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
 
     private XBApplication application;
@@ -62,9 +64,10 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
         return plugin;
     }
 
-    public void setPlugin(XBCXPlugin plugin) {
+    public void setPlugin(@Nullable XBCXPlugin plugin) {
         this.plugin = plugin;
         file = plugin == null ? null : plugin.getPluginFile();
+        node = file.getNode();
         fileTextField.setText(file == null ? "" : file.getFilename());
     }
 
@@ -82,8 +85,8 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
         return text.isEmpty() ? 0 : Long.valueOf(text);
     }
 
-    public void setRowEditorsCount(long oldRowEditorsCount) {
-        rowEditorsCountTextField.setText(String.valueOf(oldRowEditorsCount));
+    public void setRowEditorsCount(long rowEditorsCount) {
+        rowEditorsCountTextField.setText(String.valueOf(rowEditorsCount));
     }
 
     public long getPanelViewersCount() {
@@ -91,8 +94,8 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
         return text.isEmpty() ? 0 : Long.valueOf(text);
     }
 
-    public void setPanelViewersCount(long oldPanelViewersCount) {
-        panelViewersCountTextField.setText(String.valueOf(oldPanelViewersCount));
+    public void setPanelViewersCount(long panelViewersCount) {
+        panelViewersCountTextField.setText(String.valueOf(panelViewersCount));
     }
 
     /**
