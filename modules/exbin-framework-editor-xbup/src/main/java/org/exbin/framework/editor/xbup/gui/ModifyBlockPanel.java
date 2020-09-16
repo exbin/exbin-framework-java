@@ -671,7 +671,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         if (rev == null) {
             return null;
         }
-        XBCXBlockUi blockUi = uiService.findUiByPR(rev, XBPlugUiType.COMPONENT_EDITOR, 0);
+        XBCXBlockUi blockUi = uiService.findUiByPR(rev, XBPlugUiType.PANEL_EDITOR, 0);
         if (blockUi == null) {
             return null;
         }

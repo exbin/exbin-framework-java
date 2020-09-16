@@ -25,7 +25,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Interface for XBUP framework client module.
  *
- * @version 0.2.0 2016/02/14
+ * @version 0.2.1 2020/09/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -65,4 +65,8 @@ public interface ClientModuleApi extends XBApplicationModule {
     void addClientConnectionListener(ClientConnectionListener listener);
 
     void removeClientConnectionListener(ClientConnectionListener listener);
+
+    void addPluginRepositoryListener(PluginRepositoryListener listener);
+
+    void removePluginRepositoryListener(PluginRepositoryListener listener);
 }

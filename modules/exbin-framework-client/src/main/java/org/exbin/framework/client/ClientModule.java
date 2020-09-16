@@ -36,6 +36,7 @@ import org.exbin.framework.client.api.ClientConnectionEvent;
 import org.exbin.framework.client.api.ClientConnectionListener;
 import org.exbin.framework.client.api.ClientModuleApi;
 import org.exbin.framework.client.api.ConnectionStatus;
+import org.exbin.framework.client.api.PluginRepositoryListener;
 import org.exbin.xbup.catalog.XBAECatalog;
 import org.exbin.xbup.catalog.entity.XBERoot;
 import org.exbin.xbup.catalog.entity.service.XBEXDescService;
@@ -81,7 +82,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Implementation of XBUP framework client module.
  *
- * @version 0.2.1 2020/08/23
+ * @version 0.2.1 2020/09/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -93,6 +94,7 @@ public class ClientModule implements ClientModuleApi {
     private XBACatalog catalog;
     private XBPluginRepository pluginRepository;
     private final List<ClientConnectionListener> connectionListeners = new ArrayList<>();
+    private final List<PluginRepositoryListener> pluginRepositoryListeners = new ArrayList<>();
 
     public ClientModule() {
     }
@@ -129,6 +131,7 @@ public class ClientModule implements ClientModuleApi {
         if (serviceClient.validate()) {
             XBARCatalog catalogHandler = new XBARCatalog(serviceClient);
             catalog = catalogHandler;
+            initializePlugins(catalog);
 
             catalogHandler.addCatalogService(XBCXLangService.class, new XBRXLangService(catalogHandler));
             catalogHandler.addCatalogService(XBCXStriService.class, new XBRXStriService(catalogHandler));
@@ -202,7 +205,7 @@ public class ClientModule implements ClientModuleApi {
                         } else {
                             System.out.println("Never update available");
                         }
-                        
+
                         connectionStatusChanged(ConnectionStatus.UPDATING);
                         // TODO: As there is currently no diff update available - wipe out entire database instead
                         em.close();
@@ -214,8 +217,6 @@ public class ClientModule implements ClientModuleApi {
                         xbCatalog.initCatalog();
                         rootService = xbCatalog.getCatalogService(XBCRootService.class);
                         performUpdate(xbCatalog, rootService, remoteLastUpdate);
-
-                        initializePlugins(xbCatalog);
                     }
 
                     connectionStatusChanged(ConnectionStatus.INTERNET);
@@ -234,6 +235,7 @@ public class ClientModule implements ClientModuleApi {
             }
 
             this.catalog = xbCatalog;
+            initializePlugins(catalog);
             return true;
         } catch (Exception ex) {
             Logger.getLogger(ClientModule.class.getName()).log(Level.SEVERE, null, ex);
@@ -296,15 +298,18 @@ public class ClientModule implements ClientModuleApi {
         }
 
         this.catalog = catalogHandler;
+        initializePlugins(catalog);
     }
 
     private void initializePlugins(XBACatalog catalogHandler) {
-        if (catalogHandler != null) {
-            pluginRepository = new XBPluginRepository();
-//            pluginRepository.addPluginsFrom(new File("plugins/").toURI());
-//            pluginRepository.processPlugins();
-            pluginRepository.setCatalog(catalogHandler);
-        }
+        pluginRepository = new XBPluginRepository();
+//        pluginRepository.addPluginsFrom(new File("plugins/").toURI());
+//        pluginRepository.processPlugins();
+        pluginRepository.setCatalog(catalogHandler);
+
+        pluginRepositoryListeners.forEach(listener -> {
+            listener.repositoryChanged(pluginRepository);
+        });
     }
 
     @Nonnull
@@ -368,5 +373,15 @@ public class ClientModule implements ClientModuleApi {
     @Override
     public void removeClientConnectionListener(ClientConnectionListener listener) {
         connectionListeners.remove(listener);
+    }
+
+    @Override
+    public void addPluginRepositoryListener(PluginRepositoryListener listener) {
+        pluginRepositoryListeners.add(listener);
+    }
+
+    @Override
+    public void removePluginRepositoryListener(PluginRepositoryListener listener) {
+        pluginRepositoryListeners.remove(listener);
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -23,6 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
 import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
+import org.exbin.framework.editor.xbup.gui.ModifyBlockPanel;
 import org.exbin.framework.editor.xbup.gui.SimpleMessagePanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBTBlock;
@@ -34,16 +36,21 @@ import org.exbin.xbup.core.catalog.base.XBCBlockRev;
 import org.exbin.xbup.core.catalog.base.XBCXBlockUi;
 import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
 import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
+import org.exbin.xbup.core.parser.XBProcessingException;
+import org.exbin.xbup.core.parser.token.pull.convert.XBTProviderToPullProvider;
+import org.exbin.xbup.core.serial.XBPSerialReader;
+import org.exbin.xbup.core.serial.XBSerializable;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
+import org.exbin.xbup.parser_tree.XBTTreeWriter;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
-import org.exbin.xbup.plugin.XBComponentEditor;
-import org.exbin.xbup.plugin.XBComponentEditorCatalogPlugin;
+import org.exbin.xbup.plugin.XBComponentViewer;
+import org.exbin.xbup.plugin.XBComponentViewerCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
  * Custom viewer of document.
  *
- * @version 0.2.1 2020/08/18
+ * @version 0.2.1 2020/09/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -86,12 +93,12 @@ public class MainDocumentViewer implements DocumentViewer {
     public void setSelectedItem(@Nullable XBTBlock block) {
         viewerPanel.removeAllViews();
         if (block != null) {
-            XBCXUiService paneService = catalog.getCatalogService(XBCXUiService.class);
+            XBCXUiService uiService = catalog.getCatalogService(XBCXUiService.class);
             XBBlockDecl decl = block instanceof XBTTreeNode ? ((XBTTreeNode) block).getBlockDecl() : null;
             if (decl instanceof XBCBlockDecl) {
                 XBCBlockRev blockSpecRev = ((XBCBlockDecl) decl).getBlockSpecRev();
 
-                XBCXBlockUi blockUi = paneService.findUiByPR(blockSpecRev, XBPlugUiType.COMPONENT_VIEWER, 0);
+                XBCXBlockUi blockUi = uiService.findUiByPR(blockSpecRev, XBPlugUiType.PANEL_VIEWER, 0);
                 if (blockUi != null) {
                     XBCXPlugUi plugUi = blockUi.getUi();
                     Long methodIndex = plugUi.getMethodIndex();
@@ -100,8 +107,9 @@ public class MainDocumentViewer implements DocumentViewer {
                     try {
                         XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(plugUi.getPlugin());
                         if (pluginHandler != null) {
-                            XBComponentEditor panelEditor = ((XBComponentEditorCatalogPlugin) pluginHandler).getComponentEditor(methodIndex);
-                            viewerPanel.addView("Plugin " + String.valueOf(plugUi.getId()), panelEditor.getEditor());
+                            XBComponentViewer panelViewer = ((XBComponentViewerCatalogPlugin) pluginHandler).getComponentViewer(methodIndex);
+                            reloadCustomEditor(panelViewer, block);
+                            viewerPanel.addView("Plugin " + String.valueOf(plugUi.getId()), panelViewer.getViewer());
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(MainDocumentViewer.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,7 +123,15 @@ public class MainDocumentViewer implements DocumentViewer {
         selectedItem = block;
         viewerPanel.revalidate();
         viewerPanel.repaint();
+    }
 
+    private void reloadCustomEditor(XBComponentViewer panelViewer, XBTBlock block) {
+        XBPSerialReader serialReader = new XBPSerialReader(new XBTProviderToPullProvider(new XBTTreeWriter(block)));
+        try {
+            serialReader.read((XBSerializable) panelViewer);
+        } catch (XBProcessingException | IOException ex) {
+            Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
