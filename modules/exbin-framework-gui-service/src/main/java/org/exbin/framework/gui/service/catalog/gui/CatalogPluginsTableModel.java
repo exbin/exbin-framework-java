@@ -32,7 +32,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 /**
  * Table model for catalog plugins.
  *
- * @version 0.2.1 2020/09/14
+ * @version 0.2.1 2020/09/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -42,9 +42,9 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
     private XBCXPlugService pluginService;
     private XBCNode node;
 
-    private final String[] columnNames = new String[]{"Index", "Filename", "Row Editors", "Panel Viewers"};
+    private final String[] columnNames = new String[]{"Index", "Filename", "Row Editors", "Panel Viewers", "Panel Editors"};
     private final Class[] columnClasses = new Class[]{
-        java.lang.Long.class, java.lang.String.class, java.lang.Long.class, java.lang.Long.class
+        java.lang.Long.class, java.lang.String.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class
     };
 
     private List<PluginItemRecord> items = new ArrayList<>();
@@ -60,7 +60,7 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -78,6 +78,9 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
             }
             case 3: {
                 return items.get(rowIndex).panelViewersCount;
+            }
+            case 4: {
+                return items.get(rowIndex).panelEditorsCount;
             }
         }
         return "";
@@ -110,7 +113,8 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
             for (XBCXPlugin plugin : ((List<XBCXPlugin>) pluginService.findPluginsForNode(node))) {
                 long rowEditorsCount = uiService.getPlugUisCount(plugin, XBPlugUiType.ROW_EDITOR);
                 long panelViewersCount = uiService.getPlugUisCount(plugin, XBPlugUiType.PANEL_VIEWER);
-                items.add(new PluginItemRecord(plugin, plugin.getPluginFile(), rowEditorsCount, panelViewersCount));
+                long panelEditorsCount = uiService.getPlugUisCount(plugin, XBPlugUiType.PANEL_EDITOR);
+                items.add(new PluginItemRecord(plugin, plugin.getPluginFile(), rowEditorsCount, panelViewersCount, panelEditorsCount));
             }
         }
     }
@@ -119,18 +123,19 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
         return items.get(rowIndex).plugin;
     }
 
-    public void updateItem(int rowIndex, XBCXPlugin plugin, long rowEditorsCount, long panelViewersCount) {
+    public void updateItem(int rowIndex, XBCXPlugin plugin, long rowEditorsCount, long panelViewersCount, long panelEditorsCount) {
         PluginItemRecord record = items.get(rowIndex);
         record.plugin = plugin;
         record.file = plugin.getPluginFile();
         record.fileName = record.file == null ? "" : record.file.getFilename();
         record.rowEditorsCount = rowEditorsCount;
         record.panelViewersCount = panelViewersCount;
+        record.panelEditorsCount = panelEditorsCount;
         fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
-    public void addItem(XBCXPlugin plugin, XBCXFile file, long lineEditors, long paneEditors) {
-        items.add(new PluginItemRecord(plugin, file, lineEditors, paneEditors));
+    public void addItem(XBCXPlugin plugin, XBCXFile file, long rowEditorsCount, long panelViewersCount, long panelEditorsCount) {
+        items.add(new PluginItemRecord(plugin, file, rowEditorsCount, panelViewersCount, panelEditorsCount));
         fireTableDataChanged();
     }
 
@@ -154,13 +159,15 @@ public class CatalogPluginsTableModel extends AbstractTableModel {
         public String fileName = null;
         public long rowEditorsCount;
         public long panelViewersCount;
+        public long panelEditorsCount;
 
-        public PluginItemRecord(@Nullable XBCXPlugin plugin, XBCXFile file, long rowEditorsCount, long panelEditorsCount) {
+        public PluginItemRecord(@Nullable XBCXPlugin plugin, XBCXFile file, long rowEditorsCount, long panelViewersCount, long panelEditorsCount) {
             this.plugin = plugin;
             this.file = file;
             this.fileName = file == null ? "" : file.getFilename();
             this.rowEditorsCount = rowEditorsCount;
-            this.panelViewersCount = panelEditorsCount;
+            this.panelViewersCount = panelViewersCount;
+            this.panelEditorsCount = panelEditorsCount;
         }
     }
 }
