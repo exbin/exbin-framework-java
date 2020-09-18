@@ -40,12 +40,12 @@ import org.exbin.xbup.core.catalog.base.service.XBCRevService;
 import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 
 /**
- * Catalog component editor property cell panel.
+ * Catalog panel editor property cell panel.
  *
- * @version 0.2.1 2020/08/17
+ * @version 0.2.1 2020/09/19
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogCEditorPropertyTableCellPanel extends CatalogPropertyTableCellPanel {
+public class CatalogPEditorPropertyTableCellPanel extends CatalogPropertyTableCellPanel {
 
     private XBApplication application;
     private XBACatalog catalog;
@@ -53,7 +53,7 @@ public class CatalogCEditorPropertyTableCellPanel extends CatalogPropertyTableCe
     private XBCBlockRev blockRev;
     private XBCXPlugUi plugUi;
 
-    public CatalogCEditorPropertyTableCellPanel(XBACatalog catalog) {
+    public CatalogPEditorPropertyTableCellPanel(XBACatalog catalog) {
         super();
         this.catalog = catalog;
         init();
@@ -116,7 +116,7 @@ public class CatalogCEditorPropertyTableCellPanel extends CatalogPropertyTableCe
         XBCRevService revService = catalog.getCatalogService(XBCRevService.class);
         long maxRev = revService.findMaxRevXB((XBCBlockSpec) catalogItem);
         blockRev = (XBCBlockRev) revService.findRevByXB((XBCBlockSpec) catalogItem, maxRev);
-        XBCXBlockUi blockUi = uiService.findUiByPR(blockRev, XBPlugUiType.COMPONENT_EDITOR, 0);
+        XBCXBlockUi blockUi = uiService.findUiByPR(blockRev, XBPlugUiType.PANEL_EDITOR, 0);
         plugUi = blockUi == null ? null : blockUi.getUi();
         paneId = blockUi == null ? 0 : blockUi.getId();
 

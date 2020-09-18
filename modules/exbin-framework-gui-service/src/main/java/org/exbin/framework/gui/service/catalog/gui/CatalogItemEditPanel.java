@@ -69,7 +69,7 @@ import sun.swing.DefaultLookup;
 /**
  * Panel for properties of the catalog item.
  *
- * @version 0.2.1 2020/09/13
+ * @version 0.2.1 2020/09/18
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -83,9 +83,9 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
     private CatalogBIconPropertyTableCellPanel bIconCellPanel = null;
     private CatalogSIconPropertyTableCellPanel sIconCellPanel = null;
     private CatalogREditorPropertyTableCellPanel rEditorCellPanel = null;
-    private CatalogCEditorPropertyTableCellPanel cEditorCellPanel = null;
     private CatalogPViewerPropertyTableCellPanel pViewerCellPanel = null;
-            
+    private CatalogPEditorPropertyTableCellPanel pEditorCellPanel = null;
+
     public CatalogItemEditPanel() {
         initComponents();
     }
@@ -214,9 +214,9 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
         tableModel.addRow(new String[]{"Small Icon (16x16)", ""});
 
         if (catalogItem instanceof XBCBlockSpec) {
-            tableModel.addRow(new String[]{"Component editor", ""});
             tableModel.addRow(new String[]{"Row editor", ""});
             tableModel.addRow(new String[]{"Panel Viewer", ""});
+            tableModel.addRow(new String[]{"Panel editor", ""});
         }
 
         TableColumnModel columns = propertiesTable.getColumnModel();
@@ -233,15 +233,15 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
         sIconCellPanel.setApplication(application);
         sIconCellPanel.setCatalogItem(catalogItem);
         if (catalogItem instanceof XBCBlockSpec) {
-            cEditorCellPanel = new CatalogCEditorPropertyTableCellPanel(catalog);
-            cEditorCellPanel.setApplication(application);
-            cEditorCellPanel.setCatalogItem(catalogItem);
-            rEditorCellPanel = new CatalogREditorPropertyTableCellPanel(catalog);
-            rEditorCellPanel.setApplication(application);
-            rEditorCellPanel.setCatalogItem(catalogItem);
+            pEditorCellPanel = new CatalogPEditorPropertyTableCellPanel(catalog);
+            pEditorCellPanel.setApplication(application);
+            pEditorCellPanel.setCatalogItem(catalogItem);
             pViewerCellPanel = new CatalogPViewerPropertyTableCellPanel(catalog);
             pViewerCellPanel.setApplication(application);
             pViewerCellPanel.setCatalogItem(catalogItem);
+            rEditorCellPanel = new CatalogREditorPropertyTableCellPanel(catalog);
+            rEditorCellPanel.setApplication(application);
+            rEditorCellPanel.setCatalogItem(catalogItem);
         }
 
         columns.getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
@@ -275,14 +275,14 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
                         return rEditorCellPanel;
                     }
                     case 9: {
-                        cEditorCellPanel.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
-                        cEditorCellPanel.getCellComponent().setBorder(null);
-                        return cEditorCellPanel;
-                    }
-                    case 10: {
                         pViewerCellPanel.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
                         pViewerCellPanel.getCellComponent().setBorder(null);
                         return pViewerCellPanel;
+                    }
+                    case 10: {
+                        pEditorCellPanel.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+                        pEditorCellPanel.getCellComponent().setBorder(null);
+                        return pEditorCellPanel;
                     }
                 }
 
@@ -316,19 +316,19 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
                         return sIconCellPanel;
                     }
                     case 8: {
-                        cEditorCellPanel.setBackground(table.getSelectionBackground());
-                        cEditorCellPanel.getCellComponent().setBorder(DefaultLookup.getBorder(cEditorCellPanel.getCellComponent(), ui, "Table.focusCellHighlightBorder"));
-                        return cEditorCellPanel;
-                    }
-                    case 9: {
                         rEditorCellPanel.setBackground(table.getSelectionBackground());
                         rEditorCellPanel.getCellComponent().setBorder(DefaultLookup.getBorder(rEditorCellPanel.getCellComponent(), ui, "Table.focusCellHighlightBorder"));
                         return rEditorCellPanel;
                     }
-                    case 10: {
+                    case 9: {
                         pViewerCellPanel.setBackground(table.getSelectionBackground());
                         pViewerCellPanel.getCellComponent().setBorder(DefaultLookup.getBorder(rEditorCellPanel.getCellComponent(), ui, "Table.focusCellHighlightBorder"));
                         return pViewerCellPanel;
+                    }
+                    case 10: {
+                        pEditorCellPanel.setBackground(table.getSelectionBackground());
+                        pEditorCellPanel.getCellComponent().setBorder(DefaultLookup.getBorder(pEditorCellPanel.getCellComponent(), ui, "Table.focusCellHighlightBorder"));
+                        return pEditorCellPanel;
                     }
                 }
                 return super.getTableCellEditorComponent(table, value, isSelected, row, column);
