@@ -54,7 +54,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MainDocumentViewer implements DocumentViewer {
+public class ViewerDocumentTab implements DocumentTab {
 
     private XBPluginRepository pluginRepository;
 
@@ -65,7 +65,7 @@ public class MainDocumentViewer implements DocumentViewer {
     private XBACatalog catalog;
     private ClipboardActionsUpdateListener updateListener;
 
-    public MainDocumentViewer() {
+    public ViewerDocumentTab() {
 
 //        customPanel = new JPanel();
 //        customPanel.setBackground(Color.RED);
@@ -112,7 +112,7 @@ public class MainDocumentViewer implements DocumentViewer {
                             viewerPanel.addView("Plugin " + String.valueOf(plugUi.getId()), panelViewer.getViewer());
                         }
                     } catch (Exception ex) {
-                        Logger.getLogger(MainDocumentViewer.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ViewerDocumentTab.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }

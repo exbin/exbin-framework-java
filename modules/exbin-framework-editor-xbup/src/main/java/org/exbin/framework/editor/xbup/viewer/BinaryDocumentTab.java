@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
+import java.awt.Component;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
@@ -23,9 +24,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+import javax.swing.JViewport;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.bined.gui.BinaryStatusPanel;
+import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
@@ -33,16 +41,16 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Binary viewer of document.
  *
- * @version 0.2.1 2020/09/12
+ * @version 0.2.1 2020/09/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinaryDocumentViewer implements DocumentViewer {
+public class BinaryDocumentTab implements DocumentTab {
 
     private final BinEdComponentPanel binaryPanel;
     private final BinaryStatusPanel binaryStatusPanel;
 
-    public BinaryDocumentViewer() {
+    public BinaryDocumentTab() {
         binaryPanel = new BinEdComponentPanel();
         binaryStatusPanel = new BinaryStatusPanel();
         binaryPanel.registerBinaryStatus(binaryStatusPanel);
@@ -51,7 +59,39 @@ public class BinaryDocumentViewer implements DocumentViewer {
     }
 
     private void init() {
+    }
+    
+    public void setApplication(XBApplication application) {
+        BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
+        CodeAreaPopupMenuHandler codeAreaPopupMenuHandler = binedModule.getCodeAreaPopupMenuHandler();
+        JPopupMenu popupMenu = new JPopupMenu() {
+            @Override
+            public void show(Component invoker, int x, int y) {
+                int clickedX = x;
+                int clickedY = y;
+                if (invoker instanceof JViewport) {
+                    clickedX += ((JViewport) invoker).getParent().getX();
+                    clickedY += ((JViewport) invoker).getParent().getY();
+                }
+                JPopupMenu popupMenu = codeAreaPopupMenuHandler.createPopupMenu(binaryPanel.getCodeArea(), BinedModule.BINARY_POPUP_MENU_ID, clickedX, clickedY);
+                popupMenu.addPopupMenuListener(new PopupMenuListener() {
+                    @Override
+                    public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    }
 
+                    @Override
+                    public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                        codeAreaPopupMenuHandler.dropPopupMenu(BinedModule.BINARY_POPUP_MENU_ID);
+                    }
+
+                    @Override
+                    public void popupMenuCanceled(PopupMenuEvent e) {
+                    }
+                });
+                popupMenu.show(invoker, x, y);
+            }
+        };
+        binaryPanel.setPopupMenu(popupMenu);
     }
 
     @Override
@@ -62,7 +102,7 @@ public class BinaryDocumentViewer implements DocumentViewer {
             try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
                 ((XBTTreeNode) item).toStreamUB(dataOutputStream);
             } catch (IOException ex) {
-                Logger.getLogger(BinaryDocumentViewer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BinaryDocumentTab.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

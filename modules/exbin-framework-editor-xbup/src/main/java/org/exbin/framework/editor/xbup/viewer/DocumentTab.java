@@ -29,7 +29,7 @@ import org.exbin.xbup.core.block.XBTBlock;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DocumentViewer extends ClipboardActionsHandler {
+public interface DocumentTab extends ClipboardActionsHandler {
 
     void setSelectedItem(@Nullable XBTBlock item);
 

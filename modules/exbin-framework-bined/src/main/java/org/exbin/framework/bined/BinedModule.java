@@ -1635,7 +1635,7 @@ public class BinedModule implements XBApplicationModule {
         }
         return codeAreaPopupMenuHandler;
     }
-
+    
     public void registerCodeAreaPopupEventDispatcher() {
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.addComponentPopupEventDispatcher(new ComponentPopupEventDispatcher() {

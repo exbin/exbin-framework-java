@@ -51,11 +51,11 @@ import org.exbin.xbup.parser_tree.XBATreeParamExtractor;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
 import org.exbin.xbup.core.catalog.XBPlugUiType;
 import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.plugin.XBRowEditor;
 import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
+import org.exbin.framework.editor.xbup.viewer.DocumentTab;
 
 /**
  * Panel for properties of the actual panel.
@@ -67,7 +67,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
 
     private XBApplication application;
     private XBACatalog catalog;
-    private DocumentViewer activeViewer;
+    private DocumentTab activeViewer;
     private final XBPropertyTableModel tableModel;
     private final XBPropertyTableCellRenderer valueCellRenderer;
     private final TableCellRenderer nameCellRenderer;
@@ -297,11 +297,11 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         valueCellEditor.setCatalog(catalog);
     }
 
-    public DocumentViewer getActiveViewer() {
+    public DocumentTab getActiveViewer() {
         return activeViewer;
     }
 
-    public void setActiveViewer(DocumentViewer activePanel) {
+    public void setActiveViewer(DocumentTab activePanel) {
         this.activeViewer = activePanel;
     }
 

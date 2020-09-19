@@ -30,7 +30,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewer;
+import org.exbin.framework.editor.xbup.viewer.DocumentTab;
 
 /**
  * Panel for properties of the actual panel.
@@ -243,7 +243,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         descTextField.setText(getDescription(node));
     }
 
-    public void setActiveViewer(DocumentViewer viewer) {
+    public void setActiveViewer(DocumentTab viewer) {
         propertiesPanel.setActiveViewer(viewer);
     }
 

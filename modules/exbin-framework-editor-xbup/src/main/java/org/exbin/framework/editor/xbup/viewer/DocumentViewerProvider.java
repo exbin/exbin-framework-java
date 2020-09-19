@@ -64,7 +64,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2020/09/10
+ * @version 0.2.1 2020/09/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -79,13 +79,13 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     private final XBDocumentPanel documentPanel;
 
     private XBTBlock selectedItem = null;
-    private ViewerTab viewerTab;
-    private DocumentViewer activeViewer;
+    private ViewerTab preferredTab;
+    private DocumentTab activeTab;
 
-    private final MainDocumentViewer mainViewer;
-    private final BinaryDocumentViewer binaryViewer;
-    private final TextDocumentViewer textViewer;
-    private final PropertiesDocumentViewer propertiesViewer;
+    private final ViewerDocumentTab viewerTab;
+    private final PropertiesDocumentTab propertiesTab;
+    private final TextDocumentTab textTab;
+    private final BinaryDocumentTab binaryTab;
 
     private XBApplication application;
     private XBUndoHandler undoHandler;
@@ -95,30 +95,30 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     public DocumentViewerProvider(XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
 
-        mainViewer = new MainDocumentViewer();
-        propertiesViewer = new PropertiesDocumentViewer();
-        binaryViewer = new BinaryDocumentViewer();
-        textViewer = new TextDocumentViewer();
+        viewerTab = new ViewerDocumentTab();
+        propertiesTab = new PropertiesDocumentTab();
+        binaryTab = new BinaryDocumentTab();
+        textTab = new TextDocumentTab();
 
         documentPanel = new XBDocumentPanel();
-        documentPanel.addTabSwitchListener(this::setViewerTab);
+        documentPanel.addTabSwitchListener(this::setPreferredTab);
         documentPanel.addItemSelectionListener((item) -> {
             this.selectedItem = item;
-            if (activeViewer != null) {
-                activeViewer.setSelectedItem(item);
+            if (activeTab != null) {
+                activeTab.setSelectedItem(item);
             }
 
             notifyItemSelectionChanged();
         });
         mainDoc = new TreeDocument(null);
         documentPanel.setMainDoc(mainDoc);
-        documentPanel.setMainTabComponent(mainViewer.getComponent());
-        documentPanel.setPropertiesTabComponent(propertiesViewer.getComponent());
-        documentPanel.setBinaryTabComponent(binaryViewer.getComponent());
-        documentPanel.setTextTabComponent(textViewer.getComponent());
+        documentPanel.setMainTabComponent(viewerTab.getComponent());
+        documentPanel.setPropertiesTabComponent(propertiesTab.getComponent());
+        documentPanel.setBinaryTabComponent(binaryTab.getComponent());
+        documentPanel.setTextTabComponent(textTab.getComponent());
 
-        viewerTab = ViewerTab.MAIN;
-        activeViewer = mainViewer;
+        preferredTab = ViewerTab.MAIN;
+        activeTab = viewerTab;
     }
 
     @Nonnull
@@ -140,9 +140,9 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         documentPanel.setCatalog(catalog);
         mainDoc.setCatalog(catalog);
         mainDoc.processSpec();
-        mainViewer.setCatalog(catalog);
-        propertiesViewer.setCatalog(catalog);
-        textViewer.setCatalog(catalog);
+        viewerTab.setCatalog(catalog);
+        propertiesTab.setCatalog(catalog);
+        textTab.setCatalog(catalog);
     }
 
     public XBApplication getApplication() {
@@ -151,8 +151,9 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     public void setApplication(XBApplication application) {
         this.application = application;
-        propertiesViewer.setApplication(application);
+        propertiesTab.setApplication(application);
         documentPanel.setApplication(application);
+        binaryTab.setApplication(application);
     }
 
     public XBPluginRepository getPluginRepository() {
@@ -161,8 +162,8 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
-        mainViewer.setPluginRepository(pluginRepository);
-        propertiesViewer.setPluginRepository(pluginRepository);
+        viewerTab.setPluginRepository(pluginRepository);
+        propertiesTab.setPluginRepository(pluginRepository);
         documentPanel.setPluginRepository(pluginRepository);
     }
 
@@ -268,7 +269,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return;
         }
 
-        activeViewer.performCut();
+        activeTab.performCut();
     }
 
     @Override
@@ -279,7 +280,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return;
         }
 
-        activeViewer.performCopy();
+        activeTab.performCopy();
     }
 
     @Override
@@ -290,7 +291,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return;
         }
 
-        activeViewer.performPaste();
+        activeTab.performPaste();
     }
 
     @Override
@@ -301,7 +302,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return;
         }
 
-        activeViewer.performDelete();
+        activeTab.performDelete();
     }
 
     @Override
@@ -311,7 +312,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return;
         }
 
-        activeViewer.performSelectAll();
+        activeTab.performSelectAll();
     }
 
     @Override
@@ -320,7 +321,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return documentPanel.hasSelection();
         }
 
-        return activeViewer.isSelection();
+        return activeTab.isSelection();
     }
 
     @Override
@@ -329,7 +330,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return documentPanel.hasSelection();
         }
 
-        return activeViewer.isEditable();
+        return activeTab.isEditable();
     }
 
     @Override
@@ -338,7 +339,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return true;
         }
 
-        return activeViewer.canSelectAll();
+        return activeTab.canSelectAll();
     }
 
     @Override
@@ -348,7 +349,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return clipboard.isDataFlavorAvailable(XBDocTreeTransferHandler.XB_DATA_FLAVOR);
         }
 
-        return activeViewer.canPaste();
+        return activeTab.canPaste();
     }
 
     @Override
@@ -357,7 +358,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             return documentPanel.hasSelection();
         }
 
-        return activeViewer.canDelete();
+        return activeTab.canDelete();
     }
 
     @Override
@@ -366,10 +367,10 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         documentPanel.addUpdateListener((e) -> {
             updateListener.stateChanged();
         });
-        mainViewer.setUpdateListener(updateListener);
-        binaryViewer.setUpdateListener(updateListener);
-        textViewer.setUpdateListener(updateListener);
-        propertiesViewer.setUpdateListener(updateListener);
+        viewerTab.setUpdateListener(updateListener);
+        binaryTab.setUpdateListener(updateListener);
+        textTab.setUpdateListener(updateListener);
+        propertiesTab.setUpdateListener(updateListener);
     }
 
     public void postWindowOpened() {
@@ -393,11 +394,11 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 //    public void updateItem() {
 //        documentPanel.updateItem();
 //    }
-    public void setViewerTab(ViewerTab viewerTab) {
-        if (this.viewerTab != viewerTab) {
-            this.viewerTab = viewerTab;
-            if (activeViewer != null) {
-                activeViewer.setSelectedItem(null);
+    public void setPreferredTab(ViewerTab preferredTab) {
+        if (this.preferredTab != preferredTab) {
+            this.preferredTab = preferredTab;
+            if (activeTab != null) {
+                activeTab.setSelectedItem(null);
             }
             // Save changes first
             // TODO: Replace stupid buffer copy later
@@ -412,21 +413,21 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 //                    } catch (IOException ex) {
 //                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
 //                    }
-            switch (viewerTab) {
+            switch (preferredTab) {
                 case MAIN: {
-                    activeViewer = mainViewer;
+                    activeTab = viewerTab;
                     break;
                 }
                 case PROPERTIES: {
-                    activeViewer = propertiesViewer;
+                    activeTab = propertiesTab;
                     break;
                 }
                 case TEXT: {
-                    activeViewer = textViewer;
+                    activeTab = textTab;
                     break;
                 }
                 case BINARY: {
-                    activeViewer = binaryViewer;
+                    activeTab = binaryTab;
                     // TODO: Replace stupid buffer copy later
 //                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 //                    try {
@@ -440,7 +441,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
                 default:
                     throw new InternalError("Unknown mode");
             }
-            activeViewer.setSelectedItem(selectedItem);
+            activeTab.setSelectedItem(selectedItem);
 
 //            mainFrame.getEditFindAction().setEnabled(mode != PanelMode.TREE);
 //            mainFrame.getEditFindAgainAction().setEnabled(mode == PanelMode.TEXT);
@@ -538,7 +539,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 //            }
 
             if (operation instanceof XBTDocOperation) {
-                setViewerTab(ViewerTab.MAIN);
+                setPreferredTab(ViewerTab.MAIN);
             } else {
                 // TODO
             }

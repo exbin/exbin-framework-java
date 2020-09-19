@@ -43,12 +43,12 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextDocumentViewer implements DocumentViewer {
+public class TextDocumentTab implements DocumentTab {
 
     private final TextPanel textPanel;
     private XBACatalog catalog;
 
-    public TextDocumentViewer() {
+    public TextDocumentTab() {
         textPanel = new TextPanel();
         textPanel.setNoBorder();
     }
@@ -216,7 +216,7 @@ public class TextDocumentViewer implements DocumentViewer {
         return result;
     }
 
-    public String getHex(byte b) {
+    public static String getHex(byte b) {
         byte low = (byte) (b & 0xf);
         byte hi = (byte) (b >> 0x8);
         return (Integer.toHexString(hi) + Integer.toHexString(low)).toUpperCase();
