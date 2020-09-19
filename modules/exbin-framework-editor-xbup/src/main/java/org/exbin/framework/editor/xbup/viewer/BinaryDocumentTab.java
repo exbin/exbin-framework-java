@@ -63,7 +63,7 @@ public class BinaryDocumentTab implements DocumentTab {
     
     public void setApplication(XBApplication application) {
         BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
-        CodeAreaPopupMenuHandler codeAreaPopupMenuHandler = binedModule.getCodeAreaPopupMenuHandler();
+        CodeAreaPopupMenuHandler codeAreaPopupMenuHandler = binedModule.getCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC);
         JPopupMenu popupMenu = new JPopupMenu() {
             @Override
             public void show(Component invoker, int x, int y) {
@@ -73,7 +73,7 @@ public class BinaryDocumentTab implements DocumentTab {
                     clickedX += ((JViewport) invoker).getParent().getX();
                     clickedY += ((JViewport) invoker).getParent().getY();
                 }
-                JPopupMenu popupMenu = codeAreaPopupMenuHandler.createPopupMenu(binaryPanel.getCodeArea(), BinedModule.BINARY_POPUP_MENU_ID, clickedX, clickedY);
+                JPopupMenu popupMenu = binedModule.createBinEdComponentPopupMenu(codeAreaPopupMenuHandler, binaryPanel, clickedX, clickedY);
                 popupMenu.addPopupMenuListener(new PopupMenuListener() {
                     @Override
                     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {

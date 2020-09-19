@@ -152,7 +152,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2020/03/05
+ * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
 public class BinedModule implements XBApplicationModule {
@@ -239,7 +239,7 @@ public class BinedModule implements XBApplicationModule {
 
             panel.setApplication(application);
             panel.setPopupMenu(createPopupMenu(editorProvider.getId(), editorProvider.getCodeArea()));
-            panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
+            panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
             panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
             panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
             panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
@@ -274,7 +274,7 @@ public class BinedModule implements XBApplicationModule {
                 BinEdComponentPanel panel = file.getComponentPanel();
                 panel.setApplication(application);
                 panel.setPopupMenu(createPopupMenu(editorProvider.getId(), editorProvider.getCodeArea()));
-                panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler());
+                panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
                 panel.setGoToPositionAction(getGoToPositionHandler().getGoToLineAction());
                 panel.setCopyAsCode(getClipboardCodeHandler().getCopyAsCodeAction());
                 panel.setPasteFromCode(getClipboardCodeHandler().getPasteFromCodeAction());
@@ -1433,7 +1433,7 @@ public class BinedModule implements XBApplicationModule {
         return popupMenu;
     }
 
-    private JPopupMenu createCodeAreaPopupMenu(final ExtCodeArea codeArea, String menuPostfix, int x, int y) {
+    private JPopupMenu createCodeAreaPopupMenu(final ExtCodeArea codeArea, String menuPostfix, PopupMenuVariant variant, int x, int y) {
         getClipboardCodeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
@@ -1523,30 +1523,36 @@ public class BinedModule implements XBApplicationModule {
             }
         }
 
-        popupMenu.addSeparator();
+        if (variant == PopupMenuVariant.EDITOR) {
+            popupMenu.addSeparator();
 
-        switch (positionZone) {
-            case TOP_LEFT_CORNER:
-            case HEADER:
-            case ROW_POSITIONS: {
-                break;
+            switch (positionZone) {
+                case TOP_LEFT_CORNER:
+                case HEADER:
+                case ROW_POSITIONS: {
+                    break;
+                }
+                default: {
+                    JMenu showMenu = new JMenu("Show");
+                    JMenuItem showHeader = createShowHeaderMenuItem(codeArea);
+                    showMenu.add(showHeader);
+                    JMenuItem showRowPosition = createShowRowPositionMenuItem(codeArea);
+                    showMenu.add(showRowPosition);
+                    popupMenu.add(showMenu);
+                }
             }
-            default: {
-                JMenu showMenu = new JMenu("Show");
-                JMenuItem showHeader = createShowHeaderMenuItem(codeArea);
-                showMenu.add(showHeader);
-                JMenuItem showRowPosition = createShowRowPositionMenuItem(codeArea);
-                showMenu.add(showRowPosition);
-                popupMenu.add(showMenu);
-            }
+
+            final JMenuItem optionsMenuItem = ActionUtils.actionToMenuItem(optionsModule.getOptionsAction());
+            popupMenu.add(optionsMenuItem);
         }
-
-        final JMenuItem optionsMenuItem = ActionUtils.actionToMenuItem(optionsModule.getOptionsAction());
-        popupMenu.add(optionsMenuItem);
 
         return popupMenu;
     }
 
+    public JPopupMenu createBinEdComponentPopupMenu(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler, BinEdComponentPanel binaryPanel, int clickedX, int clickedY) {
+        return codeAreaPopupMenuHandler.createPopupMenu(binaryPanel.getCodeArea(), "", clickedX, clickedY);
+    }
+    
     @Nonnull
     private JMenuItem createGoToMenuItem() {
         return ActionUtils.actionToMenuItem(goToRowHandler.getGoToLineAction());
@@ -1619,12 +1625,12 @@ public class BinedModule implements XBApplicationModule {
         binaryStatusPanel.loadFromPreferences(new StatusPreferences(preferences));
     }
 
-    public CodeAreaPopupMenuHandler getCodeAreaPopupMenuHandler() {
+    public CodeAreaPopupMenuHandler getCodeAreaPopupMenuHandler(PopupMenuVariant variant) {
         if (codeAreaPopupMenuHandler == null) {
             codeAreaPopupMenuHandler = new CodeAreaPopupMenuHandler() {
                 @Override
                 public JPopupMenu createPopupMenu(ExtCodeArea codeArea, String menuPostfix, int x, int y) {
-                    return createCodeAreaPopupMenu(codeArea, menuPostfix, x, y);
+                    return createCodeAreaPopupMenu(codeArea, menuPostfix, variant, x, y);
                 }
 
                 @Override
@@ -1648,7 +1654,7 @@ public class BinedModule implements XBApplicationModule {
                 Component component = getSource(mouseEvent);
                 if (component instanceof ExtCodeArea) {
                     if (((ExtCodeArea) component).getComponentPopupMenu() == null) {
-                        CodeAreaPopupMenuHandler handler = getCodeAreaPopupMenuHandler();
+                        CodeAreaPopupMenuHandler handler = getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR);
                         if (popupMenu != null) {
                             handler.dropPopupMenu(DEFAULT_MENU_POSTFIX);
                         }
@@ -1684,7 +1690,7 @@ public class BinedModule implements XBApplicationModule {
 
                 if (component instanceof ExtCodeArea) {
                     if (((ExtCodeArea) component).getComponentPopupMenu() == null) {
-                        CodeAreaPopupMenuHandler handler = getCodeAreaPopupMenuHandler();
+                        CodeAreaPopupMenuHandler handler = getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR);
                         if (popupMenu != null) {
                             handler.dropPopupMenu(DEFAULT_MENU_POSTFIX);
                         }
@@ -1706,5 +1712,9 @@ public class BinedModule implements XBApplicationModule {
                 return SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
             }
         });
+    }
+    
+    public enum PopupMenuVariant {
+        BASIC, EDITOR
     }
 }
