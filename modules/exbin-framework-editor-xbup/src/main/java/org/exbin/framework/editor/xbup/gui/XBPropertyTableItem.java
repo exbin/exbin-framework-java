@@ -22,7 +22,7 @@ import org.exbin.xbup.plugin.XBRowEditor;
 /**
  * Parameters list table item record.
  *
- * @version 0.1.24 2015/01/10
+ * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTableItem {
@@ -30,13 +30,13 @@ public class XBPropertyTableItem {
     private XBCSpecDef specDef;
     private String valueName;
     private String typeName;
-    private XBRowEditor lineEditor;
+    private XBRowEditor rowEditor;
 
-    public XBPropertyTableItem(XBCSpecDef specDef, String valueName, String typeName, XBRowEditor lineEditor) {
+    public XBPropertyTableItem(XBCSpecDef specDef, String valueName, String typeName, XBRowEditor rowEditor) {
         this.specDef = specDef;
         this.valueName = valueName;
         this.typeName = typeName;
-        this.lineEditor = lineEditor;
+        this.rowEditor = rowEditor;
     }
 
     public XBPropertyTableItem(XBCSpecDef specDef, String name, String type) {
@@ -67,12 +67,12 @@ public class XBPropertyTableItem {
         this.typeName = typeName;
     }
 
-    public XBRowEditor getLineEditor() {
-        return lineEditor;
+    public XBRowEditor getRowEditor() {
+        return rowEditor;
     }
 
-    public void setLineEditor(XBRowEditor lineEditor) {
-        this.lineEditor = lineEditor;
+    public void setRowEditor(XBRowEditor rowEditor) {
+        this.rowEditor = rowEditor;
     }
 
     public String getDefTypeName() {

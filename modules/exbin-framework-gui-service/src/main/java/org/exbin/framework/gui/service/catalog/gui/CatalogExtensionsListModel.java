@@ -17,6 +17,7 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractListModel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.XBCatalog;
@@ -30,7 +31,8 @@ import org.exbin.xbup.core.catalog.base.service.XBCService;
  * @version 0.1.24 2014/12/08
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogExtensionsListModel extends AbstractListModel<Object> {
+@ParametersAreNonnullByDefault
+public class CatalogExtensionsListModel extends AbstractListModel<String> {
 
     private XBCatalog catalog;
     private final List<XBCService<? extends XBCBase>> extensions;

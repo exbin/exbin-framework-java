@@ -26,7 +26,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Document viewer panel.
  *
- * @version 0.2.1 2020/03/13
+ * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -45,8 +45,10 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
         modeComboBox.addItemListener((ItemEvent e) -> {
             int selectedIndex = modeComboBox.getSelectedIndex();
             if (selectedIndex >= 0) {
-                ViewRecord prevRecord = viewRecords.get(activeView);
-                remove(prevRecord.component);
+                if (activeView >= 0 && activeView < viewRecords.size()) {
+                    ViewRecord prevRecord = viewRecords.get(activeView);
+                    remove(prevRecord.component);
+                }
                 ViewRecord record = viewRecords.get(selectedIndex);
                 add(record.component, BorderLayout.CENTER);
                 activeView = selectedIndex;
@@ -59,7 +61,7 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
     public void addView(String name, JComponent component) {
         if (viewRecords.isEmpty()) {
             add(component, BorderLayout.CENTER);
-            
+
             if (borderComponent != null) {
                 remove(borderComponent);
             }
@@ -71,17 +73,22 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
 
     public void removeAllViews() {
         if (!viewRecords.isEmpty()) {
-            ViewRecord prevRecord = viewRecords.get(activeView);
-            remove(prevRecord.component);
+            if (activeView >= 0 && activeView < viewRecords.size()) {
+                ViewRecord prevRecord = viewRecords.get(activeView);
+                remove(prevRecord.component);
+            }
             modeComboBox.removeAllItems();
             viewRecords.clear();
 
             if (borderComponent != null) {
                 add(borderComponent, BorderLayout.CENTER);
             }
+
+            revalidate();
+            repaint();
         }
     }
-    
+
     public void setBorderComponent(JComponent component) {
         if (borderComponent != null) {
             remove(borderComponent);

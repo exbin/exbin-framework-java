@@ -70,7 +70,6 @@ import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.serial.XBSerializable;
 import org.exbin.xbup.core.ubnumber.UBNatural;
-import org.exbin.xbup.core.ubnumber.type.UBENat32;
 import org.exbin.xbup.core.ubnumber.type.UBNat32;
 import org.exbin.xbup.parser_tree.XBATreeParamExtractor;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;

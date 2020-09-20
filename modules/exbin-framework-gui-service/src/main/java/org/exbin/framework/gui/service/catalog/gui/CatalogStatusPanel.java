@@ -49,7 +49,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
 
         updateCatalog();
         // Patch for unchecked call to setModel(ListModel<E>) as a member of the raw type JList
-        JList newList = new JList<>();
+        JList<String> newList = new JList<>();
         newList.setModel(extModel);
         extensionsList = newList;
         extensionsScrollPane.setViewportView(extensionsList);
@@ -334,7 +334,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
         revsCountTextField.setText(count == null ? UNKNOWN : count.toString());
         count = revService == null ? null : revService.getItemsCount();
         revsCountTextField.setText(count == null ? UNKNOWN : count.toString());
-        Date date = nodeService == null ? null : ((Optional<Date>) rootService.getMainLastUpdate()).orElse(null);
+        Date date = rootService == null ? null : ((Optional<Date>) rootService.getMainLastUpdate()).orElse(null);
         lastUpdateTextField.setText(date == null ? UNKNOWN : date.toString());
     }
 }

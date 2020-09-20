@@ -104,9 +104,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         documentPanel.addTabSwitchListener(this::setPreferredTab);
         documentPanel.addItemSelectionListener((item) -> {
             this.selectedItem = item;
-            if (activeTab != null) {
-                activeTab.setSelectedItem(item);
-            }
+            notifySelectedItem();
 
             notifyItemSelectionChanged();
         });
@@ -151,6 +149,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     public void setApplication(XBApplication application) {
         this.application = application;
+        viewerTab.setApplication(application);
         propertiesTab.setApplication(application);
         documentPanel.setApplication(application);
         binaryTab.setApplication(application);
@@ -391,28 +390,12 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         return Optional.ofNullable(selectedItem);
     }
 
-//    public void updateItem() {
-//        documentPanel.updateItem();
-//    }
     public void setPreferredTab(ViewerTab preferredTab) {
         if (this.preferredTab != preferredTab) {
             this.preferredTab = preferredTab;
-            if (activeTab != null) {
-                activeTab.setSelectedItem(null);
-            }
-            // Save changes first
-            // TODO: Replace stupid buffer copy later
-//                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-//                    try {
-//                        binaryViewer.saveToStream(buffer);
-//                        mainDoc.fromStreamUB(new ByteArrayInputStream(buffer.toByteArray()));
-//                    } catch (XBProcessingException ex) {
-//                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-//                        throw new UnsupportedOperationException("Not supported yet.");
-//                        // JOptionPane.showMessageDialog(WindowUtils.getFrame(this), ex.getMessage(), "Parsing Exception", JOptionPane.ERROR_MESSAGE);
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
+            selectedItem = null;
+            notifySelectedItem();
+
             switch (preferredTab) {
                 case MAIN: {
                     activeTab = viewerTab;
@@ -441,7 +424,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
                 default:
                     throw new InternalError("Unknown mode");
             }
-            activeTab.setSelectedItem(selectedItem);
+            notifySelectedItem();
 
 //            mainFrame.getEditFindAction().setEnabled(mode != PanelMode.TREE);
 //            mainFrame.getEditFindAgainAction().setEnabled(mode == PanelMode.TEXT);
@@ -455,6 +438,16 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 //            if (clipboardActionsUpdateListener != null) {
 //                clipboardActionsUpdateListener.stateChanged();
 //            }
+        }
+    }
+
+    private void notifySelectedItem() {
+        if (activeTab != null) {
+            try {
+                activeTab.setSelectedItem(selectedItem);
+            } catch (Exception ex) {
+                Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

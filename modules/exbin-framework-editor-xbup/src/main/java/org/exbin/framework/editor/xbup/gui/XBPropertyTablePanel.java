@@ -102,9 +102,9 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
 
         };
         columns.getColumn(0).setCellRenderer(nameCellRenderer);
-        valueCellRenderer = new XBPropertyTableCellRenderer(pluginRepository, null, null);
+        valueCellRenderer = new XBPropertyTableCellRenderer(null, null);
         columns.getColumn(1).setCellRenderer(valueCellRenderer);
-        valueCellEditor = new XBPropertyTableCellEditor(pluginRepository, null, null);
+        valueCellEditor = new XBPropertyTableCellEditor(null, null);
         columns.getColumn(1).setCellEditor(valueCellEditor);
 
         propertiesTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -396,7 +396,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
                                                 XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);
                                                 serialReader.read(lineEditor);
 
-                                                lineEditor.attachChangeListener(new LineEditorChangeListener(lineEditor, paramExtractor, parameterIndex));
+                                                lineEditor.attachChangeListener(new RowEditorChangeListener(lineEditor, paramExtractor, parameterIndex));
                                             }
                                         }
                                     } catch (XBProcessingException | IOException ex) {
@@ -474,9 +474,9 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         return addEnabled;
     }
 
-    public void setAddEnabled(boolean b) {
+    public void setAddEnabled(boolean enabled) {
         boolean old = isAddEnabled();
-        this.addEnabled = b;
+        this.addEnabled = enabled;
         firePropertyChange("addEnabled", old, isAddEnabled());
     }
 
@@ -486,9 +486,9 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         return undoAvailable;
     }
 
-    public void setUndoAvailable(boolean b) {
+    public void setUndoAvailable(boolean enabled) {
         boolean old = isUndoAvailable();
-        this.undoAvailable = b;
+        this.undoAvailable = enabled;
         firePropertyChange("undoAvailable", old, isUndoAvailable());
     }
 
@@ -517,16 +517,18 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
+        valueCellRenderer.setPluginRepository(pluginRepository);
+        valueCellEditor.setPluginRepository(pluginRepository);
     }
 
-    private class LineEditorChangeListener implements XBRowEditor.ChangeListener {
+    private class RowEditorChangeListener implements XBRowEditor.ChangeListener {
 
         private final XBATreeParamExtractor paramExtractor;
         private final int parameterIndex;
-        private final XBRowEditor lineEditor;
+        private final XBRowEditor rowEditor;
 
-        private LineEditorChangeListener(XBRowEditor lineEditor, XBATreeParamExtractor paramExtractor, int parameterIndex) {
-            this.lineEditor = lineEditor;
+        private RowEditorChangeListener(XBRowEditor rowEditor, XBATreeParamExtractor paramExtractor, int parameterIndex) {
+            this.rowEditor = rowEditor;
             this.paramExtractor = paramExtractor;
             this.parameterIndex = parameterIndex;
         }
@@ -535,7 +537,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         public void valueChanged() {
             paramExtractor.setParameterIndex(parameterIndex);
             XBPSerialWriter serialWriter = new XBPSerialWriter(paramExtractor);
-            serialWriter.write(lineEditor);
+            serialWriter.write(rowEditor);
         }
     }
 }

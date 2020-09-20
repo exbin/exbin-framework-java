@@ -179,20 +179,20 @@ public class ClientModule implements ClientModuleApi {
             EntityManager em = emf.createEntityManager();
             em.setFlushMode(FlushModeType.AUTO);
 
-            XBAECatalog xbCatalog = createInternalCatalog(em);
+            XBAECatalog intCatalog = createInternalCatalog(em);
 
-            if (xbCatalog.isShallInit()) {
+            if (intCatalog.isShallInit()) {
                 connectionStatusChanged(ConnectionStatus.INITIALIZING);
-                xbCatalog.initCatalog();
+                intCatalog.initCatalog();
             }
 
             try {
                 int defaultPort = devMode ? XBTCPServiceClient.DEFAULT_DEV_PORT : XBTCPServiceClient.DEFAULT_PORT;
                 String mainCatalogHost = devMode ? XBTCPServiceClient.MAIN_DEV_CATALOG_HOST : XBTCPServiceClient.MAIN_CATALOG_HOST;
                 XBCatalogNetServiceClient mainClient = new XBCatalogNetServiceClient(mainCatalogHost, defaultPort);
-                XBCatalogServiceUpdateHandler updateHandler = new XBCatalogServiceUpdateHandler(xbCatalog, mainClient);
-                xbCatalog.setUpdateHandler(updateHandler);
-                XBCRootService rootService = xbCatalog.getCatalogService(XBCRootService.class);
+                XBCatalogServiceUpdateHandler updateHandler = new XBCatalogServiceUpdateHandler(intCatalog, mainClient);
+                intCatalog.setUpdateHandler(updateHandler);
+                XBCRootService rootService = intCatalog.getCatalogService(XBCRootService.class);
                 try {
                     Optional<Date> localLastUpdate = rootService.getMainLastUpdate();
                     Date remoteLastUpdate = (Date) updateHandler.getMainLastUpdate();
@@ -203,7 +203,7 @@ public class ClientModule implements ClientModuleApi {
                         } else if (localLastUpdate.isEmpty()) {
                             System.out.println("No last update date");
                         } else {
-                            System.out.println("Never update available");
+                            System.out.println("Never update available " + remoteLastUpdate.toString() + " > " + localLastUpdate.get().toString());
                         }
 
                         connectionStatusChanged(ConnectionStatus.UPDATING);
@@ -212,11 +212,11 @@ public class ClientModule implements ClientModuleApi {
                         EntityManagerFactory emfDrop = Persistence.createEntityManagerFactory("XBEditorPU-drop");
                         EntityManager emDrop = emfDrop.createEntityManager();
                         emDrop.setFlushMode(FlushModeType.AUTO);
-                        xbCatalog = createInternalCatalog(emDrop);
-                        xbCatalog.setUpdateHandler(new XBCatalogServiceUpdateHandler(xbCatalog, mainClient));
-                        xbCatalog.initCatalog();
-                        rootService = xbCatalog.getCatalogService(XBCRootService.class);
-                        performUpdate(xbCatalog, rootService, remoteLastUpdate);
+                        intCatalog = createInternalCatalog(emDrop);
+                        intCatalog.setUpdateHandler(new XBCatalogServiceUpdateHandler(intCatalog, mainClient));
+                        intCatalog.initCatalog();
+                        rootService = intCatalog.getCatalogService(XBCRootService.class);
+                        performUpdate(intCatalog, rootService, remoteLastUpdate);
                     }
 
                     connectionStatusChanged(ConnectionStatus.INTERNET);
@@ -234,7 +234,7 @@ public class ClientModule implements ClientModuleApi {
                 return false;
             }
 
-            this.catalog = xbCatalog;
+            this.catalog = intCatalog;
             initializePlugins(catalog);
             return true;
         } catch (Exception ex) {

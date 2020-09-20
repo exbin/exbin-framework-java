@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.editor.xbup.gui;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -33,19 +35,20 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.editor.xbup.viewer.DocumentTab;
 
 /**
- * Panel for properties of the actual panel.
+ * Block definition panel.
  *
- * @version 0.2.1 2019/06/22
+ * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
-public class XBPropertyPanel extends javax.swing.JPanel {
+@ParametersAreNonnullByDefault
+public class BlockDefinitionPanel extends javax.swing.JPanel {
 
     private XBApplication application;
     private XBACatalog catalog;
     private XBPropertyTablePanel propertiesPanel;
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBPropertyPanel.class);
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BlockDefinitionPanel.class);
 
-    public XBPropertyPanel() {
+    public BlockDefinitionPanel() {
         initComponents();
         init();
     }
@@ -199,9 +202,17 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         propertiesPanel.setApplication(application);
     }
 
+    public XBACatalog getCatalog() {
+        return catalog;
+    }
+
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
         propertiesPanel.setCatalog(catalog);
+    }
+
+    public void setPluginRepository(XBPluginRepository pluginRepository) {
+        propertiesPanel.setPluginRepository(pluginRepository);
     }
 
     /**
@@ -210,7 +221,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new XBPropertyPanel());
+        WindowUtils.invokeDialog(new BlockDefinitionPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -271,6 +282,7 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         return "";
     }
 
+    @Nonnull
     private String getDescription(XBTTreeNode node) {
         if (node != null) {
             XBBlockDecl decl = node.getBlockDecl();
@@ -283,13 +295,5 @@ public class XBPropertyPanel extends javax.swing.JPanel {
         }
 
         return "";
-    }
-
-    public XBACatalog getCatalog() {
-        return catalog;
-    }
-
-    public void setPluginRepository(XBPluginRepository pluginRepository) {
-        propertiesPanel.setPluginRepository(pluginRepository);
     }
 }

@@ -445,7 +445,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
     }
 
     private void reloadBasicTypes() {
-        DefaultComboBoxModel<String> model = (DefaultComboBoxModel) basicTypeComboBox.getModel();
+        DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) basicTypeComboBox.getModel();
         model.removeAllElements();
         if (catalog != null) {
             Long[] basicGroupPath = {0l, 0l};

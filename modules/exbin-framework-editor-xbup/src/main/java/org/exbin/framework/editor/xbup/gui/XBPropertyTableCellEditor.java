@@ -33,23 +33,22 @@ import org.exbin.xbup.plugin.XBRowEditor;
 /**
  * Property table cell renderer.
  *
- * @version 0.2.1 2020/03/02
+ * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTableCellEditor extends DefaultCellEditor {
 
     private XBApplication application;
     private XBACatalog catalog;
-    private final XBPluginRepository pluginRepository;
+    private XBPluginRepository pluginRepository;
     private final XBTTreeDocument doc;
     private XBTTreeNode node;
-    private XBRowEditor lineEditor = null;
-    private JComponent lineEditorComponent = null;
+    private XBRowEditor rowEditor = null;
+    private JComponent rowEditorComponent = null;
 
-    public XBPropertyTableCellEditor(XBPluginRepository pluginRepository, XBTTreeNode node, XBTTreeDocument doc) {
+    public XBPropertyTableCellEditor(XBTTreeNode node, XBTTreeDocument doc) {
         super(new JTextField());
         super.setClickCountToStart(0);
-        this.pluginRepository = pluginRepository;
         this.node = node;
         this.doc = doc;
     }
@@ -61,15 +60,15 @@ public class XBPropertyTableCellEditor extends DefaultCellEditor {
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         XBPropertyTableItem tableItem = ((XBPropertyTableModel) table.getModel()).getRow(row);
-        lineEditor = tableItem.getLineEditor();
-        lineEditorComponent = lineEditor == null ? null : lineEditor.getEditor();
+        rowEditor = tableItem.getRowEditor();
+        rowEditorComponent = rowEditor == null ? null : rowEditor.getEditor();
         XBPropertyTableCellPanel cellPanel;
-        if (lineEditorComponent == null) {
+        if (rowEditorComponent == null) {
             JComponent defaultComponent = (JComponent) super.getTableCellEditorComponent(table, value, isSelected, row, column);
             defaultComponent.setEnabled(false);
             cellPanel = new XBPropertyTableCellPanel(defaultComponent, catalog, pluginRepository, node, doc, row);
         } else {
-            cellPanel = new XBPropertyTableCellPanel(lineEditorComponent, catalog, pluginRepository, node, doc, row);
+            cellPanel = new XBPropertyTableCellPanel(rowEditorComponent, catalog, pluginRepository, node, doc, row);
         }
         cellPanel.setApplication(application);
 
@@ -80,9 +79,9 @@ public class XBPropertyTableCellEditor extends DefaultCellEditor {
 
     @Override
     public boolean stopCellEditing() {
-        if (lineEditor != null) {
+        if (rowEditor != null) {
             try {
-                lineEditor.finishEditor();
+                rowEditor.finishEditor();
             } catch (Exception ex) {
                 Logger.getLogger(XBPropertyTableCellEditor.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(editorComponent, ex.toString(), "Cell Input", JOptionPane.ERROR_MESSAGE);
@@ -94,6 +93,10 @@ public class XBPropertyTableCellEditor extends DefaultCellEditor {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
+    }
+
+    public void setPluginRepository(XBPluginRepository pluginRepository) {
+        this.pluginRepository = pluginRepository;
     }
 
     public void setNode(XBTTreeNode node) {

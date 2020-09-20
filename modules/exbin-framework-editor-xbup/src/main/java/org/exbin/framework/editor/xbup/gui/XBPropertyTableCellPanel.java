@@ -115,8 +115,8 @@ public class XBPropertyTableCellPanel extends ComponentPropertyTableCellPanel {
         ModifyBlockPanel panel = new ModifyBlockPanel();
         panel.setApplication(application);
         panel.setCatalog(catalog);
-        panel.setNode(paramNode, doc);
         panel.setPluginRepository(pluginRepository);
+        panel.setNode(paramNode, doc);
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);

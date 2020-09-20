@@ -16,17 +16,22 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
-import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
+import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.gui.BinEdComponentPanel;
+import org.exbin.framework.editor.xbup.gui.BlockDefinitionPanel;
 import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
 import org.exbin.framework.editor.xbup.gui.ModifyBlockPanel;
 import org.exbin.framework.editor.xbup.gui.SimpleMessagePanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
@@ -40,6 +45,7 @@ import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.parser.token.pull.convert.XBTProviderToPullProvider;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBSerializable;
+import org.exbin.xbup.core.util.StreamUtils;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.parser_tree.XBTTreeWriter;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
@@ -50,7 +56,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Custom viewer of document.
  *
- * @version 0.2.1 2020/09/16
+ * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -59,17 +65,13 @@ public class ViewerDocumentTab implements DocumentTab {
     private XBPluginRepository pluginRepository;
 
     private DocumentViewerPanel viewerPanel = new DocumentViewerPanel();
-    private BlockPropertiesPanel propertiesPanel = new BlockPropertiesPanel();
-    private JComponent customPanel = null;
+    private final BlockDefinitionPanel definitionPanel = new BlockDefinitionPanel();
+    private final BinEdComponentPanel dataPanel = new BinEdComponentPanel();
     private XBTBlock selectedItem = null;
     private XBACatalog catalog;
     private ClipboardActionsUpdateListener updateListener;
 
     public ViewerDocumentTab() {
-
-//        customPanel = new JPanel();
-//        customPanel.setBackground(Color.RED);
-//        viewerPanel.addView("Test", customPanel);
         SimpleMessagePanel messagePanel = new SimpleMessagePanel();
         viewerPanel.setBorderComponent(messagePanel);
     }
@@ -82,11 +84,16 @@ public class ViewerDocumentTab implements DocumentTab {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        propertiesPanel.setCatalog(catalog);
+        definitionPanel.setCatalog(catalog);
     }
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
+        definitionPanel.setPluginRepository(pluginRepository);
+    }
+
+    public void setApplication(XBApplication application) {
+        definitionPanel.setApplication(application);
     }
 
     @Override
@@ -117,9 +124,21 @@ public class ViewerDocumentTab implements DocumentTab {
                 }
             }
 
-            viewerPanel.addView("Information", propertiesPanel);
-            propertiesPanel.setBlock(block);
+            if (block.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
+                ByteArrayEditableData byteArrayData = new ByteArrayEditableData();
+                try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
+                    StreamUtils.copyInputStreamToOutputStream(block.getData(), dataOutputStream);
+                } catch (IOException ex) {
+                    Logger.getLogger(PropertiesDocumentTab.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                dataPanel.setContentData(byteArrayData);
+                viewerPanel.addView("Data", dataPanel);
+            } else {
+                definitionPanel.setActiveNode((XBTTreeNode) block);
+                viewerPanel.addView("Definition", definitionPanel);
+            }
         }
+
         selectedItem = block;
         viewerPanel.revalidate();
         viewerPanel.repaint();
