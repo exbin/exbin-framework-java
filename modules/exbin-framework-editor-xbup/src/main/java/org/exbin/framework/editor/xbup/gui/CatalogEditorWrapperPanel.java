@@ -23,7 +23,6 @@ import org.exbin.framework.gui.menu.api.MenuManagement;
 import org.exbin.framework.gui.service.catalog.gui.CatalogEditorPanel;
 import org.exbin.framework.gui.service.gui.CatalogAvailabilityPanel;
 import org.exbin.framework.gui.service.gui.CatalogManagerPanelable;
-import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 

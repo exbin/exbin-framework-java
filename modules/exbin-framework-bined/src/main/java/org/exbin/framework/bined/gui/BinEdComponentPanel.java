@@ -21,6 +21,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -643,6 +644,14 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         if (modifiedChangeListener != null) {
             modifiedChangeListener.modifiedChanged();
         }
+    }
+
+    public void addBinaryAreaFocusListener(FocusListener focusListener) {
+        codeArea.addFocusListener(focusListener);
+    }
+
+    public void removeBinaryAreaFocusListener(FocusListener focusListener) {
+        codeArea.removeFocusListener(focusListener);
     }
 
     public interface CharsetChangeListener {

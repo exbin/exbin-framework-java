@@ -17,6 +17,8 @@ package org.exbin.framework.editor.xbup.viewer;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -123,6 +125,16 @@ public class TextDocumentTab implements DocumentTab {
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         textPanel.setUpdateListener(updateListener);
+    }
+
+    @Override
+    public void setActivationListener(final ActivationListener listener) {
+        textPanel.addTextAreaFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                listener.activated();
+            }
+        });
     }
 
     public Color[] getDefaultColors() {
@@ -241,5 +253,4 @@ public class TextDocumentTab implements DocumentTab {
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
     }
-
 }

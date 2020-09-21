@@ -16,6 +16,8 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import java.awt.Component;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
@@ -89,6 +91,7 @@ public class BinaryDocumentTab implements DocumentTab {
                     }
                 });
                 popupMenu.show(invoker, x, y);
+                binedModule.dropBinEdComponentPopupMenu();
             }
         };
         binaryPanel.setPopupMenu(popupMenu);
@@ -168,5 +171,15 @@ public class BinaryDocumentTab implements DocumentTab {
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         binaryPanel.setUpdateListener(updateListener);
+    }
+
+    @Override
+    public void setActivationListener(final ActivationListener listener) {
+        binaryPanel.addBinaryAreaFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                listener.activated();
+            }
+        });
     }
 }

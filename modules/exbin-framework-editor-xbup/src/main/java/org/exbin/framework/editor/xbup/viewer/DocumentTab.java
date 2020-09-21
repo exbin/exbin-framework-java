@@ -25,7 +25,7 @@ import org.exbin.xbup.core.block.XBTBlock;
 /**
  * Interface for document tab.
  *
- * @version 0.2.1 2020/02/28
+ * @version 0.2.1 2020/09/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -35,4 +35,11 @@ public interface DocumentTab extends ClipboardActionsHandler {
 
     @Nonnull
     JComponent getComponent();
+
+    void setActivationListener(ActivationListener listener);
+
+    public interface ActivationListener {
+
+        void activated();
+    }
 }

@@ -16,10 +16,7 @@
 package org.exbin.framework.editor.xbup.gui;
 
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -39,7 +36,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Panel with document tree visualization.
  *
- * @version 0.2.1 2020/09/10
+ * @version 0.2.1 2020/09/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -53,7 +50,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     private XBACatalog catalog;
     private XBUndoHandler undoHandler;
     private final List<ActionListener> updateListeners;
-    private boolean active = false;
 
     private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
 
@@ -70,24 +66,11 @@ public class XBDocTreePanel extends javax.swing.JPanel {
             itemSelectionListeners.forEach((listener) -> {
                 listener.itemSelected(selectedItem);
             });
+            notifyUpdate();
         });
 //        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         updateListeners = new ArrayList<>();
 
-        mainTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent event) -> {
-            notifyUpdate();
-        });
-        mainTree.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                notifyUpdate();
-            }
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                notifyUpdate();
-            }
-        });
         /*clipboard.addFlavorListener(new FlavorListener() {
          @Override
          public void flavorsChanged(FlavorEvent e) {
@@ -305,17 +288,6 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 
     public void setPopupMenu(JPopupMenu popupMenu) {
         mainTree.setComponentPopupMenu(popupMenu);
-        popupMenu.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentShown(ComponentEvent e) {
-                active = true;
-            }
-
-            @Override
-            public void componentHidden(ComponentEvent e) {
-                active = false;
-            }
-        });
     }
 
     boolean isSelection() {
@@ -375,11 +347,16 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //
 //        return false;
 //    }
-    public boolean isActive() {
-        return mainTree.hasFocus() || mainTree.getComponentPopupMenu().isShowing() || active;
-    }
 
     public boolean hasSelection() {
         return !mainTree.isSelectionEmpty();
+    }
+
+    public void addTreeFocusListener(FocusListener focusListener) {
+        mainTree.addFocusListener(focusListener);
+    }
+
+    public void removeTreeFocusListener(FocusListener focusListener) {
+        mainTree.removeFocusListener(focusListener);
     }
 }

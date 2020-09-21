@@ -202,4 +202,8 @@ public class ViewerDocumentTab implements DocumentTab {
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         this.updateListener = updateListener;
     }
+
+    @Override
+    public void setActivationListener(ActivationListener listener) {
+    }
 }

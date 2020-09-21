@@ -19,6 +19,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.SystemColor;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.beans.PropertyChangeEvent;
@@ -78,12 +81,13 @@ import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
 import org.exbin.framework.editor.text.service.TextSearchService;
+import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.core.util.StringUtils;
 
 /**
  * Text editor panel.
  *
- * @version 0.2.1 2019/07/17
+ * @version 0.2.1 2020/09/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -103,6 +107,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     private CharsetChangeListener charsetChangeListener = null;
     private TextStatusPanel textStatus = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
+    private EditorModificationListener editorModificationListener;
 
     public TextPanel() {
         initComponents();
@@ -145,6 +150,13 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
 
             if (undoUpdateListener != null) {
                 undoUpdateListener.undoChanged();
+            }
+        });
+
+        textArea.addCaretListener((e) -> {
+            // TODO detect selection changes only
+            if (clipboardActionsUpdateListener != null) {
+                clipboardActionsUpdateListener.stateChanged();
             }
         });
 
@@ -291,7 +303,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
 
     @Override
     public boolean isSelection() {
-        return textArea.getSelectionStart() > textArea.getSelectionEnd();
+        return textArea.getSelectionEnd() > textArea.getSelectionStart();
     }
 
     public void printFile() {
@@ -372,6 +384,9 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         }
         boolean oldValue = this.modified;
         this.modified = modified;
+        if (editorModificationListener != null) {
+            editorModificationListener.modified();
+        }
         firePropertyChange("modified", oldValue, this.modified);
     }
 
@@ -674,18 +689,26 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
 
     @Override
     public boolean canPaste() {
-        // TODO
-        return true;
+        Clipboard clipboard = ClipboardUtils.getClipboard();
+        return clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
     }
 
     @Override
     public boolean canDelete() {
-        return true;
+        return textArea.isEditable();
     }
 
     @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
-        // TODO
+        this.editorModificationListener = editorModificationListener;
+    }
+
+    public void addTextAreaFocusListener(FocusListener focusListener) {
+        textArea.addFocusListener(focusListener);
+    }
+
+    public void removeTextAreaFocusListener(FocusListener focusListener) {
+        textArea.removeFocusListener(focusListener);
     }
 
     public interface CharsetChangeListener {

@@ -26,13 +26,8 @@ import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
 import org.exbin.framework.editor.xbup.gui.SimpleMessagePanel;
 import org.exbin.framework.gui.service.catalog.gui.CatalogItemPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
-import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBTBlock;
-import org.exbin.xbup.core.block.declaration.XBBlockDecl;
-import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;
 import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
-import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
@@ -77,17 +72,17 @@ public class PropertiesDocumentTab implements DocumentTab {
         if (block != null) {
             // TODO custom viewers
 
-            if (block.getDataMode() != XBBlockDataMode.DATA_BLOCK) {
-                XBBlockDecl decl = block instanceof XBTTreeNode ? ((XBTTreeNode) block).getBlockDecl() : null;
-                if (decl instanceof XBCBlockDecl) {
-                    XBCBlockSpec blockSpec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
+//            if (block.getDataMode() != XBBlockDataMode.DATA_BLOCK) {
+//                XBBlockDecl decl = block instanceof XBTTreeNode ? ((XBTTreeNode) block).getBlockDecl() : null;
+//                if (decl instanceof XBCBlockDecl) {
+//                    XBCBlockSpec blockSpec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
+//
+//                    typePanel.setItem(blockSpec);
+//                    viewerPanel.addView("Type", typePanel);
+//                }
+//            }
 
-                    typePanel.setItem(blockSpec);
-                    viewerPanel.addView("Type", typePanel);
-                }
-            }
-
-            viewerPanel.addView("Information", propertiesPanel);
+            viewerPanel.addView("General", propertiesPanel);
             propertiesPanel.setBlock(block);
         }
 
@@ -152,5 +147,9 @@ public class PropertiesDocumentTab implements DocumentTab {
 
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+    }
+
+    @Override
+    public void setActivationListener(ActivationListener listener) {
     }
 }

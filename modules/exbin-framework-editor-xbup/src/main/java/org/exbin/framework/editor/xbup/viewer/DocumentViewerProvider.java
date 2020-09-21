@@ -16,6 +16,8 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import java.awt.datatransfer.Clipboard;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +42,7 @@ import org.exbin.framework.editor.xbup.action.PasteItemAction;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
 import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
 import org.exbin.framework.editor.xbup.gui.XBDocumentPanel;
+import org.exbin.framework.editor.xbup.viewer.DocumentTab.ActivationListener;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -64,7 +67,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2020/09/19
+ * @version 0.2.1 2020/09/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -73,15 +76,16 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     private URI fileUri = null;
     private FileType fileType = null;
     private XBACatalog catalog;
-    private final TreeDocument mainDoc;
     private PropertyChangeListener propertyChangeListener = null;
 
     private final XBDocumentPanel documentPanel;
 
     private XBTBlock selectedItem = null;
     private ViewerTab preferredTab;
-    private DocumentTab activeTab;
+    private DocumentTab selectedTab;
+    private ClipboardActionsHandler activeHandler;
 
+    private final TreeDocument treeDocument;
     private final ViewerDocumentTab viewerTab;
     private final PropertiesDocumentTab propertiesTab;
     private final TextDocumentTab textTab;
@@ -91,10 +95,12 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     private XBUndoHandler undoHandler;
     private XBPluginRepository pluginRepository;
     private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
+    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
 
     public DocumentViewerProvider(XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
 
+        treeDocument = new TreeDocument(null);
         viewerTab = new ViewerDocumentTab();
         propertiesTab = new PropertiesDocumentTab();
         binaryTab = new BinaryDocumentTab();
@@ -105,18 +111,31 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         documentPanel.addItemSelectionListener((item) -> {
             this.selectedItem = item;
             notifySelectedItem();
-
             notifyItemSelectionChanged();
         });
-        mainDoc = new TreeDocument(null);
-        documentPanel.setMainDoc(mainDoc);
-        documentPanel.setMainTabComponent(viewerTab.getComponent());
+
+        treeDocument.setActivationListener(() -> {
+            activeHandler = treeDocument;
+            notifyActiveChanged();
+        });
+
+        textTab.setActivationListener(() -> {
+            activeHandler = textTab;
+            notifyActiveChanged();
+        });
+        binaryTab.setActivationListener(() -> {
+            activeHandler = binaryTab;
+            notifyActiveChanged();
+        });
+        documentPanel.setMainDoc(treeDocument);
+        documentPanel.setViewTabComponent(viewerTab.getComponent());
         documentPanel.setPropertiesTabComponent(propertiesTab.getComponent());
         documentPanel.setBinaryTabComponent(binaryTab.getComponent());
         documentPanel.setTextTabComponent(textTab.getComponent());
 
-        preferredTab = ViewerTab.MAIN;
-        activeTab = viewerTab;
+        preferredTab = ViewerTab.VIEW;
+        selectedTab = viewerTab;
+        activeHandler = treeDocument;
     }
 
     @Nonnull
@@ -126,7 +145,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     }
 
     public XBTTreeDocument getDoc() {
-        return mainDoc;
+        return treeDocument;
     }
 
     public XBACatalog getCatalog() {
@@ -136,8 +155,8 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
         documentPanel.setCatalog(catalog);
-        mainDoc.setCatalog(catalog);
-        mainDoc.processSpec();
+        treeDocument.setCatalog(catalog);
+        treeDocument.processSpec();
         viewerTab.setCatalog(catalog);
         propertiesTab.setCatalog(catalog);
         textTab.setCatalog(catalog);
@@ -262,114 +281,62 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     @Override
     public void performCut() {
-        if (documentPanel.isActive()) {
-            CutItemAction action = new CutItemAction(this);
-            action.actionPerformed(null);
-            return;
-        }
-
-        activeTab.performCut();
+        activeHandler.performCut();
     }
 
     @Override
     public void performCopy() {
-        if (documentPanel.isActive()) {
-            CopyItemAction action = new CopyItemAction(this);
-            action.actionPerformed(null);
-            return;
-        }
-
-        activeTab.performCopy();
+        activeHandler.performCopy();
     }
 
     @Override
     public void performPaste() {
-        if (documentPanel.isActive()) {
-            PasteItemAction action = new PasteItemAction(this);
-            action.actionPerformed(null);
-            return;
-        }
-
-        activeTab.performPaste();
+        activeHandler.performPaste();
     }
 
     @Override
     public void performDelete() {
-        if (documentPanel.isActive()) {
-            DeleteItemAction action = new DeleteItemAction(this);
-            action.actionPerformed(null);
-            return;
-        }
-
-        activeTab.performDelete();
+        activeHandler.performDelete();
     }
 
     @Override
     public void performSelectAll() {
-        if (documentPanel.isActive()) {
-            documentPanel.performSelectAll();
-            return;
-        }
-
-        activeTab.performSelectAll();
+        activeHandler.performSelectAll();
     }
 
     @Override
     public boolean isSelection() {
-        if (documentPanel.isActive()) {
-            return documentPanel.hasSelection();
-        }
-
-        return activeTab.isSelection();
+        return activeHandler.isSelection();
     }
 
     @Override
     public boolean isEditable() {
-        if (documentPanel.isActive()) {
-            return documentPanel.hasSelection();
-        }
-
-        return activeTab.isEditable();
+        return activeHandler.isEditable();
     }
 
     @Override
     public boolean canSelectAll() {
-        if (documentPanel.isActive()) {
-            return true;
-        }
-
-        return activeTab.canSelectAll();
+        return activeHandler.canSelectAll();
     }
 
     @Override
     public boolean canPaste() {
-        if (documentPanel.isActive()) {
-            Clipboard clipboard = ClipboardUtils.getClipboard();
-            return clipboard.isDataFlavorAvailable(XBDocTreeTransferHandler.XB_DATA_FLAVOR);
-        }
-
-        return activeTab.canPaste();
+        return activeHandler.canPaste();
     }
 
     @Override
     public boolean canDelete() {
-        if (documentPanel.isActive()) {
-            return documentPanel.hasSelection();
-        }
-
-        return activeTab.canDelete();
+        return activeHandler.canDelete();
     }
 
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-//        clipboardActionsUpdateListener = updateListener;
-        documentPanel.addUpdateListener((e) -> {
-            updateListener.stateChanged();
-        });
+        clipboardActionsUpdateListener = updateListener;
         viewerTab.setUpdateListener(updateListener);
         binaryTab.setUpdateListener(updateListener);
         textTab.setUpdateListener(updateListener);
         propertiesTab.setUpdateListener(updateListener);
+        treeDocument.setUpdateListener(updateListener);
     }
 
     public void postWindowOpened() {
@@ -393,24 +360,22 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     public void setPreferredTab(ViewerTab preferredTab) {
         if (this.preferredTab != preferredTab) {
             this.preferredTab = preferredTab;
-            selectedItem = null;
-            notifySelectedItem();
 
             switch (preferredTab) {
-                case MAIN: {
-                    activeTab = viewerTab;
+                case VIEW: {
+                    selectedTab = viewerTab;
                     break;
                 }
                 case PROPERTIES: {
-                    activeTab = propertiesTab;
+                    selectedTab = propertiesTab;
                     break;
                 }
                 case TEXT: {
-                    activeTab = textTab;
+                    selectedTab = textTab;
                     break;
                 }
                 case BINARY: {
-                    activeTab = binaryTab;
+                    selectedTab = binaryTab;
                     // TODO: Replace stupid buffer copy later
 //                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 //                    try {
@@ -425,6 +390,11 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
                     throw new InternalError("Unknown mode");
             }
             notifySelectedItem();
+            notifyItemSelectionChanged();
+            if (activeHandler != selectedTab && activeHandler != treeDocument) {
+                activeHandler = treeDocument;
+                notifyActiveChanged();
+            }
 
 //            mainFrame.getEditFindAction().setEnabled(mode != PanelMode.TREE);
 //            mainFrame.getEditFindAgainAction().setEnabled(mode == PanelMode.TEXT);
@@ -442,13 +412,17 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     }
 
     private void notifySelectedItem() {
-        if (activeTab != null) {
+        if (selectedTab != null) {
             try {
-                activeTab.setSelectedItem(selectedItem);
+                selectedTab.setSelectedItem(selectedItem);
             } catch (Exception ex) {
                 Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    private void notifyActiveChanged() {
+        clipboardActionsUpdateListener.stateChanged();
     }
 
     public void actionItemProperties() {
@@ -472,8 +446,8 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     public void itemWasModified(XBTTreeNode newNode) {
         reportStructureChange(newNode);
-        mainDoc.setModified(true);
-        mainDoc.processSpec();
+        treeDocument.setModified(true);
+        treeDocument.processSpec();
         // TODO updateItemStatus();
     }
 
@@ -491,28 +465,12 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         });
     }
 
-//    private void updateActiveViewer() {
-//        int selectedIndex = mainTabbedPane.getSelectedIndex();
-//        switch (selectedIndex) {
-//            case 0: {
-//                activeViewer = propertiesViewer;
-//                mode = PanelMode.PROPERTIES;
-//                break;
-//            }
-//            case 1: {
-//                activeViewer = textViewer;
-//                mode = PanelMode.TEXT;
-//                break;
-//            }
-//            case 2: {
-//                activeViewer = binaryViewer;
-//                mode = PanelMode.BINARY;
-//                break;
-//            }
-//        }
-//    }
     @ParametersAreNonnullByDefault
-    private class TreeDocument extends XBTTreeDocument implements OperationListener {
+    private class TreeDocument extends XBTTreeDocument implements OperationListener, ClipboardActionsHandler {
+
+        public TreeDocument() {
+            super((XBCatalog) null);
+        }
 
         public TreeDocument(@Nullable XBCatalog catalog) {
             super(catalog);
@@ -522,7 +480,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         public void notifyChange(OperationEvent event) {
             Operation operation = event.getOperation();
             // TODO Consolidate
-            mainDoc.processSpec();
+            processSpec();
             reportStructureChange(null);
             // getDoc().setModified(true);
 //            updateItem();
@@ -532,15 +490,86 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 //            }
 
             if (operation instanceof XBTDocOperation) {
-                setPreferredTab(ViewerTab.MAIN);
+                setPreferredTab(ViewerTab.VIEW);
             } else {
                 // TODO
             }
         }
+
+        public void setActivationListener(final ActivationListener listener) {
+            documentPanel.addTreeFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    listener.activated();
+                }
+            });
+        }
+
+        @Override
+        public void performCut() {
+            CutItemAction action = new CutItemAction(DocumentViewerProvider.this);
+            action.actionPerformed(null);
+        }
+
+        @Override
+        public void performCopy() {
+            CopyItemAction action = new CopyItemAction(DocumentViewerProvider.this);
+            action.actionPerformed(null);
+        }
+
+        @Override
+        public void performPaste() {
+            PasteItemAction action = new PasteItemAction(DocumentViewerProvider.this);
+            action.actionPerformed(null);
+        }
+
+        @Override
+        public void performDelete() {
+            DeleteItemAction action = new DeleteItemAction(DocumentViewerProvider.this);
+            action.actionPerformed(null);
+        }
+
+        @Override
+        public void performSelectAll() {
+            documentPanel.performSelectAll();
+        }
+
+        @Override
+        public boolean isSelection() {
+            return documentPanel.hasSelection();
+        }
+
+        @Override
+        public boolean isEditable() {
+            return documentPanel.hasSelection();
+        }
+
+        @Override
+        public boolean canSelectAll() {
+            return true;
+        }
+
+        @Override
+        public boolean canPaste() {
+            Clipboard clipboard = ClipboardUtils.getClipboard();
+            return clipboard.isDataFlavorAvailable(XBDocTreeTransferHandler.XB_DATA_FLAVOR);
+        }
+
+        @Override
+        public boolean canDelete() {
+            return documentPanel.hasSelection();
+        }
+
+        @Override
+        public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+            documentPanel.addUpdateListener((e) -> {
+                updateListener.stateChanged();
+            });
+        }
     }
 
     public enum ViewerTab {
-        MAIN,
+        VIEW,
         PROPERTIES,
         TEXT,
         BINARY

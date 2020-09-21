@@ -22,7 +22,6 @@ import org.exbin.framework.editor.xbup.action.DocumentPropertiesAction;
 import org.exbin.framework.editor.xbup.action.ItemPropertiesAction;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**

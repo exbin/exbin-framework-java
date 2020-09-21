@@ -18,6 +18,7 @@ package org.exbin.framework.editor.xbup.gui;
 import java.awt.BorderLayout;
 import org.exbin.framework.editor.xbup.viewer.DocumentItemSelectionListener;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 /**
  * Panel for document visualization.
  *
- * @version 0.2.1 2020/06/18
+ * @version 0.2.1 2020/09/21
  * @author ExBin Project (http://exbin.org)
  */
 public class XBDocumentPanel extends javax.swing.JPanel {
@@ -69,10 +70,10 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         setShowPropertiesPanel(true);
         mainTabbedPane.addChangeListener((ChangeEvent e) -> {
             int selectedIndex = mainTabbedPane.getSelectedIndex();
-            ViewerTab viewerTab = ViewerTab.MAIN;
+            ViewerTab viewerTab = ViewerTab.VIEW;
             switch (selectedIndex) {
                 case 0: {
-                    viewerTab = ViewerTab.MAIN;
+                    viewerTab = ViewerTab.VIEW;
                     break;
                 }
                 case 1: {
@@ -115,8 +116,8 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         mainSplitPane.setDividerLocation(getWidth() - 300 > 0 ? getWidth() - 300 : getWidth() / 3);
     }
 
-    public void setMainTabComponent(JComponent component) {
-        mainTabPanel.add(component, BorderLayout.CENTER);
+    public void setViewTabComponent(JComponent component) {
+        viewTabPanel.add(component, BorderLayout.CENTER);
     }
 
     public void setBinaryTabComponent(JComponent component) {
@@ -152,7 +153,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         popupItemPropertiesMenuItem = new javax.swing.JMenuItem();
         mainTabbedPane = new javax.swing.JTabbedPane();
-        mainTabPanel = new javax.swing.JPanel();
+        viewTabPanel = new javax.swing.JPanel();
         propertiesTabPanel = new javax.swing.JPanel();
         textTabPanel = new javax.swing.JPanel();
         binaryTabPanel = new javax.swing.JPanel();
@@ -194,8 +195,8 @@ public class XBDocumentPanel extends javax.swing.JPanel {
             }
         });
 
-        mainTabPanel.setLayout(new java.awt.BorderLayout());
-        mainTabbedPane.addTab("View", mainTabPanel);
+        viewTabPanel.setLayout(new java.awt.BorderLayout());
+        mainTabbedPane.addTab("View", viewTabPanel);
 
         propertiesTabPanel.setLayout(new java.awt.BorderLayout());
         mainTabbedPane.addTab("Properties", propertiesTabPanel);
@@ -281,7 +282,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     private javax.swing.JPanel binaryTabPanel;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane mainSplitPane;
-    private javax.swing.JPanel mainTabPanel;
     private javax.swing.JTabbedPane mainTabbedPane;
     private javax.swing.JMenuItem popupItemCopyMenuItem;
     private javax.swing.JMenuItem popupItemPropertiesMenuItem;
@@ -289,6 +289,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     private javax.swing.JPopupMenu popupMenu;
     private javax.swing.JPanel propertiesTabPanel;
     private javax.swing.JPanel textTabPanel;
+    private javax.swing.JPanel viewTabPanel;
     // End of variables declaration//GEN-END:variables
 
 //    public void setEditEnabled(boolean editEnabled) {
@@ -319,7 +320,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
 //                viewSplitPane.setRightComponent(propertyPanel);
 //                mainSplitPane.setRightComponent(viewSplitPane);
 //            } else {
-                mainSplitPane.setRightComponent(mainTabbedPane);
+            mainSplitPane.setRightComponent(mainTabbedPane);
 //            }
 
             this.showPropertiesPanel = showPropertiesPanel;
@@ -388,15 +389,19 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         tabSwitchListeners.remove(listener);
     }
 
-    public boolean isActive() {
-        return treePanel.isActive();
-    }
-
     public void performSelectAll() {
         treePanel.performSelectAll();
     }
-    
+
     public boolean hasSelection() {
         return treePanel.hasSelection();
+    }
+
+    public void addTreeFocusListener(FocusListener focusListener) {
+        treePanel.addTreeFocusListener(focusListener);
+    }
+
+    public void removeTreeFocusListener(FocusListener focusListener) {
+        treePanel.removeTreeFocusListener(focusListener);
     }
 }

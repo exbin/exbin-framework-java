@@ -1553,6 +1553,10 @@ public class BinedModule implements XBApplicationModule {
         return codeAreaPopupMenuHandler.createPopupMenu(binaryPanel.getCodeArea(), "", clickedX, clickedY);
     }
     
+    public void dropBinEdComponentPopupMenu() {
+        dropCodeAreaPopupMenu("");
+    }
+    
     @Nonnull
     private JMenuItem createGoToMenuItem() {
         return ActionUtils.actionToMenuItem(goToRowHandler.getGoToLineAction());
