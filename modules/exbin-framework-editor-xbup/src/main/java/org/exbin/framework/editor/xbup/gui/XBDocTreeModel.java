@@ -62,7 +62,7 @@ public class XBDocTreeModel implements TreeModel {
 
     @Override
     public boolean isLeaf(Object node) {
-        return ((XBTBlock) node).getChildAt(0) == null;
+        return false;
     }
 
     @Override

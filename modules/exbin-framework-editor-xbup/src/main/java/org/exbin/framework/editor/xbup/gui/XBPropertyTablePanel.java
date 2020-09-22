@@ -56,11 +56,12 @@ import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.plugin.XBRowEditor;
 import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
 import org.exbin.framework.editor.xbup.viewer.DocumentTab;
+import org.exbin.xbup.core.block.XBTBlock;
 
 /**
  * Panel for properties of the actual panel.
  *
- * @version 0.2.1 2020/08/18
+ * @version 0.2.1 2020/09/22
  * @author ExBin Project (http://exbin.org)
  */
 public class XBPropertyTablePanel extends javax.swing.JPanel {
@@ -77,7 +78,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
 
     private Thread propertyThread;
     private final Semaphore valueFillingSemaphore;
-    private XBTTreeNode node;
+    private XBTBlock block;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBPropertyTablePanel.class);
 
     public XBPropertyTablePanel() {
@@ -277,11 +278,11 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
     private javax.swing.JPopupMenu propertyPopupMenu;
     // End of variables declaration//GEN-END:variables
 
-    public void setActiveNode(XBTTreeNode node) {
-        this.node = node;
-        valueCellRenderer.setNode(node);
-        valueCellEditor.setNode(node);
-        new PropertyThread(this, node).start();
+    public void setBlock(XBTBlock block) {
+        this.block = block;
+        valueCellRenderer.setBlock(block);
+        valueCellEditor.setBlock(block);
+        new PropertyThread(this, (XBTTreeNode) block).start();
     }
 
     public XBACatalog getCatalog() {

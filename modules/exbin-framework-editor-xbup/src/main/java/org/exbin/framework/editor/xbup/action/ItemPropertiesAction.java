@@ -62,6 +62,7 @@ public class ItemPropertiesAction extends AbstractAction {
         XBACatalog catalog = viewerProvider.getCatalog();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         BlockPropertiesPanel panel = new BlockPropertiesPanel();
+        panel.setApplication(application);
         panel.setCatalog(catalog);
         panel.setDevMode(devMode);
         panel.setBlock(viewerProvider.getSelectedItem().get());

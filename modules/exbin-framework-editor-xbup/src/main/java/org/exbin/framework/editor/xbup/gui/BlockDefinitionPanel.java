@@ -33,6 +33,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.editor.xbup.viewer.DocumentTab;
+import org.exbin.xbup.core.block.XBTBlock;
 
 /**
  * Block definition panel.
@@ -248,10 +249,10 @@ public class BlockDefinitionPanel extends javax.swing.JPanel {
     private javax.swing.JPopupMenu propertyPopupMenu;
     // End of variables declaration//GEN-END:variables
 
-    public void setActiveNode(XBTTreeNode node) {
-        propertiesPanel.setActiveNode(node);
-        nameTextField.setText(getCaption(node));
-        descTextField.setText(getDescription(node));
+    public void setBlock(XBTBlock block) {
+        propertiesPanel.setBlock(block);
+        nameTextField.setText(getCaption((XBTTreeNode) block));
+        descTextField.setText(getDescription((XBTTreeNode) block));
     }
 
     public void setActiveViewer(DocumentTab viewer) {

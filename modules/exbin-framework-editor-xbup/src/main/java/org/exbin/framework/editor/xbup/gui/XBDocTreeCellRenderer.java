@@ -19,6 +19,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -36,19 +38,22 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Tree Cell Renderer for XBUP Document Tree.
  *
- * @version 0.1.24 2014/11/28
+ * @version 0.2.1 2020/09/22
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
 
     private XBACatalog catalog;
     private final Map<Long, String> captionCache;
     private final Map<Long, ImageIcon> iconCache;
+    private final ImageIcon dataBlockIcon;
 
     public XBDocTreeCellRenderer() {
         super();
         captionCache = new HashMap<>();
         iconCache = new HashMap<>();
+        dataBlockIcon = new ImageIcon(getClass().getResource("/org/exbin/framework/editor/xbup/resources/icons/data-block-16x16.png"));
     }
 
     @Override
@@ -58,6 +63,7 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
         if (value instanceof XBTTreeNode) {
             XBTTreeNode node = ((XBTTreeNode) value);
+            ImageIcon icon = null;
             String caption = null;
             if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
                 if (node.getDataSize() == 0) {
@@ -65,9 +71,17 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
                 } else {
                     caption = "Data Block";
                 }
-            } else if (catalog != null) {
-                caption = getCaption(node.getBlockDecl());
+                icon = dataBlockIcon;
+            } else {
+                if (catalog != null) {
+                    caption = getCaption(node.getBlockDecl());
+                }
+
+                if (catalog != null) {
+                    icon = getIcon(node.getBlockDecl());
+                }
             }
+
             if (caption != null) {
                 setText(caption);
             } else {
@@ -75,14 +89,8 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
                 setForeground(Color.RED);
             }
 
-            if (node.getDataMode() == XBBlockDataMode.NODE_BLOCK) {
-                ImageIcon icon = null;
-                if (catalog != null) {
-                    icon = getIcon(node.getBlockDecl());
-                }
-                if (icon != null) {
-                    setIcon(icon);
-                }
+            if (icon != null) {
+                setIcon(icon);
             }
         }
         return this;
@@ -148,7 +156,8 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
      * @param blockDecl block declaration
      * @return icon
      */
-    public ImageIcon getIcon(XBBlockDecl blockDecl) {
+    @Nullable
+    private ImageIcon getIcon(XBBlockDecl blockDecl) {
         if (blockDecl instanceof XBCBlockDecl) {
             XBCBlockSpec blockSpec = (XBCBlockSpec) ((XBCBlockDecl) blockDecl).getBlockSpecRev().getParent();
             if (iconCache.containsKey(blockSpec.getId())) {

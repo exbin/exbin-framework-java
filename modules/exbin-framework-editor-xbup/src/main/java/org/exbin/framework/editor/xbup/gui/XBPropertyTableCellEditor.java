@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
@@ -99,7 +100,8 @@ public class XBPropertyTableCellEditor extends DefaultCellEditor {
         this.pluginRepository = pluginRepository;
     }
 
-    public void setNode(XBTTreeNode node) {
-        this.node = node;
+    public void setBlock(XBTBlock block) {
+        this.node = (XBTTreeNode) block;
+        cancelCellEditing();
     }
 }

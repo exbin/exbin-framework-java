@@ -185,6 +185,10 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         documentPanel.setPluginRepository(pluginRepository);
     }
 
+    public void setDevMode(boolean devMode) {
+        propertiesTab.setDevMode(devMode);
+    }
+
     @Override
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         this.propertyChangeListener = propertyChangeListener;
@@ -428,6 +432,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     public void actionItemProperties() {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         BlockPropertiesPanel panel = new BlockPropertiesPanel();
+        panel.setApplication(application);
         panel.setCatalog(catalog);
         panel.setBlock(getSelectedItem().orElse(null));
         CloseControlPanel controlPanel = new CloseControlPanel();

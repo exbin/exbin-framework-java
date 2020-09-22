@@ -21,10 +21,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
 import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
+import org.exbin.framework.editor.xbup.gui.GeneralPropertiesPanel;
 import org.exbin.framework.editor.xbup.gui.SimpleMessagePanel;
-import org.exbin.framework.gui.service.catalog.gui.CatalogItemPanel;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -33,7 +32,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Properties viewer of document.
  *
- * @version 0.2.1 2020/09/20
+ * @version 0.2.1 2020/09/22
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -41,49 +40,39 @@ public class PropertiesDocumentTab implements DocumentTab {
 
     private final JPanel panel = new JPanel();
     private final DocumentViewerPanel viewerPanel = new DocumentViewerPanel();
-    private final CatalogItemPanel typePanel;
-    private BlockPropertiesPanel propertiesPanel = new BlockPropertiesPanel();
+    private GeneralPropertiesPanel generalPanel = new GeneralPropertiesPanel();
     private XBACatalog catalog;
 
     public PropertiesDocumentTab() {
         panel.setLayout(new BorderLayout());
         panel.add(viewerPanel, BorderLayout.CENTER);
 
-        typePanel = new CatalogItemPanel();
         SimpleMessagePanel messagePanel = new SimpleMessagePanel();
         viewerPanel.setBorderComponent(messagePanel);
     }
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        typePanel.setCatalog(catalog);
-        propertiesPanel.setCatalog(catalog);
+        generalPanel.setCatalog(catalog);
     }
 
     public void setApplication(XBApplication application) {
+        generalPanel.setApplication(application);
     }
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
+    }
+    
+    public void setDevMode(boolean devMode) {
+        generalPanel.setDevMode(devMode);
     }
 
     @Override
     public void setSelectedItem(@Nullable XBTBlock block) {
         viewerPanel.removeAllViews();
         if (block != null) {
-            // TODO custom viewers
-
-//            if (block.getDataMode() != XBBlockDataMode.DATA_BLOCK) {
-//                XBBlockDecl decl = block instanceof XBTTreeNode ? ((XBTTreeNode) block).getBlockDecl() : null;
-//                if (decl instanceof XBCBlockDecl) {
-//                    XBCBlockSpec blockSpec = ((XBCBlockDecl) decl).getBlockSpecRev().getParent();
-//
-//                    typePanel.setItem(blockSpec);
-//                    viewerPanel.addView("Type", typePanel);
-//                }
-//            }
-
-            viewerPanel.addView("General", propertiesPanel);
-            propertiesPanel.setBlock(block);
+            viewerPanel.addView("General", generalPanel);
+            generalPanel.setBlock(block);
         }
 
         viewerPanel.revalidate();
@@ -97,27 +86,22 @@ public class PropertiesDocumentTab implements DocumentTab {
 
     @Override
     public void performCut() {
-        // textPanel.performCut();
     }
 
     @Override
     public void performCopy() {
-        // textPanel.performCopy();
     }
 
     @Override
     public void performPaste() {
-        // textPanel.performPaste();
     }
 
     @Override
     public void performDelete() {
-        // textPanel.performDelete();
     }
 
     @Override
     public void performSelectAll() {
-        // textPanel.performSelectAll();
     }
 
     @Override

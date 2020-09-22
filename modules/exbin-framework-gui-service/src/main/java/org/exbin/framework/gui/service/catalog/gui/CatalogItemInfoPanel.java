@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.gui.service.catalog.gui;
 
+import javax.annotation.Nullable;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
@@ -24,17 +25,23 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 
 /**
- * Compact information about catalog item Panel.
+ * Compact information about catalog item panel.
  *
- * @version 0.2.1 2019/06/26
+ * @version 0.2.1 2020/09/22
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogItemInfoPanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
+    private String defaultText;
 
     public CatalogItemInfoPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        defaultText = mainEditorPane.getText();
     }
 
     /**
@@ -73,7 +80,12 @@ public class CatalogItemInfoPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane mainScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    public void setItem(XBCItem item) {
+    public void setItem(@Nullable XBCItem item) {
+        if (item == null) {
+            mainEditorPane.setText(defaultText);
+            return;
+        }
+
         XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
         XBCXDescService descService = catalog.getCatalogService(XBCXDescService.class);
         XBCXStriService striService = catalog.getCatalogService(XBCXStriService.class);

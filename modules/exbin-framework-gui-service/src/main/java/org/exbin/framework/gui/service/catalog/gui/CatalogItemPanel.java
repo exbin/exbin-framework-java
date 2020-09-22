@@ -106,6 +106,8 @@ public class CatalogItemPanel extends javax.swing.JPanel {
         generalPanel = new javax.swing.JPanel();
         basicItemScrollPane = new javax.swing.JScrollPane();
         basicItemDataPanel = new javax.swing.JPanel();
+        iconPanel = new javax.swing.JPanel();
+        itemIconLabel = new javax.swing.JLabel();
         itemTitleLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         itemNameLabel = new javax.swing.JLabel();
@@ -120,8 +122,6 @@ public class CatalogItemPanel extends javax.swing.JPanel {
         fullPathTextField = new javax.swing.JTextField();
         itemCreatedLabel = new javax.swing.JLabel();
         itemCreatedTextField = new javax.swing.JTextField();
-        iconPanel = new javax.swing.JPanel();
-        itemIconLabel = new javax.swing.JLabel();
         documentationPanel = new javax.swing.JPanel();
         itemHDocScrollPane = new javax.swing.JScrollPane();
         itemHDocEditorPane = new javax.swing.JEditorPane();
@@ -178,6 +178,14 @@ public class CatalogItemPanel extends javax.swing.JPanel {
 
         basicItemDataPanel.setName("basicItemDataPanel"); // NOI18N
 
+        iconPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        iconPanel.setName("iconPanel"); // NOI18N
+        iconPanel.setLayout(new java.awt.BorderLayout());
+
+        itemIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/service/resources/images/empty.png"))); // NOI18N
+        itemIconLabel.setName("itemIconLabel"); // NOI18N
+        iconPanel.add(itemIconLabel, java.awt.BorderLayout.CENTER);
+
         itemTitleLabel.setText("Unknown item");
         itemTitleLabel.setName("itemTitleLabel"); // NOI18N
 
@@ -223,14 +231,6 @@ public class CatalogItemPanel extends javax.swing.JPanel {
 
         itemCreatedTextField.setEditable(false);
         itemCreatedTextField.setName("itemCreatedTextField"); // NOI18N
-
-        iconPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        iconPanel.setName("iconPanel"); // NOI18N
-        iconPanel.setLayout(new java.awt.BorderLayout());
-
-        itemIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/service/resources/images/empty.png"))); // NOI18N
-        itemIconLabel.setName("itemIconLabel"); // NOI18N
-        iconPanel.add(itemIconLabel, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout basicItemDataPanelLayout = new javax.swing.GroupLayout(basicItemDataPanel);
         basicItemDataPanel.setLayout(basicItemDataPanelLayout);

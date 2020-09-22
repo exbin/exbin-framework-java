@@ -129,12 +129,12 @@ public class ViewerDocumentTab implements DocumentTab {
                 try (OutputStream dataOutputStream = byteArrayData.getDataOutputStream()) {
                     StreamUtils.copyInputStreamToOutputStream(block.getData(), dataOutputStream);
                 } catch (IOException ex) {
-                    Logger.getLogger(PropertiesDocumentTab.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ViewerDocumentTab.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 dataPanel.setContentData(byteArrayData);
                 viewerPanel.addView("Data", dataPanel);
             } else {
-                definitionPanel.setActiveNode((XBTTreeNode) block);
+                definitionPanel.setBlock(block);
                 viewerPanel.addView("Definition", definitionPanel);
             }
         }

@@ -92,6 +92,7 @@ public class EditorXbupModule implements XBApplicationModule {
         if (editorProvider == null) {
             editorProvider = new DocumentViewerProvider(undoHandler);
             ((DocumentViewerProvider) editorProvider).setApplication(application);
+            ((DocumentViewerProvider) editorProvider).setDevMode(devMode);
 
             final DocumentViewerProvider docPanel = (DocumentViewerProvider) editorProvider;
 
