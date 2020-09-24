@@ -51,15 +51,18 @@ public class PropertiesDocumentTab implements DocumentTab {
         viewerPanel.setBorderComponent(messagePanel);
     }
 
+    @Override
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
         generalPanel.setCatalog(catalog);
     }
 
+    @Override
     public void setApplication(XBApplication application) {
         generalPanel.setApplication(application);
     }
 
+    @Override
     public void setPluginRepository(XBPluginRepository pluginRepository) {
     }
     

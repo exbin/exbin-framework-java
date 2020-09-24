@@ -263,9 +263,10 @@ public class AddBlockPanel extends javax.swing.JPanel {
     private void contextTypeSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contextTypeSelectButtonActionPerformed
         if (catalog != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final ContextTypeChoicePanel panel = new ContextTypeChoicePanel(catalog, parentNode);
-
             DefaultControlPanel controlPanel = new DefaultControlPanel();
+            final ContextTypeChoicePanel panel = new ContextTypeChoicePanel(catalog, parentNode);
+            panel.setCanProceedListener(controlPanel.createEnablementListener());
+
             JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
             final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {

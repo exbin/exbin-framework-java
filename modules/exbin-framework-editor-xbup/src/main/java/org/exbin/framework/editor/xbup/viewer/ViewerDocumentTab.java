@@ -27,6 +27,7 @@ import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.xbup.gui.BlockDefinitionPanel;
+import org.exbin.framework.editor.xbup.gui.BlockRowEditorPanel;
 import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
 import org.exbin.framework.editor.xbup.gui.ModifyBlockPanel;
 import org.exbin.framework.editor.xbup.gui.SimpleMessagePanel;
@@ -67,6 +68,7 @@ public class ViewerDocumentTab implements DocumentTab {
     private DocumentViewerPanel viewerPanel = new DocumentViewerPanel();
     private final BlockDefinitionPanel definitionPanel = new BlockDefinitionPanel();
     private final BinEdComponentPanel dataPanel = new BinEdComponentPanel();
+    private final BlockRowEditorPanel rowEditorPanel = new BlockRowEditorPanel();
     private XBTBlock selectedItem = null;
     private XBACatalog catalog;
     private ClipboardActionsUpdateListener updateListener;
@@ -82,16 +84,19 @@ public class ViewerDocumentTab implements DocumentTab {
         return viewerPanel;
     }
 
+    @Override
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
         definitionPanel.setCatalog(catalog);
     }
 
+    @Override
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
         definitionPanel.setPluginRepository(pluginRepository);
     }
 
+    @Override
     public void setApplication(XBApplication application) {
         definitionPanel.setApplication(application);
     }
@@ -105,9 +110,9 @@ public class ViewerDocumentTab implements DocumentTab {
             if (decl instanceof XBCBlockDecl) {
                 XBCBlockRev blockSpecRev = ((XBCBlockDecl) decl).getBlockSpecRev();
 
-                XBCXBlockUi blockUi = uiService.findUiByPR(blockSpecRev, XBPlugUiType.PANEL_VIEWER, 0);
-                if (blockUi != null) {
-                    XBCXPlugUi plugUi = blockUi.getUi();
+                XBCXBlockUi panelViewerUi = uiService.findUiByPR(blockSpecRev, XBPlugUiType.PANEL_VIEWER, 0);
+                if (panelViewerUi != null) {
+                    XBCXPlugUi plugUi = panelViewerUi.getUi();
                     Long methodIndex = plugUi.getMethodIndex();
                     //pane.getPlugin().getPluginFile();
 
@@ -116,7 +121,22 @@ public class ViewerDocumentTab implements DocumentTab {
                         if (pluginHandler != null) {
                             XBComponentViewer panelViewer = ((XBComponentViewerCatalogPlugin) pluginHandler).getComponentViewer(methodIndex);
                             reloadCustomEditor(panelViewer, block);
-                            viewerPanel.addView("Plugin " + String.valueOf(plugUi.getId()), panelViewer.getViewer());
+                            viewerPanel.addView("Viewer", panelViewer.getViewer());
+                        }
+                    } catch (Exception ex) {
+                        Logger.getLogger(ViewerDocumentTab.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                XBCXBlockUi rowEditorUi = uiService.findUiByPR(blockSpecRev, XBPlugUiType.ROW_EDITOR, 0);
+                if (rowEditorUi != null) {
+                    XBCXPlugUi plugUi = rowEditorUi.getUi();
+
+                    try {
+                        XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(plugUi.getPlugin());
+                        if (pluginHandler != null) {
+                            rowEditorPanel.setBlock(block, plugUi, pluginHandler);
+                            viewerPanel.addView("Row Viewer", rowEditorPanel);
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(ViewerDocumentTab.class.getName()).log(Level.SEVERE, null, ex);

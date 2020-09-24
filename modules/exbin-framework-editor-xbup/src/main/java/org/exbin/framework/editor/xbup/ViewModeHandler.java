@@ -99,7 +99,7 @@ public class ViewModeHandler {
     public void setViewerTab(ViewerTab viewTab) {
         this.viewTab = viewTab;
         DocumentViewerProvider viewerProvider = (DocumentViewerProvider) editorProvider;
-        viewerProvider.setPreferredTab(viewTab);
+        viewerProvider.setSelectedTab(viewTab);
     }
 
     @Nonnull

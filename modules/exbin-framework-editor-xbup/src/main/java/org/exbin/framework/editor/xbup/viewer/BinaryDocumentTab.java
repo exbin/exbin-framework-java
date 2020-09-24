@@ -38,7 +38,9 @@ import org.exbin.framework.bined.gui.BinaryStatusPanel;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBTBlock;
+import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
+import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
  * Binary viewer of document.
@@ -63,6 +65,7 @@ public class BinaryDocumentTab implements DocumentTab {
     private void init() {
     }
     
+    @Override
     public void setApplication(XBApplication application) {
         BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
         CodeAreaPopupMenuHandler codeAreaPopupMenuHandler = binedModule.getCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC);
@@ -95,6 +98,14 @@ public class BinaryDocumentTab implements DocumentTab {
             }
         };
         binaryPanel.setPopupMenu(popupMenu);
+    }
+
+    @Override
+    public void setCatalog(XBACatalog catalog) {
+    }
+
+    @Override
+    public void setPluginRepository(XBPluginRepository pluginRepository) {
     }
 
     @Override

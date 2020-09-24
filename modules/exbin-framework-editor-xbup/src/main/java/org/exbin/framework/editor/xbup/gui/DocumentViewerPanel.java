@@ -35,6 +35,7 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
     private final List<ViewRecord> viewRecords = new ArrayList<>();
     private int activeView = 0;
     private JComponent borderComponent = null;
+    private String preferredView = null;
 
     public DocumentViewerPanel() {
         initComponents();
@@ -109,6 +110,8 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
         modeComboBox = new javax.swing.JComboBox<>();
 
         setLayout(new java.awt.BorderLayout());
+
+        modeComboBox.setFocusable(false);
         add(modeComboBox, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
 

@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
@@ -37,6 +38,7 @@ import org.exbin.xbup.core.catalog.base.XBCBlockSpec;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.parser.token.XBAttribute;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
+import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
  * Text viewer of document.
@@ -250,7 +252,16 @@ public class TextDocumentTab implements DocumentTab {
         return "Unknown" + " (" + Integer.toString(((XBFBlockType) blockType).getGroupID().getInt()) + ", " + Integer.toString(((XBFBlockType) blockType).getBlockID().getInt()) + ")";
     }
 
+    @Override
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
+    }
+
+    @Override
+    public void setApplication(XBApplication application) {
+    }
+
+    @Override
+    public void setPluginRepository(XBPluginRepository pluginRepository) {
     }
 }

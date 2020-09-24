@@ -18,6 +18,7 @@ package org.exbin.framework.editor.xbup.gui;
 import javax.swing.DefaultListModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.XBContext;
@@ -31,7 +32,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
 /**
  * Context type choice panel.
  *
- * @version 0.2.1 2019/06/25
+ * @version 0.2.1 2020/09/24
  * @author ExBin Project (http://exbin.org)
  */
 public class ContextTypeChoicePanel extends javax.swing.JPanel {
@@ -41,6 +42,7 @@ public class ContextTypeChoicePanel extends javax.swing.JPanel {
     private int selectedGroup;
     private final XBCXNameService nameService;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ContextTypeChoicePanel.class);
+    private DefaultControlHandler.DefaultControlEnablementListener enablementListener = null;
 
     public ContextTypeChoicePanel(XBACatalog catalog, XBTTreeNode parentNode) {
         this.catalog = catalog;
@@ -154,8 +156,9 @@ public class ContextTypeChoicePanel extends javax.swing.JPanel {
 
     private void blockTypeListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_blockTypeListValueChanged
         if (!evt.getValueIsAdjusting()) {
-            throw new UnsupportedOperationException("Not supported yet.");
-            // TODO okButton.setEnabled(blockTypeList.getSelectedIndex() >= 0);
+            if (enablementListener != null) {
+                enablementListener.actionEnabled(DefaultControlHandler.ControlActionType.OK, blockTypeList.getSelectedIndex() >= 0);
+            }
         }
     }//GEN-LAST:event_blockTypeListValueChanged
 
@@ -189,5 +192,10 @@ public class ContextTypeChoicePanel extends javax.swing.JPanel {
         }
 
         return null;
+    }
+
+    public void setCanProceedListener(DefaultControlHandler.DefaultControlEnablementListener enablementListener) {
+        this.enablementListener = enablementListener;
+        enablementListener.actionEnabled(DefaultControlHandler.ControlActionType.OK, false);
     }
 }

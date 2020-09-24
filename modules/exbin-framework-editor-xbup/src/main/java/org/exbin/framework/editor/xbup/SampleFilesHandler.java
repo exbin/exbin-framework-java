@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
@@ -32,7 +33,7 @@ import org.exbin.xbup.core.parser.XBProcessingException;
 /**
  * Sample files handler.
  *
- * @version 0.2.0 2016/02/09
+ * @version 0.2.1 2020/09/24
  * @author ExBin Project (http://exbin.org)
  */
 public class SampleFilesHandler {
@@ -43,6 +44,7 @@ public class SampleFilesHandler {
 
     private Action sampleHtmlFileAction;
     private Action samplePictureFileAction;
+    private Action sampleTypesFileAction;
 
     public SampleFilesHandler(XBApplication application, EditorProvider editorProvider) {
         this.application = application;
@@ -88,13 +90,39 @@ public class SampleFilesHandler {
             }
         };
         ActionUtils.setupAction(samplePictureFileAction, resourceBundle, "samplePictureFileAction");
+
+        sampleTypesFileAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editorProvider instanceof DocumentViewerProvider) {
+                    DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
+                    provider.newFile();
+                    try {
+                        provider.getDoc().fromStreamUB(getClass().getResourceAsStream("/org/exbin/framework/editor/xbup/resources/samples/xbtypes.xb"));
+                        provider.getDoc().processSpec();
+                    } catch (XBProcessingException | IOException ex) {
+                        Logger.getLogger(SampleFilesHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    provider.reportStructureChange(null);
+//                    provider.updateItem();
+                }
+            }
+        };
+        ActionUtils.setupAction(sampleTypesFileAction, resourceBundle, "sampleTypesFileAction");
     }
 
+    @Nonnull
     public Action getSampleHtmlFileAction() {
         return sampleHtmlFileAction;
     }
 
+    @Nonnull
     public Action getSamplePictureFileAction() {
         return samplePictureFileAction;
+    }
+
+    @Nonnull
+    public Action getSampleTypesFileAction() {
+        return sampleTypesFileAction;
     }
 }

@@ -19,8 +19,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.xbup.core.block.XBTBlock;
+import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
  * Interface for document tab.
@@ -37,6 +40,12 @@ public interface DocumentTab extends ClipboardActionsHandler {
     JComponent getComponent();
 
     void setActivationListener(ActivationListener listener);
+
+    void setCatalog(XBACatalog catalog);
+
+    void setApplication(XBApplication application);
+
+    public void setPluginRepository(XBPluginRepository pluginRepository);
 
     public interface ActivationListener {
 

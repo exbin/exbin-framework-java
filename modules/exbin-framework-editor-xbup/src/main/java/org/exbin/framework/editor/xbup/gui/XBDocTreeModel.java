@@ -23,6 +23,7 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.block.XBTDefaultBlock;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
@@ -62,7 +63,7 @@ public class XBDocTreeModel implements TreeModel {
 
     @Override
     public boolean isLeaf(Object node) {
-        return false;
+        return ((XBTBlock) node).getDataMode() == XBBlockDataMode.DATA_BLOCK;
     }
 
     @Override

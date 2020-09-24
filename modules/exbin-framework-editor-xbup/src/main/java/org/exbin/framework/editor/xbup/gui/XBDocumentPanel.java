@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.editor.xbup.gui;
 
-import java.awt.BorderLayout;
 import org.exbin.framework.editor.xbup.viewer.DocumentItemSelectionListener;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
@@ -23,11 +22,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.EditorXbupModule;
+import org.exbin.framework.editor.xbup.viewer.DocumentTab;
 import org.exbin.framework.editor.xbup.viewer.DocumentTabSelectionListener;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider.ViewerTab;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -70,26 +69,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         setShowPropertiesPanel(true);
         mainTabbedPane.addChangeListener((ChangeEvent e) -> {
             int selectedIndex = mainTabbedPane.getSelectedIndex();
-            ViewerTab viewerTab = ViewerTab.VIEW;
-            switch (selectedIndex) {
-                case 0: {
-                    viewerTab = ViewerTab.VIEW;
-                    break;
-                }
-                case 1: {
-                    viewerTab = ViewerTab.PROPERTIES;
-                    break;
-                }
-                case 2: {
-                    viewerTab = ViewerTab.TEXT;
-                    break;
-                }
-                case 3: {
-                    viewerTab = ViewerTab.BINARY;
-                    break;
-                }
-            }
-
+            ViewerTab viewerTab = ViewerTab.values()[selectedIndex];
             for (DocumentTabSelectionListener listener : tabSwitchListeners) {
                 listener.tabSelected(viewerTab);
             }
@@ -116,20 +96,8 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         mainSplitPane.setDividerLocation(getWidth() - 300 > 0 ? getWidth() - 300 : getWidth() / 3);
     }
 
-    public void setViewTabComponent(JComponent component) {
-        viewTabPanel.add(component, BorderLayout.CENTER);
-    }
-
-    public void setBinaryTabComponent(JComponent component) {
-        binaryTabPanel.add(component, BorderLayout.CENTER);
-    }
-
-    public void setTextTabComponent(JComponent component) {
-        textTabPanel.add(component, BorderLayout.CENTER);
-    }
-
-    public void setPropertiesTabComponent(JComponent component) {
-        propertiesTabPanel.add(component, BorderLayout.CENTER);
+    public void addTabComponent(ViewerTab viewerTab, DocumentTab tab) {
+        mainTabbedPane.add(viewerTab.getTabName(), tab.getComponent());
     }
 
 //    /**
@@ -153,10 +121,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         popupItemPropertiesMenuItem = new javax.swing.JMenuItem();
         mainTabbedPane = new javax.swing.JTabbedPane();
-        viewTabPanel = new javax.swing.JPanel();
-        propertiesTabPanel = new javax.swing.JPanel();
-        textTabPanel = new javax.swing.JPanel();
-        binaryTabPanel = new javax.swing.JPanel();
         mainSplitPane = new javax.swing.JSplitPane();
 
         popupItemViewMenuItem.setText(resourceBundle.getString("popupItemViewMenuItem.text")); // NOI18N
@@ -194,18 +158,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
                 mainTabbedPaneStateChanged(evt);
             }
         });
-
-        viewTabPanel.setLayout(new java.awt.BorderLayout());
-        mainTabbedPane.addTab("View", viewTabPanel);
-
-        propertiesTabPanel.setLayout(new java.awt.BorderLayout());
-        mainTabbedPane.addTab("Properties", propertiesTabPanel);
-
-        textTabPanel.setLayout(new java.awt.BorderLayout());
-        mainTabbedPane.addTab("Text", textTabPanel);
-
-        binaryTabPanel.setLayout(new java.awt.BorderLayout());
-        mainTabbedPane.addTab("Binary", binaryTabPanel);
 
         setLayout(new java.awt.BorderLayout());
 
@@ -279,7 +231,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel binaryTabPanel;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JTabbedPane mainTabbedPane;
@@ -287,9 +238,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     private javax.swing.JMenuItem popupItemPropertiesMenuItem;
     private javax.swing.JMenuItem popupItemViewMenuItem;
     private javax.swing.JPopupMenu popupMenu;
-    private javax.swing.JPanel propertiesTabPanel;
-    private javax.swing.JPanel textTabPanel;
-    private javax.swing.JPanel viewTabPanel;
     // End of variables declaration//GEN-END:variables
 
 //    public void setEditEnabled(boolean editEnabled) {

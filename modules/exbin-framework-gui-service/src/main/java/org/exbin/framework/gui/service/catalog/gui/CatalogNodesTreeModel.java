@@ -18,6 +18,7 @@ package org.exbin.framework.gui.service.catalog.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.Nullable;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -178,7 +179,7 @@ public class CatalogNodesTreeModel implements TreeModel {
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(@Nullable Object obj) {
             if (obj == null) {
                 return false;
             }
