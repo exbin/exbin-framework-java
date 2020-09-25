@@ -26,6 +26,7 @@ import javax.swing.JComponent;
 import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
+import org.exbin.framework.editor.xbup.gui.BlockComponentViewerPanel;
 import org.exbin.framework.editor.xbup.gui.BlockDefinitionPanel;
 import org.exbin.framework.editor.xbup.gui.BlockRowEditorPanel;
 import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
@@ -57,7 +58,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 /**
  * Custom viewer of document.
  *
- * @version 0.2.1 2020/09/20
+ * @version 0.2.1 2020/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -69,6 +70,7 @@ public class ViewerDocumentTab implements DocumentTab {
     private final BlockDefinitionPanel definitionPanel = new BlockDefinitionPanel();
     private final BinEdComponentPanel dataPanel = new BinEdComponentPanel();
     private final BlockRowEditorPanel rowEditorPanel = new BlockRowEditorPanel();
+    private final BlockComponentViewerPanel componentViewerPanel = new BlockComponentViewerPanel();
     private XBTBlock selectedItem = null;
     private XBACatalog catalog;
     private ClipboardActionsUpdateListener updateListener;
@@ -128,6 +130,21 @@ public class ViewerDocumentTab implements DocumentTab {
                     }
                 }
 
+                XBCXBlockUi componentViewerUi = uiService.findUiByPR(blockSpecRev, XBPlugUiType.COMPONENT_VIEWER, 0);
+                if (componentViewerUi != null) {
+                    XBCXPlugUi plugUi = componentViewerUi.getUi();
+
+                    try {
+                        XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(plugUi.getPlugin());
+                        if (pluginHandler != null) {
+                            componentViewerPanel.setBlock(block, plugUi, pluginHandler);
+                            viewerPanel.addView("Component Viewer", componentViewerPanel);
+                        }
+                    } catch (Exception ex) {
+                        Logger.getLogger(ViewerDocumentTab.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
                 XBCXBlockUi rowEditorUi = uiService.findUiByPR(blockSpecRev, XBPlugUiType.ROW_EDITOR, 0);
                 if (rowEditorUi != null) {
                     XBCXPlugUi plugUi = rowEditorUi.getUi();
@@ -159,6 +176,7 @@ public class ViewerDocumentTab implements DocumentTab {
             }
         }
 
+        viewerPanel.viewsAdded();
         selectedItem = block;
         viewerPanel.revalidate();
         viewerPanel.repaint();

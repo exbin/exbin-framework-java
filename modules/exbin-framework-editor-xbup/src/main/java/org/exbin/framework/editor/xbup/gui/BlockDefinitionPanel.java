@@ -38,7 +38,7 @@ import org.exbin.xbup.core.block.XBTBlock;
 /**
  * Block definition panel.
  *
- * @version 0.2.1 2020/09/20
+ * @version 0.2.1 2020/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -56,7 +56,8 @@ public class BlockDefinitionPanel extends javax.swing.JPanel {
 
     private void init() {
         propertiesPanel = new XBPropertyTablePanel();
-        add(propertiesPanel, java.awt.BorderLayout.CENTER);
+        panel.add(propertiesPanel, java.awt.BorderLayout.CENTER);
+        panel.invalidate();
     }
 
     /**
@@ -84,6 +85,7 @@ public class BlockDefinitionPanel extends javax.swing.JPanel {
         popupSelectAllMenuItem = new javax.swing.JMenuItem();
         jSeparator16 = new javax.swing.JPopupMenu.Separator();
         popupItemPropertiesMenuItem = new javax.swing.JMenuItem();
+        panel = new javax.swing.JPanel();
         itemInfoHeaderPanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
         descLabel = new javax.swing.JLabel();
@@ -153,7 +155,9 @@ public class BlockDefinitionPanel extends javax.swing.JPanel {
         propertyPopupMenu.add(popupItemPropertiesMenuItem);
 
         setName("Form"); // NOI18N
-        setLayout(new java.awt.BorderLayout());
+
+        panel.setName("panel"); // NOI18N
+        panel.setLayout(new java.awt.BorderLayout());
 
         itemInfoHeaderPanel.setName("itemInfoHeaderPanel"); // NOI18N
 
@@ -178,7 +182,7 @@ public class BlockDefinitionPanel extends javax.swing.JPanel {
                     .addComponent(nameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(itemInfoHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(descTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                    .addComponent(descTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
                     .addComponent(nameTextField))
                 .addContainerGap())
         );
@@ -195,7 +199,24 @@ public class BlockDefinitionPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        add(itemInfoHeaderPanel, java.awt.BorderLayout.NORTH);
+        panel.add(itemInfoHeaderPanel, java.awt.BorderLayout.NORTH);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                .addContainerGap())
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     public void setApplication(XBApplication application) {
@@ -235,6 +256,7 @@ public class BlockDefinitionPanel extends javax.swing.JPanel {
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
+    private javax.swing.JPanel panel;
     private javax.swing.JMenuItem popupCopyMenuItem;
     private javax.swing.JMenuItem popupCutMenuItem;
     private javax.swing.JMenuItem popupDeleteMenuItem;

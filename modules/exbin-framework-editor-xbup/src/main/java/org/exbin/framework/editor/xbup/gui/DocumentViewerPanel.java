@@ -21,12 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import javax.swing.JToggleButton;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Document viewer panel.
  *
- * @version 0.2.1 2020/09/20
+ * @version 0.2.1 2020/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -36,6 +37,7 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
     private int activeView = 0;
     private JComponent borderComponent = null;
     private String preferredView = null;
+    private boolean updateMode = false;
 
     public DocumentViewerPanel() {
         initComponents();
@@ -46,17 +48,26 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
         modeComboBox.addItemListener((ItemEvent e) -> {
             int selectedIndex = modeComboBox.getSelectedIndex();
             if (selectedIndex >= 0) {
-                if (activeView >= 0 && activeView < viewRecords.size()) {
-                    ViewRecord prevRecord = viewRecords.get(activeView);
-                    remove(prevRecord.component);
+                switchTo(selectedIndex);
+                if (!updateMode) {
+                    preferredView = viewRecords.get(selectedIndex).name;
                 }
-                ViewRecord record = viewRecords.get(selectedIndex);
-                add(record.component, BorderLayout.CENTER);
-                activeView = selectedIndex;
-                revalidate();
-                repaint();
             }
         });
+    }
+
+    private void switchTo(int index) {
+        if (activeView >= 0 && activeView < viewRecords.size()) {
+            ViewRecord prevRecord = viewRecords.get(activeView);
+            prevRecord.button.setSelected(false);
+            remove(prevRecord.component);
+        }
+        ViewRecord record = viewRecords.get(index);
+        record.button.setSelected(true);
+        add(record.component, BorderLayout.CENTER);
+        activeView = index;
+        revalidate();
+        repaint();
     }
 
     public void addView(String name, JComponent component) {
@@ -68,8 +79,35 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
             }
         }
 
-        viewRecords.add(new ViewRecord(name, component));
+        ViewRecord record = new ViewRecord(name, component);
+        final int index = viewRecords.size();
+        viewRecords.add(record);
+        record.button = new JToggleButton(name);
+        record.button.setSelected(index == 0);
+        record.button.addActionListener((e) -> {
+            switchTo(index);
+            preferredView = viewRecords.get(index).name;
+        });
         modeComboBox.addItem(name);
+        selectionPanel.add(record.button);
+    }
+
+    public void viewsAdded() {
+        int viewsCount = viewRecords.size();
+        if (preferredView != null) {
+            for (int i = 0; i < viewsCount; i++) {
+                ViewRecord viewRecord = viewRecords.get(i);
+                if (viewRecord.name.equals(preferredView)) {
+                    switchTo(i);
+                }
+            }
+        }
+
+        if (viewsCount > 0) {
+            modeComboBox.setEnabled(true);
+        }
+
+        updateMode = false;
     }
 
     public void removeAllViews() {
@@ -79,6 +117,8 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
                 remove(prevRecord.component);
             }
             modeComboBox.removeAllItems();
+            modeComboBox.setEnabled(false);
+            selectionPanel.removeAll();
             viewRecords.clear();
 
             if (borderComponent != null) {
@@ -88,6 +128,8 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
             revalidate();
             repaint();
         }
+
+        updateMode = true;
     }
 
     public void setBorderComponent(JComponent component) {
@@ -107,12 +149,28 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        headerPanel = new javax.swing.JPanel();
+        selectionPanel = new javax.swing.JPanel();
+        controlPanel = new javax.swing.JPanel();
         modeComboBox = new javax.swing.JComboBox<>();
 
         setLayout(new java.awt.BorderLayout());
 
+        headerPanel.setBorder(javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.shadow")));
+        headerPanel.setLayout(new java.awt.BorderLayout());
+
+        selectionPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        headerPanel.add(selectionPanel, java.awt.BorderLayout.CENTER);
+
+        controlPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        modeComboBox.setEnabled(false);
         modeComboBox.setFocusable(false);
-        add(modeComboBox, java.awt.BorderLayout.NORTH);
+        controlPanel.add(modeComboBox);
+
+        headerPanel.add(controlPanel, java.awt.BorderLayout.EAST);
+
+        add(headerPanel, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -124,15 +182,18 @@ public class DocumentViewerPanel extends javax.swing.JPanel {
         WindowUtils.invokeDialog(new DocumentViewerPanel());
     }
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel controlPanel;
+    private javax.swing.JPanel headerPanel;
     private javax.swing.JComboBox<String> modeComboBox;
+    private javax.swing.JPanel selectionPanel;
     // End of variables declaration//GEN-END:variables
 
     @ParametersAreNonnullByDefault
     private static final class ViewRecord {
 
         String name;
+        JToggleButton button;
         JComponent component;
 
         public ViewRecord(String name, JComponent component) {

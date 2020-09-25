@@ -75,6 +75,7 @@ public class PropertiesDocumentTab implements DocumentTab {
         viewerPanel.removeAllViews();
         if (block != null) {
             viewerPanel.addView("General", generalPanel);
+            viewerPanel.viewsAdded();
             generalPanel.setBlock(block);
         }
 
