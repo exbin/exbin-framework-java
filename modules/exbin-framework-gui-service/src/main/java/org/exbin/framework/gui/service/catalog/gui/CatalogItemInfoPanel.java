@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.gui.service.catalog.gui;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
@@ -27,13 +29,15 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 /**
  * Compact information about catalog item panel.
  *
- * @version 0.2.1 2020/09/22
+ * @version 0.2.1 2020/09/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogItemInfoPanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
     private String defaultText;
+    private Mode mode = Mode.BASIC;
 
     public CatalogItemInfoPanel() {
         initComponents();
@@ -104,19 +108,21 @@ public class CatalogItemInfoPanel extends javax.swing.JPanel {
         StringBuilder builder = new StringBuilder();
         builder.append("<html><head></head><body>");
         builder.append("\n");
-        builder.append("<h1>Block: ").append(nameOrId).append("</h1>");
-        builder.append("\n");
-        builder.append("Id : ").append(String.valueOf(item.getId())).append("<br/>");
-        builder.append("\n");
+        if (mode != Mode.BASIC) {
+            builder.append("<h1>Block: ").append(nameOrId).append("</h1>");
+            builder.append("\n");
+            builder.append("Id : ").append(String.valueOf(item.getId())).append("<br/>");
+            builder.append("\n");
+        }
         builder.append("String Id : ").append(stringId).append("<br/>");
         builder.append("\n");
         builder.append("Name : ").append(name).append("<br/>");
         builder.append("\n");
         builder.append("Description : ").append(desc).append("<br/>");
-        builder.append("\n");
-        builder.append("TBD<br/>");
-        builder.append("\n");
+//        builder.append("TBD<br/>");
         if (hdoc != null && !hdoc.isEmpty()) {
+            builder.append("\n");
+            builder.append("\n");
             builder.append("<h2>Documentation</h2>");
             builder.append("\n");
             builder.append(hdoc);
@@ -133,5 +139,19 @@ public class CatalogItemInfoPanel extends javax.swing.JPanel {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
+    }
+
+    @Nonnull
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+    }
+    
+    public enum Mode {
+        BASIC,
+        FULL
     }
 }

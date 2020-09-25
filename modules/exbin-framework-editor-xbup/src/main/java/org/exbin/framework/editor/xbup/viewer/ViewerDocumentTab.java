@@ -51,8 +51,8 @@ import org.exbin.xbup.core.util.StreamUtils;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.parser_tree.XBTTreeWriter;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
-import org.exbin.xbup.plugin.XBComponentViewer;
-import org.exbin.xbup.plugin.XBComponentViewerCatalogPlugin;
+import org.exbin.xbup.plugin.XBPanelViewer;
+import org.exbin.xbup.plugin.XBPanelViewerCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
@@ -121,7 +121,7 @@ public class ViewerDocumentTab implements DocumentTab {
                     try {
                         XBCatalogPlugin pluginHandler = pluginRepository.getPluginHandler(plugUi.getPlugin());
                         if (pluginHandler != null) {
-                            XBComponentViewer panelViewer = ((XBComponentViewerCatalogPlugin) pluginHandler).getComponentViewer(methodIndex);
+                            XBPanelViewer panelViewer = ((XBPanelViewerCatalogPlugin) pluginHandler).getPanelViewer(methodIndex);
                             reloadCustomEditor(panelViewer, block);
                             viewerPanel.addView("Viewer", panelViewer.getViewer());
                         }
@@ -182,7 +182,7 @@ public class ViewerDocumentTab implements DocumentTab {
         viewerPanel.repaint();
     }
 
-    private void reloadCustomEditor(XBComponentViewer panelViewer, XBTBlock block) {
+    private void reloadCustomEditor(XBPanelViewer panelViewer, XBTBlock block) {
         XBPSerialReader serialReader = new XBPSerialReader(new XBTProviderToPullProvider(new XBTTreeWriter(block)));
         try {
             serialReader.read((XBSerializable) panelViewer);

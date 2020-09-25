@@ -15,8 +15,6 @@
  */
 package org.exbin.framework.editor.xbup.gui;
 
-import java.awt.BorderLayout;
-import java.awt.ComponentOrientation;
 import java.util.ResourceBundle;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -50,6 +48,7 @@ public class BlockPropertiesPanel extends javax.swing.JPanel {
 
     public BlockPropertiesPanel() {
         catalogItemPanel = new CatalogItemInfoPanel();
+        catalogItemPanel.setMode(CatalogItemInfoPanel.Mode.FULL);
         initComponents();
         init();
     }

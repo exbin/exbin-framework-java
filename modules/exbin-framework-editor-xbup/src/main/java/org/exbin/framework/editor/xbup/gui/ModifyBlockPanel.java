@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.swing.JFileChooser;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -79,13 +80,14 @@ import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.xbup.plugin.XBRowEditor;
 import org.exbin.xbup.plugin.XBComponentEditor;
-import org.exbin.xbup.plugin.XBComponentEditorCatalogPlugin;
+import org.exbin.xbup.plugin.XBPanelEditor;
+import org.exbin.xbup.plugin.XBPanelEditorCatalogPlugin;
 import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
 
 /**
  * Panel for modifying item attributes or data.
  *
- * @version 0.2.1 2020/08/18
+ * @version 0.2.1 2020/09/25
  * @author ExBin Project (http://exbin.org)
  */
 public class ModifyBlockPanel extends javax.swing.JPanel {
@@ -101,7 +103,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     private XBTTreeNode newNode = null;
 
     private final BinEdFile binaryDataFile;
-    private XBComponentEditor customPanel;
+    private XBPanelEditor customPanel;
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
     private BinEdFile tailDataBinaryDataFile = null;
@@ -591,7 +593,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             try {
                 customPanel = getCustomPanel(srcNode);
                 if (customPanel != null) {
-                    ((XBComponentEditor) customPanel).attachChangeListener(() -> {
+                    ((XBPanelEditor) customPanel).attachChangeListener(() -> {
                         dataChanged = true;
                     });
 
@@ -651,7 +653,8 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         }
     }
 
-    private XBComponentEditor getCustomPanel(XBTTreeNode srcNode) {
+    @Nullable
+    private XBPanelEditor getCustomPanel(XBTTreeNode srcNode) {
         if (catalog == null) {
             return null;
         }
@@ -690,7 +693,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
             return null;
         }
 
-        return ((XBComponentEditorCatalogPlugin) pluginHandler).getComponentEditor(plugUi.getMethodIndex());
+        return ((XBPanelEditorCatalogPlugin) pluginHandler).getPanelEditor(plugUi.getMethodIndex());
     }
 
     private void reloadBasic() {

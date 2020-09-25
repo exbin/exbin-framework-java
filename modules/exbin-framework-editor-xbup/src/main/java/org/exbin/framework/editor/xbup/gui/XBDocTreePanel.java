@@ -170,8 +170,8 @@ public class XBDocTreePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mainTreeMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainTreeMouseReleased
-//        if (evt.isPopupTrigger()) {
-//            mainTree.setSelectionPath(mainTree.getPathForLocation(evt.getX(), evt.getY()));
+        if (evt.isPopupTrigger()) {
+            mainTree.setSelectionPath(mainTree.getPathForLocation(evt.getX(), evt.getY()));
 //            boolean availableItem = (mainTree.getLastSelectedPathComponent() != null);
 //            setEditEnabled(availableItem);
 //            boolean addPossible;
@@ -181,12 +181,12 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //                addPossible = ((XBTTreeNode) mainTree.getLastSelectedPathComponent()).getDataMode() == XBBlockDataMode.NODE_BLOCK;
 //            }
 //            setAddEnabled(addPossible);
-//        }
+        }
     }//GEN-LAST:event_mainTreeMouseReleased
 
     private void mainTreeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainTreeMousePressed
-//        if (evt.isPopupTrigger()) {
-//            mainTree.setSelectionPath(mainTree.getPathForLocation(evt.getX(), evt.getY()));
+        if (evt.isPopupTrigger()) {
+            mainTree.setSelectionPath(mainTree.getPathForLocation(evt.getX(), evt.getY()));
 //            boolean availableItem = (mainTree.getLastSelectedPathComponent() != null);
 //            setEditEnabled(availableItem);
 //            boolean addPossible;
@@ -196,7 +196,7 @@ public class XBDocTreePanel extends javax.swing.JPanel {
 //                addPossible = ((XBTTreeNode) mainTree.getLastSelectedPathComponent()).getDataMode() == XBBlockDataMode.NODE_BLOCK;
 //            }
 //            setAddEnabled(addPossible);
-//        }
+        }
     }//GEN-LAST:event_mainTreeMousePressed
 
     public XBTTreeNode getSelectedItem() {

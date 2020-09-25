@@ -40,7 +40,7 @@ public class PropertiesDocumentTab implements DocumentTab {
 
     private final JPanel panel = new JPanel();
     private final DocumentViewerPanel viewerPanel = new DocumentViewerPanel();
-    private GeneralPropertiesPanel generalPanel = new GeneralPropertiesPanel();
+    private final GeneralPropertiesPanel generalPanel = new GeneralPropertiesPanel();
     private XBACatalog catalog;
 
     public PropertiesDocumentTab() {

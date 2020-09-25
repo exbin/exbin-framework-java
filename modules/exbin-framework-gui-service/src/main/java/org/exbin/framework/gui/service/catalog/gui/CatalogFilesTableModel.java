@@ -127,6 +127,7 @@ public class CatalogFilesTableModel extends AbstractTableModel {
                 XBEXFile file = new XBEXFile();
                 file.setNode((XBENode) node);
                 file.setFilename(itemRecord.fileName);
+                itemRecord.file = file;
             }
 
             if (itemRecord.modifiedData != null) {
