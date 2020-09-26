@@ -385,6 +385,10 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 //            }
         }
     }
+    
+    public void switchToTab(ViewerTab selectedTab) {
+        documentPanel.switchToTab(selectedTab);
+    }
 
     private void notifySelectedItem() {
         DocumentTab currentTab = getCurrentTab();

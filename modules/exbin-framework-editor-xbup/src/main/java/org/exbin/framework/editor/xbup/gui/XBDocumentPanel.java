@@ -211,14 +211,8 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         treePanel.removeUpdateListener(listener);
     }
 
-//    public void performAdd() {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-    public void showPanel() {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        int index = getMode().ordinal();
-//        mainTabbedPane.setSelectedIndex(index);
-//        ((JPanel) mainTabbedPane.getComponentAt(index)).add(getPanel(index));
+    public void switchToTab(ViewerTab selectedTab) {
+        mainTabbedPane.setSelectedIndex(selectedTab.ordinal());
     }
 
     /**
@@ -305,7 +299,6 @@ public class XBDocumentPanel extends javax.swing.JPanel {
                 propertyChangeListener.propertyChange(evt);
             }
         });
-
     }
 
     public JPopupMenu getPopupMenu() {

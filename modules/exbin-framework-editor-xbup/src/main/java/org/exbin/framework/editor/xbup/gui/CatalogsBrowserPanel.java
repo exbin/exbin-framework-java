@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
@@ -69,13 +70,15 @@ public class CatalogsBrowserPanel extends javax.swing.JPanel {
         // catalogPanel.setApplication(application);
     }
 
-    public void setCatalog(XBACatalog catalog) {
+    public void setCatalog(@Nullable XBACatalog catalog) {
         this.catalog = catalog;
-        XBCRootService catalogService = catalog.getCatalogService(XBCRootService.class);
-        XBCRoot mainRoot = catalogService.getMainRoot();
-        Optional<Date> lastUpdate = mainRoot.getLastUpdate();
-        String lastUpdateText = lastUpdate.isPresent() ? lastUpdate.get().toString() : "";
-        ((DefaultTableModel) catalogsTable.getModel()).addRow(new Object[]{"Main", "(build-in)", lastUpdateText});
+        if (catalog != null) {
+            XBCRootService catalogService = catalog.getCatalogService(XBCRootService.class);
+            XBCRoot mainRoot = catalogService.getMainRoot();
+            Optional<Date> lastUpdate = mainRoot.getLastUpdate();
+            String lastUpdateText = lastUpdate.isPresent() ? lastUpdate.get().toString() : "";
+            ((DefaultTableModel) catalogsTable.getModel()).addRow(new Object[]{"Main", "(build-in)", lastUpdateText});
+        }
     }
 
     public XBACatalog getSelectedItem() {

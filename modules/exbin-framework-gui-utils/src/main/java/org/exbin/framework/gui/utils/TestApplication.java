@@ -31,6 +31,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.exbin.xbup.plugin.LookAndFeelApplier;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
@@ -253,6 +254,17 @@ public class TestApplication implements XBApplication {
     public Image getApplicationIcon() {
         return null;
     }
+
+    @Override
+    public void registerLafPlugin(String className, LookAndFeelApplier applier) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void applyLookAndFeel(String laf) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     ResourceBundle emptyBundle = new ResourceBundle() {
 
         @Override

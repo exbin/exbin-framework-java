@@ -71,7 +71,6 @@ public class EditorXbupModule implements XBApplicationModule {
     private SampleFilesHandler sampleFilesHandler;
     private CatalogBrowserHandler catalogBrowserHandler;
     private PropertiesHandler propertiesHandler;
-    private PropertyPanelHandler propertyPanelHandler;
     private ImportExportHandler importExportHandler;
 
     private boolean devMode;
@@ -170,15 +169,6 @@ public class EditorXbupModule implements XBApplicationModule {
         return propertiesHandler;
     }
 
-    private PropertyPanelHandler getPropertyPanelHandler() {
-        if (propertyPanelHandler == null) {
-            propertyPanelHandler = new PropertyPanelHandler(application, editorProvider);
-            propertyPanelHandler.init();
-        }
-
-        return propertyPanelHandler;
-    }
-
     private ImportExportHandler getImportExportHandler() {
         if (importExportHandler == null) {
             importExportHandler = new ImportExportHandler(application, editorProvider);
@@ -208,9 +198,10 @@ public class EditorXbupModule implements XBApplicationModule {
         getViewModeHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_MODE_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getPreviewModeAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getTextModeAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getBinaryModeAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowViewTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowPropertiesTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowTextTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowBinaryTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
     }
 
     public void registerStatusBar() {
@@ -250,12 +241,6 @@ public class EditorXbupModule implements XBApplicationModule {
         getPropertiesHandler();
         GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, propertiesHandler.getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
-    }
-
-    public void registerPropertyPanelMenuAction() {
-        getPropertyPanelHandler();
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, propertyPanelHandler.getViewPropertyPanelAction(), new MenuPosition(PositionMode.MIDDLE));
     }
 
     @Nonnull

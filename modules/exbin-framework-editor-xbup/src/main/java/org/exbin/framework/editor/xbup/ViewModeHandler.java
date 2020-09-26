@@ -37,15 +37,16 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 @ParametersAreNonnullByDefault
 public class ViewModeHandler {
 
-    public static String VIEW_MODE_RADIO_GROUP_ID = "viewModeRadioGroup";
+    public static String VIEW_MODE_RADIO_GROUP_ID = "viewTabRadioGroup";
 
     private final EditorProvider editorProvider;
     private final XBApplication application;
     private final ResourceBundle resourceBundle;
 
-    private Action viewPreviewModeAction;
-    private Action viewTextModeAction;
-    private Action viewBinaryModeAction;
+    private Action showViewTabAction;
+    private Action showPropertiesTabAction;
+    private Action showTextTabAction;
+    private Action showBinaryTabAction;
 
     private ViewerTab viewTab = ViewerTab.VIEW;
 
@@ -56,7 +57,7 @@ public class ViewModeHandler {
     }
 
     public void init() {
-        viewPreviewModeAction = new AbstractAction() {
+        showViewTabAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof DocumentViewerProvider) {
@@ -64,12 +65,25 @@ public class ViewModeHandler {
                 }
             }
         };
-        ActionUtils.setupAction(viewPreviewModeAction, resourceBundle, "viewPreviewModeAction");
-        viewPreviewModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        viewPreviewModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewPreviewModeAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.VIEW);
+        ActionUtils.setupAction(showViewTabAction, resourceBundle, "showViewTabAction");
+        showViewTabAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
+        showViewTabAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
+        showViewTabAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.VIEW);
 
-        viewTextModeAction = new AbstractAction() {
+        showPropertiesTabAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editorProvider instanceof DocumentViewerProvider) {
+                    setViewerTab(ViewerTab.PROPERTIES);
+                }
+            }
+        };
+        ActionUtils.setupAction(showPropertiesTabAction, resourceBundle, "showPropertiesTabAction");
+        showPropertiesTabAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
+        showPropertiesTabAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
+        showPropertiesTabAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.VIEW);
+
+        showTextTabAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof DocumentViewerProvider) {
@@ -77,12 +91,12 @@ public class ViewModeHandler {
                 }
             }
         };
-        ActionUtils.setupAction(viewTextModeAction, resourceBundle, "viewTextModeAction");
-        viewTextModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        viewTextModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewTextModeAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.TEXT);
+        ActionUtils.setupAction(showTextTabAction, resourceBundle, "showTextTabAction");
+        showTextTabAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
+        showTextTabAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
+        showTextTabAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.TEXT);
 
-        viewBinaryModeAction = new AbstractAction() {
+        showBinaryTabAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (editorProvider instanceof DocumentViewerProvider) {
@@ -90,16 +104,16 @@ public class ViewModeHandler {
                 }
             }
         };
-        ActionUtils.setupAction(viewBinaryModeAction, resourceBundle, "viewBinaryModeAction");
-        viewBinaryModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
-        viewBinaryModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-        viewBinaryModeAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.BINARY);
+        ActionUtils.setupAction(showBinaryTabAction, resourceBundle, "showBinaryTabAction");
+        showBinaryTabAction.putValue(ActionUtils.ACTION_RADIO_GROUP, VIEW_MODE_RADIO_GROUP_ID);
+        showBinaryTabAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
+        showBinaryTabAction.putValue(Action.SELECTED_KEY, viewTab == ViewerTab.BINARY);
     }
 
     public void setViewerTab(ViewerTab viewTab) {
         this.viewTab = viewTab;
         DocumentViewerProvider viewerProvider = (DocumentViewerProvider) editorProvider;
-        viewerProvider.setSelectedTab(viewTab);
+        viewerProvider.switchToTab(viewTab);
     }
 
     @Nonnull
@@ -108,17 +122,22 @@ public class ViewModeHandler {
     }
 
     @Nonnull
-    public Action getPreviewModeAction() {
-        return viewPreviewModeAction;
+    public Action getShowViewTabAction() {
+        return showViewTabAction;
     }
 
     @Nonnull
-    public Action getTextModeAction() {
-        return viewTextModeAction;
+    public Action getShowPropertiesTabAction() {
+        return showPropertiesTabAction;
     }
 
     @Nonnull
-    public Action getBinaryModeAction() {
-        return viewBinaryModeAction;
+    public Action getShowTextTabAction() {
+        return showTextTabAction;
+    }
+
+    @Nonnull
+    public Action getShowBinaryTabAction() {
+        return showBinaryTabAction;
     }
 }

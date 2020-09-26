@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.api;
 
+import org.exbin.xbup.plugin.LookAndFeelApplier;
 import java.awt.Image;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -27,7 +28,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Interface for application module management.
  *
- * @version 0.2.1 2019/07/01
+ * @version 0.2.1 2020/09/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -82,4 +83,19 @@ public interface XBApplication extends XBModuleHandler {
      */
     @Nonnull
     Set<Locale> getLanguageLocales();
+
+    /**
+     * Registers look & feel from plugin.
+     *
+     * @param className className
+     * @param applier applier method
+     */
+    void registerLafPlugin(String className, LookAndFeelApplier applier);
+
+    /**
+     * Apply given look and feel.
+     *
+     * @param laf look and feel class name
+     */
+    void applyLookAndFeel(String laf);
 }

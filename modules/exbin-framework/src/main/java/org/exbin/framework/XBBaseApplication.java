@@ -40,6 +40,7 @@ import javax.swing.ImageIcon;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.exbin.xbup.plugin.LookAndFeelApplier;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModuleRepository;
@@ -49,7 +50,7 @@ import org.exbin.framework.preferences.FrameworkPreferences;
 /**
  * Base application class.
  *
- * @version 0.2.1 2019/07/01
+ * @version 0.2.1 2020/09/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -61,7 +62,9 @@ public class XBBaseApplication implements XBApplication {
     private final XBDefaultApplicationModuleRepository moduleRepository;
     private final List<URI> plugins = new ArrayList<>();
     private final Map<Locale, ClassLoader> languagePlugins = new HashMap<>();
+    private final Map<String, LookAndFeelApplier> lafPlugins = new HashMap<>();
     private LookAndFeel defaultLaf = null;
+    private String targetLaf = null;
 
     public XBBaseApplication() {
         moduleRepository = new XBDefaultApplicationModuleRepository(this);
@@ -70,10 +73,12 @@ public class XBBaseApplication implements XBApplication {
     public void init() {
         // Setup language utility
         Locale locale = Locale.getDefault();
-        defaultLaf = UIManager.getLookAndFeel();
         ClassLoader languageClassLoader = languagePlugins.get(locale);
         if (languageClassLoader != null) {
             LanguageUtils.setLanguageClassLoader(languageClassLoader);
+        }
+        if (targetLaf != null) {
+            applyLookAndFeel(targetLaf);
         }
     }
 
@@ -131,7 +136,12 @@ public class XBBaseApplication implements XBApplication {
             Locale.setDefault(locale);
         }
 
-        String laf = frameworkParameters.getLookAndFeel();
+        defaultLaf = UIManager.getLookAndFeel();
+        targetLaf = frameworkParameters.getLookAndFeel();
+    }
+
+    @Override
+    public void applyLookAndFeel(String laf) {
         try {
             if (laf.isEmpty()) {
                 String osName = System.getProperty("os.name").toLowerCase();
@@ -148,7 +158,12 @@ public class XBBaseApplication implements XBApplication {
             }
 
             if (laf != null && !laf.isEmpty()) {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                LookAndFeelApplier applier = lafPlugins.get(laf);
+                if (applier != null) {
+                    applier.applyLookAndFeel(laf);
+                } else {
+                    UIManager.setLookAndFeel(laf);
+                }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(XBBaseApplication.class.getName()).log(Level.SEVERE, null, ex);
@@ -204,6 +219,15 @@ public class XBBaseApplication implements XBApplication {
     @Override
     public void registerLanguagePlugin(Locale locale, ClassLoader classLoader) {
         languagePlugins.put(locale, classLoader);
+    }
+
+    @Override
+    public void registerLafPlugin(String className, LookAndFeelApplier applier) {
+        lafPlugins.put(className, applier);
+        if (className.equals(targetLaf)) {
+            applyLookAndFeel(targetLaf);
+            targetLaf = null;
+        }
     }
 
     @Nonnull

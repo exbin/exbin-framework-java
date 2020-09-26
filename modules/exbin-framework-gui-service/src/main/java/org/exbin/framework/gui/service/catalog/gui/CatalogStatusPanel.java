@@ -255,7 +255,7 @@ public class CatalogStatusPanel extends javax.swing.JPanel {
             transaction.commit();
             em.refresh(rootService.getMainRoot());
             Optional<Date> lastUpdate = rootService.getMainLastUpdate();
-            lastUpdateTextField.setText(lastUpdate.isPresent() ? lastUpdate.toString() : "");
+            lastUpdateTextField.setText(lastUpdate.isPresent() ? lastUpdate.get().toString() : "");
         }
     }//GEN-LAST:event_lastUpdateNowButtonActionPerformed
 

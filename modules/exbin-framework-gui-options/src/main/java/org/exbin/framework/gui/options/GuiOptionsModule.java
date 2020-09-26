@@ -19,16 +19,12 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
@@ -115,26 +111,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             @Override
             public void applyPreferencesChanges(FrameworkOptionsImpl options) {
                 String selectedTheme = options.getLookAndFeel();
-                if (selectedTheme != null) {
-                    if (selectedTheme.isEmpty()) {
-                        String osName = System.getProperty("os.name").toLowerCase();
-                        if (!osName.startsWith("windows") && !osName.startsWith("mac")) {
-                            try {
-                                // Try "GTK+" on linux
-                                UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-                                return;
-                            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                            }
-                        }
-                        selectedTheme = UIManager.getSystemLookAndFeelClassName();
-                    }
-
-                    try {
-                        UIManager.setLookAndFeel(selectedTheme);
-                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                        Logger.getLogger(FrameworkPreferences.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                application.applyLookAndFeel(selectedTheme);
             }
         };
         optionsPages.add(new OptionsPageRecord(null, mainOptionsPage));
@@ -308,7 +285,6 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             OptionsPage page = optionsPage.optionsPage;
             OptionsData options = page.createOptions();
             page.loadFromPreferences(preferences, options);
-            page.applyPreferencesChanges(options);
         }
     }
 
