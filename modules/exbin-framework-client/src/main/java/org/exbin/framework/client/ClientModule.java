@@ -196,11 +196,11 @@ public class ClientModule implements ClientModuleApi {
                 try {
                     Optional<Date> localLastUpdate = rootService.getMainLastUpdate();
                     Date remoteLastUpdate = (Date) updateHandler.getMainLastUpdate();
-                    if (!rootService.isMainPresent() || localLastUpdate.isEmpty() || localLastUpdate.get().before(remoteLastUpdate)) {
+                    if (!rootService.isMainPresent() || !localLastUpdate.isPresent() || localLastUpdate.get().before(remoteLastUpdate)) {
                         System.out.print("Update due to: ");
                         if (!rootService.isMainPresent()) {
                             System.out.println("Missing main root");
-                        } else if (localLastUpdate.isEmpty()) {
+                        } else if (!localLastUpdate.isPresent()) {
                             System.out.println("No last update date");
                         } else {
                             System.out.println("Never update available " + remoteLastUpdate.toString() + " > " + localLastUpdate.get().toString());

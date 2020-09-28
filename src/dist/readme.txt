@@ -4,7 +4,7 @@ ExBin Framework Libraries
 Framework provides various modules for swing desktop applications support.
 
 Homepage: https://exbin.org
-Version: 0.2.1-SNAPSHOT
+Version: 0.2.1
 
 Structure
 ---------
