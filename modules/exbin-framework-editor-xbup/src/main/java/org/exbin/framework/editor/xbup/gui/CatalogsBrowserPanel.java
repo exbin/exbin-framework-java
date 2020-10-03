@@ -17,6 +17,7 @@ package org.exbin.framework.editor.xbup.gui;
 
 import java.awt.BorderLayout;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -33,11 +34,12 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCRoot;
 import org.exbin.xbup.core.catalog.base.service.XBCRootService;
+import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 
 /**
  * Panel for list of catalogs.
  *
- * @version 0.2.1 2020/07/20
+ * @version 0.2.2 2020/10/03
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -73,11 +75,21 @@ public class CatalogsBrowserPanel extends javax.swing.JPanel {
     public void setCatalog(@Nullable XBACatalog catalog) {
         this.catalog = catalog;
         if (catalog != null) {
-            XBCRootService catalogService = catalog.getCatalogService(XBCRootService.class);
-            XBCRoot mainRoot = catalogService.getMainRoot();
-            Optional<Date> lastUpdate = mainRoot.getLastUpdate();
-            String lastUpdateText = lastUpdate.isPresent() ? lastUpdate.get().toString() : "";
-            ((DefaultTableModel) catalogsTable.getModel()).addRow(new Object[]{"Main", "(build-in)", lastUpdateText});
+            XBCRootService rootService = catalog.getCatalogService(XBCRootService.class);
+            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+            List<XBCRoot> catalogRoots = rootService.getAllItems();
+            for (XBCRoot catalogRoot : catalogRoots) {
+                Optional<Date> lastUpdate = catalogRoot.getLastUpdate();
+                String lastUpdateText = lastUpdate.isPresent() ? lastUpdate.get().toString() : "";
+                Object[] row;
+                if (catalogRoot.getUrl().isEmpty()) {
+                    row = new Object[]{"Main", "(build-in)", lastUpdateText};
+                } else {
+                    String nodeName = nameService.getDefaultText(catalogRoot.getNode());
+                    row = new Object[]{"Catalog " + nodeName, catalogRoot.getUrl().orElse(""), lastUpdateText};
+                }
+                ((DefaultTableModel) catalogsTable.getModel()).addRow(row);
+            }
         }
     }
 
