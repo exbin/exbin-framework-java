@@ -73,12 +73,10 @@ public class FrameworkPreferences {
         preferences.put(PREFERENCES_LOCALE_LANGUAGE, language);
     }
 
-    @Nonnull
     public void setLocaleCountry(String country) {
         preferences.put(PREFERENCES_LOCALE_COUNTRY, country);
     }
 
-    @Nonnull
     public void setLocaleVariant(String variant) {
         preferences.put(PREFERENCES_LOCALE_VARIANT, variant);
     }

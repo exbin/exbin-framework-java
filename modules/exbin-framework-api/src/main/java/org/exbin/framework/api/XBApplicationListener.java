@@ -15,12 +15,15 @@
  */
 package org.exbin.framework.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Framework application event listener.
  *
  * @version 0.2.0 2015/11/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface XBApplicationListener {
 
     /**

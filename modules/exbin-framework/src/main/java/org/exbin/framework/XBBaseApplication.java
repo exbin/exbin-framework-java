@@ -34,7 +34,6 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.LookAndFeel;
@@ -103,6 +102,7 @@ public class XBBaseApplication implements XBApplication {
         this.appBundle = appBundle;
     }
 
+    @Nonnull
     public Preferences createPreferences(Class clazz) {
         java.util.prefs.Preferences prefsPreferences;
         String osName = System.getProperty("os.name").toLowerCase();
@@ -204,7 +204,7 @@ public class XBBaseApplication implements XBApplication {
         }
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Image getApplicationIcon() {
         return new ImageIcon(getClass().getResource(getAppBundle().getString("Application.icon"))).getImage();

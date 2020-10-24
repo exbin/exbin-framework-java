@@ -154,6 +154,7 @@ public class PreferencesWrapper implements Preferences {
         }
     }
 
+    @Nonnull
     public java.util.prefs.Preferences getInnerPreferences() {
         return preferences;
     }
