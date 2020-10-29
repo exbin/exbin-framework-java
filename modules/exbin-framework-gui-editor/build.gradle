@@ -33,7 +33,7 @@ dependencies {
     implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-operation')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-undo-api')
-    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-menu-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-action-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-file-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'

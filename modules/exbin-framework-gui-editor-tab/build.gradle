@@ -34,7 +34,7 @@ dependencies {
     implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
-    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-menu-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-action-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-file-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')

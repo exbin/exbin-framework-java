@@ -17,7 +17,7 @@ package org.exbin.framework.gui.component.gui;
 
 import java.awt.BorderLayout;
 import javax.swing.JToolBar;
-import org.exbin.framework.gui.menu.GuiMenuModule;
+import org.exbin.framework.gui.action.GuiActionModule;
 import org.exbin.framework.gui.utils.ClipboardActions;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsHandlerEmpty;
@@ -68,14 +68,14 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
         TestApplication testApplication = GuiUtilsModule.getDefaultAppEditor();
         GuiUndoModule guiUndoModule = new GuiUndoModule();
         testApplication.addModule(GuiUndoModule.MODULE_ID, guiUndoModule);
-        GuiMenuModule guiMenuModule = new GuiMenuModule();
-        testApplication.addModule(GuiMenuModule.MODULE_ID, guiMenuModule);
+        GuiActionModule guiActionModule = new GuiActionModule();
+        testApplication.addModule(GuiActionModule.MODULE_ID, guiActionModule);
 
         ToolBarEditorPanel toolBarEditorPanel = new ToolBarEditorPanel();
         UndoActionsHandler undoActionsHandler = new UndoActionsHandlerEmpty();
         toolBarEditorPanel.setUndoHandler(undoActionsHandler, guiUndoModule.createUndoActions(undoActionsHandler));
         ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
-        toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, guiMenuModule.createClipboardActions(clipboardActionsHandler));
+        toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.createClipboardActions(clipboardActionsHandler));
         WindowUtils.invokeDialog(toolBarEditorPanel);
     }
 

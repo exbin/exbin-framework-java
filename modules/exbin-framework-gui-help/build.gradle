@@ -31,7 +31,7 @@ repositories {
 dependencies {
     api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-help-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
-    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-menu-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-action-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
     implementation 'javax.help:javahelp:2.0.05'

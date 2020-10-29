@@ -25,7 +25,7 @@ import org.exbin.framework.gui.component.api.toolbar.MoveItemActions;
 import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandler;
 import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandlerEmpty;
 import org.exbin.framework.gui.component.gui.ToolBarSidePanel;
-import org.exbin.framework.gui.menu.GuiMenuModule;
+import org.exbin.framework.gui.action.GuiActionModule;
 import org.exbin.framework.gui.utils.ClipboardActions;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsHandlerEmpty;
@@ -116,8 +116,8 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         TestApplication testApplication = GuiUtilsModule.getDefaultAppEditor();
         GuiUndoModule guiUndoModule = new GuiUndoModule();
         testApplication.addModule(GuiUndoModule.MODULE_ID, guiUndoModule);
-        GuiMenuModule guiMenuModule = new GuiMenuModule();
-        testApplication.addModule(GuiMenuModule.MODULE_ID, guiMenuModule);
+        GuiActionModule guiActionModule = new GuiActionModule();
+        testApplication.addModule(GuiActionModule.MODULE_ID, guiActionModule);
         GuiComponentModule guiComponentModule = new GuiComponentModule();
         testApplication.addModule(GuiComponentModule.MODULE_ID, guiComponentModule);
 
@@ -125,7 +125,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         UndoActionsHandler undoActionsHandler = new UndoActionsHandlerEmpty();
         definitionEditorPanel.setUndoHandler(undoActionsHandler, guiUndoModule.createUndoActions(undoActionsHandler));
         ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
-        definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiMenuModule.createClipboardActions(clipboardActionsHandler));
+        definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.createClipboardActions(clipboardActionsHandler));
         WindowUtils.invokeDialog(definitionEditorPanel);
         definitionEditorPanel.registerToolBarActions(guiComponentModule);
     }

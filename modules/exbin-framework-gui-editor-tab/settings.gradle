@@ -7,7 +7,7 @@ if (rootProject.path == ':') {
     include ':modules:exbin-framework-gui-editor-tab-api'
     include ':modules:exbin-framework-gui-file-api'
     include ':modules:exbin-framework-gui-frame-api'
-    include ':modules:exbin-framework-gui-menu-api'
+    include ':modules:exbin-framework-gui-action-api'
     include ':modules:exbin-framework-gui-utils'
 }
 
