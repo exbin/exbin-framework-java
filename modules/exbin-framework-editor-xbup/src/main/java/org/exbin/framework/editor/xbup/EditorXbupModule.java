@@ -239,8 +239,8 @@ public class EditorXbupModule implements XBApplicationModule {
 
     public void registerPropertiesMenuAction() {
         getPropertiesHandler();
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, propertiesHandler.getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, propertiesHandler.getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     @Nonnull
@@ -248,19 +248,19 @@ public class EditorXbupModule implements XBApplicationModule {
         getPropertiesHandler();
         getDocEditingHandler();
         getImportExportHandler();
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenu(XBUP_POPUP_MENU_ID, MODULE_ID);
-        menuModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, docEditingHandler.getAddItemAction(), new MenuPosition(PositionMode.TOP));
-        menuModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, docEditingHandler.getEditItemAction(), new MenuPosition(PositionMode.TOP));
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenu(XBUP_POPUP_MENU_ID, MODULE_ID);
+        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, docEditingHandler.getAddItemAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, docEditingHandler.getEditItemAction(), new MenuPosition(PositionMode.TOP));
 
-        menuModule.registerClipboardMenuItems(XBUP_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
+        actionModule.registerClipboardMenuItems(XBUP_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
 
-        menuModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, importExportHandler.getImportItemAction(), new MenuPosition(PositionMode.BOTTOM));
-        menuModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, importExportHandler.getExportItemAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, importExportHandler.getImportItemAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, importExportHandler.getExportItemAction(), new MenuPosition(PositionMode.BOTTOM));
 
-        menuModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, propertiesHandler.getItemPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, propertiesHandler.getItemPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
         JPopupMenu popupMenu = new JPopupMenu();
-        menuModule.buildMenu(popupMenu, XBUP_POPUP_MENU_ID);
+        actionModule.buildMenu(popupMenu, XBUP_POPUP_MENU_ID);
         return popupMenu;
     }
 

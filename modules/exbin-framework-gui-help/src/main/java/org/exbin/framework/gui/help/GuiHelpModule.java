@@ -62,7 +62,7 @@ public class GuiHelpModule implements GuiHelpModuleApi {
 
     @Override
     public void registerMainMenu() {
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getHelpAction(), new MenuPosition(PositionMode.TOP));
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getHelpAction(), new MenuPosition(PositionMode.TOP));
     }
 }

@@ -146,14 +146,14 @@ public class EditorPictureModule implements XBApplicationModule {
 
     public void registerPropertiesMenu() {
         getPropertiesHandler();
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, propertiesHandler.getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, propertiesHandler.getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
         getPrintHandler();
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, printHandler.getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, printHandler.getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     private PictureOperationHandler getPictureOperationHandler() {
@@ -195,28 +195,28 @@ public class EditorPictureModule implements XBApplicationModule {
     }
 
     private JPopupMenu createPopupMenu() {
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenu(PICTURE_POPUP_MENU_ID, MODULE_ID);
-        menuModule.registerClipboardMenuItems(PICTURE_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenu(PICTURE_POPUP_MENU_ID, MODULE_ID);
+        actionModule.registerClipboardMenuItems(PICTURE_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
         JPopupMenu popupMenu = new JPopupMenu();
-        menuModule.buildMenu(popupMenu, PICTURE_POPUP_MENU_ID);
+        actionModule.buildMenu(popupMenu, PICTURE_POPUP_MENU_ID);
         return popupMenu;
     }
 
     public void registerToolsOptionsMenuActions() {
         getToolsOptionsHandler();
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, toolsOptionsHandler.getToolsSetColorAction(), new MenuPosition(PositionMode.TOP));
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, toolsOptionsHandler.getToolsSetColorAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerZoomModeMenu() {
         getZoomControlHandler();
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, ZOOM_MODE_SUBMENU_ID, "Zoom", new MenuPosition(PositionMode.BOTTOM));
-        menuModule.registerMenu(ZOOM_MODE_SUBMENU_ID, MODULE_ID);
-        menuModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
-        menuModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getNormalZoomAction(), new MenuPosition(PositionMode.TOP));
-        menuModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getZoomDownAction(), new MenuPosition(PositionMode.TOP));
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, ZOOM_MODE_SUBMENU_ID, "Zoom", new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenu(ZOOM_MODE_SUBMENU_ID, MODULE_ID);
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getNormalZoomAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getZoomDownAction(), new MenuPosition(PositionMode.TOP));
     }
 
     private PropertiesHandler getPropertiesHandler() {
@@ -256,15 +256,15 @@ public class EditorPictureModule implements XBApplicationModule {
     }
 
     public void registerPictureMenu() {
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenu(PICTURE_MENU_ID, MODULE_ID);
-        menuModule.registerMenuItem(GuiFrameModuleApi.MAIN_MENU_ID, MODULE_ID, PICTURE_MENU_ID, "Picture", new MenuPosition(NextToMode.AFTER, "View"));
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenu(PICTURE_MENU_ID, MODULE_ID);
+        actionModule.registerMenuItem(GuiFrameModuleApi.MAIN_MENU_ID, MODULE_ID, PICTURE_MENU_ID, "Picture", new MenuPosition(NextToMode.AFTER, "View"));
     }
 
     public void registerPictureOperationMenu() {
         getPictureOperationHandler();
-        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        menuModule.registerMenuItem(PICTURE_MENU_ID, MODULE_ID, pictureOperationHandler.getRevertAction(), new MenuPosition(PositionMode.TOP));
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenuItem(PICTURE_MENU_ID, MODULE_ID, pictureOperationHandler.getRevertAction(), new MenuPosition(PositionMode.TOP));
     }
 
     /**
