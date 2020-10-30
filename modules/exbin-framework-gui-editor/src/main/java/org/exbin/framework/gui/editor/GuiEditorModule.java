@@ -30,13 +30,13 @@ import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 
 /**
  * XBUP framework editor module.
@@ -64,8 +64,8 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
     private void setActiveEditor(EditorProvider editorProvider) {
         if (activeEditor == null) {
-            GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-            menuModule.registerClipboardHandler(new ClipboardActionsHandler() {
+            GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+            actionModule.registerClipboardHandler(new ClipboardActionsHandler() {
                 @Override
                 public void performCut() {
                     if (activeEditor instanceof ClipboardActionsHandler) {

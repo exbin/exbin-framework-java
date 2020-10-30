@@ -18,7 +18,7 @@ package org.exbin.framework.gui.service.catalog.gui;
 import java.awt.Container;
 import java.util.ResourceBundle;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;

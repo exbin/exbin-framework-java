@@ -29,7 +29,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.service.XBDbServiceClient;
 import org.exbin.framework.gui.service.catalog.gui.CatalogBrowserPanel;
 import org.exbin.framework.gui.service.catalog.gui.CatalogEditorPanel;

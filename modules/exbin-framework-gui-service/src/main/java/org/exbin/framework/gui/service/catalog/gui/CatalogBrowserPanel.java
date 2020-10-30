@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.text.DefaultEditorKit;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.service.ServiceManagerHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;

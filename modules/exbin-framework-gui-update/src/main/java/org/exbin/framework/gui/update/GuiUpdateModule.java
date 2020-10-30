@@ -27,9 +27,8 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
-import org.exbin.framework.gui.menu.api.MenuPosition;
-import org.exbin.framework.gui.menu.api.PositionMode;
+import org.exbin.framework.gui.action.api.MenuPosition;
+import org.exbin.framework.gui.action.api.PositionMode;
 import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.update.api.GuiUpdateModuleApi;
@@ -46,6 +45,7 @@ import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.options.api.DefaultOptionsPage;
 import org.exbin.framework.gui.update.action.CheckForUpdateAction;
+import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 
 /**
  * Implementation of framework check update module.
@@ -94,7 +94,7 @@ public class GuiUpdateModule implements GuiUpdateModuleApi {
 
     @Override
     public void registerDefaultMenuItem() {
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
     }
 

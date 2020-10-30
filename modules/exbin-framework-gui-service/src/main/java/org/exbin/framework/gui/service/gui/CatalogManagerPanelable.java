@@ -16,7 +16,7 @@
 package org.exbin.framework.gui.service.gui;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**

@@ -13,40 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
+package org.exbin.framework.gui.action.api;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 
 /**
- * Tool bar position.
+ * Record for action as menu item contribution.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.0 2016/01/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ToolBarPosition {
+public class ActionMenuContribution implements MenuContribution {
 
-    private final PositionMode basicMode;
-    private final String groupId;
+    private final Action action;
+    private final MenuPosition position;
 
-    public ToolBarPosition(PositionMode basicMode) {
-        this.basicMode = basicMode;
-        groupId = null;
+    public ActionMenuContribution(Action action, MenuPosition position) {
+        this.action = action;
+        this.position = position;
     }
 
-    public ToolBarPosition(String groupId) {
-        basicMode = null;
-        this.groupId = groupId;
+    @Nonnull
+    public Action getAction() {
+        return action;
     }
 
-    @Nullable
-    public PositionMode getBasicMode() {
-        return basicMode;
-    }
-
-    @Nullable
-    public String getGroupId() {
-        return groupId;
+    @Nonnull
+    @Override
+    public MenuPosition getMenuPosition() {
+        return position;
     }
 }

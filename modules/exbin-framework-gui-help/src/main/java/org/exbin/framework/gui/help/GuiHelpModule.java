@@ -21,10 +21,10 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.help.action.HelpAction;
 import org.exbin.framework.gui.help.api.GuiHelpModuleApi;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
-import org.exbin.framework.gui.menu.api.MenuPosition;
-import org.exbin.framework.gui.menu.api.PositionMode;
+import org.exbin.framework.gui.action.api.MenuPosition;
+import org.exbin.framework.gui.action.api.PositionMode;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 
 /**
  * Implementation of XBUP framework help module.
@@ -62,7 +62,7 @@ public class GuiHelpModule implements GuiHelpModuleApi {
 
     @Override
     public void registerMainMenu() {
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+        GuiActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         menuModule.registerMenuItem(GuiFrameModuleApi.HELP_MENU_ID, MODULE_ID, getHelpAction(), new MenuPosition(PositionMode.TOP));
     }
 }

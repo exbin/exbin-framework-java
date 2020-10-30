@@ -13,18 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
-
-import javax.annotation.Nonnull;
+package org.exbin.framework.gui.action.api;
 
 /**
- * Interface for tool bar contributions.
+ * Enumeration of menu position modes using build-in groups.
  *
- * @version 0.2.0 2016/01/11
+ * @version 0.2.0 2015/12/16
  * @author ExBin Project (http://exbin.org)
  */
-public interface ToolBarContribution {
+public enum PositionMode {
 
-    @Nonnull
-    ToolBarPosition getToolBarPosition();
+    /**
+     * Top position.
+     */
+    TOP,
+    /**
+     * End of the top position.
+     */
+    TOP_LAST,
+    /**
+     * Default: Normal position in the middle section.
+     */
+    MIDDLE,
+    /**
+     * Normal position at the end of the middle section.
+     */
+    MIDDLE_LAST,
+    /**
+     * Bottom position.
+     */
+    BOTTOM,
+    /**
+     * End of the bottom position.
+     */
+    BOTTOM_LAST
 }

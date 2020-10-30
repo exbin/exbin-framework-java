@@ -13,32 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
+package org.exbin.framework.gui.action.api;
 
-import javax.swing.Action;
+import javax.annotation.Nonnull;
 
 /**
- * Record for action as menu item contribution.
+ * Interface for tool bar contributions.
  *
- * @version 0.2.0 2016/01/09
+ * @version 0.2.0 2016/01/11
  * @author ExBin Project (http://exbin.org)
  */
-public class ActionMenuContribution implements MenuContribution {
+public interface ToolBarContribution {
 
-    private final Action action;
-    private final MenuPosition position;
-
-    public ActionMenuContribution(Action action, MenuPosition position) {
-        this.action = action;
-        this.position = position;
-    }
-
-    public Action getAction() {
-        return action;
-    }
-
-    @Override
-    public MenuPosition getMenuPosition() {
-        return position;
-    }
+    @Nonnull
+    ToolBarPosition getToolBarPosition();
 }

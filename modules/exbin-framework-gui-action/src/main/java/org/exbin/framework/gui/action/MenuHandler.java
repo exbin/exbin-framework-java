@@ -30,14 +30,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
-import org.exbin.framework.gui.menu.api.ActionMenuContribution;
-import org.exbin.framework.gui.menu.api.DirectMenuContribution;
-import org.exbin.framework.gui.menu.api.MenuContribution;
-import org.exbin.framework.gui.menu.api.MenuGroup;
-import org.exbin.framework.gui.menu.api.MenuPosition;
-import org.exbin.framework.gui.menu.api.PositionMode;
-import org.exbin.framework.gui.menu.api.SeparationMode;
-import org.exbin.framework.gui.menu.api.SubMenuContribution;
+import org.exbin.framework.gui.action.api.ActionMenuContribution;
+import org.exbin.framework.gui.action.api.DirectMenuContribution;
+import org.exbin.framework.gui.action.api.MenuContribution;
+import org.exbin.framework.gui.action.api.MenuGroup;
+import org.exbin.framework.gui.action.api.MenuPosition;
+import org.exbin.framework.gui.action.api.PositionMode;
+import org.exbin.framework.gui.action.api.SeparationMode;
+import org.exbin.framework.gui.action.api.SubMenuContribution;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**

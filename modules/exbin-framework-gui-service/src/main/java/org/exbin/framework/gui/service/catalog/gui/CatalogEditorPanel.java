@@ -43,7 +43,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.menu.api.MenuManagement;
+import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.service.XBFileType;
 import org.exbin.framework.gui.service.YamlFileType;
 import org.exbin.framework.gui.service.catalog.gui.CatalogNodesTreeModel.CatalogNodesTreeItem;

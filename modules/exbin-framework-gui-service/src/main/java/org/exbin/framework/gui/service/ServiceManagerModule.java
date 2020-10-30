@@ -27,14 +27,14 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
-import org.exbin.framework.gui.menu.api.MenuManagement;
-import org.exbin.framework.gui.menu.api.PositionMode;
+import org.exbin.framework.gui.action.api.MenuManagement;
+import org.exbin.framework.gui.action.api.PositionMode;
 import org.exbin.framework.gui.service.gui.ConnectionPanel;
 import org.exbin.framework.gui.service.gui.ServiceManagerPanel;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 
 /**
  * XBUP service manager module.
@@ -113,8 +113,8 @@ public class ServiceManagerModule implements XBApplicationModule {
             @Override
             public void insertMainPopupMenu(JPopupMenu popupMenu, int position) {
                 // Temporary
-                GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-                menuModule.fillPopupMenu(popupMenu, position);
+                GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+                actionModule.fillPopupMenu(popupMenu, position);
             }
         };
     }

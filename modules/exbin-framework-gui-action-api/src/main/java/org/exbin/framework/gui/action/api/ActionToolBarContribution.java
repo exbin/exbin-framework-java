@@ -13,43 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
+package org.exbin.framework.gui.action.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 
 /**
- * Record of sub/child menu contribution.
+ * Record for action as menu item contribution.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.0 2016/01/11
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SubMenuContribution implements MenuContribution {
+public class ActionToolBarContribution implements ToolBarContribution {
 
-    private final String menuId;
-    private final String name;
-    private final MenuPosition position;
+    private final Action action;
+    private final ToolBarPosition position;
 
-    public SubMenuContribution(String menuId, String name, MenuPosition position) {
-        this.menuId = menuId;
-        this.name = name;
+    public ActionToolBarContribution(Action action, ToolBarPosition position) {
+        this.action = action;
         this.position = position;
     }
 
     @Nonnull
-    public String getMenuId() {
-        return menuId;
-    }
-
-    @Nonnull
-    public String getName() {
-        return name;
+    public Action getAction() {
+        return action;
     }
 
     @Nonnull
     @Override
-    public MenuPosition getMenuPosition() {
+    public ToolBarPosition getToolBarPosition() {
         return position;
     }
 }

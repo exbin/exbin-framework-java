@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
+package org.exbin.framework.gui.action.api;
+
+import javax.annotation.Nonnull;
 
 /**
- * Enumeration of menu next to modes.
+ * Interface for menu contributions.
  *
- * @version 0.2.0 2016/01/24
+ * @version 0.2.0 2016/01/09
  * @author ExBin Project (http://exbin.org)
  */
-public enum NextToMode {
+public interface MenuContribution {
 
-    BEFORE,
-    AFTER
+    @Nonnull
+    MenuPosition getMenuPosition();
 }

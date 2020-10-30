@@ -13,32 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
-
-import javax.swing.Action;
+package org.exbin.framework.gui.action.api;
 
 /**
- * Record for action as menu item contribution.
+ * Enumeration of menu separator placement modes.
  *
- * @version 0.2.0 2016/01/11
+ * @version 0.2.0 2016/01/09
  * @author ExBin Project (http://exbin.org)
  */
-public class ActionToolBarContribution implements ToolBarContribution {
+public enum SeparationMode {
 
-    private final Action action;
-    private final ToolBarPosition position;
-
-    public ActionToolBarContribution(Action action, ToolBarPosition position) {
-        this.action = action;
-        this.position = position;
-    }
-
-    public Action getAction() {
-        return action;
-    }
-
-    @Override
-    public ToolBarPosition getToolBarPosition() {
-        return position;
-    }
+    NONE,
+    ABOVE,
+    /**
+     * Includes separator both above and below
+     */
+    AROUND,
+    BELOW
 }

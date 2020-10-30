@@ -29,15 +29,15 @@ import org.exbin.framework.gui.utils.ClipboardActions;
 import org.exbin.framework.gui.utils.ClipboardActionsApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ComponentPopupEventDispatcher;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
-import org.exbin.framework.gui.menu.api.MenuGroup;
-import org.exbin.framework.gui.menu.api.MenuPosition;
-import org.exbin.framework.gui.menu.api.PositionMode;
-import org.exbin.framework.gui.menu.api.SeparationMode;
-import org.exbin.framework.gui.menu.api.ToolBarGroup;
-import org.exbin.framework.gui.menu.api.ToolBarPosition;
+import org.exbin.framework.gui.action.api.MenuGroup;
+import org.exbin.framework.gui.action.api.MenuPosition;
+import org.exbin.framework.gui.action.api.PositionMode;
+import org.exbin.framework.gui.action.api.SeparationMode;
+import org.exbin.framework.gui.action.api.ToolBarGroup;
+import org.exbin.framework.gui.action.api.ToolBarPosition;
 import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 
 /**
  * Implementation of framework menu module.
@@ -46,7 +46,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class GuiActionModule implements GuiMenuModuleApi {
+public class GuiActionModule implements GuiActionModuleApi {
 
     private XBApplication application;
     private ClipboardActionsImpl clipboardActions = null;

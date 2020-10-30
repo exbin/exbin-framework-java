@@ -13,48 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
+package org.exbin.framework.gui.action.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JMenu;
 
 /**
- * Menu group definition.
+ * Record for action as menu item contribution.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.0 2016/01/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MenuGroup {
+public class DirectMenuContribution implements MenuContribution {
 
-    private final String groupId;
+    private final JMenu menu;
     private final MenuPosition position;
-    private final SeparationMode separationMode;
 
-    public MenuGroup(String groupId, MenuPosition position) {
-        this.groupId = groupId;
+    public DirectMenuContribution(JMenu menu, MenuPosition position) {
+        this.menu = menu;
         this.position = position;
-        separationMode = SeparationMode.NONE;
-    }
-
-    public MenuGroup(String groupId, MenuPosition position, SeparationMode separationMode) {
-        this.groupId = groupId;
-        this.position = position;
-        this.separationMode = separationMode;
     }
 
     @Nonnull
-    public String getGroupId() {
-        return groupId;
+    public JMenu getMenu() {
+        return menu;
     }
 
     @Nonnull
-    public MenuPosition getPosition() {
+    @Override
+    public MenuPosition getMenuPosition() {
         return position;
-    }
-
-    @Nonnull
-    public SeparationMode getSeparationMode() {
-        return separationMode;
     }
 }

@@ -13,41 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
+package org.exbin.framework.gui.action.api;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Menu position.
+ * Tool bar position.
  *
  * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MenuPosition {
+public class ToolBarPosition {
 
     private final PositionMode basicMode;
-    private final NextToMode nextToMode;
     private final String groupId;
 
-    public MenuPosition(PositionMode basicMode) {
+    public ToolBarPosition(PositionMode basicMode) {
         this.basicMode = basicMode;
-        this.groupId = null;
-        this.nextToMode = null;
+        groupId = null;
     }
 
-    public MenuPosition(String groupId) {
-        this.basicMode = null;
+    public ToolBarPosition(String groupId) {
+        basicMode = null;
         this.groupId = groupId;
-        this.nextToMode = null;
-    }
-
-    public MenuPosition(NextToMode nextToMode, String menuItemId) {
-        this.basicMode = null;
-        this.groupId = menuItemId;
-        this.nextToMode = nextToMode;
     }
 
     @Nullable
@@ -55,13 +45,8 @@ public class MenuPosition {
         return basicMode;
     }
 
-    @Nonnull
+    @Nullable
     public String getGroupId() {
         return groupId;
-    }
-
-    @Nullable
-    public NextToMode getNextToMode() {
-        return nextToMode;
     }
 }

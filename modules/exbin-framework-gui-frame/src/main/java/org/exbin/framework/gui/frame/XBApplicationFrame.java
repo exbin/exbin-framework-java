@@ -34,8 +34,8 @@ import javax.swing.UIManager;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.menu.api.GuiMenuModuleApi;
 import org.exbin.framework.gui.utils.gui.WindowHeaderPanel;
+import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 
 /**
  * Basic appplication frame.
@@ -237,14 +237,14 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
 
     @Override
     public void loadMainMenu(XBApplication application) {
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.buildMenu(menuBar, GuiFrameModule.MAIN_MENU_ID);
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.buildMenu(menuBar, GuiFrameModule.MAIN_MENU_ID);
     }
 
     @Override
     public void loadMainToolBar(XBApplication application) {
-        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-        menuModule.buildToolBar(toolBar, GuiFrameModule.MAIN_TOOL_BAR_ID);
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.buildToolBar(toolBar, GuiFrameModule.MAIN_TOOL_BAR_ID);
     }
 
     public void switchStatusBar(@Nullable JPanel panel) {

@@ -31,12 +31,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import org.exbin.framework.gui.menu.api.ActionToolBarContribution;
-import org.exbin.framework.gui.menu.api.PositionMode;
-import org.exbin.framework.gui.menu.api.SeparationMode;
-import org.exbin.framework.gui.menu.api.ToolBarContribution;
-import org.exbin.framework.gui.menu.api.ToolBarGroup;
-import org.exbin.framework.gui.menu.api.ToolBarPosition;
+import org.exbin.framework.gui.action.api.ActionToolBarContribution;
+import org.exbin.framework.gui.action.api.PositionMode;
+import org.exbin.framework.gui.action.api.SeparationMode;
+import org.exbin.framework.gui.action.api.ToolBarContribution;
+import org.exbin.framework.gui.action.api.ToolBarGroup;
+import org.exbin.framework.gui.action.api.ToolBarPosition;
 import org.exbin.framework.gui.action.gui.DropDownButton;
 import org.exbin.framework.gui.utils.ActionUtils;
 

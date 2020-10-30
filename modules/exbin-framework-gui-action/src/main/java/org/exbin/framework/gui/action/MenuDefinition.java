@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.menu.api.MenuContribution;
+import org.exbin.framework.gui.action.api.MenuContribution;
 
 /**
  * Implementation of XBUP framework menu module.

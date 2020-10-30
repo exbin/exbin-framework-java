@@ -13,48 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
+package org.exbin.framework.gui.action.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Tool bar group definition.
+ * Record of sub/child menu contribution.
  *
- * @version 0.2.0 2016/01/11
+ * @version 0.2.1 2019/07/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ToolBarGroup {
+public class SubMenuContribution implements MenuContribution {
 
-    private final String groupId;
-    private final ToolBarPosition position;
-    private final SeparationMode separationMode;
+    private final String menuId;
+    private final String name;
+    private final MenuPosition position;
 
-    public ToolBarGroup(String groupId, ToolBarPosition position) {
-        this.groupId = groupId;
+    public SubMenuContribution(String menuId, String name, MenuPosition position) {
+        this.menuId = menuId;
+        this.name = name;
         this.position = position;
-        separationMode = SeparationMode.NONE;
-    }
-
-    public ToolBarGroup(String groupId, ToolBarPosition position, SeparationMode separationMode) {
-        this.groupId = groupId;
-        this.position = position;
-        this.separationMode = separationMode;
     }
 
     @Nonnull
-    public String getGroupId() {
-        return groupId;
+    public String getMenuId() {
+        return menuId;
     }
 
     @Nonnull
-    public ToolBarPosition getPosition() {
+    public String getName() {
+        return name;
+    }
+
+    @Nonnull
+    @Override
+    public MenuPosition getMenuPosition() {
         return position;
-    }
-
-    @Nonnull
-    public SeparationMode getSeparationMode() {
-        return separationMode;
     }
 }

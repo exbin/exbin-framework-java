@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.menu.api;
+package org.exbin.framework.gui.action.api;
 
 import org.exbin.framework.gui.utils.ComponentPopupEventDispatcher;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
@@ -32,13 +32,13 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 /**
  * Interface for XBUP framework menu module.
  *
- * @version 0.2.0 2016/07/22
+ * @version 0.2.2 2020/10/30
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface GuiMenuModuleApi extends XBApplicationModule {
+public interface GuiActionModuleApi extends XBApplicationModule {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiMenuModuleApi.class);
+    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiActionModuleApi.class);
     public static final String CLIPBOARD_ACTIONS_MENU_GROUP_ID = MODULE_ID + ".clipboardActionsMenuGroup";
     public static final String CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID = MODULE_ID + ".clipboardActionsToolBarGroup";
 
