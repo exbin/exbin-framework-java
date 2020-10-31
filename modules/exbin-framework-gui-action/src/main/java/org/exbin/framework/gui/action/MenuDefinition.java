@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.action.api.MenuContribution;
 
 /**
- * Implementation of XBUP framework menu module.
+ * Menu definition.
  *
  * @version 0.2.0 2016/01/04
  * @author ExBin Project (http://exbin.org)

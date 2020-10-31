@@ -15,34 +15,19 @@
  */
 package org.exbin.framework.gui.action;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.action.api.ToolBarContribution;
 
 /**
- * Toolbar definition.
+ * Action definition.
  *
- * @version 0.2.0 2016/01/11
+ * @version 0.2.2 2020/10/31
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ToolBarDefinition {
-
-    private final String pluginId;
-    private List<ToolBarContribution> contributions = new ArrayList<>();
-
-    public ToolBarDefinition(String pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    @Nonnull
-    public List<ToolBarContribution> getContributions() {
-        return contributions;
-    }
-
-    public void setContributions(List<ToolBarContribution> contributions) {
-        this.contributions = contributions;
-    }
+public class Action {
+    
+    private String name;
+    private String icon;
+    private String shortcut;
+    
 }
