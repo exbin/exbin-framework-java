@@ -49,6 +49,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2019/07/30
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class BaseSwitchableSpinnerPanel extends javax.swing.JPanel {
 
     private boolean adjusting;

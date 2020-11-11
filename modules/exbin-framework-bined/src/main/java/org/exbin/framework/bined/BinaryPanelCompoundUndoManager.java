@@ -16,6 +16,7 @@
 package org.exbin.framework.bined;
 
 import java.util.ArrayList;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -31,6 +32,7 @@ import javax.swing.undo.UndoableEdit;
  * @version 0.1.0 2016/04/03
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class BinaryPanelCompoundUndoManager extends AbstractUndoableEdit implements UndoableEditListener {
 
     private DocumentEvent.EventType lastEditType = null;

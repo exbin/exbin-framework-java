@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.BinaryDataOperationException;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
@@ -36,6 +37,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
  * @version 0.2.1 2018/08/10
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class UndoHandlerWrapper implements XBUndoHandler {
 
     private final BinaryDataUndoHandler handler;
@@ -75,6 +77,7 @@ public class UndoHandlerWrapper implements XBUndoHandler {
         handler.addCommand(new BinaryCommandWrapper(cmnd));
     }
 
+    @Nonnull
     @Override
     public List<Command> getCommandList() {
         List<Command> result = new ArrayList<>();
@@ -168,6 +171,7 @@ public class UndoHandlerWrapper implements XBUndoHandler {
         handler.removeUndoUpdateListener(binaryListener);
     }
 
+    @ParametersAreNonnullByDefault
     private static class CommandWrapper implements Command {
 
         private final BinaryDataCommand command;
@@ -176,6 +180,7 @@ public class UndoHandlerWrapper implements XBUndoHandler {
             this.command = command;
         }
 
+        @Nonnull
         @Override
         public String getCaption() {
             return command.getCaption();
@@ -218,6 +223,7 @@ public class UndoHandlerWrapper implements XBUndoHandler {
         }
     }
 
+    @ParametersAreNonnullByDefault
     private static class BinaryCommandWrapper implements BinaryDataCommand {
 
         private final Command command;
@@ -226,6 +232,7 @@ public class UndoHandlerWrapper implements XBUndoHandler {
             this.command = command;
         }
 
+        @Nonnull
         @Override
         public String getCaption() {
             return command.getCaption();

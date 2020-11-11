@@ -47,6 +47,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
@@ -155,6 +156,7 @@ import org.exbin.framework.gui.action.api.GuiActionModuleApi;
  * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class BinedModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(BinedModule.class);
@@ -217,6 +219,7 @@ public class BinedModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
             resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
@@ -225,6 +228,7 @@ public class BinedModule implements XBApplicationModule {
         return resourceBundle;
     }
 
+    @Nonnull
     public BinaryEditorProvider getEditorProvider() {
         if (editorProvider == null) {
             EditorPreferences editorParameters = new EditorPreferences(application.getAppPreferences());
@@ -264,6 +268,7 @@ public class BinedModule implements XBApplicationModule {
         return editorProvider;
     }
 
+    @Nonnull
     public BinaryEditorProvider getMultiEditorProvider() {
         if (editorProvider == null) {
             GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
@@ -1552,11 +1557,11 @@ public class BinedModule implements XBApplicationModule {
     public JPopupMenu createBinEdComponentPopupMenu(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler, BinEdComponentPanel binaryPanel, int clickedX, int clickedY) {
         return codeAreaPopupMenuHandler.createPopupMenu(binaryPanel.getCodeArea(), "", clickedX, clickedY);
     }
-    
+
     public void dropBinEdComponentPopupMenu() {
         dropCodeAreaPopupMenu("");
     }
-    
+
     @Nonnull
     private JMenuItem createGoToMenuItem() {
         return ActionUtils.actionToMenuItem(goToRowHandler.getGoToLineAction());
@@ -1645,7 +1650,7 @@ public class BinedModule implements XBApplicationModule {
         }
         return codeAreaPopupMenuHandler;
     }
-    
+
     public void registerCodeAreaPopupEventDispatcher() {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.addComponentPopupEventDispatcher(new ComponentPopupEventDispatcher() {
@@ -1717,7 +1722,7 @@ public class BinedModule implements XBApplicationModule {
             }
         });
     }
-    
+
     public enum PopupMenuVariant {
         BASIC, EDITOR
     }
