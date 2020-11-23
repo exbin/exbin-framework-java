@@ -153,7 +153,7 @@ import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2020/09/20
+ * @version 0.2.1 2020/11/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -235,11 +235,11 @@ public class BinedModule implements XBApplicationModule {
 
             String deltaModeString = editorParameters.getMemoryMode();
             BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
-            BinEdFile binEdEditorProvider = new BinEdFile();
-            binEdEditorProvider.setSegmentsRepository(new SegmentsRepository());
-            BinEdComponentPanel panel = binEdEditorProvider.getComponentPanel();
+            BinEdFile editorFile = new BinEdFile();
+            editorFile.setSegmentsRepository(new SegmentsRepository());
+            BinEdComponentPanel panel = editorFile.getComponentPanel();
             // TODO panel.setMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
-            editorProvider = binEdEditorProvider;
+            editorProvider = editorFile;
 
             panel.setApplication(application);
             panel.setPopupMenu(createPopupMenu(editorProvider.getId(), editorProvider.getCodeArea()));
@@ -274,6 +274,8 @@ public class BinedModule implements XBApplicationModule {
             GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
 //            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryEditorHandler();
+            ((BinaryEditorHandler) editorProvider).setSegmentsRepository(new SegmentsRepository());
+            editorProvider.newFile();
 
             ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinEdFile file) -> {
                 BinEdComponentPanel panel = file.getComponentPanel();

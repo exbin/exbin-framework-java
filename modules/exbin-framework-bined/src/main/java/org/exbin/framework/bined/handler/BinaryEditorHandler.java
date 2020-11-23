@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.bined.handler;
 
+import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
@@ -38,6 +39,7 @@ import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
+import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.tab.api.EditorViewHandling;
@@ -49,10 +51,10 @@ import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 /**
  * Binary editor provider.
  *
- * @version 0.2.1 2020/03/05
+ * @version 0.2.1 2020/11/23
  * @author ExBin Project (http://exbin.org)
  */
-public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
+public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorProvider, ClipboardActionsHandler, TextFontApi {
 
     private BinaryPanelInit binaryPanelInit = null;
     private final List<BinEdFile> files = new ArrayList<>();
@@ -202,7 +204,9 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
             createdFile.registerBinaryStatus(binaryStatus);
             createdFile.registerEncodingStatus(encodingStatus);
         }
-        editorViewHandling.addEditorView(createdFile);
+        if (editorViewHandling != null) {
+            editorViewHandling.addEditorView(createdFile);
+        }
         createdFile.setModificationListener(multiModificationListener);
         createdFile.getUndoHandler().addUndoUpdateListener(multiUndoUpdateListener);
         createdFile.setUpdateListener(multiClipboardUpdateListener);
@@ -520,6 +524,21 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         this.clipboardUpdateListener = updateListener;
+    }
+
+    @Override
+    public Font getCurrentFont() {
+        return activeFile.getCurrentFont();
+    }
+
+    @Override
+    public Font getDefaultFont() {
+        return activeFile.getDefaultFont();
+    }
+
+    @Override
+    public void setCurrentFont(Font font) {
+        activeFile.setCurrentFont(font);
     }
 
     /**
