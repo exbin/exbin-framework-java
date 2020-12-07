@@ -48,6 +48,7 @@ public class DropDownButton extends JButton {
         setFocusable(false);
         setActionText((String) action.getValue(Action.NAME));
         addActionListener(action);
+        setToolTipText((String) action.getValue(Action.SHORT_DESCRIPTION));
 
         setMargin(new Insets(0, 0, 0, 0));
         add(buttonPanel);
