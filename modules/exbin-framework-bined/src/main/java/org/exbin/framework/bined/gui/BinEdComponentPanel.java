@@ -76,7 +76,7 @@ import org.exbin.xbup.core.util.StringUtils;
 @ParametersAreNonnullByDefault
 public class BinEdComponentPanel extends javax.swing.JPanel implements ClipboardActionsHandler, TextCharsetApi, TextFontApi {
 
-    private static final FileHandlingMode DEFAULT_FILE_HANDLING_MODE = FileHandlingMode.DELTA;
+    private static final FileHandlingMode DEFAULT_FILE_HANDLING_MODE = FileHandlingMode.MEMORY;
 
     private BinEdComponentFileApi fileApi = null;
     private BinaryEditorPreferences preferences;

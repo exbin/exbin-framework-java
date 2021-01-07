@@ -435,7 +435,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
         @Override
         public String getDescription() {
-            return "XBUP Text Files (*.xbs*)";
+            return "XBUP Sound Files (*.xbs*)";
         }
 
         @Override

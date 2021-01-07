@@ -201,17 +201,14 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
     @Override
     public void newFile() {
         closeData();
-//        if (codeArea.getContentData() instanceof DeltaDocument) {
-//            segmentsRepository.dropDocument(Objects.requireNonNull((DeltaDocument) codeArea.getContentData()));
-//        }
+        ExtCodeArea codeArea = componentPanel.getCodeArea();
+        BinaryData data = codeArea.getContentData();
+        if (data instanceof DeltaDocument) {
+            segmentsRepository.dropDocument(Objects.requireNonNull((DeltaDocument) codeArea.getContentData()));
+        }
         setNewData();
         fileUri = null;
-//        documentOriginalSize = codeArea.getDataSize();
-//        codeArea.notifyDataChanged();
-//        updateCurrentDocumentSize();
-//        updateCurrentMemoryMode();
-//        undoHandler.clear();
-//        codeArea.repaint();
+        undoHandler.clear();
     }
 
     @Override
@@ -307,8 +304,10 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
         if (data instanceof DeltaDocument) {
             FileDataSource fileSource = ((DeltaDocument) data).getFileSource();
             data.dispose();
-            segmentsRepository.detachFileSource(fileSource);
-            segmentsRepository.closeFileSource(fileSource);
+            if (fileSource != null) {
+                segmentsRepository.detachFileSource(fileSource);
+                segmentsRepository.closeFileSource(fileSource);
+            }
         } else {
             if (data != null) {
                 data.dispose();

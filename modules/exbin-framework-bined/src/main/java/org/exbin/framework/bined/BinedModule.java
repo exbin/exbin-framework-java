@@ -237,6 +237,8 @@ public class BinedModule implements XBApplicationModule {
             BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
             BinEdFile editorFile = new BinEdFile();
             editorFile.setSegmentsRepository(new SegmentsRepository());
+            editorFile.switchFileHandlingMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY);
+            editorFile.newFile();
             BinEdComponentPanel panel = editorFile.getComponentPanel();
             // TODO panel.setMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
             editorProvider = editorFile;
