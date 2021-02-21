@@ -148,7 +148,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         });
 
         binarySearchPanel = new BinarySearchPanel();
-        binarySearchPanel.setBinarySearchService(new BinarySearchServiceImpl());
+        binarySearchPanel.setBinarySearchService(new BinarySearchServiceImpl(codeArea));
         binarySearchPanel.setClosePanelListener(this::hideSearchPanel);
 
         valuesPanel = new ValuesPanel();

@@ -33,17 +33,20 @@ import org.exbin.auxiliary.paged_data.EditableBinaryData;
 /**
  * Binary search service.
  *
- * @version 0.2.1 2019/07/16
+ * @version 0.2.1 2021/02/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BinarySearchServiceImpl implements BinarySearchService {
 
-    public BinarySearchServiceImpl() {
+    private final ExtCodeArea codeArea;
+
+    public BinarySearchServiceImpl(ExtCodeArea codeArea) {
+        this.codeArea = codeArea;
     }
 
     @Override
-    public void performFind(SearchParameters searchParameters, ExtCodeArea codeArea, SearchStatusListener searchStatusListener) {
+    public void performFind(SearchParameters searchParameters, SearchStatusListener searchStatusListener) {
         ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
         searchStatusListener.clearStatus();
@@ -74,11 +77,11 @@ public class BinarySearchServiceImpl implements BinarySearchService {
 
         switch (condition.getSearchMode()) {
             case TEXT: {
-                searchForText(searchParameters, codeArea, searchStatusListener);
+                searchForText(searchParameters, searchStatusListener);
                 break;
             }
             case BINARY: {
-                searchForBinaryData(searchParameters, codeArea, searchStatusListener);
+                searchForBinaryData(searchParameters, searchStatusListener);
                 break;
             }
             default:
@@ -89,7 +92,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
     /**
      * Performs search by binary data.
      */
-    private void searchForBinaryData(SearchParameters searchParameters, ExtCodeArea codeArea, SearchStatusListener searchStatusListener) {
+    private void searchForBinaryData(SearchParameters searchParameters, SearchStatusListener searchStatusListener) {
         ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
         long position = codeArea.getCaretPosition().getDataPosition();
@@ -146,7 +149,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
     /**
      * Performs search by text/characters.
      */
-    private void searchForText(SearchParameters searchParameters, ExtCodeArea codeArea, SearchStatusListener searchStatusListener) {
+    private void searchForText(SearchParameters searchParameters, SearchStatusListener searchStatusListener) {
         ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         SearchCondition condition = searchParameters.getCondition();
 
@@ -227,7 +230,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
     }
 
     @Override
-    public void setMatchPosition(int matchPosition, ExtCodeArea codeArea) {
+    public void setMatchPosition(int matchPosition) {
         ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         painter.setCurrentMatchIndex(matchPosition);
         ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
@@ -236,7 +239,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
     }
 
     @Override
-    public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters, ExtCodeArea codeArea) {
+    public void performReplace(SearchParameters searchParameters, ReplaceParameters replaceParameters) {
         SearchCondition replaceCondition = replaceParameters.getCondition();
         ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch currentMatch = painter.getCurrentMatch();
@@ -254,7 +257,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
     }
 
     @Override
-    public void clearMatches(ExtCodeArea codeArea) {
+    public void clearMatches() {
         ExtendedHighlightNonAsciiCodeAreaPainter painter = (ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter();
         painter.clearMatches();
     }
