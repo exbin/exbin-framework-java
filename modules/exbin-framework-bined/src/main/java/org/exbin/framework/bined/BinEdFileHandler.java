@@ -63,7 +63,7 @@ import org.exbin.xbup.core.type.XBData;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, ClipboardActionsHandler, TextFontApi {
+public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFileApi, ClipboardActionsHandler, TextFontApi {
 
     private SegmentsRepository segmentsRepository;
 
@@ -72,7 +72,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
     private int id = 0;
     private URI fileUri = null;
 
-    public BinEdFile() {
+    public BinEdFileHandler() {
         componentPanel = new BinEdComponentPanel();
         undoHandler = new CodeAreaUndoHandler(componentPanel.getCodeArea());
         componentPanel.setUndoHandler(undoHandler);
@@ -84,7 +84,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
         componentPanel.setContentData(new ByteArrayData());
     }
 
-    public BinEdFile(int id) {
+    public BinEdFileHandler(int id) {
         this();
         this.id = id;
     }
@@ -124,7 +124,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(BinEdFile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         undoHandler.clear();
@@ -160,7 +160,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
 //            updateCurrentDocumentSize();
 //            updateCurrentMemoryMode();
         } catch (IOException ex) {
-            Logger.getLogger(BinEdFile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         undoHandler.setSyncPoint();
@@ -250,7 +250,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
                 job.print();
 //                }
             } catch (PrinterException ex) {
-                Logger.getLogger(BinEdFile.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -280,7 +280,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
             try {
                 segmentsRepository.saveDocument((DeltaDocument) data);
             } catch (IOException ex) {
-                Logger.getLogger(BinEdFile.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             File file = new File(fileUri);
@@ -291,7 +291,7 @@ public class BinEdFile implements BinaryEditorProvider, BinEdComponentFileApi, C
                 }
                 stream.flush();
             } catch (IOException ex) {
-                Logger.getLogger(BinEdFile.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

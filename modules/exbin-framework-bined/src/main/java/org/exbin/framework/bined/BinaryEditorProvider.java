@@ -37,7 +37,7 @@ public interface BinaryEditorProvider extends EditorProvider {
     /**
      * Registers binary status method.
      *
-     * @param binaryStatus hex status
+     * @param binaryStatus binarystatus
      */
     void registerBinaryStatus(BinaryStatusApi binaryStatus);
 

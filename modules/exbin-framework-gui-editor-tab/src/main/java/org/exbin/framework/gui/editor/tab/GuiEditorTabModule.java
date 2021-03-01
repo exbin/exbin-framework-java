@@ -17,6 +17,7 @@ package org.exbin.framework.gui.editor.tab;
 
 import java.awt.Component;
 import java.util.ResourceBundle;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JLabel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -33,6 +34,7 @@ import sun.jvm.hotspot.ui.EditorFactory;
  * @version 0.2.0 2016/08/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class GuiEditorTabModule implements GuiEditorTabModuleApi {
 
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";

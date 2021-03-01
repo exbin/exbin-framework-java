@@ -42,7 +42,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
 import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinEdFile;
+import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
@@ -79,7 +79,6 @@ import org.exbin.xbup.parser_tree.XBTTreeWriter;
 import org.exbin.xbup.plugin.XBCatalogPlugin;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.xbup.plugin.XBRowEditor;
-import org.exbin.xbup.plugin.XBComponentEditor;
 import org.exbin.xbup.plugin.XBPanelEditor;
 import org.exbin.xbup.plugin.XBPanelEditorCatalogPlugin;
 import org.exbin.xbup.plugin.XBRowEditorCatalogPlugin;
@@ -102,11 +101,11 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     private XBTTreeNode srcNode;
     private XBTTreeNode newNode = null;
 
-    private final BinEdFile binaryDataFile;
+    private final BinEdFileHandler binaryDataFile;
     private XBPanelEditor customPanel;
     private XBBlockDataMode dataMode = XBBlockDataMode.NODE_BLOCK;
     private List<XBAttribute> attributes = null;
-    private BinEdFile tailDataBinaryDataFile = null;
+    private BinEdFileHandler tailDataBinaryDataFile = null;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockPanel.class);
 
     private final String attributesPanelTitle;
@@ -122,7 +121,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     public ModifyBlockPanel() {
         initComponents();
 
-        binaryDataFile = new BinEdFile();
+        binaryDataFile = new BinEdFileHandler();
         binaryDataFile.getComponentPanel().setContentData(new ByteArrayEditableData());
         customPanel = null;
         binaryEditPanel.add(binaryDataFile.getComponentPanel());
@@ -770,7 +769,7 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     }
 
     private void reloadTailData() {
-        tailDataBinaryDataFile = new BinEdFile();
+        tailDataBinaryDataFile = new BinEdFileHandler();
         tailDataBinaryDataFile.getComponentPanel().setContentData(new ByteArrayEditableData());
         binaryEditScrollPane.setViewportView(tailDataBinaryDataFile.getComponentPanel());
 

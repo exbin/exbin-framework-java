@@ -231,11 +231,10 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public BinaryEditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            EditorPreferences editorParameters = new EditorPreferences(application.getAppPreferences());
+            EditorPreferences editorPreferences = new EditorPreferences(application.getAppPreferences());
 
-            String deltaModeString = editorParameters.getMemoryMode();
-            BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(deltaModeString);
-            BinEdFile editorFile = new BinEdFile();
+            BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(editorPreferences.getMemoryMode());
+            BinEdFileHandler editorFile = new BinEdFileHandler();
             editorFile.setSegmentsRepository(new SegmentsRepository());
             editorFile.switchFileHandlingMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY);
             editorFile.newFile();
@@ -279,7 +278,7 @@ public class BinedModule implements XBApplicationModule {
             ((BinaryEditorHandler) editorProvider).setSegmentsRepository(new SegmentsRepository());
             editorProvider.newFile();
 
-            ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinEdFile file) -> {
+            ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinEdFileHandler file) -> {
                 BinEdComponentPanel panel = file.getComponentPanel();
                 panel.setApplication(application);
                 panel.setPopupMenu(createPopupMenu(editorProvider.getId(), editorProvider.getCodeArea()));

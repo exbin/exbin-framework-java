@@ -33,7 +33,7 @@ import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
-import org.exbin.framework.bined.BinEdFile;
+import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
@@ -57,10 +57,10 @@ import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorProvider, ClipboardActionsHandler, TextFontApi {
 
     private BinaryPanelInit binaryPanelInit = null;
-    private final List<BinEdFile> files = new ArrayList<>();
+    private final List<BinEdFileHandler> files = new ArrayList<>();
     private EditorViewHandling editorViewHandling = null;
     private SegmentsRepository segmentsRepository;
-    private BinEdFile activeFile = null;
+    private BinEdFileHandler activeFile = null;
     private int lastIndex = 0;
     private BinaryStatusApi binaryStatus = null;
     private TextEncodingStatusApi encodingStatus;
@@ -118,7 +118,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public void loadFromFile(URI fileUri, FileType fileType) {
-        BinEdFile createdFile = createNewFile();
+        BinEdFileHandler createdFile = createNewFile();
         createdFile.newFile();
         createdFile.loadFromFile(fileUri, fileType);
         editorViewHandling.updateEditorView(createdFile);
@@ -158,7 +158,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public void newFile() {
-        BinEdFile createdFile = createNewFile();
+        BinEdFileHandler createdFile = createNewFile();
         createdFile.newFile();
         activeFile = createdFile;
     }
@@ -192,8 +192,8 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
         this.segmentsRepository = segmentsRepository;
     }
 
-    private synchronized BinEdFile createNewFile() {
-        BinEdFile createdFile = new BinEdFile(lastIndex);
+    private synchronized BinEdFileHandler createNewFile() {
+        BinEdFileHandler createdFile = new BinEdFileHandler(lastIndex);
         createdFile.setSegmentsRepository(segmentsRepository);
         lastIndex++;
         files.add(createdFile);
@@ -321,8 +321,8 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public void setActiveEditor(EditorProvider editorProvider) {
-        if (editorProvider instanceof BinEdFile) {
-            BinEdFile newActiveFile = (BinEdFile) editorProvider;
+        if (editorProvider instanceof BinEdFileHandler) {
+            BinEdFileHandler newActiveFile = (BinEdFileHandler) editorProvider;
             activeFile = newActiveFile;
             // TODO newActiveFile.notifyListeners();
             notifyUndoChanged();
@@ -337,7 +337,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
 
     @Override
     public void closeFile(FileHandlerApi closedFile) {
-        files.remove((BinEdFile) closedFile);
+        files.remove((BinEdFileHandler) closedFile);
         editorViewHandling.removeEditorView((EditorProvider) closedFile);
     }
 
@@ -546,6 +546,6 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
      */
     public static interface BinaryPanelInit {
 
-        void init(BinEdFile binEdFile);
+        void init(BinEdFileHandler binEdFile);
     }
 }
