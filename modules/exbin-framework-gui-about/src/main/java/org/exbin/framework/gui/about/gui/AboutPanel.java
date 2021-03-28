@@ -20,7 +20,6 @@ import java.awt.Color;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -35,12 +34,11 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.xbup.plugin.XBModuleRecord;
 
 /**
  * Basic about panel.
  *
- * @version 0.2.1 2019/08/17
+ * @version 0.2.1 2021/03/28
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -51,6 +49,8 @@ public class AboutPanel extends javax.swing.JPanel {
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutPanel.class);
     private JComponent sideComponent = null;
     private boolean darkMode = false;
+    private final AboutModulesPanel aboutModulesPanel = new AboutModulesPanel();
+    private final AboutAuthorsPanel aboutAuthorsPanel = new AboutAuthorsPanel();
 
     public AboutPanel() {
         initComponents();
@@ -59,9 +59,7 @@ public class AboutPanel extends javax.swing.JPanel {
 
     private void init() {
         initComponents();
-        Color backgroundColor = getBackground();
-        int medium = (backgroundColor.getRed() + backgroundColor.getBlue() + backgroundColor.getGreen()) / 3;
-        darkMode = medium < 96;
+        darkMode = WindowUtils.isDarkUI();
         if (darkMode) {
             aboutHeaderPanel.setBackground(Color.BLACK);
             appTitleLabel.setForeground(Color.WHITE);
@@ -78,13 +76,9 @@ public class AboutPanel extends javax.swing.JPanel {
                     resourceBundle.getString("environmentTable.propertyColumn"), resourceBundle.getString("environmentTable.valueColumn")
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
-                false, false
-            };
-
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return false;
             }
         });
 
@@ -100,30 +94,8 @@ public class AboutPanel extends javax.swing.JPanel {
             tableModel.addRow(line);
         });
 
-        // Fill list of modules
-        modulesTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{
-                    resourceBundle.getString("modulesTable.moduleNameColumn"), resourceBundle.getString("modulesTable.moduleDescriptionColumn")
-                }
-        ) {
-            Class[] types = new Class[]{
-                java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean[]{
-                false, false
-            };
-
-            @Override
-            public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
-            }
-
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
-            }
-        });
+        productTabbedPane.insertTab("Authors", null, aboutAuthorsPanel, null, 1);
+        productTabbedPane.insertTab("Modules", null, aboutModulesPanel, null, 3);
     }
 
     /**
@@ -149,15 +121,9 @@ public class AboutPanel extends javax.swing.JPanel {
         licenseTextField = new javax.swing.JTextField();
         javax.swing.JLabel homepageLabel = new javax.swing.JLabel();
         appHomepageLabel = new javax.swing.JLabel();
-        authorsPanel = new javax.swing.JPanel();
-        authorsScrollPane = new javax.swing.JScrollPane();
-        authorsTextArea = new javax.swing.JTextArea();
         licensePanel = new javax.swing.JPanel();
         licenseScrollPane = new javax.swing.JScrollPane();
         licenseEditorPane = new javax.swing.JEditorPane();
-        modulesPanel = new javax.swing.JPanel();
-        modulesScrollPane = new javax.swing.JScrollPane();
-        modulesTable = new javax.swing.JTable();
         environmentPanel = new javax.swing.JPanel();
         environmentScrollPane = new javax.swing.JScrollPane();
         environmentTable = new javax.swing.JTable();
@@ -281,22 +247,6 @@ public class AboutPanel extends javax.swing.JPanel {
 
         productTabbedPane.addTab("Application", applicationPanel);
 
-        authorsTextArea.setEditable(false);
-        authorsScrollPane.setViewportView(authorsTextArea);
-
-        javax.swing.GroupLayout authorsPanelLayout = new javax.swing.GroupLayout(authorsPanel);
-        authorsPanel.setLayout(authorsPanelLayout);
-        authorsPanelLayout.setHorizontalGroup(
-            authorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(authorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
-        );
-        authorsPanelLayout.setVerticalGroup(
-            authorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(authorsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
-        );
-
-        productTabbedPane.addTab("Authors", authorsPanel);
-
         licenseEditorPane.setEditable(false);
         licenseEditorPane.setContentType("text/html"); // NOI18N
         licenseEditorPane.setText("<html>   <head>    </head>   <body>     <p style=\"margin-top: 0\"></p>   </body> </html> ");
@@ -314,23 +264,6 @@ public class AboutPanel extends javax.swing.JPanel {
         );
 
         productTabbedPane.addTab("License", licensePanel);
-
-        modulesPanel.setEnabled(false);
-
-        modulesScrollPane.setViewportView(modulesTable);
-
-        javax.swing.GroupLayout modulesPanelLayout = new javax.swing.GroupLayout(modulesPanel);
-        modulesPanel.setLayout(modulesPanelLayout);
-        modulesPanelLayout.setHorizontalGroup(
-            modulesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(modulesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
-        );
-        modulesPanelLayout.setVerticalGroup(
-            modulesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(modulesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
-        );
-
-        productTabbedPane.addTab("Modules", modulesPanel);
 
         environmentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -432,9 +365,6 @@ public class AboutPanel extends javax.swing.JPanel {
     private javax.swing.JLabel appHomepageLabel;
     private javax.swing.JLabel appTitleLabel;
     private javax.swing.JPanel applicationPanel;
-    private javax.swing.JPanel authorsPanel;
-    private javax.swing.JScrollPane authorsScrollPane;
-    private javax.swing.JTextArea authorsTextArea;
     private javax.swing.JPanel environmentPanel;
     private javax.swing.JScrollPane environmentScrollPane;
     private javax.swing.JTable environmentTable;
@@ -444,9 +374,6 @@ public class AboutPanel extends javax.swing.JPanel {
     private javax.swing.JPanel licensePanel;
     private javax.swing.JScrollPane licenseScrollPane;
     private javax.swing.JTextField licenseTextField;
-    private javax.swing.JPanel modulesPanel;
-    private javax.swing.JScrollPane modulesScrollPane;
-    private javax.swing.JTable modulesTable;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTabbedPane productTabbedPane;
     private javax.swing.JTextField vendorTextField;
@@ -468,22 +395,12 @@ public class AboutPanel extends javax.swing.JPanel {
         this.application = application;
         if (application != null) {
             appBundle = application.getAppBundle();
-
-            DefaultTableModel modulesTableModel = (DefaultTableModel) modulesTable.getModel();
-            List<XBModuleRecord> modulesList = application.getModuleRepository().getModulesList();
-            for (XBModuleRecord moduleRecord : modulesList) {
-                String moduleName;
-                if (moduleRecord.getName().isEmpty()) {
-                    moduleName = moduleRecord.getModuleId();
-                } else {
-                    moduleName = moduleRecord.getName();
-                }
-                String[] newRow = {moduleName, moduleRecord.getDescription()};
-                modulesTableModel.addRow(newRow);
-            }
         } else {
             appBundle = resourceBundle;
         }
+
+        aboutModulesPanel.setApplication(application);
+        aboutAuthorsPanel.setApplication(application);
 
         // Load license
         try {
@@ -505,7 +422,6 @@ public class AboutPanel extends javax.swing.JPanel {
         vendorTextField.setText(appBundle.getString("Application.vendor"));
         licenseTextField.setText(appBundle.getString("Application.license"));
         appHomepageLabel.setText(appBundle.getString("Application.homepage"));
-        authorsTextArea.setText(appBundle.getString("Application.authors"));
         String aboutImagePath = appBundle.getString("Application.aboutImage");
         if (aboutImagePath != null) {
             imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(appBundle.getString("Application.aboutImage"))));

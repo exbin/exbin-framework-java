@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Icon;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Simple header panel.
@@ -45,9 +46,7 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
     public WindowHeaderPanel() {
         initComponents();
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
-        Color backgroundColor = textPanel.getBackground();
-        int medium = (backgroundColor.getRed() + backgroundColor.getBlue() + backgroundColor.getGreen()) / 3;
-        darkMode = medium < 96;
+        darkMode = WindowUtils.isDarkUI();
         if (darkMode) {
             WindowHeaderPanel.this.setBackground(Color.BLACK);
             titleLabel.setForeground(Color.WHITE);

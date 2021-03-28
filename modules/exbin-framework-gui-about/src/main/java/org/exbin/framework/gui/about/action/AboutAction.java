@@ -17,11 +17,8 @@ package org.exbin.framework.gui.about.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.util.ResourceBundle;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;

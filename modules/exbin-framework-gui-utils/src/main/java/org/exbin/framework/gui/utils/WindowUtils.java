@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.utils;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dialog;
@@ -51,6 +52,7 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.gui.utils.handler.OkCancelService;
@@ -205,6 +207,16 @@ public class WindowUtils {
 
     public static void setLookAndFeel(LookAndFeel lookAndFeel) {
         WindowUtils.lookAndFeel = lookAndFeel;
+    }
+
+    public static boolean isDarkUI() {
+        Color backgroundColor = UIManager.getColor("TextArea.background");
+        if (backgroundColor == null) {
+            return false;
+        }
+
+        int medium = (backgroundColor.getRed() + backgroundColor.getBlue() + backgroundColor.getGreen()) / 3;
+        return medium < 96;
     }
 
     public static void closeWindow(Window window) {
