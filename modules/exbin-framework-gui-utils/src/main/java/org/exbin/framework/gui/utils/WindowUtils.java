@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -415,9 +416,14 @@ public class WindowUtils {
         if (position.isMaximized()) {
             window.setLocation((int) absoluteX, (int) absoluteY);
             if (window instanceof Frame) {
-                ((Frame) window).setExtendedState(JFrame.MAXIMIZED_BOTH);
+                ((Frame) window).setExtendedState(Frame.MAXIMIZED_BOTH);
             } else {
-                // TODO if (window instanceof JDialog)
+                if (window instanceof Window) {
+                    // TODO 
+//                    final EventQueue eventQueue = AccessController.doPrivileged(
+//                            (PrivilegedAction<EventQueue>) Toolkit.getDefaultToolkit()::getSystemEventQueue);
+//                    eventQueue.postEvent(new AWTEvent(window, WindowEvent.WINDOW_ICONIFIED) {});
+                }
             }
         } else {
             window.setBounds((int) absoluteX, (int) absoluteY, (int) widthX, (int) widthY);

@@ -260,17 +260,17 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
     }
 
     @Override
-    public String getWindowTitle(String frameTitle) {
+    public String getWindowTitle(String windowTitle) {
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastIndexOf = path.lastIndexOf("/");
             if (lastIndexOf < 0) {
-                return path + " - " + frameTitle;
+                return path + " - " + windowTitle;
             }
-            return path.substring(lastIndexOf + 1) + " - " + frameTitle;
+            return path.substring(lastIndexOf + 1) + " - " + windowTitle;
         }
 
-        return frameTitle;
+        return windowTitle;
     }
 
     public void saveFile() {

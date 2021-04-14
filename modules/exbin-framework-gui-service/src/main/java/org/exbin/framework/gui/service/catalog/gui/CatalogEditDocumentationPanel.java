@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import javax.annotation.Nullable;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -99,9 +100,9 @@ public class CatalogEditDocumentationPanel extends javax.swing.JPanel {
         return documentation;
     }
 
-    public void setDocumentation(String documentation) {
+    public void setDocumentation(@Nullable String documentation) {
         this.documentation = documentation;
-        mainPanel.setCurrentDocumentContent(documentation);
+        mainPanel.setCurrentDocumentContent(documentation == null ? "<html><body></body></html>" : documentation);
     }
 
     private static TextResources createResources() {

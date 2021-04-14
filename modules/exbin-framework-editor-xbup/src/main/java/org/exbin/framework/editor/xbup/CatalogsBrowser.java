@@ -15,41 +15,102 @@
  */
 package org.exbin.framework.editor.xbup;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.xbup.gui.AddCatalogPanel;
 import org.exbin.framework.editor.xbup.gui.CatalogEditorWrapperPanel;
 import org.exbin.framework.editor.xbup.gui.CatalogsBrowserPanel;
-import org.exbin.framework.gui.component.api.ActionsProvider;
-import org.exbin.framework.gui.component.api.toolbar.SideToolBar;
+import org.exbin.framework.gui.component.DefaultEditItemActions;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
+import org.exbin.framework.gui.component.api.toolbar.EditItemActionsUpdateListener;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
+import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
  * Catalog browser.
  *
- * @version 0.2.1 2020/07/19
+ * @version 0.2.1 2021/04/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CatalogsBrowser {
 
     private final CatalogsBrowserPanel browserPanel;
-    private final BrowserActions actions;
+    private final DefaultEditItemActions actions;
     private XBApplication application;
     private XBACatalog catalog;
 
     public CatalogsBrowser() {
         browserPanel = new CatalogsBrowserPanel();
-        actions = new BrowserActions();
+        actions = new DefaultEditItemActions();
+        actions.setEditItemActionsHandler(new EditItemActionsHandler() {
+            @Override
+            public void performAddItem() {
+                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
+                AddCatalogPanel panel = new AddCatalogPanel();
+                panel.setApplication(application);
+                panel.setCatalog(catalog);
+                DefaultControlPanel controlPanel = new DefaultControlPanel();
+                JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+                final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                controlPanel.setHandler((actionType) -> {
+                    if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                    dialog.close();
+                    dialog.dispose();
+                });
+                frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+                dialog.showCentered(browserPanel);
+            }
+
+            @Override
+            public void performEditItem() {
+                browserPanel.getSelectedItem();
+                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
+                CatalogEditorWrapperPanel panel = new CatalogEditorWrapperPanel();
+                panel.setApplication(application);
+                panel.setMenuManagement(managerModule.getDefaultMenuManagement());
+                panel.setCatalog(catalog);
+                    CloseControlPanel controlPanel = new CloseControlPanel();
+                JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+                final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                    controlPanel.setHandler(() -> {
+                    dialog.close();
+                    dialog.dispose();
+                });
+                frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+                dialog.showCentered(browserPanel);
+            }
+
+            @Override
+            public void performDeleteItem() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public boolean isSelection() {
+                return true;
+            }
+
+            @Override
+            public boolean isEditable() {
+                return true;
+            }
+
+            @Override
+            public void setUpdateListener(EditItemActionsUpdateListener updateListener) {
+            }
+        });
         init();
     }
 
@@ -70,59 +131,5 @@ public class CatalogsBrowser {
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
         browserPanel.setCatalog(catalog);
-    }
-
-    private final class BrowserActions implements ActionsProvider {
-
-        private final Action createCatalog;
-        private final Action editCatalog;
-        private final Action updateCatalog;
-
-        public BrowserActions() {
-            createCatalog = new AbstractAction("Create") {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-            };
-            createCatalog.setEnabled(false);
-
-            editCatalog = new AbstractAction("Edit") {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    browserPanel.getSelectedItem();
-                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
-                    CatalogEditorWrapperPanel panel = new CatalogEditorWrapperPanel();
-                    panel.setApplication(application);
-                    panel.setMenuManagement(managerModule.getDefaultMenuManagement());
-                    panel.setCatalog(catalog);
-                    CloseControlPanel controlPanel = new CloseControlPanel();
-                    JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-                    final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    controlPanel.setHandler(() -> {
-                        dialog.close();
-                        dialog.dispose();
-                    });
-                    frameModule.setDialogTitle(dialog, panel.getResourceBundle());
-                    dialog.showCentered((Component) e.getSource());
-                }
-            };
-            
-            updateCatalog = new AbstractAction("Update") {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-            };
-            updateCatalog.setEnabled(false);
-        }
-
-        @Override
-        public void registerActions(SideToolBar sideToolBar) {
-            sideToolBar.addAction(createCatalog);
-            sideToolBar.addAction(editCatalog);
-            sideToolBar.addAction(updateCatalog);
-        }
     }
 }

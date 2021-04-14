@@ -39,6 +39,10 @@ public class DefaultEditItemActions implements EditItemActions {
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiComponentModule.class);
     private EditItemActionsHandler actionsHandler = null;
 
+    public static final String ADD_ITEM_ACTION = "addItemAction";
+    public static final String EDIT_ITEM_ACTION = "editItemAction";
+    public static final String DELETE_ITEM_ACTION = "deleteItemAction";
+
     private Action addItemAction = null;
     private Action editItemAction = null;
     private Action deleteItemAction = null;
@@ -61,7 +65,7 @@ public class DefaultEditItemActions implements EditItemActions {
                     actionsHandler.performAddItem();
                 }
             };
-            ActionUtils.setupAction(addItemAction, resourceBundle, "addItemAction");
+            ActionUtils.setupAction(addItemAction, resourceBundle, ADD_ITEM_ACTION);
             addItemAction.setEnabled(false);
         }
         return addItemAction;
@@ -77,7 +81,7 @@ public class DefaultEditItemActions implements EditItemActions {
                     actionsHandler.performEditItem();
                 }
             };
-            ActionUtils.setupAction(editItemAction, resourceBundle, "editItemAction");
+            ActionUtils.setupAction(editItemAction, resourceBundle, EDIT_ITEM_ACTION);
             editItemAction.setEnabled(false);
         }
         return editItemAction;
@@ -93,7 +97,7 @@ public class DefaultEditItemActions implements EditItemActions {
                     actionsHandler.performDeleteItem();
                 }
             };
-            ActionUtils.setupAction(deleteItemAction, resourceBundle, "deleteItemAction");
+            ActionUtils.setupAction(deleteItemAction, resourceBundle, DELETE_ITEM_ACTION);
             deleteItemAction.setEnabled(false);
         }
         return deleteItemAction;

@@ -27,7 +27,7 @@ You can either download and install gradle or use gradlew or gradlew.bat scripts
 
 Build commands: "gradle build" and "gradle distZip"
 
-Dependecies are either downloaded or loaded from local maven repository.
+Currently it might be necessary to use local Maven - Manually download all dependecies from GitHub (clone repositories from github.com/exbin - see. deps directory for names) and run "gradle publish" on each of them.
 
 License
 -------
