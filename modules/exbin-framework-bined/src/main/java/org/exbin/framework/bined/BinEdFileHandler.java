@@ -33,6 +33,7 @@ import java.nio.charset.Charset;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -193,6 +194,7 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
         data.saveToStream(stream);
     }
 
+    @Nullable
     @Override
     public URI getFileUri() {
         return fileUri;
@@ -216,6 +218,7 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
         return id;
     }
 
+    @Nullable
     @Override
     public String getFileName() {
         if (fileUri != null) {
@@ -227,6 +230,7 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
         return null;
     }
 
+    @Nullable
     @Override
     public FileType getFileType() {
         return null;

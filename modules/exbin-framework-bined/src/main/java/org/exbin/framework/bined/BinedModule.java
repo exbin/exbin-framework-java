@@ -1447,7 +1447,7 @@ public class BinedModule implements XBApplicationModule {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
         actionModule.registerMenu(CODE_AREA_POPUP_MENU_ID + menuPostfix, MODULE_ID);
 
-        BasicCodeAreaZone positionZone = codeArea.getPositionZone(x, y);
+        BasicCodeAreaZone positionZone = codeArea.getPainter().getPositionZone(x, y);
 
         final JPopupMenu popupMenu = new JPopupMenu();
         switch (positionZone) {
