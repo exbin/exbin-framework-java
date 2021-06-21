@@ -40,6 +40,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorPanel.class);
+    private static final String RESOURCE_COLOR_CHOOSER_TITLE = "JColorChooser.title";
     private TextColorService textColorService;
 
     public TextColorPanel() {
@@ -477,7 +478,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
 
     private void selectTextColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTextColorButtonActionPerformed
         colorChooser.setColor(textColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString(RESOURCE_COLOR_CHOOSER_TITLE), true, colorChooser, (ActionEvent e) -> {
             setTextColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
@@ -485,7 +486,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
 
     private void selectTextBackgroundColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTextBackgroundColorButtonActionPerformed
         colorChooser.setColor(textBackgroundColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString(RESOURCE_COLOR_CHOOSER_TITLE), true, colorChooser, (ActionEvent e) -> {
             setTextBackgroundColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
@@ -493,7 +494,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
 
     private void selectSelectionTextColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectSelectionTextColorButtonActionPerformed
         colorChooser.setColor(selectionTextColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString(RESOURCE_COLOR_CHOOSER_TITLE), true, colorChooser, (ActionEvent e) -> {
             setSelectionTextColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
@@ -501,7 +502,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
 
     private void selectSelectionBackgroundColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectSelectionBackgroundColorButtonActionPerformed
         colorChooser.setColor(selectionBackgroundColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString(RESOURCE_COLOR_CHOOSER_TITLE), true, colorChooser, (ActionEvent e) -> {
             setSelectionBackgroundColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
@@ -509,7 +510,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
 
     private void selectFoundBackgroundColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFoundBackgroundColorButtonActionPerformed
         colorChooser.setColor(foundBackgroundColorPanel.getBackground());
-        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString("JColorChooser.title"), true, colorChooser, (ActionEvent e) -> {
+        JDialog dialog = JColorChooser.createDialog(this, resourceBundle.getString(RESOURCE_COLOR_CHOOSER_TITLE), true, colorChooser, (ActionEvent e) -> {
             setFoundBackgroundColor(colorChooser.getColor());
         }, null);
         dialog.setVisible(true);
@@ -570,6 +571,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable
         setFoundBackgroundColor(colors[4]);
     }
 
+    @Nonnull
     public Color[] getArrayFromColors() {
         Color[] colors = new Color[5];
         colors[0] = getTextColor();

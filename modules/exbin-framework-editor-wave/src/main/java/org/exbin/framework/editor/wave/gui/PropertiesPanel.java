@@ -16,6 +16,7 @@
 package org.exbin.framework.editor.wave.gui;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.sound.sampled.AudioFormat;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -149,8 +150,8 @@ public class PropertiesPanel extends javax.swing.JPanel {
 
     public void setDocument(AudioPanel panel) {
         if (!panel.isEmpty()) {
-            URI fileUri = panel.getFileUri();
-            fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
+            Optional<URI> fileUri = panel.getFileUri();
+            fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
             waveLengthTextField.setText(panel.getWaveLength());
             AudioFormat waveFormat = panel.getWaveFormat();
             sampleRateTextField.setText(String.valueOf((long) waveFormat.getSampleRate()));

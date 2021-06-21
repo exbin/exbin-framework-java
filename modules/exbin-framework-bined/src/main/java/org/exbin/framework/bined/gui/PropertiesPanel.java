@@ -16,6 +16,7 @@
 package org.exbin.framework.bined.gui;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.swing.DefaultListModel;
 import org.exbin.auxiliary.paged_data.delta.DataSegment;
@@ -145,9 +146,9 @@ public class PropertiesPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void setEditorProvider(BinaryEditorProvider editorProvider) {
-        URI fileUri = editorProvider.getFileUri();
+        Optional<URI> fileUri = editorProvider.getFileUri();
         BinEdComponentPanel panel = editorProvider.getComponentPanel();
-        fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
+        fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
         ExtCodeArea codeArea = panel.getCodeArea();
         fileSizeTextField.setText(Long.toString(codeArea.getDataSize()));
 

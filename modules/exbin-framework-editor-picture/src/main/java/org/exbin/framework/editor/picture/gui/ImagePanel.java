@@ -48,8 +48,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -442,25 +444,28 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         }
     }
 
+    @Nonnull
     @Override
-    public URI getFileUri() {
-        return fileUri;
+    public Optional<URI> getFileUri() {
+        return Optional.ofNullable(fileUri);
     }
 
+    @Nonnull
     @Override
-    public String getFileName() {
+    public Optional<String> getFileName() {
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastSegment = path.lastIndexOf("/");
-            return lastSegment < 0 ? path : path.substring(lastSegment + 1);
+            return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
         }
 
-        return null;
+        return Optional.empty();
     }
 
+    @Nonnull
     @Override
-    public FileType getFileType() {
-        return fileType;
+    public Optional<FileType> getFileType() {
+        return Optional.ofNullable(fileType);
     }
 
     /**

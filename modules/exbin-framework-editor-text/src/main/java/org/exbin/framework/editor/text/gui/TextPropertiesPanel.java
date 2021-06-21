@@ -21,6 +21,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -177,8 +178,8 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
     }
 
     public void setDocument(TextPanel panel) {
-        URI fileUri = panel.getFileUri();
-        fileNameTextField.setText(fileUri == null ? "" : fileUri.toString());
+        Optional<URI> fileUri = panel.getFileUri();
+        fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
         Document document = panel.getDocument();
         linesCountTextField.setText(Integer.toString(panel.getLineCount()));
         charCountTextField.setText(Integer.toString(document.getLength()));

@@ -31,8 +31,10 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
@@ -194,10 +196,10 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
         data.saveToStream(stream);
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public URI getFileUri() {
-        return fileUri;
+    public Optional<URI> getFileUri() {
+        return Optional.ofNullable(fileUri);
     }
 
     @Override
@@ -218,22 +220,22 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
         return id;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getFileName() {
+    public Optional<String> getFileName() {
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastSegment = path.lastIndexOf("/");
-            return lastSegment < 0 ? path : path.substring(lastSegment + 1);
+            return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
         }
 
-        return null;
+        return Optional.empty();
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public FileType getFileType() {
-        return null;
+    public Optional<FileType> getFileType() {
+        return Optional.empty();
     }
 
     @Override

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -284,11 +285,11 @@ public class FileHandlingActions implements FileHandlingActionsApi {
 
     public void actionFileSave() {
         if (fileHandler != null) {
-            URI fileUri = fileHandler.getFileUri();
-            if (fileUri == null) {
-                actionFileSaveAs();
+            Optional<URI> fileUri = fileHandler.getFileUri();
+            if (fileUri.isPresent()) {
+                fileHandler.saveToFile(fileUri.get(), fileHandler.getFileType().get());
             } else {
-                fileHandler.saveToFile(fileUri, fileHandler.getFileType());
+                actionFileSaveAs();
             }
         }
     }

@@ -22,6 +22,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
@@ -136,18 +137,21 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
         return activeFile.getId();
     }
 
+    @Nonnull
     @Override
-    public URI getFileUri() {
+    public Optional<URI> getFileUri() {
         return activeFile.getFileUri();
     }
 
+    @Nonnull
     @Override
-    public String getFileName() {
+    public Optional<String> getFileName() {
         return activeFile.getFileName();
     }
 
+    @Nonnull
     @Override
-    public FileType getFileType() {
+    public Optional<FileType> getFileType() {
         return activeFile.getFileType();
     }
 

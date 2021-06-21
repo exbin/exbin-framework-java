@@ -18,6 +18,7 @@ package org.exbin.framework.gui.docking;
 import bibliothek.gui.dock.common.DefaultMultipleCDockable;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.util.Optional;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
@@ -60,10 +61,8 @@ public class EditorCDockable extends DefaultMultipleCDockable {
     public void update() {
         if (content instanceof EditorProvider) {
             EditorProvider editorProvider = ((EditorProvider) content);
-            String name = editorProvider.getFileName();
-            if (name == null) {
-                name = UNDEFINED_NAME;
-            }
+            Optional<String> fileName = editorProvider.getFileName();
+            String name = fileName.isEmpty() ? UNDEFINED_NAME : fileName.get();
             if (editorProvider.isModified()) {
                 name += " *";
             }
