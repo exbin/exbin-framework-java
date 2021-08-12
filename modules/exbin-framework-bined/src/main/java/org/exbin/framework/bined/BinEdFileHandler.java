@@ -35,7 +35,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -178,6 +177,7 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
 
         EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) contentData);
         data.loadFromStream(stream);
+        componentPanel.setContentData(contentData);
     }
 
     public void loadFromStream(InputStream stream, long dataSize) throws IOException {
@@ -189,6 +189,7 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
         EditableBinaryData data = Objects.requireNonNull((EditableBinaryData) contentData);
         data.clear();
         data.insert(0, stream, dataSize);
+        componentPanel.setContentData(contentData);
     }
 
     public void saveToStream(OutputStream stream) throws IOException {
