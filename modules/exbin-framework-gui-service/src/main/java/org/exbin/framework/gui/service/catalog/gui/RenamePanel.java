@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Name editation dialog.
+ * Name edit dialog.
  *
  * @version 0.2.0 2020/07/26
  * @author ExBin Project (http://exbin.org)

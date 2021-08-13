@@ -35,11 +35,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import org.exbin.bined.CaretMovedListener;
 import org.exbin.bined.CodeAreaCaretPosition;
-import org.exbin.bined.EditationMode;
-import org.exbin.bined.EditationModeChangedListener;
-import org.exbin.bined.EditationOperation;
+import org.exbin.bined.EditMode;
+import org.exbin.bined.EditOperation;
 import org.exbin.bined.SelectionRange;
-import org.exbin.bined.capability.EditationModeCapable;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.highlight.swing.extended.ExtendedHighlightNonAsciiCodeAreaPainter;
@@ -66,6 +64,8 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 import org.exbin.framework.gui.editor.api.EditorProvider.EditorModificationListener;
 import org.exbin.xbup.core.util.StringUtils;
+import org.exbin.bined.EditModeChangedListener;
+import org.exbin.bined.capability.EditModeCapable;
 
 /**
  * Binary editor panel.
@@ -403,8 +403,8 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         codeArea.addCaretMovedListener(listener);
     }
 
-    public void attachEditationModeChangedListener(EditationModeChangedListener listener) {
-        codeArea.addEditationModeChangedListener(listener);
+    public void attachEditModeChangedListener(EditModeChangedListener listener) {
+        codeArea.addEditModeChangedListener(listener);
     }
 
     @Override
@@ -442,19 +442,19 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         attachCaretListener((CodeAreaCaretPosition caretPosition) -> {
             binaryStatus.setCursorPosition(caretPosition);
         });
-        codeArea.addSelectionChangedListener(selectionRange -> {
-            binaryStatus.setSelectionRange(selectionRange);
+        codeArea.addSelectionChangedListener(() -> {
+            binaryStatus.setSelectionRange(codeArea.getSelection());
         });
 
-        attachEditationModeChangedListener((EditationMode mode, EditationOperation operation) -> {
-            binaryStatus.setEditationMode(mode, operation);
+        attachEditModeChangedListener((EditMode mode, EditOperation operation) -> {
+            binaryStatus.setEditMode(mode, operation);
         });
-        binaryStatus.setEditationMode(codeArea.getEditationMode(), codeArea.getActiveOperation());
+        binaryStatus.setEditMode(codeArea.getEditMode(), codeArea.getActiveOperation());
 
         binaryStatus.setControlHandler(new BinaryStatusApi.StatusControlHandler() {
             @Override
-            public void changeEditationOperation(EditationOperation editationOperation) {
-                codeArea.setEditationOperation(editationOperation);
+            public void changeEditOperation(EditOperation editOperation) {
+                codeArea.setEditOperation(editOperation);
             }
 
             @Override
@@ -552,7 +552,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
 
     private void updateCurrentMemoryMode() {
         BinaryStatusApi.MemoryMode newMemoryMode = BinaryStatusApi.MemoryMode.RAM_MEMORY;
-        if (((EditationModeCapable) codeArea).getEditationMode() == EditationMode.READ_ONLY) {
+        if (((EditModeCapable) codeArea).getEditMode() == EditMode.READ_ONLY) {
             newMemoryMode = BinaryStatusApi.MemoryMode.READ_ONLY;
         } else if (codeArea.getContentData() instanceof DeltaDocument) {
             newMemoryMode = BinaryStatusApi.MemoryMode.DELTA_MODE;

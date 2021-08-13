@@ -27,7 +27,7 @@ import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCSpec;
 
 /**
- * XBManager catalog item editation panel.
+ * XBManager catalog item edit panel.
  *
  * @version 0.2.1 2020/07/22
  * @author ExBin Project (http://exbin.org)

@@ -30,7 +30,7 @@ import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Panel with editation toolbar.
+ * Panel with edit toolbar.
  *
  * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)

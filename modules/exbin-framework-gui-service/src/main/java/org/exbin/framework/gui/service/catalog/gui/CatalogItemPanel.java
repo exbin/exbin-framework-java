@@ -49,7 +49,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 
 /**
- * Panel for basic XBItem viewing/editation.
+ * Panel for basic XBItem viewing/edit.
  *
  * @version 0.2.0 2016/02/01
  * @author ExBin Project (http://exbin.org)

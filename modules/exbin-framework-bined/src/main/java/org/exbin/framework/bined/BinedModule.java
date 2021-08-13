@@ -712,7 +712,7 @@ public class BinedModule implements XBApplicationModule {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
-                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Editation Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
@@ -742,7 +742,7 @@ public class BinedModule implements XBApplicationModule {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
-                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Editation Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
@@ -772,7 +772,7 @@ public class BinedModule implements XBApplicationModule {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
-                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Editation Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
@@ -850,7 +850,7 @@ public class BinedModule implements XBApplicationModule {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
-                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Editation Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
@@ -880,7 +880,7 @@ public class BinedModule implements XBApplicationModule {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
-                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Editation Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
@@ -910,7 +910,7 @@ public class BinedModule implements XBApplicationModule {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
-                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Editation Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
@@ -988,7 +988,7 @@ public class BinedModule implements XBApplicationModule {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
-                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Editation Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
@@ -1017,7 +1017,7 @@ public class BinedModule implements XBApplicationModule {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
-                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Editation Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
@@ -1047,7 +1047,7 @@ public class BinedModule implements XBApplicationModule {
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                             if (!isValidProfileName(namedProfilePanel.getProfileName())) {
-                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Editation Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 

@@ -28,7 +28,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
- * Item editation default action set.
+ * Item edit default action set.
  *
  * @version 0.2.0 2016/03/22
  * @author ExBin Project (http://exbin.org)

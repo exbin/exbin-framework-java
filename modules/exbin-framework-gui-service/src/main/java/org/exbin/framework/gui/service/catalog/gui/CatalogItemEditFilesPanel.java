@@ -44,7 +44,7 @@ import org.exbin.xbup.core.catalog.base.XBCXFile;
 import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 
 /**
- * Catalog item files editation panel.
+ * Catalog item files edit panel.
  *
  * @version 0.2.0 2020/07/26
  * @author ExBin Project (http://exbin.org)
