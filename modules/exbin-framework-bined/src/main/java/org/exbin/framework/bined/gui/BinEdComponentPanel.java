@@ -116,7 +116,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         codeArea = new ExtCodeArea();
         codeArea.setPainter(new ExtendedHighlightNonAsciiCodeAreaPainter(codeArea));
         codeArea.setCodeFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        codeArea.addSelectionChangedListener((SelectionRange selection) -> {
+        codeArea.addSelectionChangedListener(() -> {
             updateClipboardActionsStatus();
         });
 
