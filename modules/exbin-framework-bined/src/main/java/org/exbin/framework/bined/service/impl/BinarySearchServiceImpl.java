@@ -29,6 +29,7 @@ import org.exbin.framework.bined.SearchParameters;
 import org.exbin.framework.bined.service.BinarySearchService;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.EditableBinaryData;
+import org.exbin.bined.CodeAreaUtils;
 
 /**
  * Binary search service.
@@ -70,7 +71,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
                     break;
                 }
                 default:
-                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
+                    throw CodeAreaUtils.getInvalidTypeException(searchParameters.getSearchDirection());
             }
         }
         searchParameters.setStartPosition(position);
@@ -85,7 +86,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
                 break;
             }
             default:
-                throw new IllegalStateException("Unexpected search mode " + condition.getSearchMode().name());
+                throw CodeAreaUtils.getInvalidTypeException(condition.getSearchMode());
         }
     }
 
@@ -215,7 +216,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
                     break;
                 }
                 default:
-                    throw new IllegalStateException("Illegal search type " + searchParameters.getSearchDirection().name());
+                    throw CodeAreaUtils.getInvalidTypeException(searchParameters.getSearchDirection());
             }
         }
 

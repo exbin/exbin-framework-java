@@ -109,7 +109,7 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
                 break;
             }
             default:
-                throw new IllegalStateException("Unexpected code type " + cursorPositionFormat.getCodeType());
+                throw CodeAreaUtils.getInvalidTypeException(cursorPositionFormat.getCodeType());
         }
         cursorPositionShowOffsetCheckBoxMenuItem.setSelected(cursorPositionFormat.isShowOffset());
 
@@ -127,7 +127,7 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
                 break;
             }
             default:
-                throw new IllegalStateException("Unexpected code type " + documentSizeFormat.getCodeType());
+                throw CodeAreaUtils.getInvalidTypeException(documentSizeFormat.getCodeType());
         }
         documentSizeShowRelativeCheckBoxMenuItem.setSelected(documentSizeFormat.isShowRelative());
     }
@@ -638,7 +638,7 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
                         break;
                     }
                     default:
-                        throw new IllegalStateException("Unexpected edit operation " + editOperation.name());
+                        throw CodeAreaUtils.getInvalidTypeException(editOperation);
                 }
                 break;
             }
@@ -647,7 +647,7 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
                 break;
             }
             default:
-                throw new IllegalStateException("Unexpected edit mode " + editMode.name());
+                throw CodeAreaUtils.getInvalidTypeException(editMode);
         }
     }
 
@@ -787,7 +787,7 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
                 break;
             }
             default:
-                throw new IllegalStateException("Unexpected code type " + codeType.name());
+                throw CodeAreaUtils.getInvalidTypeException(codeType);
         }
 
         long remainder = value > 0 ? value : -value;

@@ -23,6 +23,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JPopupMenu;
+import org.exbin.bined.CodeAreaUtils;
 import org.exbin.bined.CodeType;
 import org.exbin.bined.capability.CodeTypeCapable;
 import org.exbin.framework.api.XBApplication;
@@ -159,7 +160,7 @@ public class CodeTypeHandler {
                 break;
             }
             default:
-                throw new IllegalStateException("Unexpected code tyoe " + codeType.name());
+                throw CodeAreaUtils.getInvalidTypeException(codeType);
         }
         BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
         ((CodeTypeCapable) activePanel.getCodeArea()).setCodeType(codeType);

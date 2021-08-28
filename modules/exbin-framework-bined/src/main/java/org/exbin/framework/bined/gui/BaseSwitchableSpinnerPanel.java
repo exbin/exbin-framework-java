@@ -168,7 +168,7 @@ public class BaseSwitchableSpinnerPanel extends javax.swing.JPanel {
                 break;
             }
             default:
-                throw new IllegalStateException("Unexpected position type " + positionCodeType.name());
+                throw CodeAreaUtils.getInvalidTypeException(positionCodeType);
         }
     }//GEN-LAST:event_baseSwitchButtonActionPerformed
 
