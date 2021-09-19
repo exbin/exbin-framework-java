@@ -143,7 +143,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
             ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch firstMatch = Objects.requireNonNull(painter.getCurrentMatch());
             codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
         }
-        searchStatusListener.setStatus(new FoundMatches(foundMatches.size(), 0));
+        searchStatusListener.setStatus(new FoundMatches(foundMatches.size(), foundMatches.isEmpty() ? -1 : 0));
         codeArea.repaint();
     }
 
@@ -226,7 +226,7 @@ public class BinarySearchServiceImpl implements BinarySearchService {
             ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch firstMatch = painter.getCurrentMatch();
             codeArea.revealPosition(firstMatch.getPosition(), 0, codeArea.getActiveSection());
         }
-        searchStatusListener.setStatus(new FoundMatches(foundMatches.size(), 0));
+        searchStatusListener.setStatus(new FoundMatches(foundMatches.size(), foundMatches.isEmpty() ? -1 : 0));
         codeArea.repaint();
     }
 
