@@ -28,7 +28,7 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
 /**
  * Layout profiles options panel.
  *
- * @version 0.2.1 2019/08/20
+ * @version 0.2.1 2021/09/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault

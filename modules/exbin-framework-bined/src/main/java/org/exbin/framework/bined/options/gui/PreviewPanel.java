@@ -43,11 +43,10 @@ public class PreviewPanel extends javax.swing.JPanel {
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(PreviewPanel.class);
 
     private ExtCodeArea codeArea;
-    private PreviewType previewType = PreviewType.DEFAULT;
+    private final PreviewType previewType;
 
     public PreviewPanel() {
-        initComponents();
-        init();
+        this(PreviewType.DEFAULT);
     }
 
     public PreviewPanel(PreviewType previewType) {
