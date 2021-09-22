@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE map SYSTEM "http://java.sun.com/dtd/preferences.dtd">
+<map MAP_XML_VERSION="1.0">
+  <entry key="layoutProfileName.0" value="Imported profile"/>
+  <entry key="layoutProfileSelected" value="0"/>
+  <entry key="layoutProfilesCount" value="1"/>
+  <entry key="layouts.0.bottomHeaderSpace" value="0"/>
+  <entry key="layouts.0.doubleSpaceGroupSize" value="0"/>
+  <entry key="layouts.0.halfSpaceGroupSize" value="0"/>
+  <entry key="layouts.0.leftRowPositionSpace" value="0"/>
+  <entry key="layouts.0.rightRowPositionSpace" value="0"/>
+  <entry key="layouts.0.showHeader" value="true"/>
+  <entry key="layouts.0.showRowPosition" value="true"/>
+  <entry key="layouts.0.spaceGroupSize" value="1"/>
+  <entry key="layouts.0.topHeaderSpace" value="0"/>
+</map>

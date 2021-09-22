@@ -90,6 +90,9 @@ public class ThemeProfilesPanel extends javax.swing.JPanel implements ProfileLis
         if (hasSelection) {
             upButton.setEnabled(profilesList.getMaxSelectionIndex() >= selectedIndices.length);
             downButton.setEnabled(profilesList.getMinSelectionIndex() + selectedIndices.length < getProfilesListModel().getSize());
+            if (selectedIndices.length == 1) {
+                previewPanel.getCodeArea().setThemeProfile(getProfilesListModel().getElementAt(selectedIndices[0]).getThemeProfile());
+            }
         } else {
             upButton.setEnabled(false);
             downButton.setEnabled(false);

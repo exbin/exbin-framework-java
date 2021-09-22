@@ -86,6 +86,9 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
         if (hasSelection) {
             upButton.setEnabled(profilesList.getMaxSelectionIndex() >= selectedIndices.length);
             downButton.setEnabled(profilesList.getMinSelectionIndex() + selectedIndices.length < getProfilesListModel().getSize());
+            if (selectedIndices.length == 1) {
+                previewPanel.getCodeArea().setLayoutProfile(getProfilesListModel().getElementAt(selectedIndices[0]).getLayoutProfile());
+            }
         } else {
             upButton.setEnabled(false);
             downButton.setEnabled(false);
@@ -389,7 +392,21 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
     }//GEN-LAST:event_copyButtonActionPerformed
 
     private void fromTemplateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromTemplateButtonActionPerformed
-        // TODO add your handling code here:
+        ProfilesListModel model = getProfilesListModel();
+        int selectedIndex = profilesList.getSelectedIndex();
+
+        if (templateProfileOperation != null) {
+            LayoutProfile newProfileRecord = templateProfileOperation.run(this);
+            if (newProfileRecord != null) {
+                if (selectedIndex >= 0) {
+                    profilesList.clearSelection();
+                    model.add(selectedIndex, newProfileRecord);
+                } else {
+                    model.add(newProfileRecord);
+                }
+                wasModified();
+            }
+        }
     }//GEN-LAST:event_fromTemplateButtonActionPerformed
 
     public boolean isModified() {

@@ -92,6 +92,9 @@ public class ColorProfilesPanel extends javax.swing.JPanel implements ProfileLis
         if (hasSelection) {
             upButton.setEnabled(profilesList.getMaxSelectionIndex() >= selectedIndices.length);
             downButton.setEnabled(profilesList.getMinSelectionIndex() + selectedIndices.length < getProfilesListModel().getSize());
+            if (selectedIndices.length == 1) {
+                previewPanel.getCodeArea().setColorsProfile(getProfilesListModel().getElementAt(selectedIndices[0]).getColorProfile());
+            }
         } else {
             upButton.setEnabled(false);
             downButton.setEnabled(false);

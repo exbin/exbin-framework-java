@@ -33,7 +33,9 @@ import java.util.logging.Logger;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -58,9 +60,10 @@ import org.xml.sax.SAXParseException;
 /**
  * File preferences class.
  *
- * @version 0.2.1 2019/07/01
+ * @version 0.2.1 2021/09/22
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class FilePreferences extends AbstractPreferences {
 
     private static final String PRECERENCES_DTD_URI = "http://java.sun.com/dtd/preferences.dtd";
@@ -89,7 +92,15 @@ public class FilePreferences extends AbstractPreferences {
         super(parent, name);
         this.spiValues = new TreeMap<>();
         this.children = new TreeMap<>();
-        preferencesFile = createPreferenceFile();
+        this.preferencesFile = createPreferenceFile();
+        init();
+    }
+
+    public FilePreferences(@Nullable AbstractPreferences parent, String name, File preferencesFile) {
+        super(parent, name);
+        this.spiValues = new TreeMap<>();
+        this.children = new TreeMap<>();
+        this.preferencesFile = preferencesFile;
         init();
     }
 
@@ -101,6 +112,7 @@ public class FilePreferences extends AbstractPreferences {
         }
     }
 
+    @Nonnull
     private File createPreferenceFile() {
         return FilePreferencesFactory.getPreferencesFile(absolutePath());
     }
@@ -115,6 +127,7 @@ public class FilePreferences extends AbstractPreferences {
         }
     }
 
+    @Nullable
     @Override
     protected String getSpi(String key) {
         return spiValues.get(key);
@@ -136,18 +149,21 @@ public class FilePreferences extends AbstractPreferences {
         flush();
     }
 
+    @Nonnull
     @Override
     protected String[] keysSpi() throws BackingStoreException {
         Set<String> keySet = spiValues.keySet();
         return (String[]) keySet.toArray(new String[keySet.size()]);
     }
 
+    @Nonnull
     @Override
     protected String[] childrenNamesSpi() throws BackingStoreException {
         Set<String> keySet = children.keySet();
         return (String[]) keySet.toArray(new String[keySet.size()]);
     }
 
+    @Nonnull
     @Override
     protected AbstractPreferences childSpi(String name) {
         FilePreferences child = children.get(name);
@@ -217,6 +233,7 @@ public class FilePreferences extends AbstractPreferences {
      * @param qname root node qualified name
      * @return XML document
      */
+    @Nonnull
     private static Document createPreferencesDoc(String qname) {
         try {
             DOMImplementation di = DocumentBuilderFactory.newInstance().
@@ -318,6 +335,7 @@ public class FilePreferences extends AbstractPreferences {
      * Loads an XML document from specified input stream, which must have the
      * requisite DTD URI.
      */
+    @Nonnull
     private static Document loadPrefsDoc(InputStream in)
             throws SAXException, IOException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -335,8 +353,10 @@ public class FilePreferences extends AbstractPreferences {
         }
     }
 
+    @ParametersAreNonnullByDefault
     private static class Resolver implements EntityResolver {
 
+        @Nonnull
         @Override
         public InputSource resolveEntity(String publicId, String systemId)
                 throws SAXException {
@@ -349,6 +369,7 @@ public class FilePreferences extends AbstractPreferences {
         }
     }
 
+    @ParametersAreNonnullByDefault
     private static class RethrowErrorHandler implements ErrorHandler {
 
         @Override

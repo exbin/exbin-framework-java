@@ -118,6 +118,7 @@ import org.exbin.framework.bined.options.gui.CodeAreaOptionsPanel;
 import org.exbin.framework.bined.options.gui.ColorProfilePanel;
 import org.exbin.framework.bined.options.gui.ColorProfilesOptionsPanel;
 import org.exbin.framework.bined.options.gui.ColorProfilesPanel;
+import org.exbin.framework.bined.options.gui.ColorTemplatePanel;
 import org.exbin.framework.bined.options.gui.EditorOptionsPanel;
 import org.exbin.framework.bined.options.gui.LayoutProfilePanel;
 import org.exbin.framework.bined.options.gui.LayoutProfilesOptionsPanel;
@@ -1061,6 +1062,34 @@ public class BinedModule implements XBApplicationModule {
                     });
                     dialog.showCentered(parentComponent);
 
+                    return result.profile;
+                });
+                panel.setTemplateProfileOperation((JComponent parentComponent) -> {
+                    ColorTemplatePanel colorTemplatePanel = new ColorTemplatePanel();
+                    NamedProfilePanel namedProfilePanel = new NamedProfilePanel(colorTemplatePanel);
+                    namedProfilePanel.setProfileName("TEST");
+                    DefaultControlPanel controlPanel = new DefaultControlPanel();
+                    JPanel dialogPanel = WindowUtils.createDialogPanel(namedProfilePanel, controlPanel);
+
+                    ColorProfileResult result = new ColorProfileResult();
+                    final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "Add Colors Template", Dialog.ModalityType.APPLICATION_MODAL);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), colorTemplatePanel.getClass(), colorTemplatePanel.getResourceBundle());
+                    controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                        if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
+                            if (!isValidProfileName(namedProfilePanel.getProfileName())) {
+                                JOptionPane.showMessageDialog(parentComponent, "Invalid profile name", "Profile Edit Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+
+                            result.profile = new ColorProfilesPanel.ColorProfile(
+                                    namedProfilePanel.getProfileName(), colorTemplatePanel.getSelectedTemplate().getColorProfile()
+                            );
+                        }
+
+                        dialog.close();
+                        dialog.dispose();
+                    });
+                    dialog.showCentered(parentComponent);
                     return result.profile;
                 });
                 return panel;

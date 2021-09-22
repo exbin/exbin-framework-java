@@ -16,8 +16,13 @@
 package org.exbin.framework.bined.options.gui;
 
 import java.awt.Component;
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -29,20 +34,21 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 import org.exbin.framework.bined.options.impl.CodeAreaThemeOptionsImpl;
+import org.exbin.framework.bined.preferences.CodeAreaThemePreferences;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.preferences.FilePreferences;
+import org.exbin.framework.preferences.PreferencesWrapper;
 
 /**
  * Manage list of theme profiles panel.
  *
- * @version 0.2.1 2019/08/20
+ * @version 0.2.1 2021/09/22
  * @author ExBin Project (http://exbin.org)
  */
 public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileListPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ThemeTemplatePanel.class);
-
-    private boolean modified = false;
 
     public ThemeTemplatePanel() {
         initComponents();
@@ -50,12 +56,26 @@ public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileLis
     }
 
     private void init() {
-        profilesList.setModel(new ProfilesListModel());
-        profilesList.setCellRenderer(new ProfileCellRenderer());
-        profilesList.addListSelectionListener((ListSelectionEvent e) -> updateStates());
+        templatesList.setModel(new ProfilesListModel());
+        templatesList.setCellRenderer(new ProfileCellRenderer());
+        templatesList.addListSelectionListener((ListSelectionEvent e) -> updateStates());
+        loadFromOptions();
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     private void updateStates() {
+        ThemeProfile themeProfile = getSelectedTemplate();
+        previewPanel.getCodeArea().setThemeProfile(themeProfile.getThemeProfile());
+    }
+
+    @Nullable
+    public ThemeProfile getSelectedTemplate() {
+        int selectedIndex = templatesList.getSelectedIndex();
+        return getProfilesListModel().getElementAt(selectedIndex);
     }
 
     @Nonnull
@@ -68,7 +88,7 @@ public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileLis
 
     @Nonnull
     private ProfilesListModel getProfilesListModel() {
-        return ((ProfilesListModel) profilesList.getModel());
+        return ((ProfilesListModel) templatesList.getModel());
     }
 
     @Override
@@ -90,10 +110,10 @@ public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileLis
     private void initComponents() {
 
         profilesListScrollPane = new javax.swing.JScrollPane();
-        profilesList = new javax.swing.JList<>();
+        templatesList = new javax.swing.JList<>();
         previewPanel = new org.exbin.framework.bined.options.gui.PreviewPanel();
 
-        profilesListScrollPane.setViewportView(profilesList);
+        profilesListScrollPane.setViewportView(templatesList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -117,15 +137,17 @@ public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileLis
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public boolean isModified() {
-        return modified;
-    }
-
     public void addProfilesListListener(ListDataListener listener) {
         getProfilesListModel().addListDataListener(listener);
     }
 
-    public void loadFromOptions(CodeAreaThemeOptionsImpl options) {
+    private void loadFromOptions() {
+        CodeAreaThemeOptionsImpl options = new CodeAreaThemeOptionsImpl();
+        java.util.prefs.Preferences filePreferences;
+        filePreferences = new FilePreferences(null, "",
+                new File(getClass().getResource("/org/exbin/framework/bined/resources/templates/themeTemplates.xml").getFile())
+        );
+        options.loadFromPreferences(new CodeAreaThemePreferences(new PreferencesWrapper(filePreferences)));
         List<ThemeProfile> profiles = new ArrayList<>();
         List<String> profileNames = options.getProfileNames();
         for (int index = 0; index < profileNames.size(); index++) {
@@ -140,16 +162,6 @@ public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileLis
         model.setProfiles(profiles);
     }
 
-    public void saveToOptions(CodeAreaThemeOptionsImpl options) {
-        options.clearProfiles();
-        ProfilesListModel model = getProfilesListModel();
-        List<ThemeProfile> profiles = model.getProfiles();
-        for (int index = 0; index < profiles.size(); index++) {
-            ThemeProfile profile = profiles.get(index);
-            options.addProfile(profile.profileName, profile.themeProfile);
-        }
-    }
-
     /**
      * Test method for this panel.
      *
@@ -161,15 +173,14 @@ public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileLis
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.exbin.framework.bined.options.gui.PreviewPanel previewPanel;
-    private javax.swing.JList<ThemeProfile> profilesList;
     private javax.swing.JScrollPane profilesListScrollPane;
+    private javax.swing.JList<ThemeProfile> templatesList;
     // End of variables declaration//GEN-END:variables
 
     @ParametersAreNonnullByDefault
     public final static class ThemeProfile {
 
         private String profileName;
-        private boolean visible = true;
         private ExtendedCodeAreaThemeProfile themeProfile;
 
         public ThemeProfile(String profileName, ExtendedCodeAreaThemeProfile themeProfile) {
