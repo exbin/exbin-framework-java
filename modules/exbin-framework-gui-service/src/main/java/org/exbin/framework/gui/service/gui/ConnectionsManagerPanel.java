@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.service.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.AbstractListModel;
@@ -395,10 +396,14 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
         }
 
         public void removeIndices(int[] indices) {
-            for (int i = 0; i < indices.length; i++) {
-                connections.remove(indices[i]);
+            if (indices.length == 0) {
+                return;
             }
-            fireContentsChanged(this, 0, connections.size());
+            Arrays.sort(indices);
+            for (int i = indices.length - 1; i >= 0; i--) {
+                connections.remove(indices[i]);
+                fireIntervalRemoved(this, indices[i], indices[i]);
+            }
         }
 
         public void remove(int index) {

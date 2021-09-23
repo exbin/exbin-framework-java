@@ -16,9 +16,10 @@
 package org.exbin.framework.bined.options.gui;
 
 import java.awt.Component;
-import java.io.File;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -32,20 +33,22 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.exbin.bined.swing.extended.layout.DefaultExtendedCodeAreaLayoutProfile;
 import org.exbin.framework.bined.options.impl.CodeAreaLayoutOptionsImpl;
 import org.exbin.framework.bined.preferences.CodeAreaLayoutPreferences;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.preferences.FilePreferences;
 import org.exbin.framework.preferences.PreferencesWrapper;
+import org.exbin.framework.preferences.StreamPreferences;
 
 /**
  * Manage list of layout profiles panel.
  *
- * @version 0.2.1 2021/08/22
+ * @version 0.2.1 2021/08/23
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class LayoutTemplatePanel extends javax.swing.JPanel implements ProfileListPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(LayoutTemplatePanel.class);
@@ -69,13 +72,19 @@ public class LayoutTemplatePanel extends javax.swing.JPanel implements ProfileLi
 
     private void updateStates() {
         LayoutProfile layoutProfile = getSelectedTemplate();
-        previewPanel.getCodeArea().setLayoutProfile(layoutProfile.getLayoutProfile());
+        if (layoutProfile != null) {
+            previewPanel.getCodeArea().setLayoutProfile(layoutProfile.getLayoutProfile());
+        }
     }
 
     @Nullable
     public LayoutProfile getSelectedTemplate() {
         int selectedIndex = templatesList.getSelectedIndex();
-        return getProfilesListModel().getElementAt(selectedIndex);
+        return selectedIndex < 0 ? null : getProfilesListModel().getElementAt(selectedIndex);
+    }
+
+    public void addListSelectionListener(ListSelectionListener listener) {
+        templatesList.addListSelectionListener(listener);
     }
 
     @Nonnull
@@ -139,24 +148,26 @@ public class LayoutTemplatePanel extends javax.swing.JPanel implements ProfileLi
 
     private void loadFromOptions() {
         CodeAreaLayoutOptionsImpl options = new CodeAreaLayoutOptionsImpl();
-        java.util.prefs.Preferences filePreferences;
-        filePreferences = new FilePreferences(null, "",
-                new File(getClass().getResource("/org/exbin/framework/bined/resources/templates/layoutTemplates.xml").getFile())
-        );
-        options.loadFromPreferences(new CodeAreaLayoutPreferences(new PreferencesWrapper(filePreferences)));
+        try (InputStream stream = getClass().getResourceAsStream("/org/exbin/framework/bined/resources/templates/layoutTemplates.xml")) {
+            java.util.prefs.Preferences filePreferences = new StreamPreferences(stream);
 
-        List<LayoutProfile> profiles = new ArrayList<>();
-        List<String> profileNames = options.getProfileNames();
-        for (int index = 0; index < profileNames.size(); index++) {
-            LayoutProfile profile = new LayoutProfile(
-                    profileNames.get(index),
-                    options.getLayoutProfile(index)
-            );
-            profiles.add(profile);
+            options.loadFromPreferences(new CodeAreaLayoutPreferences(new PreferencesWrapper(filePreferences)));
+
+            List<LayoutProfile> profiles = new ArrayList<>();
+            List<String> profileNames = options.getProfileNames();
+            for (int index = 0; index < profileNames.size(); index++) {
+                LayoutProfile profile = new LayoutProfile(
+                        profileNames.get(index),
+                        options.getLayoutProfile(index)
+                );
+                profiles.add(profile);
+            }
+
+            ProfilesListModel model = getProfilesListModel();
+            model.setProfiles(profiles);
+        } catch (IOException ex) {
+            Logger.getLogger(LayoutTemplatePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        ProfilesListModel model = getProfilesListModel();
-        model.setProfiles(profiles);
     }
 
     /**
@@ -251,9 +262,13 @@ public class LayoutTemplatePanel extends javax.swing.JPanel implements ProfileLi
         }
 
         public void removeIndices(int[] indices) {
+            if (indices.length == 0) {
+                return;
+            }
+            Arrays.sort(indices);
             for (int i = indices.length - 1; i >= 0; i--) {
                 profiles.remove(indices[i]);
-                fireIntervalRemoved(this, 0, indices[i]);
+                fireIntervalRemoved(this, indices[i], indices[i]);
             }
         }
 

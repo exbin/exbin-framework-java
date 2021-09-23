@@ -69,6 +69,10 @@ public class LayoutProfilesOptionsPanel extends javax.swing.JPanel implements Op
         profilesPanel.setCopyProfileOperation(copyProfileOperation);
     }
 
+    public void setTemplateProfileOperation(LayoutProfilesPanel.TemplateProfileOperation templateProfileOperation) {
+        profilesPanel.setTemplateProfileOperation(templateProfileOperation);
+    }
+
     @Override
     public void loadFromOptions(CodeAreaLayoutOptionsImpl options) {
         profilesPanel.loadFromOptions(options);

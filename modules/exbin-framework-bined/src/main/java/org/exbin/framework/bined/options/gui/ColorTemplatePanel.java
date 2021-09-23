@@ -16,10 +16,14 @@
 package org.exbin.framework.bined.options.gui;
 
 import java.awt.Component;
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -29,13 +33,14 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.options.impl.CodeAreaColorOptionsImpl;
 import org.exbin.framework.bined.preferences.CodeAreaColorPreferences;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.preferences.FilePreferences;
 import org.exbin.framework.preferences.PreferencesWrapper;
+import org.exbin.framework.preferences.StreamPreferences;
 
 /**
  * Manage list of color profiles panel.
@@ -67,13 +72,19 @@ public class ColorTemplatePanel extends javax.swing.JPanel implements ProfileLis
 
     private void updateStates() {
         ColorProfile colorsProfile = getSelectedTemplate();
-        previewPanel.getCodeArea().setColorsProfile(colorsProfile.getColorProfile());
+        if (colorsProfile != null) {
+            previewPanel.getCodeArea().setColorsProfile(colorsProfile.getColorProfile());
+        }
     }
 
     @Nullable
     public ColorProfile getSelectedTemplate() {
         int selectedIndex = templatesList.getSelectedIndex();
-        return getProfilesListModel().getElementAt(selectedIndex);
+        return selectedIndex < 0 ? null : getProfilesListModel().getElementAt(selectedIndex);
+    }
+
+    public void addListSelectionListener(ListSelectionListener listener) {
+        templatesList.addListSelectionListener(listener);
     }
 
     @Nonnull
@@ -137,23 +148,24 @@ public class ColorTemplatePanel extends javax.swing.JPanel implements ProfileLis
 
     private void loadFromOptions() {
         CodeAreaColorOptionsImpl options = new CodeAreaColorOptionsImpl();
-        java.util.prefs.Preferences filePreferences;
-        filePreferences = new FilePreferences(null, "",
-                new File(getClass().getResource("/org/exbin/framework/bined/resources/templates/colorTemplates.xml").getFile())
-        );
-        options.loadFromPreferences(new CodeAreaColorPreferences(new PreferencesWrapper(filePreferences)));
-        List<ColorProfile> profiles = new ArrayList<>();
-        List<String> profileNames = options.getProfileNames();
-        for (int index = 0; index < profileNames.size(); index++) {
-            ColorProfile profile = new ColorProfile(
-                    profileNames.get(index),
-                    options.getColorsProfile(index)
-            );
-            profiles.add(profile);
-        }
+        try (InputStream stream = getClass().getResourceAsStream("/org/exbin/framework/bined/resources/templates/colorTemplates.xml")) {
+            java.util.prefs.Preferences filePreferences = new StreamPreferences(stream);
+            options.loadFromPreferences(new CodeAreaColorPreferences(new PreferencesWrapper(filePreferences)));
+            List<ColorProfile> profiles = new ArrayList<>();
+            List<String> profileNames = options.getProfileNames();
+            for (int index = 0; index < profileNames.size(); index++) {
+                ColorProfile profile = new ColorProfile(
+                        profileNames.get(index),
+                        options.getColorsProfile(index)
+                );
+                profiles.add(profile);
+            }
 
-        ProfilesListModel model = getProfilesListModel();
-        model.setProfiles(profiles);
+            ProfilesListModel model = getProfilesListModel();
+            model.setProfiles(profiles);
+        } catch (IOException ex) {
+            Logger.getLogger(LayoutTemplatePanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -248,6 +260,10 @@ public class ColorTemplatePanel extends javax.swing.JPanel implements ProfileLis
         }
 
         public void removeIndices(int[] indices) {
+            if (indices.length == 0) {
+                return;
+            }
+            Arrays.sort(indices);
             for (int i = indices.length - 1; i >= 0; i--) {
                 profiles.remove(indices[i]);
                 fireIntervalRemoved(this, indices[i], indices[i]);

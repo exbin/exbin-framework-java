@@ -17,6 +17,7 @@ package org.exbin.framework.bined.options.gui;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,6 +72,10 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
 
     public void setCopyProfileOperation(CopyProfileOperation copyProfileOperation) {
         this.copyProfileOperation = copyProfileOperation;
+    }
+
+    public void setTemplateProfileOperation(TemplateProfileOperation templateProfileOperation) {
+        this.templateProfileOperation = templateProfileOperation;
     }
 
     private void updateStates() {
@@ -551,9 +556,13 @@ public class LayoutProfilesPanel extends javax.swing.JPanel implements ProfileLi
         }
 
         public void removeIndices(int[] indices) {
+            if (indices.length == 0) {
+                return;
+            }
+            Arrays.sort(indices);
             for (int i = indices.length - 1; i >= 0; i--) {
                 profiles.remove(indices[i]);
-                fireIntervalRemoved(this, 0, indices[i]);
+                fireIntervalRemoved(this, indices[i], indices[i]);
             }
         }
 

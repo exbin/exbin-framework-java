@@ -17,6 +17,7 @@ package org.exbin.framework.bined.options.gui;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -555,9 +556,13 @@ public class ThemeProfilesPanel extends javax.swing.JPanel implements ProfileLis
         }
 
         public void removeIndices(int[] indices) {
+            if (indices.length == 0) {
+                return;
+            }
+            Arrays.sort(indices);
             for (int i = indices.length - 1; i >= 0; i--) {
                 profiles.remove(indices[i]);
-                fireIntervalRemoved(this, 0, indices[i]);
+                fireIntervalRemoved(this, indices[i], indices[i]);
             }
         }
 

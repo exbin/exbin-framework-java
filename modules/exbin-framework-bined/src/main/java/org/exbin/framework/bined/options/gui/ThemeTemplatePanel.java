@@ -16,9 +16,10 @@
 package org.exbin.framework.bined.options.gui;
 
 import java.awt.Component;
-import java.io.File;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -32,20 +33,22 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
 import org.exbin.framework.bined.options.impl.CodeAreaThemeOptionsImpl;
 import org.exbin.framework.bined.preferences.CodeAreaThemePreferences;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.preferences.FilePreferences;
 import org.exbin.framework.preferences.PreferencesWrapper;
+import org.exbin.framework.preferences.StreamPreferences;
 
 /**
  * Manage list of theme profiles panel.
  *
- * @version 0.2.1 2021/09/22
+ * @version 0.2.1 2021/09/23
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileListPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ThemeTemplatePanel.class);
@@ -69,13 +72,19 @@ public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileLis
 
     private void updateStates() {
         ThemeProfile themeProfile = getSelectedTemplate();
-        previewPanel.getCodeArea().setThemeProfile(themeProfile.getThemeProfile());
+        if (themeProfile != null) {
+            previewPanel.getCodeArea().setThemeProfile(themeProfile.getThemeProfile());
+        }
     }
 
     @Nullable
     public ThemeProfile getSelectedTemplate() {
         int selectedIndex = templatesList.getSelectedIndex();
-        return getProfilesListModel().getElementAt(selectedIndex);
+        return selectedIndex < 0 ? null : getProfilesListModel().getElementAt(selectedIndex);
+    }
+
+    public void addListSelectionListener(ListSelectionListener listener) {
+        templatesList.addListSelectionListener(listener);
     }
 
     @Nonnull
@@ -143,23 +152,24 @@ public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileLis
 
     private void loadFromOptions() {
         CodeAreaThemeOptionsImpl options = new CodeAreaThemeOptionsImpl();
-        java.util.prefs.Preferences filePreferences;
-        filePreferences = new FilePreferences(null, "",
-                new File(getClass().getResource("/org/exbin/framework/bined/resources/templates/themeTemplates.xml").getFile())
-        );
-        options.loadFromPreferences(new CodeAreaThemePreferences(new PreferencesWrapper(filePreferences)));
-        List<ThemeProfile> profiles = new ArrayList<>();
-        List<String> profileNames = options.getProfileNames();
-        for (int index = 0; index < profileNames.size(); index++) {
-            ThemeProfile profile = new ThemeProfile(
-                    profileNames.get(index),
-                    options.getThemeProfile(index)
-            );
-            profiles.add(profile);
-        }
+        try (InputStream stream = getClass().getResourceAsStream("/org/exbin/framework/bined/resources/templates/themeTemplates.xml")) {
+            java.util.prefs.Preferences filePreferences = new StreamPreferences(stream);
+            options.loadFromPreferences(new CodeAreaThemePreferences(new PreferencesWrapper(filePreferences)));
+            List<ThemeProfile> profiles = new ArrayList<>();
+            List<String> profileNames = options.getProfileNames();
+            for (int index = 0; index < profileNames.size(); index++) {
+                ThemeProfile profile = new ThemeProfile(
+                        profileNames.get(index),
+                        options.getThemeProfile(index)
+                );
+                profiles.add(profile);
+            }
 
-        ProfilesListModel model = getProfilesListModel();
-        model.setProfiles(profiles);
+            ProfilesListModel model = getProfilesListModel();
+            model.setProfiles(profiles);
+        } catch (IOException ex) {
+            Logger.getLogger(LayoutTemplatePanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -254,9 +264,13 @@ public class ThemeTemplatePanel extends javax.swing.JPanel implements ProfileLis
         }
 
         public void removeIndices(int[] indices) {
+            if (indices.length == 0) {
+                return;
+            }
+            Arrays.sort(indices);
             for (int i = indices.length - 1; i >= 0; i--) {
                 profiles.remove(indices[i]);
-                fireIntervalRemoved(this, 0, indices[i]);
+                fireIntervalRemoved(this, indices[i], indices[i]);
             }
         }
 

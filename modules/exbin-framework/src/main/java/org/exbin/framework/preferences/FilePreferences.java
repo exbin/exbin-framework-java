@@ -66,10 +66,10 @@ import org.xml.sax.SAXParseException;
 @ParametersAreNonnullByDefault
 public class FilePreferences extends AbstractPreferences {
 
-    private static final String PRECERENCES_DTD_URI = "http://java.sun.com/dtd/preferences.dtd";
+    public static final String PRECERENCES_DTD_URI = "http://java.sun.com/dtd/preferences.dtd";
     private static final String MAP_XML_VERSION_ATTRIBUTE = "MAP_XML_VERSION";
     private static final String MAP_XML_VERSION_VALUE = "1.0";
-    private static final String PREFERENCES_DTD
+    public static final String PREFERENCES_DTD
             = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<!-- DTD for preferences -->"
             + "<!ELEMENT map (entry*) >"
