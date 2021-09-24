@@ -15,12 +15,16 @@
  */
 package org.exbin.framework.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * XBUP framework modules repository utilities class.
  *
  * @version 0.2.0 2015/12/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBModuleRepositoryUtils {
 
     private static final String API_CLASS_EXT = "Api";
@@ -32,6 +36,7 @@ public class XBModuleRepositoryUtils {
      * @param moduleClass module class
      * @return string ID
      */
+    @Nonnull
     public static String getModuleIdByApi(Class moduleClass) {
         String packageName = moduleClass.getPackage().getName();
         String className = moduleClass.getSimpleName();

@@ -16,6 +16,7 @@
 package org.exbin.framework.bined.handler;
 
 import java.awt.event.MouseEvent;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Encoding status handler.
@@ -23,6 +24,7 @@ import java.awt.event.MouseEvent;
  * @version 0.2.0 2016/12/31
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface EncodingStatusHandler {
 
     void cycleEncodings();

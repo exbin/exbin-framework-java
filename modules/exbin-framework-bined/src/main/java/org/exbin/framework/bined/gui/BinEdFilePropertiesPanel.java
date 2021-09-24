@@ -20,7 +20,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * File properties dialog.
+ * File properties panel.
  *
  * @version 0.2.0 2016/12/23
  * @author ExBin Project (http://exbin.org)

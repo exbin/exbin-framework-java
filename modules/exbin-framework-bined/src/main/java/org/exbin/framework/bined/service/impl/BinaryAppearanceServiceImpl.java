@@ -44,11 +44,11 @@ public class BinaryAppearanceServiceImpl implements BinaryAppearanceService {
     public void setWordWrapMode(boolean mode) {
         binedModule.getEditorProvider().setWordWrapMode(mode);
 
-        binedModule.getRowWrappingHandler().getViewLineWrapAction().putValue(Action.SELECTED_KEY, mode);
+        binedModule.getRowWrappingAction().putValue(Action.SELECTED_KEY, mode);
     }
 
     @Override
     public void setShowValuesPanel(boolean showValuesPanel) {
-        binedModule.getShowValuesPanelHandler().setShowValuesPanel(showValuesPanel);
+        binedModule.getShowValuesPanelAction().setShowValuesPanel(showValuesPanel);
     }
 }

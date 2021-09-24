@@ -13,75 +13,83 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.bined.handler;
+package org.exbin.framework.bined.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JOptionPane;
-import org.exbin.bined.swing.CodeAreaCore;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
-import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
- * Clipboard code handling.
+ * Clipboard code actions.
  *
- * @version 0.2.1 2018/10/29
+ * @version 0.2.1 2021/09/24
  * @author ExBin Project (http://exbin.org)
  */
-public class ClipboardCodeHandler {
+@ParametersAreNonnullByDefault
+public class ClipboardCodeActions {
 
-    private final EditorProvider editorProvider;
-    private final XBApplication application;
-    private final ResourceBundle resourceBundle;
+    public static final String COPY_AS_CODE_ACTION_ID = "copyAsCodeAction";
+    public static final String PASTE_FROM_CODE_ACTION_ID = "pasteFromCodeAction";
+
+    private EditorProvider editorProvider;
+    private XBApplication application;
+    private ResourceBundle resourceBundle;
 
     private Action copyAsCodeAction;
     private Action pasteFromCodeAction;
 
-    public ClipboardCodeHandler(XBApplication application, EditorProvider editorProvider) {
+    public ClipboardCodeActions() {
+    }
+
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
-        resourceBundle = LanguageUtils.getResourceBundleByClass(BinedModule.class);
+        this.resourceBundle = resourceBundle;
     }
 
-    public void init() {
-        copyAsCodeAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof BinaryEditorProvider) {
-                    BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
-                    activePanel.performCopyAsCode();
-                }
-            }
-        };
-        ActionUtils.setupAction(copyAsCodeAction, resourceBundle, "copyAsCodeAction");
-
-        pasteFromCodeAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (editorProvider instanceof BinaryEditorProvider) {
-                    BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
-                    activePanel.performPasteFromCode();
-                }
-            }
-        };
-        ActionUtils.setupAction(pasteFromCodeAction, resourceBundle, "pasteFromCodeAction");
-    }
-
+    @Nonnull
     public Action getCopyAsCodeAction() {
+        if (copyAsCodeAction == null) {
+            copyAsCodeAction = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (editorProvider instanceof BinaryEditorProvider) {
+                        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+                        activePanel.performCopyAsCode();
+                    }
+                }
+            };
+            ActionUtils.setupAction(copyAsCodeAction, resourceBundle, COPY_AS_CODE_ACTION_ID);
+        }
         return copyAsCodeAction;
     }
 
+    @Nonnull
     public Action getPasteFromCodeAction() {
+        if (pasteFromCodeAction == null) {
+            pasteFromCodeAction = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (editorProvider instanceof BinaryEditorProvider) {
+                        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+                        activePanel.performPasteFromCode();
+                    }
+                }
+            };
+            ActionUtils.setupAction(pasteFromCodeAction, resourceBundle, PASTE_FROM_CODE_ACTION_ID);
+        }
         return pasteFromCodeAction;
     }
 
+    /*
     public Action createCopyAsCodeAction(final CodeAreaCore codeArea) {
         Action action = new AbstractAction() {
             @Override
@@ -106,5 +114,5 @@ public class ClipboardCodeHandler {
         };
         ActionUtils.setupAction(action, resourceBundle, "pasteFromCodeAction");
         return action;
-    }
+    } */
 }
