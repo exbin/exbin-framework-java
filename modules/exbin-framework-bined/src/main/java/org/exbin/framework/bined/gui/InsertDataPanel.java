@@ -18,6 +18,8 @@ package org.exbin.framework.bined.gui;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.bined.CodeAreaUtils;
+import org.exbin.framework.bined.operation.InsertDataOperation.FillWithType;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -61,6 +63,7 @@ public class InsertDataPanel extends javax.swing.JPanel {
         sizePanel = new org.exbin.framework.bined.gui.BaseSwitchableSpinnerPanel();
         fillWithLabel = new javax.swing.JLabel();
         emptyRadioButton = new javax.swing.JRadioButton();
+        spaceRadioButton = new javax.swing.JRadioButton();
         randomRadioButton = new javax.swing.JRadioButton();
         sampleRadioButton = new javax.swing.JRadioButton();
         sampleDataButton = new javax.swing.JButton();
@@ -72,6 +75,9 @@ public class InsertDataPanel extends javax.swing.JPanel {
         fillWithbuttonGroup.add(emptyRadioButton);
         emptyRadioButton.setSelected(true);
         emptyRadioButton.setText(resourceBundle.getString("emptyRadioButton.text")); // NOI18N
+
+        fillWithbuttonGroup.add(spaceRadioButton);
+        spaceRadioButton.setText(resourceBundle.getString("spaceRadioButton.text")); // NOI18N
 
         fillWithbuttonGroup.add(randomRadioButton);
         randomRadioButton.setText(resourceBundle.getString("randomRadioButton.text")); // NOI18N
@@ -107,7 +113,8 @@ public class InsertDataPanel extends javax.swing.JPanel {
                                     .addComponent(sizeLabel)
                                     .addComponent(fillWithLabel))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(sampleRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(sampleRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(spaceRadioButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -121,6 +128,8 @@ public class InsertDataPanel extends javax.swing.JPanel {
                 .addComponent(fillWithLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(emptyRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spaceRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(randomRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -143,13 +152,46 @@ public class InsertDataPanel extends javax.swing.JPanel {
             return FillWithType.RANDOM;
         } else if (sampleRadioButton.isSelected()) {
             return FillWithType.SAMPLE;
+        } else if (spaceRadioButton.isSelected()) {
+            return FillWithType.SPACE;
         }
 
         return FillWithType.EMPTY;
     }
 
+    public void setFillWith(FillWithType fillWithType) {
+        switch (fillWithType) {
+            case EMPTY: {
+                emptyRadioButton.setSelected(true);
+                break;
+            }
+            case SPACE: {
+                spaceRadioButton.setSelected(true);
+                break;
+            }
+            case RANDOM: {
+                randomRadioButton.setSelected(true);
+                break;
+            }
+            case SAMPLE: {
+                sampleRadioButton.setSelected(true);
+                break;
+            }
+            default:
+                throw CodeAreaUtils.getInvalidTypeException(fillWithType);
+        }
+    }
+
+    public long getDataLength() {
+        return sizePanel.getValue();
+    }
+
+    public void setDataLength(long dataLength) {
+        sizePanel.setValue(dataLength);
+    }
+
     public void initFocus() {
-        sizePanel.requestFocus();
+        sizePanel.initFocus();
     }
 
     public void acceptInput() {
@@ -174,13 +216,8 @@ public class InsertDataPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton sampleRadioButton;
     private javax.swing.JLabel sizeLabel;
     private org.exbin.framework.bined.gui.BaseSwitchableSpinnerPanel sizePanel;
+    private javax.swing.JRadioButton spaceRadioButton;
     // End of variables declaration//GEN-END:variables
-
-    public enum FillWithType {
-        EMPTY,
-        RANDOM,
-        SAMPLE
-    }
 
     public interface Control {
 

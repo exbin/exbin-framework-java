@@ -15,6 +15,12 @@
  */
 package org.exbin.framework.editor.text;
 
+import org.exbin.framework.editor.text.action.FindReplaceActions;
+import org.exbin.framework.editor.text.action.TextColorAction;
+import org.exbin.framework.editor.text.action.PrintAction;
+import org.exbin.framework.editor.text.action.WordWrappingAction;
+import org.exbin.framework.editor.text.action.PropertiesAction;
+import org.exbin.framework.editor.text.action.GoToLineAction;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
@@ -31,6 +37,7 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.editor.text.action.TextFontAction;
 import org.exbin.framework.editor.text.options.impl.TextAppearanceOptionsImpl;
 import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
 import org.exbin.framework.editor.text.options.impl.TextEncodingOptionsImpl;
@@ -76,7 +83,7 @@ import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 /**
  * Text editor module.
  *
- * @version 0.2.1 2019/07/19
+ * @version 0.2.1 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -94,15 +101,17 @@ public class EditorTextModule implements XBApplicationModule {
 
     private XBApplication application;
     private EditorProvider editorProvider;
+    private ResourceBundle resourceBundle;
     private TextStatusPanel textStatusPanel;
 
-    private FindReplaceHandler findReplaceHandler;
-    private ToolsOptionsHandler toolsOptionsHandler;
+    private FindReplaceActions findReplaceActions;
+    private TextFontAction textFontAction;
+    private TextColorAction textColorAction;
     private EncodingsHandler encodingsHandler;
-    private WordWrappingHandler wordWrappingHandler;
-    private GoToPositionHandler goToLineHandler;
-    private PropertiesHandler propertiesHandler;
-    private PrintHandler printHandler;
+    private WordWrappingAction wordWrappingAction;
+    private GoToLineAction goToLineAction;
+    private PropertiesAction propertiesAction;
+    private PrintAction printAction;
 
     public EditorTextModule() {
     }
@@ -116,6 +125,16 @@ public class EditorTextModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
+    private void ensureProvider() {
+        if (editorProvider == null) {
+            getEditorProvider();
+        }
+
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
+    }
+
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
@@ -123,6 +142,15 @@ public class EditorTextModule implements XBApplicationModule {
         }
 
         return editorProvider;
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(EditorTextModule.class);
+        }
+
+        return resourceBundle;
     }
 
     public void registerFileTypes() {
@@ -445,39 +473,54 @@ public class EditorTextModule implements XBApplicationModule {
     }
 
     public void registerWordWrapping() {
-        getWordWrappingHandler();
+        getWordWrappingAction();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, wordWrappingHandler.getViewWordWrapAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, getWordWrappingAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
-        getGoToLineHandler();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, goToLineHandler.getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public TextStatusPanel getTextStatusPanel() {
         return textStatusPanel;
     }
 
-    private FindReplaceHandler getFindReplaceHandler() {
-        if (findReplaceHandler == null) {
-            findReplaceHandler = new FindReplaceHandler(application, (TextPanel) getEditorProvider());
-            findReplaceHandler.init();
+    @Nonnull
+    private FindReplaceActions getFindReplaceActions() {
+        if (findReplaceActions == null) {
+            ensureProvider();
+            findReplaceActions = new FindReplaceActions();
+            findReplaceActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return findReplaceHandler;
+        return findReplaceActions;
     }
 
-    private ToolsOptionsHandler getToolsOptionsHandler() {
-        if (toolsOptionsHandler == null) {
-            toolsOptionsHandler = new ToolsOptionsHandler(application, (TextPanel) getEditorProvider());
-            toolsOptionsHandler.init();
+    @Nonnull
+    private TextFontAction getTextFontAction() {
+        if (textFontAction == null) {
+            ensureProvider();
+            textFontAction = new TextFontAction();
+            textFontAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return toolsOptionsHandler;
+        return textFontAction;
     }
 
+    @Nonnull
+    private TextColorAction getTextColorAction() {
+        if (textColorAction == null) {
+            ensureProvider();
+            textColorAction = new TextColorAction();
+            textColorAction.setup(application, editorProvider, resourceBundle);
+        }
+
+        return textColorAction;
+    }
+
+    @Nonnull
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
             encodingsHandler = new EncodingsHandler();
@@ -491,75 +534,80 @@ public class EditorTextModule implements XBApplicationModule {
         return encodingsHandler;
     }
 
-    private WordWrappingHandler getWordWrappingHandler() {
-        if (wordWrappingHandler == null) {
-            wordWrappingHandler = new WordWrappingHandler(application, (TextPanel) getEditorProvider());
-            wordWrappingHandler.init();
+    @Nonnull
+    private WordWrappingAction getWordWrappingAction() {
+        if (wordWrappingAction == null) {
+            ensureProvider();
+            wordWrappingAction = new WordWrappingAction();
+            wordWrappingAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return wordWrappingHandler;
+        return wordWrappingAction;
     }
 
-    private GoToPositionHandler getGoToLineHandler() {
-        if (goToLineHandler == null) {
-            goToLineHandler = new GoToPositionHandler(application, (TextPanel) getEditorProvider());
-            goToLineHandler.init();
+    @Nonnull
+    private GoToLineAction getGoToLineAction() {
+        if (goToLineAction == null) {
+            ensureProvider();
+            goToLineAction = new GoToLineAction();
+            goToLineAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return goToLineHandler;
+        return goToLineAction;
     }
 
-    private PropertiesHandler getPropertiesHandler() {
-        if (propertiesHandler == null) {
-            propertiesHandler = new PropertiesHandler(application, (TextPanel) getEditorProvider());
-            propertiesHandler.init();
+    @Nonnull
+    private PropertiesAction getPropertiesAction() {
+        if (propertiesAction == null) {
+            ensureProvider();
+            propertiesAction = new PropertiesAction();
+            propertiesAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return propertiesHandler;
+        return propertiesAction;
     }
 
-    private PrintHandler getPrintHandler() {
-        if (printHandler == null) {
-            printHandler = new PrintHandler(application, (TextPanel) getEditorProvider());
-            printHandler.init();
+    @Nonnull
+    private PrintAction getPrintAction() {
+        if (printAction == null) {
+            ensureProvider();
+            printAction = new PrintAction();
+            printAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return printHandler;
+        return printAction;
     }
 
     public void registerEditFindMenuActions() {
-        getFindReplaceHandler();
+        getFindReplaceActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuGroup(GuiFrameModuleApi.EDIT_MENU_ID, new MenuGroup(EDIT_FIND_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceHandler.getEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceHandler.getEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceHandler.getEditReplaceAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditReplaceAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
     }
 
     public void registerEditFindToolBarActions() {
-        getFindReplaceHandler();
+        getFindReplaceActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceHandler.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
-        getToolsOptionsHandler();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, toolsOptionsHandler.getToolsSetFontAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, toolsOptionsHandler.getToolsSetColorAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getTextFontAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getTextColorAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerPropertiesMenu() {
-        getPropertiesHandler();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, propertiesHandler.getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
-        getPrintHandler();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, printHandler.getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void loadFromPreferences(Preferences preferences) {

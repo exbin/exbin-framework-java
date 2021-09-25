@@ -16,17 +16,39 @@
 package org.exbin.framework.editor.xbup.action;
 
 import java.awt.event.ActionEvent;
+import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
+import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
- * Export item as file action.
+ * Import item action.
  *
- * @version 0.2.1 2020/09/10
+ * @version 0.2.0 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ExportItemAsFileAction extends AbstractAction {
+public class ImportItemAction extends AbstractAction {
+
+    public static final String ACTION_ID = "importItemAction";
+
+    private EditorProvider editorProvider;
+    private XBApplication application;
+    private ResourceBundle resourceBundle;
+
+    public ImportItemAction() {
+    }
+
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
+        this.application = application;
+        this.editorProvider = editorProvider;
+        this.resourceBundle = resourceBundle;
+
+        ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
+        putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

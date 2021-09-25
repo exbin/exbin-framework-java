@@ -13,48 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.bined.action;
+package org.exbin.framework.editor.text.action;
 
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import org.exbin.bined.capability.CaretCapable;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
-import org.exbin.framework.bined.gui.GoToBinaryPanel;
-import org.exbin.framework.bined.gui.BinEdComponentPanel;
+import org.exbin.framework.editor.text.gui.TextGoToPanel;
+import org.exbin.framework.editor.text.gui.TextPanel;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 
 /**
- * Go to position action.
+ * Go to line action.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.1 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class GoToPositionAction extends AbstractAction {
+public class GoToLineAction extends AbstractAction {
 
-    public static final String ACTION_ID = "goToPositionAction";
+    public static final String ACTION_ID = "goToLineAction";
 
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
-    public GoToPositionAction() {
+    public GoToLineAction() {
     }
 
-    public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
@@ -66,28 +62,28 @@ public class GoToPositionAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof BinaryEditorProvider) {
-            final BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
-            final GoToBinaryPanel goToPanel = new GoToBinaryPanel();
-            goToPanel.setCursorPosition(((CaretCapable) activePanel.getCodeArea()).getCaret().getCaretPosition().getDataPosition());
-            goToPanel.setMaxPosition(activePanel.getCodeArea().getDataSize());
+        if (editorProvider instanceof TextPanel) {
+            final TextPanel activePanel = (TextPanel) editorProvider;
+            final TextGoToPanel goToPanel = new TextGoToPanel();
+            goToPanel.initFocus();
+            goToPanel.setMaxLine(activePanel.getLineCount());
+            goToPanel.setCharPos(1);
             DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
             JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getPanel(), "", Dialog.ModalityType.APPLICATION_MODAL);
+            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
             frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                if (actionType == ControlActionType.OK) {
-                    goToPanel.acceptInput();
-                    activePanel.goToPosition(goToPanel.getTargetPosition());
+                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                    activePanel.gotoLine(goToPanel.getLine());
+                    activePanel.gotoRelative(goToPanel.getCharPos());
                 }
 
                 dialog.close();
                 dialog.dispose();
             });
-            SwingUtilities.invokeLater(goToPanel::initFocus);
-            dialog.showCentered(editorProvider.getPanel());
+            dialog.showCentered(frameModule.getFrame());
         }
     }
 }

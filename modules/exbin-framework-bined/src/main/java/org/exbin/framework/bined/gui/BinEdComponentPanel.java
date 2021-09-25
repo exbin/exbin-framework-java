@@ -16,7 +16,6 @@
 package org.exbin.framework.bined.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -70,7 +69,7 @@ import org.exbin.bined.capability.EditModeCapable;
 /**
  * Binary editor panel.
  *
- * @version 0.2.1 2020/03/06
+ * @version 0.2.1 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -82,7 +81,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     private BinaryEditorPreferences preferences;
     private ExtCodeArea codeArea;
     private CodeAreaUndoHandler undoHandler;
-    private Color foundTextBackgroundColor;
     private Font defaultFont;
     private ExtendedCodeAreaColorProfile defaultColors;
     private BinaryStatusApi binaryStatus = null;
@@ -135,7 +133,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         });
 
         add(codeArea);
-        foundTextBackgroundColor = Color.YELLOW;
         codeArea.setCharset(Charset.forName(StringUtils.ENCODING_UTF8));
         defaultFont = codeArea.getCodeFont();
 
@@ -320,14 +317,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     @Override
     public Font getCurrentFont() {
         return codeArea.getCodeFont();
-    }
-
-    public Color getFoundTextBackgroundColor() {
-        return foundTextBackgroundColor;
-    }
-
-    public void setFoundTextBackgroundColor(Color color) {
-        foundTextBackgroundColor = color;
     }
 
     /**

@@ -36,9 +36,12 @@ public class CopyItemAction extends AbstractAction {
 
     public static final String ACTION_ID = "copyItemAction";
 
-    private final DocumentViewerProvider viewerProvider;
+    private DocumentViewerProvider viewerProvider;
 
-    public CopyItemAction(DocumentViewerProvider viewerProvider) {
+    public CopyItemAction() {
+    }
+    
+    public void setup(DocumentViewerProvider viewerProvider) {
         this.viewerProvider = viewerProvider;
     }
 

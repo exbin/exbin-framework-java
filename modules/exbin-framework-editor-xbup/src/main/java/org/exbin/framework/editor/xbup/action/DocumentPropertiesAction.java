@@ -42,15 +42,15 @@ public class DocumentPropertiesAction extends AbstractAction {
 
     public static final String ACTION_ID = "propertiesAction";
 
-    private final DocumentViewerProvider viewerProvider;
+    private DocumentViewerProvider viewerProvider;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DocumentPropertiesAction.class);
 
-    public DocumentPropertiesAction(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
-        init();
+    public DocumentPropertiesAction() {
     }
 
-    private void init() {
+    public void setup(DocumentViewerProvider viewerProvider) {
+        this.viewerProvider = viewerProvider;
+
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }

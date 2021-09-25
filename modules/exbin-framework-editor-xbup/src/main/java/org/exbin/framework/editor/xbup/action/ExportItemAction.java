@@ -13,36 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.bined.action;
+package org.exbin.framework.editor.xbup.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
- * Tools options font action.
+ * Export to file action.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.0 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ToolsFontAction extends AbstractAction {
+public class ExportItemAction extends AbstractAction {
 
-    public static final String ACTION_ID = "toolsSetFontAction";
+    public static final String ACTION_ID = "exportItemAction";
 
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
-    public ToolsFontAction() {
+    public ExportItemAction() {
     }
 
-    public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
@@ -53,9 +52,6 @@ public class ToolsFontAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        org.exbin.framework.editor.text.ToolsOptionsHandler textOptionsHandler = new org.exbin.framework.editor.text.ToolsOptionsHandler(application, editorProvider);
-        textOptionsHandler.init();
-        Action textToolsSetFontAction = textOptionsHandler.getToolsSetFontAction();
-        textToolsSetFontAction.actionPerformed(e);
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

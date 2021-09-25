@@ -47,9 +47,12 @@ public class PasteItemAction extends AbstractAction {
 
     public static final String ACTION_ID = "pasteItemAction";
 
-    private final DocumentViewerProvider viewerProvider;
+    private DocumentViewerProvider viewerProvider;
 
-    public PasteItemAction(DocumentViewerProvider viewerProvider) {
+    public PasteItemAction() {
+    }
+
+    public void setup(DocumentViewerProvider viewerProvider) {
         this.viewerProvider = viewerProvider;
     }
 

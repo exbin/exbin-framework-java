@@ -22,7 +22,7 @@ import org.exbin.framework.bined.action.GoToPositionAction;
 import org.exbin.framework.bined.action.ShowValuesPanelAction;
 import org.exbin.framework.bined.handler.EncodingStatusHandler;
 import org.exbin.framework.bined.action.CodeTypeActions;
-import org.exbin.framework.bined.action.ToolsFontAction;
+import org.exbin.framework.bined.action.CodeAreaFontAction;
 import org.exbin.framework.bined.action.ViewModeHandlerActions;
 import org.exbin.framework.bined.action.PrintAction;
 import org.exbin.framework.bined.action.ShowNonprintablesActions;
@@ -198,7 +198,7 @@ public class BinedModule implements XBApplicationModule {
     private FindReplaceActions findReplaceHandler;
     private ShowNonprintablesActions showNonprintablesHandler;
     private ShowValuesPanelAction showValuesPanelAction;
-    private ToolsFontAction toolsFontAction;
+    private CodeAreaFontAction toolsFontAction;
     private RowWrappingAction rowWrappingAction;
     private EncodingsHandler encodingsHandler;
     private GoToPositionAction goToPositionAction;
@@ -1244,13 +1244,17 @@ public class BinedModule implements XBApplicationModule {
 
     public void registerWordWrapping() {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, getGoToPositionAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, getRowWrappingAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
-    public void registerGoToLine() {
-        getGoToPositionAction();
+    public void registerGoToPosition() {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, getGoToPositionAction(), new MenuPosition(PositionMode.BOTTOM));
+    }
+
+    public void registerInsertDataAction() {
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, getInsertDataAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     @Nullable
@@ -1336,10 +1340,10 @@ public class BinedModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public ToolsFontAction getToolsFontAction() {
+    public CodeAreaFontAction getToolsFontAction() {
         if (toolsFontAction == null) {
             ensureProvider();
-            toolsFontAction = new ToolsFontAction();
+            toolsFontAction = new CodeAreaFontAction();
             toolsFontAction.setup(application, editorProvider, resourceBundle);
         }
 

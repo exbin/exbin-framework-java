@@ -52,15 +52,15 @@ public class AddItemAction extends AbstractAction {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AddItemAction.class);
 
-    private final DocumentViewerProvider viewerProvider;
+    private DocumentViewerProvider viewerProvider;
     private AddBlockPanel addItemPanel = null;
 
-    public AddItemAction(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
-        init();
+    public AddItemAction() {
     }
 
-    private void init() {
+    public void setup(DocumentViewerProvider viewerProvider) {
+        this.viewerProvider = viewerProvider;
+
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }

@@ -388,7 +388,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 //            }
         }
     }
-    
+
     public void switchToTab(ViewerTab selectedTab) {
         documentPanel.switchToTab(selectedTab);
     }
@@ -495,25 +495,29 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
         @Override
         public void performCut() {
-            CutItemAction action = new CutItemAction(DocumentViewerProvider.this);
+            CutItemAction action = new CutItemAction();
+            action.setup(DocumentViewerProvider.this);
             action.actionPerformed(null);
         }
 
         @Override
         public void performCopy() {
-            CopyItemAction action = new CopyItemAction(DocumentViewerProvider.this);
+            CopyItemAction action = new CopyItemAction();
+            action.setup(DocumentViewerProvider.this);
             action.actionPerformed(null);
         }
 
         @Override
         public void performPaste() {
-            PasteItemAction action = new PasteItemAction(DocumentViewerProvider.this);
+            PasteItemAction action = new PasteItemAction();
+            action.setup(DocumentViewerProvider.this);
             action.actionPerformed(null);
         }
 
         @Override
         public void performDelete() {
-            DeleteItemAction action = new DeleteItemAction(DocumentViewerProvider.this);
+            DeleteItemAction action = new DeleteItemAction();
+            action.setup(DocumentViewerProvider.this);
             action.actionPerformed(null);
         }
 

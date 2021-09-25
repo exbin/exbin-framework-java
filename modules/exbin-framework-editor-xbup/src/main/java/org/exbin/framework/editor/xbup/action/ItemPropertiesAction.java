@@ -43,15 +43,15 @@ public class ItemPropertiesAction extends AbstractAction {
     public static final String ACTION_ID = "itemPropertiesAction";
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ItemPropertiesAction.class);
-    private final DocumentViewerProvider viewerProvider;
+    private DocumentViewerProvider viewerProvider;
     private boolean devMode = false;
 
-    public ItemPropertiesAction(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
-        init();
+    public ItemPropertiesAction() {
     }
 
-    private void init() {
+    public void setup(DocumentViewerProvider viewerProvider) {
+        this.viewerProvider = viewerProvider;
+
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }

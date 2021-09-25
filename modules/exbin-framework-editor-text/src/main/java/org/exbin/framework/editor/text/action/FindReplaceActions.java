@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text;
+package org.exbin.framework.editor.text.action;
 
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
@@ -29,7 +29,6 @@ import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
@@ -37,57 +36,33 @@ import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
 
 /**
- * Find/replace handler.
+ * Find/replace actions.
  *
- * @version 0.2.1 2019/07/17
+ * @version 0.2.1 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FindReplaceHandler {
+public class FindReplaceActions {
 
-    private final EditorProvider editorProvider;
-    private final XBApplication application;
-    private final ResourceBundle resourceBundle;
+    public static final String EDIT_FIND_ACTION_ID = "editFindAction";
+    public static final String EDIT_FIND_AGAIN_ACTION_ID = "editFindAgainAction";
+    public static final String EDIT_REPLACE_ACTION_ID = "editReplaceAction";
+
+    private EditorProvider editorProvider;
+    private XBApplication application;
+    private ResourceBundle resourceBundle;
 
     private Action editFindAction;
     private Action editFindAgainAction;
     private Action editReplaceAction;
 
-    public FindReplaceHandler(XBApplication application, EditorProvider editorProvider) {
-        this.application = application;
-        this.editorProvider = editorProvider;
-        resourceBundle = LanguageUtils.getResourceBundleByClass(EditorTextModule.class);
+    public FindReplaceActions() {
     }
 
-    public void init() {
-        editFindAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showFindDialog(false);
-            }
-        };
-        ActionUtils.setupAction(editFindAction, resourceBundle, "editFindAction");
-        editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
-        editFindAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-
-        editFindAgainAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showFindDialog(false);
-            }
-        };
-        ActionUtils.setupAction(editFindAgainAction, resourceBundle, "editFindAgainAction");
-        editFindAgainAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
-
-        editReplaceAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showFindDialog(true);
-            }
-        };
-        ActionUtils.setupAction(editReplaceAction, resourceBundle, "editReplaceAction");
-        editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
-        editReplaceAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
+        this.application = application;
+        this.editorProvider = editorProvider;
+        this.resourceBundle = resourceBundle;
     }
 
     public void showFindDialog(boolean shallReplace) {
@@ -121,16 +96,48 @@ public class FindReplaceHandler {
 
     @Nonnull
     public Action getEditFindAction() {
+        if (editFindAction == null) {
+            editFindAction = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    showFindDialog(false);
+                }
+            };
+            ActionUtils.setupAction(editFindAction, resourceBundle, EDIT_FIND_ACTION_ID);
+            editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
+            editFindAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        }
         return editFindAction;
     }
 
     @Nonnull
     public Action getEditFindAgainAction() {
+        if (editFindAgainAction == null) {
+            editFindAgainAction = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    showFindDialog(false);
+                }
+            };
+            ActionUtils.setupAction(editFindAgainAction, resourceBundle, EDIT_FIND_AGAIN_ACTION_ID);
+            editFindAgainAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
+        }
         return editFindAgainAction;
     }
 
     @Nonnull
     public Action getEditReplaceAction() {
+        if (editReplaceAction == null) {
+            editReplaceAction = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    showFindDialog(true);
+                }
+            };
+            ActionUtils.setupAction(editReplaceAction, resourceBundle, EDIT_REPLACE_ACTION_ID);
+            editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
+            editReplaceAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        }
         return editReplaceAction;
     }
 }

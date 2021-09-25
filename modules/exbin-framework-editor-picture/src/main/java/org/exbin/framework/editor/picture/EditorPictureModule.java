@@ -15,10 +15,17 @@
  */
 package org.exbin.framework.editor.picture;
 
+import org.exbin.framework.editor.picture.action.PropertiesAction;
+import org.exbin.framework.editor.picture.action.PictureOperationActions;
+import org.exbin.framework.editor.picture.action.ZoomControlActions;
+import org.exbin.framework.editor.picture.action.ToolColorAction;
+import org.exbin.framework.editor.picture.action.PrintAction;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
@@ -38,11 +45,12 @@ import org.exbin.framework.gui.action.api.SeparationMode;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * XBUP picture editor module.
  *
- * @version 0.2.0 2017/01/19
+ * @version 0.2.0 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 public class EditorPictureModule implements XBApplicationModule {
@@ -58,13 +66,14 @@ public class EditorPictureModule implements XBApplicationModule {
 
     private XBApplication application;
     private EditorProvider editorProvider;
+    private ResourceBundle resourceBundle;
     private ImageStatusPanel imageStatusPanel;
 
-    private ToolsOptionsHandler toolsOptionsHandler;
-    private PropertiesHandler propertiesHandler;
-    private PrintHandler printHandler;
-    private ZoomControlHandler zoomControlHandler;
-    private PictureOperationHandler pictureOperationHandler;
+    private ToolColorAction toolColorAction;
+    private PropertiesAction propertiesAction;
+    private PrintAction printAction;
+    private ZoomControlActions zoomControlActions;
+    private PictureOperationActions pictureOperationActions;
 
     public EditorPictureModule() {
     }
@@ -78,6 +87,17 @@ public class EditorPictureModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
+    private void ensureProvider() {
+        if (editorProvider == null) {
+            getEditorProvider();
+        }
+
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
+    }
+
+    @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
             ImagePanel imagePanel = new ImagePanel();
@@ -106,6 +126,15 @@ public class EditorPictureModule implements XBApplicationModule {
         }
 
         return editorProvider;
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(EditorPictureModule.class);
+        }
+
+        return resourceBundle;
     }
 
     public void registerFileTypes() {
@@ -145,24 +174,23 @@ public class EditorPictureModule implements XBApplicationModule {
     }
 
     public void registerPropertiesMenu() {
-        getPropertiesHandler();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, propertiesHandler.getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
-        getPrintHandler();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, printHandler.getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
-    private PictureOperationHandler getPictureOperationHandler() {
-        if (pictureOperationHandler == null) {
-            pictureOperationHandler = new PictureOperationHandler(application, (ImagePanel) getEditorProvider());
-            pictureOperationHandler.init();
+    private PictureOperationActions getPictureOperationActions() {
+        if (pictureOperationActions == null) {
+            ensureProvider();
+            pictureOperationActions = new PictureOperationActions();
+            pictureOperationActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return pictureOperationHandler;
+        return pictureOperationActions;
     }
 
     public void registerOptionsMenuPanels() {
@@ -204,55 +232,58 @@ public class EditorPictureModule implements XBApplicationModule {
     }
 
     public void registerToolsOptionsMenuActions() {
-        getToolsOptionsHandler();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, toolsOptionsHandler.getToolsSetColorAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getToolColorAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerZoomModeMenu() {
-        getZoomControlHandler();
+        getZoomControlActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, ZOOM_MODE_SUBMENU_ID, "Zoom", new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenu(ZOOM_MODE_SUBMENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getNormalZoomAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getZoomDownAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getNormalZoomAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomDownAction(), new MenuPosition(PositionMode.TOP));
     }
 
-    private PropertiesHandler getPropertiesHandler() {
-        if (propertiesHandler == null) {
-            propertiesHandler = new PropertiesHandler(application, (ImagePanel) getEditorProvider());
-            propertiesHandler.init();
+    private PropertiesAction getPropertiesAction() {
+        if (propertiesAction == null) {
+            ensureProvider();
+            propertiesAction = new PropertiesAction();
+            propertiesAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return propertiesHandler;
+        return propertiesAction;
     }
 
-    private ToolsOptionsHandler getToolsOptionsHandler() {
-        if (toolsOptionsHandler == null) {
-            toolsOptionsHandler = new ToolsOptionsHandler(application, (ImagePanel) getEditorProvider());
-            toolsOptionsHandler.init();
+    private ToolColorAction getToolColorAction() {
+        if (toolColorAction == null) {
+            ensureProvider();
+            toolColorAction = new ToolColorAction();
+            toolColorAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return toolsOptionsHandler;
+        return toolColorAction;
     }
 
-    private PrintHandler getPrintHandler() {
-        if (printHandler == null) {
-            printHandler = new PrintHandler(application, (ImagePanel) getEditorProvider());
-            printHandler.init();
+    private PrintAction getPrintAction() {
+        if (printAction == null) {
+            ensureProvider();
+            printAction = new PrintAction();
+            printAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return printHandler;
+        return printAction;
     }
 
-    private ZoomControlHandler getZoomControlHandler() {
-        if (zoomControlHandler == null) {
-            zoomControlHandler = new ZoomControlHandler(application, (ImagePanel) getEditorProvider());
-            zoomControlHandler.init();
+    private ZoomControlActions getZoomControlActions() {
+        if (zoomControlActions == null) {
+            ensureProvider();
+            zoomControlActions = new ZoomControlActions();
+            zoomControlActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return zoomControlHandler;
+        return zoomControlActions;
     }
 
     public void registerPictureMenu() {
@@ -262,9 +293,9 @@ public class EditorPictureModule implements XBApplicationModule {
     }
 
     public void registerPictureOperationMenu() {
-        getPictureOperationHandler();
+        getPictureOperationActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(PICTURE_MENU_ID, MODULE_ID, pictureOperationHandler.getRevertAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(PICTURE_MENU_ID, MODULE_ID, pictureOperationActions.getRevertAction(), new MenuPosition(PositionMode.TOP));
     }
 
     /**

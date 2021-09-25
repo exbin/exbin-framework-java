@@ -18,16 +18,27 @@ package org.exbin.framework.bined.action;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
+import org.exbin.auxiliary.paged_data.EditableBinaryData;
+import org.exbin.bined.operation.BinaryDataOperationException;
+import org.exbin.bined.operation.swing.command.CodeAreaCommand;
+import org.exbin.bined.operation.swing.command.CodeAreaCommandType;
+import org.exbin.bined.operation.swing.command.OpCodeAreaCommand;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.SearchCondition;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
+import org.exbin.framework.bined.gui.BinaryMultilinePanel;
 import org.exbin.framework.bined.gui.InsertDataPanel;
+import org.exbin.framework.bined.operation.InsertDataOperation;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -39,12 +50,12 @@ import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 /**
  * Insert data action.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.1 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class InsertDataAction extends AbstractAction {
-    
+
     public static final String ACTION_ID = "insertDataAction";
 
     private BinaryEditorProvider editorProvider;
@@ -54,7 +65,7 @@ public class InsertDataAction extends AbstractAction {
     public InsertDataAction() {
 
     }
-    
+
     public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
@@ -68,19 +79,63 @@ public class InsertDataAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (editorProvider instanceof BinaryEditorProvider) {
+            final EditableBinaryData sampleBinaryData = new ByteArrayEditableData();
             final BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
             final InsertDataPanel insertDataPanel = new InsertDataPanel();
             DefaultControlPanel controlPanel = new DefaultControlPanel(insertDataPanel.getResourceBundle());
             JPanel dialogPanel = WindowUtils.createDialogPanel(insertDataPanel, controlPanel);
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getPanel(), "", Dialog.ModalityType.APPLICATION_MODAL);
+            insertDataPanel.setControl(new InsertDataPanel.Control() {
+                @Override
+                public void sampleDataAction() {
+                    final BinaryMultilinePanel multilinePanel = new BinaryMultilinePanel();
+                    SearchCondition searchCondition = new SearchCondition();
+                    EditableBinaryData conditionData = new ByteArrayEditableData();
+                    conditionData.insert(0, sampleBinaryData);
+                    searchCondition.setBinaryData(conditionData);
+                    searchCondition.setSearchMode(SearchCondition.SearchMode.BINARY);
+                    multilinePanel.setCondition(searchCondition);
+//                    multilinePanel.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
+                    DefaultControlPanel controlPanel = new DefaultControlPanel();
+                    JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
+                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                    final DialogWrapper multilineDialog = frameModule.createDialog(dialog.getWindow(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
+//                    WindowUtils.addHeaderPanel(multilineDialog.getWindow(), multilinePanel.getClass(), multilinePanel.getResourceBundle());
+                    frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
+                    controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                        if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                            SearchCondition condition = multilinePanel.getCondition();
+                            sampleBinaryData.clear();
+                            sampleBinaryData.insert(0, condition.getBinaryData());
+                            insertDataPanel.setFillWith(InsertDataOperation.FillWithType.SAMPLE);
+                            long dataLength = insertDataPanel.getDataLength();
+                            if (dataLength < sampleBinaryData.getDataSize()) {
+                                insertDataPanel.setDataLength(sampleBinaryData.getDataSize());
+                            }
+                        }
+
+                        multilineDialog.close();
+                        multilineDialog.dispose();
+                    });
+                    multilineDialog.showCentered(dialog.getWindow());
+//                    multilinePanel.detachMenu();
+                }
+            });
             frameModule.setDialogTitle(dialog, insertDataPanel.getResourceBundle());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == ControlActionType.OK) {
                     insertDataPanel.acceptInput();
-                    InsertDataPanel.FillWithType fillWithType = insertDataPanel.getFillWithType();
+                    long dataLength = insertDataPanel.getDataLength();
+                    InsertDataOperation.FillWithType fillWithType = insertDataPanel.getFillWithType();
                     ExtCodeArea codeArea = activePanel.getCodeArea();
-                    // TODO
+                    InsertDataOperation operation = new InsertDataOperation(codeArea, codeArea.getDataPosition(), dataLength, fillWithType, sampleBinaryData);
+                    CodeAreaCommand command = new InsertDataOperation.InsertDataCommand(operation);
+                    try {
+                        activePanel.getUndoHandler().execute(command);
+                    } catch (BinaryDataOperationException ex) {
+                        Logger.getLogger(InsertDataAction.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
 
                 dialog.close();

@@ -58,14 +58,14 @@ public class EditItemAction extends AbstractAction {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditItemAction.class);
 
-    private final DocumentViewerProvider viewerProvider;
+    private DocumentViewerProvider viewerProvider;
 
-    public EditItemAction(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
-        init();
+    public EditItemAction() {
     }
 
-    private void init() {
+    public void setup(DocumentViewerProvider viewerProvider) {
+        this.viewerProvider = viewerProvider;
+
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         setEnabled(false);

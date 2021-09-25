@@ -31,9 +31,12 @@ public class CutItemAction extends AbstractAction {
 
     public static final String ACTION_ID = "cutItemAction";
 
-    private final DocumentViewerProvider viewerProvider;
+    private DocumentViewerProvider viewerProvider;
 
-    public CutItemAction(DocumentViewerProvider viewerProvider) {
+    public CutItemAction() {
+    }
+    
+    public void setup(DocumentViewerProvider viewerProvider) {
         this.viewerProvider = viewerProvider;
     }
 

@@ -15,12 +15,21 @@
  */
 package org.exbin.framework.editor.wave;
 
+import org.exbin.framework.editor.wave.action.EditToolActions;
+import org.exbin.framework.editor.wave.action.WaveColorAction;
+import org.exbin.framework.editor.wave.action.ZoomControlActions;
+import org.exbin.framework.editor.wave.action.AudioOperationActions;
+import org.exbin.framework.editor.wave.action.AudioControlActions;
+import org.exbin.framework.editor.wave.action.PropertiesAction;
+import org.exbin.framework.editor.wave.action.DrawingControlActions;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.Preferences;
@@ -57,9 +66,10 @@ import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 /**
  * XBUP audio editor module.
  *
- * @version 0.2.1 2019/07/20
+ * @version 0.2.1 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class EditorWaveModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(EditorWaveModule.class);
@@ -76,16 +86,17 @@ public class EditorWaveModule implements XBApplicationModule {
 
     private XBApplication application;
     private EditorProvider editorProvider;
+    private ResourceBundle resourceBundle;
     private AudioStatusPanel audioStatusPanel;
     private boolean playing = false;
 
-    private ToolsOptionsHandler toolsOptionsHandler;
-    private PropertiesHandler propertiesHandler;
-    private AudioControlHandler audioControlHandler;
-    private DrawingControlHandler drawingControlHandler;
-    private ToolsSelectionHandler toolsSelectionHandler;
-    private ZoomControlHandler zoomControlHandler;
-    private AudioOperationHandler audioOperationHandler;
+    private WaveColorAction waveColorAction;
+    private PropertiesAction propertiesAction;
+    private AudioControlActions audioControlActions;
+    private DrawingControlActions drawingControlActions;
+    private EditToolActions editToolActions;
+    private ZoomControlActions zoomControlActions;
+    private AudioOperationActions audioOperationActions;
 
     public EditorWaveModule() {
     }
@@ -99,6 +110,17 @@ public class EditorWaveModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
+    private void ensureProvider() {
+        if (editorProvider == null) {
+            getEditorProvider();
+        }
+
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
+    }
+
+    @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
             AudioPanel audioPanel = new AudioPanel();
@@ -131,6 +153,15 @@ public class EditorWaveModule implements XBApplicationModule {
         }
 
         return editorProvider;
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(EditorWaveModule.class);
+        }
+
+        return resourceBundle;
     }
 
     public void registerFileTypes() {
@@ -273,123 +304,128 @@ public class EditorWaveModule implements XBApplicationModule {
     }
 
     public void registerToolsOptionsMenuActions() {
-        getToolsOptionsHandler();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, toolsOptionsHandler.getToolsSetColorAction(), new MenuPosition(PositionMode.MIDDLE));
+        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getWaveColorAction(), new MenuPosition(PositionMode.MIDDLE));
     }
 
     public void registerToolsMenuActions() {
-        getToolsSelectionHandler();
+        EditToolActions actions = getEditToolActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuGroup(GuiFrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_SELECTION_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.AROUND));
-        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, toolsSelectionHandler.getSelectionToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, toolsSelectionHandler.getPencilToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, actions.getSelectionToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, actions.getPencilToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
     }
 
     public AudioStatusPanel getAudioStatusPanel() {
         return audioStatusPanel;
     }
 
-    private PropertiesHandler getPropertiesHandler() {
-        if (propertiesHandler == null) {
-            propertiesHandler = new PropertiesHandler(application, (AudioPanel) getEditorProvider());
-            propertiesHandler.init();
+    private PropertiesAction getPropertiesAction() {
+        if (propertiesAction == null) {
+            ensureProvider();
+            propertiesAction = new PropertiesAction();
+            propertiesAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return propertiesHandler;
+        return propertiesAction;
     }
 
-    private AudioControlHandler getAudioControlHandler() {
-        if (audioControlHandler == null) {
-            audioControlHandler = new AudioControlHandler(application, (AudioPanel) getEditorProvider());
-            audioControlHandler.init();
+    private AudioControlActions getAudioControlActions() {
+        if (audioControlActions == null) {
+            ensureProvider();
+            audioControlActions = new AudioControlActions();
+            audioControlActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return audioControlHandler;
+        return audioControlActions;
     }
 
-    private AudioOperationHandler getAudioOperationHandler() {
-        if (audioOperationHandler == null) {
-            audioOperationHandler = new AudioOperationHandler(application, (AudioPanel) getEditorProvider());
-            audioOperationHandler.init();
+    private AudioOperationActions getAudioOperationActions() {
+        if (audioOperationActions == null) {
+            ensureProvider();
+            audioOperationActions = new AudioOperationActions();
+            audioOperationActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return audioOperationHandler;
+        return audioOperationActions;
     }
 
-    private DrawingControlHandler getDrawingControlHandler() {
-        if (drawingControlHandler == null) {
-            drawingControlHandler = new DrawingControlHandler(application, (AudioPanel) getEditorProvider());
-            drawingControlHandler.init();
+    private DrawingControlActions getDrawingControlActions() {
+        if (drawingControlActions == null) {
+            ensureProvider();
+            drawingControlActions = new DrawingControlActions();
+            drawingControlActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return drawingControlHandler;
+        return drawingControlActions;
     }
 
-    private ToolsSelectionHandler getToolsSelectionHandler() {
-        if (toolsSelectionHandler == null) {
-            toolsSelectionHandler = new ToolsSelectionHandler(application, (AudioPanel) getEditorProvider());
-            toolsSelectionHandler.init();
+    private EditToolActions getEditToolActions() {
+        if (editToolActions == null) {
+            ensureProvider();
+            editToolActions = new EditToolActions();
+            editToolActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return toolsSelectionHandler;
+        return editToolActions;
     }
 
-    private ZoomControlHandler getZoomControlHandler() {
-        if (zoomControlHandler == null) {
-            zoomControlHandler = new ZoomControlHandler(application, (AudioPanel) getEditorProvider());
-            zoomControlHandler.init();
+    private ZoomControlActions getZoomControlActions() {
+        if (zoomControlActions == null) {
+            ensureProvider();
+            zoomControlActions = new ZoomControlActions();
+            zoomControlActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return zoomControlHandler;
+        return zoomControlActions;
     }
 
-    private ToolsOptionsHandler getToolsOptionsHandler() {
-        if (toolsOptionsHandler == null) {
-            toolsOptionsHandler = new ToolsOptionsHandler(application, (AudioPanel) getEditorProvider());
-            toolsOptionsHandler.init();
+    private WaveColorAction getWaveColorAction() {
+        if (waveColorAction == null) {
+            ensureProvider();
+            waveColorAction = new WaveColorAction();
+            waveColorAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return toolsOptionsHandler;
+        return waveColorAction;
     }
 
     public void registerPropertiesMenu() {
-        getPropertiesHandler();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, propertiesHandler.getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerAudioMenu() {
-        getAudioControlHandler();
+        getAudioControlActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenu(AUDIO_MENU_ID, MODULE_ID);
         actionModule.registerMenuItem(GuiFrameModuleApi.MAIN_MENU_ID, MODULE_ID, AUDIO_MENU_ID, "Audio", new MenuPosition(NextToMode.AFTER, "View"));
-        actionModule.registerMenuItem(AUDIO_MENU_ID, MODULE_ID, audioControlHandler.getPlayAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(AUDIO_MENU_ID, MODULE_ID, audioControlHandler.getStopAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(AUDIO_MENU_ID, MODULE_ID, audioControlActions.getPlayAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(AUDIO_MENU_ID, MODULE_ID, audioControlActions.getStopAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerAudioOperationMenu() {
-        getAudioOperationHandler();
+        getAudioOperationActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenu(AUDIO_OPERATION_MENU_ID, MODULE_ID);
         actionModule.registerMenuItem(AUDIO_MENU_ID, MODULE_ID, AUDIO_OPERATION_MENU_ID, "Operation", new MenuPosition(PositionMode.BOTTOM));
-        actionModule.registerMenuItem(AUDIO_OPERATION_MENU_ID, MODULE_ID, audioOperationHandler.getRevertAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(AUDIO_OPERATION_MENU_ID, MODULE_ID, audioOperationActions.getRevertAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerDrawingModeMenu() {
-        getDrawingControlHandler();
+        getDrawingControlActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, DRAW_MODE_SUBMENU_ID, "Draw Mode", new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerZoomModeMenu() {
-        getZoomControlHandler();
+        getZoomControlActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, ZOOM_MODE_SUBMENU_ID, "Zoom", new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenu(ZOOM_MODE_SUBMENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getNormalZoomAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlHandler.getZoomDownAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getNormalZoomAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomDownAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void bindZoomScrollWheel() {
@@ -397,18 +433,18 @@ public class EditorWaveModule implements XBApplicationModule {
     }
 
     private JPopupMenu createPopupMenu() {
-        getAudioControlHandler();
-        getDrawingControlHandler();
+        getAudioControlActions();
+        getDrawingControlActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenu(AUDIO_POPUP_MENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(AUDIO_POPUP_MENU_ID, MODULE_ID, audioControlHandler.getPlayAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(AUDIO_POPUP_MENU_ID, MODULE_ID, audioControlHandler.getStopAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(AUDIO_POPUP_MENU_ID, MODULE_ID, audioControlActions.getPlayAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(AUDIO_POPUP_MENU_ID, MODULE_ID, audioControlActions.getStopAction(), new MenuPosition(PositionMode.TOP));
 
         actionModule.registerClipboardMenuItems(AUDIO_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
         actionModule.registerMenu(DRAW_MODE_SUBMENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(DRAW_MODE_SUBMENU_ID, MODULE_ID, drawingControlHandler.getDotsModeAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(DRAW_MODE_SUBMENU_ID, MODULE_ID, drawingControlHandler.getLineModeAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(DRAW_MODE_SUBMENU_ID, MODULE_ID, drawingControlHandler.getIntegralModeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(DRAW_MODE_SUBMENU_ID, MODULE_ID, drawingControlActions.getDotsModeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(DRAW_MODE_SUBMENU_ID, MODULE_ID, drawingControlActions.getLineModeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(DRAW_MODE_SUBMENU_ID, MODULE_ID, drawingControlActions.getIntegralModeAction(), new MenuPosition(PositionMode.TOP));
 
         actionModule.registerMenuItem(AUDIO_POPUP_MENU_ID, MODULE_ID, DRAW_MODE_SUBMENU_ID, "Draw Mode", new MenuPosition(PositionMode.BOTTOM));
         JPopupMenu popupMenu = new JPopupMenu();

@@ -13,56 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.xbup;
+package org.exbin.framework.editor.text.action;
 
+import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.client.api.ClientConnectionEvent;
-import org.exbin.framework.client.api.ClientConnectionListener;
-import org.exbin.framework.editor.xbup.gui.XBDocStatusPanel;
+import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
- * Status panel handler.
+ * Word wrapping action.
  *
  * @version 0.2.1 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class StatusPanelHandler {
+public class WordWrappingAction extends AbstractAction {
+
+    public static final String ACTION_ID = "viewWordWrapAction";
 
     private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
-    private XBDocStatusPanel docStatusPanel;
-
-    public StatusPanelHandler() {
+    public WordWrappingAction() {
     }
 
     public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
+
+        ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
+        putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
     }
 
-    public XBDocStatusPanel getDocStatusPanel() {
-        if (docStatusPanel == null) {
-            docStatusPanel = new XBDocStatusPanel();
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            frameModule.registerStatusBar(EditorXbupModule.MODULE_ID, EditorXbupModule.DOC_STATUS_BAR_ID, docStatusPanel);
-            frameModule.switchStatusBar(EditorXbupModule.DOC_STATUS_BAR_ID);
-            // ((XBDocumentPanel) getEditorProvider()).registerTextStatus(docStatusPanel);
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (editorProvider instanceof TextPanel) {
+            boolean lineWraping = ((TextPanel) editorProvider).changeLineWrap();
+            putValue(Action.SELECTED_KEY, lineWraping);
         }
-
-        return docStatusPanel;
-    }
-
-    public ClientConnectionListener getClientConnectionListener() {
-        return (ClientConnectionEvent connectionEvent) -> {
-            docStatusPanel.setConnectionStatus(connectionEvent.getConnectionStatus());
-        };
     }
 }

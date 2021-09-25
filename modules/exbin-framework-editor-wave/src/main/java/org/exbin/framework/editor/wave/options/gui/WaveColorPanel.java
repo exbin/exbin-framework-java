@@ -18,6 +18,7 @@ package org.exbin.framework.editor.wave.options.gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import org.exbin.framework.editor.wave.options.impl.WaveColorOptionsImpl;
@@ -568,6 +569,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
         setWaveSelectionColor(colors[5]);
     }
 
+    @Nonnull
     public Color[] getWaveColorsAsArray() {
         Color[] colors = new Color[6];
         colors[0] = getWaveColor();

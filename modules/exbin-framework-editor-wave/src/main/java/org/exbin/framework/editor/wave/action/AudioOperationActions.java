@@ -13,33 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.xbup;
+package org.exbin.framework.editor.wave.action;
 
+import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.client.api.ClientConnectionEvent;
-import org.exbin.framework.client.api.ClientConnectionListener;
-import org.exbin.framework.editor.xbup.gui.XBDocStatusPanel;
+import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
- * Status panel handler.
+ * Audio operation actions.
  *
- * @version 0.2.1 2021/09/25
+ * @version 0.2.0 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class StatusPanelHandler {
+public class AudioOperationActions {
+
+    public static final String AUDIO_REVERSE_ACTION_ID = "audioReverseAction";
 
     private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
-    private XBDocStatusPanel docStatusPanel;
+    private Action audioReverseAction;
 
-    public StatusPanelHandler() {
+    public AudioOperationActions() {
     }
 
     public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
@@ -48,21 +52,21 @@ public class StatusPanelHandler {
         this.resourceBundle = resourceBundle;
     }
 
-    public XBDocStatusPanel getDocStatusPanel() {
-        if (docStatusPanel == null) {
-            docStatusPanel = new XBDocStatusPanel();
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            frameModule.registerStatusBar(EditorXbupModule.MODULE_ID, EditorXbupModule.DOC_STATUS_BAR_ID, docStatusPanel);
-            frameModule.switchStatusBar(EditorXbupModule.DOC_STATUS_BAR_ID);
-            // ((XBDocumentPanel) getEditorProvider()).registerTextStatus(docStatusPanel);
+    @Nonnull
+    public Action getRevertAction() {
+        if (audioReverseAction == null) {
+            audioReverseAction = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (editorProvider instanceof AudioPanel) {
+                        AudioPanel activePanel = (AudioPanel) editorProvider;
+                        activePanel.performTransformReverse();
+                    }
+                }
+            };
+            ActionUtils.setupAction(audioReverseAction, resourceBundle, AUDIO_REVERSE_ACTION_ID);
         }
 
-        return docStatusPanel;
-    }
-
-    public ClientConnectionListener getClientConnectionListener() {
-        return (ClientConnectionEvent connectionEvent) -> {
-            docStatusPanel.setConnectionStatus(connectionEvent.getConnectionStatus());
-        };
+        return audioReverseAction;
     }
 }

@@ -40,9 +40,12 @@ public class DeleteItemAction extends AbstractAction {
 
     public static final String ACTION_ID = "deleteItemAction";
 
-    private final DocumentViewerProvider viewerProvider;
+    private DocumentViewerProvider viewerProvider;
 
-    public DeleteItemAction(DocumentViewerProvider viewerProvider) {
+    public DeleteItemAction() {
+    }
+
+    public void setup(DocumentViewerProvider viewerProvider) {
         this.viewerProvider = viewerProvider;
     }
 
@@ -60,7 +63,7 @@ public class DeleteItemAction extends AbstractAction {
         XBTTreeNode node = (XBTTreeNode) block;
         XBTTreeDocument mainDoc = viewerProvider.getDoc();
         XBUndoHandler undoHandler = viewerProvider.getUndoHandler();
-        
+
         XBTTreeNode parent = (XBTTreeNode) node.getParent();
         try {
             XBTDocCommand command = new XBTDeleteBlockCommand(mainDoc, node);

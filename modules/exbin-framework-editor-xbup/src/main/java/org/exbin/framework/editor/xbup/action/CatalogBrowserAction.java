@@ -49,16 +49,13 @@ public class CatalogBrowserAction extends AbstractAction {
     private XBACatalog catalog;
 
     public CatalogBrowserAction() {
-        init();
     }
 
-    private void init() {
+    public void setup(XBApplication application) {
+        this.application = application;
+
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-    }
-
-    public void setApplication(XBApplication application) {
-        this.application = application;
     }
 
     public void setCatalog(XBACatalog catalog) {
