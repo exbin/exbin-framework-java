@@ -19,33 +19,40 @@ import java.util.Random;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.EditableBinaryData;
+import org.exbin.auxiliary.paged_data.PagedData;
 import org.exbin.bined.CodeAreaUtils;
+import org.exbin.bined.EditMode;
 import org.exbin.bined.capability.CaretCapable;
+import org.exbin.bined.capability.EditModeCapable;
 import org.exbin.bined.capability.ScrollingCapable;
 import org.exbin.bined.operation.BinaryDataOperationException;
 import org.exbin.bined.operation.swing.CodeAreaOperation;
 import org.exbin.bined.operation.swing.CodeAreaOperationType;
+import org.exbin.bined.operation.swing.ModifyDataOperation;
 import org.exbin.bined.operation.swing.RemoveDataOperation;
 import org.exbin.bined.operation.swing.command.CodeAreaCommand;
 import org.exbin.bined.operation.swing.command.CodeAreaCommandType;
 import org.exbin.bined.swing.CodeAreaCore;
+import org.exbin.framework.bined.operation.InsertDataOperation.FillWithType;
+import org.exbin.xbup.operation.CompoundCommand;
 
 /**
- * Insert data operation.
+ * Replace data operation.
  *
- * @version 0.2.1 2021/09/25
+ * @version 0.2.1 2021/09/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class InsertDataOperation extends CodeAreaOperation {
+public class ReplaceDataOperation extends CodeAreaOperation {
 
     private final long position;
     private final long length;
     private final FillWithType fillWithType;
     private final EditableBinaryData data;
 
-    public InsertDataOperation(CodeAreaCore codeArea, long position, long length, FillWithType fillWithType, @Nullable EditableBinaryData data) {
+    public ReplaceDataOperation(CodeAreaCore codeArea, long position, long length, FillWithType fillWithType, @Nullable EditableBinaryData data) {
         super(codeArea);
         this.position = position;
         this.length = length;
@@ -56,7 +63,7 @@ public class InsertDataOperation extends CodeAreaOperation {
     @Nonnull
     @Override
     public CodeAreaOperationType getType() {
-        return CodeAreaOperationType.INSERT_DATA;
+        return CodeAreaOperationType.MODIFY_DATA;
     }
 
     @Nullable
@@ -72,24 +79,51 @@ public class InsertDataOperation extends CodeAreaOperation {
     }
 
     @Nullable
-    private CodeAreaOperation execute(boolean withUndo) {
+    private CodeAreaOperation execute(boolean withUndo) throws BinaryDataOperationException {
+        long dataSize = codeArea.getDataSize();
+        if (position > dataSize) {
+            throw new BinaryDataOperationException("Unable to replace data outside of document");
+        }
+
         CodeAreaOperation undoOperation = null;
         EditableBinaryData contentData = ((EditableBinaryData) codeArea.getContentData());
 
+        if (position == dataSize) {
+            undoOperation = new RemoveDataOperation(codeArea, position, 0, length);
+            contentData.insertUninitialized(dataSize, length);
+        } else if (position + length > dataSize) {
+            long diff = position + length - dataSize;
+            if (withUndo) {
+                // TODO use copy directly once delta is fixed
+                PagedData origData = new PagedData();
+                origData.insert(0, contentData.copy(position, length - diff));
+                undoOperation = new CompoundCodeAreaOperation(codeArea);
+                ((CompoundCodeAreaOperation) undoOperation).appendOperation(new ModifyDataOperation(codeArea, position, origData));
+                ((CompoundCodeAreaOperation) undoOperation).appendOperation(new RemoveDataOperation(codeArea, dataSize, 0, diff));
+            }
+
+            contentData.insertUninitialized(dataSize, diff);
+        } else if (withUndo) {
+            // TODO use copy directly once delta is fixed
+            PagedData origData = new PagedData();
+            origData.insert(0, contentData.copy(position, length));
+            undoOperation = new ModifyDataOperation(codeArea, position, origData);
+        }
+
         switch (fillWithType) {
             case EMPTY: {
-                contentData.insert(position, length);
+                for (long pos = position; pos < position + length; pos++) {
+                    contentData.setByte(pos, (byte) 0x0);
+                }
                 break;
             }
             case SPACE: {
-                contentData.insertUninitialized(position, length);
                 for (long pos = position; pos < position + length; pos++) {
                     contentData.setByte(pos, (byte) 0x20);
                 }
                 break;
             }
             case RANDOM: {
-                contentData.insertUninitialized(position, length);
                 Random random = new Random();
                 for (long pos = position; pos < position + length; pos++) {
                     contentData.setByte(pos, (byte) random.nextInt());
@@ -97,18 +131,16 @@ public class InsertDataOperation extends CodeAreaOperation {
                 break;
             }
             case SAMPLE: {
-                contentData.insertUninitialized(position, length);
-
                 if (data == null || data.isEmpty()) {
                     for (long pos = position; pos < position + length; pos++) {
                         contentData.setByte(pos, (byte) 0xFF);
                     }
                 } else {
-                    long dataSize = data.getDataSize();
+                    long dataSizeLimit = data.getDataSize();
                     long pos = position;
                     long remain = length;
                     while (remain > 0) {
-                        long seg = Math.min(remain, dataSize);
+                        long seg = Math.min(remain, dataSizeLimit);
                         contentData.replace(pos, data, 0, seg);
                         pos += seg;
                         remain -= seg;
@@ -121,9 +153,6 @@ public class InsertDataOperation extends CodeAreaOperation {
                 throw CodeAreaUtils.getInvalidTypeException(fillWithType);
         }
 
-        if (withUndo) {
-            undoOperation = new RemoveDataOperation(codeArea, position, 0, length);
-        }
         ((CaretCapable) codeArea).getCaret().setCaretPosition(position + length, 0);
         return undoOperation;
     }
@@ -134,27 +163,20 @@ public class InsertDataOperation extends CodeAreaOperation {
         data.dispose();
     }
 
-    public enum FillWithType {
-        EMPTY,
-        SPACE,
-        RANDOM,
-        SAMPLE
-    }
-    
     @ParametersAreNonnullByDefault
-    public static class InsertDataCommand extends CodeAreaCommand {
+    public static class ReplaceDataCommand extends CodeAreaCommand {
 
-        private final InsertDataOperation operation;
+        private final ReplaceDataOperation operation;
         private CodeAreaOperation undoOperation;
 
-        public InsertDataCommand(InsertDataOperation operation) {
+        public ReplaceDataCommand(ReplaceDataOperation operation) {
             super(operation.getCodeArea());
             this.operation = operation;
         }
 
         @Override
         public CodeAreaCommandType getType() {
-            return CodeAreaCommandType.DATA_INSERTED;
+            return CodeAreaCommandType.DATA_MODIFIED;
         }
 
         @Override

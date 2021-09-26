@@ -27,11 +27,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.auxiliary.paged_data.EditableBinaryData;
+import org.exbin.bined.EditOperation;
 import org.exbin.bined.operation.BinaryDataOperationException;
 import org.exbin.bined.operation.swing.command.CodeAreaCommand;
-import org.exbin.bined.operation.swing.command.CodeAreaCommandType;
-import org.exbin.bined.operation.swing.command.OpCodeAreaCommand;
 import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.framework.XBFrameworkUtils;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.SearchCondition;
@@ -39,6 +39,7 @@ import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.bined.gui.BinaryMultilinePanel;
 import org.exbin.framework.bined.gui.InsertDataPanel;
 import org.exbin.framework.bined.operation.InsertDataOperation;
+import org.exbin.framework.bined.operation.ReplaceDataOperation;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -129,8 +130,22 @@ public class InsertDataAction extends AbstractAction {
                     long dataLength = insertDataPanel.getDataLength();
                     InsertDataOperation.FillWithType fillWithType = insertDataPanel.getFillWithType();
                     ExtCodeArea codeArea = activePanel.getCodeArea();
-                    InsertDataOperation operation = new InsertDataOperation(codeArea, codeArea.getDataPosition(), dataLength, fillWithType, sampleBinaryData);
-                    CodeAreaCommand command = new InsertDataOperation.InsertDataCommand(operation);
+                    EditOperation activeOperation = codeArea.getActiveOperation();
+                    CodeAreaCommand command;
+                    switch (activeOperation) {
+                        case INSERT: {
+                            InsertDataOperation operation = new InsertDataOperation(codeArea, codeArea.getDataPosition(), dataLength, fillWithType, sampleBinaryData);
+                            command = new InsertDataOperation.InsertDataCommand(operation);
+                            break;
+                        }
+                        case OVERWRITE: {
+                            ReplaceDataOperation operation = new ReplaceDataOperation(codeArea, codeArea.getDataPosition(), dataLength, fillWithType, sampleBinaryData);
+                            command = new ReplaceDataOperation.ReplaceDataCommand(operation);
+                            break;
+                        }
+                        default:
+                            throw XBFrameworkUtils.getInvalidTypeException(activeOperation);
+                    }
                     try {
                         activePanel.getUndoHandler().execute(command);
                     } catch (BinaryDataOperationException ex) {
