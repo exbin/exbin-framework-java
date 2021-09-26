@@ -80,6 +80,7 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.bined.action.CompareFilesAction;
 import org.exbin.framework.bined.action.InsertDataAction;
 import org.exbin.framework.bined.action.ShowHeaderAction;
 import org.exbin.framework.bined.options.impl.BinaryAppearanceOptionsImpl;
@@ -198,7 +199,7 @@ public class BinedModule implements XBApplicationModule {
     private FindReplaceActions findReplaceHandler;
     private ShowNonprintablesActions showNonprintablesHandler;
     private ShowValuesPanelAction showValuesPanelAction;
-    private CodeAreaFontAction toolsFontAction;
+    private CodeAreaFontAction codeAreaFontAction;
     private RowWrappingAction rowWrappingAction;
     private EncodingsHandler encodingsHandler;
     private GoToPositionAction goToPositionAction;
@@ -213,6 +214,7 @@ public class BinedModule implements XBApplicationModule {
     private HexCharactersCaseActions hexCharactersCaseActions;
     private ClipboardCodeActions clipboardCodeActions;
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
+    private CompareFilesAction compareFilesAction;
 
     public BinedModule() {
     }
@@ -276,16 +278,6 @@ public class BinedModule implements XBApplicationModule {
         return editorProvider;
     }
 
-    private void ensureProvider() {
-        if (editorProvider == null) {
-            getEditorProvider();
-        }
-        
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     public BinaryEditorProvider getMultiEditorProvider() {
         if (editorProvider == null) {
@@ -324,6 +316,16 @@ public class BinedModule implements XBApplicationModule {
         }
 
         return editorProvider;
+    }
+
+    private void ensureProvider() {
+        if (editorProvider == null) {
+            getEditorProvider();
+        }
+
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
     }
 
     public void registerStatusBar() {
@@ -1340,14 +1342,14 @@ public class BinedModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public CodeAreaFontAction getToolsFontAction() {
-        if (toolsFontAction == null) {
+    public CodeAreaFontAction getCodeAreaFontAction() {
+        if (codeAreaFontAction == null) {
             ensureProvider();
-            toolsFontAction = new CodeAreaFontAction();
-            toolsFontAction.setup(application, editorProvider, resourceBundle);
+            codeAreaFontAction = new CodeAreaFontAction();
+            codeAreaFontAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return toolsFontAction;
+        return codeAreaFontAction;
     }
 
     @Nonnull
@@ -1377,7 +1379,7 @@ public class BinedModule implements XBApplicationModule {
         if (encodingsHandler == null) {
             ensureProvider();
             encodingsHandler = new EncodingsHandler();
-            encodingsHandler.setParentComponent(editorProvider.getPanel());
+            encodingsHandler.setParentComponent(editorProvider.getEditorComponent());
             if (binaryStatusPanel != null) {
                 encodingsHandler.setTextEncodingStatus(binaryStatusPanel);
             }
@@ -1396,6 +1398,17 @@ public class BinedModule implements XBApplicationModule {
         }
 
         return printAction;
+    }
+
+    @Nonnull
+    public AbstractAction getCompareFilesAction() {
+        if (compareFilesAction == null) {
+            ensureProvider();
+            compareFilesAction = new CompareFilesAction();
+            compareFilesAction.setup(application, editorProvider, resourceBundle);
+        }
+
+        return compareFilesAction;
     }
 
     @Nonnull
@@ -1491,16 +1504,15 @@ public class BinedModule implements XBApplicationModule {
     }
 
     public void registerViewValuesPanelMenuActions() {
-        getShowValuesPanelAction();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_VALUES_PANEL_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
         actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, getShowValuesPanelAction(), new MenuPosition(VIEW_VALUES_PANEL_MENU_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
-        getToolsFontAction();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getToolsFontAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getCodeAreaFontAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getCompareFilesAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerClipboardCodeActions() {

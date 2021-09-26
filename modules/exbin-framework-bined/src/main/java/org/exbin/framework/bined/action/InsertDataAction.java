@@ -86,7 +86,7 @@ public class InsertDataAction extends AbstractAction {
             DefaultControlPanel controlPanel = new DefaultControlPanel(insertDataPanel.getResourceBundle());
             JPanel dialogPanel = WindowUtils.createDialogPanel(insertDataPanel, controlPanel);
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getPanel(), "", Dialog.ModalityType.APPLICATION_MODAL);
+            final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "", Dialog.ModalityType.APPLICATION_MODAL);
             insertDataPanel.setControl(new InsertDataPanel.Control() {
                 @Override
                 public void sampleDataAction() {
@@ -157,7 +157,7 @@ public class InsertDataAction extends AbstractAction {
                 dialog.dispose();
             });
             SwingUtilities.invokeLater(insertDataPanel::initFocus);
-            dialog.showCentered(editorProvider.getPanel());
+            dialog.showCentered(editorProvider.getEditorComponent());
         }
     }
 }

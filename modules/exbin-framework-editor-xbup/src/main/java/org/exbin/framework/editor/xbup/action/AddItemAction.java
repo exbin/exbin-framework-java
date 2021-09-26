@@ -119,6 +119,6 @@ public class AddItemAction extends AbstractAction {
                 }
             }
         });
-        dialog.showCentered(viewerProvider.getPanel());
+        dialog.showCentered(viewerProvider.getEditorComponent());
     }
 }

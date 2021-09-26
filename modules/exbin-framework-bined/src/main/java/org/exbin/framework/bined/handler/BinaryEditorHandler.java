@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.JComponent;
 import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
 import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.capability.RowWrappingCapable;
@@ -43,6 +44,7 @@ import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
+import org.exbin.framework.gui.editor.gui.MultiEditorPanel;
 import org.exbin.framework.gui.editor.tab.api.EditorViewHandling;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
@@ -71,6 +73,7 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     private final BinaryDataUndoUpdateListener multiUndoUpdateListener;
     private ClipboardActionsUpdateListener clipboardUpdateListener = null;
     private final ClipboardActionsUpdateListener multiClipboardUpdateListener;
+    private MultiEditorPanel multiEditorPanel = new MultiEditorPanel();
 
     public BinaryEditorHandler() {
         multiModificationListener = () -> {
@@ -309,8 +312,8 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
     }
 
     @Override
-    public BinEdComponentPanel getPanel() {
-        return activeFile.getComponentPanel();
+    public JComponent getEditorComponent() {
+        return multiEditorPanel;
     }
 
     @Override

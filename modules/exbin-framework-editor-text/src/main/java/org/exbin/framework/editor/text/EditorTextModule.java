@@ -524,7 +524,7 @@ public class EditorTextModule implements XBApplicationModule {
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
             encodingsHandler = new EncodingsHandler();
-            encodingsHandler.setParentComponent(getEditorProvider().getPanel());
+            encodingsHandler.setParentComponent(getEditorProvider().getEditorComponent());
             if (textStatusPanel != null) {
                 encodingsHandler.setTextEncodingStatus(textStatusPanel);
             }

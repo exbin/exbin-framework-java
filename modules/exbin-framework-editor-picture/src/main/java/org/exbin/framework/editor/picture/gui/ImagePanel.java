@@ -686,7 +686,7 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
-    public JPanel getPanel() {
+    public JPanel getEditorComponent() {
         return this;
     }
 

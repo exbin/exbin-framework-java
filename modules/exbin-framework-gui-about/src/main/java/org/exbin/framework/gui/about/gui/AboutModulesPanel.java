@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.about.gui;
 
 import java.util.List;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -28,6 +29,7 @@ import org.exbin.xbup.plugin.XBModuleRecord;
  * @version 0.2.1 2021/03/28
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class AboutModulesPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutModulesPanel.class);
@@ -104,7 +106,6 @@ public class AboutModulesPanel extends javax.swing.JPanel {
     public static void main(String args[]) {
         WindowUtils.invokeDialog(new AboutModulesPanel());
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane modulesScrollPane;

@@ -137,7 +137,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     @Nonnull
     @Override
-    public JPanel getPanel() {
+    public JPanel getEditorComponent() {
         return documentPanel;
     }
 

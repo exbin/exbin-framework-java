@@ -658,7 +658,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     }
 
     @Override
-    public JPanel getPanel() {
+    public JPanel getEditorComponent() {
         return this;
     }
 

@@ -18,24 +18,24 @@ package org.exbin.framework.gui.editor.api;
 import java.beans.PropertyChangeListener;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * XBUP framework editor interface.
  *
- * @version 0.2.0 2016/08/14
+ * @version 0.2.2 2021/09/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface EditorProvider extends FileHandlerApi {
 
     /**
-     * Returns currently active panel.
+     * Returns main editor component.
      *
-     * @return panel
+     * @return component
      */
-    JPanel getPanel();
+    JComponent getEditorComponent();
 
     /**
      * Changes passing listener.

@@ -486,7 +486,7 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
     }
 
     @Override
-    public JPanel getPanel() {
+    public JPanel getEditorComponent() {
         return componentPanel;
     }
 

@@ -15,27 +15,20 @@
  */
 package org.exbin.framework.gui.editor.gui;
 
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * XBUP framework editor panel.
+ * Multi editor panel.
  *
- * @version 0.2.0 2015/12/28
+ * @version 0.2.2 2021/09/26
  * @author ExBin Project (http://exbin.org)
  */
-public class SingleEditorPanel extends javax.swing.JPanel {
+@ParametersAreNonnullByDefault
+public class MultiEditorPanel extends javax.swing.JPanel {
 
-    private final JPanel editorPanel;
-
-    public SingleEditorPanel(JPanel editorPanel) {
-        this.editorPanel = editorPanel;
-
+    public MultiEditorPanel() {
         initComponents();
-    }
-
-    public void init() {
-        add(editorPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -47,10 +40,28 @@ public class SingleEditorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        tabbedPane = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+
+        setPreferredSize(new java.awt.Dimension(400, 300));
         setLayout(new java.awt.BorderLayout());
+
+        tabbedPane.addTab("tab1", jPanel1);
+
+        add(tabbedPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new MultiEditorPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 }

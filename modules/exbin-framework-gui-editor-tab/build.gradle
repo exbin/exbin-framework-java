@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-tab-api')
-    implementation 'org.dockingframes:docking-frames-common:1.1.1'
+//    implementation 'org.dockingframes:docking-frames-common:1.1.1'
     implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')

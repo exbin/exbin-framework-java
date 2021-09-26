@@ -133,6 +133,6 @@ public class EditItemAction extends AbstractAction {
             dialog.close();
             dialog.dispose();
         });
-        dialog.showCentered(viewerProvider.getPanel());
+        dialog.showCentered(viewerProvider.getEditorComponent());
     }
 }

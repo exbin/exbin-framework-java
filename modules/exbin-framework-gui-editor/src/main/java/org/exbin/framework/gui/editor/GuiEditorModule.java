@@ -25,7 +25,6 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
-import org.exbin.framework.gui.editor.gui.SingleEditorPanel;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
@@ -41,7 +40,7 @@ import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 /**
  * XBUP framework editor module.
  *
- * @version 0.2.0 2016/08/16
+ * @version 0.2.2 2021/09/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -50,8 +49,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     private XBApplication application;
     private final List<EditorProvider> editors = new ArrayList<>();
     private final Map<String, List<EditorProvider>> pluginEditorsMap = new HashMap<>();
-    private SingleEditorPanel editorPanel;
-    private EditorProvider activeEditor = null;
+    private EditorProvider editorProvider = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener = null;
 
     public GuiEditorModule() {
@@ -62,49 +60,49 @@ public class GuiEditorModule implements GuiEditorModuleApi {
         this.application = (XBApplication) moduleHandler;
     }
 
-    private void setActiveEditor(EditorProvider editorProvider) {
-        if (activeEditor == null) {
+    private void setEditorProvider(EditorProvider editorProvider) {
+        if (this.editorProvider == null) {
             GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
             actionModule.registerClipboardHandler(new ClipboardActionsHandler() {
                 @Override
                 public void performCut() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) activeEditor).performCut();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) editorProvider).performCut();
                     }
                 }
 
                 @Override
                 public void performCopy() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) activeEditor).performCopy();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) editorProvider).performCopy();
                     }
                 }
 
                 @Override
                 public void performPaste() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) activeEditor).performPaste();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) editorProvider).performPaste();
                     }
                 }
 
                 @Override
                 public void performDelete() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) activeEditor).performDelete();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) editorProvider).performDelete();
                     }
                 }
 
                 @Override
                 public void performSelectAll() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) activeEditor).performSelectAll();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        ((ClipboardActionsHandler) editorProvider).performSelectAll();
                     }
                 }
 
                 @Override
                 public boolean isSelection() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) activeEditor).isSelection();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) editorProvider).isSelection();
                     }
 
                     return false;
@@ -112,8 +110,8 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
                 @Override
                 public boolean isEditable() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) activeEditor).isEditable();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) editorProvider).isEditable();
                     }
 
                     return false;
@@ -121,8 +119,8 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
                 @Override
                 public boolean canSelectAll() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) activeEditor).canSelectAll();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) editorProvider).canSelectAll();
                     }
 
                     return false;
@@ -135,8 +133,8 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
                 @Override
                 public boolean canPaste() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) activeEditor).canPaste();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) editorProvider).canPaste();
                     }
 
                     return true;
@@ -144,8 +142,8 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
                 @Override
                 public boolean canDelete() {
-                    if (activeEditor instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) activeEditor).canDelete();
+                    if (editorProvider instanceof ClipboardActionsHandler) {
+                        return ((ClipboardActionsHandler) editorProvider).canDelete();
                     }
 
                     return isEditable();
@@ -153,7 +151,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
             });
         }
 
-        this.activeEditor = editorProvider;
+        this.editorProvider = editorProvider;
     }
 
     @Override
@@ -170,7 +168,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     @Override
     public void registerMultiEditor(String pluginId, final MultiEditorProvider editorProvider) {
         registerEditor(pluginId, editorProvider);
-        setActiveEditor(editorProvider);
+        setEditorProvider(editorProvider);
     }
 
     @Override
@@ -183,7 +181,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
         }
         if (editorProvider instanceof ClipboardActionsHandler) {
             ((ClipboardActionsHandler) editorProvider).setUpdateListener(() -> {
-                if (editorProvider == activeEditor) {
+                if (editorProvider == this.editorProvider) {
                     clipboardActionsUpdateListener.stateChanged();
                 }
             });
@@ -200,17 +198,11 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
     @Override
     public Component getEditorPanel() {
-        if (editorPanel == null) {
-            setActiveEditor(editors.get(0));
-            editorPanel = new SingleEditorPanel(activeEditor.getPanel());
-            editorPanel.init();
-        }
-
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
         FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
-        fileHandlingActions.setFileHandler(activeEditor);
+        fileHandlingActions.setFileHandler(editorProvider);
 
-        return editorPanel;
+        return editorProvider.getEditorComponent();
     }
 
     @Override
@@ -219,8 +211,8 @@ public class GuiEditorModule implements GuiEditorModuleApi {
         undoModule.setUndoHandler(new XBUndoHandler() {
             @Override
             public boolean canRedo() {
-                if (activeEditor != null && activeEditor.getPanel() instanceof UndoActionsHandler) {
-                    return ((UndoActionsHandler) activeEditor.getPanel()).canRedo();
+                if (editorProvider != null && editorProvider.getEditorComponent() instanceof UndoActionsHandler) {
+                    return ((UndoActionsHandler) editorProvider.getEditorComponent()).canRedo();
                 }
 
                 return false;
@@ -228,8 +220,8 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
             @Override
             public boolean canUndo() {
-                if (activeEditor != null && activeEditor.getPanel() instanceof UndoActionsHandler) {
-                    return ((UndoActionsHandler) activeEditor.getPanel()).canUndo();
+                if (editorProvider != null && editorProvider.getEditorComponent() instanceof UndoActionsHandler) {
+                    return ((UndoActionsHandler) editorProvider.getEditorComponent()).canUndo();
                 }
 
                 return false;
@@ -287,8 +279,8 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
             @Override
             public void performRedo() throws Exception {
-                if (activeEditor != null && activeEditor.getPanel() instanceof UndoActionsHandler) {
-                    ((UndoActionsHandler) activeEditor.getPanel()).performRedo();
+                if (editorProvider != null && editorProvider.getEditorComponent() instanceof UndoActionsHandler) {
+                    ((UndoActionsHandler) editorProvider.getEditorComponent()).performRedo();
                     GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
                     undoModule.updateUndoStatus();
                 }
@@ -301,8 +293,8 @@ public class GuiEditorModule implements GuiEditorModuleApi {
 
             @Override
             public void performUndo() throws Exception {
-                if (activeEditor != null && activeEditor.getPanel() instanceof UndoActionsHandler) {
-                    ((UndoActionsHandler) activeEditor.getPanel()).performUndo();
+                if (editorProvider != null && editorProvider.getEditorComponent() instanceof UndoActionsHandler) {
+                    ((UndoActionsHandler) editorProvider.getEditorComponent()).performUndo();
                     GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
                     undoModule.updateUndoStatus();
                 }

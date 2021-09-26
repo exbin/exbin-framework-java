@@ -32,7 +32,7 @@ import org.exbin.framework.gui.file.api.FileType;
 public class DocumentEditorProvider implements EditorProvider {
 
     @Override
-    public JPanel getPanel() {
+    public JPanel getEditorComponent() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

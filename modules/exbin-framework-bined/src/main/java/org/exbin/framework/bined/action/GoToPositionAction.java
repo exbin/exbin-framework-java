@@ -74,7 +74,7 @@ public class GoToPositionAction extends AbstractAction {
             DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
             JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getPanel(), "", Dialog.ModalityType.APPLICATION_MODAL);
+            final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "", Dialog.ModalityType.APPLICATION_MODAL);
             WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
             frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
@@ -87,7 +87,7 @@ public class GoToPositionAction extends AbstractAction {
                 dialog.dispose();
             });
             SwingUtilities.invokeLater(goToPanel::initFocus);
-            dialog.showCentered(editorProvider.getPanel());
+            dialog.showCentered(editorProvider.getEditorComponent());
         }
     }
 }

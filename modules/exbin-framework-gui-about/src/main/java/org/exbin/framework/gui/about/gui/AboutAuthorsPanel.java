@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.about.gui;
 
 import java.util.ResourceBundle;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -26,6 +27,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2021/03/28
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class AboutAuthorsPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutAuthorsPanel.class);
@@ -36,7 +38,6 @@ public class AboutAuthorsPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-
     }
 
     public void setApplication(XBApplication application) {

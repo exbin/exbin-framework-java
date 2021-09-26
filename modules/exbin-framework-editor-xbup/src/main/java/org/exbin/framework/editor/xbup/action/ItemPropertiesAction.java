@@ -73,7 +73,7 @@ public class ItemPropertiesAction extends AbstractAction {
             dialog.close();
             dialog.dispose();
         });
-        dialog.showCentered(viewerProvider.getPanel());
+        dialog.showCentered(viewerProvider.getEditorComponent());
     }
 
     public void setDevMode(boolean devMode) {
