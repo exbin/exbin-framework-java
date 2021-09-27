@@ -23,9 +23,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.bined.basic.CodeAreaViewMode;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.bined.BinaryEditorControl;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * View mode actions.
@@ -42,7 +43,7 @@ public class ViewModeHandlerActions {
 
     public static final String VIEW_MODE_RADIO_GROUP_ID = "viewModeRadioGroup";
 
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
@@ -55,7 +56,7 @@ public class ViewModeHandlerActions {
     public ViewModeHandlerActions() {
     }
 
-    public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
@@ -63,7 +64,7 @@ public class ViewModeHandlerActions {
 
     public void setViewMode(CodeAreaViewMode viewMode) {
         this.viewMode = viewMode;
-        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
         activePanel.getCodeArea().setViewMode(viewMode);
     }
 
@@ -73,7 +74,7 @@ public class ViewModeHandlerActions {
             dualModeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setViewMode(CodeAreaViewMode.DUAL);
                     }
                 }
@@ -92,7 +93,7 @@ public class ViewModeHandlerActions {
             codeMatrixModeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setViewMode(CodeAreaViewMode.CODE_MATRIX);
                     }
                 }
@@ -112,7 +113,7 @@ public class ViewModeHandlerActions {
             textPreviewModeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setViewMode(CodeAreaViewMode.TEXT_PREVIEW);
                     }
                 }

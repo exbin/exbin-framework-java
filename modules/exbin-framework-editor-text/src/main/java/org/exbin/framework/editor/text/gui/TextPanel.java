@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -81,13 +82,14 @@ import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
 import org.exbin.framework.editor.text.service.TextSearchService;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.core.util.StringUtils;
 
 /**
  * Text editor panel.
  *
- * @version 0.2.1 2020/09/21
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -95,8 +97,6 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
     private UndoUpdateListener undoUpdateListener = null;
-    private URI fileUri = null;
-    private FileType fileType = null;
     private boolean modified = false;
     private Object highlight;
     private Color foundTextBackgroundColor;
@@ -108,6 +108,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     private TextStatusPanel textStatus = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
     private EditorModificationListener editorModificationListener;
+    private FileHandlerApi activeFile;
 
     public TextPanel() {
         initComponents();
@@ -165,6 +166,155 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
                 propertyChangeListener.propertyChange(evt);
             }
         });
+
+        activeFile = new FileHandlerApi() {
+            private URI fileUri = null;
+            private FileType fileType = null;
+
+            @Nonnull
+            @Override
+            public JComponent getComponent() {
+                return TextPanel.this;
+            }
+
+            @Override
+            public void loadFromFile(URI fileUri, FileType fileType) {
+                File file = new File(fileUri);
+                switch (fileType.getFileTypeId()) {
+                    case EditorTextModule.XBT_FILE_TYPE: {
+                        try {
+                            XBPCatalog catalog = new XBPCatalog();
+                            catalog.addFormatDecl(getContextFormatDecl());
+                            XBLFormatDecl formatDecl = new XBLFormatDecl(XBEncodingText.XBUP_FORMATREV_CATALOGPATH);
+                            XBEncodingText encodingText = new XBEncodingText();
+                            XBDeclaration declaration = new XBDeclaration(formatDecl, encodingText);
+                            XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
+                            typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
+                            XBPSerialReader reader = new XBPSerialReader(typeProcessing);
+                            reader.read(declaration);
+                            changeCharset(encodingText.getCharset());
+                            textArea.setText(encodingText.getValue());
+                            this.fileUri = fileUri;
+                        } catch (XBProcessingException | IOException ex) {
+                            Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                    case EditorTextModule.TXT_FILE_TYPE: {
+                        try {
+                            FileInputStream fileStream = new FileInputStream(file);
+                            int gotChars;
+                            char[] buffer = new char[32];
+                            StringBuilder data = new StringBuilder();
+                            BufferedReader rdr = new BufferedReader(new InputStreamReader(fileStream, charset));
+                            while ((gotChars = rdr.read(buffer)) != -1) {
+                                data.append(buffer, 0, gotChars);
+                            }
+                            textArea.setText(data.toString());
+                            this.fileUri = fileUri;
+                        } catch (IOException ex) {
+                            Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                }
+
+                setModified(false);
+            }
+
+            @Override
+            public void saveToFile(URI fileUri, FileType fileType) {
+                File file = new File(fileUri);
+                switch (fileType.getFileTypeId()) {
+                    case EditorTextModule.XBT_FILE_TYPE: {
+                        try {
+                            XBEncodingText encodingString = new XBEncodingText();
+                            encodingString.setValue(textArea.getText());
+                            encodingString.setCharset(charset);
+
+                            try (FileOutputStream output = new FileOutputStream(file)) {
+                                XBPCatalog catalog = new XBPCatalog();
+                                catalog.addFormatDecl(getContextFormatDecl());
+                                XBLFormatDecl formatDecl = new XBLFormatDecl(XBEncodingText.XBUP_FORMATREV_CATALOGPATH);
+                                XBDeclaration declaration = new XBDeclaration(formatDecl, encodingString);
+                                declaration.realignReservation(catalog);
+                                XBTTypeUndeclaringFilter typeProcessing = new XBTTypeUndeclaringFilter(catalog);
+                                typeProcessing.attachXBTListener(new XBTEventListenerToListener(new XBTToXBEventConvertor(new XBEventWriter(output))));
+                                XBPSerialWriter writer = new XBPSerialWriter(new XBTListenerToEventListener(typeProcessing));
+                                writer.write(declaration);
+                                this.fileUri = fileUri;
+                            }
+                        } catch (XBProcessingException | IOException ex) {
+                            Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                    default: // TODO detect extension
+                    case EditorTextModule.TXT_FILE_TYPE: {
+                        try {
+                            try (FileOutputStream output = new FileOutputStream(file)) {
+                                String text = textArea.getText();
+                                try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, charset))) {
+                                    int fileLength = text.length();
+                                    int offset = 0;
+                                    while (offset < fileLength) {
+                                        int length = Math.min(1024, fileLength - offset);
+                                        writer.write(text, offset, length);
+                                        offset += length;
+                                    }
+                                    this.fileUri = fileUri;
+                                }
+                            }
+                        } catch (IOException ex) {
+                            Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                }
+
+                setModified(false);
+            }
+
+            @Nonnull
+            @Override
+            public Optional<URI> getFileUri() {
+                return Optional.ofNullable(fileUri);
+            }
+
+            @Nonnull
+            @Override
+            public Optional<String> getFileName() {
+                if (fileUri != null) {
+                    String path = fileUri.getPath();
+                    int lastSegment = path.lastIndexOf("/");
+                    return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
+                }
+
+                return Optional.empty();
+            }
+
+            @Nonnull
+            @Override
+            public Optional<FileType> getFileType() {
+                return Optional.ofNullable(fileType);
+            }
+
+            @Override
+            public void newFile() {
+                textArea.setText("");
+                setModified(false);
+            }
+
+            @Override
+            public void setFileType(FileType fileType) {
+                this.fileType = fileType;
+            }
+
+            @Override
+            public boolean isModified() {
+                return modified;
+            }
+        };
     }
 
     public boolean changeLineWrap() {
@@ -306,6 +456,12 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         return textArea.getSelectionEnd() > textArea.getSelectionStart();
     }
 
+    @Nonnull
+    @Override
+    public FileHandlerApi getActiveFile() {
+        return activeFile;
+    }
+
     public void printFile() {
         try {
             textArea.print();
@@ -372,11 +528,6 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     private javax.swing.JScrollPane textAreaScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public boolean isModified() {
-        return modified;
-    }
-
     public void setModified(boolean modified) {
         if (highlight != null) {
             textArea.getHighlighter().removeHighlight(highlight);
@@ -388,128 +539,6 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
             editorModificationListener.modified();
         }
         firePropertyChange("modified", oldValue, this.modified);
-    }
-
-    @Override
-    public void loadFromFile(URI fileUri, FileType fileType) {
-        File file = new File(fileUri);
-        switch (fileType.getFileTypeId()) {
-            case EditorTextModule.XBT_FILE_TYPE: {
-                try {
-                    XBPCatalog catalog = new XBPCatalog();
-                    catalog.addFormatDecl(getContextFormatDecl());
-                    XBLFormatDecl formatDecl = new XBLFormatDecl(XBEncodingText.XBUP_FORMATREV_CATALOGPATH);
-                    XBEncodingText encodingText = new XBEncodingText();
-                    XBDeclaration declaration = new XBDeclaration(formatDecl, encodingText);
-                    XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
-                    typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
-                    XBPSerialReader reader = new XBPSerialReader(typeProcessing);
-                    reader.read(declaration);
-                    changeCharset(encodingText.getCharset());
-                    textArea.setText(encodingText.getValue());
-                    this.fileUri = fileUri;
-                } catch (XBProcessingException | IOException ex) {
-                    Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                break;
-            }
-            case EditorTextModule.TXT_FILE_TYPE: {
-                try {
-                    FileInputStream fileStream = new FileInputStream(file);
-                    int gotChars;
-                    char[] buffer = new char[32];
-                    StringBuilder data = new StringBuilder();
-                    BufferedReader rdr = new BufferedReader(new InputStreamReader(fileStream, charset));
-                    while ((gotChars = rdr.read(buffer)) != -1) {
-                        data.append(buffer, 0, gotChars);
-                    }
-                    textArea.setText(data.toString());
-                    this.fileUri = fileUri;
-                } catch (IOException ex) {
-                    Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                break;
-            }
-        }
-
-        setModified(false);
-    }
-
-    @Override
-    public void saveToFile(URI fileUri, FileType fileType) {
-        File file = new File(fileUri);
-        switch (fileType.getFileTypeId()) {
-            case EditorTextModule.XBT_FILE_TYPE: {
-                try {
-                    XBEncodingText encodingString = new XBEncodingText();
-                    encodingString.setValue(textArea.getText());
-                    encodingString.setCharset(charset);
-
-                    try (FileOutputStream output = new FileOutputStream(file)) {
-                        XBPCatalog catalog = new XBPCatalog();
-                        catalog.addFormatDecl(getContextFormatDecl());
-                        XBLFormatDecl formatDecl = new XBLFormatDecl(XBEncodingText.XBUP_FORMATREV_CATALOGPATH);
-                        XBDeclaration declaration = new XBDeclaration(formatDecl, encodingString);
-                        declaration.realignReservation(catalog);
-                        XBTTypeUndeclaringFilter typeProcessing = new XBTTypeUndeclaringFilter(catalog);
-                        typeProcessing.attachXBTListener(new XBTEventListenerToListener(new XBTToXBEventConvertor(new XBEventWriter(output))));
-                        XBPSerialWriter writer = new XBPSerialWriter(new XBTListenerToEventListener(typeProcessing));
-                        writer.write(declaration);
-                        this.fileUri = fileUri;
-                    }
-                } catch (XBProcessingException | IOException ex) {
-                    Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                break;
-            }
-            default: // TODO detect extension
-            case EditorTextModule.TXT_FILE_TYPE: {
-                try {
-                    try (FileOutputStream output = new FileOutputStream(file)) {
-                        String text = textArea.getText();
-                        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, charset))) {
-                            int fileLength = text.length();
-                            int offset = 0;
-                            while (offset < fileLength) {
-                                int length = Math.min(1024, fileLength - offset);
-                                writer.write(text, offset, length);
-                                offset += length;
-                            }
-                            this.fileUri = fileUri;
-                        }
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                break;
-            }
-        }
-
-        setModified(false);
-    }
-
-    @Nonnull
-    @Override
-    public Optional<URI> getFileUri() {
-        return Optional.ofNullable(fileUri);
-    }
-
-    @Nonnull
-    @Override
-    public Optional<String> getFileName() {
-        if (fileUri != null) {
-            String path = fileUri.getPath();
-            int lastSegment = path.lastIndexOf("/");
-            return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
-        }
-
-        return Optional.empty();
-    }
-
-    @Nonnull
-    @Override
-    public Optional<FileType> getFileType() {
-        return Optional.ofNullable(fileType);
     }
 
     /**
@@ -544,12 +573,6 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
             return null;
         }
         return formatDecl;
-    }
-
-    @Override
-    public void newFile() {
-        textArea.setText("");
-        setModified(false);
     }
 
     public UndoableEdit getUndo() {
@@ -603,11 +626,6 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     }
 
     @Override
-    public void setFileType(FileType fileType) {
-        this.fileType = fileType;
-    }
-
-    @Override
     public boolean canUndo() {
         return getUndo().canUndo();
     }
@@ -634,6 +652,7 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
 
     @Override
     public String getWindowTitle(String frameTitle) {
+        URI fileUri = activeFile.getFileUri().orElse(null);
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastIndexOf = path.lastIndexOf("/");

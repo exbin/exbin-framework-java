@@ -25,14 +25,15 @@ import org.exbin.auxiliary.paged_data.delta.FileSegment;
 import org.exbin.auxiliary.paged_data.delta.MemorySegment;
 import org.exbin.auxiliary.paged_data.delta.list.DefaultDoublyLinkedList;
 import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.bined.BinaryEditorControl;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
- * File properties dialog.
+ * File properties panel.
  *
- * @version 0.2.0 2016/12/27
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 public class PropertiesPanel extends javax.swing.JPanel {
@@ -145,9 +146,9 @@ public class PropertiesPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane structureScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    public void setEditorProvider(BinaryEditorProvider editorProvider) {
-        Optional<URI> fileUri = editorProvider.getFileUri();
-        BinEdComponentPanel panel = editorProvider.getComponentPanel();
+    public void setEditorProvider(EditorProvider editorProvider) {
+        Optional<URI> fileUri = editorProvider.getActiveFile().getFileUri();
+        BinEdComponentPanel panel = ((BinaryEditorControl) editorProvider).getComponentPanel();
         fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
         ExtCodeArea codeArea = panel.getCodeArea();
         fileSizeTextField.setText(Long.toString(codeArea.getDataSize()));

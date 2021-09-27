@@ -36,7 +36,6 @@ import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.BinaryStatusApi;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
@@ -50,6 +49,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.bined.BinaryEditorControl;
 
 /**
  * Binary editor provider.
@@ -57,8 +57,8 @@ import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
  * @version 0.2.1 2020/11/23
  * @author ExBin Project (http://exbin.org)
  */
-public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorProvider, ClipboardActionsHandler, TextFontApi {
-
+public class BinaryEditorHandler { //implements BinaryEditorControl, MultiEditorProvider, ClipboardActionsHandler, TextFontApi {
+/*
     private BinaryPanelInit binaryPanelInit = null;
     private final List<BinEdFileHandler> files = new ArrayList<>();
     private EditorViewHandling editorViewHandling = null;
@@ -102,8 +102,15 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
         multiClipboardUpdateListener = this::notifyClipboardStateChanged;
     }
 
+    @Nonnull
     @Override
     public BinEdComponentPanel getComponentPanel() {
+        return activeFile.getComponentPanel();
+    }
+
+    @Nonnull
+    @Override
+    public JComponent getComponent() {
         return activeFile.getComponentPanel();
     }
 
@@ -548,11 +555,12 @@ public class BinaryEditorHandler implements BinaryEditorProvider, MultiEditorPro
         activeFile.setCurrentFont(font);
     }
 
-    /**
+    / **
      * Method for initialization of new binary panel.
-     */
+     * /
     public static interface BinaryPanelInit {
 
         void init(BinEdFileHandler binEdFile);
     }
+*/
 }

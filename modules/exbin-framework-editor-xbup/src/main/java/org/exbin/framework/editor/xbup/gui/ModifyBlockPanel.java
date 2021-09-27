@@ -43,6 +43,7 @@ import javax.swing.text.JTextComponent;
 import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBBlockDataMode;
@@ -122,9 +123,10 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
         initComponents();
 
         binaryDataFile = new BinEdFileHandler();
-        binaryDataFile.getComponentPanel().setContentData(new ByteArrayEditableData());
+        BinEdComponentPanel componentPanel = (BinEdComponentPanel) binaryDataFile.getComponent();
+        componentPanel.setContentData(new ByteArrayEditableData());
         customPanel = null;
-        binaryEditPanel.add(binaryDataFile.getComponentPanel());
+        binaryEditPanel.add(binaryDataFile.getComponent());
 
         attributesPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(attributesPanel));
         dataPanelTitle = mainTabbedPane.getTitleAt(mainTabbedPane.indexOfComponent(dataPanel));
@@ -617,7 +619,8 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
     public XBTTreeNode getNode() {
         if (dataMode == XBBlockDataMode.DATA_BLOCK) {
             try {
-                newNode.setData(binaryDataFile.getComponentPanel().getContentData().getDataInputStream());
+                BinEdComponentPanel componentPanel = (BinEdComponentPanel) binaryDataFile.getComponent();        
+                newNode.setData(componentPanel.getContentData().getDataInputStream());
             } catch (IOException ex) {
                 Logger.getLogger(ModifyBlockPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -770,8 +773,9 @@ public class ModifyBlockPanel extends javax.swing.JPanel {
 
     private void reloadTailData() {
         tailDataBinaryDataFile = new BinEdFileHandler();
-        tailDataBinaryDataFile.getComponentPanel().setContentData(new ByteArrayEditableData());
-        binaryEditScrollPane.setViewportView(tailDataBinaryDataFile.getComponentPanel());
+        BinEdComponentPanel componentPanel = (BinEdComponentPanel) tailDataBinaryDataFile.getComponent();        
+        componentPanel.setContentData(new ByteArrayEditableData());
+        binaryEditScrollPane.setViewportView(componentPanel);
 
         if (doc != null && doc.getTailDataSize() > 0) {
             try {

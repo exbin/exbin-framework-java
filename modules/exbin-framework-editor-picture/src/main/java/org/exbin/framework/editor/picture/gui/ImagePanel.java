@@ -55,6 +55,7 @@ import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
@@ -64,6 +65,7 @@ import javax.swing.undo.UndoManager;
 import org.exbin.framework.editor.picture.EditorPictureModule;
 import org.exbin.framework.editor.picture.PictureFileType;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
@@ -94,9 +96,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     private static final String DEFAULT_PICTURE_FILE_EXT = "PNG";
 
     private final UndoManager undo;
-    private URI fileUri = null;
-    private String ext = null;
-    private FileType fileType = null;
     private final boolean modified = false;
     private Image image;
     private Graphics graphics;
@@ -111,6 +110,7 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     private PropertyChangeListener propertyChangeListener;
     private ImageStatusPanel imageStatusPanel;
     private final ImageAreaPanel imageArea;
+    private FileHandlerApi activeFile;
 
     public ImagePanel() {
         initComponents();
@@ -212,6 +212,128 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
             scrollPane.getVerticalScrollBar().setValue((int) (positionY / scaleRatio));
             repaint();
         });
+
+        activeFile = new FileHandlerApi() {
+            private URI fileUri = null;
+            private String ext = null;
+            private FileType fileType = null;
+
+            @Override
+            public JComponent getComponent() {
+                return ImagePanel.this;
+            }
+
+            @Override
+            public void loadFromFile(URI fileUri, FileType fileType) {
+                File file = new File(fileUri);
+                if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
+                    try {
+                        if (image == null) {
+                            image = createImage(1, 1);
+                        }
+
+                        XBPCatalog catalog = new XBPCatalog();
+                        catalog.addFormatDecl(getContextFormatDecl());
+                        XBLFormatDecl formatDecl = new XBLFormatDecl(XBBufferedImage.XBUP_FORMATREV_CATALOGPATH);
+                        XBBufferedImage bufferedImage = new XBBufferedImage(toBufferedImage(image));
+                        XBDeclaration declaration = new XBDeclaration(formatDecl, bufferedImage);
+                        XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
+                        typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
+                        XBPSerialReader reader = new XBPSerialReader(typeProcessing);
+                        reader.read(declaration);
+                        image = bufferedImage.getImage();
+                        this.fileUri = fileUri;
+                    } catch (XBProcessingException | IOException ex) {
+                        Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    try {
+                        image = toBufferedImage(Toolkit.getDefaultToolkit().getImage(fileUri.toURL()));
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                graphics = image.getGraphics();
+                graphics.setColor(toolColor);
+                setScale(scaleRatio);
+            }
+
+            @Override
+            public void saveToFile(URI fileUri, FileType fileType) {
+                File file = new File(fileUri);
+                if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
+                    try {
+                        FileOutputStream output = new FileOutputStream(file);
+
+                        XBPCatalog catalog = new XBPCatalog();
+                        catalog.addFormatDecl(getContextFormatDecl());
+                        XBLFormatDecl formatDecl = new XBLFormatDecl(XBBufferedImage.XBUP_FORMATREV_CATALOGPATH);
+                        XBDeclaration declaration = new XBDeclaration(formatDecl, new XBBufferedImage(toBufferedImage(image)));
+                        declaration.realignReservation(catalog);
+                        XBTTypeUndeclaringFilter typeProcessing = new XBTTypeUndeclaringFilter(catalog);
+                        typeProcessing.attachXBTListener(new XBTEventListenerToListener(new XBTToXBEventConvertor(new XBEventWriter(output))));
+                        XBPSerialWriter writer = new XBPSerialWriter(new XBTListenerToEventListener(typeProcessing));
+                        writer.write(declaration);
+                    } catch (XBProcessingException | IOException ex) {
+                        Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    try {
+                        if (fileType instanceof PictureFileType) {
+                            ext = ((PictureFileType) fileType).getExt();
+                        }
+
+                        ImageIO.write((RenderedImage) image, ext == null ? DEFAULT_PICTURE_FILE_EXT : ext, file);
+                    } catch (IOException ex) {
+                        Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+            @Nonnull
+            @Override
+            public Optional<URI> getFileUri() {
+                return Optional.ofNullable(fileUri);
+            }
+
+            @Nonnull
+            @Override
+            public Optional<String> getFileName() {
+                if (fileUri != null) {
+                    String path = fileUri.getPath();
+                    int lastSegment = path.lastIndexOf("/");
+                    return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
+                }
+
+                return Optional.empty();
+            }
+
+            @Nonnull
+            @Override
+            public Optional<FileType> getFileType() {
+                return Optional.ofNullable(fileType);
+            }
+
+            @Override
+            public void newFile() {
+                image = toBufferedImage(createImage(100, 100));
+                graphics = image.getGraphics();
+                graphics.setColor(Color.WHITE);
+                graphics.fillRect(0, 0, 100, 100);
+                graphics.setColor(toolColor);
+                setModified(false);
+            }
+
+            @Override
+            public void setFileType(FileType fileType) {
+                this.fileType = fileType;
+            }
+
+            @Override
+            public boolean isModified() {
+                return modified;
+            }
+        };
     }
 
     private void imageAreaMouseDragged(java.awt.event.MouseEvent evt) {
@@ -294,6 +416,11 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
 //        imageArea.selectAll();
     }
 
+    @Override
+    public FileHandlerApi getActiveFile() {
+        return activeFile;
+    }
+
     public void printFile() {
         PrinterJob job = PrinterJob.getPrinterJob();
         if (job.printDialog()) {
@@ -352,11 +479,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public boolean isModified() {
-        return modified;
-    }
-
     public void setModified(boolean modified) {
         /*        if (highlight != null) {
          imageArea.getHighlighter().removeHighlight(highlight);
@@ -375,97 +497,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     public boolean isPasteEnabled() {
         return false;
 //        return imageArea.isEditable();
-    }
-
-    @Override
-    public void loadFromFile(URI fileUri, FileType fileType) {
-        File file = new File(fileUri);
-        if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
-            try {
-                if (image == null) {
-                    image = createImage(1, 1);
-                }
-
-                XBPCatalog catalog = new XBPCatalog();
-                catalog.addFormatDecl(getContextFormatDecl());
-                XBLFormatDecl formatDecl = new XBLFormatDecl(XBBufferedImage.XBUP_FORMATREV_CATALOGPATH);
-                XBBufferedImage bufferedImage = new XBBufferedImage(toBufferedImage(image));
-                XBDeclaration declaration = new XBDeclaration(formatDecl, bufferedImage);
-                XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
-                typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
-                XBPSerialReader reader = new XBPSerialReader(typeProcessing);
-                reader.read(declaration);
-                image = bufferedImage.getImage();
-                this.fileUri = fileUri;
-            } catch (XBProcessingException | IOException ex) {
-                Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            try {
-                image = toBufferedImage(Toolkit.getDefaultToolkit().getImage(fileUri.toURL()));
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        graphics = image.getGraphics();
-        graphics.setColor(toolColor);
-        setScale(scaleRatio);
-    }
-
-    @Override
-    public void saveToFile(URI fileUri, FileType fileType) {
-        File file = new File(fileUri);
-        if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
-            try {
-                FileOutputStream output = new FileOutputStream(file);
-
-                XBPCatalog catalog = new XBPCatalog();
-                catalog.addFormatDecl(getContextFormatDecl());
-                XBLFormatDecl formatDecl = new XBLFormatDecl(XBBufferedImage.XBUP_FORMATREV_CATALOGPATH);
-                XBDeclaration declaration = new XBDeclaration(formatDecl, new XBBufferedImage(toBufferedImage(image)));
-                declaration.realignReservation(catalog);
-                XBTTypeUndeclaringFilter typeProcessing = new XBTTypeUndeclaringFilter(catalog);
-                typeProcessing.attachXBTListener(new XBTEventListenerToListener(new XBTToXBEventConvertor(new XBEventWriter(output))));
-                XBPSerialWriter writer = new XBPSerialWriter(new XBTListenerToEventListener(typeProcessing));
-                writer.write(declaration);
-            } catch (XBProcessingException | IOException ex) {
-                Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            try {
-                if (fileType instanceof PictureFileType) {
-                    ext = ((PictureFileType) fileType).getExt();
-                }
-
-                ImageIO.write((RenderedImage) image, ext == null ? DEFAULT_PICTURE_FILE_EXT : ext, file);
-            } catch (IOException ex) {
-                Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    @Nonnull
-    @Override
-    public Optional<URI> getFileUri() {
-        return Optional.ofNullable(fileUri);
-    }
-
-    @Nonnull
-    @Override
-    public Optional<String> getFileName() {
-        if (fileUri != null) {
-            String path = fileUri.getPath();
-            int lastSegment = path.lastIndexOf("/");
-            return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
-        }
-
-        return Optional.empty();
-    }
-
-    @Nonnull
-    @Override
-    public Optional<FileType> getFileType() {
-        return Optional.ofNullable(fileType);
     }
 
     /**
@@ -510,16 +541,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         return formatDecl;
     }
 
-    @Override
-    public void newFile() {
-        image = toBufferedImage(createImage(100, 100));
-        graphics = image.getGraphics();
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(0, 0, 100, 100);
-        graphics.setColor(toolColor);
-        setModified(false);
-    }
-
     public UndoManager getUndo() {
         return undo;
     }
@@ -540,14 +561,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
 
     public double getScale() {
         return scaleRatio;
-    }
-
-    public String getExt() {
-        return ext;
-    }
-
-    public void setExt(String ext) {
-        this.ext = ext;
     }
 
     // This method returns a buffered image with the contents of an image
@@ -662,17 +675,14 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
-    public void setFileType(FileType fileType) {
-        this.fileType = fileType;
-    }
-
-    @Override
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         this.propertyChangeListener = propertyChangeListener;
     }
 
+    @Nonnull
     @Override
     public String getWindowTitle(String frameTitle) {
+        URI fileUri = activeFile.getFileUri().orElse(null);
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastIndexOf = path.lastIndexOf("/");

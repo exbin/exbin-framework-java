@@ -61,9 +61,9 @@ public class EditorCDockable extends DefaultMultipleCDockable {
     public void update() {
         if (content instanceof EditorProvider) {
             EditorProvider editorProvider = ((EditorProvider) content);
-            Optional<String> fileName = editorProvider.getFileName();
+            Optional<String> fileName = editorProvider.getActiveFile().getFileName();
             String name = fileName.isEmpty() ? UNDEFINED_NAME : fileName.get();
-            if (editorProvider.isModified()) {
+            if (editorProvider.getActiveFile().isModified()) {
                 name += " *";
             }
             setTitleText(name);

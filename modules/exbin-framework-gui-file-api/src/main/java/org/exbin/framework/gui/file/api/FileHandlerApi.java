@@ -19,15 +19,24 @@ import java.net.URI;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 
 /**
  * Interface for file handling actions.
  *
- * @version 0.2.0 2021/06/20
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface FileHandlerApi {
+
+    /**
+     * Returns component for the file.
+     *
+     * @return component
+     */
+    @Nonnull
+    JComponent getComponent();
 
     /**
      * Loads file from given filename.

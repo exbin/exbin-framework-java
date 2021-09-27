@@ -15,12 +15,12 @@
  */
 package org.exbin.framework.gui.editor;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
@@ -194,13 +194,14 @@ public class GuiEditorModule implements GuiEditorModuleApi {
         }
 
         pluginEditors.add(editorProvider);
+        this.editorProvider = editorProvider;
     }
 
     @Override
-    public Component getEditorPanel() {
+    public JComponent getEditorComponent() {
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
         FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
-        fileHandlingActions.setFileHandler(editorProvider);
+        fileHandlingActions.setFileHandler(editorProvider.getActiveFile());
 
         return editorProvider.getEditorComponent();
     }

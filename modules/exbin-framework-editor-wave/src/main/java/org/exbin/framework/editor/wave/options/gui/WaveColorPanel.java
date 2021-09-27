@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import org.exbin.framework.editor.wave.options.impl.WaveColorOptionsImpl;
@@ -31,9 +32,10 @@ import org.exbin.framework.editor.wave.service.WaveColorService;
 /**
  * Wave editor color selection panel.
  *
- * @version 0.2.1 2019/07/20
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable<WaveColorOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
@@ -93,31 +95,38 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
         options.setWaveCursorWaveColor(getWaveCursorWaveColor().getRGB());
     }
 
+    @Nonnull
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
 
+    @Nonnull
     public Color getWaveColor() {
         return waveColorPanel.getBackground();
     }
 
+    @Nonnull
     public Color getWaveFillColor() {
         return waveFillColorPanel.getBackground();
     }
 
+    @Nonnull
     public Color getWaveBackgroundColor() {
         return waveBackgroundColorPanel.getBackground();
     }
 
+    @Nonnull
     public Color getWaveSelectionColor() {
         return waveSelectionColorPanel.getBackground();
     }
 
+    @Nonnull
     public Color getWaveCursorColor() {
         return waveCursorColorPanel.getBackground();
     }
 
+    @Nonnull
     public Color getWaveCursorWaveColor() {
         return waveCursorWaveColorPanel.getBackground();
     }
@@ -371,10 +380,6 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(waveColorLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -395,6 +400,14 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
                         .addComponent(waveColorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(waveColorButton))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(waveCursorWaveColorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(waveCursorColorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(waveCursorWaveColorButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(waveCursorColorButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(waveFillColorLabel)
@@ -405,16 +418,9 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(fillDefaultButton))
                             .addComponent(waveCursorColorLabel)
-                            .addComponent(waveCursorWaveColorLabel))
-                        .addGap(0, 308, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(waveCursorWaveColorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(waveCursorColorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(waveCursorWaveColorButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(waveCursorColorButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(waveCursorWaveColorLabel)
+                            .addComponent(waveColorLabel))
+                        .addGap(0, 308, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

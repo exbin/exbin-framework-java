@@ -22,8 +22,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Show nonprintables actions.
@@ -37,7 +38,7 @@ public class ShowNonprintablesActions {
     public static final String VIEW_NONPRINTABLES_ACTION_ID = "viewNonprintablesAction";
     public static final String VIEW_NONPRINTABLES_TOOLBAR_ACTION_ID = "viewNonprintablesToolbarAction";
 
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
@@ -47,14 +48,14 @@ public class ShowNonprintablesActions {
     public ShowNonprintablesActions() {
     }
 
-    public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
     }
 
     public void setShowNonprintables(boolean showNonprintables) {
-        editorProvider.setShowNonprintables(showNonprintables);
+        ((BinaryEditorControl) editorProvider).setShowNonprintables(showNonprintables);
         viewNonprintablesAction.putValue(Action.SELECTED_KEY, showNonprintables);
         viewNonprintablesToolbarAction.putValue(Action.SELECTED_KEY, showNonprintables);
     }
@@ -65,7 +66,7 @@ public class ShowNonprintablesActions {
             viewNonprintablesAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    setShowNonprintables(!editorProvider.isShowNonprintables());
+                    setShowNonprintables(!((BinaryEditorControl) editorProvider).isShowNonprintables());
                 }
             };
             ActionUtils.setupAction(viewNonprintablesAction, resourceBundle, VIEW_NONPRINTABLES_ACTION_ID);
@@ -82,7 +83,7 @@ public class ShowNonprintablesActions {
             viewNonprintablesToolbarAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    setShowNonprintables(!editorProvider.isShowNonprintables());
+                    setShowNonprintables(!((BinaryEditorControl) editorProvider).isShowNonprintables());
                 }
             };
             ActionUtils.setupAction(viewNonprintablesToolbarAction, resourceBundle, VIEW_NONPRINTABLES_TOOLBAR_ACTION_ID);

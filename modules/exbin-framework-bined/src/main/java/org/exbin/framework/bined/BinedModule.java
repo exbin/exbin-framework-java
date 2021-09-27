@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.bined;
 
-import org.exbin.framework.bined.handler.BinaryEditorHandler;
 import org.exbin.framework.bined.action.ShowRowPositionAction;
 import org.exbin.framework.bined.action.ClipboardCodeActions;
 import org.exbin.framework.bined.action.GoToPositionAction;
@@ -76,6 +75,7 @@ import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.bined.swing.extended.layout.DefaultExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.swing.extended.theme.ExtendedCodeAreaThemeProfile;
+import org.exbin.framework.XBFrameworkUtils;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
@@ -94,7 +94,6 @@ import org.exbin.framework.bined.options.gui.BinaryAppearanceOptionsPanel;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.bined.gui.BinaryStatusPanel;
 import org.exbin.framework.editor.text.EncodingsHandler;
-import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.gui.AddEncodingPanel;
 import org.exbin.framework.editor.text.options.gui.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.options.gui.TextFontOptionsPanel;
@@ -155,11 +154,13 @@ import org.exbin.framework.bined.service.EditorOptionsService;
 import org.exbin.framework.gui.options.api.DefaultOptionsPage;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.editor.api.EditorProviderVariant;
 
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.1 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -184,7 +185,7 @@ public class BinedModule implements XBApplicationModule {
     private java.util.ResourceBundle resourceBundle = null;
 
     private XBApplication application;
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private BinaryStatusPanel binaryStatusPanel;
     private DefaultOptionsPage<TextEncodingOptionsImpl> textEncodingOptionsPage;
     private DefaultOptionsPage<TextFontOptionsImpl> textFontOptionsPage;
@@ -196,25 +197,25 @@ public class BinedModule implements XBApplicationModule {
     private DefaultOptionsPage<CodeAreaLayoutOptionsImpl> layoutProfilesOptionsPage;
     private DefaultOptionsPage<CodeAreaColorOptionsImpl> colorProfilesOptionsPage;
 
-    private FindReplaceActions findReplaceHandler;
-    private ShowNonprintablesActions showNonprintablesHandler;
+    private FindReplaceActions findReplaceActions;
+    private ShowNonprintablesActions showNonprintablesActions;
     private ShowValuesPanelAction showValuesPanelAction;
     private CodeAreaFontAction codeAreaFontAction;
     private RowWrappingAction rowWrappingAction;
-    private EncodingsHandler encodingsHandler;
     private GoToPositionAction goToPositionAction;
     private PropertiesAction propertiesAction;
     private PrintAction printAction;
-    private ViewModeHandlerActions viewModeHandler;
+    private ViewModeHandlerActions viewModeActions;
     private ShowRowPositionAction showRowPositionAction;
     private ShowHeaderAction showHeaderAction;
     private InsertDataAction insertDataAction;
-    private CodeTypeActions codeTypeHandler;
-    private PositionCodeTypeActions positionCodeTypeHandler;
+    private CodeTypeActions codeTypeActions;
+    private PositionCodeTypeActions positionCodeTypeActions;
     private HexCharactersCaseActions hexCharactersCaseActions;
     private ClipboardCodeActions clipboardCodeActions;
-    private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
     private CompareFilesAction compareFilesAction;
+    private EncodingsHandler encodingsHandler;
+    private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
 
     public BinedModule() {
     }
@@ -222,6 +223,21 @@ public class BinedModule implements XBApplicationModule {
     @Override
     public void init(XBModuleHandler application) {
         this.application = (XBApplication) application;
+    }
+    
+    public void initEditorProvider(EditorProviderVariant variant) {
+        switch (variant) {
+            case SINGLE: {
+                editorProvider = createSingleEditorProvider();
+                break;
+            }
+            case MULTI: {
+                editorProvider = createMultiEditorProvider();
+                break;
+            }
+            default:
+                throw XBFrameworkUtils.getInvalidTypeException(variant);
+        }
     }
 
     @Override
@@ -238,7 +254,7 @@ public class BinedModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public BinaryEditorProvider getEditorProvider() {
+    private EditorProvider createSingleEditorProvider() {
         if (editorProvider == null) {
             EditorPreferences editorPreferences = new EditorPreferences(application.getAppPreferences());
 
@@ -247,12 +263,12 @@ public class BinedModule implements XBApplicationModule {
             editorFile.setSegmentsRepository(new SegmentsRepository());
             editorFile.switchFileHandlingMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY);
             editorFile.newFile();
-            BinEdComponentPanel panel = editorFile.getComponentPanel();
+            BinEdComponentPanel panel = (BinEdComponentPanel) editorFile.getComponent();
             // TODO panel.setMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
-            editorProvider = editorFile;
+            editorProvider = new BinaryEditorProvider(editorFile);
 
             panel.setApplication(application);
-            panel.setPopupMenu(createPopupMenu(editorProvider.getId(), editorProvider.getCodeArea()));
+            panel.setPopupMenu(createPopupMenu(((BinaryEditorControl) editorProvider).getId(), ((BinaryEditorControl) editorProvider).getCodeArea()));
             panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
             panel.setGoToPositionAction(getGoToPositionAction());
             panel.setCopyAsCode(getClipboardCodeActions().getCopyAsCodeAction());
@@ -279,42 +295,48 @@ public class BinedModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public BinaryEditorProvider getMultiEditorProvider() {
+    private EditorProvider createMultiEditorProvider() {
         if (editorProvider == null) {
             GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
 //            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
-            editorProvider = new BinaryEditorHandler();
-            ((BinaryEditorHandler) editorProvider).setSegmentsRepository(new SegmentsRepository());
-            editorProvider.newFile();
+            editorProvider = new BinaryMultiEditorProvider();
+            BinEdFileHandler activeFile = (BinEdFileHandler) editorProvider.getActiveFile();
+            activeFile.setSegmentsRepository(new SegmentsRepository());
+            activeFile.newFile();
 
-            ((BinaryEditorHandler) editorProvider).setBinaryPanelInit((BinEdFileHandler file) -> {
-                BinEdComponentPanel panel = file.getComponentPanel();
-                panel.setApplication(application);
-                panel.setPopupMenu(createPopupMenu(editorProvider.getId(), editorProvider.getCodeArea()));
-                panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
-                panel.setGoToPositionAction(getGoToPositionAction());
-                panel.setCopyAsCode(getClipboardCodeActions().getCopyAsCodeAction());
-                panel.setPasteFromCode(getClipboardCodeActions().getPasteFromCodeAction());
-                panel.setEncodingsHandler(new EncodingStatusHandler() {
-                    @Override
-                    public void cycleEncodings() {
-                        encodingsHandler.cycleEncodings();
-                    }
-
-                    @Override
-                    public void popupEncodingsMenu(MouseEvent mouseEvent) {
-                        encodingsHandler.popupEncodingsMenu(mouseEvent);
-                    }
-                });
-            });
-            ((BinaryEditorHandler) editorProvider).setEditorViewHandling(editorTabModule.getEditorViewHandling());
-            ((BinaryEditorHandler) editorProvider).setSegmentsRepository(new SegmentsRepository());
-            ((BinaryEditorHandler) editorProvider).init();
+//            activeFile.setBinaryPanelInit((BinEdFileHandler file) -> {
+//                BinEdComponentPanel panel = (BinEdComponentPanel) ((BinEdFileHandler) activeFile).getComponent();
+//                panel.setApplication(application);
+//                panel.setPopupMenu(createPopupMenu(((BinaryEditorControl) editorProvider).getId(), ((BinaryEditorControl) editorProvider).getCodeArea()));
+//                panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
+//                panel.setGoToPositionAction(getGoToPositionAction());
+//                panel.setCopyAsCode(getClipboardCodeActions().getCopyAsCodeAction());
+//                panel.setPasteFromCode(getClipboardCodeActions().getPasteFromCodeAction());
+//                panel.setEncodingsHandler(new EncodingStatusHandler() {
+//                    @Override
+//                    public void cycleEncodings() {
+//                        encodingsHandler.cycleEncodings();
+//                    }
+//
+//                    @Override
+//                    public void popupEncodingsMenu(MouseEvent mouseEvent) {
+//                        encodingsHandler.popupEncodingsMenu(mouseEvent);
+//                    }
+//                });
+//            });
+            //((BinaryEditorControl) editorProvider).getComponentPanel().setEditorViewHandling(editorTabModule.getEditorViewHandling());
+            activeFile.setSegmentsRepository(new SegmentsRepository());
+            //activeFile.init();
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
-            fileHandlingActions.setFileHandler(editorProvider);
+            fileHandlingActions.setFileHandler(activeFile);
         }
 
+        return editorProvider;
+    }
+
+    @Nonnull
+    public EditorProvider getEditorProvider() {
         return editorProvider;
     }
 
@@ -333,8 +355,8 @@ public class BinedModule implements XBApplicationModule {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, BINARY_STATUS_BAR_ID, binaryStatusPanel);
         frameModule.switchStatusBar(BINARY_STATUS_BAR_ID);
-        getEditorProvider().registerBinaryStatus(binaryStatusPanel);
-        getEditorProvider().registerEncodingStatus(binaryStatusPanel);
+        ((BinaryEditorControl) editorProvider).registerBinaryStatus(binaryStatusPanel);
+        ((BinaryEditorControl) editorProvider).registerEncodingStatus(binaryStatusPanel);
         if (encodingsHandler != null) {
             encodingsHandler.setTextEncodingStatus(binaryStatusPanel);
         }
@@ -351,7 +373,7 @@ public class BinedModule implements XBApplicationModule {
     public void registerOptionsPanels() {
         GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
 
-        BinaryAppearanceService binaryAppearanceService = new BinaryAppearanceServiceImpl(this);
+        BinaryAppearanceService binaryAppearanceService = new BinaryAppearanceServiceImpl(this, editorProvider);
 
         binaryAppearanceOptionsPage = new DefaultOptionsPage<BinaryAppearanceOptionsImpl>() {
 
@@ -406,7 +428,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void selectedEncodingChanged() {
-                getEditorProvider().setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
+                ((BinaryEditorControl) editorProvider).setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
             }
         });
 
@@ -475,17 +497,17 @@ public class BinedModule implements XBApplicationModule {
         TextFontService textFontService = new TextFontService() {
             @Override
             public Font getCurrentFont() {
-                return ((TextFontApi) getEditorProvider()).getCurrentFont();
+                return ((BinaryEditorControl) editorProvider).getComponentPanel().getCurrentFont();
             }
 
             @Override
             public Font getDefaultFont() {
-                return ((TextFontApi) getEditorProvider()).getDefaultFont();
+                return ((BinaryEditorControl) editorProvider).getComponentPanel().getDefaultFont();
             }
 
             @Override
             public void setCurrentFont(Font font) {
-                ((TextFontApi) getEditorProvider()).setCurrentFont(font);
+                ((BinaryEditorControl) editorProvider).getComponentPanel().setCurrentFont(font);
             }
         };
         textFontOptionsPage = new DefaultOptionsPage<TextFontOptionsImpl>() {
@@ -559,7 +581,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(TextFontOptionsImpl options) {
-                ExtCodeArea codeArea = getEditorProvider().getCodeArea();
+                ExtCodeArea codeArea = ((BinaryEditorControl) editorProvider).getCodeArea();
                 ((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getFont(CodeAreaPreferences.DEFAULT_FONT));
                 textFontService.setCurrentFont(options.isUseDefaultFont() ? textFontService.getDefaultFont() : options.getFont(textFontService.getDefaultFont()));
             }
@@ -569,7 +591,7 @@ public class BinedModule implements XBApplicationModule {
         EditorOptionsService editorOptionsService = new EditorOptionsService() {
             @Override
             public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-                getEditorProvider().setFileHandlingMode(fileHandlingMode);
+                ((BinaryEditorControl) editorProvider).setFileHandlingMode(fileHandlingMode);
             }
 
             @Override
@@ -579,7 +601,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void setEditorHandlingMode(EnterKeyHandlingMode enterKeyHandlingMode) {
-                CodeAreaCommandHandler commandHandler = getEditorProvider().getCodeArea().getCommandHandler();
+                CodeAreaCommandHandler commandHandler = ((BinaryEditorControl) editorProvider).getCodeArea().getCommandHandler();
                 ((CodeAreaOperationCommandHandler) commandHandler).setEnterKeyHandlingMode(enterKeyHandlingMode);
             }
         };
@@ -654,20 +676,20 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(CodeAreaOptionsImpl options) {
-                ExtCodeArea codeArea = getEditorProvider().getCodeArea();
-                codeTypeHandler.setCodeType(options.getCodeType());
+                ExtCodeArea codeArea = ((BinaryEditorControl) editorProvider).getCodeArea();
+                codeTypeActions.setCodeType(options.getCodeType());
                 // font
                 //((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getCodeFont());
-                showNonprintablesHandler.setShowNonprintables(options.isShowUnprintables());
+                showNonprintablesActions.setShowNonprintables(options.isShowUnprintables());
                 hexCharactersCaseActions.setHexCharactersCase(options.getCodeCharactersCase());
-                positionCodeTypeHandler.setCodeType(options.getPositionCodeType());
-                viewModeHandler.setViewMode(options.getViewMode());
+                positionCodeTypeActions.setCodeType(options.getPositionCodeType());
+                viewModeActions.setViewMode(options.getViewMode());
                 ((ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter()).setNonAsciiHighlightingEnabled(options.isCodeColorization());
                 // codeArea.setRowWrapping(options.getRowWrappingMode());
                 codeArea.setMaxBytesPerRow(options.getMaxBytesPerRow());
                 codeArea.setMinRowPositionLength(options.getMinRowPositionLength());
                 codeArea.setMaxRowPositionLength(options.getMaxRowPositionLength());
-//                CodeAreaOptionsImpl.applyToCodeArea(options, getEditorProvider().getCodeArea());
+//                CodeAreaOptionsImpl.applyToCodeArea(options, ((BinaryEditorControl) editorProvider).getCodeArea());
             }
         };
         optionsModule.addOptionsPage(codeAreaOptionsPage);
@@ -884,7 +906,7 @@ public class BinedModule implements XBApplicationModule {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
                     ExtendedCodeAreaThemeProfile profile = options.getThemeProfile(selectedProfile);
-                    getEditorProvider().getCodeArea().setThemeProfile(profile);
+                    ((BinaryEditorControl) editorProvider).getCodeArea().setThemeProfile(profile);
                 }
             }
         };
@@ -1061,7 +1083,7 @@ public class BinedModule implements XBApplicationModule {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
                     ExtendedCodeAreaLayoutProfile profile = options.getLayoutProfile(selectedProfile);
-                    getEditorProvider().getCodeArea().setLayoutProfile(profile);
+                    ((BinaryEditorControl) editorProvider).getCodeArea().setLayoutProfile(profile);
                 }
             }
         };
@@ -1237,7 +1259,7 @@ public class BinedModule implements XBApplicationModule {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
                     ExtendedCodeAreaColorProfile profile = options.getColorsProfile(selectedProfile);
-                    getEditorProvider().getCodeArea().setColorsProfile(profile);
+                    ((BinaryEditorControl) editorProvider).getCodeArea().setColorsProfile(profile);
                 }
             }
         };
@@ -1309,25 +1331,25 @@ public class BinedModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public FindReplaceActions getFindReplaceHandler() {
-        if (findReplaceHandler == null) {
+    public FindReplaceActions getFindReplaceActions() {
+        if (findReplaceActions == null) {
             ensureProvider();
-            findReplaceHandler = new FindReplaceActions();
-            findReplaceHandler.setup(application, editorProvider, resourceBundle);
+            findReplaceActions = new FindReplaceActions();
+            findReplaceActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return findReplaceHandler;
+        return findReplaceActions;
     }
 
     @Nonnull
-    public ShowNonprintablesActions getShowNonprintablesHandler() {
-        if (showNonprintablesHandler == null) {
+    public ShowNonprintablesActions getShowNonprintablesActions() {
+        if (showNonprintablesActions == null) {
             ensureProvider();
-            showNonprintablesHandler = new ShowNonprintablesActions();
-            showNonprintablesHandler.setup(application, editorProvider, resourceBundle);
+            showNonprintablesActions = new ShowNonprintablesActions();
+            showNonprintablesActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return showNonprintablesHandler;
+        return showNonprintablesActions;
     }
 
     @Nonnull
@@ -1413,35 +1435,35 @@ public class BinedModule implements XBApplicationModule {
 
     @Nonnull
     public ViewModeHandlerActions getViewModeActions() {
-        if (viewModeHandler == null) {
+        if (viewModeActions == null) {
             ensureProvider();
-            viewModeHandler = new ViewModeHandlerActions();
-            viewModeHandler.setup(application, editorProvider, resourceBundle);
+            viewModeActions = new ViewModeHandlerActions();
+            viewModeActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return viewModeHandler;
+        return viewModeActions;
     }
 
     @Nonnull
     public CodeTypeActions getCodeTypeActions() {
-        if (codeTypeHandler == null) {
+        if (codeTypeActions == null) {
             ensureProvider();
-            codeTypeHandler = new CodeTypeActions();
-            codeTypeHandler.setup(application, editorProvider, resourceBundle);
+            codeTypeActions = new CodeTypeActions();
+            codeTypeActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return codeTypeHandler;
+        return codeTypeActions;
     }
 
     @Nonnull
     public PositionCodeTypeActions getPositionCodeTypeActions() {
-        if (positionCodeTypeHandler == null) {
+        if (positionCodeTypeActions == null) {
             ensureProvider();
-            positionCodeTypeHandler = new PositionCodeTypeActions();
-            positionCodeTypeHandler.setup(application, editorProvider, resourceBundle);
+            positionCodeTypeActions = new PositionCodeTypeActions();
+            positionCodeTypeActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return positionCodeTypeHandler;
+        return positionCodeTypeActions;
     }
 
     @Nonnull
@@ -1467,40 +1489,40 @@ public class BinedModule implements XBApplicationModule {
     }
 
     public void registerEditFindMenuActions() {
-        getFindReplaceHandler();
+        getFindReplaceActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuGroup(GuiFrameModuleApi.EDIT_MENU_ID, new MenuGroup(EDIT_FIND_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceHandler.getEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceHandler.getEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceHandler.getEditReplaceAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditReplaceAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
     }
 
     public void registerEditFindToolBarActions() {
-        getFindReplaceHandler();
+        getFindReplaceActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceHandler.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
     public void registerCodeTypeToolBarActions() {
         getCodeTypeActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(BINED_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.ABOVE));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, codeTypeHandler.getCycleCodeTypesAction(), new ToolBarPosition(BINED_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, codeTypeActions.getCycleCodeTypesAction(), new ToolBarPosition(BINED_TOOL_BAR_GROUP_ID));
     }
 
     public void registerShowNonprintablesToolBarActions() {
-        getShowNonprintablesHandler();
+        getShowNonprintablesActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(BINED_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.NONE));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, showNonprintablesHandler.getViewNonprintablesToolbarAction(), new ToolBarPosition(BINED_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, showNonprintablesActions.getViewNonprintablesToolbarAction(), new ToolBarPosition(BINED_TOOL_BAR_GROUP_ID));
     }
 
     public void registerViewNonprintablesMenuActions() {
-        getShowNonprintablesHandler();
+        getShowNonprintablesActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_NONPRINTABLES_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, showNonprintablesHandler.getViewNonprintablesAction(), new MenuPosition(VIEW_NONPRINTABLES_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, showNonprintablesActions.getViewNonprintablesAction(), new MenuPosition(VIEW_NONPRINTABLES_MENU_GROUP_ID));
     }
 
     public void registerViewValuesPanelMenuActions() {
@@ -1539,9 +1561,9 @@ public class BinedModule implements XBApplicationModule {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, VIEW_MODE_SUBMENU_ID, resourceBundle.getString("viewModeSubMenu.text"), new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenu(VIEW_MODE_SUBMENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getDualModeAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getCodeMatrixModeAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeHandler.getTextPreviewModeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeActions.getDualModeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeActions.getCodeMatrixModeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(VIEW_MODE_SUBMENU_ID, MODULE_ID, viewModeActions.getTextPreviewModeAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerLayoutMenu() {
@@ -1555,10 +1577,10 @@ public class BinedModule implements XBApplicationModule {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, CODE_TYPE_SUBMENU_ID, resourceBundle.getString("codeTypeSubMenu.text"), new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenu(CODE_TYPE_SUBMENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getBinaryCodeTypeAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getOctalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getDecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeHandler.getHexadecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeActions.getBinaryCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeActions.getOctalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeActions.getDecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(CODE_TYPE_SUBMENU_ID, MODULE_ID, codeTypeActions.getHexadecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerPositionCodeTypeMenu() {
@@ -1566,9 +1588,9 @@ public class BinedModule implements XBApplicationModule {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, POSITION_CODE_TYPE_SUBMENU_ID, resourceBundle.getString("positionCodeTypeSubMenu.text"), new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenu(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeHandler.getOctalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeHandler.getDecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeHandler.getHexadecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeActions.getOctalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeActions.getDecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(POSITION_CODE_TYPE_SUBMENU_ID, MODULE_ID, positionCodeTypeActions.getHexadecimalCodeTypeAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerHexCharactersCaseHandlerMenu() {
@@ -1706,10 +1728,10 @@ public class BinedModule implements XBApplicationModule {
                 JMenuItem goToMenuItem = createGoToMenuItem();
                 popupMenu.add(goToMenuItem);
 
-                final JMenuItem findMenuItem = ActionUtils.actionToMenuItem(getFindReplaceHandler().getEditFindAction());
+                final JMenuItem findMenuItem = ActionUtils.actionToMenuItem(getFindReplaceActions().getEditFindAction());
                 popupMenu.add(findMenuItem);
 
-                final JMenuItem replaceMenuItem = ActionUtils.actionToMenuItem(getFindReplaceHandler().getEditReplaceAction());
+                final JMenuItem replaceMenuItem = ActionUtils.actionToMenuItem(getFindReplaceActions().getEditReplaceAction());
                 popupMenu.add(replaceMenuItem);
             }
         }

@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.component.DefaultEditItemActions;
+import org.exbin.framework.gui.component.action.DefaultEditItemActions;
 import org.exbin.framework.gui.component.api.ActionsProvider;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandlerEmpty;
 import org.exbin.framework.gui.utils.WindowUtils;

@@ -37,18 +37,19 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Help action.
  *
- * @version 0.2.0 2020/07/19
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class HelpAction extends AbstractAction {
 
     public static final String ACTION_ID = "helpAction";
+    public static final String HELP_SET_FILE = "help/help.hs";
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HelpAction.class);
 
-    private HelpSet helpSet;
-    private HelpBroker helpBroker;
+    private HelpSet mainHelpSet;
+    private HelpBroker mainHelpBroker;
     private ActionListener helpActionLisneter;
 
     public HelpAction() {
@@ -66,12 +67,12 @@ public class HelpAction extends AbstractAction {
         } catch (IOException ex) {
             Logger.getLogger(HelpAction.class.getName()).log(Level.SEVERE, null, ex);
         }
-        helpSet = getHelpSet(path + "/help/help.hs");
-        if (helpSet != null) {
+        mainHelpSet = getHelpSet(path + "/" + HELP_SET_FILE);
+        if (mainHelpSet != null) {
             // Temporary for Java webstart, include help in jar later
-            helpBroker = helpSet.createHelpBroker();
+            mainHelpBroker = mainHelpSet.createHelpBroker();
             // CSH.setHelpIDString(helpContextMenuItem, "top");
-            helpActionLisneter = new CSH.DisplayHelpFromSource(helpBroker);
+            helpActionLisneter = new CSH.DisplayHelpFromSource(mainHelpBroker);
             // helpContextMenuItem.addActionListener(helpActionLisneter);
         }
     }
@@ -86,22 +87,21 @@ public class HelpAction extends AbstractAction {
      */
     @Nullable
     private HelpSet getHelpSet(String helpSetFile) {
-        HelpSet hs = null;
+        HelpSet helpSet = null;
         ClassLoader cl = getClass().getClassLoader();
         try {
-            URL hsURL = HelpSet.findHelpSet(cl, helpSetFile);
-            File file = new File("./help/help.hs");
+            URL helpSetURL = HelpSet.findHelpSet(cl, helpSetFile);
+            File file = new File("./" + HELP_SET_FILE);
             if (!file.exists()) {
-                file = new File("./../help/help.hs");
+                file = new File("./../" + HELP_SET_FILE);
             }
-            if (hsURL == null) {
-                hsURL = (file.toURI()).toURL();
+            if (helpSetURL == null) {
+                helpSetURL = (file.toURI()).toURL();
             }
-            hs = new HelpSet(null, hsURL);
+            helpSet = new HelpSet(null, helpSetURL);
         } catch (MalformedURLException | HelpSetException ex) {
-            System.out.println("HelpSet: " + ex.getMessage());
-            System.out.println("HelpSet: " + helpSetFile + " not found");
+            Logger.getLogger(HelpAction.class.getName()).log(Level.INFO, "HelpSet: " + helpSetFile + " not found", ex);
         }
-        return hs;
+        return helpSet;
     }
 }

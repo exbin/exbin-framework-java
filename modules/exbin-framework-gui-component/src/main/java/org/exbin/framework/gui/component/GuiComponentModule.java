@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.gui.component;
 
+import org.exbin.framework.gui.component.action.DefaultEditItemActions;
+import org.exbin.framework.gui.component.action.DefaultMoveItemActions;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
@@ -77,6 +79,8 @@ public class GuiComponentModule implements GuiComponentModuleApi {
     @Nonnull
     @Override
     public JPanel createDialogControlPanel(DialogControlPanelHandler handler) {
-        return new DialogControlPanel(handler);
+        DialogControlPanel controlPanel =  new DialogControlPanel();
+        controlPanel.setControl(handler);
+        return controlPanel;
     }
 }

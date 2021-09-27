@@ -486,6 +486,7 @@ public class EditorWaveModule implements XBApplicationModule {
      * @param file Source file
      * @return extension part of file name
      */
+    @Nullable
     public static String getExtension(File file) {
         String ext = null;
         String str = file.getName();

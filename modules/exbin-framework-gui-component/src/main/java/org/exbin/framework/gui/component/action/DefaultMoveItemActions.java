@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.component;
+package org.exbin.framework.gui.component.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.gui.component.GuiComponentModule;
 import org.exbin.framework.gui.component.api.toolbar.MoveItemActions;
 import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandler;
 import org.exbin.framework.gui.component.api.toolbar.SideToolBar;
@@ -30,11 +31,16 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Item movement default action set.
  *
- * @version 0.2.0 2016/03/21
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultMoveItemActions implements MoveItemActions {
+
+    public static final String MOVE_ITEM_UP_ACTION_ID = "moveItemUpAction";
+    public static final String MOVE_ITEM_DOWN_ACTION_ID = "moveItemDownAction";
+    public static final String MOVE_ITEM_TOP_ACTION_ID = "moveItemTopAction";
+    public static final String MOVE_ITEM_BOTTOM_ACTION_ID = "moveItemBottomAction";
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiComponentModule.class);
 
@@ -62,7 +68,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
                     actionsHandler.performMoveUp();
                 }
             };
-            ActionUtils.setupAction(moveUpAction, resourceBundle, "moveItemUpAction");
+            ActionUtils.setupAction(moveUpAction, resourceBundle, MOVE_ITEM_UP_ACTION_ID);
             moveUpAction.setEnabled(false);
         }
         return moveUpAction;
@@ -78,7 +84,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
                     actionsHandler.performMoveDown();
                 }
             };
-            ActionUtils.setupAction(moveDownAction, resourceBundle, "moveItemDownAction");
+            ActionUtils.setupAction(moveDownAction, resourceBundle, MOVE_ITEM_DOWN_ACTION_ID);
             moveDownAction.setEnabled(false);
         }
         return moveDownAction;
@@ -94,7 +100,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
                     actionsHandler.performMoveTop();
                 }
             };
-            ActionUtils.setupAction(moveTopAction, resourceBundle, "moveItemTopAction");
+            ActionUtils.setupAction(moveTopAction, resourceBundle, MOVE_ITEM_TOP_ACTION_ID);
             moveTopAction.setEnabled(false);
         }
         return moveTopAction;
@@ -110,7 +116,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
                     actionsHandler.performMoveBottom();
                 }
             };
-            ActionUtils.setupAction(moveBottomAction, resourceBundle, "moveItemBottomAction");
+            ActionUtils.setupAction(moveBottomAction, resourceBundle, MOVE_ITEM_BOTTOM_ACTION_ID);
             moveBottomAction.setEnabled(false);
         }
         return moveBottomAction;

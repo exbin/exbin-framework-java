@@ -18,6 +18,8 @@ package org.exbin.framework.editor.picture.gui;
 import java.net.URI;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -27,6 +29,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2017/02/18
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PropertiesPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(PropertiesPanel.class);
@@ -76,10 +79,11 @@ public class PropertiesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     public void setDocument(ImagePanel panel) {
-        Optional<URI> fileUri = panel.getFileUri();
+        Optional<URI> fileUri = panel.getActiveFile().getFileUri();
         fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }

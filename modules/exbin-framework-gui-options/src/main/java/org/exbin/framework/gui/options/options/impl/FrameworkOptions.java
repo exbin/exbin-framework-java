@@ -16,17 +16,22 @@
 package org.exbin.framework.gui.options.options.impl;
 
 import java.util.Locale;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Framework options.
  *
- * @version 0.2.1 2019/07/20
+ * @version 0.2.1 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface FrameworkOptions {
 
+    @Nonnull
     Locale getLanguageLocale();
 
+    @Nonnull
     String getLookAndFeel();
 
     void setLanguageLocale(Locale languageLocale);

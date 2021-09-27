@@ -22,7 +22,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.AddCatalogPanel;
 import org.exbin.framework.editor.xbup.gui.CatalogEditorWrapperPanel;
 import org.exbin.framework.editor.xbup.gui.CatalogsBrowserPanel;
-import org.exbin.framework.gui.component.DefaultEditItemActions;
+import org.exbin.framework.gui.component.action.DefaultEditItemActions;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActionsUpdateListener;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;

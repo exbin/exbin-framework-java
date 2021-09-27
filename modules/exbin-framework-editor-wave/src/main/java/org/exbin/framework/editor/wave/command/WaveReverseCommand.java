@@ -18,6 +18,7 @@ package org.exbin.framework.editor.wave.command;
 import java.util.Date;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.xbup.operation.AbstractCommand;
@@ -28,13 +29,14 @@ import org.exbin.xbup.operation.AbstractCommand;
  * @version 0.2.0 2016/01/24
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class WaveReverseCommand extends AbstractCommand {
 
     private XBWavePanel wave;
     private int startPosition;
     private int endPosition;
 
-    XBData deletedData;
+    private XBData deletedData;
 
     public WaveReverseCommand(XBWavePanel wave) {
         this(wave, -1, -1);
@@ -46,6 +48,7 @@ public class WaveReverseCommand extends AbstractCommand {
         this.endPosition = endPosition;
     }
 
+    @Nonnull
     @Override
     public String getCaption() {
         return "Wave section reversed";

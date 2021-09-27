@@ -27,11 +27,6 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-              <Component id="waveColorLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
@@ -59,6 +54,17 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="waveColorButton" min="-2" max="-2" attributes="1"/>
                   </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="waveCursorWaveColorPanel" max="32767" attributes="1"/>
+                          <Component id="waveCursorColorPanel" max="32767" attributes="1"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="waveCursorWaveColorButton" max="32767" attributes="1"/>
+                          <Component id="waveCursorColorButton" max="32767" attributes="1"/>
+                      </Group>
+                  </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="waveFillColorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -71,19 +77,9 @@
                           </Group>
                           <Component id="waveCursorColorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="waveCursorWaveColorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="waveColorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="308" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="waveCursorWaveColorPanel" max="32767" attributes="1"/>
-                          <Component id="waveCursorColorPanel" max="32767" attributes="1"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="waveCursorWaveColorButton" max="32767" attributes="1"/>
-                          <Component id="waveCursorColorButton" max="32767" attributes="1"/>
-                      </Group>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>

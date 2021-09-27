@@ -20,6 +20,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -41,6 +42,7 @@ import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
  * @version 0.2.1 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PictureOperationActions {
 
     public static final String IMAGE_RESIZE_ACTION_ID = "imageResizeAction";

@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.exbin.bined.capability.CaretCapable;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.gui.GoToBinaryPanel;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -35,6 +34,8 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.bined.BinaryEditorControl;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Go to position action.
@@ -47,14 +48,14 @@ public class GoToPositionAction extends AbstractAction {
 
     public static final String ACTION_ID = "goToPositionAction";
 
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public GoToPositionAction() {
     }
 
-    public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
@@ -66,8 +67,8 @@ public class GoToPositionAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof BinaryEditorProvider) {
-            final BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+        if (editorProvider instanceof BinaryEditorControl) {
+            final BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
             final GoToBinaryPanel goToPanel = new GoToBinaryPanel();
             goToPanel.setCursorPosition(((CaretCapable) activePanel.getCodeArea()).getCaret().getCaretPosition().getDataPosition());
             goToPanel.setMaxPosition(activePanel.getCodeArea().getDataSize());

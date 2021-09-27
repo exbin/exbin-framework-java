@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.gui.component.gui;
 
-import javax.swing.JButton;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.component.api.DialogControlPanelHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -23,18 +23,22 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Default control panel for options dialogs.
  *
- * @version 0.2.1 2017/02/21
+ * @version 0.2.1 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DialogControlPanel extends javax.swing.JPanel {
 
-    private final DialogControlPanelHandler controlHandler;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DialogControlPanel.class);
+    private DialogControlPanelHandler control;
 
-    public DialogControlPanel(DialogControlPanelHandler controlHandler) {
-        this.controlHandler = controlHandler;
+    public DialogControlPanel() {
         initComponents();
-        controlHandler.okCancelButtons(saveButton, cancelButton);
+    }
+
+    public void setControl(DialogControlPanelHandler control) {
+        this.control = control;
+        control.okCancelButtons(saveButton, cancelButton);
     }
 
     /**
@@ -97,15 +101,18 @@ public class DialogControlPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        controlHandler.cancelAction();
+        if (control != null)
+            control.cancelAction();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void setButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setButtonActionPerformed
-        controlHandler.setAction();
+        if (control != null)
+            control.setAction();
     }//GEN-LAST:event_setButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        controlHandler.saveAction();
+        if (control != null)
+            control.saveAction();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
@@ -114,23 +121,7 @@ public class DialogControlPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        WindowUtils.invokeDialog(new DialogControlPanel(new DialogControlPanelHandler() {
-            @Override
-            public void cancelAction() {
-            }
-
-            @Override
-            public void setAction() {
-            }
-
-            @Override
-            public void saveAction() {
-            }
-
-            @Override
-            public void okCancelButtons(JButton okButton, JButton cancelButton) {
-            }
-        }));
+        WindowUtils.invokeDialog(new DialogControlPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

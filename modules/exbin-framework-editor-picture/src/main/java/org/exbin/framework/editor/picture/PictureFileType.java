@@ -16,6 +16,9 @@
 package org.exbin.framework.editor.picture;
 
 import java.io.File;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.gui.file.api.FileType;
 
@@ -25,6 +28,7 @@ import org.exbin.framework.gui.file.api.FileType;
  * @version 0.2.0 2016/01/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PictureFileType extends FileFilter implements FileType {
 
     private String ext;
@@ -46,23 +50,25 @@ public class PictureFileType extends FileFilter implements FileType {
         return false;
     }
 
-    //The description of this filter
+    @Nonnull
     @Override
     public String getDescription() {
-        return "Images " + getExt().toUpperCase() + " (*."+getExt()+")";
+        return "Images " + getExt().toUpperCase() + " (*." + getExt() + ")";
     }
 
+    @Nullable
     public static String getExtension(File f) {
         String ext = null;
         String s = f.getName();
         int i = s.lastIndexOf('.');
 
-        if (i > 0 &&  i < s.length() - 1) {
-            ext = s.substring(i+1).toLowerCase();
+        if (i > 0 && i < s.length() - 1) {
+            ext = s.substring(i + 1).toLowerCase();
         }
         return ext;
     }
 
+    @Nonnull
     public String getExt() {
         return ext;
     }
@@ -71,6 +77,7 @@ public class PictureFileType extends FileFilter implements FileType {
         this.ext = ext;
     }
 
+    @Nonnull
     @Override
     public String getFileTypeId() {
         return "XBPictureEditor.PictureFileType" + ext;

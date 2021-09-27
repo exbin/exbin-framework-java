@@ -21,8 +21,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Show values panel action.
@@ -35,14 +36,14 @@ public class ShowValuesPanelAction extends AbstractAction {
 
     public static final String ACTION_ID = "showValuesPanelAction";
 
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public ShowValuesPanelAction() {
     }
 
-    public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
@@ -53,11 +54,11 @@ public class ShowValuesPanelAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        setShowValuesPanel(!editorProvider.isShowValuesPanel());
+        setShowValuesPanel(!((BinaryEditorControl) editorProvider).isShowValuesPanel());
     }
 
     public void setShowValuesPanel(boolean show) {
-        editorProvider.setShowValuesPanel(show);
+        ((BinaryEditorControl) editorProvider).setShowValuesPanel(show);
         putValue(Action.SELECTED_KEY, show);
     }
 }

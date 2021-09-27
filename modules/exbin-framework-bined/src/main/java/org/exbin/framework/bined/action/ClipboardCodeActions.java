@@ -22,10 +22,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.bined.BinaryEditorControl;
 
 /**
  * Clipboard code actions.
@@ -61,8 +61,8 @@ public class ClipboardCodeActions {
             copyAsCodeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
-                        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+                    if (editorProvider instanceof BinaryEditorControl) {
+                        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
                         activePanel.performCopyAsCode();
                     }
                 }
@@ -78,8 +78,8 @@ public class ClipboardCodeActions {
             pasteFromCodeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
-                        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+                    if (editorProvider instanceof BinaryEditorControl) {
+                        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
                         activePanel.performPasteFromCode();
                     }
                 }

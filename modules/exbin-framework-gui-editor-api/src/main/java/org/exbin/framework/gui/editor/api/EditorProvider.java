@@ -28,14 +28,22 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditorProvider extends FileHandlerApi {
+public interface EditorProvider {
 
     /**
      * Returns main editor component.
      *
      * @return component
      */
+    @Nonnull
     JComponent getEditorComponent();
+
+    /**
+     * Returns active file.
+     *
+     * @return acftive file
+     */
+    FileHandlerApi getActiveFile();
 
     /**
      * Changes passing listener.

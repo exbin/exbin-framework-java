@@ -36,8 +36,10 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.editor.xbup.action.CopyItemAction;
 import org.exbin.framework.editor.xbup.action.CutItemAction;
 import org.exbin.framework.editor.xbup.action.DeleteItemAction;
@@ -47,6 +49,7 @@ import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
 import org.exbin.framework.editor.xbup.gui.XBDocumentPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentTab.ActivationListener;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
@@ -76,8 +79,6 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 @ParametersAreNonnullByDefault
 public class DocumentViewerProvider implements EditorProvider, ClipboardActionsHandler {
 
-    private URI fileUri = null;
-    private FileType fileType = null;
     private XBACatalog catalog;
     private PropertyChangeListener propertyChangeListener = null;
 
@@ -95,6 +96,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     private XBPluginRepository pluginRepository;
     private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
+    private FileHandlerApi activeFile;
 
     public DocumentViewerProvider(XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
@@ -133,12 +135,105 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
         selectedTab = ViewerTab.VIEW;
         activeHandler = treeDocument;
+
+        activeFile = new FileHandlerApi() {
+            private URI fileUri = null;
+            private FileType fileType = null;
+
+            @Nonnull
+            @Override
+            public JComponent getComponent() {
+                return documentPanel;
+            }
+
+            @Override
+            public void loadFromFile(URI fileUri, FileType fileType) {
+                File file = new File(fileUri);
+                try (FileInputStream fileStream = new FileInputStream(file)) {
+                    getDoc().fromStreamUB(fileStream);
+                    getDoc().processSpec();
+                    reportStructureChange((XBTTreeNode) getDoc().getRootBlock().get());
+                    performSelectAll();
+                    undoHandler.clear();
+                    this.fileUri = fileUri;
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (XBProcessingException ex) {
+                    Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new UnsupportedOperationException("Not supported yet.");
+                    // TODO JOptionPane.showMessageDialog(WindowUtils.getFrame(this), ex.getMessage(), "Parsing Exception", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            @Override
+            public void saveToFile(URI fileUri, FileType fileType) {
+                File file = new File(fileUri);
+                try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                    getDoc().toStreamUB(fileOutputStream);
+                    undoHandler.setSyncPoint();
+                    getDoc().setModified(false);
+                    this.fileUri = fileUri;
+                } catch (IOException ex) {
+                    Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            @Nonnull
+            @Override
+            public Optional<URI> getFileUri() {
+                return Optional.ofNullable(fileUri);
+            }
+
+            @Override
+            public void newFile() {
+                undoHandler.clear();
+                getDoc().clear();
+                reportStructureChange(null);
+//        updateItem();
+            }
+
+            @Nonnull
+            @Override
+            public Optional<String> getFileName() {
+                if (fileUri != null) {
+                    String path = fileUri.getPath();
+                    int lastSegment = path.lastIndexOf("/");
+                    return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
+                }
+
+                return Optional.empty();
+            }
+
+            @Nonnull
+            @Override
+            public Optional<FileType> getFileType() {
+                return Optional.ofNullable(fileType);
+            }
+
+            @Override
+            public void setFileType(FileType fileType) {
+                this.fileType = fileType;
+            }
+
+            @Override
+            public boolean isModified() {
+                return getDoc().wasModified();
+            }
+        };
     }
 
     @Nonnull
     @Override
     public JPanel getEditorComponent() {
         return documentPanel;
+    }
+
+    @Nonnull
+    @Override
+    public FileHandlerApi getActiveFile() {
+        return activeFile;
     }
 
     public XBTTreeDocument getDoc() {
@@ -208,82 +303,6 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         }
 
         return frameTitle;
-    }
-
-    @Override
-    public void loadFromFile(URI fileUri, FileType fileType) {
-        File file = new File(fileUri);
-        try (FileInputStream fileStream = new FileInputStream(file)) {
-            getDoc().fromStreamUB(fileStream);
-            getDoc().processSpec();
-            reportStructureChange((XBTTreeNode) getDoc().getRootBlock().get());
-            performSelectAll();
-            undoHandler.clear();
-            this.fileUri = fileUri;
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XBProcessingException ex) {
-            Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-            throw new UnsupportedOperationException("Not supported yet.");
-            // TODO JOptionPane.showMessageDialog(WindowUtils.getFrame(this), ex.getMessage(), "Parsing Exception", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    @Override
-    public void saveToFile(URI fileUri, FileType fileType) {
-        File file = new File(fileUri);
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            getDoc().toStreamUB(fileOutputStream);
-            undoHandler.setSyncPoint();
-            getDoc().setModified(false);
-            this.fileUri = fileUri;
-        } catch (IOException ex) {
-            Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Nonnull
-    @Override
-    public Optional<URI> getFileUri() {
-        return Optional.ofNullable(fileUri);
-    }
-
-    @Override
-    public void newFile() {
-        undoHandler.clear();
-        getDoc().clear();
-        reportStructureChange(null);
-//        updateItem();
-    }
-
-    @Nonnull
-    @Override
-    public Optional<String> getFileName() {
-        if (fileUri != null) {
-            String path = fileUri.getPath();
-            int lastSegment = path.lastIndexOf("/");
-            return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
-        }
-
-        return Optional.empty();
-    }
-
-    @Nonnull
-    @Override
-    public Optional<FileType> getFileType() {
-        return Optional.ofNullable(fileType);
-    }
-
-    @Override
-    public void setFileType(FileType fileType) {
-        this.fileType = fileType;
-    }
-
-    @Override
-    public boolean isModified() {
-        return getDoc().wasModified();
     }
 
     @Override

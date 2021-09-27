@@ -16,12 +16,6 @@
 package org.exbin.framework.bined;
 
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,15 +23,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.ByteArrayData;
 import org.exbin.auxiliary.paged_data.ByteArrayEditableData;
@@ -46,26 +39,24 @@ import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
 import org.exbin.auxiliary.paged_data.delta.FileDataSource;
 import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
 import org.exbin.bined.operation.swing.CodeAreaUndoHandler;
-import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.gui.BinEdComponentFileApi;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
-import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextFontApi;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.type.XBData;
 
 /**
- * File handling mode.
+ * File handler for binary editor.
  *
- * @version 0.2.0 2019/03/06
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFileApi, ClipboardActionsHandler, TextFontApi {
+public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, ClipboardActionsHandler, TextFontApi {
 
     private SegmentsRepository segmentsRepository;
 
@@ -95,7 +86,7 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
     public void loadFromFile(URI fileUri, FileType fileType) {
         File file = new File(fileUri);
         if (!file.isFile()) {
-            JOptionPane.showOptionDialog(this.getComponentPanel(),
+            JOptionPane.showOptionDialog(componentPanel,
                     "File not found",
                     "Unable to load file",
                     JOptionPane.CLOSED_OPTION,
@@ -216,7 +207,6 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
         undoHandler.clear();
     }
 
-    @Override
     public int getId() {
         return id;
     }
@@ -234,39 +224,6 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
     }
 
     @Nonnull
-    @Override
-    public Optional<FileType> getFileType() {
-        return Optional.empty();
-    }
-
-    @Override
-    public void printFile() {
-        ExtCodeArea codeArea = componentPanel.getCodeArea();
-        PrinterJob job = PrinterJob.getPrinterJob();
-        if (job.printDialog()) {
-            try {
-//                PrintJob myJob = imageArea.getToolkit().getPrintJob(null, fileName, null);
-//                if (myJob != null) {
-                job.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
-                    codeArea.print(graphics);
-                    if (pageIndex == 0) {
-                        return Printable.PAGE_EXISTS;
-                    }
-                    return Printable.NO_SUCH_PAGE;
-                });
-                job.print();
-//                }
-            } catch (PrinterException ex) {
-                Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    @Override
-    public void setFileType(FileType fileType) {
-    }
-
-    @Override
     public String getWindowTitle(String windowTitle) {
         if (fileUri != null) {
             String path = fileUri.getPath();
@@ -339,7 +296,7 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
             // Switch memory mode
             if (fileUri != null) {
                 // If document is connected to file, attempt to release first if modified and then simply reload
-                if (isModified()) {
+                if (componentPanel.isModified()) {
                     if (releaseFile()) {
                         loadFromFile(fileUri, null);
                         codeArea.clearSelection();
@@ -370,6 +327,26 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
         }
     }
 
+    @Nonnull
+    @Override
+    public JComponent getComponent() {
+        return componentPanel;
+    }
+
+    @Override
+    public Optional<FileType> getFileType() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void setFileType(FileType fileType) {
+    }
+
+    @Override
+    public boolean isModified() {
+        return componentPanel.isModified();
+    }
+
     private void setNewData() {
         FileHandlingMode fileHandlingMode = componentPanel.getFileHandlingMode();
         if (fileHandlingMode == FileHandlingMode.DELTA) {
@@ -391,118 +368,9 @@ public class BinEdFileHandler implements BinaryEditorProvider, BinEdComponentFil
         componentPanel.getCodeArea().requestFocus();
     }
 
-    @Override
-    public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
-        componentPanel.registerBinaryStatus(binaryStatus);
-    }
-
-    @Override
-    public void registerEncodingStatus(TextEncodingStatusApi encodingStatus) {
-        componentPanel.registerEncodingStatus(encodingStatus);
-    }
-
-    @Override
-    public ExtendedCodeAreaColorProfile getCurrentColors() {
-        return componentPanel.getCurrentColors();
-    }
-
-    @Override
-    public ExtendedCodeAreaColorProfile getDefaultColors() {
-        return componentPanel.getDefaultColors();
-    }
-
-    @Override
-    public void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile) {
-        componentPanel.setCurrentColors(colorsProfile);
-    }
-
-    @Override
-    public boolean isWordWrapMode() {
-        return componentPanel.isWordWrapMode();
-    }
-
-    @Override
-    public void setWordWrapMode(boolean mode) {
-        componentPanel.setWordWrapMode(mode);
-    }
-
-    @Override
-    public Charset getCharset() {
-        return componentPanel.getCharset();
-    }
-
-    @Override
-    public void setCharset(Charset charset) {
-        componentPanel.setCharset(charset);
-    }
-
-    @Override
-    public boolean isShowNonprintables() {
-        return componentPanel.isShowNonprintables();
-    }
-
-    @Override
-    public void setShowNonprintables(boolean show) {
-        componentPanel.setShowNonprintables(show);
-    }
-
-    @Override
-    public boolean isShowValuesPanel() {
-        return componentPanel.isShowValuesPanel();
-    }
-
-    @Override
-    public void setShowValuesPanel(boolean show) {
-        componentPanel.setShowValuesPanel(show);
-    }
-
-    @Override
-    public boolean changeLineWrap() {
-        return componentPanel.changeLineWrap();
-    }
-
-    @Override
-    public BinEdComponentPanel getComponentPanel() {
-        return componentPanel;
-    }
-
+    @Nonnull
     public CodeAreaUndoHandler getUndoHandler() {
         return undoHandler;
-    }
-
-    @Override
-    public BinaryDataUndoHandler getBinaryUndoHandler() {
-        return undoHandler;
-    }
-
-    @Override
-    public ExtCodeArea getCodeArea() {
-        return componentPanel.getCodeArea();
-    }
-
-    @Override
-    public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-        componentPanel.setFileHandlingMode(fileHandlingMode);
-    }
-
-    @Override
-    public JPanel getEditorComponent() {
-        return componentPanel;
-    }
-
-    @Override
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        componentPanel.setPropertyChangeListener(propertyChangeListener);
-    }
-
-    @Override
-    public void setModificationListener(EditorModificationListener modificationListener) {
-        componentPanel.setModificationListener(modificationListener);
-    }
-
-    @Override
-    public boolean isModified() {
-        return componentPanel.isModified();
     }
 
     public boolean releaseFile() {

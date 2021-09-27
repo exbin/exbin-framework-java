@@ -29,10 +29,10 @@ import org.exbin.bined.CodeAreaUtils;
 import org.exbin.bined.CodeType;
 import org.exbin.bined.capability.CodeTypeCapable;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.bined.BinaryEditorControl;
 
 /**
  * Code type handler.
@@ -94,7 +94,7 @@ public class CodeTypeActions {
             default:
                 throw CodeAreaUtils.getInvalidTypeException(codeType);
         }
-        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
         ((CodeTypeCapable) activePanel.getCodeArea()).setCodeType(codeType);
         updateCycleButtonName();
     }
@@ -109,7 +109,7 @@ public class CodeTypeActions {
             binaryCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setCodeType(CodeType.BINARY);
                     }
                 }
@@ -129,7 +129,7 @@ public class CodeTypeActions {
             octalCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setCodeType(CodeType.OCTAL);
                     }
                 }
@@ -148,7 +148,7 @@ public class CodeTypeActions {
             decimalCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setCodeType(CodeType.DECIMAL);
                     }
                 }
@@ -168,7 +168,7 @@ public class CodeTypeActions {
             hexadecimalCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setCodeType(CodeType.HEXADECIMAL);
                     }
                 }
@@ -188,7 +188,7 @@ public class CodeTypeActions {
             cycleCodeTypesAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         int codeTypePos = codeType.ordinal();
                         CodeType[] values = CodeType.values();
                         CodeType next = codeTypePos + 1 >= values.length ? values[0] : values[codeTypePos + 1];

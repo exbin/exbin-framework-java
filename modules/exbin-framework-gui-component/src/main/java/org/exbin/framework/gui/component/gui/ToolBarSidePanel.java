@@ -78,7 +78,7 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
         MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
         toolBarSidePanel.addActions(moveItemActions);
         toolBarSidePanel.addSeparator();
-        
+
         EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
         EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
         toolBarSidePanel.addActions(editItemActions);
@@ -122,5 +122,4 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
     public enum ToolBarPosition {
         LEFT, RIGHT
     }
-
 }

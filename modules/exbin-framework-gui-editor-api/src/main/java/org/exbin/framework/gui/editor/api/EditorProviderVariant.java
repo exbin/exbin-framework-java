@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.options.api;
+package org.exbin.framework.gui.editor.api;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for options page.
+ * Editor provider variants enumeration.
  *
- * @version 0.2.1 2019/07/20
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
-public interface OptionsData {
+@ParametersAreNonnullByDefault
+public enum EditorProviderVariant {
+    SINGLE,
+    MULTI
 }

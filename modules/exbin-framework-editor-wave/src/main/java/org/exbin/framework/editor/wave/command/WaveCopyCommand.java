@@ -17,6 +17,7 @@ package org.exbin.framework.editor.wave.command;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.audio.wave.XBWave;
 
@@ -26,14 +27,15 @@ import org.exbin.xbup.audio.wave.XBWave;
  * @version 0.2.0 2016/01/24
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class WaveCopyCommand {
 
     private final Clipboard clipboard;
-    private final XBWavePanel  wave;
+    private final XBWavePanel wave;
     private final int startPosition;
     private final int endPosition;
 
-    public WaveCopyCommand(XBWavePanel  wave, int startPosition, int endPosition) {
+    public WaveCopyCommand(XBWavePanel wave, int startPosition, int endPosition) {
         this.wave = wave;
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         this.startPosition = startPosition;

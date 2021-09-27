@@ -20,6 +20,8 @@ import org.exbin.framework.editor.xbup.action.ViewModeActions;
 import java.io.File;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
@@ -59,6 +61,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.1 2021/09/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class EditorXbupModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(EditorXbupModule.class);
@@ -347,6 +350,7 @@ public class EditorXbupModule implements XBApplicationModule {
     /**
      * FileFilter for *.xb* files.
      */
+    @ParametersAreNonnullByDefault
     public class XBFileFilter extends FileFilter implements FileType {
 
         @Override
@@ -364,11 +368,13 @@ public class EditorXbupModule implements XBApplicationModule {
             return false;
         }
 
+        @Nonnull
         @Override
         public String getDescription() {
             return "All XB Files (*.xb*)";
         }
 
+        @Nonnull
         @Override
         public String getFileTypeId() {
             return XB_FILE_TYPE;
@@ -381,6 +387,7 @@ public class EditorXbupModule implements XBApplicationModule {
      * @param file Source file
      * @return extension part of file name
      */
+    @Nullable
     public static String getExtension(File file) {
         String ext = null;
         String str = file.getName();

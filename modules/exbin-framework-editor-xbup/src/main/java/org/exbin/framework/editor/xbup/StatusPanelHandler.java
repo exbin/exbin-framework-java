@@ -16,6 +16,7 @@
 package org.exbin.framework.editor.xbup;
 
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.client.api.ClientConnectionEvent;
@@ -48,6 +49,7 @@ public class StatusPanelHandler {
         this.resourceBundle = resourceBundle;
     }
 
+    @Nonnull
     public XBDocStatusPanel getDocStatusPanel() {
         if (docStatusPanel == null) {
             docStatusPanel = new XBDocStatusPanel();
@@ -60,6 +62,7 @@ public class StatusPanelHandler {
         return docStatusPanel;
     }
 
+    @Nonnull
     public ClientConnectionListener getClientConnectionListener() {
         return (ClientConnectionEvent connectionEvent) -> {
             docStatusPanel.setConnectionStatus(connectionEvent.getConnectionStatus());

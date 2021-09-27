@@ -160,7 +160,7 @@ public class GuiDockingModule implements GuiDockingModuleApi {
                             CDockable dockable = event.getDockable(i);
                             if (dockable instanceof EditorCDockable) {
                                 EditorProvider editor = (EditorProvider) ((EditorCDockable) dockable).getContent();
-                                multiEditorProvider.closeFile(editor);
+                                multiEditorProvider.closeFile(editor.getActiveFile());
                                 removeEditorView(editorProvider);
                             }
                         }

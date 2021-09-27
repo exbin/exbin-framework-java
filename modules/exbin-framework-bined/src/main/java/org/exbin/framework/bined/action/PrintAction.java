@@ -15,19 +15,29 @@
  */
 package org.exbin.framework.bined.action;
 
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
+import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Print action.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.1 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -35,14 +45,14 @@ public class PrintAction extends AbstractAction {
 
     public static final String ACTION_ID = "printAction";
 
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public PrintAction() {
     }
 
-    public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
@@ -54,6 +64,24 @@ public class PrintAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        editorProvider.printFile();
+        ExtCodeArea codeArea = ((BinaryEditorControl) editorProvider).getCodeArea();
+        PrinterJob job = PrinterJob.getPrinterJob();
+        if (job.printDialog()) {
+            try {
+//                PrintJob myJob = imageArea.getToolkit().getPrintJob(null, fileName, null);
+//                if (myJob != null) {
+                job.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
+                    codeArea.print(graphics);
+                    if (pageIndex == 0) {
+                        return Printable.PAGE_EXISTS;
+                    }
+                    return Printable.NO_SUCH_PAGE;
+                });
+                job.print();
+//                }
+            } catch (PrinterException ex) {
+                Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

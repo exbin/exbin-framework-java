@@ -61,7 +61,7 @@ public class DocumentPropertiesAction extends AbstractAction {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         DocumentPropertiesPanel propertiesPanel = new DocumentPropertiesPanel();
         propertiesPanel.setDocument(viewerProvider.getDoc());
-        propertiesPanel.setDocumentUri(viewerProvider.getFileUri().orElse(null));
+        propertiesPanel.setDocumentUri(viewerProvider.getActiveFile().getFileUri().orElse(null));
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);

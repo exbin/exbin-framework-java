@@ -15,78 +15,165 @@
  */
 package org.exbin.framework.bined;
 
+import java.beans.PropertyChangeListener;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
- * Binary editor provider interface.
+ * Binary editor provider.
  *
- * @version 0.2.0 2020/03/05
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface BinaryEditorProvider extends EditorProvider {
+public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl {
 
-    /**
-     * Registers binary status method.
-     *
-     * @param binaryStatus binarystatus
-     */
-    void registerBinaryStatus(BinaryStatusApi binaryStatus);
+    private BinEdFileHandler activeFile;
 
-    /**
-     * Registers encoding status method.
-     *
-     * @param encodingStatus encoding status
-     */
-    void registerEncodingStatus(TextEncodingStatusApi encodingStatus);
+    public BinaryEditorProvider(BinEdFileHandler activeFile) {
+        this.activeFile = activeFile;
+    }
 
     @Nonnull
-    ExtendedCodeAreaColorProfile getCurrentColors();
+    @Override
+    public FileHandlerApi getActiveFile() {
+        return activeFile;
+    }
 
     @Nonnull
-    ExtendedCodeAreaColorProfile getDefaultColors();
-
-    void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile);
-
-    boolean isWordWrapMode();
-
-    void setWordWrapMode(boolean mode);
+    @Override
+    public JComponent getEditorComponent() {
+        return activeFile.getComponent();
+    }
 
     @Nonnull
-    Charset getCharset();
+    private BinEdComponentPanel getBinEdComponentPanel() {
+        return (BinEdComponentPanel) activeFile.getComponent();
+    }
 
-    int getId();
+    @Override
+    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+        getBinEdComponentPanel().setPropertyChangeListener(propertyChangeListener);
+    }
 
-    void setCharset(Charset charset);
-
-    boolean isShowNonprintables();
-
-    void setShowNonprintables(boolean show);
-
-    boolean isShowValuesPanel();
-
-    void setShowValuesPanel(boolean show);
-
-    boolean changeLineWrap();
+    @Override
+    public void setModificationListener(EditorModificationListener editorModificationListener) {
+        getBinEdComponentPanel().setModificationListener(editorModificationListener);
+    }
 
     @Nonnull
-    BinEdComponentPanel getComponentPanel();
+    @Override
+    public String getWindowTitle(String parentTitle) {
+        return activeFile.getWindowTitle(parentTitle);
+    }
 
-    void printFile();
+    @Override
+    public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
+        getBinEdComponentPanel().registerBinaryStatus(binaryStatus);
+    }
+
+    @Override
+    public void registerEncodingStatus(TextEncodingStatusApi encodingStatus) {
+        getBinEdComponentPanel().registerEncodingStatus(encodingStatus);
+    }
 
     @Nonnull
-    BinaryDataUndoHandler getBinaryUndoHandler();
+    @Override
+    public ExtendedCodeAreaColorProfile getCurrentColors() {
+        return getBinEdComponentPanel().getCurrentColors();
+    }
 
     @Nonnull
-    ExtCodeArea getCodeArea();
+    @Override
+    public ExtendedCodeAreaColorProfile getDefaultColors() {
+        return getBinEdComponentPanel().getDefaultColors();
+    }
 
-    void setFileHandlingMode(FileHandlingMode fileHandlingMode);
+    @Override
+    public void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile) {
+        getBinEdComponentPanel().setCurrentColors(colorsProfile);
+    }
+
+    @Override
+    public boolean isWordWrapMode() {
+        return getBinEdComponentPanel().isWordWrapMode();
+    }
+
+    @Override
+    public void setWordWrapMode(boolean mode) {
+        getBinEdComponentPanel().setWordWrapMode(mode);
+    }
+
+    @Nonnull
+    @Override
+    public Charset getCharset() {
+        return getBinEdComponentPanel().getCharset();
+    }
+
+    @Override
+    public int getId() {
+        return activeFile.getId();
+    }
+
+    @Override
+    public void setCharset(Charset charset) {
+        getBinEdComponentPanel().setCharset(charset);
+    }
+
+    @Override
+    public boolean isShowNonprintables() {
+        return getBinEdComponentPanel().isShowNonprintables();
+    }
+
+    @Override
+    public void setShowNonprintables(boolean show) {
+        getBinEdComponentPanel().setShowNonprintables(show);
+    }
+
+    @Override
+    public boolean isShowValuesPanel() {
+        return getBinEdComponentPanel().isShowValuesPanel();
+    }
+
+    @Override
+    public void setShowValuesPanel(boolean show) {
+        getBinEdComponentPanel().setShowValuesPanel(show);
+    }
+
+    @Override
+    public boolean changeLineWrap() {
+        return getBinEdComponentPanel().changeLineWrap();
+    }
+
+    @Nonnull
+    @Override
+    public BinEdComponentPanel getComponentPanel() {
+        return (BinEdComponentPanel) activeFile.getComponent();
+    }
+
+    @Nonnull
+    @Override
+    public BinaryDataUndoHandler getBinaryUndoHandler() {
+        return getBinEdComponentPanel().getUndoHandler();
+    }
+
+    @Nonnull
+    @Override
+    public ExtCodeArea getCodeArea() {
+        return getBinEdComponentPanel().getCodeArea();
+    }
+
+    @Override
+    public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
+        getBinEdComponentPanel().setFileHandlingMode(fileHandlingMode);
+    }
 }

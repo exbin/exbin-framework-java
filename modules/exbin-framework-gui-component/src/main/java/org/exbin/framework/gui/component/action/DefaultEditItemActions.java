@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.component;
+package org.exbin.framework.gui.component.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.gui.component.GuiComponentModule;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActions;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
 import org.exbin.framework.gui.component.api.toolbar.SideToolBar;
@@ -39,9 +40,9 @@ public class DefaultEditItemActions implements EditItemActions {
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiComponentModule.class);
     private EditItemActionsHandler actionsHandler = null;
 
-    public static final String ADD_ITEM_ACTION = "addItemAction";
-    public static final String EDIT_ITEM_ACTION = "editItemAction";
-    public static final String DELETE_ITEM_ACTION = "deleteItemAction";
+    public static final String ADD_ITEM_ACTION_ID = "addItemAction";
+    public static final String EDIT_ITEM_ACTION_ID = "editItemAction";
+    public static final String DELETE_ITEM_ACTION_ID = "deleteItemAction";
 
     private Action addItemAction = null;
     private Action editItemAction = null;
@@ -65,7 +66,7 @@ public class DefaultEditItemActions implements EditItemActions {
                     actionsHandler.performAddItem();
                 }
             };
-            ActionUtils.setupAction(addItemAction, resourceBundle, ADD_ITEM_ACTION);
+            ActionUtils.setupAction(addItemAction, resourceBundle, ADD_ITEM_ACTION_ID);
             addItemAction.setEnabled(false);
         }
         return addItemAction;
@@ -81,7 +82,7 @@ public class DefaultEditItemActions implements EditItemActions {
                     actionsHandler.performEditItem();
                 }
             };
-            ActionUtils.setupAction(editItemAction, resourceBundle, EDIT_ITEM_ACTION);
+            ActionUtils.setupAction(editItemAction, resourceBundle, EDIT_ITEM_ACTION_ID);
             editItemAction.setEnabled(false);
         }
         return editItemAction;
@@ -97,7 +98,7 @@ public class DefaultEditItemActions implements EditItemActions {
                     actionsHandler.performDeleteItem();
                 }
             };
-            ActionUtils.setupAction(deleteItemAction, resourceBundle, DELETE_ITEM_ACTION);
+            ActionUtils.setupAction(deleteItemAction, resourceBundle, DELETE_ITEM_ACTION_ID);
             deleteItemAction.setEnabled(false);
         }
         return deleteItemAction;

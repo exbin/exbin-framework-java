@@ -69,7 +69,7 @@ public class SampleFilesActions {
                 public void actionPerformed(ActionEvent e) {
                     if (editorProvider instanceof DocumentViewerProvider) {
                         DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
-                        provider.newFile();
+                        provider.getActiveFile().newFile();
                         try {
                             provider.getDoc().fromStreamUB(getClass().getResourceAsStream(SAMPLE_FILES_DIR + "xhtml_example.xb"));
                             provider.getDoc().processSpec();
@@ -94,7 +94,7 @@ public class SampleFilesActions {
                 public void actionPerformed(ActionEvent e) {
                     if (editorProvider instanceof DocumentViewerProvider) {
                         DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
-                        provider.newFile();
+                        provider.getActiveFile().newFile();
                         try {
                             provider.getDoc().fromStreamUB(getClass().getResourceAsStream(SAMPLE_FILES_DIR + "xblogo.xbp"));
                             provider.getDoc().processSpec();
@@ -120,7 +120,7 @@ public class SampleFilesActions {
                 public void actionPerformed(ActionEvent e) {
                     if (editorProvider instanceof DocumentViewerProvider) {
                         DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
-                        provider.newFile();
+                        provider.getActiveFile().newFile();
                         try {
                             provider.getDoc().fromStreamUB(getClass().getResourceAsStream(SAMPLE_FILES_DIR + "xbtypes.xb"));
                             provider.getDoc().processSpec();

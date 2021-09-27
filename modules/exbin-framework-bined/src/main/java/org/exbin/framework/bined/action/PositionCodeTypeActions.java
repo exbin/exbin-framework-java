@@ -22,10 +22,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.bined.PositionCodeType;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.bined.BinaryEditorControl;
 
 /**
  * Position code type actions.
@@ -63,7 +63,7 @@ public class PositionCodeTypeActions {
 
     public void setCodeType(PositionCodeType codeType) {
         this.positionCodeType = codeType;
-        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
         activePanel.getCodeArea().setPositionCodeType(codeType);
     }
 
@@ -72,7 +72,7 @@ public class PositionCodeTypeActions {
             octalPositionCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setCodeType(PositionCodeType.OCTAL);
                     }
                 }
@@ -91,7 +91,7 @@ public class PositionCodeTypeActions {
             decimalPositionCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setCodeType(PositionCodeType.DECIMAL);
                     }
                 }
@@ -109,7 +109,7 @@ public class PositionCodeTypeActions {
             hexadecimalPositionCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
+                    if (editorProvider instanceof BinaryEditorControl) {
                         setCodeType(PositionCodeType.HEXADECIMAL);
                     }
                 }

@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.component.gui;
 
 import java.awt.BorderLayout;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JToolBar;
 import org.exbin.framework.gui.action.GuiActionModule;
 import org.exbin.framework.gui.utils.ClipboardActions;
@@ -35,6 +36,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2017/02/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ToolBarEditorPanel extends javax.swing.JPanel {
 
     private UndoActionsHandler undoHandler = null;

@@ -15,17 +15,19 @@
  */
 package org.exbin.framework.gui.editor.api;
 
-import java.awt.Component;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * XBUP framework editor module api interface.
  *
- * @version 0.2.0 2016/08/16
+ * @version 0.2.2 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface GuiEditorModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiEditorModuleApi.class);
@@ -39,7 +41,7 @@ public interface GuiEditorModuleApi extends XBApplicationModule {
     void registerEditor(String pluginId, EditorProvider editorProvider);
 
     /**
-     * Registers multitab editor.
+     * Registers multi-file editor.
      *
      * @param pluginId plugin identifier
      * @param editorProvider editor provider
@@ -52,7 +54,7 @@ public interface GuiEditorModuleApi extends XBApplicationModule {
      * @return panel component
      */
     @Nonnull
-    Component getEditorPanel();
+    JComponent getEditorComponent();
 
     /**
      * Registers undo handler for undo management to editor.

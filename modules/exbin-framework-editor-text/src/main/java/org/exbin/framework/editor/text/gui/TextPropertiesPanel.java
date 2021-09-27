@@ -178,7 +178,7 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
     }
 
     public void setDocument(TextPanel panel) {
-        Optional<URI> fileUri = panel.getFileUri();
+        Optional<URI> fileUri = panel.getActiveFile().getFileUri();
         fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
         Document document = panel.getDocument();
         linesCountTextField.setText(Integer.toString(panel.getLineCount()));

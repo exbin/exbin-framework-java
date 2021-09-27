@@ -22,9 +22,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.bined.BinaryEditorControl;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Find/replace actions.
@@ -39,7 +40,7 @@ public class FindReplaceActions {
     public static final String EDIT_FIND_AGAIN_ACTION_ID = "editFindAgainAction";
     public static final String EDIT_REPLACE_ACTION_ID = "editReplaceAction";
 
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
@@ -50,7 +51,7 @@ public class FindReplaceActions {
     public FindReplaceActions() {
     }
 
-    public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
@@ -62,8 +63,8 @@ public class FindReplaceActions {
             editFindAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
-                        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+                    if (editorProvider instanceof BinaryEditorControl) {
+                        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
                         activePanel.showSearchPanel(false);
                     }
                 }
@@ -81,7 +82,7 @@ public class FindReplaceActions {
             editFindAgainAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+                    BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
                     activePanel.findAgain();
                 }
             };
@@ -97,8 +98,8 @@ public class FindReplaceActions {
             editReplaceAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorProvider) {
-                        BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+                    if (editorProvider instanceof BinaryEditorControl) {
+                        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
                         activePanel.showSearchPanel(true);
                     }
                 }

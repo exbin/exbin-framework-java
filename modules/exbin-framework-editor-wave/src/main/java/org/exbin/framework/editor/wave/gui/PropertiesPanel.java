@@ -150,7 +150,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
 
     public void setDocument(AudioPanel panel) {
         if (!panel.isEmpty()) {
-            Optional<URI> fileUri = panel.getFileUri();
+            Optional<URI> fileUri = panel.getActiveFile().getFileUri();
             fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
             waveLengthTextField.setText(panel.getWaveLength());
             AudioFormat waveFormat = panel.getWaveFormat();

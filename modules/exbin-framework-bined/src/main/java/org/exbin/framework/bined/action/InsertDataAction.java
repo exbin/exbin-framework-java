@@ -33,7 +33,6 @@ import org.exbin.bined.operation.swing.command.CodeAreaCommand;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.XBFrameworkUtils;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorProvider;
 import org.exbin.framework.bined.SearchCondition;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.bined.gui.BinaryMultilinePanel;
@@ -47,6 +46,8 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.bined.BinaryEditorControl;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Insert data action.
@@ -59,7 +60,7 @@ public class InsertDataAction extends AbstractAction {
 
     public static final String ACTION_ID = "insertDataAction";
 
-    private BinaryEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
@@ -67,7 +68,7 @@ public class InsertDataAction extends AbstractAction {
 
     }
 
-    public void setup(XBApplication application, BinaryEditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
@@ -79,9 +80,9 @@ public class InsertDataAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof BinaryEditorProvider) {
+        if (editorProvider instanceof BinaryEditorControl) {
             final EditableBinaryData sampleBinaryData = new ByteArrayEditableData();
-            final BinEdComponentPanel activePanel = ((BinaryEditorProvider) editorProvider).getComponentPanel();
+            final BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
             final InsertDataPanel insertDataPanel = new InsertDataPanel();
             DefaultControlPanel controlPanel = new DefaultControlPanel(insertDataPanel.getResourceBundle());
             JPanel dialogPanel = WindowUtils.createDialogPanel(insertDataPanel, controlPanel);

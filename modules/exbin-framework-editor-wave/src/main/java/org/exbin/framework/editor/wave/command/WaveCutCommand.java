@@ -18,6 +18,7 @@ package org.exbin.framework.editor.wave.command;
 import java.util.Date;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.operation.AbstractCommand;
 
@@ -27,16 +28,18 @@ import org.exbin.xbup.operation.AbstractCommand;
  * @version 0.2.0 2016/01/24
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class WaveCutCommand extends AbstractCommand {
 
-    WaveCopyCommand copyCommand;
-    WaveDeleteCommand deleteCommand;
+    private WaveCopyCommand copyCommand;
+    private WaveDeleteCommand deleteCommand;
 
     public WaveCutCommand(XBWavePanel wave, int startPosition, int endPosition) {
         copyCommand = new WaveCopyCommand(wave, startPosition, endPosition);
         deleteCommand = new WaveDeleteCommand(wave, startPosition, endPosition);
     }
 
+    @Nonnull
     @Override
     public String getCaption() {
         return "Wave section cut out";

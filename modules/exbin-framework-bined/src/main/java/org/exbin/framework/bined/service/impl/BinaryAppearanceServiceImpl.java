@@ -17,32 +17,36 @@ package org.exbin.framework.bined.service.impl;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.bined.service.BinaryAppearanceService;
+import org.exbin.framework.gui.editor.api.EditorProvider;
 
 /**
  * Appearance service implementation.
  *
- * @version 0.2.1 2019/07/16
+ * @version 0.2.1 2021/09/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BinaryAppearanceServiceImpl implements BinaryAppearanceService {
 
     private final BinedModule binedModule;
+    private final EditorProvider editorProvider;
 
-    public BinaryAppearanceServiceImpl(BinedModule binedModule) {
+    public BinaryAppearanceServiceImpl(BinedModule binedModule, EditorProvider editorProvider) {
         this.binedModule = binedModule;
+        this.editorProvider = editorProvider;
     }
 
     @Override
     public boolean getWordWrapMode() {
-        return binedModule.getEditorProvider().isWordWrapMode();
+        return ((BinaryEditorControl) editorProvider).isWordWrapMode();
     }
 
     @Override
     public void setWordWrapMode(boolean mode) {
-        binedModule.getEditorProvider().setWordWrapMode(mode);
+        ((BinaryEditorControl) editorProvider).setWordWrapMode(mode);
 
         binedModule.getRowWrappingAction().putValue(Action.SELECTED_KEY, mode);
     }

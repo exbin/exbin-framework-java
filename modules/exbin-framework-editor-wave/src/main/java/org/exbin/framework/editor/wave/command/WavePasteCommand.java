@@ -20,6 +20,7 @@ import java.awt.datatransfer.Clipboard;
 import java.util.Date;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.audio.wave.XBWave;
@@ -31,6 +32,7 @@ import org.exbin.xbup.operation.AbstractCommand;
  * @version 0.2.0 2016/01/28
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class WavePasteCommand extends AbstractCommand {
 
     private XBWave pastedWave;
@@ -45,6 +47,7 @@ public class WavePasteCommand extends AbstractCommand {
         this.startPosition = startPosition;
     }
 
+    @Nonnull
     @Override
     public String getCaption() {
         return "Wave section pasted";

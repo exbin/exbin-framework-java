@@ -16,6 +16,7 @@
 package org.exbin.framework.editor.text;
 
 import java.nio.charset.Charset;
+import javax.annotation.Nonnull;
 
 /**
  * Text encoding access interface.
@@ -30,6 +31,7 @@ public interface TextCharsetApi {
      *
      * @return charset
      */
+    @Nonnull
     Charset getCharset();
 
     /**
