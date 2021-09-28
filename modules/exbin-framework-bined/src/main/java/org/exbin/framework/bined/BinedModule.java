@@ -300,9 +300,10 @@ public class BinedModule implements XBApplicationModule {
             GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
 //            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryMultiEditorProvider();
+            editorProvider.newFile();
             BinEdFileHandler activeFile = (BinEdFileHandler) editorProvider.getActiveFile();
-            activeFile.setSegmentsRepository(new SegmentsRepository());
-            activeFile.newFile();
+//            activeFile.setSegmentsRepository(new SegmentsRepository());
+//            activeFile.newFile();
 
 //            activeFile.setBinaryPanelInit((BinEdFileHandler file) -> {
 //                BinEdComponentPanel panel = (BinEdComponentPanel) ((BinEdFileHandler) activeFile).getComponent();
@@ -326,7 +327,7 @@ public class BinedModule implements XBApplicationModule {
 //            });
             //((BinaryEditorControl) editorProvider).getComponentPanel().setEditorViewHandling(editorTabModule.getEditorViewHandling());
             activeFile.setSegmentsRepository(new SegmentsRepository());
-            //activeFile.init();
+//            activeFile.init();
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
             fileHandlingActions.setFileHandler(activeFile);

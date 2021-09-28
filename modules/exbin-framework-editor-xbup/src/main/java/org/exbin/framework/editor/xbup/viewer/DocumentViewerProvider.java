@@ -472,6 +472,11 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         });
     }
 
+    @Override
+    public void newFile() {
+        activeFile.newFile();
+    }
+
     @ParametersAreNonnullByDefault
     private class TreeDocument extends XBTTreeDocument implements OperationListener, ClipboardActionsHandler {
 

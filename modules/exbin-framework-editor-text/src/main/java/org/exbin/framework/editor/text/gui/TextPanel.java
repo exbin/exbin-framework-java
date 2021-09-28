@@ -732,6 +732,11 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
         textArea.removeFocusListener(focusListener);
     }
 
+    @Override
+    public void newFile() {
+        activeFile.newFile();
+    }
+
     public interface CharsetChangeListener {
 
         public void charsetChanged();

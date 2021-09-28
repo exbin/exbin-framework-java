@@ -732,6 +732,11 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
         // TODO
     }
 
+    @Override
+    public void newFile() {
+        activeFile.newFile();
+    }
+
     class PlayThread extends Thread {
 
         boolean playing;

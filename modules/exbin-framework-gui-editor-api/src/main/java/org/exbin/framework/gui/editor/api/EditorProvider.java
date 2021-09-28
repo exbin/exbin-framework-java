@@ -24,7 +24,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
 /**
  * XBUP framework editor interface.
  *
- * @version 0.2.2 2021/09/26
+ * @version 0.2.2 2021/09/28
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -67,6 +67,11 @@ public interface EditorProvider {
      */
     @Nonnull
     String getWindowTitle(String parentTitle);
+
+    /**
+     * Creates new empty file.
+     */
+    void newFile();
 
     /**
      * Interface for editor modifications listener.

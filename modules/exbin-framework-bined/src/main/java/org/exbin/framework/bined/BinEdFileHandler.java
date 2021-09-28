@@ -329,7 +329,7 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
 
     @Nonnull
     @Override
-    public JComponent getComponent() {
+    public BinEdComponentPanel getComponent() {
         return componentPanel;
     }
 

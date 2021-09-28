@@ -29,6 +29,7 @@ import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
+import org.exbin.framework.gui.editor.gui.MultiEditorPanel;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 
@@ -41,19 +42,27 @@ import org.exbin.framework.gui.file.api.FileType;
 @ParametersAreNonnullByDefault
 public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEditorControl {
 
+    private final MultiEditorPanel multiEditorPanel = new MultiEditorPanel();
+
     public BinaryMultiEditorProvider() {
+        multiEditorPanel.setControl(new MultiEditorPanel.Control() {
+            @Override
+            public void activeIndexChanged(int index) {
+                
+            }
+        });
     }
 
     @Nonnull
     @Override
     public BinEdFileHandler getActiveFile() {
-        return null;
+        return (BinEdFileHandler) multiEditorPanel.getActiveFile();
     }
 
     @Nonnull
     @Override
     public JComponent getEditorComponent() {
-        return getActiveFile().getComponent();
+        return multiEditorPanel;
     }
 
     @Override
@@ -74,7 +83,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
 
     @Nonnull
     @Override
-    public JComponent getComponent() {
+    public BinEdComponentPanel getComponent() {
         return getActiveFile().getComponent();
     }
 
@@ -112,7 +121,9 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
 
     @Override
     public void newFile() {
-        getActiveFile().newFile();
+        BinEdFileHandler newFile = new BinEdFileHandler();
+        newFile.newFile();
+        multiEditorPanel.addFileHandler(newFile);
     }
 
     @Override
@@ -127,106 +138,112 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
 
     @Override
     public void closeFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
 
     @Override
     public void closeFile(FileHandlerApi file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
 
     @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getComponent().registerBinaryStatus(binaryStatus);
     }
 
     @Override
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatus) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getComponent().registerEncodingStatus(encodingStatus);
     }
 
+    @Nonnull
     @Override
     public ExtendedCodeAreaColorProfile getCurrentColors() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent().getCurrentColors();
     }
 
+    @Nonnull
     @Override
     public ExtendedCodeAreaColorProfile getDefaultColors() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent().getDefaultColors();
     }
 
     @Override
     public void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getComponent().setCurrentColors(colorsProfile);
     }
 
     @Override
     public boolean isWordWrapMode() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent().isWordWrapMode();
     }
 
     @Override
     public void setWordWrapMode(boolean mode) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getComponent().setWordWrapMode(mode);
     }
 
+    @Nonnull
     @Override
     public Charset getCharset() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent().getCharset();
     }
 
     @Override
     public int getId() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getActiveFile().getId();
     }
 
     @Override
     public void setCharset(Charset charset) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getComponent().setCharset(charset);
     }
 
     @Override
     public boolean isShowNonprintables() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent().isShowNonprintables();
     }
 
     @Override
     public void setShowNonprintables(boolean show) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getComponent().setShowNonprintables(show);
     }
 
     @Override
     public boolean isShowValuesPanel() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent().isShowValuesPanel();
     }
 
     @Override
     public void setShowValuesPanel(boolean show) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getComponent().setShowValuesPanel(show);
     }
 
     @Override
     public boolean changeLineWrap() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent().changeLineWrap();
     }
 
+    @Nonnull
     @Override
     public BinEdComponentPanel getComponentPanel() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent();
     }
 
+    @Nonnull
     @Override
     public BinaryDataUndoHandler getBinaryUndoHandler() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent().getUndoHandler();
     }
 
+    @Nonnull
     @Override
     public ExtCodeArea getCodeArea() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getComponent().getCodeArea();
     }
 
     @Override
     public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        getComponent().setFileHandlingMode(fileHandlingMode);
     }
 }

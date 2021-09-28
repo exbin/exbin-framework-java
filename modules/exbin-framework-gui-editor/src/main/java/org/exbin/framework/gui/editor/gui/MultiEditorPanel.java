@@ -83,7 +83,10 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     }
 
     @Nullable
-    public FileHandlerApi getActiveHandler() {
+    public FileHandlerApi getActiveFile() {
+        if (fileHandlers.isEmpty()) {
+            return null;
+        }
         return fileHandlers.get(getActiveIndex());
     }
 

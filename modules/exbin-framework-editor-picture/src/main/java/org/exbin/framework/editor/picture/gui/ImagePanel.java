@@ -742,6 +742,11 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         return new Point(image.getWidth(null), image.getHeight(null));
     }
 
+    @Override
+    public void newFile() {
+        activeFile.newFile();
+    }
+
     public enum ToolMode {
 
         DOTTER,
