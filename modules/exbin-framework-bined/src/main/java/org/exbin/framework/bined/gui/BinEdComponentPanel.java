@@ -204,6 +204,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         return valuesPanelVisible;
     }
 
+    @Nonnull
     public ExtCodeArea getCodeArea() {
         return codeArea;
     }
@@ -656,5 +657,9 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     public interface ModifiedStateListener {
 
         void modifiedChanged();
+    }
+    
+    public interface Control {
+        
     }
 }

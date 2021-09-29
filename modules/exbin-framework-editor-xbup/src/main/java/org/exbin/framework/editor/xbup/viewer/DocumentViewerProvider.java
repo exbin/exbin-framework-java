@@ -140,6 +140,11 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
             private URI fileUri = null;
             private FileType fileType = null;
 
+            @Override
+            public int getId() {
+                return -1;
+            }
+
             @Nonnull
             @Override
             public JComponent getComponent() {
@@ -475,6 +480,11 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     @Override
     public void newFile() {
         activeFile.newFile();
+    }
+
+    @Override
+    public void openFile(URI fileUri, FileType fileType) {
+        activeFile.loadFromFile(fileUri, fileType);
     }
 
     @ParametersAreNonnullByDefault

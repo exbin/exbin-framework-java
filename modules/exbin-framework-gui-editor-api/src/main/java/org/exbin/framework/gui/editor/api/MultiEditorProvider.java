@@ -16,7 +16,7 @@
 package org.exbin.framework.gui.editor.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.file.api.MultiFileHandlerApi;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Framework multitab editor interface.
@@ -25,7 +25,7 @@ import org.exbin.framework.gui.file.api.MultiFileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface MultiEditorProvider extends EditorProvider, MultiFileHandlerApi {
+public interface MultiEditorProvider extends EditorProvider {
 
     /**
      * Sets currently active editor provider.
@@ -33,4 +33,16 @@ public interface MultiEditorProvider extends EditorProvider, MultiFileHandlerApi
      * @param editorProvider editor provider
      */
     void setActiveEditor(EditorProvider editorProvider);
+
+    /**
+     * Closes active file.
+     */
+    void closeFile();
+
+    /**
+     * Closes specified file.
+     *
+     * @param file file handler
+     */
+    void closeFile(FileHandlerApi file);
 }

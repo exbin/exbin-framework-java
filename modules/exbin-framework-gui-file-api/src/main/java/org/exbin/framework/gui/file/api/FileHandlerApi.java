@@ -24,11 +24,18 @@ import javax.swing.JComponent;
 /**
  * Interface for file handling actions.
  *
- * @version 0.2.2 2021/09/27
+ * @version 0.2.2 2021/09/29
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface FileHandlerApi {
+
+    /**
+     * Returns unique identifier of the file.
+     *
+     * @return id
+     */
+    int getId();
 
     /**
      * Returns component for the file.

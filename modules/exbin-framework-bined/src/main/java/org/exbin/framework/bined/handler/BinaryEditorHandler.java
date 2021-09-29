@@ -102,18 +102,6 @@ public class BinaryEditorHandler { //implements BinaryEditorControl, MultiEditor
         multiClipboardUpdateListener = this::notifyClipboardStateChanged;
     }
 
-    @Nonnull
-    @Override
-    public BinEdComponentPanel getComponentPanel() {
-        return activeFile.getComponentPanel();
-    }
-
-    @Nonnull
-    @Override
-    public JComponent getComponent() {
-        return activeFile.getComponentPanel();
-    }
-
     @Override
     public void setPropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
         activeFile.setPropertyChangeListener((PropertyChangeEvent evt) -> {
@@ -143,43 +131,10 @@ public class BinaryEditorHandler { //implements BinaryEditorControl, MultiEditor
     }
 
     @Override
-    public int getId() {
-        return activeFile.getId();
-    }
-
-    @Nonnull
-    @Override
-    public Optional<URI> getFileUri() {
-        return activeFile.getFileUri();
-    }
-
-    @Nonnull
-    @Override
-    public Optional<String> getFileName() {
-        return activeFile.getFileName();
-    }
-
-    @Nonnull
-    @Override
-    public Optional<FileType> getFileType() {
-        return activeFile.getFileType();
-    }
-
-    @Override
-    public void setFileType(FileType fileType) {
-        activeFile.setFileType(fileType);
-    }
-
-    @Override
     public void newFile() {
         BinEdFileHandler createdFile = createNewFile();
         createdFile.newFile();
         activeFile = createdFile;
-    }
-
-    @Override
-    public boolean isModified() {
-        return activeFile.isModified();
     }
 
     @Override
@@ -483,84 +438,6 @@ public class BinaryEditorHandler { //implements BinaryEditorControl, MultiEditor
         if (clipboardUpdateListener != null) {
             clipboardUpdateListener.stateChanged();
         }
-    }
-
-    @Override
-    public void performCut() {
-        activeFile.performCut();
-    }
-
-    @Override
-    public void performCopy() {
-        activeFile.performCopy();
-    }
-
-    @Override
-    public void performPaste() {
-        activeFile.performPaste();
-    }
-
-    @Override
-    public void performDelete() {
-        activeFile.performDelete();
-    }
-
-    @Override
-    public void performSelectAll() {
-        activeFile.performSelectAll();
-    }
-
-    @Override
-    public boolean isSelection() {
-        return activeFile.isSelection();
-    }
-
-    @Override
-    public boolean isEditable() {
-        return activeFile.isEditable();
-    }
-
-    @Override
-    public boolean canSelectAll() {
-        return activeFile.canSelectAll();
-    }
-
-    @Override
-    public boolean canPaste() {
-        return activeFile.canPaste();
-    }
-
-    @Override
-    public boolean canDelete() {
-        return activeFile.canDelete();
-    }
-
-    @Override
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-        this.clipboardUpdateListener = updateListener;
-    }
-
-    @Override
-    public Font getCurrentFont() {
-        return activeFile.getCurrentFont();
-    }
-
-    @Override
-    public Font getDefaultFont() {
-        return activeFile.getDefaultFont();
-    }
-
-    @Override
-    public void setCurrentFont(Font font) {
-        activeFile.setCurrentFont(font);
-    }
-
-    / **
-     * Method for initialization of new binary panel.
-     * /
-    public static interface BinaryPanelInit {
-
-        void init(BinEdFileHandler binEdFile);
     }
 */
 }

@@ -219,6 +219,11 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
             private FileType fileType = null;
 
             @Override
+            public int getId() {
+                return -1;
+            }
+
+            @Override
             public JComponent getComponent() {
                 return ImagePanel.this;
             }
@@ -745,6 +750,11 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     @Override
     public void newFile() {
         activeFile.newFile();
+    }
+
+    @Override
+    public void openFile(URI fileUri, FileType fileType) {
+        activeFile.loadFromFile(fileUri, fileType);
     }
 
     public enum ToolMode {

@@ -18,6 +18,8 @@ package org.exbin.framework.bined;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -43,12 +45,15 @@ import org.exbin.framework.gui.file.api.FileType;
 public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEditorControl {
 
     private final MultiEditorPanel multiEditorPanel = new MultiEditorPanel();
+    private int lastIndex = 0;
+    private int lastNewFileIndex = 0;
+    private Map<Integer, Integer> newFilesMap = new HashMap<>();
 
     public BinaryMultiEditorProvider() {
         multiEditorPanel.setControl(new MultiEditorPanel.Control() {
             @Override
             public void activeIndexChanged(int index) {
-                
+
             }
         });
     }
@@ -82,53 +87,34 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
     }
 
     @Nonnull
-    @Override
-    public BinEdComponentPanel getComponent() {
+    private BinEdComponentPanel getComponent() {
         return getActiveFile().getComponent();
     }
 
     @Override
-    public void loadFromFile(URI fileUri, FileType fileType) {
-        getActiveFile().loadFromFile(fileUri, fileType);
-    }
-
-    @Override
-    public void saveToFile(URI fileUri, FileType fileType) {
-        getActiveFile().saveToFile(fileUri, fileType);
-    }
-
-    @Nonnull
-    @Override
-    public Optional<URI> getFileUri() {
-        return getActiveFile().getFileUri();
-    }
-
-    @Nonnull
-    @Override
-    public Optional<String> getFileName() {
-        return getActiveFile().getFileName();
-    }
-
-    @Nonnull
-    @Override
-    public Optional<FileType> getFileType() {
-        return Optional.empty();
-    }
-
-    @Override
-    public void setFileType(FileType fileType) {
-    }
-
-    @Override
     public void newFile() {
-        BinEdFileHandler newFile = new BinEdFileHandler();
+        int fileIndex = ++lastIndex;
+        newFilesMap.put(fileIndex, ++lastNewFileIndex);
+        BinEdFileHandler newFile = new BinEdFileHandler(fileIndex);
         newFile.newFile();
-        multiEditorPanel.addFileHandler(newFile);
+        multiEditorPanel.addFileHandler(newFile, getFileName(newFile));
     }
 
     @Override
-    public boolean isModified() {
-        return ((BinEdComponentPanel) getComponent()).isModified();
+    public void openFile(URI fileUri, FileType fileType) {
+        BinEdFileHandler file = new BinEdFileHandler(++lastIndex);
+        file.loadFromFile(fileUri, fileType);
+        multiEditorPanel.addFileHandler(file, file.getFileName().orElse(""));
+    }
+
+    @Nonnull
+    private String getFileName(FileHandlerApi fileHandler) {
+        Optional<String> fileName = fileHandler.getFileName();
+        if (!fileName.isPresent()) {
+            return "New File " + newFilesMap.get(fileHandler.getId());
+        }
+
+        return fileName.orElse("");
     }
 
     @Override
@@ -138,12 +124,12 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
 
     @Override
     public void closeFile() {
-        
+
     }
 
     @Override
     public void closeFile(FileHandlerApi file) {
-        
+
     }
 
     @Override

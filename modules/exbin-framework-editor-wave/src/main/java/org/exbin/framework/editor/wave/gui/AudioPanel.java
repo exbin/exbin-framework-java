@@ -158,6 +158,11 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
             private FileType fileType = null;
             private String ext;
 
+            @Override
+            public int getId() {
+                return -1;
+            }
+
             @Nonnull
             @Override
             public JComponent getComponent() {
@@ -735,6 +740,11 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     @Override
     public void newFile() {
         activeFile.newFile();
+    }
+
+    @Override
+    public void openFile(URI fileUri, FileType fileType) {
+        activeFile.loadFromFile(fileUri, fileType);
     }
 
     class PlayThread extends Thread {

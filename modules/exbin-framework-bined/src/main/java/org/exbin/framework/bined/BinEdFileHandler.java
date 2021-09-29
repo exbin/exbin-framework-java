@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.ByteArrayData;
@@ -52,7 +51,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * File handler for binary editor.
  *
- * @version 0.2.2 2021/09/27
+ * @version 0.2.2 2021/09/29
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -207,6 +206,7 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
         undoHandler.clear();
     }
 
+    @Override
     public int getId() {
         return id;
     }

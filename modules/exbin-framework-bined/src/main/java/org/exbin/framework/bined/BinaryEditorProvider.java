@@ -16,6 +16,7 @@
 package org.exbin.framework.bined;
 
 import java.beans.PropertyChangeListener;
+import java.net.URI;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -25,6 +26,7 @@ import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileType;
 
 /**
  * Binary editor provider.
@@ -173,5 +175,10 @@ public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl
     @Override
     public void newFile() {
         activeFile.newFile();
+    }
+
+    @Override
+    public void openFile(URI fileUri, FileType fileType) {
+        activeFile.loadFromFile(fileUri, fileType);
     }
 }

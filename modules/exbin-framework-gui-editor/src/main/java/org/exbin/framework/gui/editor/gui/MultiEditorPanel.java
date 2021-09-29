@@ -15,9 +15,9 @@
  */
 package org.exbin.framework.gui.editor.gui;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
@@ -56,10 +56,9 @@ public class MultiEditorPanel extends javax.swing.JPanel {
         return fileHandlers.size();
     }
 
-    public void addFileHandler(FileHandlerApi fileHandler) {
+    public void addFileHandler(FileHandlerApi fileHandler, String text) {
         fileHandlers.add(fileHandler);
-        Optional<String> fileName = fileHandler.getFileName();
-        tabbedPane.addTab(fileName.orElse(""), fileHandler.getComponent());
+        tabbedPane.addTab(text, fileHandler.getComponent());
     }
 
     public void insertFileHandler(int position, FileHandlerApi fileHandler) {
@@ -76,6 +75,11 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     public void removeFileHandlerAt(int index) {
         tabbedPane.removeTabAt(index);
         fileHandlers.remove(index);
+    }
+
+    public void updateFileHandlerAt(int index, String text) {
+        Component component = tabbedPane.getTabComponentAt(index);
+        component.setName(text);
     }
 
     public int getActiveIndex() {

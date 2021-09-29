@@ -16,10 +16,13 @@
 package org.exbin.framework.gui.editor.api;
 
 import java.beans.PropertyChangeListener;
+import java.net.URI;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileType;
 
 /**
  * XBUP framework editor interface.
@@ -43,21 +46,8 @@ public interface EditorProvider {
      *
      * @return acftive file
      */
+    @Nullable
     FileHandlerApi getActiveFile();
-
-    /**
-     * Changes passing listener.
-     *
-     * @param propertyChangeListener change listener
-     */
-    void setPropertyChangeListener(PropertyChangeListener propertyChangeListener);
-
-    /**
-     * Sets modification listener.
-     *
-     * @param editorModificationListener editor modification listener
-     */
-    void setModificationListener(EditorModificationListener editorModificationListener);
 
     /**
      * Gets window title related to last opened or saved file.
@@ -72,6 +62,28 @@ public interface EditorProvider {
      * Creates new empty file.
      */
     void newFile();
+
+    /**
+     * Opens file from given filename.
+     *
+     * @param fileUri file Uri
+     * @param fileType file type
+     */
+    void openFile(URI fileUri, FileType fileType);
+
+    /**
+     * Changes passing listener.
+     *
+     * @param propertyChangeListener change listener
+     */
+    void setPropertyChangeListener(PropertyChangeListener propertyChangeListener);
+
+    /**
+     * Sets modification listener.
+     *
+     * @param editorModificationListener editor modification listener
+     */
+    void setModificationListener(EditorModificationListener editorModificationListener);
 
     /**
      * Interface for editor modifications listener.

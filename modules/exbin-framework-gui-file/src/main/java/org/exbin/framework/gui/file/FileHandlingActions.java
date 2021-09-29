@@ -43,7 +43,6 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.file.api.MultiFileHandlerApi;
 import org.exbin.framework.gui.file.preferences.RecentFilesPreferences;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -248,20 +247,12 @@ public class FileHandlingActions implements FileHandlingActionsApi {
 
     public void actionFileNew() {
         if (fileHandler != null) {
-            if (!(fileHandler instanceof MultiFileHandlerApi) && !releaseFile()) {
-                return;
-            }
-
             fileHandler.newFile();
         }
     }
 
     public void actionFileOpen() {
         if (fileHandler != null) {
-            if (!(fileHandler instanceof MultiFileHandlerApi) && !releaseFile()) {
-                return;
-            }
-
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             if (openFileChooser.showOpenDialog(frameModule.getFrame()) == JFileChooser.APPROVE_OPTION) {
 //                ((CardLayout) statusPanel.getLayout()).show(statusPanel, "busy");
@@ -319,7 +310,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
 
     public void actionFileClose() {
         if (releaseFile()) {
-            ((MultiFileHandlerApi) fileHandler).closeFile();
+            // TODO
         }
     }
 

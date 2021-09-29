@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplication;
@@ -197,6 +198,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
         this.editorProvider = editorProvider;
     }
 
+    @Nonnull
     @Override
     public JComponent getEditorComponent() {
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);

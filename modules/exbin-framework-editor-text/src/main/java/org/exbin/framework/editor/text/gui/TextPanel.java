@@ -171,6 +171,11 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
             private URI fileUri = null;
             private FileType fileType = null;
 
+            @Override
+            public int getId() {
+                return -1;
+            }
+
             @Nonnull
             @Override
             public JComponent getComponent() {
@@ -735,6 +740,11 @@ public class TextPanel extends javax.swing.JPanel implements EditorProvider, Cli
     @Override
     public void newFile() {
         activeFile.newFile();
+    }
+
+    @Override
+    public void openFile(URI fileUri, FileType fileType) {
+        activeFile.loadFromFile(fileUri, fileType);
     }
 
     public interface CharsetChangeListener {
