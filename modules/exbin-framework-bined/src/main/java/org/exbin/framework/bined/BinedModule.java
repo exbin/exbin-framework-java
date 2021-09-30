@@ -99,7 +99,6 @@ import org.exbin.framework.editor.text.options.gui.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.options.gui.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
 import org.exbin.framework.gui.editor.tab.api.GuiEditorTabModuleApi;
-import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ComponentPopupEventDispatcher;
@@ -156,6 +155,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.EditorProviderVariant;
+import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 
 /**
  * Binary data editor module.
@@ -330,7 +330,7 @@ public class BinedModule implements XBApplicationModule {
 //            activeFile.init();
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
-            fileHandlingActions.setFileHandler(activeFile);
+            fileHandlingActions.setFileHandler(editorProvider.getActiveFile());
         }
 
         return editorProvider;

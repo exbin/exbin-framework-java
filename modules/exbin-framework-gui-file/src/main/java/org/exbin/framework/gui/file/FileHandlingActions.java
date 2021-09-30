@@ -41,13 +41,13 @@ import javax.swing.filechooser.FileSystemView;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
-import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.preferences.RecentFilesPreferences;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 
 /**
  * File handling operations.
@@ -62,7 +62,6 @@ public class FileHandlingActions implements FileHandlingActionsApi {
 
     private final ResourceBundle resourceBundle;
     private Preferences preferences;
-    private int metaMask;
 
     private Action newFileAction;
     private Action openFileAction;
@@ -87,7 +86,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     public void init(XBApplication application) {
         this.application = application;
 
-        metaMask = ActionUtils.getMetaMask();
+        int metaMask = ActionUtils.getMetaMask();
         openFileChooser = new JFileChooser();
         openFileChooser.setAcceptAllFileFilterUsed(false);
         saveFileChooser = new JFileChooser();

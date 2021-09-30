@@ -34,11 +34,15 @@ import org.exbin.framework.gui.action.api.ToolBarGroup;
 import org.exbin.framework.gui.action.api.ToolBarPosition;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.file.action.NewFileAction;
+import org.exbin.framework.gui.file.action.OpenFileAction;
+import org.exbin.framework.gui.file.action.SaveAsFileAction;
+import org.exbin.framework.gui.file.action.SaveFileAction;
 
 /**
  * Implementation of framework file module.
  *
- * @version 0.2.1 2019/07/16
+ * @version 0.2.2 2021/09/30
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -49,6 +53,11 @@ public class GuiFileModule implements GuiFileModuleApi {
 
     private FileHandlingActions fileHandlingActions = null;
     private XBApplication application;
+    
+    private NewFileAction newFileAction;
+    private OpenFileAction openFileAction;
+    private SaveFileAction saveFileAction;
+    private SaveAsFileAction saveAsFileAction;
 
     public GuiFileModule() {
     }
