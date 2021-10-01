@@ -21,6 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -55,8 +56,8 @@ public class PrintAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof TextPanel) {
-            TextPanel activePanel = (TextPanel) editorProvider;
+        if (editorProvider instanceof TextEditor) {
+            TextPanel activePanel = (TextPanel) editorProvider.getActiveFile().getComponent();
             activePanel.printFile();
         }
     }

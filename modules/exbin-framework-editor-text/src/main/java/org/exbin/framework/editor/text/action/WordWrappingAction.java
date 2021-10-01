@@ -21,6 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -54,8 +55,8 @@ public class WordWrappingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof TextPanel) {
-            boolean lineWraping = ((TextPanel) editorProvider).changeLineWrap();
+        if (editorProvider instanceof TextEditor) {
+            boolean lineWraping = ((TextPanel) editorProvider.getActiveFile().getComponent()).changeLineWrap();
             putValue(Action.SELECTED_KEY, lineWraping);
         }
     }

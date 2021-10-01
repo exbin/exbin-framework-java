@@ -181,4 +181,24 @@ public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl
     public void openFile(URI fileUri, FileType fileType) {
         activeFile.loadFromFile(fileUri, fileType);
     }
+
+    @Override
+    public void openFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void saveFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void saveAsFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean releaseFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

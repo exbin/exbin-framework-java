@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -59,7 +60,7 @@ public class EditToolActions {
     }
 
     public void setToolMode(XBWavePanel.ToolMode mode) {
-        AudioPanel activePanel = (AudioPanel) editorProvider;
+        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
         activePanel.setToolMode(mode);
     }
 
@@ -69,7 +70,7 @@ public class EditToolActions {
             selectionToolAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioPanel) {
+                    if (editorProvider instanceof AudioEditor) {
                         setToolMode(XBWavePanel.ToolMode.SELECTION);
                     }
                 }
@@ -88,7 +89,7 @@ public class EditToolActions {
             pencilToolAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioPanel) {
+                    if (editorProvider instanceof AudioEditor) {
                         setToolMode(XBWavePanel.ToolMode.PENCIL);
                     }
                 }

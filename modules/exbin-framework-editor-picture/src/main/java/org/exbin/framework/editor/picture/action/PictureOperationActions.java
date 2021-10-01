@@ -25,6 +25,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.picture.ImageEditor;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ImageResizePanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -68,9 +69,9 @@ public class PictureOperationActions {
             imageResizeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof ImagePanel) {
+                    if (editorProvider instanceof ImageEditor) {
                         final ImageResizePanel imageResizePanel = new ImageResizePanel();
-                        imageResizePanel.setResolution(((ImagePanel) editorProvider).getImageSize());
+                        imageResizePanel.setResolution(((ImagePanel) editorProvider.getActiveFile().getComponent()).getImageSize());
                         DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
                         JPanel dialogPanel = WindowUtils.createDialogPanel(imageResizePanel, controlPanel);
                         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
@@ -82,7 +83,7 @@ public class PictureOperationActions {
                                 Point point = imageResizePanel.getResolution();
                                 int width = (int) (point.getX());
                                 int height = (int) (point.getY());
-                                ((ImagePanel) editorProvider).performResize(width, height);
+                                ((ImagePanel) editorProvider.getActiveFile().getComponent()).performResize(width, height);
                             }
 
                             dialog.close();

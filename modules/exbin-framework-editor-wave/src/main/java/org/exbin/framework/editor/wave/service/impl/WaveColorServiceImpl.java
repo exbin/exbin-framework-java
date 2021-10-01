@@ -40,17 +40,17 @@ public class WaveColorServiceImpl implements WaveColorService {
     @Nonnull
     @Override
     public Color[] getCurrentWaveColors() {
-        return ((AudioPanel) editorProvider).getAudioPanelColors();
+        return ((AudioPanel) editorProvider.getActiveFile().getComponent()).getAudioPanelColors();
     }
 
     @Nonnull
     @Override
     public Color[] getDefaultWaveColors() {
-        return ((AudioPanel) editorProvider).getDefaultColors();
+        return ((AudioPanel) editorProvider.getActiveFile().getComponent()).getDefaultColors();
     }
 
     @Override
     public void setCurrentWaveColors(Color[] colors) {
-        ((AudioPanel) editorProvider).setAudioPanelColors(colors);
+        ((AudioPanel) editorProvider.getActiveFile().getComponent()).setAudioPanelColors(colors);
     }
 }

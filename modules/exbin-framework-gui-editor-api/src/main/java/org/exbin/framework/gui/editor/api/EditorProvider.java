@@ -23,6 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.file.api.FileOperations;
 
 /**
  * XBUP framework editor interface.
@@ -31,7 +32,7 @@ import org.exbin.framework.gui.file.api.FileType;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditorProvider {
+public interface EditorProvider extends FileOperations {
 
     /**
      * Returns main editor component.
@@ -57,11 +58,6 @@ public interface EditorProvider {
      */
     @Nonnull
     String getWindowTitle(String parentTitle);
-
-    /**
-     * Creates new empty file.
-     */
-    void newFile();
 
     /**
      * Opens file from given filename.

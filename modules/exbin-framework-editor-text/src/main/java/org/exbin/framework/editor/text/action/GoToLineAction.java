@@ -22,6 +22,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.TextGoToPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -62,8 +63,8 @@ public class GoToLineAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof TextPanel) {
-            final TextPanel activePanel = (TextPanel) editorProvider;
+        if (editorProvider instanceof TextEditor) {
+            final TextPanel activePanel = (TextPanel) editorProvider.getActiveFile().getComponent();
             final TextGoToPanel goToPanel = new TextGoToPanel();
             goToPanel.initFocus();
             goToPanel.setMaxLine(activePanel.getLineCount());

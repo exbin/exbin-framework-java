@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.editor.picture.ImageEditor;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -78,8 +79,8 @@ public class PropertiesPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public void setDocument(ImagePanel panel) {
-        Optional<URI> fileUri = panel.getActiveFile().getFileUri();
+    public void setDocument(ImageEditor imageEditor) {
+        Optional<URI> fileUri = imageEditor.getActiveFile().getFileUri();
         fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
     }
 

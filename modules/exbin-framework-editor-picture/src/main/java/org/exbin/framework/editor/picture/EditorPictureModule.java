@@ -26,6 +26,7 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
@@ -50,9 +51,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * XBUP picture editor module.
  *
- * @version 0.2.0 2021/09/25
+ * @version 0.2.2 2021/10/01
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class EditorPictureModule implements XBApplicationModule {
 
     public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(EditorPictureModule.class);
@@ -100,14 +102,14 @@ public class EditorPictureModule implements XBApplicationModule {
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            ImagePanel imagePanel = new ImagePanel();
+            ImageEditor imageEditor = new ImageEditor();
 
             GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
             // imagePanel.setUndoHandler(undoModule.getUndoHandler());
 
-            editorProvider = imagePanel;
+            editorProvider = imageEditor;
 
-            imagePanel.attachCaretListener(new MouseMotionListener() {
+            imageEditor.setMouseMotionListener(new MouseMotionListener() {
 
                 @Override
                 public void mouseDragged(MouseEvent e) {
@@ -122,7 +124,7 @@ public class EditorPictureModule implements XBApplicationModule {
                     updateCurrentPosition();
                 }
             });
-            imagePanel.setPopupMenu(createPopupMenu());
+            imageEditor.setPopupMenu(createPopupMenu());
         }
 
         return editorProvider;
@@ -151,8 +153,8 @@ public class EditorPictureModule implements XBApplicationModule {
 
     private void updateCurrentPosition() {
         if (imageStatusPanel != null) {
-            Point mousePosition = ((ImagePanel) editorProvider).getMousePosition();
-            double scale = ((ImagePanel) editorProvider).getScale();
+            Point mousePosition = ((ImagePanel) editorProvider.getActiveFile().getComponent()).getMousePosition();
+            double scale = ((ImagePanel) editorProvider.getActiveFile().getComponent()).getScale();
             if (mousePosition != null) {
                 imageStatusPanel.setCurrentPosition(new Point((int) (mousePosition.x * scale), (int) (mousePosition.y * scale)));
             }
@@ -170,7 +172,7 @@ public class EditorPictureModule implements XBApplicationModule {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, IMAGE_STATUS_BAR_ID, imageStatusPanel);
         frameModule.switchStatusBar(IMAGE_STATUS_BAR_ID);
-        ((ImagePanel) getEditorProvider()).registerImageStatus(imageStatusPanel);
+        ((ImagePanel) getEditorProvider().getActiveFile().getComponent()).registerImageStatus(imageStatusPanel);
     }
 
     public void registerPropertiesMenu() {

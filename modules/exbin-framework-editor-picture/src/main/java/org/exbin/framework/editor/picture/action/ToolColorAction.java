@@ -65,8 +65,9 @@ public class ToolColorAction extends AbstractAction {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
 
         final ToolColorPanel toolColorPanel = new ToolColorPanel();
-        toolColorPanel.setToolColor(((ImagePanel) editorProvider).getToolColor());
-        toolColorPanel.setSelectionColor(((ImagePanel) editorProvider).getSelectionColor());
+        ImagePanel imagePanel = (ImagePanel) editorProvider.getActiveFile().getComponent();
+        toolColorPanel.setToolColor(imagePanel.getToolColor());
+        toolColorPanel.setSelectionColor(imagePanel.getSelectionColor());
         DefaultControlPanel controlPanel = new DefaultControlPanel(toolColorPanel.getResourceBundle());
         JPanel dialogPanel = WindowUtils.createDialogPanel(toolColorPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -74,8 +75,8 @@ public class ToolColorAction extends AbstractAction {
         frameModule.setDialogTitle(dialog, toolColorPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == ControlActionType.OK) {
-                ((ImagePanel) editorProvider).setToolColor(toolColorPanel.getToolColor());
-                ((ImagePanel) editorProvider).setSelectionColor(toolColorPanel.getSelectionColor());
+                imagePanel.setToolColor(toolColorPanel.getToolColor());
+                imagePanel.setSelectionColor(toolColorPanel.getSelectionColor());
             }
 
             dialog.close();

@@ -26,6 +26,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
+import org.exbin.framework.editor.text.TextEditor;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -177,13 +179,15 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
         WindowUtils.invokeDialog(new TextPropertiesPanel());
     }
 
-    public void setDocument(TextPanel panel) {
-        Optional<URI> fileUri = panel.getActiveFile().getFileUri();
+    public void setDocument(TextEditor textEditor) {
+        FileHandlerApi activeFile = textEditor.getActiveFile();
+        Optional<URI> fileUri = activeFile.getFileUri();
         fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
-        Document document = panel.getDocument();
-        linesCountTextField.setText(Integer.toString(panel.getLineCount()));
+        TextPanel textPanel = (TextPanel) activeFile.getComponent();
+        Document document = textPanel.getDocument();
+        linesCountTextField.setText(Integer.toString(textPanel.getLineCount()));
         charCountTextField.setText(Integer.toString(document.getLength()));
-        CharBuffer buffer = CharBuffer.wrap(new StringBuffer(panel.getText()));
+        CharBuffer buffer = CharBuffer.wrap(new StringBuffer(textPanel.getText()));
 
         CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
         try {

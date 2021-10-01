@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.picture.ImageEditor;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -64,8 +65,8 @@ public class ZoomControlActions {
             normalZoomAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof ImagePanel) {
-                        ImagePanel activePanel = (ImagePanel) editorProvider;
+                    if (editorProvider instanceof ImageEditor) {
+                        ImagePanel activePanel = (ImagePanel) editorProvider.getActiveFile().getComponent();
                         activePanel.setScale(1);
                     }
                 }
@@ -81,8 +82,8 @@ public class ZoomControlActions {
             zoomUpAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof ImagePanel) {
-                        ImagePanel activePanel = (ImagePanel) editorProvider;
+                    if (editorProvider instanceof ImageEditor) {
+                        ImagePanel activePanel = (ImagePanel) editorProvider.getActiveFile().getComponent();
                         activePanel.setScale(activePanel.getScale() / 2);
                     }
                 }
@@ -98,8 +99,8 @@ public class ZoomControlActions {
             zoomDownAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof ImagePanel) {
-                        ImagePanel activePanel = (ImagePanel) editorProvider;
+                    if (editorProvider instanceof ImageEditor) {
+                        ImagePanel activePanel = (ImagePanel) editorProvider.getActiveFile().getComponent();
                         activePanel.setScale(activePanel.getScale() * 2);
                     }
                 }

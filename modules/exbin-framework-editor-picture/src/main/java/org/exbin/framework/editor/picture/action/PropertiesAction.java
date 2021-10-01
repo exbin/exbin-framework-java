@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.picture.ImageEditor;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.PropertiesPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -60,12 +61,11 @@ public class PropertiesAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof ImagePanel) {
-            ImagePanel activePanel = (ImagePanel) editorProvider;
+        if (editorProvider instanceof ImageEditor) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
 
             PropertiesPanel propertiesPanel = new PropertiesPanel();
-            propertiesPanel.setDocument(activePanel);
+            propertiesPanel.setDocument((ImageEditor) editorProvider);
             CloseControlPanel controlPanel = new CloseControlPanel();
             JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
 

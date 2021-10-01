@@ -107,6 +107,26 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
         multiEditorPanel.addFileHandler(file, file.getFileName().orElse(""));
     }
 
+    @Override
+    public void openFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void saveFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void saveAsFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean releaseFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Nonnull
     private String getFileName(FileHandlerApi fileHandler) {
         Optional<String> fileName = fileHandler.getFileName();

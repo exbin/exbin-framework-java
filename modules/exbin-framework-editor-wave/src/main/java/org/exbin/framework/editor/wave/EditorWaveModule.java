@@ -123,17 +123,17 @@ public class EditorWaveModule implements XBApplicationModule {
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            AudioPanel audioPanel = new AudioPanel();
+            AudioEditor audioEditor = new AudioEditor();
 
             GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-            audioPanel.setUndoHandler(undoModule.getUndoHandler());
+            audioEditor.setUndoHandler(undoModule.getUndoHandler());
 
-            editorProvider = audioPanel;
+            editorProvider = audioEditor;
 
-            audioPanel.addStatusChangeListener(this::updateStatus);
-            audioPanel.addWaveRepaintListener(this::updatePositionTime);
+            audioEditor.setStatusChangeListener(this::updateStatus);
+            audioEditor.setWaveRepaintListener(this::updatePositionTime);
 
-            audioPanel.attachCaretListener(new MouseMotionListener() {
+            audioEditor.setMouseMotionListener(new MouseMotionListener() {
 
                 @Override
                 public void mouseDragged(MouseEvent e) {
@@ -149,7 +149,7 @@ public class EditorWaveModule implements XBApplicationModule {
                 }
             });
 
-            audioPanel.setPopupMenu(createPopupMenu());
+            audioEditor.setPopupMenu(createPopupMenu());
         }
 
         return editorProvider;
@@ -178,13 +178,13 @@ public class EditorWaveModule implements XBApplicationModule {
     }
 
     private void updatePositionTime() {
-        audioStatusPanel.setCurrentTime(((AudioPanel) editorProvider).getPositionTime());
+        audioStatusPanel.setCurrentTime(((AudioPanel) editorProvider.getActiveFile().getComponent()).getPositionTime());
     }
 
     private void updateStatus() {
         updatePositionTime();
 
-        AudioPanel audioPanel = (AudioPanel) editorProvider;
+        AudioPanel audioPanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
         if (audioPanel.getIsPlaying() != playing) {
             playing = !playing;
             audioStatusPanel.setPlayButtonIcon(playing
@@ -198,17 +198,17 @@ public class EditorWaveModule implements XBApplicationModule {
         audioStatusPanel = new AudioStatusPanel(new AudioControlApi() {
             @Override
             public void performPlay() {
-                ((AudioPanel) editorProvider).performPlay();
+                ((AudioPanel) editorProvider.getActiveFile().getComponent()).performPlay();
             }
 
             @Override
             public void performStop() {
-                ((AudioPanel) editorProvider).performStop();
+                ((AudioPanel) editorProvider.getActiveFile().getComponent()).performStop();
             }
 
             @Override
             public void setVolume(int volumeLevel) {
-                ((AudioPanel) editorProvider).setVolume(volumeLevel);
+                ((AudioPanel) editorProvider.getActiveFile().getComponent()).setVolume(volumeLevel);
             }
         });
 

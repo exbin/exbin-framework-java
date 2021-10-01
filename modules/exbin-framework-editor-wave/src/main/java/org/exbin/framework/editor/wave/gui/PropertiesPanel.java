@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.sound.sampled.AudioFormat;
+import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -148,12 +149,13 @@ public class PropertiesPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    public void setDocument(AudioPanel panel) {
-        if (!panel.isEmpty()) {
-            Optional<URI> fileUri = panel.getActiveFile().getFileUri();
+    public void setDocument(AudioEditor audioEditor) {
+        AudioPanel audioPanel = (AudioPanel) audioEditor.getActiveFile().getComponent();
+        if (!audioPanel.isEmpty()) {
+            Optional<URI> fileUri = audioEditor.getActiveFile().getFileUri();
             fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
-            waveLengthTextField.setText(panel.getWaveLength());
-            AudioFormat waveFormat = panel.getWaveFormat();
+            waveLengthTextField.setText(audioPanel.getWaveLength());
+            AudioFormat waveFormat = audioPanel.getWaveFormat();
             sampleRateTextField.setText(String.valueOf((long) waveFormat.getSampleRate()));
             channelsTextField.setText(String.valueOf(waveFormat.getChannels()));
             encodingTextField.setText(String.valueOf(waveFormat.getEncoding().toString()));

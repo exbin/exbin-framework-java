@@ -70,7 +70,7 @@ public class WaveColorAction extends AbstractAction {
 
         final WaveColorPanel waveColorPanel = new WaveColorPanel();
         waveColorPanel.setWaveColorService(waveColorService);
-        waveColorPanel.setWaveColorsFromArray(((AudioPanel) editorProvider).getAudioPanelColors());
+        waveColorPanel.setWaveColorsFromArray(((AudioPanel) editorProvider.getActiveFile().getComponent()).getAudioPanelColors());
         DefaultControlPanel controlPanel = new DefaultControlPanel(waveColorPanel.getResourceBundle());
         JPanel dialogPanel = WindowUtils.createDialogPanel(waveColorPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -78,7 +78,7 @@ public class WaveColorAction extends AbstractAction {
         frameModule.setDialogTitle(dialog, waveColorPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == ControlActionType.OK) {
-                ((AudioPanel) editorProvider).setAudioPanelColors(waveColorPanel.getWaveColorsAsArray());
+                ((AudioPanel) editorProvider.getActiveFile().getComponent()).setAudioPanelColors(waveColorPanel.getWaveColorsAsArray());
             }
 
             dialog.close();

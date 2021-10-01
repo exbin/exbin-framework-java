@@ -487,6 +487,26 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         activeFile.loadFromFile(fileUri, fileType);
     }
 
+    @Override
+    public void openFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void saveFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void saveAsFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean releaseFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @ParametersAreNonnullByDefault
     private class TreeDocument extends XBTTreeDocument implements OperationListener, ClipboardActionsHandler {
 

@@ -27,19 +27,14 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -50,49 +45,30 @@ import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import org.exbin.framework.editor.wave.EditorWaveModule;
+import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.command.WaveClipboardData;
 import org.exbin.framework.editor.wave.command.WaveCopyCommand;
 import org.exbin.framework.editor.wave.command.WaveCutCommand;
 import org.exbin.framework.editor.wave.command.WaveDeleteCommand;
 import org.exbin.framework.editor.wave.command.WavePasteCommand;
 import org.exbin.framework.editor.wave.command.WaveReverseCommand;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
-import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.audio.wave.XBWave;
-import org.exbin.xbup.core.block.declaration.XBDeclaration;
-import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
-import org.exbin.xbup.core.catalog.XBPCatalog;
-import org.exbin.xbup.core.parser.XBProcessingException;
-import org.exbin.xbup.core.parser.basic.convert.XBTTypeUndeclaringFilter;
-import org.exbin.xbup.core.parser.token.event.XBEventWriter;
-import org.exbin.xbup.core.parser.token.event.convert.XBTEventListenerToListener;
-import org.exbin.xbup.core.parser.token.event.convert.XBTListenerToEventListener;
-import org.exbin.xbup.core.parser.token.event.convert.XBTToXBEventConvertor;
-import org.exbin.xbup.core.parser.token.pull.XBPullReader;
-import org.exbin.xbup.core.parser.token.pull.convert.XBTPullTypeDeclaringFilter;
-import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
-import org.exbin.xbup.core.serial.XBPSerialReader;
-import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Audio panel wave editor.
  *
- * @version 0.2.1 2017/02/18
+ * @version 0.2.2 2021/10/01
  * @author ExBin Project (http://exbin.org)
  */
-public class AudioPanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
+@ParametersAreNonnullByDefault
+public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHandler {
 
     private XBUndoHandler undoHandler;
-    private javax.sound.sampled.AudioFileFormat.Type audioFormatType;
     private boolean wavePlayed = false;
     private int drawPosition = -1;
     private int wavePosition = -1;
@@ -111,7 +87,6 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     private final List<StatusChangeListener> statusChangeListeners = new ArrayList<>();
     private final List<WaveRepaintListener> waveRepaintListeners = new ArrayList<>();
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private FileHandlerApi activeFile;
 
     public AudioPanel() {
         initComponents();
@@ -119,8 +94,6 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     private void init() {
-        audioFormatType = null;
-
         wavePanel = new XBWavePanel();
         wavePanel.setSelectionChangedListener(() -> {
             if (clipboardActionsUpdateListener != null) {
@@ -152,151 +125,6 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
         wavePaintThread.start();
         targetDataLineInfo = null;
         audioInputStream = null;
-
-        activeFile = new FileHandlerApi() {
-            private URI fileUri = null;
-            private FileType fileType = null;
-            private String ext;
-
-            @Override
-            public int getId() {
-                return -1;
-            }
-
-            @Nonnull
-            @Override
-            public JComponent getComponent() {
-                return AudioPanel.this;
-            }
-
-            @Override
-            public void loadFromFile(URI fileUri, FileType fileType) {
-                File file = new File(fileUri);
-                if (EditorWaveModule.XBS_FILE_TYPE.equals(fileType.getFileTypeId())) {
-                    try {
-                        XBPCatalog catalog = new XBPCatalog();
-                        catalog.addFormatDecl(getContextFormatDecl());
-                        XBLFormatDecl formatDecl = new XBLFormatDecl(XBWave.XBUP_FORMATREV_CATALOGPATH);
-                        XBWave wave = new XBWave();
-                        XBDeclaration declaration = new XBDeclaration(formatDecl, wave);
-                        XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
-                        typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
-                        XBPSerialReader reader = new XBPSerialReader(typeProcessing);
-                        reader.read(declaration);
-                        wavePanel.setWave(wave);
-                        scrollBar.setMaximum(wavePanel.getWaveWidth());
-                        this.fileUri = fileUri;
-                    } catch (XBProcessingException | IOException ex) {
-                        Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    XBWave wave = new XBWave();
-                    wave.loadFromFile(file);
-                    wavePanel.setWave(wave);
-                    scrollBar.setMaximum(wavePanel.getWaveWidth());
-                    this.fileUri = fileUri;
-                }
-
-                targetFormat = wavePanel.getWave().getAudioFormat();
-                targetDataLineInfo = new DataLine.Info(SourceDataLine.class, wavePanel.getWave().getAudioFormat());
-                audioInputStream = wavePanel.getWave().getAudioInputStream();
-
-                // If the format is not supported directly (i.e. if it is not PCM
-                // encoded, then try to transcode it to PCM.
-                if (!AudioSystem.isLineSupported(targetDataLineInfo)) {
-                    // This is the PCM format we want to transcode to.
-                    // The parameters here are audio format details that you
-                    // shouldn't need to understand for casual use.
-                    AudioFormat pcm = new AudioFormat(targetFormat.getSampleRate(), 16, targetFormat.getChannels(), true, false);
-
-                    // Get a wrapper stream around the input stream that does the
-                    // transcoding for us.
-                    audioInputStream = AudioSystem.getAudioInputStream(pcm, audioInputStream);
-
-                    // Update the format and info variables for the transcoded data
-                    targetFormat = audioInputStream.getFormat();
-                    targetDataLineInfo = new DataLine.Info(SourceDataLine.class, targetFormat);
-                }
-
-                try {
-                    sourceDataLine = (SourceDataLine) AudioSystem.getLine(targetDataLineInfo); //(SourceDataLine) AudioSystem.getSourceDataLine(targetFormat, AudioSystem.getMixerInfo()[0]); //Line(targetDataLineInfo);
-                } catch (LineUnavailableException ex) {
-                    Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                wavePanel.setCursorPosition(0);
-                wavePanel.setWindowPosition(0);
-                wavePanel.repaint();
-            }
-
-            @Override
-            public void saveToFile(URI fileUri, FileType fileType) {
-                File file = new File(fileUri);
-                if (EditorWaveModule.XBS_FILE_TYPE.equals(fileType.getFileTypeId())) {
-                    try {
-                        FileOutputStream output = new FileOutputStream(file);
-
-                        XBPCatalog catalog = new XBPCatalog();
-                        catalog.addFormatDecl(getContextFormatDecl());
-                        XBLFormatDecl formatDecl = new XBLFormatDecl(XBWave.XBUP_FORMATREV_CATALOGPATH);
-                        XBDeclaration declaration = new XBDeclaration(formatDecl, wavePanel.getWave());
-                        declaration.realignReservation(catalog);
-                        XBTTypeUndeclaringFilter typeProcessing = new XBTTypeUndeclaringFilter(catalog);
-                        typeProcessing.attachXBTListener(new XBTEventListenerToListener(new XBTToXBEventConvertor(new XBEventWriter(output))));
-                        XBPSerialWriter writer = new XBPSerialWriter(new XBTListenerToEventListener(typeProcessing));
-                        writer.write(declaration);
-                    } catch (XBProcessingException | IOException ex) {
-                        Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else if (getBuildInFileType() == null) {
-                    wavePanel.getWave().saveToFile(file);
-                } else {
-                    wavePanel.getWave().saveToFile(file, getBuildInFileType());
-                }
-                undoHandler.setSyncPoint();
-            }
-
-            @Override
-            public void newFile() {
-                wavePanel.setWave(null);
-                scrollBar.setMaximum(wavePanel.getWaveWidth());
-                undoHandler.clear();
-            }
-
-            @Nonnull
-            @Override
-            public Optional<URI> getFileUri() {
-                return Optional.ofNullable(fileUri);
-            }
-
-            @Nonnull
-            @Override
-            public Optional<String> getFileName() {
-                if (fileUri != null) {
-                    String path = fileUri.getPath();
-                    int lastSegment = path.lastIndexOf("/");
-                    return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
-                }
-
-                return Optional.empty();
-            }
-
-            @Nonnull
-            @Override
-            public Optional<FileType> getFileType() {
-                return Optional.ofNullable(fileType);
-            }
-
-            @Override
-            public void setFileType(FileType fileType) {
-                this.fileType = fileType;
-            }
-
-            @Override
-            public boolean isModified() {
-                return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();
-            }
-        };
     }
 
     @Override
@@ -344,6 +172,61 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     @Override
     public void performSelectAll() {
         wavePanel.selectAll();
+    }
+
+    @Nullable
+    public XBWave getWave() {
+        return wavePanel.getWave();
+    }
+
+    public void newWave() {
+        wavePanel.setWave(null);
+        scrollBar.setMaximum(wavePanel.getWaveWidth());
+        undoHandler.clear();
+    }
+
+    public void setWave(XBWave wave) {
+        wavePanel.setWave(wave);
+        scrollBar.setMaximum(wavePanel.getWaveWidth());
+
+        targetFormat = wavePanel.getWave().getAudioFormat();
+        targetDataLineInfo = new DataLine.Info(SourceDataLine.class, wavePanel.getWave().getAudioFormat());
+        audioInputStream = wavePanel.getWave().getAudioInputStream();
+
+        // If the format is not supported directly (i.e. if it is not PCM
+        // encoded, then try to transcode it to PCM.
+        if (!AudioSystem.isLineSupported(targetDataLineInfo)) {
+            // This is the PCM format we want to transcode to.
+            // The parameters here are audio format details that you
+            // shouldn't need to understand for casual use.
+            AudioFormat pcm = new AudioFormat(targetFormat.getSampleRate(), 16, targetFormat.getChannels(), true, false);
+
+            // Get a wrapper stream around the input stream that does the
+            // transcoding for us.
+            audioInputStream = AudioSystem.getAudioInputStream(pcm, audioInputStream);
+
+            // Update the format and info variables for the transcoded data
+            targetFormat = audioInputStream.getFormat();
+            targetDataLineInfo = new DataLine.Info(SourceDataLine.class, targetFormat);
+        }
+
+        try {
+            sourceDataLine = (SourceDataLine) AudioSystem.getLine(targetDataLineInfo); //(SourceDataLine) AudioSystem.getSourceDataLine(targetFormat, AudioSystem.getMixerInfo()[0]); //Line(targetDataLineInfo);
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(AudioEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        wavePanel.setCursorPosition(0);
+        wavePanel.setWindowPosition(0);
+        wavePanel.repaint();
+    }
+
+    public boolean isModified() {
+        return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();
+    }
+
+    public void notifyFileSaved() {
+        undoHandler.setSyncPoint();
     }
 
     public void performPlay() {
@@ -471,11 +354,6 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
         playingChange(true, true, position);
     }
 
-    @Override
-    public FileHandlerApi getActiveFile() {
-        return activeFile;
-    }
-
     public void printFile() {
         PrinterJob job = PrinterJob.getPrinterJob();
         if (job.printDialog()) {
@@ -546,36 +424,6 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     private javax.swing.JScrollBar scrollBar;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * Returns local format declaration when catalog or service is not
-     * available.
-     *
-     * @return local format declaration
-     */
-    public XBLFormatDecl getContextFormatDecl() {
-        /*XBLFormatDef formatDef = new XBLFormatDef();
-         List<XBFormatParam> groups = formatDef.getFormatParams();
-         XBLGroupDecl waveGroup = new XBLGroupDecl(new XBLGroupDef());
-         List<XBGroupParam> waveBlocks = waveGroup.getGroupDef().getGroupParams();
-         waveBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 5, 0, 0})));
-         ((XBLGroupDef) waveGroup.getGroupDef()).provideRevision();
-         groups.add(new XBFormatParamConsist(waveGroup));
-         formatDef.realignRevision();
-
-         XBLFormatDecl formatDecl = new XBLFormatDecl(formatDef);
-         formatDecl.setCatalogPath(XBWave.XBUP_FORMATREV_CATALOGPATH);
-         return formatDecl;*/
-
-        XBPSerialReader reader = new XBPSerialReader(getClass().getResourceAsStream("/org/exbin/framework/editor/wave/resources/xbs_format_decl.xb"));
-        XBLFormatDecl formatDecl = new XBLFormatDecl();
-        try {
-            reader.read(formatDecl);
-        } catch (XBProcessingException | IOException ex) {
-            Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return formatDecl;
-    }
-
     public void setUndoHandler(XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
     }
@@ -626,35 +474,8 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
         return getTimeForTicks(position, wavePanel.getWave());
     }
 
-    public javax.sound.sampled.AudioFileFormat.Type getBuildInFileType() {
-        return audioFormatType;
-    }
-
-    public void setFileType(javax.sound.sampled.AudioFileFormat.Type fileType) {
-        this.audioFormatType = fileType;
-    }
-
     public Color[] getDefaultColors() {
         return defaultColors;
-    }
-
-    @Override
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-    }
-
-    @Override
-    public String getWindowTitle(String frameTitle) {
-        URI fileUri = activeFile.getFileUri().orElse(null);
-        if (fileUri != null) {
-            String path = fileUri.getPath();
-            int lastIndexOf = path.lastIndexOf("/");
-            if (lastIndexOf < 0) {
-                return path + " - " + frameTitle;
-            }
-            return path.substring(lastIndexOf + 1) + " - " + frameTitle;
-        }
-
-        return frameTitle;
     }
 
     public void setVolume(int value) {
@@ -693,11 +514,6 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
     }
 
     @Override
-    public JPanel getEditorComponent() {
-        return this;
-    }
-
-    @Override
     public boolean isSelection() {
         return wavePanel.hasSelection() && wavePanel.getWave() != null;
     }
@@ -730,21 +546,6 @@ public class AudioPanel extends javax.swing.JPanel implements EditorProvider, Cl
 
     public boolean isEmpty() {
         return wavePanel.getWave() == null;
-    }
-
-    @Override
-    public void setModificationListener(EditorModificationListener editorModificationListener) {
-        // TODO
-    }
-
-    @Override
-    public void newFile() {
-        activeFile.newFile();
-    }
-
-    @Override
-    public void openFile(URI fileUri, FileType fileType) {
-        activeFile.loadFromFile(fileUri, fileType);
     }
 
     class PlayThread extends Thread {

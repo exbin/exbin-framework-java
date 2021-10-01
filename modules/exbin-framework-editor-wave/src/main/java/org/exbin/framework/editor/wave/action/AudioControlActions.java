@@ -24,6 +24,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -62,8 +63,8 @@ public class AudioControlActions {
             audioPlayAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioPanel) {
-                        AudioPanel activePanel = (AudioPanel) editorProvider;
+                    if (editorProvider instanceof AudioEditor) {
+                        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
                         activePanel.performPlay();
                     }
                 }
@@ -80,8 +81,8 @@ public class AudioControlActions {
             audioStopAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioPanel) {
-                        AudioPanel activePanel = (AudioPanel) editorProvider;
+                    if (editorProvider instanceof AudioEditor) {
+                        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
                         activePanel.performStop();
                     }
                 }

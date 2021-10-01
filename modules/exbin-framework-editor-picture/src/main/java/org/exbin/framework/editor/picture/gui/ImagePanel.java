@@ -26,7 +26,6 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputMethodListener;
@@ -36,64 +35,31 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
-import java.awt.image.RenderedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.imageio.ImageIO;
+import javax.annotation.Nullable;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
-import org.exbin.framework.editor.picture.EditorPictureModule;
-import org.exbin.framework.editor.picture.PictureFileType;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
-import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
-import org.exbin.xbup.core.block.declaration.XBDeclaration;
-import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
-import org.exbin.xbup.core.catalog.XBPCatalog;
-import org.exbin.xbup.core.parser.XBProcessingException;
-import org.exbin.xbup.core.parser.basic.convert.XBTTypeUndeclaringFilter;
-import org.exbin.xbup.core.parser.token.event.XBEventWriter;
-import org.exbin.xbup.core.parser.token.event.convert.XBTEventListenerToListener;
-import org.exbin.xbup.core.parser.token.event.convert.XBTListenerToEventListener;
-import org.exbin.xbup.core.parser.token.event.convert.XBTToXBEventConvertor;
-import org.exbin.xbup.core.parser.token.pull.XBPullReader;
-import org.exbin.xbup.core.parser.token.pull.convert.XBTPullTypeDeclaringFilter;
-import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
-import org.exbin.xbup.core.serial.XBPSerialReader;
-import org.exbin.xbup.core.serial.XBPSerialWriter;
-import org.exbin.xbup.visual.picture.XBBufferedImage;
 
 /**
  * Image panel for picture editor.
  *
- * @version 0.2.1 2017/02/18
+ * @version 0.2.2 2021/10/01
  * @author ExBin Project (http://exbin.org)
  */
-public class ImagePanel extends javax.swing.JPanel implements EditorProvider, ClipboardActionsHandler {
-
-    private static final String DEFAULT_PICTURE_FILE_EXT = "PNG";
+public class ImagePanel extends javax.swing.JPanel implements ClipboardActionsHandler {
 
     private final UndoManager undo;
     private final boolean modified = false;
@@ -107,10 +73,8 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     private Color[] defaultColors;
     private InputMethodListener caretListener;
     private final ToolMode toolMode;
-    private PropertyChangeListener propertyChangeListener;
     private ImageStatusPanel imageStatusPanel;
     private final ImageAreaPanel imageArea;
-    private FileHandlerApi activeFile;
 
     public ImagePanel() {
         initComponents();
@@ -212,133 +176,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
             scrollPane.getVerticalScrollBar().setValue((int) (positionY / scaleRatio));
             repaint();
         });
-
-        activeFile = new FileHandlerApi() {
-            private URI fileUri = null;
-            private String ext = null;
-            private FileType fileType = null;
-
-            @Override
-            public int getId() {
-                return -1;
-            }
-
-            @Override
-            public JComponent getComponent() {
-                return ImagePanel.this;
-            }
-
-            @Override
-            public void loadFromFile(URI fileUri, FileType fileType) {
-                File file = new File(fileUri);
-                if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
-                    try {
-                        if (image == null) {
-                            image = createImage(1, 1);
-                        }
-
-                        XBPCatalog catalog = new XBPCatalog();
-                        catalog.addFormatDecl(getContextFormatDecl());
-                        XBLFormatDecl formatDecl = new XBLFormatDecl(XBBufferedImage.XBUP_FORMATREV_CATALOGPATH);
-                        XBBufferedImage bufferedImage = new XBBufferedImage(toBufferedImage(image));
-                        XBDeclaration declaration = new XBDeclaration(formatDecl, bufferedImage);
-                        XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
-                        typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
-                        XBPSerialReader reader = new XBPSerialReader(typeProcessing);
-                        reader.read(declaration);
-                        image = bufferedImage.getImage();
-                        this.fileUri = fileUri;
-                    } catch (XBProcessingException | IOException ex) {
-                        Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    try {
-                        image = toBufferedImage(Toolkit.getDefaultToolkit().getImage(fileUri.toURL()));
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                graphics = image.getGraphics();
-                graphics.setColor(toolColor);
-                setScale(scaleRatio);
-            }
-
-            @Override
-            public void saveToFile(URI fileUri, FileType fileType) {
-                File file = new File(fileUri);
-                if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
-                    try {
-                        FileOutputStream output = new FileOutputStream(file);
-
-                        XBPCatalog catalog = new XBPCatalog();
-                        catalog.addFormatDecl(getContextFormatDecl());
-                        XBLFormatDecl formatDecl = new XBLFormatDecl(XBBufferedImage.XBUP_FORMATREV_CATALOGPATH);
-                        XBDeclaration declaration = new XBDeclaration(formatDecl, new XBBufferedImage(toBufferedImage(image)));
-                        declaration.realignReservation(catalog);
-                        XBTTypeUndeclaringFilter typeProcessing = new XBTTypeUndeclaringFilter(catalog);
-                        typeProcessing.attachXBTListener(new XBTEventListenerToListener(new XBTToXBEventConvertor(new XBEventWriter(output))));
-                        XBPSerialWriter writer = new XBPSerialWriter(new XBTListenerToEventListener(typeProcessing));
-                        writer.write(declaration);
-                    } catch (XBProcessingException | IOException ex) {
-                        Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    try {
-                        if (fileType instanceof PictureFileType) {
-                            ext = ((PictureFileType) fileType).getExt();
-                        }
-
-                        ImageIO.write((RenderedImage) image, ext == null ? DEFAULT_PICTURE_FILE_EXT : ext, file);
-                    } catch (IOException ex) {
-                        Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-
-            @Nonnull
-            @Override
-            public Optional<URI> getFileUri() {
-                return Optional.ofNullable(fileUri);
-            }
-
-            @Nonnull
-            @Override
-            public Optional<String> getFileName() {
-                if (fileUri != null) {
-                    String path = fileUri.getPath();
-                    int lastSegment = path.lastIndexOf("/");
-                    return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
-                }
-
-                return Optional.empty();
-            }
-
-            @Nonnull
-            @Override
-            public Optional<FileType> getFileType() {
-                return Optional.ofNullable(fileType);
-            }
-
-            @Override
-            public void newFile() {
-                image = toBufferedImage(createImage(100, 100));
-                graphics = image.getGraphics();
-                graphics.setColor(Color.WHITE);
-                graphics.fillRect(0, 0, 100, 100);
-                graphics.setColor(toolColor);
-                setModified(false);
-            }
-
-            @Override
-            public void setFileType(FileType fileType) {
-                this.fileType = fileType;
-            }
-
-            @Override
-            public boolean isModified() {
-                return modified;
-            }
-        };
     }
 
     private void imageAreaMouseDragged(java.awt.event.MouseEvent evt) {
@@ -421,11 +258,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
 //        imageArea.selectAll();
     }
 
-    @Override
-    public FileHandlerApi getActiveFile() {
-        return activeFile;
-    }
-
     public void printFile() {
         PrinterJob job = PrinterJob.getPrinterJob();
         if (job.printDialog()) {
@@ -484,6 +316,10 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
 
+    public boolean isModified() {
+        return modified;
+    }
+
     public void setModified(boolean modified) {
         /*        if (highlight != null) {
          imageArea.getHighlighter().removeHighlight(highlight);
@@ -502,48 +338,6 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
     public boolean isPasteEnabled() {
         return false;
 //        return imageArea.isEditable();
-    }
-
-    /**
-     * Returns local format declaration when catalog or service is not
-     * available.
-     *
-     * @return local format declaration
-     */
-    public XBLFormatDecl getContextFormatDecl() {
-        /*XBLFormatDef formatDef = new XBLFormatDef();
-         List<XBFormatParam> groups = formatDef.getFormatParams();
-         XBLGroupDecl bitmapGroup = new XBLGroupDecl(new XBLGroupDef());
-         List<XBGroupParam> bitmapBlocks = bitmapGroup.getGroupDef().getGroupParams();
-         bitmapBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 0, 1, 0})));
-         bitmapBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 0, 2, 0})));
-         ((XBLGroupDef) bitmapGroup.getGroupDef()).provideRevision();
-         XBLGroupDecl paletteGroup = new XBLGroupDecl(new XBLGroupDef());
-         List<XBGroupParam> paletteBlocks = paletteGroup.getGroupDef().getGroupParams();
-         paletteBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 1, 1, 0})));
-         paletteBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 1, 1, 0})));
-         paletteBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 1, 2, 0})));
-         paletteBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 1, 3, 0})));
-         paletteBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 1, 4, 0})));
-         paletteBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 1, 5, 0})));
-         paletteBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 1, 6, 0})));
-         paletteBlocks.add(new XBGroupParamConsist(new XBLBlockDecl(new long[]{1, 4, 0, 1, 7, 0})));
-         ((XBLGroupDef) paletteGroup.getGroupDef()).provideRevision();
-         groups.add(new XBFormatParamConsist(bitmapGroup));
-         groups.add(new XBFormatParamConsist(paletteGroup));
-         formatDef.realignRevision();
-
-         XBLFormatDecl formatDecl = new XBLFormatDecl(formatDef);
-         formatDecl.setCatalogPath(XBBufferedImage.XBUP_FORMATREV_CATALOGPATH);*/
-
-        XBPSerialReader reader = new XBPSerialReader(getClass().getResourceAsStream("/org/exbin/framework/editor/picture/resources/xbp_format_decl.xb"));
-        XBLFormatDecl formatDecl = new XBLFormatDecl();
-        try {
-            reader.read(formatDecl);
-        } catch (XBProcessingException | IOException ex) {
-            Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return formatDecl;
     }
 
     public UndoManager getUndo() {
@@ -679,30 +473,29 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         setScale(scaleRatio);
     }
 
-    @Override
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        this.propertyChangeListener = propertyChangeListener;
+    public void newImage() {
+        image = toBufferedImage(createImage(100, 100));
+        graphics = image.getGraphics();
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, 100, 100);
+        graphics.setColor(toolColor);
     }
-
-    @Nonnull
-    @Override
-    public String getWindowTitle(String frameTitle) {
-        URI fileUri = activeFile.getFileUri().orElse(null);
-        if (fileUri != null) {
-            String path = fileUri.getPath();
-            int lastIndexOf = path.lastIndexOf("/");
-            if (lastIndexOf < 0) {
-                return path + " - " + frameTitle;
-            }
-            return path.substring(lastIndexOf + 1) + " - " + frameTitle;
-        }
-
-        return frameTitle;
+    
+    @Nullable
+    public Image getImage() {
+        return image;
     }
+    
+    public void initImage() {
+        image = createImage(1, 1);
+    }
+    
+    public void setImage(Image image) {
+        this.image = image;
 
-    @Override
-    public JPanel getEditorComponent() {
-        return this;
+        graphics = image.getGraphics();
+        graphics.setColor(toolColor);
+        setScale(scaleRatio);
     }
 
     @Override
@@ -738,23 +531,8 @@ public class ImagePanel extends javax.swing.JPanel implements EditorProvider, Cl
         this.imageStatusPanel = imageStatusPanel;
     }
 
-    @Override
-    public void setModificationListener(EditorModificationListener editorModificationListener) {
-        // TODO
-    }
-
     public Point getImageSize() {
         return new Point(image.getWidth(null), image.getHeight(null));
-    }
-
-    @Override
-    public void newFile() {
-        activeFile.newFile();
-    }
-
-    @Override
-    public void openFile(URI fileUri, FileType fileType) {
-        activeFile.loadFromFile(fileUri, fileType);
     }
 
     public enum ToolMode {

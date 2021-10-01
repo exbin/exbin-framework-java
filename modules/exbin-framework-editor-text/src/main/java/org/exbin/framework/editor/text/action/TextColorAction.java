@@ -68,17 +68,17 @@ public class TextColorAction extends AbstractAction {
         final TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
-                return ((TextPanel) editorProvider).getCurrentColors();
+                return ((TextPanel) editorProvider.getActiveFile().getComponent()).getCurrentColors();
             }
 
             @Override
             public Color[] getDefaultTextColors() {
-                return ((TextPanel) editorProvider).getDefaultColors();
+                return ((TextPanel) editorProvider.getActiveFile().getComponent()).getDefaultColors();
             }
 
             @Override
             public void setCurrentTextColors(Color[] colors) {
-                ((TextPanel) editorProvider).setCurrentColors(colors);
+                ((TextPanel) editorProvider.getActiveFile().getComponent()).setCurrentColors(colors);
             }
         };
         final TextColorPanel colorPanel = new TextColorPanel();
