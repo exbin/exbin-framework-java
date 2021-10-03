@@ -87,7 +87,7 @@ public class CatalogPViewerPropertyTableCellPanel extends CatalogPropertyTableCe
                     XBEXBlockUi blockPane = new XBEXBlockUi();
                     blockPane.setBlockRev((XBEBlockRev) blockRev);
                     blockPane.setUi((XBEXPlugUi) plugUi);
-                    blockPane.setPriority(0l);
+                    blockPane.setPriority(0L);
                     
                     EntityManager em = ((XBECatalog) catalog).getEntityManager();
                     EntityTransaction transaction = em.getTransaction();

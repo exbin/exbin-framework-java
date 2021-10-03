@@ -434,13 +434,13 @@ public class BaseSwitchableSpinnerPanel extends javax.swing.JPanel {
         @Nonnull
         private String getPositionAsString(long position) {
             if (position < 0) {
-                return "-" + getNonNegativePostionAsString(-position);
+                return "-" + getNonNegativePositionAsString(-position);
             }
-            return getNonNegativePostionAsString(position);
+            return getNonNegativePositionAsString(position);
         }
 
         @Nonnull
-        private String getNonNegativePostionAsString(long position) {
+        private String getNonNegativePositionAsString(long position) {
             Arrays.fill(cache, ' ');
             CodeAreaUtils.longToBaseCode(cache, 0, position, positionCodeType.getBase(), LENGTH_LIMIT, false, CodeCharactersCase.LOWER);
             return new String(cache).trim();

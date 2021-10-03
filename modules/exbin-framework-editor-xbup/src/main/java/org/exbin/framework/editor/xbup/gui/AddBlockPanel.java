@@ -449,7 +449,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
         DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) basicTypeComboBox.getModel();
         model.removeAllElements();
         if (catalog != null) {
-            Long[] basicGroupPath = {0l, 0l};
+            Long[] basicGroupPath = {0L, 0L};
             List<XBBlockDecl> list = catalog.getBlocks(((XBCGroupDecl) catalog.findGroupTypeByPath(basicGroupPath, 0)).getGroupSpecRev().getParent());
 
             XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
