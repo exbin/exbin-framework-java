@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.file.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -23,7 +24,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 /**
  * Interface for XBUP framework file module.
  *
- * @version 0.2.0 2016/02/03
+ * @version 0.2.2 2021/10/05
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -35,6 +36,13 @@ public interface GuiFileModuleApi extends XBApplicationModule {
     FileHandlingActionsApi getFileHandlingActions();
 
     void addFileType(FileType fileType);
+
+    /**
+     * Sets file operations handler.
+     *
+     * @param fileOperations file operations handler
+     */
+    void setFileOperations(@Nullable FileOperations fileOperations);
 
     /**
      * Registers file handling operations to main frame menu.

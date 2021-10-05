@@ -70,7 +70,7 @@ public class GoToPositionAction extends AbstractAction {
         if (editorProvider instanceof BinaryEditorControl) {
             final BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
             final GoToBinaryPanel goToPanel = new GoToBinaryPanel();
-            goToPanel.setCursorPosition(((CaretCapable) activePanel.getCodeArea()).getCaret().getCaretPosition().getDataPosition());
+            goToPanel.setCursorPosition(((CaretCapable) activePanel.getCodeArea()).getDataPosition());
             goToPanel.setMaxPosition(activePanel.getCodeArea().getDataSize());
             DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
             JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);

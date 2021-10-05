@@ -63,11 +63,11 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     private final ResourceBundle resourceBundle;
     private Preferences preferences;
 
-    private Action newFileAction;
-    private Action openFileAction;
-    private Action saveFileAction;
-    private Action saveAsFileAction;
-    private Action closeFileAction;
+//    private Action newFileAction;
+//    private Action openFileAction;
+//    private Action saveFileAction;
+//    private Action saveAsFileAction;
+//    private Action closeFileAction;
 
     private JMenu fileOpenRecentMenu = null;
     private List<RecentItem> recentFiles = null;
@@ -92,55 +92,55 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         saveFileChooser = new JFileChooser();
         saveFileChooser.setAcceptAllFileFilterUsed(false);
 
-        newFileAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionFileNew();
-            }
-        };
-        ActionUtils.setupAction(newFileAction, resourceBundle, "fileNewAction");
-        newFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, metaMask));
-
-        openFileAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionFileOpen();
-            }
-        };
-        ActionUtils.setupAction(openFileAction, resourceBundle, "fileOpenAction");
-        openFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, metaMask));
-        openFileAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-
-        saveFileAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionFileSave();
-            }
-        };
-        ActionUtils.setupAction(saveFileAction, resourceBundle, "fileSaveAction");
-        saveFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, metaMask));
-
-        saveAsFileAction = new AbstractAction() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionFileSaveAs();
-            }
-        };
-        ActionUtils.setupAction(saveAsFileAction, resourceBundle, "fileSaveAsAction");
-        saveAsFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, metaMask));
-        saveAsFileAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-
-        closeFileAction = new AbstractAction() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionFileClose();
-            }
-        };
-        ActionUtils.setupAction(closeFileAction, resourceBundle, "fileCloseAction");
-        closeFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, metaMask));
-        closeFileAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+//        newFileAction = new AbstractAction() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                actionFileNew();
+//            }
+//        };
+//        ActionUtils.setupAction(newFileAction, resourceBundle, "fileNewAction");
+//        newFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, metaMask));
+//
+//        openFileAction = new AbstractAction() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                actionFileOpen();
+//            }
+//        };
+//        ActionUtils.setupAction(openFileAction, resourceBundle, "fileOpenAction");
+//        openFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, metaMask));
+//        openFileAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+//
+//        saveFileAction = new AbstractAction() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                actionFileSave();
+//            }
+//        };
+//        ActionUtils.setupAction(saveFileAction, resourceBundle, "fileSaveAction");
+//        saveFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, metaMask));
+//
+//        saveAsFileAction = new AbstractAction() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                actionFileSaveAs();
+//            }
+//        };
+//        ActionUtils.setupAction(saveAsFileAction, resourceBundle, "fileSaveAsAction");
+//        saveAsFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, metaMask));
+//        saveAsFileAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+//
+//        closeFileAction = new AbstractAction() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                actionFileClose();
+//            }
+//        };
+//        ActionUtils.setupAction(closeFileAction, resourceBundle, "fileCloseAction");
+//        closeFileAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, metaMask));
+//        closeFileAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
 
         AllFilesFilter filesFilter = new AllFilesFilter();
         addFileType(filesFilter);
@@ -158,7 +158,6 @@ public class FileHandlingActions implements FileHandlingActionsApi {
      *
      * @return true if successful
      */
-    @Override
     public boolean releaseFile() {
 
         if (fileHandler == null) {
@@ -218,30 +217,6 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         }
 
         return false;
-    }
-
-    @Nonnull
-    @Override
-    public Action getNewFileAction() {
-        return newFileAction;
-    }
-
-    @Nonnull
-    @Override
-    public Action getOpenFileAction() {
-        return openFileAction;
-    }
-
-    @Nonnull
-    @Override
-    public Action getSaveFileAction() {
-        return saveFileAction;
-    }
-
-    @Nonnull
-    @Override
-    public Action getSaveAsFileAction() {
-        return saveAsFileAction;
     }
 
     public void actionFileNew() {
@@ -463,6 +438,26 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         }
     }
 
+    @Override
+    public Action getNewFileAction() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Action getOpenFileAction() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Action getSaveFileAction() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Action getSaveAsFileAction() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @ParametersAreNonnullByDefault
     public class AllFilesFilter extends FileFilter implements FileType {
 
@@ -484,12 +479,10 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         }
     }
 
-    @Override
     public FileHandlerApi getFileHandler() {
         return fileHandler;
     }
 
-    @Override
     public void setFileHandler(FileHandlerApi fileHandler) {
         this.fileHandler = fileHandler;
     }

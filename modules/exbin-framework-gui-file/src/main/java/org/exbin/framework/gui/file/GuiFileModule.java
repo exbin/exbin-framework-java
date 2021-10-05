@@ -16,9 +16,11 @@
 package org.exbin.framework.gui.file;
 
 import java.net.URISyntaxException;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JMenu;
 import org.exbin.framework.api.XBApplication;
@@ -38,21 +40,27 @@ import org.exbin.framework.gui.file.action.NewFileAction;
 import org.exbin.framework.gui.file.action.OpenFileAction;
 import org.exbin.framework.gui.file.action.SaveAsFileAction;
 import org.exbin.framework.gui.file.action.SaveFileAction;
+import org.exbin.framework.gui.file.api.FileOperations;
+import org.exbin.framework.gui.file.api.FileOperationsProvider;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * Implementation of framework file module.
  *
- * @version 0.2.2 2021/09/30
+ * @version 0.2.2 2021/10/05
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class GuiFileModule implements GuiFileModuleApi {
+public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
 
     private static final String FILE_MENU_GROUP_ID = MODULE_ID + ".fileMenuGroup";
     private static final String FILE_TOOL_BAR_GROUP_ID = MODULE_ID + ".fileToolBarGroup";
 
     private FileHandlingActions fileHandlingActions = null;
+
+    private java.util.ResourceBundle resourceBundle = null;
     private XBApplication application;
+    private FileOperations fileOperations;
     
     private NewFileAction newFileAction;
     private OpenFileAction openFileAction;
@@ -72,6 +80,15 @@ public class GuiFileModule implements GuiFileModuleApi {
     }
 
     @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(GuiFileModule.class);
+        }
+
+        return resourceBundle;
+    }
+
+    @Nonnull
     @Override
     public FileHandlingActions getFileHandlingActions() {
         if (fileHandlingActions == null) {
@@ -83,6 +100,23 @@ public class GuiFileModule implements GuiFileModuleApi {
         return fileHandlingActions;
     }
 
+    private void ensureSetup() {
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
+    }
+
+    @Nullable
+    @Override
+    public FileOperations getFileOperations() {
+        return fileOperations;
+    }
+
+    @Override
+    public void setFileOperations(@Nullable FileOperations fileOperations) {
+        this.fileOperations = fileOperations;
+    }
+
     @Override
     public void addFileType(FileType fileType) {
         FileHandlingActions handle = getFileHandlingActions();
@@ -91,23 +125,21 @@ public class GuiFileModule implements GuiFileModuleApi {
 
     @Override
     public void registerMenuFileHandlingActions() {
-        getFileHandlingActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenuGroup(GuiFrameModuleApi.FILE_MENU_ID, new MenuGroup(FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, fileHandlingActions.getNewFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, fileHandlingActions.getOpenFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, fileHandlingActions.getSaveFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, fileHandlingActions.getSaveAsFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getNewFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getOpenFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getSaveFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getSaveAsFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
     }
 
     @Override
     public void registerToolBarFileHandlingActions() {
-        getFileHandlingActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(FILE_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP)));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, fileHandlingActions.getNewFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, fileHandlingActions.getOpenFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, fileHandlingActions.getSaveFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getNewFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getOpenFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getSaveFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
     }
 
     @Override
@@ -123,6 +155,46 @@ public class GuiFileModule implements GuiFileModuleApi {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         JMenu recentFileMenu = fileHandlingActions.getOpenRecentMenu();
         actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, "Open..."));
+    }
+
+    @Nonnull
+    public NewFileAction getNewFileAction() {
+        if (newFileAction == null) {
+            ensureSetup();
+            newFileAction = new NewFileAction();
+            newFileAction.setup(application, resourceBundle, this);
+        }
+        return newFileAction;
+    }
+
+    @Nonnull
+    public OpenFileAction getOpenFileAction() {
+        if (openFileAction == null) {
+            ensureSetup();
+            openFileAction = new OpenFileAction();
+            openFileAction.setup(application, resourceBundle, this);
+        }
+        return openFileAction;
+    }
+
+    @Nonnull
+    public SaveFileAction getSaveFileAction() {
+        if (saveFileAction == null) {
+            ensureSetup();
+            saveFileAction = new SaveFileAction();
+            saveFileAction.setup(application, resourceBundle, this);
+        }
+        return saveFileAction;
+    }
+
+    @Nonnull
+    public SaveAsFileAction getSaveAsFileAction() {
+        if (saveAsFileAction == null) {
+            ensureSetup();
+            saveAsFileAction = new SaveAsFileAction();
+            saveAsFileAction.setup(application, resourceBundle, this);
+        }
+        return saveAsFileAction;
     }
 
     @Override

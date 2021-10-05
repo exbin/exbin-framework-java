@@ -13,36 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.editor.api;
+package org.exbin.framework.gui.file.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import javax.annotation.Nullable;
 
 /**
- * Framework multitab editor interface.
+ * Provider for file operations.
  *
  * @version 0.2.2 2021/10/05
  * @author ExBin Project (http://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface MultiEditorProvider extends EditorProvider {
+public interface FileOperationsProvider {
 
-    /**
-     * Sets currently active editor provider.
-     *
-     * @param editorProvider editor provider
-     */
-    void setActiveEditor(EditorProvider editorProvider);
-
-    /**
-     * Closes active file.
-     */
-    void closeFile();
-
-    /**
-     * Closes specified file.
-     *
-     * @param file file handler
-     */
-    void closeFile(FileHandlerApi file);
+    @Nullable
+    FileOperations getFileOperations();
 }

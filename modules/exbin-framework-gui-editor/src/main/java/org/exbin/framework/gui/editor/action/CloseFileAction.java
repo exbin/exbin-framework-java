@@ -21,12 +21,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Close file action.
  *
- * @version 0.2.2 2021/09/30
+ * @version 0.2.2 2021/10/05
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -36,13 +37,15 @@ public class CloseFileAction extends AbstractAction {
 
     private ResourceBundle resourceBundle;
     private XBApplication application;
+    private MultiEditorProvider editorProvider;
 
     public CloseFileAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
         this.application = application;
         this.resourceBundle = resourceBundle;
+        this.editorProvider = editorProvider;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
@@ -51,6 +54,6 @@ public class CloseFileAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        editorProvider.closeFile();
     }
 }

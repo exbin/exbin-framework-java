@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.file.action;
+package org.exbin.framework.gui.editor.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -21,42 +21,36 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.file.api.FileOperations;
-import org.exbin.framework.gui.file.api.FileOperationsProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
- * Save file action.
+ * Close file action.
  *
- * @version 0.2.2 2021/10/05
+ * @version 0.2.2 2021/09/30
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SaveFileAction extends AbstractAction {
+public class CloseOtherFileAction extends AbstractAction {
 
-    public static final String ACTION_ID = "saveFileAction";
+    public static final String ACTION_ID = "fileCloseOtherAction";
 
     private ResourceBundle resourceBundle;
     private XBApplication application;
-    private FileOperationsProvider fileOperationsProvider;
 
-    public SaveFileAction() {
+    public CloseOtherFileAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle, FileOperationsProvider fileOperationsProvider) {
+    public void setup(XBApplication application, ResourceBundle resourceBundle) {
         this.application = application;
-        this.fileOperationsProvider = fileOperationsProvider;
         this.resourceBundle = resourceBundle;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
-        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask()));
+        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
+        putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        FileOperations fileOperations = fileOperationsProvider.getFileOperations();
-        if (fileOperations != null) {
-            fileOperations.saveFile();
-        }
+
     }
 }

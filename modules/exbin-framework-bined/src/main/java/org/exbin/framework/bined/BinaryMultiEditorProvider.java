@@ -55,6 +55,11 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
             public void activeIndexChanged(int index) {
 
             }
+
+            @Override
+            public void showPopupMenu(int index, int positionX, int positionY) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
         });
     }
 

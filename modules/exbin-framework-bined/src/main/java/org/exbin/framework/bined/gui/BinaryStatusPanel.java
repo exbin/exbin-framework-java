@@ -278,6 +278,7 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
         documentSizeCodeTypeMenu.add(octalDocumentSizeModeRadioButtonMenuItem);
 
         documentSizeModeButtonGroup.add(decimalDocumentSizeModeRadioButtonMenuItem);
+        decimalDocumentSizeModeRadioButtonMenuItem.setSelected(true);
         decimalDocumentSizeModeRadioButtonMenuItem.setText(resourceBundle.getString("decDocumentSizeModeRadioButtonMenuItem.text")); // NOI18N
         decimalDocumentSizeModeRadioButtonMenuItem.setName("decimalDocumentSizeModeRadioButtonMenuItem"); // NOI18N
         decimalDocumentSizeModeRadioButtonMenuItem.addActionListener(new java.awt.event.ActionListener() {

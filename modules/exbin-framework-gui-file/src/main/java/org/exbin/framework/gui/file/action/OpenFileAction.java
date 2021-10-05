@@ -21,12 +21,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.file.api.FileOperations;
+import org.exbin.framework.gui.file.api.FileOperationsProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Open file action.
  *
- * @version 0.2.2 2021/09/30
+ * @version 0.2.2 2021/10/05
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -36,12 +38,14 @@ public class OpenFileAction extends AbstractAction {
 
     private ResourceBundle resourceBundle;
     private XBApplication application;
+    private FileOperationsProvider fileOperationsProvider;
 
     public OpenFileAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, ResourceBundle resourceBundle, FileOperationsProvider fileOperationsProvider) {
         this.application = application;
+        this.fileOperationsProvider = fileOperationsProvider;
         this.resourceBundle = resourceBundle;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
@@ -50,5 +54,9 @@ public class OpenFileAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        FileOperations fileOperations = fileOperationsProvider.getFileOperations();
+        if (fileOperations != null) {
+            fileOperations.openFile();
+        }
     }
 }

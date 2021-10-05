@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JPopupMenu;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -44,6 +45,15 @@ public class MultiEditorPanel extends javax.swing.JPanel {
         tabbedPane.addChangeListener((e) -> {
             if (control != null) {
                 control.activeIndexChanged(tabbedPane.getSelectedIndex());
+            }
+        });
+        tabbedPane.setComponentPopupMenu(new JPopupMenu() {
+            @Override
+            public void show(Component invoker, int x, int y) {
+                int index = tabbedPane.indexOfComponent(invoker);
+                if (control != null) {
+                    control.showPopupMenu(index, x, y);
+                }
             }
         });
     }
@@ -126,5 +136,7 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     public interface Control {
 
         void activeIndexChanged(int index);
+
+        void showPopupMenu(int index, int positionX, int positionY);
     }
 }

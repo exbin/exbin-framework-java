@@ -266,6 +266,8 @@ public class BinedModule implements XBApplicationModule {
             BinEdComponentPanel panel = (BinEdComponentPanel) editorFile.getComponent();
             // TODO panel.setMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
             editorProvider = new BinaryEditorProvider(editorFile);
+            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            fileModule.setFileOperations(editorProvider);
 
             panel.setApplication(application);
             panel.setPopupMenu(createPopupMenu(((BinaryEditorControl) editorProvider).getId(), ((BinaryEditorControl) editorProvider).getCodeArea()));
@@ -285,7 +287,6 @@ public class BinedModule implements XBApplicationModule {
                 }
             });
             panel.setReleaseFileMethod(() -> {
-                GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
                 FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
                 return fileHandlingActions.releaseFile();
             });
@@ -300,6 +301,9 @@ public class BinedModule implements XBApplicationModule {
             GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
 //            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryMultiEditorProvider();
+            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            fileModule.setFileOperations(editorProvider);
+
             editorProvider.newFile();
             BinEdFileHandler activeFile = (BinEdFileHandler) editorProvider.getActiveFile();
 //            activeFile.setSegmentsRepository(new SegmentsRepository());
@@ -328,7 +332,6 @@ public class BinedModule implements XBApplicationModule {
             //((BinaryEditorControl) editorProvider).getComponentPanel().setEditorViewHandling(editorTabModule.getEditorViewHandling());
             activeFile.setSegmentsRepository(new SegmentsRepository());
 //            activeFile.init();
-            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
             fileHandlingActions.setFileHandler(editorProvider.getActiveFile());
         }
