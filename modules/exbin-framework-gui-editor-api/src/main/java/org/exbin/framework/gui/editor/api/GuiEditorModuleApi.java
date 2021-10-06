@@ -17,6 +17,7 @@ package org.exbin.framework.gui.editor.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -24,7 +25,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 /**
  * XBUP framework editor module api interface.
  *
- * @version 0.2.2 2021/09/27
+ * @version 0.2.2 2021/10/06
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -60,4 +61,13 @@ public interface GuiEditorModuleApi extends XBApplicationModule {
      * Registers undo handler for undo management to editor.
      */
     void registerUndoHandler();
+
+    @Nonnull
+    AbstractAction getCloseFileAction();
+
+    @Nonnull
+    AbstractAction getCloseAllFileAction();
+
+    @Nonnull
+    AbstractAction getCloseOtherFileAction();
 }

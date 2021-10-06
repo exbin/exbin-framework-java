@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
@@ -36,12 +37,16 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.editor.action.CloseAllFileAction;
+import org.exbin.framework.gui.editor.action.CloseFileAction;
+import org.exbin.framework.gui.editor.action.CloseOtherFileAction;
 import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
+import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * XBUP framework editor module.
  *
- * @version 0.2.2 2021/09/26
+ * @version 0.2.2 2021/10/06
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -52,6 +57,11 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     private final Map<String, List<EditorProvider>> pluginEditorsMap = new HashMap<>();
     private EditorProvider editorProvider = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener = null;
+    private ResourceBundle resourceBundle;
+
+    private CloseFileAction closeFileAction;
+    private CloseAllFileAction closeAllFileAction;
+    private CloseOtherFileAction closeOtherFileAction;
 
     public GuiEditorModule() {
     }
@@ -59,6 +69,21 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     @Override
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(GuiEditorModule.class);
+        }
+
+        return resourceBundle;
+    }
+
+    private void ensureSetup() {
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
     }
 
     private void setEditorProvider(EditorProvider editorProvider) {
@@ -332,5 +357,38 @@ public class GuiEditorModule implements GuiEditorModuleApi {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         });
+    }
+
+    @Nonnull
+    @Override
+    public CloseFileAction getCloseFileAction() {
+        if (closeFileAction == null) {
+            closeFileAction = new CloseFileAction();
+            ensureSetup();
+            closeFileAction.setup(application, resourceBundle, (MultiEditorProvider) editorProvider);
+        }
+        return closeFileAction;
+    }
+
+    @Nonnull
+    @Override
+    public CloseAllFileAction getCloseAllFileAction() {
+        if (closeAllFileAction == null) {
+            closeAllFileAction = new CloseAllFileAction();
+            ensureSetup();
+            closeAllFileAction.setup(application, resourceBundle);
+        }
+        return closeAllFileAction;
+    }
+
+    @Nonnull
+    @Override
+    public CloseOtherFileAction getCloseOtherFileAction() {
+        if (closeOtherFileAction == null) {
+            closeOtherFileAction = new CloseOtherFileAction();
+            ensureSetup();
+            closeOtherFileAction.setup(application, resourceBundle);
+        }
+        return closeOtherFileAction;
     }
 }

@@ -52,7 +52,7 @@ public class MultiEditorPanel extends javax.swing.JPanel {
             public void show(Component invoker, int x, int y) {
                 int index = tabbedPane.indexOfComponent(invoker);
                 if (control != null) {
-                    control.showPopupMenu(index, x, y);
+                    control.showPopupMenu(index, invoker, x, y);
                 }
             }
         });
@@ -64,6 +64,11 @@ public class MultiEditorPanel extends javax.swing.JPanel {
 
     public int getFileHandlersCount() {
         return fileHandlers.size();
+    }
+    
+    @Nullable
+    public FileHandlerApi getFileHandler(int index) {
+        return fileHandlers.get(index);
     }
 
     public void addFileHandler(FileHandlerApi fileHandler, String text) {
@@ -137,6 +142,6 @@ public class MultiEditorPanel extends javax.swing.JPanel {
 
         void activeIndexChanged(int index);
 
-        void showPopupMenu(int index, int positionX, int positionY);
+        void showPopupMenu(int index, Component component, int positionX, int positionY);
     }
 }

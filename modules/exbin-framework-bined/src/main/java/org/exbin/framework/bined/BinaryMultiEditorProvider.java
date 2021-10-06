@@ -15,21 +15,30 @@
  */
 package org.exbin.framework.bined;
 
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
+import org.exbin.framework.gui.editor.action.CloseFileAction;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.gui.MultiEditorPanel;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
@@ -38,7 +47,7 @@ import org.exbin.framework.gui.file.api.FileType;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/09/27
+ * @version 0.2.2 2021/10/06
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -50,6 +59,9 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
     private Map<Integer, Integer> newFilesMap = new HashMap<>();
 
     public BinaryMultiEditorProvider() {
+    }
+
+    public void setup(XBApplication application, ResourceBundle resourceBundle) {
         multiEditorPanel.setControl(new MultiEditorPanel.Control() {
             @Override
             public void activeIndexChanged(int index) {
@@ -57,8 +69,20 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
             }
 
             @Override
-            public void showPopupMenu(int index, int positionX, int positionY) {
-                throw new UnsupportedOperationException("Not supported yet.");
+            public void showPopupMenu(int index, Component component, int positionX, int positionY) {
+                GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
+                JPopupMenu fileTabPopupMenu = new JPopupMenu();
+                CloseFileAction closeFileAction = (CloseFileAction) editorModule.getCloseFileAction();
+                JMenuItem closeMenuItem = new JMenuItem(closeFileAction);
+                closeMenuItem.addActionListener((ActionEvent e) -> {
+                    FileHandlerApi fileHandler = multiEditorPanel.getFileHandler(index);
+                    if (releaseFile(fileHandler)) {
+                        closeFile(fileHandler);
+                        multiEditorPanel.removeFileHandler(fileHandler);
+                    }
+                });
+                fileTabPopupMenu.add(closeMenuItem);
+                fileTabPopupMenu.show(component, positionX, positionY);
             }
         });
     }
@@ -130,6 +154,10 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
     @Override
     public boolean releaseFile() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public boolean releaseFile(FileHandlerApi fileHandler) {
+        return false; //fileHandler.
     }
 
     @Nonnull
