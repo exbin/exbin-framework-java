@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -70,7 +69,6 @@ public class FileHandlingActions implements FileHandlingActionsApi {
 //    private Action closeFileAction;
 
     private JMenu fileOpenRecentMenu = null;
-    private List<RecentItem> recentFiles = null;
 
     private JFileChooser openFileChooser, saveFileChooser;
     private AllFilesFilter allFilesFilter;
@@ -145,12 +143,6 @@ public class FileHandlingActions implements FileHandlingActionsApi {
         AllFilesFilter filesFilter = new AllFilesFilter();
         addFileType(filesFilter);
         allFilesFilter = filesFilter;
-
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
-            saveState();
-            return true;
-        });
     }
 
     /**
@@ -243,7 +235,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                 }
                 fileHandler.loadFromFile(fileUri, fileType);
 
-                updateRecentFilesList(fileUri);
+//                updateRecentFilesList(fileUri);
             }
         }
     }
@@ -272,7 +264,7 @@ public class FileHandlingActions implements FileHandlingActionsApi {
                 try {
                     URI fileUri = saveFileChooser.getSelectedFile().toURI();
                     fileHandler.saveToFile(fileUri, (FileType) saveFileChooser.getFileFilter());
-                    updateRecentFilesList(fileUri);
+//                    updateRecentFilesList(fileUri);
                 } catch (Exception ex) {
                     Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
                     String errorMessage = ex.getLocalizedMessage();
@@ -306,136 +298,6 @@ public class FileHandlingActions implements FileHandlingActionsApi {
     void loadFromFile(String filename) throws URISyntaxException {
         URI fileUri = new URI(filename);
         fileHandler.loadFromFile(fileUri, null);
-    }
-
-    public JMenu getOpenRecentMenu() {
-        if (fileOpenRecentMenu == null) {
-            fileOpenRecentMenu = new JMenu("Open Recent File");
-            recentFiles = new ArrayList<>();
-            if (preferences != null) {
-                loadState();
-            }
-        }
-        return fileOpenRecentMenu;
-    }
-
-    private void loadState() {
-        RecentFilesPreferences recentFilesParameters = new RecentFilesPreferences(preferences);
-        recentFiles.clear();
-        int recent = 1;
-        while (recent < 14) {
-            String filePath = recentFilesParameters.getFilePath(recent).orElse(null);
-            String moduleName = recentFilesParameters.getModuleName(recent).orElse(null);
-            String fileMode = recentFilesParameters.getFileMode(recent).orElse(null);
-            if (filePath == null) {
-                break;
-            }
-            recentFiles.add(new RecentItem(filePath, moduleName, fileMode));
-            recent++;
-        }
-        rebuildRecentFilesMenu();
-    }
-
-    private void saveState() {
-        RecentFilesPreferences recentFilesParameters = new RecentFilesPreferences(preferences);
-        for (int i = 0; i < recentFiles.size(); i++) {
-            recentFilesParameters.setFilePath(recentFiles.get(i).getFileName(), i + 1);
-            recentFilesParameters.setModuleName(recentFiles.get(i).getModuleName(), i + 1);
-            recentFilesParameters.setFileMode(recentFiles.get(i).getFileMode(), i + 1);
-        }
-        recentFilesParameters.remove(recentFiles.size() + 1);
-        preferences.flush();
-    }
-
-    private void rebuildRecentFilesMenu() {
-        fileOpenRecentMenu.removeAll();
-        for (int recentFileIndex = 0; recentFileIndex < recentFiles.size(); recentFileIndex++) {
-            String filename = recentFiles.get(recentFileIndex).getFileName();
-            File file = new File(filename);
-            JMenuItem menuItem = new JMenuItem(file.getName());
-            menuItem.setToolTipText(filename);
-            {
-                URI fileUri;
-                try {
-                    fileUri = new URI(filename);
-                    try {
-                        menuItem.setIcon(FileSystemView.getFileSystemView().getSystemIcon(new File(fileUri)));
-                    } catch (Exception ex) {
-                        menuItem.setIcon(null);
-                    }
-                } catch (URISyntaxException ex) {
-                    Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            menuItem.addActionListener((ActionEvent e) -> {
-                if (e.getSource() instanceof JMenuItem) {
-                    if (!releaseFile()) {
-                        return;
-                    }
-                    JMenuItem menuItem1 = (JMenuItem) e.getSource();
-                    for (int itemIndex = 0; itemIndex < fileOpenRecentMenu.getItemCount(); itemIndex++) {
-                        if (menuItem1.equals(fileOpenRecentMenu.getItem(itemIndex))) {
-                            RecentItem recentItem = recentFiles.get(itemIndex);
-                            FileType fileType = null;
-                            for (FileFilter fileFilter : openFileChooser.getChoosableFileFilters()) {
-                                if (fileFilter instanceof FileType) {
-                                    if (((FileType) fileFilter).getFileTypeId().equals(recentItem.getFileMode())) {
-                                        fileType = (FileType) fileFilter;
-                                    }
-                                }
-                            }
-
-                            URI fileUri;
-                            try {
-                                fileUri = new URI(recentItem.getFileName());
-                                fileHandler.loadFromFile(fileUri, fileType);
-
-                                if (itemIndex > 0) {
-                                    // Move recent item on top
-                                    recentFiles.remove(itemIndex);
-                                    recentFiles.add(0, recentItem);
-                                    rebuildRecentFilesMenu();
-                                }
-                            } catch (URISyntaxException ex) {
-                                Logger.getLogger(FileHandlingActions.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    }
-                }
-            });
-
-            fileOpenRecentMenu.add(menuItem);
-        }
-        fileOpenRecentMenu.setEnabled(recentFiles.size() > 0);
-    }
-
-    @Nullable
-    public Preferences getPreferences() {
-        return preferences;
-    }
-
-    public void setPreferences(Preferences preferences) {
-        this.preferences = preferences;
-    }
-
-    private void updateRecentFilesList(URI fileUri) {
-        if (recentFiles != null) {
-            // Update recent files list
-            int i = 0;
-            while (i < recentFiles.size()) {
-                RecentItem recentItem = recentFiles.get(i);
-                if (recentItem.getFileName().equals(fileUri.toString())) {
-                    recentFiles.remove(i);
-                }
-                i++;
-            }
-
-            recentFiles.add(0, new RecentItem(fileUri.toString(), "", ((FileType) openFileChooser.getFileFilter()).getFileTypeId()));
-            if (recentFiles.size() > 15) {
-                recentFiles.remove(15);
-            }
-            rebuildRecentFilesMenu();
-        }
     }
 
     @Override
@@ -485,49 +347,5 @@ public class FileHandlingActions implements FileHandlingActionsApi {
 
     public void setFileHandler(FileHandlerApi fileHandler) {
         this.fileHandler = fileHandler;
-    }
-
-    /**
-     * Class for representation of recently opened or saved files.
-     */
-    @ParametersAreNonnullByDefault
-    public class RecentItem {
-
-        private String fileName;
-        private String moduleName;
-        private String fileMode;
-
-        public RecentItem(@Nullable String fileName, @Nullable String moduleName, @Nullable String fileMode) {
-            this.fileName = fileName;
-            this.moduleName = moduleName;
-            this.fileMode = fileMode;
-        }
-
-        @Nullable
-        public String getFileName() {
-            return fileName;
-        }
-
-        public void setFileName(@Nullable String path) {
-            this.fileName = path;
-        }
-
-        @Nullable
-        public String getFileMode() {
-            return fileMode;
-        }
-
-        public void setFileMode(@Nullable String fileMode) {
-            this.fileMode = fileMode;
-        }
-
-        @Nullable
-        public String getModuleName() {
-            return moduleName;
-        }
-
-        public void setModuleName(@Nullable String moduleName) {
-            this.moduleName = moduleName;
-        }
     }
 }

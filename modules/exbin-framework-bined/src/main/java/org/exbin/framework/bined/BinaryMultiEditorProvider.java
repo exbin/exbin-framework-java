@@ -47,7 +47,7 @@ import org.exbin.framework.gui.file.api.FileType;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/06
+ * @version 0.2.2 2021/10/07
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -58,10 +58,11 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
     private int lastNewFileIndex = 0;
     private Map<Integer, Integer> newFilesMap = new HashMap<>();
 
-    public BinaryMultiEditorProvider() {
+    public BinaryMultiEditorProvider(XBApplication application, ResourceBundle resourceBundle) {
+        init(application, resourceBundle);
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle) {
+    private void init(XBApplication application, ResourceBundle resourceBundle) {
         multiEditorPanel.setControl(new MultiEditorPanel.Control() {
             @Override
             public void activeIndexChanged(int index) {
@@ -77,8 +78,8 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
                 closeMenuItem.addActionListener((ActionEvent e) -> {
                     FileHandlerApi fileHandler = multiEditorPanel.getFileHandler(index);
                     if (releaseFile(fileHandler)) {
-                        closeFile(fileHandler);
                         multiEditorPanel.removeFileHandler(fileHandler);
+                        closeFile(fileHandler);
                     }
                 });
                 fileTabPopupMenu.add(closeMenuItem);

@@ -49,6 +49,7 @@ public class OpenFileAction extends AbstractAction {
         this.resourceBundle = resourceBundle;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
+        putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, ActionUtils.getMetaMask()));
     }
 

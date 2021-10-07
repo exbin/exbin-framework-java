@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.gui.file;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -38,10 +39,12 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.file.action.NewFileAction;
 import org.exbin.framework.gui.file.action.OpenFileAction;
+import org.exbin.framework.gui.file.action.RecentFilesActions;
 import org.exbin.framework.gui.file.action.SaveAsFileAction;
 import org.exbin.framework.gui.file.action.SaveFileAction;
 import org.exbin.framework.gui.file.api.FileOperations;
 import org.exbin.framework.gui.file.api.FileOperationsProvider;
+import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
@@ -66,6 +69,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
     private OpenFileAction openFileAction;
     private SaveFileAction saveFileAction;
     private SaveAsFileAction saveAsFileAction;
+    private RecentFilesActions recentFilesActions;
 
     public GuiFileModule() {
     }
@@ -94,7 +98,6 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
         if (fileHandlingActions == null) {
             fileHandlingActions = new FileHandlingActions();
             fileHandlingActions.init(application);
-            fileHandlingActions.setPreferences(application.getAppPreferences());
         }
 
         return fileHandlingActions;
@@ -151,10 +154,10 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
 
     @Override
     public void registerLastOpenedMenuActions() {
-        getFileHandlingActions();
+        getRecentFilesActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        JMenu recentFileMenu = fileHandlingActions.getOpenRecentMenu();
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, "Open..."));
+        JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, "Open" + ActionUtils.DIALOG_MENUITEM_EXT));
     }
 
     @Nonnull
@@ -195,6 +198,26 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
             saveAsFileAction.setup(application, resourceBundle, this);
         }
         return saveAsFileAction;
+    }
+
+    @Nonnull
+    public RecentFilesActions getRecentFilesActions() {
+        if (recentFilesActions == null) {
+            recentFilesActions = new RecentFilesActions();
+            recentFilesActions.setup(application, resourceBundle, new RecentFilesActions.FilesControl() {
+                @Override
+                public boolean releaseFile() {
+                    return fileHandlingActions.releaseFile();
+                }
+
+                @Override
+                public void loadFromFile(URI fileUri, FileType fileType) {
+                    fileHandlingActions.getFileHandler().loadFromFile(fileUri, fileType);
+                }
+            });
+            recentFilesActions.setPreferences(application.getAppPreferences());
+        }
+        return recentFilesActions;
     }
 
     @Override
