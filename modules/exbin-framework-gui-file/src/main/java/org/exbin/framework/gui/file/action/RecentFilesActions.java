@@ -139,14 +139,13 @@ public class RecentFilesActions {
                         if (menuItem1.equals(fileOpenRecentMenu.getItem(itemIndex))) {
                             RecentItem recentItem = recentFiles.get(itemIndex);
                             FileType fileType = null;
-                            // TODO 
-//                            for (FileFilter fileFilter : openFileChooser.getChoosableFileFilters()) {
-//                                if (fileFilter instanceof FileType) {
-//                                    if (((FileType) fileFilter).getFileTypeId().equals(recentItem.getFileMode())) {
-//                                        fileType = (FileType) fileFilter;
-//                                    }
-//                                }
-//                            }
+                            List<FileType> registeredFileTypes = filesControl.getRegisteredFileTypes();
+                            for (FileType regFileType : registeredFileTypes) {
+                                if (regFileType.getFileTypeId().equals(recentItem.getFileMode())) {
+                                    fileType = regFileType;
+                                    break;
+                                }
+                            }
 
                             URI fileUri;
                             try {
@@ -249,6 +248,9 @@ public class RecentFilesActions {
 
         boolean releaseFile();
 
-        void loadFromFile(URI fileUri, FileType fileType);
+        void loadFromFile(URI fileUri, @Nullable FileType fileType);
+
+        @Nonnull
+        List<FileType> getRegisteredFileTypes();
     }
 }

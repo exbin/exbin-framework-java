@@ -17,6 +17,7 @@ package org.exbin.framework.bined;
 
 import java.beans.PropertyChangeListener;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -188,6 +189,16 @@ public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl
     }
 
     @Override
+    public void loadFromFile(String fileName) throws URISyntaxException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public void saveFile() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -198,7 +209,7 @@ public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl
     }
 
     @Override
-    public boolean releaseFile() {
+    public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

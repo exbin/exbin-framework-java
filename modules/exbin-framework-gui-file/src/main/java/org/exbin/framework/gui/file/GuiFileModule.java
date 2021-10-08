@@ -17,6 +17,8 @@ package org.exbin.framework.gui.file;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +52,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Implementation of framework file module.
  *
- * @version 0.2.2 2021/10/05
+ * @version 0.2.2 2021/10/08
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -59,17 +61,16 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
     private static final String FILE_MENU_GROUP_ID = MODULE_ID + ".fileMenuGroup";
     private static final String FILE_TOOL_BAR_GROUP_ID = MODULE_ID + ".fileToolBarGroup";
 
-    private FileHandlingActions fileHandlingActions = null;
-
     private java.util.ResourceBundle resourceBundle = null;
     private XBApplication application;
     private FileOperations fileOperations;
-    
+
     private NewFileAction newFileAction;
     private OpenFileAction openFileAction;
     private SaveFileAction saveFileAction;
     private SaveAsFileAction saveAsFileAction;
     private RecentFilesActions recentFilesActions;
+    private final List<FileType> registeredFileTypes = new ArrayList<>();
 
     public GuiFileModule() {
     }
@@ -92,17 +93,6 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
         return resourceBundle;
     }
 
-    @Nonnull
-    @Override
-    public FileHandlingActions getFileHandlingActions() {
-        if (fileHandlingActions == null) {
-            fileHandlingActions = new FileHandlingActions();
-            fileHandlingActions.init(application);
-        }
-
-        return fileHandlingActions;
-    }
-
     private void ensureSetup() {
         if (resourceBundle == null) {
             getResourceBundle();
@@ -122,8 +112,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
 
     @Override
     public void addFileType(FileType fileType) {
-        FileHandlingActions handle = getFileHandlingActions();
-        handle.addFileType(fileType);
+        registeredFileTypes.add(fileType);
     }
 
     @Override
@@ -147,13 +136,18 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
 
     @Override
     public void registerCloseListener() {
-        getFileHandlingActions();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> fileHandlingActions.releaseFile());
+        frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
+            if (fileOperations != null) {
+                return fileOperations.releaseAllFiles();
+            }
+            
+            return true;
+        });
     }
 
     @Override
-    public void registerLastOpenedMenuActions() {
+    public void registerRecenFilesMenuActions() {
         getRecentFilesActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
@@ -207,12 +201,17 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
             recentFilesActions.setup(application, resourceBundle, new RecentFilesActions.FilesControl() {
                 @Override
                 public boolean releaseFile() {
-                    return fileHandlingActions.releaseFile();
+                    return fileOperations.releaseAllFiles();
                 }
 
                 @Override
-                public void loadFromFile(URI fileUri, FileType fileType) {
-                    fileHandlingActions.getFileHandler().loadFromFile(fileUri, fileType);
+                public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
+                    fileOperations.loadFromFile(fileUri, fileType);
+                }
+                
+                @Nonnull
+                public List<FileType> getRegisteredFileTypes() {
+                    return registeredFileTypes;
                 }
             });
             recentFilesActions.setPreferences(application.getAppPreferences());
@@ -222,8 +221,11 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
 
     @Override
     public void loadFromFile(String filename) {
+        if (fileOperations == null) {
+            return;
+        }
         try {
-            getFileHandlingActions().loadFromFile(filename);
+            fileOperations.loadFromFile(filename);
         } catch (URISyntaxException ex) {
             Logger.getLogger(GuiFileModule.class.getName()).log(Level.SEVERE, null, ex);
         }

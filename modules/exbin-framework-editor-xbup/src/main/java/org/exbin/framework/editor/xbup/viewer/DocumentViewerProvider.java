@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -493,6 +494,16 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     }
 
     @Override
+    public void loadFromFile(String fileName) throws URISyntaxException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public void saveFile() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -503,7 +514,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     }
 
     @Override
-    public boolean releaseFile() {
+    public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

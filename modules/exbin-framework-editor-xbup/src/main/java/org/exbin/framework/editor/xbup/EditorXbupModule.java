@@ -105,7 +105,7 @@ public class EditorXbupModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    private void ensureProvider() {
+    private void ensureSetup() {
         if (editorProvider == null) {
             getEditorProvider();
         }
@@ -152,7 +152,7 @@ public class EditorXbupModule implements XBApplicationModule {
 
     private ViewModeActions getViewModeHandler() {
         if (viewModeHandler == null) {
-            ensureProvider();
+            ensureSetup();
             viewModeHandler = new ViewModeActions();
             viewModeHandler.setup(application, editorProvider, resourceBundle);
         }
@@ -162,7 +162,7 @@ public class EditorXbupModule implements XBApplicationModule {
 
     private StatusPanelHandler getStatusPanelHandler() {
         if (statusPanelHandler == null) {
-            ensureProvider();
+            ensureSetup();
             statusPanelHandler = new StatusPanelHandler();
             statusPanelHandler.setup(application, editorProvider, resourceBundle);
         }
@@ -172,7 +172,7 @@ public class EditorXbupModule implements XBApplicationModule {
 
     private SampleFilesActions getSampleFilesHandler() {
         if (sampleFilesHandler == null) {
-            ensureProvider();
+            ensureSetup();
             sampleFilesHandler = new SampleFilesActions();
             sampleFilesHandler.setup(application, editorProvider, resourceBundle);
         }
@@ -182,7 +182,7 @@ public class EditorXbupModule implements XBApplicationModule {
 
     private CatalogBrowserAction getCatalogBrowserAction() {
         if (catalogBrowserAction == null) {
-            ensureProvider();
+            ensureSetup();
             catalogBrowserAction = new CatalogBrowserAction();
             catalogBrowserAction.setup(application);
             catalogBrowserAction.setCatalog(catalog);
@@ -194,7 +194,7 @@ public class EditorXbupModule implements XBApplicationModule {
     @Nonnull
     private ItemPropertiesAction getItemPropertiesAction() {
         if (itemPropertiesAction == null) {
-            ensureProvider();
+            ensureSetup();
             itemPropertiesAction = new ItemPropertiesAction();
             itemPropertiesAction.setup((DocumentViewerProvider) editorProvider);
             itemPropertiesAction.setDevMode(devMode);
@@ -205,7 +205,7 @@ public class EditorXbupModule implements XBApplicationModule {
     @Nonnull
     private DocumentPropertiesAction getDocumentPropertiesAction() {
         if (documentPropertiesAction == null) {
-            ensureProvider();
+            ensureSetup();
             documentPropertiesAction = new DocumentPropertiesAction();
             documentPropertiesAction.setup((DocumentViewerProvider) editorProvider);
         }
@@ -215,7 +215,7 @@ public class EditorXbupModule implements XBApplicationModule {
     @Nonnull
     public ImportItemAction getImportItemAction() {
         if (importItemAction == null) {
-            ensureProvider();
+            ensureSetup();
             importItemAction = new ImportItemAction();
             importItemAction.setup(application, editorProvider, resourceBundle);
         }
@@ -225,7 +225,7 @@ public class EditorXbupModule implements XBApplicationModule {
     @Nonnull
     public ExportItemAction getExportItemAction() {
         if (exportItemAction == null) {
-            ensureProvider();
+            ensureSetup();
             exportItemAction = new ExportItemAction();
             exportItemAction.setup(application, editorProvider, resourceBundle);
         }

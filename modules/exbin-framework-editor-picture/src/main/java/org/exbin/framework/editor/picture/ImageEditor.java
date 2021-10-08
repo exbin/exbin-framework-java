@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -231,6 +232,17 @@ public class ImageEditor implements EditorProvider {
     }
 
     @Override
+    public void loadFromFile(String fileName) throws URISyntaxException {
+        URI fileUri = new URI(fileName);
+        activeFile.loadFromFile(fileUri, null);
+    }
+
+    @Override
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        activeFile.loadFromFile(fileUri, fileType);
+    }
+
+    @Override
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -261,7 +273,7 @@ public class ImageEditor implements EditorProvider {
     }
 
     @Override
-    public boolean releaseFile() {
+    public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

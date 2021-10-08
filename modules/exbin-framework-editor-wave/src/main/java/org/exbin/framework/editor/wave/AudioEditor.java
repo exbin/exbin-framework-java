@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -240,6 +241,16 @@ public class AudioEditor implements EditorProvider {
     }
 
     @Override
+    public void loadFromFile(String fileName) throws URISyntaxException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void loadFromFile(URI fileUri, FileType fileType) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public void saveFile() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -250,7 +261,7 @@ public class AudioEditor implements EditorProvider {
     }
 
     @Override
-    public boolean releaseFile() {
+    public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

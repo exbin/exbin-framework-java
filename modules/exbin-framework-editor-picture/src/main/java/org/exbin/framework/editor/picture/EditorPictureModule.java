@@ -89,7 +89,7 @@ public class EditorPictureModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    private void ensureProvider() {
+    private void ensureSetup() {
         if (editorProvider == null) {
             getEditorProvider();
         }
@@ -187,7 +187,7 @@ public class EditorPictureModule implements XBApplicationModule {
 
     private PictureOperationActions getPictureOperationActions() {
         if (pictureOperationActions == null) {
-            ensureProvider();
+            ensureSetup();
             pictureOperationActions = new PictureOperationActions();
             pictureOperationActions.setup(application, editorProvider, resourceBundle);
         }
@@ -250,7 +250,7 @@ public class EditorPictureModule implements XBApplicationModule {
 
     private PropertiesAction getPropertiesAction() {
         if (propertiesAction == null) {
-            ensureProvider();
+            ensureSetup();
             propertiesAction = new PropertiesAction();
             propertiesAction.setup(application, editorProvider, resourceBundle);
         }
@@ -260,7 +260,7 @@ public class EditorPictureModule implements XBApplicationModule {
 
     private ToolColorAction getToolColorAction() {
         if (toolColorAction == null) {
-            ensureProvider();
+            ensureSetup();
             toolColorAction = new ToolColorAction();
             toolColorAction.setup(application, editorProvider, resourceBundle);
         }
@@ -270,7 +270,7 @@ public class EditorPictureModule implements XBApplicationModule {
 
     private PrintAction getPrintAction() {
         if (printAction == null) {
-            ensureProvider();
+            ensureSetup();
             printAction = new PrintAction();
             printAction.setup(application, editorProvider, resourceBundle);
         }
@@ -280,7 +280,7 @@ public class EditorPictureModule implements XBApplicationModule {
 
     private ZoomControlActions getZoomControlActions() {
         if (zoomControlActions == null) {
-            ensureProvider();
+            ensureSetup();
             zoomControlActions = new ZoomControlActions();
             zoomControlActions.setup(application, editorProvider, resourceBundle);
         }

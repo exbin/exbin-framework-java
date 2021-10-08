@@ -15,24 +15,60 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for file operations.
  *
- * @version 0.2.2 2021/09/30
+ * @version 0.2.2 2021/10/08
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface FileOperations {
 
+    /**
+     * Calls new file creation.
+     */
     void newFile();
 
+    /**
+     * Calls file opening operation.
+     */
     void openFile();
 
+    /**
+     * Calls file saving operation.
+     */
     void saveFile();
 
+    /**
+     * Calls file saving as operation.
+     */
     void saveAsFile();
 
-    boolean releaseFile();
+    /**
+     * Calls file release operation to ask if file can be closed.
+     *
+     * @return true if file approved for close
+     */
+    boolean releaseAllFiles();
+
+    /**
+     * Attempts to load given filename.
+     *
+     * @param fileName filename
+     * @throws java.net.URISyntaxException issue with file name
+     */
+    void loadFromFile(String fileName) throws URISyntaxException;
+
+    /**
+     * Attempts to load given URI.
+     *
+     * @param fileUri file Uri
+     * @param fileType file type
+     */
+    void loadFromFile(URI fileUri, @Nullable FileType fileType);
 }

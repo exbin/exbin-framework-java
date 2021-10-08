@@ -18,6 +18,7 @@ package org.exbin.framework.gui.file.api;
 import java.net.URI;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 
@@ -88,11 +89,11 @@ public interface FileHandlerApi {
     Optional<FileType> getFileType();
 
     /**
-     * Sets current used filetype.
+     * Sets currently used file type.
      *
      * @param fileType file type
      */
-    void setFileType(FileType fileType);
+    void setFileType(@Nullable FileType fileType);
 
     /**
      * Creates new file.

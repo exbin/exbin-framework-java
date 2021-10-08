@@ -40,7 +40,6 @@ import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.editor.action.CloseAllFileAction;
 import org.exbin.framework.gui.editor.action.CloseFileAction;
 import org.exbin.framework.gui.editor.action.CloseOtherFileAction;
-import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
@@ -227,9 +226,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     @Override
     public JComponent getEditorComponent() {
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-        FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
-        fileHandlingActions.setFileHandler(editorProvider.getActiveFile());
-
+        fileModule.setFileOperations(editorProvider);
         return editorProvider.getEditorComponent();
     }
 

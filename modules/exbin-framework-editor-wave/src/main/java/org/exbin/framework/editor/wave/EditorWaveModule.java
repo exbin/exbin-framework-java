@@ -110,7 +110,7 @@ public class EditorWaveModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    private void ensureProvider() {
+    private void ensureSetup() {
         if (editorProvider == null) {
             getEditorProvider();
         }
@@ -322,7 +322,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     private PropertiesAction getPropertiesAction() {
         if (propertiesAction == null) {
-            ensureProvider();
+            ensureSetup();
             propertiesAction = new PropertiesAction();
             propertiesAction.setup(application, editorProvider, resourceBundle);
         }
@@ -332,7 +332,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     private AudioControlActions getAudioControlActions() {
         if (audioControlActions == null) {
-            ensureProvider();
+            ensureSetup();
             audioControlActions = new AudioControlActions();
             audioControlActions.setup(application, editorProvider, resourceBundle);
         }
@@ -342,7 +342,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     private AudioOperationActions getAudioOperationActions() {
         if (audioOperationActions == null) {
-            ensureProvider();
+            ensureSetup();
             audioOperationActions = new AudioOperationActions();
             audioOperationActions.setup(application, editorProvider, resourceBundle);
         }
@@ -352,7 +352,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     private DrawingControlActions getDrawingControlActions() {
         if (drawingControlActions == null) {
-            ensureProvider();
+            ensureSetup();
             drawingControlActions = new DrawingControlActions();
             drawingControlActions.setup(application, editorProvider, resourceBundle);
         }
@@ -362,7 +362,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     private EditToolActions getEditToolActions() {
         if (editToolActions == null) {
-            ensureProvider();
+            ensureSetup();
             editToolActions = new EditToolActions();
             editToolActions.setup(application, editorProvider, resourceBundle);
         }
@@ -372,7 +372,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     private ZoomControlActions getZoomControlActions() {
         if (zoomControlActions == null) {
-            ensureProvider();
+            ensureSetup();
             zoomControlActions = new ZoomControlActions();
             zoomControlActions.setup(application, editorProvider, resourceBundle);
         }
@@ -382,7 +382,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     private WaveColorAction getWaveColorAction() {
         if (waveColorAction == null) {
-            ensureProvider();
+            ensureSetup();
             waveColorAction = new WaveColorAction();
             waveColorAction.setup(application, editorProvider, resourceBundle);
         }

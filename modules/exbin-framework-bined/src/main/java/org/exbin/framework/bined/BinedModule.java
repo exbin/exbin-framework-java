@@ -155,7 +155,6 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.EditorProviderVariant;
-import org.exbin.framework.gui.file.api.FileHandlingActionsApi;
 
 /**
  * Binary data editor module.
@@ -287,8 +286,7 @@ public class BinedModule implements XBApplicationModule {
                 }
             });
             panel.setReleaseFileMethod(() -> {
-                FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
-                return fileHandlingActions.releaseFile();
+                return editorProvider.releaseAllFiles();
             });
         }
 
@@ -332,8 +330,7 @@ public class BinedModule implements XBApplicationModule {
             //((BinaryEditorControl) editorProvider).getComponentPanel().setEditorViewHandling(editorTabModule.getEditorViewHandling());
             activeFile.setSegmentsRepository(new SegmentsRepository());
 //            activeFile.init();
-            FileHandlingActionsApi fileHandlingActions = fileModule.getFileHandlingActions();
-            fileHandlingActions.setFileHandler(editorProvider.getActiveFile());
+            fileModule.setFileOperations(editorProvider);
         }
 
         return editorProvider;
@@ -344,7 +341,7 @@ public class BinedModule implements XBApplicationModule {
         return editorProvider;
     }
 
-    private void ensureProvider() {
+    private void ensureSetup() {
         if (editorProvider == null) {
             getEditorProvider();
         }
@@ -1293,7 +1290,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private AbstractAction getShowHeaderAction() {
         if (showHeaderAction == null) {
-            ensureProvider();
+            ensureSetup();
             showHeaderAction = new ShowHeaderAction();
             showHeaderAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1304,7 +1301,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private AbstractAction getShowRowPositionAction() {
         if (showRowPositionAction == null) {
-            ensureProvider();
+            ensureSetup();
             showRowPositionAction = new ShowRowPositionAction();
             showRowPositionAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1315,7 +1312,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private AbstractAction getInsertDataAction() {
         if (insertDataAction == null) {
-            ensureProvider();
+            ensureSetup();
             insertDataAction = new InsertDataAction();
             insertDataAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1326,7 +1323,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public AbstractAction getRowWrappingAction() {
         if (rowWrappingAction == null) {
-            ensureProvider();
+            ensureSetup();
             rowWrappingAction = new RowWrappingAction();
             rowWrappingAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1337,7 +1334,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public FindReplaceActions getFindReplaceActions() {
         if (findReplaceActions == null) {
-            ensureProvider();
+            ensureSetup();
             findReplaceActions = new FindReplaceActions();
             findReplaceActions.setup(application, editorProvider, resourceBundle);
         }
@@ -1348,7 +1345,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public ShowNonprintablesActions getShowNonprintablesActions() {
         if (showNonprintablesActions == null) {
-            ensureProvider();
+            ensureSetup();
             showNonprintablesActions = new ShowNonprintablesActions();
             showNonprintablesActions.setup(application, editorProvider, resourceBundle);
         }
@@ -1359,7 +1356,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public ShowValuesPanelAction getShowValuesPanelAction() {
         if (showValuesPanelAction == null) {
-            ensureProvider();
+            ensureSetup();
             showValuesPanelAction = new ShowValuesPanelAction();
             showValuesPanelAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1370,7 +1367,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public CodeAreaFontAction getCodeAreaFontAction() {
         if (codeAreaFontAction == null) {
-            ensureProvider();
+            ensureSetup();
             codeAreaFontAction = new CodeAreaFontAction();
             codeAreaFontAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1381,7 +1378,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public AbstractAction getGoToPositionAction() {
         if (goToPositionAction == null) {
-            ensureProvider();
+            ensureSetup();
             goToPositionAction = new GoToPositionAction();
             goToPositionAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1392,7 +1389,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public AbstractAction getPropertiesAction() {
         if (propertiesAction == null) {
-            ensureProvider();
+            ensureSetup();
             propertiesAction = new PropertiesAction();
             propertiesAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1403,7 +1400,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
-            ensureProvider();
+            ensureSetup();
             encodingsHandler = new EncodingsHandler();
             encodingsHandler.setParentComponent(editorProvider.getEditorComponent());
             if (binaryStatusPanel != null) {
@@ -1418,7 +1415,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public AbstractAction getPrintAction() {
         if (printAction == null) {
-            ensureProvider();
+            ensureSetup();
             printAction = new PrintAction();
             printAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1429,7 +1426,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public AbstractAction getCompareFilesAction() {
         if (compareFilesAction == null) {
-            ensureProvider();
+            ensureSetup();
             compareFilesAction = new CompareFilesAction();
             compareFilesAction.setup(application, editorProvider, resourceBundle);
         }
@@ -1440,7 +1437,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public ViewModeHandlerActions getViewModeActions() {
         if (viewModeActions == null) {
-            ensureProvider();
+            ensureSetup();
             viewModeActions = new ViewModeHandlerActions();
             viewModeActions.setup(application, editorProvider, resourceBundle);
         }
@@ -1451,7 +1448,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public CodeTypeActions getCodeTypeActions() {
         if (codeTypeActions == null) {
-            ensureProvider();
+            ensureSetup();
             codeTypeActions = new CodeTypeActions();
             codeTypeActions.setup(application, editorProvider, resourceBundle);
         }
@@ -1462,7 +1459,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public PositionCodeTypeActions getPositionCodeTypeActions() {
         if (positionCodeTypeActions == null) {
-            ensureProvider();
+            ensureSetup();
             positionCodeTypeActions = new PositionCodeTypeActions();
             positionCodeTypeActions.setup(application, editorProvider, resourceBundle);
         }
@@ -1473,7 +1470,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public HexCharactersCaseActions getHexCharactersCaseActions() {
         if (hexCharactersCaseActions == null) {
-            ensureProvider();
+            ensureSetup();
             hexCharactersCaseActions = new HexCharactersCaseActions();
             hexCharactersCaseActions.setup(application, editorProvider, resourceBundle);
         }
@@ -1484,7 +1481,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     public ClipboardCodeActions getClipboardCodeActions() {
         if (clipboardCodeActions == null) {
-            ensureProvider();
+            ensureSetup();
             clipboardCodeActions = new ClipboardCodeActions();
             clipboardCodeActions.setup(application, editorProvider, resourceBundle);
         }

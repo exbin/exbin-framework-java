@@ -125,7 +125,7 @@ public class EditorTextModule implements XBApplicationModule {
     public void unregisterModule(String moduleId) {
     }
 
-    private void ensureProvider() {
+    private void ensureSetup() {
         if (editorProvider == null) {
             getEditorProvider();
         }
@@ -490,7 +490,7 @@ public class EditorTextModule implements XBApplicationModule {
     @Nonnull
     private FindReplaceActions getFindReplaceActions() {
         if (findReplaceActions == null) {
-            ensureProvider();
+            ensureSetup();
             findReplaceActions = new FindReplaceActions();
             findReplaceActions.setup(application, editorProvider, resourceBundle);
         }
@@ -501,7 +501,7 @@ public class EditorTextModule implements XBApplicationModule {
     @Nonnull
     private TextFontAction getTextFontAction() {
         if (textFontAction == null) {
-            ensureProvider();
+            ensureSetup();
             textFontAction = new TextFontAction();
             textFontAction.setup(application, editorProvider, resourceBundle);
         }
@@ -512,7 +512,7 @@ public class EditorTextModule implements XBApplicationModule {
     @Nonnull
     private TextColorAction getTextColorAction() {
         if (textColorAction == null) {
-            ensureProvider();
+            ensureSetup();
             textColorAction = new TextColorAction();
             textColorAction.setup(application, editorProvider, resourceBundle);
         }
@@ -537,7 +537,7 @@ public class EditorTextModule implements XBApplicationModule {
     @Nonnull
     private WordWrappingAction getWordWrappingAction() {
         if (wordWrappingAction == null) {
-            ensureProvider();
+            ensureSetup();
             wordWrappingAction = new WordWrappingAction();
             wordWrappingAction.setup(application, editorProvider, resourceBundle);
         }
@@ -548,7 +548,7 @@ public class EditorTextModule implements XBApplicationModule {
     @Nonnull
     private GoToLineAction getGoToLineAction() {
         if (goToLineAction == null) {
-            ensureProvider();
+            ensureSetup();
             goToLineAction = new GoToLineAction();
             goToLineAction.setup(application, editorProvider, resourceBundle);
         }
@@ -559,7 +559,7 @@ public class EditorTextModule implements XBApplicationModule {
     @Nonnull
     private PropertiesAction getPropertiesAction() {
         if (propertiesAction == null) {
-            ensureProvider();
+            ensureSetup();
             propertiesAction = new PropertiesAction();
             propertiesAction.setup(application, editorProvider, resourceBundle);
         }
@@ -570,7 +570,7 @@ public class EditorTextModule implements XBApplicationModule {
     @Nonnull
     private PrintAction getPrintAction() {
         if (printAction == null) {
-            ensureProvider();
+            ensureSetup();
             printAction = new PrintAction();
             printAction.setup(application, editorProvider, resourceBundle);
         }
