@@ -17,7 +17,6 @@ package org.exbin.framework.gui.file.action;
 
 import java.io.File;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -29,9 +28,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.file.api.FileActionsApi;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileOperationsProvider;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 
 /**
@@ -41,7 +42,7 @@ import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FileActions {
+public class FileActions implements FileActionsApi {
 
     public static final String ALL_FILES_FILTER = "AllFilesFilter";
 
@@ -68,6 +69,7 @@ public class FileActions {
         }
     }
 
+    @Override
     public void openFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
         if (fileHandler != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
@@ -90,6 +92,7 @@ public class FileActions {
         }
     }
 
+    @Override
     public void saveFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
         if (fileHandler != null) {
             Optional<URI> fileUri = fileHandler.getFileUri();
@@ -101,6 +104,7 @@ public class FileActions {
         }
     }
 
+    @Override
     public void saveAsFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
         if (fileHandler != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
@@ -133,6 +137,7 @@ public class FileActions {
      * @param fileTypes file types handler
      * @return true if successful
      */
+    @Override
     public boolean releaseFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
         if (fileHandler == null) {
             return true;
@@ -169,7 +174,8 @@ public class FileActions {
      *
      * @return true if allowed
      */
-    private boolean overwriteFile() {
+    @Override
+    public boolean overwriteFile() {
         Object[] options = {
             resourceBundle.getString("Question.overwrite_save"),
             resourceBundle.getString("Question.modified_cancel")
@@ -212,17 +218,5 @@ public class FileActions {
         public String getFileTypeId() {
             return ALL_FILES_FILTER;
         }
-    }
-
-    @ParametersAreNonnullByDefault
-    public interface FileTypes {
-
-        boolean allowAllFiles();
-
-        @Nonnull
-        Optional<FileType> getFileType(String fileTypeId);
-
-        @Nonnull
-        List<FileType> getFileTypes();
     }
 }

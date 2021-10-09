@@ -19,29 +19,55 @@ import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.file.api.FileTypes;
+import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/09/28
+ * @version 0.2.2 2021/10/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl {
 
+    private XBApplication application;
     private BinEdFileHandler activeFile;
+    private FileTypes fileTypes;
 
-    public BinaryEditorProvider(BinEdFileHandler activeFile) {
+    public BinaryEditorProvider(XBApplication application, BinEdFileHandler activeFile) {
+        this.application = application;
         this.activeFile = activeFile;
+        fileTypes = new FileTypes() {
+            @Override
+            public boolean allowAllFiles() {
+                return true;
+            }
+
+            @Override
+            public Optional<FileType> getFileType(String fileTypeId) {
+                return Optional.empty();
+            }
+
+            @Override
+            public List<FileType> getFileTypes() {
+                return new ArrayList<>();
+            }
+        };
     }
 
     @Nonnull
@@ -179,37 +205,44 @@ public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl
     }
 
     @Override
-    public void openFile(URI fileUri, FileType fileType) {
+    public void openFile(URI fileUri, @Nullable FileType fileType) {
         activeFile.loadFromFile(fileUri, fileType);
     }
 
     @Override
     public void openFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        fileModule.getFileActions().openFile(activeFile, fileTypes);
     }
 
     @Override
     public void loadFromFile(String fileName) throws URISyntaxException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        URI fileUri = new URI(fileName);
+        activeFile.loadFromFile(fileUri, null);
     }
 
     @Override
-    public void loadFromFile(URI fileUri, FileType fileType) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
+        activeFile.loadFromFile(fileUri, fileType);
     }
 
     @Override
     public void saveFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (activeFile.getFileUri().isEmpty()) {
+            saveAsFile();
+        } else {
+            activeFile.saveFile();
+        }
     }
 
     @Override
     public void saveAsFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        fileModule.getFileActions().saveAsFile(activeFile, fileTypes);
     }
 
     @Override
     public boolean releaseAllFiles() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return activeFile.releaseFile();
     }
 }

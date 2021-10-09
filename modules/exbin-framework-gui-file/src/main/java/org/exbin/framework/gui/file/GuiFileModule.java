@@ -39,6 +39,7 @@ import org.exbin.framework.gui.action.api.ToolBarGroup;
 import org.exbin.framework.gui.action.api.ToolBarPosition;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.file.action.FileActions;
 import org.exbin.framework.gui.file.action.NewFileAction;
 import org.exbin.framework.gui.file.action.OpenFileAction;
 import org.exbin.framework.gui.file.action.RecentFilesActions;
@@ -70,6 +71,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
     private SaveFileAction saveFileAction;
     private SaveAsFileAction saveAsFileAction;
     private RecentFilesActions recentFilesActions;
+    private FileActions fileActions;
     private final List<FileType> registeredFileTypes = new ArrayList<>();
 
     public GuiFileModule() {
@@ -155,6 +157,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
     }
 
     @Nonnull
+    @Override
     public NewFileAction getNewFileAction() {
         if (newFileAction == null) {
             ensureSetup();
@@ -165,6 +168,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
     }
 
     @Nonnull
+    @Override
     public OpenFileAction getOpenFileAction() {
         if (openFileAction == null) {
             ensureSetup();
@@ -175,6 +179,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
     }
 
     @Nonnull
+    @Override
     public SaveFileAction getSaveFileAction() {
         if (saveFileAction == null) {
             ensureSetup();
@@ -185,6 +190,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
     }
 
     @Nonnull
+    @Override
     public SaveAsFileAction getSaveAsFileAction() {
         if (saveAsFileAction == null) {
             ensureSetup();
@@ -210,6 +216,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
                 }
                 
                 @Nonnull
+                @Override
                 public List<FileType> getRegisteredFileTypes() {
                     return registeredFileTypes;
                 }
@@ -217,6 +224,17 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
             recentFilesActions.setPreferences(application.getAppPreferences());
         }
         return recentFilesActions;
+    }
+    
+    @Nonnull
+    public FileActions getFileActions() {
+        if (fileActions == null) {
+            ensureSetup();
+            fileActions = new FileActions();
+            fileActions.setup(application, resourceBundle, this);
+        }
+        
+        return fileActions;
     }
 
     @Override

@@ -52,7 +52,7 @@ public interface FileHandlerApi {
      * @param fileUri file Uri
      * @param fileType file type
      */
-    void loadFromFile(URI fileUri, FileType fileType);
+    void loadFromFile(URI fileUri, @Nullable FileType fileType);
 
     /**
      * Saves file to given filename.
@@ -60,7 +60,7 @@ public interface FileHandlerApi {
      * @param fileUri file Uri
      * @param fileType file type
      */
-    void saveToFile(URI fileUri, FileType fileType);
+    void saveToFile(URI fileUri, @Nullable FileType fileType);
 
     /**
      * Returns currect file URI.

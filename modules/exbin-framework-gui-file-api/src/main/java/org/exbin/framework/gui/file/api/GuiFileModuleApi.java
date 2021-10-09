@@ -15,15 +15,17 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 
 /**
  * Interface for XBUP framework file module.
  *
- * @version 0.2.2 2021/10/05
+ * @version 0.2.2 2021/10/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -71,4 +73,19 @@ public interface GuiFileModuleApi extends XBApplicationModule {
      * Registers list of last opened files into file menu.
      */
     void registerRecenFilesMenuActions();
+
+    @Nonnull
+    AbstractAction getNewFileAction();
+
+    @Nonnull
+    AbstractAction getOpenFileAction();
+
+    @Nonnull
+    AbstractAction getSaveFileAction();
+
+    @Nonnull
+    AbstractAction getSaveAsFileAction();
+
+    @Nonnull
+    FileActionsApi getFileActions();
 }

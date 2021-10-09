@@ -159,7 +159,7 @@ import org.exbin.framework.gui.editor.api.EditorProviderVariant;
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2021/09/27
+ * @version 0.2.1 2021/10/09
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -264,7 +264,7 @@ public class BinedModule implements XBApplicationModule {
             editorFile.newFile();
             BinEdComponentPanel panel = (BinEdComponentPanel) editorFile.getComponent();
             // TODO panel.setMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
-            editorProvider = new BinaryEditorProvider(editorFile);
+            editorProvider = new BinaryEditorProvider(application, editorFile);
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             fileModule.setFileOperations(editorProvider);
 
