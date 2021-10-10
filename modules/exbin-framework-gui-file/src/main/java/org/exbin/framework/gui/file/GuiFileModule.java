@@ -206,11 +206,6 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
             recentFilesActions = new RecentFilesActions();
             recentFilesActions.setup(application, resourceBundle, new RecentFilesActions.FilesControl() {
                 @Override
-                public boolean releaseFile() {
-                    return fileOperations.releaseAllFiles();
-                }
-
-                @Override
                 public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
                     fileOperations.loadFromFile(fileUri, fileType);
                 }

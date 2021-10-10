@@ -131,9 +131,6 @@ public class RecentFilesActions {
             }
             menuItem.addActionListener((ActionEvent e) -> {
                 if (e.getSource() instanceof JMenuItem) {
-                    if (!filesControl.releaseFile()) {
-                        return;
-                    }
                     JMenuItem menuItem1 = (JMenuItem) e.getSource();
                     for (int itemIndex = 0; itemIndex < fileOpenRecentMenu.getItemCount(); itemIndex++) {
                         if (menuItem1.equals(fileOpenRecentMenu.getItem(itemIndex))) {
@@ -245,8 +242,6 @@ public class RecentFilesActions {
 
     @ParametersAreNonnullByDefault
     public interface FilesControl {
-
-        boolean releaseFile();
 
         void loadFromFile(URI fileUri, @Nullable FileType fileType);
 

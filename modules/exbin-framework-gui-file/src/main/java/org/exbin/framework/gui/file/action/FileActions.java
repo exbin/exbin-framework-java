@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileActionsApi;
+import org.exbin.framework.gui.file.api.FileActionsApi.OpenFileResult;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileOperationsProvider;
 import org.exbin.framework.gui.file.api.FileType;
@@ -72,24 +73,61 @@ public class FileActions implements FileActionsApi {
     @Override
     public void openFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
         if (fileHandler != null) {
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            JFileChooser openFileChooser = new JFileChooser();
-            setupFileFilters(openFileChooser, fileTypes);
-            if (openFileChooser.showOpenDialog(frameModule.getFrame()) == JFileChooser.APPROVE_OPTION) {
+            OpenFileResult openFileResult = FileActions.this.showOpenFileDialog(fileTypes);
+            if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
 //                ((CardLayout) statusPanel.getLayout()).show(statusPanel, "busy");
 //                statusPanel.repaint();
-                URI fileUri = openFileChooser.getSelectedFile().toURI();
-
-                FileType fileType = null;
-                FileFilter fileFilter = openFileChooser.getFileFilter();
-                if (fileFilter instanceof FileType) {
-                    fileType = fileTypes.getFileType(((FileType) fileFilter).getFileTypeId()).orElse(null);
-                }
-                fileHandler.loadFromFile(fileUri, fileType);
+                URI fileUri = openFileResult.selectedFile.toURI();
+                fileHandler.loadFromFile(fileUri, openFileResult.fileType);
 
 //                updateRecentFilesList(fileUri);
             }
         }
+    }
+
+    @Nonnull
+    @Override
+    public OpenFileResult showOpenFileDialog(FileTypes fileTypes) {
+        return showOpenFileDialog(fileTypes, null);
+    }
+
+    @Nonnull
+    @Override
+    public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile) {
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        JFileChooser openFileChooser = new JFileChooser();
+        setupFileFilters(openFileChooser, fileTypes);
+        openFileChooser.setSelectedFile(selectedFile);
+        int dialogResult = openFileChooser.showOpenDialog(frameModule.getFrame());
+        OpenFileResult result = new OpenFileResult();
+        result.dialogResult = dialogResult;
+        result.selectedFile = openFileChooser.getSelectedFile();
+        FileFilter fileFilter = openFileChooser.getFileFilter();
+        result.fileType = fileFilter instanceof FileType ? (FileType) fileFilter : null;
+
+        return result;
+    }
+
+    @Nonnull
+    @Override
+    public OpenFileResult showSaveFileDialog(FileTypes fileTypes) {
+        return showSaveFileDialog(fileTypes, null);
+    }
+
+    @Nonnull
+    @Override
+    public OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile) {
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        JFileChooser saveFileChooser = new JFileChooser();
+        setupFileFilters(saveFileChooser, fileTypes);
+        saveFileChooser.setSelectedFile(selectedFile);
+        int dialogResult = saveFileChooser.showSaveDialog(frameModule.getFrame());
+        OpenFileResult result = new OpenFileResult();
+        result.dialogResult = dialogResult;
+        result.selectedFile = saveFileChooser.getSelectedFile();
+        FileFilter fileFilter = saveFileChooser.getFileFilter();
+        result.fileType = fileFilter instanceof FileType ? (FileType) fileFilter : null;
+        return result;
     }
 
     @Override
@@ -108,18 +146,17 @@ public class FileActions implements FileActionsApi {
     public void saveAsFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
         if (fileHandler != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            JFileChooser saveFileChooser = new JFileChooser();
-            setupFileFilters(saveFileChooser, fileTypes);
-            if (saveFileChooser.showSaveDialog(frameModule.getFrame()) == JFileChooser.APPROVE_OPTION) {
-                if (new File(saveFileChooser.getSelectedFile().getAbsolutePath()).exists()) {
+            OpenFileResult openFileResult = showSaveFileDialog(fileTypes);
+            if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
+                if (new File(openFileResult.selectedFile.getAbsolutePath()).exists()) {
                     if (!overwriteFile()) {
                         return;
                     }
                 }
 
                 try {
-                    URI fileUri = saveFileChooser.getSelectedFile().toURI();
-                    fileHandler.saveToFile(fileUri, (FileType) saveFileChooser.getFileFilter());
+                    URI fileUri = openFileResult.selectedFile.toURI();
+                    fileHandler.saveToFile(fileUri, (FileType) openFileResult.fileType);
 //                    updateRecentFilesList(fileUri);
                 } catch (Exception ex) {
                     Logger.getLogger(FileActions.class.getName()).log(Level.SEVERE, null, ex);

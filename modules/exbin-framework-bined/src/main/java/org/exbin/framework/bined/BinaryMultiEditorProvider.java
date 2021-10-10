@@ -30,6 +30,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
@@ -43,6 +44,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.gui.MultiEditorPanel;
+import org.exbin.framework.gui.file.api.FileActionsApi;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
@@ -51,7 +53,7 @@ import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/09
+ * @version 0.2.2 2021/10/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -163,7 +165,11 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
     @Override
     public void openFile() {
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-        fileModule.getFileActions().openFile(getActiveFile(), fileTypes);
+        FileActionsApi fileActions = fileModule.getFileActions();
+        FileActionsApi.OpenFileResult openFileResult = fileActions.showOpenFileDialog(fileTypes);
+        if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
+            openFile(openFileResult.selectedFile.toURI(), openFileResult.fileType);
+        }
     }
 
     @Override
@@ -213,7 +219,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
 
     @Override
     public void setActiveEditor(EditorProvider editorProvider) {
-        
+
     }
 
     @Override
@@ -223,7 +229,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinaryEdi
 
     @Override
     public void closeFile(FileHandlerApi file) {
-        
+
     }
 
     @Override

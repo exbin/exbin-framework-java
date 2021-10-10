@@ -15,13 +15,15 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import java.io.File;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for file handling actions.
  *
- * @version 0.2.2 2021/10/09
+ * @version 0.2.2 2021/10/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -48,4 +50,25 @@ public interface FileActionsApi {
      * @return true if allowed
      */
     boolean overwriteFile();
+
+    @Nonnull
+    OpenFileResult showOpenFileDialog(FileTypes fileTypes);
+
+    @Nonnull
+    OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile);
+
+    @Nonnull
+    OpenFileResult showSaveFileDialog(FileTypes fileTypes);
+
+    @Nonnull
+    OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile);
+
+    public class OpenFileResult {
+
+        public int dialogResult;
+        @Nullable
+        public File selectedFile;
+        @Nullable
+        public FileType fileType;
+    }
 }

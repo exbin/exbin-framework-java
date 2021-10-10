@@ -296,7 +296,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private EditorProvider createMultiEditorProvider() {
         if (editorProvider == null) {
-            GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
+//            GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
 //            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryMultiEditorProvider(application, resourceBundle);
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
