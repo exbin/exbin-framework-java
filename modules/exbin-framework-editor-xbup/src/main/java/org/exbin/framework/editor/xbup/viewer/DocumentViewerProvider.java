@@ -40,7 +40,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.editor.xbup.action.CopyItemAction;
 import org.exbin.framework.editor.xbup.action.CutItemAction;
 import org.exbin.framework.editor.xbup.action.DeleteItemAction;

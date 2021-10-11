@@ -68,6 +68,7 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
         componentPanel = new BinEdComponentPanel();
         undoHandler = new CodeAreaUndoHandler(componentPanel.getCodeArea());
         componentPanel.setUndoHandler(undoHandler);
+        // TODO componentPanel.setPopupMenu(menu);
         init();
     }
 
@@ -333,6 +334,7 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
         return componentPanel;
     }
 
+    @Nonnull
     @Override
     public Optional<FileType> getFileType() {
         return Optional.empty();
@@ -437,11 +439,13 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
         componentPanel.setUpdateListener(updateListener);
     }
 
+    @Nonnull
     @Override
     public Font getCurrentFont() {
         return componentPanel.getCurrentFont();
     }
 
+    @Nonnull
     @Override
     public Font getDefaultFont() {
         return componentPanel.getDefaultFont();

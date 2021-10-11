@@ -80,7 +80,7 @@ public class PrintAction extends AbstractAction {
                 job.print();
 //                }
             } catch (PrinterException ex) {
-                Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PrintAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

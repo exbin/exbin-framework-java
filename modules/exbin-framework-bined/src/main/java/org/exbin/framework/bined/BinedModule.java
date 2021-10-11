@@ -98,7 +98,6 @@ import org.exbin.framework.editor.text.gui.AddEncodingPanel;
 import org.exbin.framework.editor.text.options.gui.TextEncodingOptionsPanel;
 import org.exbin.framework.editor.text.options.gui.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
-import org.exbin.framework.gui.editor.tab.api.GuiEditorTabModuleApi;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ComponentPopupEventDispatcher;
@@ -223,7 +222,7 @@ public class BinedModule implements XBApplicationModule {
     public void init(XBModuleHandler application) {
         this.application = (XBApplication) application;
     }
-    
+
     public void initEditorProvider(EditorProviderVariant variant) {
         switch (variant) {
             case SINGLE: {
@@ -1604,13 +1603,7 @@ public class BinedModule implements XBApplicationModule {
     }
 
     private JPopupMenu createPopupMenu(int postfix, ExtCodeArea codeArea) {
-//        getClipboardCodeHandler();
         String popupMenuId = BINARY_POPUP_MENU_ID + "." + postfix;
-//        GuiMenuModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
-//        actionModule.registerMenu(popupMenuId, MODULE_ID);
-//        actionModule.registerClipboardMenuItems(popupMenuId, MODULE_ID, SeparationMode.AROUND);
-//        actionModule.registerMenuItem(popupMenuId, MODULE_ID, clipboardCodeHandler.getCopyAsCodeAction(), new MenuPosition(NextToMode.AFTER, (String) actionModule.getClipboardActions().getCopyAction().getValue(Action.NAME)));
-//        actionModule.registerMenuItem(popupMenuId, MODULE_ID, clipboardCodeHandler.getPasteFromCodeAction(), new MenuPosition(NextToMode.AFTER, (String) actionModule.getClipboardActions().getPasteAction().getValue(Action.NAME)));
 
         JPopupMenu popupMenu = new JPopupMenu() {
             @Override
