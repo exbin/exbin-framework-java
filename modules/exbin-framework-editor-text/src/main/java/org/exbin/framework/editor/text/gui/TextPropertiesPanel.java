@@ -180,10 +180,15 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
     }
 
     public void setDocument(TextEditor textEditor) {
-        FileHandlerApi activeFile = textEditor.getActiveFile();
-        Optional<URI> fileUri = activeFile.getFileUri();
+        Optional<FileHandlerApi> activeFile = textEditor.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+        
+        FileHandlerApi fileHandler = activeFile.get();
+        Optional<URI> fileUri = fileHandler.getFileUri();
         fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
-        TextPanel textPanel = (TextPanel) activeFile.getComponent();
+        TextPanel textPanel = (TextPanel) fileHandler.getComponent();
         Document document = textPanel.getDocument();
         linesCountTextField.setText(Integer.toString(textPanel.getLineCount()));
         charCountTextField.setText(Integer.toString(document.getLength()));

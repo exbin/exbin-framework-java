@@ -16,6 +16,7 @@
 package org.exbin.framework.editor.wave.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -25,6 +26,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
@@ -64,10 +66,13 @@ public class ZoomControlActions {
             normalZoomAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioEditor) {
-                        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
-                        activePanel.scaleAndSeek(1);
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+
+                    AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+                    audioPanel.scaleAndSeek(1);
                 }
             };
             ActionUtils.setupAction(normalZoomAction, resourceBundle, NORMAL_ZOOM_ACTION_ID);
@@ -81,10 +86,13 @@ public class ZoomControlActions {
             zoomUpAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioEditor) {
-                        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
-                        activePanel.scaleAndSeek(activePanel.getScale() / 2);
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+
+                    AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+                    audioPanel.scaleAndSeek(audioPanel.getScale() / 2);
                 }
             };
             ActionUtils.setupAction(zoomUpAction, resourceBundle, ZOOM_UP_ACTION_ID);
@@ -99,10 +107,13 @@ public class ZoomControlActions {
             zoomDownAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioEditor) {
-                        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
-                        activePanel.scaleAndSeek(activePanel.getScale() * 2);
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+
+                    AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+                    audioPanel.scaleAndSeek(audioPanel.getScale() * 2);
                 }
             };
             ActionUtils.setupAction(zoomDownAction, resourceBundle, ZOOM_DOWN_ACTION_ID);

@@ -16,21 +16,22 @@
 package org.exbin.framework.bined.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.bined.BinaryEditorControl;
+import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Clipboard code actions.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.1 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -61,10 +62,12 @@ public class ClipboardCodeActions {
             copyAsCodeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
-                        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
-                        activePanel.performCopyAsCode();
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+                    // TODO move out of code area
+                    ((BinEdFileHandler) activeFile.get()).getCodeArea().copyAsCode();
                 }
             };
             ActionUtils.setupAction(copyAsCodeAction, resourceBundle, COPY_AS_CODE_ACTION_ID);
@@ -78,41 +81,16 @@ public class ClipboardCodeActions {
             pasteFromCodeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
-                        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
-                        activePanel.performPasteFromCode();
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+                    // TODO move out of code area
+                    ((BinEdFileHandler) activeFile.get()).getCodeArea().pasteFromCode();
                 }
             };
             ActionUtils.setupAction(pasteFromCodeAction, resourceBundle, PASTE_FROM_CODE_ACTION_ID);
         }
         return pasteFromCodeAction;
     }
-
-    /*
-    public Action createCopyAsCodeAction(final CodeAreaCore codeArea) {
-        Action action = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                codeArea.copyAsCode();
-            }
-        };
-        ActionUtils.setupAction(action, resourceBundle, "copyAsCodeAction");
-        return action;
-    }
-
-    public Action createPasteFromCodeAction(final CodeAreaCore codeArea) {
-        Action action = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    codeArea.pasteFromCode();
-                } catch (IllegalArgumentException ex) {
-                    JOptionPane.showMessageDialog(codeArea, ex.getMessage(), "Unable to Paste Code", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        };
-        ActionUtils.setupAction(action, resourceBundle, "pasteFromCodeAction");
-        return action;
-    } */
 }

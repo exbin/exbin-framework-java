@@ -17,16 +17,16 @@ package org.exbin.framework.bined.action;
 
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import org.exbin.bined.capability.CaretCapable;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.GoToBinaryPanel;
-import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -34,13 +34,14 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
-import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Go to position action.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.1 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -67,28 +68,32 @@ public class GoToPositionAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof BinaryEditorControl) {
-            final BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
-            final GoToBinaryPanel goToPanel = new GoToBinaryPanel();
-            goToPanel.setCursorPosition(((CaretCapable) activePanel.getCodeArea()).getDataPosition());
-            goToPanel.setMaxPosition(activePanel.getCodeArea().getDataSize());
-            DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
-            JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "", Dialog.ModalityType.APPLICATION_MODAL);
-            WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
-            frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
-            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                if (actionType == ControlActionType.OK) {
-                    goToPanel.acceptInput();
-                    activePanel.goToPosition(goToPanel.getTargetPosition());
-                }
-
-                dialog.close();
-                dialog.dispose();
-            });
-            SwingUtilities.invokeLater(goToPanel::initFocus);
-            dialog.showCentered(editorProvider.getEditorComponent());
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
         }
+
+        ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+        final GoToBinaryPanel goToPanel = new GoToBinaryPanel();
+        goToPanel.setCursorPosition(codeArea.getDataPosition());
+        goToPanel.setMaxPosition(codeArea.getDataSize());
+        DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
+        JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "", Dialog.ModalityType.APPLICATION_MODAL);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == ControlActionType.OK) {
+                goToPanel.acceptInput();
+                codeArea.setCaretPosition(goToPanel.getTargetPosition());
+                codeArea.revealCursor();
+            }
+
+            dialog.close();
+            dialog.dispose();
+        });
+        SwingUtilities.invokeLater(goToPanel::initFocus);
+        dialog.showCentered(editorProvider.getEditorComponent());
     }
 }

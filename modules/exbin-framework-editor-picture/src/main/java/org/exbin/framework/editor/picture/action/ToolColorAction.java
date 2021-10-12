@@ -17,6 +17,7 @@ package org.exbin.framework.editor.picture.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -25,6 +26,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ToolColorPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -62,10 +64,15 @@ public class ToolColorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
 
         final ToolColorPanel toolColorPanel = new ToolColorPanel();
-        ImagePanel imagePanel = (ImagePanel) editorProvider.getActiveFile().getComponent();
         toolColorPanel.setToolColor(imagePanel.getToolColor());
         toolColorPanel.setSelectionColor(imagePanel.getSelectionColor());
         DefaultControlPanel controlPanel = new DefaultControlPanel(toolColorPanel.getResourceBundle());

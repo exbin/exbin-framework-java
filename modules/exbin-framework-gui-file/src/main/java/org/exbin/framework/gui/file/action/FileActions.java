@@ -149,7 +149,7 @@ public class FileActions implements FileActionsApi {
             OpenFileResult openFileResult = showSaveFileDialog(fileTypes);
             if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
                 if (new File(openFileResult.selectedFile.getAbsolutePath()).exists()) {
-                    if (!overwriteFile()) {
+                    if (!showAskToOverwrite()) {
                         return;
                     }
                 }
@@ -175,7 +175,7 @@ public class FileActions implements FileActionsApi {
      * @return true if successful
      */
     @Override
-    public boolean releaseFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
+    public boolean showAskForSaveDialog(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
         if (fileHandler == null) {
             return true;
         }
@@ -212,7 +212,7 @@ public class FileActions implements FileActionsApi {
      * @return true if allowed
      */
     @Override
-    public boolean overwriteFile() {
+    public boolean showAskToOverwrite() {
         Object[] options = {
             resourceBundle.getString("Question.overwrite_save"),
             resourceBundle.getString("Question.modified_cancel")

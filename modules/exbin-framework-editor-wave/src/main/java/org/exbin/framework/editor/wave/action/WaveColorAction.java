@@ -17,6 +17,7 @@ package org.exbin.framework.editor.wave.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -34,6 +35,7 @@ import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlAction
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.editor.wave.service.WaveColorService;
 import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Tools options action handler.
@@ -64,13 +66,19 @@ public class WaveColorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
 
         WaveColorService waveColorService = new WaveColorServiceImpl(editorProvider);
 
         final WaveColorPanel waveColorPanel = new WaveColorPanel();
         waveColorPanel.setWaveColorService(waveColorService);
-        waveColorPanel.setWaveColorsFromArray(((AudioPanel) editorProvider.getActiveFile().getComponent()).getAudioPanelColors());
+        waveColorPanel.setWaveColorsFromArray(audioPanel.getAudioPanelColors());
         DefaultControlPanel controlPanel = new DefaultControlPanel(waveColorPanel.getResourceBundle());
         JPanel dialogPanel = WindowUtils.createDialogPanel(waveColorPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -78,7 +86,7 @@ public class WaveColorAction extends AbstractAction {
         frameModule.setDialogTitle(dialog, waveColorPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == ControlActionType.OK) {
-                ((AudioPanel) editorProvider.getActiveFile().getComponent()).setAudioPanelColors(waveColorPanel.getWaveColorsAsArray());
+                audioPanel.setAudioPanelColors(waveColorPanel.getWaveColorsAsArray());
             }
 
             dialog.close();

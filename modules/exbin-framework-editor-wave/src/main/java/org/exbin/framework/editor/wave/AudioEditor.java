@@ -195,8 +195,8 @@ public class AudioEditor implements EditorProvider {
 
     @Nonnull
     @Override
-    public FileHandlerApi getActiveFile() {
-        return activeFile;
+    public Optional<FileHandlerApi> getActiveFile() {
+        return Optional.of(activeFile);
     }
 
     @Nonnull
@@ -302,6 +302,14 @@ public class AudioEditor implements EditorProvider {
 
     public void setFileType(javax.sound.sampled.AudioFileFormat.Type fileType) {
         this.audioFormatType = fileType;
+    }
+
+    @Override
+    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
+    }
+
+    @Override
+    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
     }
 
     /**

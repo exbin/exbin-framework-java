@@ -18,17 +18,20 @@ package org.exbin.framework.editor.wave.gui;
 import java.net.URI;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sound.sampled.AudioFormat;
 import org.exbin.framework.editor.wave.AudioEditor;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Wave file properties panel.
  *
- * @version 0.2.1 2017/02/18
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PropertiesPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(PropertiesPanel.class);
@@ -150,9 +153,15 @@ public class PropertiesPanel extends javax.swing.JPanel {
     }
 
     public void setDocument(AudioEditor audioEditor) {
-        AudioPanel audioPanel = (AudioPanel) audioEditor.getActiveFile().getComponent();
+        Optional<FileHandlerApi> activeFile = audioEditor.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        FileHandlerApi fileHandler = activeFile.get();
+        AudioPanel audioPanel = (AudioPanel) fileHandler.getComponent();
         if (!audioPanel.isEmpty()) {
-            Optional<URI> fileUri = audioEditor.getActiveFile().getFileUri();
+            Optional<URI> fileUri = fileHandler.getFileUri();
             fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
             waveLengthTextField.setText(audioPanel.getWaveLength());
             AudioFormat waveFormat = audioPanel.getWaveFormat();

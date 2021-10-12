@@ -16,14 +16,15 @@
 package org.exbin.framework.editor.text.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
@@ -35,7 +36,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 @ParametersAreNonnullByDefault
 public class WordWrappingAction extends AbstractAction {
 
-    public static final String ACTION_ID = "viewWordWrapAction";
+    public static final String ACTION_ID = "viewWordWrappingAction";
 
     private EditorProvider editorProvider;
     private XBApplication application;
@@ -55,9 +56,13 @@ public class WordWrappingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof TextEditor) {
-            boolean lineWraping = ((TextPanel) editorProvider.getActiveFile().getComponent()).changeLineWrap();
-            putValue(Action.SELECTED_KEY, lineWraping);
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
         }
+
+        TextPanel textPanel = (TextPanel) activeFile.get().getComponent();
+        boolean lineWraping = textPanel.changeLineWrap();
+        putValue(Action.SELECTED_KEY, lineWraping);
     }
 }

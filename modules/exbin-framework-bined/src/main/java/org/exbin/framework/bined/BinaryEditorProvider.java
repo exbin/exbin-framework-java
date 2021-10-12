@@ -18,20 +18,17 @@ package org.exbin.framework.bined;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.bined.operation.undo.BinaryDataUndoHandler;
-import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -39,15 +36,15 @@ import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/09
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl {
+public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider {
 
     private XBApplication application;
     private BinEdFileHandler activeFile;
-    private FileTypes fileTypes;
+    private final FileTypes fileTypes;
 
     public BinaryEditorProvider(XBApplication application, BinEdFileHandler activeFile) {
         this.application = application;
@@ -72,14 +69,8 @@ public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl
 
     @Nonnull
     @Override
-    public BinEdFileHandler getActiveFile() {
-        return activeFile;
-    }
-
-    @Nonnull
-    @Override
-    public BinEdComponentPanel getComponentPanel() {
-        return (BinEdComponentPanel) activeFile.getComponent();
+    public Optional<FileHandlerApi> getActiveFile() {
+        return Optional.ofNullable(activeFile);
     }
 
     @Nonnull
@@ -114,94 +105,11 @@ public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl
         getEditorComponent().registerEncodingStatus(encodingStatus);
     }
 
-    @Nonnull
-    @Override
-    public ExtendedCodeAreaColorProfile getCurrentColors() {
-        return getEditorComponent().getCurrentColors();
-    }
-
-    @Nonnull
-    @Override
-    public ExtendedCodeAreaColorProfile getDefaultColors() {
-        return getEditorComponent().getDefaultColors();
-    }
-
-    @Override
-    public void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile) {
-        getEditorComponent().setCurrentColors(colorsProfile);
-    }
-
-    @Override
-    public boolean isWordWrapMode() {
-        return getEditorComponent().isWordWrapMode();
-    }
-
-    @Override
-    public void setWordWrapMode(boolean mode) {
-        getEditorComponent().setWordWrapMode(mode);
-    }
-
-    @Nonnull
-    @Override
-    public Charset getCharset() {
-        return getEditorComponent().getCharset();
-    }
-
-    @Override
-    public int getId() {
-        return activeFile.getId();
-    }
-
-    @Override
-    public void setCharset(Charset charset) {
-        getEditorComponent().setCharset(charset);
-    }
-
-    @Override
-    public boolean isShowNonprintables() {
-        return getEditorComponent().isShowNonprintables();
-    }
-
-    @Override
-    public void setShowNonprintables(boolean show) {
-        getEditorComponent().setShowNonprintables(show);
-    }
-
-    @Override
-    public boolean isShowValuesPanel() {
-        return getEditorComponent().isShowValuesPanel();
-    }
-
-    @Override
-    public void setShowValuesPanel(boolean show) {
-        getEditorComponent().setShowValuesPanel(show);
-    }
-
-    @Override
-    public boolean changeLineWrap() {
-        return getEditorComponent().changeLineWrap();
-    }
-
-    @Nonnull
-    @Override
-    public BinaryDataUndoHandler getBinaryUndoHandler() {
-        return getEditorComponent().getUndoHandler();
-    }
-
-    @Nonnull
-    @Override
-    public ExtCodeArea getCodeArea() {
-        return getEditorComponent().getCodeArea();
-    }
-
-    @Override
-    public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-        getEditorComponent().setFileHandlingMode(fileHandlingMode);
-    }
-
     @Override
     public void newFile() {
-        activeFile.newFile();
+        if (releaseAllFiles()) {
+            activeFile.newFile();
+        }
     }
 
     @Override
@@ -211,8 +119,10 @@ public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl
 
     @Override
     public void openFile() {
-        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-        fileModule.getFileActions().openFile(activeFile, fileTypes);
+        if (releaseAllFiles()) {
+            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            fileModule.getFileActions().openFile(activeFile, fileTypes);
+        }
     }
 
     @Override
@@ -243,6 +153,19 @@ public class BinaryEditorProvider implements EditorProvider, BinaryEditorControl
 
     @Override
     public boolean releaseAllFiles() {
-        return activeFile.releaseFile();
+        if (activeFile.isModified()) {
+            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            return fileModule.getFileActions().showAskForSaveDialog(activeFile, fileTypes);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
+    }
+
+    @Override
+    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
     }
 }

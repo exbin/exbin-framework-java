@@ -17,6 +17,7 @@ package org.exbin.framework.editor.wave.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -26,6 +27,7 @@ import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.wave.gui.PropertiesPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -61,21 +63,24 @@ public class PropertiesAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof AudioEditor) {
-            AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-
-            PropertiesPanel propertiesPanel = new PropertiesPanel();
-            propertiesPanel.setDocument((AudioEditor) editorProvider);
-            CloseControlPanel controlPanel = new CloseControlPanel();
-            JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
-
-            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-            WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
-            frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
-            controlPanel.setHandler(dialog::close);
-            dialog.showCentered((Component) e.getSource());
-            dialog.dispose();
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
         }
+
+        AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+
+        PropertiesPanel propertiesPanel = new PropertiesPanel();
+        propertiesPanel.setDocument((AudioEditor) editorProvider);
+        CloseControlPanel controlPanel = new CloseControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
+
+        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
+        controlPanel.setHandler(dialog::close);
+        dialog.showCentered((Component) e.getSource());
+        dialog.dispose();
     }
 }

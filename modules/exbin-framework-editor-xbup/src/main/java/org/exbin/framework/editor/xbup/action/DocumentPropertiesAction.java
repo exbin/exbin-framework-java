@@ -17,6 +17,7 @@ package org.exbin.framework.editor.xbup.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -24,6 +25,7 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.DocumentPropertiesPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -61,7 +63,11 @@ public class DocumentPropertiesAction extends AbstractAction {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         DocumentPropertiesPanel propertiesPanel = new DocumentPropertiesPanel();
         propertiesPanel.setDocument(viewerProvider.getDoc());
-        propertiesPanel.setDocumentUri(viewerProvider.getActiveFile().getFileUri().orElse(null));
+        Optional<FileHandlerApi> activeFile = viewerProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            return;
+        }
+        propertiesPanel.setDocumentUri(activeFile.get().getFileUri().orElse(null));
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);

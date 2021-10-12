@@ -49,7 +49,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.bined.BinaryEditorControl;
+import org.exbin.framework.bined.BinEdEditorProvider;
 
 /**
  * Binary editor provider.

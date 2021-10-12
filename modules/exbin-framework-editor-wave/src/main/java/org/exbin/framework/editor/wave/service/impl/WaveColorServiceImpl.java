@@ -17,15 +17,17 @@ package org.exbin.framework.editor.wave.service.impl;
 
 import org.exbin.framework.editor.wave.service.*;
 import java.awt.Color;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Wave color service.
  *
- * @version 0.2.1 2019/07/13
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -40,17 +42,35 @@ public class WaveColorServiceImpl implements WaveColorService {
     @Nonnull
     @Override
     public Color[] getCurrentWaveColors() {
-        return ((AudioPanel) editorProvider.getActiveFile().getComponent()).getAudioPanelColors();
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+        return audioPanel.getAudioPanelColors();
     }
 
     @Nonnull
     @Override
     public Color[] getDefaultWaveColors() {
-        return ((AudioPanel) editorProvider.getActiveFile().getComponent()).getDefaultColors();
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+        return audioPanel.getDefaultColors();
     }
 
     @Override
     public void setCurrentWaveColors(Color[] colors) {
-        ((AudioPanel) editorProvider.getActiveFile().getComponent()).setAudioPanelColors(colors);
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+        audioPanel.setAudioPanelColors(colors);
     }
 }

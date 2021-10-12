@@ -44,6 +44,7 @@ import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.type.XBData;
@@ -51,7 +52,7 @@ import org.exbin.xbup.core.type.XBData;
 /**
  * File handler for binary editor.
  *
- * @version 0.2.2 2021/09/29
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -66,15 +67,13 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
 
     public BinEdFileHandler() {
         componentPanel = new BinEdComponentPanel();
-        undoHandler = new CodeAreaUndoHandler(componentPanel.getCodeArea());
-        componentPanel.setUndoHandler(undoHandler);
-        // TODO componentPanel.setPopupMenu(menu);
         init();
     }
 
     private void init() {
+        undoHandler = new CodeAreaUndoHandler(componentPanel.getCodeArea());
+        componentPanel.setUndoHandler(undoHandler);
         componentPanel.setFileApi(this);
-        componentPanel.setContentData(new ByteArrayData());
     }
 
     public BinEdFileHandler(int id) {
@@ -96,20 +95,24 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
         }
 
         try {
-            BinaryData oldData = Objects.requireNonNull(componentPanel.getContentData());
+            BinaryData oldData = componentPanel.getContentData();
             FileHandlingMode fileHandlingMode = componentPanel.getFileHandlingMode();
             if (fileHandlingMode == FileHandlingMode.DELTA) {
                 FileDataSource openFileSource = segmentsRepository.openFileSource(file);
                 DeltaDocument document = segmentsRepository.createDocument(openFileSource);
                 componentPanel.setContentData(document);
                 this.fileUri = fileUri;
-                oldData.dispose();
+                if (oldData != null) {
+                    oldData.dispose();
+                }
             } else {
                 try (FileInputStream fileStream = new FileInputStream(file)) {
                     BinaryData data = componentPanel.getContentData();
                     if (!(data instanceof XBData)) {
                         data = new XBData();
-                        oldData.dispose();
+                        if (oldData != null) {
+                            oldData.dispose();
+                        }
                     }
                     ((EditableBinaryData) data).loadFromStream(fileStream);
                     componentPanel.setContentData(data);
@@ -297,32 +300,36 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
             // Switch memory mode
             if (fileUri != null) {
                 // If document is connected to file, attempt to release first if modified and then simply reload
-                if (componentPanel.isModified()) {
-                    if (releaseFile()) {
+                if (isModified()) {
+//                    if (releaseFile()) {
                         loadFromFile(fileUri, null);
                         codeArea.clearSelection();
                         codeArea.setCaretPosition(0);
                         componentPanel.setFileHandlingMode(handlingMode);
-                    }
+//                    }
                 } else {
                     componentPanel.setFileHandlingMode(handlingMode);
                     loadFromFile(fileUri, null);
                 }
             } else {
-                // If document unsaved in memory, switch data in code area
-                BinaryData oldData = Objects.requireNonNull(codeArea.getContentData());
-                if (codeArea.getContentData() instanceof DeltaDocument) {
+                // If document is unsaved in memory, switch data in code area
+                BinaryData oldData = codeArea.getContentData();
+                if (oldData instanceof DeltaDocument) {
                     DeltaDocument document = segmentsRepository.createDocument();
                     document.insert(0, oldData);
                     componentPanel.setContentData(document);
                 } else {
                     XBData data = new XBData();
-                    data.insert(0, codeArea.getContentData());
+                    if (oldData != null) {
+                        data.insert(0, oldData);
+                    }
                     componentPanel.setContentData(data);
                 }
 
                 undoHandler.clear();
-                oldData.dispose();
+                if (oldData != null) {
+                    oldData.dispose();
+                }
                 componentPanel.setFileHandlingMode(handlingMode);
             }
         }
@@ -332,6 +339,11 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
     @Override
     public BinEdComponentPanel getComponent() {
         return componentPanel;
+    }
+
+    @Nonnull
+    public ExtCodeArea getCodeArea() {
+        return componentPanel.getCodeArea();
     }
 
     @Nonnull
@@ -346,7 +358,7 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
 
     @Override
     public boolean isModified() {
-        return componentPanel.isModified();
+        return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();
     }
 
     private void setNewData() {
@@ -373,10 +385,6 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
     @Nonnull
     public CodeAreaUndoHandler getUndoHandler() {
         return undoHandler;
-    }
-
-    public boolean releaseFile() {
-        return componentPanel.releaseFile();
     }
 
     @Override
@@ -416,7 +424,7 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
 
     @Override
     public boolean isEditable() {
-        return componentPanel.isEditable();
+        return getCodeArea().isEditable();
     }
 
     @Override

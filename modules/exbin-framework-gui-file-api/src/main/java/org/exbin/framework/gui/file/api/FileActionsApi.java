@@ -42,14 +42,14 @@ public interface FileActionsApi {
      * @param fileTypes file types handler
      * @return true if successful
      */
-    boolean releaseFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes);
+    boolean showAskForSaveDialog(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes);
 
     /**
      * Asks whether it's allowed to overwrite file.
      *
      * @return true if allowed
      */
-    boolean overwriteFile();
+    boolean showAskToOverwrite();
 
     @Nonnull
     OpenFileResult showOpenFileDialog(FileTypes fileTypes);

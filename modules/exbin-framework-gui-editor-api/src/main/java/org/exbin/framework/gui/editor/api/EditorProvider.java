@@ -17,6 +17,7 @@ package org.exbin.framework.gui.editor.api;
 
 import java.beans.PropertyChangeListener;
 import java.net.URI;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -28,7 +29,7 @@ import org.exbin.framework.gui.file.api.FileOperations;
 /**
  * XBUP framework editor interface.
  *
- * @version 0.2.2 2021/09/28
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -47,8 +48,8 @@ public interface EditorProvider extends FileOperations {
      *
      * @return acftive file
      */
-    @Nullable
-    FileHandlerApi getActiveFile();
+    @Nonnull
+    Optional<FileHandlerApi> getActiveFile();
 
     /**
      * Gets window title related to last opened or saved file.
@@ -60,12 +61,16 @@ public interface EditorProvider extends FileOperations {
     String getWindowTitle(String parentTitle);
 
     /**
-     * Opens file from given filename.
+     * Opens file from given file parameters.
      *
      * @param fileUri file Uri
      * @param fileType file type
      */
     void openFile(URI fileUri, FileType fileType);
+
+    void addActiveFileChangeListener(ActiveFileChangeListener listener);
+
+    void removeActiveFileChangeListener(ActiveFileChangeListener listener);
 
     /**
      * Changes passing listener.
@@ -87,5 +92,13 @@ public interface EditorProvider extends FileOperations {
     public static interface EditorModificationListener {
 
         void modified();
+    }
+
+    /**
+     * Interface for changes of active file in editor listener.
+     */
+    public static interface ActiveFileChangeListener {
+
+        void activeFileChanged(@Nullable FileHandlerApi fileHandler);
     }
 }

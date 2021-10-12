@@ -15,17 +15,19 @@
  */
 package org.exbin.framework.editor.text.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.TextGoToPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -63,8 +65,13 @@ public class GoToLineAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof TextEditor) {
-            final TextPanel activePanel = (TextPanel) editorProvider.getActiveFile().getComponent();
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty())
+            throw new IllegalStateException();
+        
+        Component component = activeFile.get().getComponent();
+        if (component instanceof TextPanel) {
+            final TextPanel activePanel = (TextPanel) component;
             final TextGoToPanel goToPanel = new TextGoToPanel();
             goToPanel.initFocus();
             goToPanel.setMaxLine(activePanel.getLineCount());

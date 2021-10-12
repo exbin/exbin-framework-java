@@ -16,16 +16,17 @@
 package org.exbin.framework.bined.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Show header action.
@@ -52,12 +53,16 @@ public class ShowHeaderAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
-        putValue(Action.SELECTED_KEY, ((BinaryEditorControl) editorProvider).getCodeArea().getLayoutProfile().isShowHeader());
+//        putValue(Action.SELECTED_KEY, ((BinEdEditorProvider) editorProvider).getCodeArea().getLayoutProfile().isShowHeader());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ExtCodeArea codeArea = ((BinaryEditorControl) editorProvider).getCodeArea();
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty())
+            throw new IllegalStateException();
+        
+        ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
         ExtendedCodeAreaLayoutProfile layoutProfile = codeArea.getLayoutProfile();
         layoutProfile.setShowHeader(!codeArea.getLayoutProfile().isShowHeader());
         codeArea.setLayoutProfile(layoutProfile);

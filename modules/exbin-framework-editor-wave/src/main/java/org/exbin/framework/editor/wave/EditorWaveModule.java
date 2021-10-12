@@ -26,6 +26,7 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,11 +63,12 @@ import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.DefaultOptionsPage;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * XBUP audio editor module.
  *
- * @version 0.2.1 2021/09/25
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -178,13 +180,24 @@ public class EditorWaveModule implements XBApplicationModule {
     }
 
     private void updatePositionTime() {
-        audioStatusPanel.setCurrentTime(((AudioPanel) editorProvider.getActiveFile().getComponent()).getPositionTime());
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            return;
+        }
+
+        AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+        audioStatusPanel.setCurrentTime(audioPanel.getPositionTime());
     }
 
     private void updateStatus() {
         updatePositionTime();
 
-        AudioPanel audioPanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            return;
+        }
+
+        AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
         if (audioPanel.getIsPlaying() != playing) {
             playing = !playing;
             audioStatusPanel.setPlayButtonIcon(playing
@@ -198,17 +211,35 @@ public class EditorWaveModule implements XBApplicationModule {
         audioStatusPanel = new AudioStatusPanel(new AudioControlApi() {
             @Override
             public void performPlay() {
-                ((AudioPanel) editorProvider.getActiveFile().getComponent()).performPlay();
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+                audioPanel.performPlay();
             }
 
             @Override
             public void performStop() {
-                ((AudioPanel) editorProvider.getActiveFile().getComponent()).performStop();
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+                audioPanel.performStop();
             }
 
             @Override
             public void setVolume(int volumeLevel) {
-                ((AudioPanel) editorProvider.getActiveFile().getComponent()).setVolume(volumeLevel);
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+                audioPanel.setVolume(volumeLevel);
             }
         });
 

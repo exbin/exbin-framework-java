@@ -16,15 +16,16 @@
 package org.exbin.framework.editor.wave.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
@@ -59,10 +60,13 @@ public class AudioOperationActions {
             audioReverseAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioEditor) {
-                        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
-                        activePanel.performTransformReverse();
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+
+                    AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+                    audioPanel.performTransformReverse();
                 }
             };
             ActionUtils.setupAction(audioReverseAction, resourceBundle, AUDIO_REVERSE_ACTION_ID);

@@ -17,23 +17,25 @@ package org.exbin.framework.bined.action;
 
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.bined.gui.CompareFilesPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Compare files action.
  *
- * @version 0.2.1 2021/09/26
+ * @version 0.2.1 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -65,7 +67,11 @@ public class CompareFilesAction extends AbstractAction {
         JPanel dialogPanel = WindowUtils.createDialogPanel(compareFilesPanel, controlPanel);
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         final WindowUtils.DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "", Dialog.ModalityType.APPLICATION_MODAL);
-        compareFilesPanel.setLeftFile(((BinaryEditorControl) editorProvider).getCodeArea().getContentData());
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isPresent()) {
+            compareFilesPanel.setLeftFile(((BinEdFileHandler) activeFile.get()).getCodeArea().getContentData());
+        }
+
         compareFilesPanel.setControl(new CompareFilesPanel.Control() {
             @Override
             public void openRightFile() {

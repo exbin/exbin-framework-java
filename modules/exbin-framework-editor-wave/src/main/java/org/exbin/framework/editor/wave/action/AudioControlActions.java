@@ -17,6 +17,7 @@ package org.exbin.framework.editor.wave.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,15 +25,15 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Audio control handler.
  *
- * @version 0.2.0 2021/09/25
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -63,10 +64,13 @@ public class AudioControlActions {
             audioPlayAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioEditor) {
-                        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
-                        activePanel.performPlay();
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+
+                    AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+                    audioPanel.performPlay();
                 }
             };
             ActionUtils.setupAction(audioPlayAction, resourceBundle, AUDIO_PLAY_ACTION_ID);
@@ -81,10 +85,13 @@ public class AudioControlActions {
             audioStopAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof AudioEditor) {
-                        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
-                        activePanel.performStop();
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+
+                    AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+                    audioPanel.performStop();
                 }
             };
             ActionUtils.setupAction(audioStopAction, resourceBundle, AUDIO_STOP_ACTION_ID);

@@ -16,18 +16,19 @@
 package org.exbin.framework.bined.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.bined.CodeCharactersCase;
-import org.exbin.bined.capability.CodeCharactersCaseCapable;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.bined.BinaryEditorControl;
+import org.exbin.framework.bined.BinEdEditorProvider;
+import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Hex characters case handler.
@@ -62,8 +63,13 @@ public class HexCharactersCaseActions {
 
     public void setHexCharactersCase(CodeCharactersCase hexCharactersCase) {
         this.hexCharactersCase = hexCharactersCase;
-        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
-        ((CodeCharactersCaseCapable) activePanel.getCodeArea()).setCodeCharactersCase(hexCharactersCase);
+
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        ((BinEdFileHandler) activeFile.get()).getCodeArea().setCodeCharactersCase(hexCharactersCase);
     }
 
     @Nonnull
@@ -72,7 +78,7 @@ public class HexCharactersCaseActions {
             upperHexCharsAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
+                    if (editorProvider instanceof BinEdEditorProvider) {
                         setHexCharactersCase(CodeCharactersCase.UPPER);
                     }
                 }
@@ -91,7 +97,7 @@ public class HexCharactersCaseActions {
             lowerHexCharsAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
+                    if (editorProvider instanceof BinEdEditorProvider) {
                         setHexCharactersCase(CodeCharactersCase.LOWER);
                     }
                 }

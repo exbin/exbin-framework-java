@@ -237,8 +237,8 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     @Nonnull
     @Override
-    public FileHandlerApi getActiveFile() {
-        return activeFile;
+    public Optional<FileHandlerApi> getActiveFile() {
+        return Optional.of(activeFile);
     }
 
     public XBTTreeDocument getDoc() {
@@ -515,6 +515,14 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     @Override
     public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
+    }
+
+    @Override
+    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
     }
 
     @ParametersAreNonnullByDefault

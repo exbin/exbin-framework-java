@@ -206,8 +206,8 @@ public class ImageEditor implements EditorProvider {
 
     @Nonnull
     @Override
-    public FileHandlerApi getActiveFile() {
-        return activeFile;
+    public Optional<FileHandlerApi> getActiveFile() {
+        return Optional.of(activeFile);
     }
 
     @Nonnull
@@ -287,6 +287,14 @@ public class ImageEditor implements EditorProvider {
         this.mouseMotionListener = mouseMotionListener;
         ImagePanel imagePanel = (ImagePanel) activeFile.getComponent();
         imagePanel.attachCaretListener(mouseMotionListener);
+    }
+
+    @Override
+    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
+    }
+
+    @Override
+    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
     }
 
     /**

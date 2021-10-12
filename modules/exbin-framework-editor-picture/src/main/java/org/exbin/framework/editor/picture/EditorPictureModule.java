@@ -24,6 +24,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -46,12 +47,13 @@ import org.exbin.framework.gui.action.api.SeparationMode;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * XBUP picture editor module.
  *
- * @version 0.2.2 2021/10/01
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -153,8 +155,14 @@ public class EditorPictureModule implements XBApplicationModule {
 
     private void updateCurrentPosition() {
         if (imageStatusPanel != null) {
-            Point mousePosition = ((ImagePanel) editorProvider.getActiveFile().getComponent()).getMousePosition();
-            double scale = ((ImagePanel) editorProvider.getActiveFile().getComponent()).getScale();
+            Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+            if (activeFile.isEmpty()) {
+                throw new IllegalStateException();
+            }
+
+            ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
+            Point mousePosition = imagePanel.getMousePosition();
+            double scale = imagePanel.getScale();
             if (mousePosition != null) {
                 imageStatusPanel.setCurrentPosition(new Point((int) (mousePosition.x * scale), (int) (mousePosition.y * scale)));
             }
@@ -172,7 +180,15 @@ public class EditorPictureModule implements XBApplicationModule {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, IMAGE_STATUS_BAR_ID, imageStatusPanel);
         frameModule.switchStatusBar(IMAGE_STATUS_BAR_ID);
-        ((ImagePanel) getEditorProvider().getActiveFile().getComponent()).registerImageStatus(imageStatusPanel);
+
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            return;
+        }
+
+        // TODO support for multi editor
+        ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
+        imagePanel.registerImageStatus(imageStatusPanel);
     }
 
     public void registerPropertiesMenu() {

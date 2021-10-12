@@ -15,16 +15,18 @@
  */
 package org.exbin.framework.editor.text.action;
 
-import org.exbin.framework.editor.text.*;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
 import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -33,9 +35,9 @@ import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.gui.OptionsControlPanel;
 
 /**
- * Tools options action handler.
+ * Text font action handler.
  *
- * @version 0.2.1 2019/07/20
+ * @version 0.2.1 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -61,9 +63,16 @@ public class TextFontAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+        
+        TextFontApi textFontApi = (TextFontApi) activeFile.get().getComponent();
+
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();
-        fontPanel.setStoredFont(((TextFontApi) editorProvider).getCurrentFont());
+        fontPanel.setStoredFont(textFontApi.getCurrentFont());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -76,7 +85,7 @@ public class TextFontAction extends AbstractAction {
                     parameters.setUseDefaultFont(false);
                     parameters.setFont(fontPanel.getStoredFont());
                 }
-                ((TextFontApi) editorProvider).setCurrentFont(fontPanel.getStoredFont());
+                textFontApi.setCurrentFont(fontPanel.getStoredFont());
             }
 
             dialog.close();

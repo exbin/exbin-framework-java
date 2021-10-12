@@ -15,15 +15,17 @@
  */
 package org.exbin.framework.editor.picture.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.picture.ImageEditor;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
@@ -56,9 +58,14 @@ public class PrintAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof ImageEditor) {
-            ImagePanel activePanel = (ImagePanel) editorProvider.getActiveFile().getComponent();
-            activePanel.printFile();
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        Component component = activeFile.get().getComponent();
+        if (component instanceof ImagePanel) {
+            ((ImagePanel) component).printFile();
         }
     }
 }

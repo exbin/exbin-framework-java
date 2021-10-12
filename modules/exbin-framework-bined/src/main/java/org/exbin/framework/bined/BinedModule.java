@@ -24,7 +24,7 @@ import org.exbin.framework.bined.action.CodeTypeActions;
 import org.exbin.framework.bined.action.CodeAreaFontAction;
 import org.exbin.framework.bined.action.ViewModeHandlerActions;
 import org.exbin.framework.bined.action.PrintAction;
-import org.exbin.framework.bined.action.ShowNonprintablesActions;
+import org.exbin.framework.bined.action.ShowUnprintablesActions;
 import org.exbin.framework.bined.action.RowWrappingAction;
 import org.exbin.framework.bined.action.PropertiesAction;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
@@ -43,6 +43,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -154,6 +155,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.EditorProviderVariant;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Binary data editor module.
@@ -173,7 +175,7 @@ public class BinedModule implements XBApplicationModule {
     public static final String HEX_CHARACTERS_CASE_SUBMENU_ID = MODULE_ID + ".hexCharactersCaseSubMenu";
 
     private static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
-    private static final String VIEW_NONPRINTABLES_MENU_GROUP_ID = MODULE_ID + ".viewNonprintablesMenuGroup";
+    private static final String VIEW_UNPRINTABLES_MENU_GROUP_ID = MODULE_ID + ".viewUnprintablesMenuGroup";
     private static final String VIEW_VALUES_PANEL_MENU_GROUP_ID = MODULE_ID + ".viewValuesPanelMenuGroup";
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
     private static final String BINED_TOOL_BAR_GROUP_ID = MODULE_ID + ".binedToolBarGroup";
@@ -196,7 +198,7 @@ public class BinedModule implements XBApplicationModule {
     private DefaultOptionsPage<CodeAreaColorOptionsImpl> colorProfilesOptionsPage;
 
     private FindReplaceActions findReplaceActions;
-    private ShowNonprintablesActions showNonprintablesActions;
+    private ShowUnprintablesActions showUnprintablesActions;
     private ShowValuesPanelAction showValuesPanelAction;
     private CodeAreaFontAction codeAreaFontAction;
     private RowWrappingAction rowWrappingAction;
@@ -268,7 +270,7 @@ public class BinedModule implements XBApplicationModule {
             fileModule.setFileOperations(editorProvider);
 
             panel.setApplication(application);
-            panel.setPopupMenu(createPopupMenu(((BinaryEditorControl) editorProvider).getId(), ((BinaryEditorControl) editorProvider).getCodeArea()));
+            panel.setPopupMenu(createPopupMenu(editorFile.getId(), editorFile.getComponent().getCodeArea()));
             panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
             panel.setGoToPositionAction(getGoToPositionAction());
             panel.setCopyAsCode(getClipboardCodeActions().getCopyAsCodeAction());
@@ -284,9 +286,6 @@ public class BinedModule implements XBApplicationModule {
                     encodingsHandler.popupEncodingsMenu(mouseEvent);
                 }
             });
-            panel.setReleaseFileMethod(() -> {
-                return editorProvider.releaseAllFiles();
-            });
         }
 
         return editorProvider;
@@ -300,9 +299,10 @@ public class BinedModule implements XBApplicationModule {
             editorProvider = new BinaryMultiEditorProvider(application, resourceBundle);
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             fileModule.setFileOperations(editorProvider);
+            ((BinaryMultiEditorProvider) editorProvider).setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
 
             editorProvider.newFile();
-            BinEdFileHandler activeFile = (BinEdFileHandler) editorProvider.getActiveFile();
+            Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
 //            activeFile.setSegmentsRepository(new SegmentsRepository());
 //            activeFile.newFile();
 
@@ -327,7 +327,7 @@ public class BinedModule implements XBApplicationModule {
 //                });
 //            });
             //((BinaryEditorControl) editorProvider).getComponentPanel().setEditorViewHandling(editorTabModule.getEditorViewHandling());
-            activeFile.setSegmentsRepository(new SegmentsRepository());
+//            activeFile.setSegmentsRepository(new SegmentsRepository());
 //            activeFile.init();
             fileModule.setFileOperations(editorProvider);
         }
@@ -355,8 +355,8 @@ public class BinedModule implements XBApplicationModule {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, BINARY_STATUS_BAR_ID, binaryStatusPanel);
         frameModule.switchStatusBar(BINARY_STATUS_BAR_ID);
-        ((BinaryEditorControl) editorProvider).registerBinaryStatus(binaryStatusPanel);
-        ((BinaryEditorControl) editorProvider).registerEncodingStatus(binaryStatusPanel);
+        ((BinEdEditorProvider) editorProvider).registerBinaryStatus(binaryStatusPanel);
+        ((BinEdEditorProvider) editorProvider).registerEncodingStatus(binaryStatusPanel);
         if (encodingsHandler != null) {
             encodingsHandler.setTextEncodingStatus(binaryStatusPanel);
         }
@@ -428,7 +428,12 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void selectedEncodingChanged() {
-                ((BinaryEditorControl) editorProvider).setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                ((BinEdFileHandler) activeFile.get()).getComponent().setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
             }
         });
 
@@ -497,17 +502,32 @@ public class BinedModule implements XBApplicationModule {
         TextFontService textFontService = new TextFontService() {
             @Override
             public Font getCurrentFont() {
-                return ((BinaryEditorControl) editorProvider).getComponentPanel().getCurrentFont();
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                return ((BinEdFileHandler) activeFile.get()).getCurrentFont();
             }
 
             @Override
             public Font getDefaultFont() {
-                return ((BinaryEditorControl) editorProvider).getComponentPanel().getDefaultFont();
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                return ((BinEdFileHandler) activeFile.get()).getDefaultFont();
             }
 
             @Override
             public void setCurrentFont(Font font) {
-                ((BinaryEditorControl) editorProvider).getComponentPanel().setCurrentFont(font);
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                ((BinEdFileHandler) activeFile.get()).setCurrentFont(font);
             }
         };
         textFontOptionsPage = new DefaultOptionsPage<TextFontOptionsImpl>() {
@@ -581,9 +601,15 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(TextFontOptionsImpl options) {
-                ExtCodeArea codeArea = ((BinaryEditorControl) editorProvider).getCodeArea();
-                ((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getFont(CodeAreaPreferences.DEFAULT_FONT));
                 textFontService.setCurrentFont(options.isUseDefaultFont() ? textFontService.getDefaultFont() : options.getFont(textFontService.getDefaultFont()));
+
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    return;
+                }
+
+                ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+                ((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getFont(CodeAreaPreferences.DEFAULT_FONT));
             }
         };
         optionsModule.addOptionsPage(textFontOptionsPage);
@@ -591,7 +617,16 @@ public class BinedModule implements XBApplicationModule {
         EditorOptionsService editorOptionsService = new EditorOptionsService() {
             @Override
             public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-                ((BinaryEditorControl) editorProvider).setFileHandlingMode(fileHandlingMode);
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                BinEdFileHandler fileHandler = (BinEdFileHandler) activeFile.get();
+                throw new UnsupportedOperationException("Not supported yet.");
+//                if (!fileHandler.isModified() || editorProvider.releaseFile(fileHandler)) {
+//                    fileHandler.switchFileHandlingMode(fileHandlingMode);
+//                }
             }
 
             @Override
@@ -601,7 +636,13 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void setEditorHandlingMode(EnterKeyHandlingMode enterKeyHandlingMode) {
-                CodeAreaCommandHandler commandHandler = ((BinaryEditorControl) editorProvider).getCodeArea().getCommandHandler();
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    return;
+                }
+
+                ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+                CodeAreaCommandHandler commandHandler = codeArea.getCommandHandler();
                 ((CodeAreaOperationCommandHandler) commandHandler).setEnterKeyHandlingMode(enterKeyHandlingMode);
             }
         };
@@ -676,14 +717,20 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(CodeAreaOptionsImpl options) {
-                ExtCodeArea codeArea = ((BinaryEditorControl) editorProvider).getCodeArea();
                 codeTypeActions.setCodeType(options.getCodeType());
                 // font
                 //((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getCodeFont());
-                showNonprintablesActions.setShowNonprintables(options.isShowUnprintables());
+                showUnprintablesActions.setShowUnprintables(options.isShowUnprintables());
                 hexCharactersCaseActions.setHexCharactersCase(options.getCodeCharactersCase());
                 positionCodeTypeActions.setCodeType(options.getPositionCodeType());
                 viewModeActions.setViewMode(options.getViewMode());
+
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    return;
+                }
+
+                ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
                 ((ExtendedHighlightNonAsciiCodeAreaPainter) codeArea.getPainter()).setNonAsciiHighlightingEnabled(options.isCodeColorization());
                 // codeArea.setRowWrapping(options.getRowWrappingMode());
                 codeArea.setMaxBytesPerRow(options.getMaxBytesPerRow());
@@ -905,8 +952,14 @@ public class BinedModule implements XBApplicationModule {
             public void applyPreferencesChanges(CodeAreaThemeOptionsImpl options) {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        return;
+                    }
+
+                    ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
                     ExtendedCodeAreaThemeProfile profile = options.getThemeProfile(selectedProfile);
-                    ((BinaryEditorControl) editorProvider).getCodeArea().setThemeProfile(profile);
+                    codeArea.setThemeProfile(profile);
                 }
             }
         };
@@ -1082,8 +1135,14 @@ public class BinedModule implements XBApplicationModule {
             public void applyPreferencesChanges(CodeAreaLayoutOptionsImpl options) {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        return;
+                    }
+
+                    ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
                     ExtendedCodeAreaLayoutProfile profile = options.getLayoutProfile(selectedProfile);
-                    ((BinaryEditorControl) editorProvider).getCodeArea().setLayoutProfile(profile);
+                    codeArea.setLayoutProfile(profile);
                 }
             }
         };
@@ -1258,8 +1317,14 @@ public class BinedModule implements XBApplicationModule {
             public void applyPreferencesChanges(CodeAreaColorOptionsImpl options) {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        return;
+                    }
+
+                    ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
                     ExtendedCodeAreaColorProfile profile = options.getColorsProfile(selectedProfile);
-                    ((BinaryEditorControl) editorProvider).getCodeArea().setColorsProfile(profile);
+                    codeArea.setColorsProfile(profile);
                 }
             }
         };
@@ -1342,14 +1407,14 @@ public class BinedModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public ShowNonprintablesActions getShowNonprintablesActions() {
-        if (showNonprintablesActions == null) {
+    public ShowUnprintablesActions getShowUnprintablesActions() {
+        if (showUnprintablesActions == null) {
             ensureSetup();
-            showNonprintablesActions = new ShowNonprintablesActions();
-            showNonprintablesActions.setup(application, editorProvider, resourceBundle);
+            showUnprintablesActions = new ShowUnprintablesActions();
+            showUnprintablesActions.setup(application, editorProvider, resourceBundle);
         }
 
-        return showNonprintablesActions;
+        return showUnprintablesActions;
     }
 
     @Nonnull
@@ -1511,18 +1576,18 @@ public class BinedModule implements XBApplicationModule {
         actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, codeTypeActions.getCycleCodeTypesAction(), new ToolBarPosition(BINED_TOOL_BAR_GROUP_ID));
     }
 
-    public void registerShowNonprintablesToolBarActions() {
-        getShowNonprintablesActions();
+    public void registerShowUnprintablesToolBarActions() {
+        getShowUnprintablesActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(BINED_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.NONE));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, showNonprintablesActions.getViewNonprintablesToolbarAction(), new ToolBarPosition(BINED_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, showUnprintablesActions.getViewUnprintablesToolbarAction(), new ToolBarPosition(BINED_TOOL_BAR_GROUP_ID));
     }
 
-    public void registerViewNonprintablesMenuActions() {
-        getShowNonprintablesActions();
+    public void registerViewUnprintablesMenuActions() {
+        getShowUnprintablesActions();
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_NONPRINTABLES_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, showNonprintablesActions.getViewNonprintablesAction(), new MenuPosition(VIEW_NONPRINTABLES_MENU_GROUP_ID));
+        actionModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_UNPRINTABLES_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
+        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, showUnprintablesActions.getViewUnprintablesAction(), new MenuPosition(VIEW_UNPRINTABLES_MENU_GROUP_ID));
     }
 
     public void registerViewValuesPanelMenuActions() {
@@ -1602,6 +1667,7 @@ public class BinedModule implements XBApplicationModule {
         actionModule.registerMenuItem(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID, hexCharactersCaseActions.getLowerHexCharsAction(), new MenuPosition(PositionMode.TOP));
     }
 
+    @Nonnull
     private JPopupMenu createPopupMenu(int postfix, ExtCodeArea codeArea) {
         String popupMenuId = BINARY_POPUP_MENU_ID + "." + postfix;
 

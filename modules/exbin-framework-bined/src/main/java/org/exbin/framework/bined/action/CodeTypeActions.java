@@ -18,6 +18,7 @@ package org.exbin.framework.bined.action;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -27,17 +28,17 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPopupMenu;
 import org.exbin.bined.CodeAreaUtils;
 import org.exbin.bined.CodeType;
-import org.exbin.bined.capability.CodeTypeCapable;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.bined.BinaryEditorControl;
+import org.exbin.framework.bined.BinEdEditorProvider;
+import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Code type handler.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.1 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -94,8 +95,11 @@ public class CodeTypeActions {
             default:
                 throw CodeAreaUtils.getInvalidTypeException(codeType);
         }
-        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
-        ((CodeTypeCapable) activePanel.getCodeArea()).setCodeType(codeType);
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty())
+            throw new IllegalStateException();
+        
+        ((BinEdFileHandler) activeFile.get()).getCodeArea().setCodeType(codeType);
         updateCycleButtonName();
     }
 
@@ -109,7 +113,7 @@ public class CodeTypeActions {
             binaryCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
+                    if (editorProvider instanceof BinEdEditorProvider) {
                         setCodeType(CodeType.BINARY);
                     }
                 }
@@ -129,7 +133,7 @@ public class CodeTypeActions {
             octalCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
+                    if (editorProvider instanceof BinEdEditorProvider) {
                         setCodeType(CodeType.OCTAL);
                     }
                 }
@@ -148,7 +152,7 @@ public class CodeTypeActions {
             decimalCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
+                    if (editorProvider instanceof BinEdEditorProvider) {
                         setCodeType(CodeType.DECIMAL);
                     }
                 }
@@ -168,7 +172,7 @@ public class CodeTypeActions {
             hexadecimalCodeTypeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
+                    if (editorProvider instanceof BinEdEditorProvider) {
                         setCodeType(CodeType.HEXADECIMAL);
                     }
                 }
@@ -188,7 +192,7 @@ public class CodeTypeActions {
             cycleCodeTypesAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
+                    if (editorProvider instanceof BinEdEditorProvider) {
                         int codeTypePos = codeType.ordinal();
                         CodeType[] values = CodeType.values();
                         CodeType next = codeTypePos + 1 >= values.length ? values[0] : values[codeTypePos + 1];

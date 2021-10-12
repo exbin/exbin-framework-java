@@ -17,6 +17,7 @@ package org.exbin.framework.editor.text.action;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -34,11 +35,12 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Text color action.
  *
- * @version 0.2.1 2021/09/25
+ * @version 0.2.1 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -68,41 +70,64 @@ public class TextColorAction extends AbstractAction {
         final TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
-                return ((TextPanel) editorProvider.getActiveFile().getComponent()).getCurrentColors();
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                TextPanel textPanel = (TextPanel) activeFile.get().getComponent();
+                return textPanel.getCurrentColors();
             }
 
             @Override
             public Color[] getDefaultTextColors() {
-                return ((TextPanel) editorProvider.getActiveFile().getComponent()).getDefaultColors();
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                TextPanel textPanel = (TextPanel) activeFile.get().getComponent();
+                return textPanel.getDefaultColors();
             }
 
             @Override
             public void setCurrentTextColors(Color[] colors) {
-                ((TextPanel) editorProvider.getActiveFile().getComponent()).setCurrentColors(colors);
+                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                if (activeFile.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+
+                TextPanel textPanel = (TextPanel) activeFile.get().getComponent();
+                textPanel.setCurrentColors(colors);
             }
         };
         final TextColorPanel colorPanel = new TextColorPanel();
+
         colorPanel.setTextColorService(textColorService);
+
         colorPanel.setColorsFromArray(textColorService.getCurrentTextColors());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(colorPanel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+
         WindowUtils.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, colorPanel.getResourceBundle());
-        controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-            if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                    TextColorOptionsImpl options = new TextColorOptionsImpl();
-                    colorPanel.saveToOptions(options);
-                    TextColorPreferences textColorParameters = new TextColorPreferences(application.getAppPreferences());
-                    options.saveToPreferences(textColorParameters);
-                }
-                textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());
-            }
+        controlPanel.setHandler(
+                (OptionsControlHandler.ControlActionType actionType) -> {
+                    if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+                        if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                            TextColorOptionsImpl options = new TextColorOptionsImpl();
+                            colorPanel.saveToOptions(options);
+                            TextColorPreferences textColorParameters = new TextColorPreferences(application.getAppPreferences());
+                            options.saveToPreferences(textColorParameters);
+                        }
+                        textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());
+                    }
 
-            dialog.close();
-            dialog.dispose();
-        });
+                    dialog.close();
+                    dialog.dispose();
+                }
+        );
         dialog.showCentered(frameModule.getFrame());
     }
 }

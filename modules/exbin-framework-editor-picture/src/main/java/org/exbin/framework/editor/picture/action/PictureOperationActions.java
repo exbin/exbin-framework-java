@@ -18,6 +18,7 @@ package org.exbin.framework.editor.picture.action;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -25,10 +26,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.picture.ImageEditor;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ImageResizePanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -69,28 +70,33 @@ public class PictureOperationActions {
             imageResizeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof ImageEditor) {
-                        final ImageResizePanel imageResizePanel = new ImageResizePanel();
-                        imageResizePanel.setResolution(((ImagePanel) editorProvider.getActiveFile().getComponent()).getImageSize());
-                        DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
-                        JPanel dialogPanel = WindowUtils.createDialogPanel(imageResizePanel, controlPanel);
-                        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                        WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
-                        frameModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());
-                        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                            if (actionType == ControlActionType.OK) {
-                                Point point = imageResizePanel.getResolution();
-                                int width = (int) (point.getX());
-                                int height = (int) (point.getY());
-                                ((ImagePanel) editorProvider.getActiveFile().getComponent()).performResize(width, height);
-                            }
-
-                            dialog.close();
-                        });
-                        dialog.showCentered((Component) e.getSource());
-                        dialog.dispose();
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+
+                    ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
+
+                    final ImageResizePanel imageResizePanel = new ImageResizePanel();
+                    imageResizePanel.setResolution(imagePanel.getImageSize());
+                    DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
+                    JPanel dialogPanel = WindowUtils.createDialogPanel(imageResizePanel, controlPanel);
+                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                    WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
+                    frameModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());
+                    controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                        if (actionType == ControlActionType.OK) {
+                            Point point = imageResizePanel.getResolution();
+                            int width = (int) (point.getX());
+                            int height = (int) (point.getY());
+                            imagePanel.performResize(width, height);
+                        }
+
+                        dialog.close();
+                    });
+                    dialog.showCentered((Component) e.getSource());
+                    dialog.dispose();
                 }
             };
 

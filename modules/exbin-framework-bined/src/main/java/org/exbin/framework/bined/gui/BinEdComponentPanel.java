@@ -102,7 +102,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     private PropertyChangeListener propertyChangeListener;
     private CharsetChangeListener charsetChangeListener = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private ReleaseFileMethod releaseFileMethod = null;
     private ModifiedStateListener modifiedChangeListener = null;
 
     public BinEdComponentPanel() {
@@ -222,18 +221,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         codeArea.setShowUnprintables(show);
     }
 
-    public boolean isWordWrapMode() {
-        return false;
-        // TODO codeArea.isWrapMode();
-    }
-
-    public void setWordWrapMode(boolean mode) {
-        // TODO
-//        if (codeArea.isWrapMode() != mode) {
-//            changeLineWrap();
-//        }
-    }
-
     public void findAgain() {
         // TODO hexSearchPanel.f
     }
@@ -261,11 +248,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
 
     public void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile) {
         codeArea.setColorsProfile(colorsProfile);
-    }
-
-    public void goToPosition(long position) {
-        codeArea.setCaretPosition(position);
-        codeArea.revealCursor();
     }
 
     @Override
@@ -344,17 +326,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    public boolean isModified() {
-        return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();
-    }
-
-    public boolean releaseFile() {
-        if (releaseFileMethod != null) {
-            return releaseFileMethod.execute();
-        }
-
-        return true;
-    }
 
     public CodeAreaUndoHandler getUndoHandler() {
         return undoHandler;
@@ -573,10 +544,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         this.pasteFromCode = pasteFromCode;
     }
 
-    public void setReleaseFileMethod(ReleaseFileMethod releaseFileMethod) {
-        this.releaseFileMethod = releaseFileMethod;
-    }
-
     @Nullable
     public BinaryData getContentData() {
         return codeArea.getContentData();
@@ -647,11 +614,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     public interface CharsetChangeListener {
 
         void charsetChanged();
-    }
-
-    public interface ReleaseFileMethod {
-
-        boolean execute();
     }
 
     public interface ModifiedStateListener {

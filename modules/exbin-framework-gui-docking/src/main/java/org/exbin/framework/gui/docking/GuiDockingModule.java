@@ -32,12 +32,14 @@ import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
@@ -160,7 +162,10 @@ public class GuiDockingModule implements GuiDockingModuleApi {
                             CDockable dockable = event.getDockable(i);
                             if (dockable instanceof EditorCDockable) {
                                 EditorProvider editor = (EditorProvider) ((EditorCDockable) dockable).getContent();
-                                multiEditorProvider.closeFile(editor.getActiveFile());
+                                Optional<FileHandlerApi> activeFile = editor.getActiveFile();
+                                if (!activeFile.isEmpty()) {
+                                    multiEditorProvider.closeFile(activeFile.get());
+                                }
                                 removeEditorView(editorProvider);
                             }
                         }

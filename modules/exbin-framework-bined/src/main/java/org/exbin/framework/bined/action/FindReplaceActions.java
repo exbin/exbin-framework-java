@@ -16,6 +16,7 @@
 package org.exbin.framework.bined.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,13 +25,14 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Find/replace actions.
  *
- * @version 0.2.0 2021/09/24
+ * @version 0.2.0 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -63,10 +65,13 @@ public class FindReplaceActions {
             editFindAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
-                        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
-                        activePanel.showSearchPanel(false);
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+
+                    BinEdComponentPanel activePanel = ((BinEdFileHandler) activeFile.get()).getComponent();
+                    activePanel.showSearchPanel(false);
                 }
             };
             ActionUtils.setupAction(editFindAction, resourceBundle, EDIT_FIND_ACTION_ID);
@@ -82,7 +87,12 @@ public class FindReplaceActions {
             editFindAgainAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
+                    }
+
+                    BinEdComponentPanel activePanel = ((BinEdFileHandler) activeFile.get()).getComponent();
                     activePanel.findAgain();
                 }
             };
@@ -98,10 +108,13 @@ public class FindReplaceActions {
             editReplaceAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof BinaryEditorControl) {
-                        BinEdComponentPanel activePanel = ((BinaryEditorControl) editorProvider).getComponentPanel();
-                        activePanel.showSearchPanel(true);
+                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    if (activeFile.isEmpty()) {
+                        throw new IllegalStateException();
                     }
+
+                    BinEdComponentPanel activePanel = ((BinEdFileHandler) activeFile.get()).getComponent();
+                    activePanel.showSearchPanel(true);
                 }
             };
             ActionUtils.setupAction(editReplaceAction, resourceBundle, EDIT_REPLACE_ACTION_ID);

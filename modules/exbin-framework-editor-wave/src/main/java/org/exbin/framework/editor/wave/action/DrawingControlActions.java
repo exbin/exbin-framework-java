@@ -16,6 +16,7 @@
 package org.exbin.framework.editor.wave.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -25,6 +26,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 
@@ -62,8 +64,13 @@ public class DrawingControlActions {
     }
 
     public void setDrawMode(XBWavePanel.DrawMode mode) {
-        AudioPanel activePanel = (AudioPanel) editorProvider.getActiveFile().getComponent();
-        activePanel.setDrawMode(mode);
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
+        audioPanel.setDrawMode(mode);
     }
 
     @Nonnull

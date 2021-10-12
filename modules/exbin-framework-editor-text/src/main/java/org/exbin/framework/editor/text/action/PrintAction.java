@@ -15,21 +15,23 @@
  */
 package org.exbin.framework.editor.text.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Print action.
  *
- * @version 0.2.1 2021/09/25
+ * @version 0.2.1 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -56,9 +58,14 @@ public class PrintAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof TextEditor) {
-            TextPanel activePanel = (TextPanel) editorProvider.getActiveFile().getComponent();
-            activePanel.printFile();
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
+            throw new IllegalStateException();
+        }
+
+        Component component = activeFile.get().getComponent();
+        if (component instanceof TextPanel) {
+            ((TextPanel) component).printFile();
         }
     }
 }

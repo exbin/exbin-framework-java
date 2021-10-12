@@ -21,6 +21,7 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,9 +31,9 @@ import javax.swing.Action;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandlerApi;
 
 /**
  * Print action.
@@ -64,7 +65,11 @@ public class PrintAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ExtCodeArea codeArea = ((BinaryEditorControl) editorProvider).getCodeArea();
+        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty())
+            throw new IllegalStateException();
+        
+        ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
         PrinterJob job = PrinterJob.getPrinterJob();
         if (job.printDialog()) {
             try {

@@ -21,9 +21,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.BinaryEditorControl;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.bined.BinEdEditorProvider;
 
 /**
  * Row wrapping handler.
@@ -34,7 +34,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 @ParametersAreNonnullByDefault
 public class RowWrappingAction extends AbstractAction {
 
-    public static final String ACTION_ID = "viewLineWrapAction";
+    public static final String ACTION_ID = "viewRowWrappingAction";
 
     private EditorProvider editorProvider;
     private XBApplication application;
@@ -54,7 +54,7 @@ public class RowWrappingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        boolean lineWraping = ((BinaryEditorControl) editorProvider).changeLineWrap();
-        putValue(Action.SELECTED_KEY, lineWraping);
+// TODO        boolean lineWraping = ((BinEdEditorProvider) editorProvider).changeLineWrap();
+//        putValue(Action.SELECTED_KEY, lineWraping);
     }
 }

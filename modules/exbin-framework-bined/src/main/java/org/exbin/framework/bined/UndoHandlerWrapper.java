@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.BinaryDataOperationException;
@@ -34,27 +35,39 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Undo handler wrapper.
  *
- * @version 0.2.1 2018/08/10
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UndoHandlerWrapper implements XBUndoHandler {
 
-    private final BinaryDataUndoHandler handler;
+    private BinaryDataUndoHandler handler;
     private final Map<XBUndoUpdateListener, BinaryDataUndoUpdateListener> listenersMap = new HashMap<>();
 
-    public UndoHandlerWrapper(BinaryDataUndoHandler handler) {
-        this.handler = handler;
+    public UndoHandlerWrapper() {
+    }
+
+    public void setHandler(@Nullable BinaryDataUndoHandler newHandler) {
+        if (handler != null) {
+            for (BinaryDataUndoUpdateListener listener : listenersMap.values()) {
+                handler.removeUndoUpdateListener(listener);
+            }
+        }
+        
+        this.handler = newHandler;
+            for (BinaryDataUndoUpdateListener listener : listenersMap.values()) {
+                handler.addUndoUpdateListener(listener);
+            }
     }
 
     @Override
     public boolean canRedo() {
-        return handler.canRedo();
+        return handler != null ? handler.canRedo() : false;
     }
 
     @Override
     public boolean canUndo() {
-        return handler.canUndo();
+        return handler != null ? handler.canUndo() : false;
     }
 
     @Override
@@ -81,36 +94,38 @@ public class UndoHandlerWrapper implements XBUndoHandler {
     @Override
     public List<Command> getCommandList() {
         List<Command> result = new ArrayList<>();
-        handler.getCommandList().forEach((command) -> {
-            result.add(new CommandWrapper(command));
-        });
+        if (handler != null) {
+            handler.getCommandList().forEach((command) -> {
+                result.add(new CommandWrapper(command));
+            });
+        }
 
         return result;
     }
 
     @Override
     public long getCommandPosition() {
-        return handler.getCommandPosition();
+        return handler != null ? handler.getCommandPosition() : 0;
     }
 
     @Override
     public long getMaximumUndo() {
-        return handler.getMaximumUndo();
+        return handler != null ? handler.getMaximumUndo() : 0;
     }
 
     @Override
     public long getSyncPoint() {
-        return handler.getSyncPoint();
+        return handler != null ? handler.getSyncPoint() : 0;
     }
 
     @Override
     public long getUndoMaximumSize() {
-        return handler.getUndoMaximumSize();
+        return handler != null ? handler.getUndoMaximumSize() : 0;
     }
 
     @Override
     public long getUsedSize() {
-        return handler.getUsedSize();
+        return handler != null ? handler.getUsedSize() : 0;
     }
 
     @Override
@@ -162,13 +177,17 @@ public class UndoHandlerWrapper implements XBUndoHandler {
             }
         };
         listenersMap.put(listener, binaryListener);
-        handler.addUndoUpdateListener(binaryListener);
+        if (handler != null) {
+            handler.addUndoUpdateListener(binaryListener);
+        }
     }
 
     @Override
     public void removeUndoUpdateListener(XBUndoUpdateListener listener) {
         BinaryDataUndoUpdateListener binaryListener = listenersMap.remove(listener);
-        handler.removeUndoUpdateListener(binaryListener);
+        if (handler != null) {
+            handler.removeUndoUpdateListener(binaryListener);
+        }
     }
 
     @ParametersAreNonnullByDefault

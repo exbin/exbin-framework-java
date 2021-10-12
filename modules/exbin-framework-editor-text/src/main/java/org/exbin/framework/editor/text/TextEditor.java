@@ -56,7 +56,7 @@ import org.exbin.xbup.core.type.XBEncodingText;
 /**
  * Text editor.
  *
- * @version 0.2.2 2021/10/01
+ * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -242,8 +242,8 @@ public class TextEditor implements EditorProvider {
 
     @Nonnull
     @Override
-    public FileHandlerApi getActiveFile() {
-        return activeFile;
+    public Optional<FileHandlerApi> getActiveFile() {
+        return Optional.of(activeFile);
     }
 
     @Override
@@ -310,6 +310,14 @@ public class TextEditor implements EditorProvider {
     @Override
     public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
+    }
+
+    @Override
+    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
     }
 
     /**
