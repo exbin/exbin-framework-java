@@ -36,7 +36,8 @@ import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlAction
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Go to position action.
@@ -45,7 +46,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class GoToPositionAction extends AbstractAction {
+public class GoToPositionAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "goToPositionAction";
 
@@ -67,8 +68,14 @@ public class GoToPositionAction extends AbstractAction {
     }
 
     @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

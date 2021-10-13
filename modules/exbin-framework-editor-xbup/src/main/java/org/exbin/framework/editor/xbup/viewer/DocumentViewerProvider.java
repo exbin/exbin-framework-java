@@ -49,7 +49,6 @@ import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
 import org.exbin.framework.editor.xbup.gui.XBDocumentPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentTab.ActivationListener;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
@@ -69,6 +68,7 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Viewer provider.
@@ -96,7 +96,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     private XBPluginRepository pluginRepository;
     private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private FileHandlerApi activeFile;
+    private FileHandler activeFile;
 
     public DocumentViewerProvider(XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
@@ -136,7 +136,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         selectedTab = ViewerTab.VIEW;
         activeHandler = treeDocument;
 
-        activeFile = new FileHandlerApi() {
+        activeFile = new FileHandler() {
             private URI fileUri = null;
             private FileType fileType = null;
 
@@ -237,7 +237,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     @Nonnull
     @Override
-    public Optional<FileHandlerApi> getActiveFile() {
+    public Optional<FileHandler> getActiveFile() {
         return Optional.of(activeFile);
     }
 
@@ -515,14 +515,6 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     @Override
     public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
-    }
-
-    @Override
-    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
     }
 
     @ParametersAreNonnullByDefault

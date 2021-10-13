@@ -24,8 +24,8 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Word wrapping action.
@@ -56,7 +56,7 @@ public class WordWrappingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

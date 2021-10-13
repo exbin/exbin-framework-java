@@ -18,6 +18,7 @@ package org.exbin.framework.bined.action;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,7 +29,8 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.bined.BinEdEditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Position code type actions.
@@ -37,7 +39,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class PositionCodeTypeActions {
+public class PositionCodeTypeActions implements FileDependentAction {
 
     public static final String OCTAL_POSITION_CODE_TYPE_ACTION_ID = "octalPositionCodeTypeAction";
     public static final String DECIMAL_POSITION_CODE_TYPE_ACTION_ID = "decimalPositionCodeTypeAction";
@@ -64,16 +66,46 @@ public class PositionCodeTypeActions {
         this.resourceBundle = resourceBundle;
     }
 
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        PositionCodeType activePositionCodeType = activeFile.isPresent() ? ((BinEdFileHandler) activeFile.get()).getCodeArea().getPositionCodeType() : null;
+        if (activePositionCodeType != null) {
+            positionCodeType = activePositionCodeType;
+        }
+
+        if (octalPositionCodeTypeAction != null) {
+            octalPositionCodeTypeAction.setEnabled(activeFile.isPresent());
+            if (activePositionCodeType == PositionCodeType.OCTAL) {
+                octalPositionCodeTypeAction.putValue(Action.SELECTED_KEY, true);
+            }
+        }
+        if (decimalPositionCodeTypeAction != null) {
+            decimalPositionCodeTypeAction.setEnabled(activeFile.isPresent());
+            if (activePositionCodeType == PositionCodeType.DECIMAL) {
+                decimalPositionCodeTypeAction.putValue(Action.SELECTED_KEY, true);
+            }
+        }
+        if (hexadecimalPositionCodeTypeAction != null) {
+            hexadecimalPositionCodeTypeAction.setEnabled(activeFile.isPresent());
+            if (activePositionCodeType == PositionCodeType.HEXADECIMAL) {
+                hexadecimalPositionCodeTypeAction.putValue(Action.SELECTED_KEY, true);
+            }
+        }
+    }
+
     public void setCodeType(PositionCodeType codeType) {
         this.positionCodeType = codeType;
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty())
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
             throw new IllegalStateException();
-        
+        }
+
         ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
         codeArea.setPositionCodeType(codeType);
     }
 
+    @Nonnull
     public Action getOctalCodeTypeAction() {
         if (octalPositionCodeTypeAction == null) {
             octalPositionCodeTypeAction = new AbstractAction() {
@@ -93,6 +125,7 @@ public class PositionCodeTypeActions {
         return octalPositionCodeTypeAction;
     }
 
+    @Nonnull
     public Action getDecimalCodeTypeAction() {
         if (decimalPositionCodeTypeAction == null) {
             decimalPositionCodeTypeAction = new AbstractAction() {
@@ -111,6 +144,7 @@ public class PositionCodeTypeActions {
         return decimalPositionCodeTypeAction;
     }
 
+    @Nonnull
     public Action getHexadecimalCodeTypeAction() {
         if (hexadecimalPositionCodeTypeAction == null) {
             hexadecimalPositionCodeTypeAction = new AbstractAction() {

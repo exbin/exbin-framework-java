@@ -22,11 +22,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Clipboard code actions.
@@ -35,7 +37,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ClipboardCodeActions {
+public class ClipboardCodeActions implements FileDependentAction {
 
     public static final String COPY_AS_CODE_ACTION_ID = "copyAsCodeAction";
     public static final String PASTE_FROM_CODE_ACTION_ID = "pasteFromCodeAction";
@@ -56,13 +58,31 @@ public class ClipboardCodeActions {
         this.resourceBundle = resourceBundle;
     }
 
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        boolean hasSelection = false;
+        boolean canPaste = false;
+        if (activeFile.isPresent()) {
+            ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+            hasSelection = codeArea.hasSelection();
+            canPaste = codeArea.canPaste();
+        }
+        if (copyAsCodeAction != null) {
+            copyAsCodeAction.setEnabled(hasSelection);
+        }
+        if (pasteFromCodeAction != null) {
+            pasteFromCodeAction.setEnabled(canPaste);
+        }
+    }
+
     @Nonnull
     public Action getCopyAsCodeAction() {
         if (copyAsCodeAction == null) {
             copyAsCodeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         throw new IllegalStateException();
                     }
@@ -81,7 +101,7 @@ public class ClipboardCodeActions {
             pasteFromCodeAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         throw new IllegalStateException();
                     }

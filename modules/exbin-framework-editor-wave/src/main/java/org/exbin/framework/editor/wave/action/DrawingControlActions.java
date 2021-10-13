@@ -26,9 +26,9 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.audio.swing.XBWavePanel;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Drawing mode control actions.
@@ -64,7 +64,7 @@ public class DrawingControlActions {
     }
 
     public void setDrawMode(XBWavePanel.DrawMode mode) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

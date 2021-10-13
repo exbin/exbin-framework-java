@@ -28,10 +28,12 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
+import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.gui.undo.api.UndoFileHandler;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Binary editor provider.
@@ -40,7 +42,7 @@ import org.exbin.framework.gui.file.api.GuiFileModuleApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider {
+public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider, UndoFileHandler {
 
     private XBApplication application;
     private BinEdFileHandler activeFile;
@@ -69,7 +71,7 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Nonnull
     @Override
-    public Optional<FileHandlerApi> getActiveFile() {
+    public Optional<FileHandler> getActiveFile() {
         return Optional.ofNullable(activeFile);
     }
 
@@ -138,10 +140,10 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Override
     public void saveFile() {
-        if (activeFile.getFileUri().isEmpty()) {
-            saveAsFile();
-        } else {
+        if (activeFile.getFileUri().isPresent()) {
             activeFile.saveFile();
+        } else {
+            saveAsFile();
         }
     }
 
@@ -161,11 +163,9 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
         return true;
     }
 
+    @Nonnull
     @Override
-    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
-    }
-
-    @Override
-    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
+    public XBUndoHandler getUndoHandler() {
+        return activeFile.getUndoHandler();
     }
 }

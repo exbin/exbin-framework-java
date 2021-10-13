@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Wave color service.
@@ -42,7 +42,7 @@ public class WaveColorServiceImpl implements WaveColorService {
     @Nonnull
     @Override
     public Color[] getCurrentWaveColors() {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }
@@ -54,7 +54,7 @@ public class WaveColorServiceImpl implements WaveColorService {
     @Nonnull
     @Override
     public Color[] getDefaultWaveColors() {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }
@@ -65,7 +65,7 @@ public class WaveColorServiceImpl implements WaveColorService {
 
     @Override
     public void setCurrentWaveColors(Color[] colors) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

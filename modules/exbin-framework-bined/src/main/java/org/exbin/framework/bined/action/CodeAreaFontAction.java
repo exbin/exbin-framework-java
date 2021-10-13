@@ -16,6 +16,7 @@
 package org.exbin.framework.bined.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -25,15 +26,17 @@ import org.exbin.framework.editor.text.action.TextFontAction;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Tools options font action.
  *
- * @version 0.2.1 2021/09/25
+ * @version 0.2.1 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CodeAreaFontAction extends AbstractAction {
+public class CodeAreaFontAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "codeAreaFontAction";
 
@@ -52,6 +55,12 @@ public class CodeAreaFontAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+    }
+
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
     }
 
     @Override

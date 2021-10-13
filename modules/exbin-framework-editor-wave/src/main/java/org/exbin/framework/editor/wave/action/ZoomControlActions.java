@@ -26,8 +26,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Zoom mode control actions.
@@ -66,7 +66,7 @@ public class ZoomControlActions {
             normalZoomAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         throw new IllegalStateException();
                     }
@@ -86,7 +86,7 @@ public class ZoomControlActions {
             zoomUpAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         throw new IllegalStateException();
                     }
@@ -107,7 +107,7 @@ public class ZoomControlActions {
             zoomDownAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         throw new IllegalStateException();
                     }

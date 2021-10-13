@@ -35,7 +35,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
@@ -52,6 +51,7 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Text editor.
@@ -63,7 +63,7 @@ import org.exbin.xbup.core.type.XBEncodingText;
 public class TextEditor implements EditorProvider {
 
     private final TextPanel textPanel = new TextPanel();
-    private FileHandlerApi activeFile;
+    private FileHandler activeFile;
 
     private EditorModificationListener editorModificationListener;
     private PropertyChangeListener propertyChangeListener;
@@ -73,7 +73,7 @@ public class TextEditor implements EditorProvider {
     }
 
     private void init() {
-        activeFile = new FileHandlerApi() {
+        activeFile = new FileHandler() {
             private URI fileUri = null;
             private FileType fileType = null;
 
@@ -242,7 +242,7 @@ public class TextEditor implements EditorProvider {
 
     @Nonnull
     @Override
-    public Optional<FileHandlerApi> getActiveFile() {
+    public Optional<FileHandler> getActiveFile() {
         return Optional.of(activeFile);
     }
 
@@ -310,14 +310,6 @@ public class TextEditor implements EditorProvider {
     @Override
     public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
-    }
-
-    @Override
-    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
     }
 
     /**

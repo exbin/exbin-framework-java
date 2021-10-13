@@ -47,8 +47,8 @@ import org.exbin.framework.gui.action.api.SeparationMode;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * XBUP picture editor module.
@@ -155,7 +155,7 @@ public class EditorPictureModule implements XBApplicationModule {
 
     private void updateCurrentPosition() {
         if (imageStatusPanel != null) {
-            Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+            Optional<FileHandler> activeFile = editorProvider.getActiveFile();
             if (activeFile.isEmpty()) {
                 throw new IllegalStateException();
             }
@@ -181,7 +181,7 @@ public class EditorPictureModule implements XBApplicationModule {
         frameModule.registerStatusBar(MODULE_ID, IMAGE_STATUS_BAR_ID, imageStatusPanel);
         frameModule.switchStatusBar(IMAGE_STATUS_BAR_ID);
 
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             return;
         }

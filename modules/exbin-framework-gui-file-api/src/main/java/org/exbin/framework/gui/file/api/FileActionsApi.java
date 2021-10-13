@@ -29,11 +29,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface FileActionsApi {
 
-    void openFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes);
+    void openFile(@Nullable FileHandler fileHandler, FileTypes fileTypes);
 
-    void saveFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes);
+    void saveFile(@Nullable FileHandler fileHandler, FileTypes fileTypes);
 
-    void saveAsFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes);
+    void saveAsFile(@Nullable FileHandler fileHandler, FileTypes fileTypes);
 
     /**
      * Attempts to release current file and warn if document was modified.
@@ -42,7 +42,7 @@ public interface FileActionsApi {
      * @param fileTypes file types handler
      * @return true if successful
      */
-    boolean showAskForSaveDialog(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes);
+    boolean showAskForSaveDialog(@Nullable FileHandler fileHandler, FileTypes fileTypes);
 
     /**
      * Asks whether it's allowed to overwrite file.

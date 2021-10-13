@@ -42,26 +42,27 @@ import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.bined.gui.BinEdComponentFileApi;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextFontApi;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.type.XBData;
+import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.gui.undo.api.UndoFileHandler;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * File handler for binary editor.
  *
- * @version 0.2.2 2021/10/12
+ * @version 0.2.2 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, ClipboardActionsHandler, TextFontApi {
+public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComponentFileApi, ClipboardActionsHandler, TextFontApi {
 
     private SegmentsRepository segmentsRepository;
 
     private final BinEdComponentPanel componentPanel;
-    private CodeAreaUndoHandler undoHandler;
+    private XBUndoHandler undoHandler;
     private int id = 0;
     private URI fileUri = null;
 
@@ -71,8 +72,7 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
     }
 
     private void init() {
-        undoHandler = new CodeAreaUndoHandler(componentPanel.getCodeArea());
-        componentPanel.setUndoHandler(undoHandler);
+        componentPanel.setUndoHandler(new CodeAreaUndoHandler(componentPanel.getCodeArea()));
         componentPanel.setFileApi(this);
     }
 
@@ -302,10 +302,10 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
                 // If document is connected to file, attempt to release first if modified and then simply reload
                 if (isModified()) {
 //                    if (releaseFile()) {
-                        loadFromFile(fileUri, null);
-                        codeArea.clearSelection();
-                        codeArea.setCaretPosition(0);
-                        componentPanel.setFileHandlingMode(handlingMode);
+                    loadFromFile(fileUri, null);
+                    codeArea.clearSelection();
+                    codeArea.setCaretPosition(0);
+                    componentPanel.setFileHandlingMode(handlingMode);
 //                    }
                 } else {
                     componentPanel.setFileHandlingMode(handlingMode);
@@ -382,9 +382,18 @@ public class BinEdFileHandler implements FileHandlerApi, BinEdComponentFileApi, 
         componentPanel.getCodeArea().requestFocus();
     }
 
-    @Nonnull
-    public CodeAreaUndoHandler getUndoHandler() {
+    @Override
+    public XBUndoHandler getUndoHandler() {
+        if (undoHandler == null) {
+            undoHandler = new UndoHandlerWrapper();
+            ((UndoHandlerWrapper) undoHandler).setHandler(componentPanel.getUndoHandler());
+        }
         return undoHandler;
+    }
+
+    @Nonnull
+    public CodeAreaUndoHandler getCodeAreaUndoHandler() {
+        return componentPanel.getUndoHandler();
     }
 
     @Override

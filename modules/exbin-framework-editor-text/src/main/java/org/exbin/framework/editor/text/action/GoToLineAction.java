@@ -27,13 +27,13 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.gui.TextGoToPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Go to line action.
@@ -65,7 +65,7 @@ public class GoToLineAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty())
             throw new IllegalStateException();
         

@@ -26,16 +26,17 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Show values panel action.
  *
- * @version 0.2.0 2021/10/12
+ * @version 0.2.0 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ShowValuesPanelAction extends AbstractAction {
+public class ShowValuesPanelAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "showValuesPanelAction";
 
@@ -56,8 +57,18 @@ public class ShowValuesPanelAction extends AbstractAction {
     }
 
     @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        Boolean showValuesPanel = activeFile.isPresent() ? ((BinEdFileHandler) activeFile.get()).getComponent().isShowValuesPanel() : null;
+        setEnabled(activeFile.isPresent());
+        if (showValuesPanel != null) {
+            putValue(Action.SELECTED_KEY, showValuesPanel);
+        }
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }
@@ -67,7 +78,7 @@ public class ShowValuesPanelAction extends AbstractAction {
     }
 
     public void setShowValuesPanel(boolean show) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

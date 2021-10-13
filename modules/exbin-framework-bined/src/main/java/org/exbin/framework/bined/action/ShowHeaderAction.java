@@ -20,22 +20,24 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Show header action.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.1 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ShowHeaderAction extends AbstractAction {
+public class ShowHeaderAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "showHeaderAction";
 
@@ -53,15 +55,24 @@ public class ShowHeaderAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
-//        putValue(Action.SELECTED_KEY, ((BinEdEditorProvider) editorProvider).getCodeArea().getLayoutProfile().isShowHeader());
+    }
+
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
+        if (activeFile.isPresent()) {
+            putValue(Action.SELECTED_KEY, ((BinEdFileHandler) activeFile.get()).getCodeArea().getLayoutProfile().isShowHeader());
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty())
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
             throw new IllegalStateException();
-        
+        }
+
         ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
         ExtendedCodeAreaLayoutProfile layoutProfile = codeArea.getLayoutProfile();
         layoutProfile.setShowHeader(!codeArea.getLayoutProfile().isShowHeader());

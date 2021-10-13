@@ -33,16 +33,17 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.bined.BinEdEditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Code type handler.
  *
- * @version 0.2.1 2021/10/12
+ * @version 0.2.1 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CodeTypeActions {
+public class CodeTypeActions implements FileDependentAction {
 
     public static final String BINARY_CODE_TYPE_ACTION_ID = "binaryCodeTypeAction";
     public static final String OCTAL_CODE_TYPE_ACTION_ID = "octalCodeTypeAction";
@@ -73,6 +74,31 @@ public class CodeTypeActions {
         this.resourceBundle = resourceBundle;
     }
 
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        CodeType activeCodeType = activeFile.isPresent() ? ((BinEdFileHandler) activeFile.get()).getCodeArea().getCodeType() : null;
+        if (activeCodeType != null) {
+            setCodeType(activeCodeType);
+        }
+
+        if (binaryCodeTypeAction != null) {
+            binaryCodeTypeAction.setEnabled(activeFile.isPresent());
+        }
+        if (octalCodeTypeAction != null) {
+            octalCodeTypeAction.setEnabled(activeFile.isPresent());
+        }
+        if (decimalCodeTypeAction != null) {
+            decimalCodeTypeAction.setEnabled(activeFile.isPresent());
+        }
+        if (hexadecimalCodeTypeAction != null) {
+            hexadecimalCodeTypeAction.setEnabled(activeFile.isPresent());
+        }
+        if (cycleCodeTypesAction != null) {
+            cycleCodeTypesAction.setEnabled(activeFile.isPresent());
+        }
+    }
+
     public void setCodeType(CodeType codeType) {
         this.codeType = codeType;
         switch (codeType) {
@@ -95,10 +121,11 @@ public class CodeTypeActions {
             default:
                 throw CodeAreaUtils.getInvalidTypeException(codeType);
         }
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty())
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
             throw new IllegalStateException();
-        
+        }
+
         ((BinEdFileHandler) activeFile.get()).getCodeArea().setCodeType(codeType);
         updateCycleButtonName();
     }

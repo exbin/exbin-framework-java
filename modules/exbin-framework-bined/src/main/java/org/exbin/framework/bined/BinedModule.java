@@ -155,12 +155,14 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.EditorProviderVariant;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.editor.api.MultiEditorProvider;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2021/10/09
+ * @version 0.2.1 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -301,8 +303,12 @@ public class BinedModule implements XBApplicationModule {
             fileModule.setFileOperations(editorProvider);
             ((BinaryMultiEditorProvider) editorProvider).setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
 
+            ((MultiEditorProvider) editorProvider).addActiveFileChangeListener(e -> {
+                updateActionStatus();
+            });
+
             editorProvider.newFile();
-            Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+            Optional<FileHandler> activeFile = editorProvider.getActiveFile();
 //            activeFile.setSegmentsRepository(new SegmentsRepository());
 //            activeFile.newFile();
 
@@ -335,9 +341,24 @@ public class BinedModule implements XBApplicationModule {
         return editorProvider;
     }
 
+    private void updateActionStatus() {
+        FileDependentAction[] fileDepActions = new FileDependentAction[]{
+            findReplaceActions, showUnprintablesActions, showValuesPanelAction, codeAreaFontAction, rowWrappingAction,
+            goToPositionAction, propertiesAction, printAction, viewModeActions, showRowPositionAction, showHeaderAction,
+            insertDataAction, codeTypeActions, positionCodeTypeActions, hexCharactersCaseActions, clipboardCodeActions
+        };
+
+        for (int i = 0; i < fileDepActions.length; i++) {
+            FileDependentAction fileDepAction = fileDepActions[i];
+            if (fileDepAction != null) {
+                fileDepAction.updateForActiveFile();
+            }
+        }
+    }
+
     @Nonnull
     public EditorProvider getEditorProvider() {
-        return editorProvider;
+        return Objects.requireNonNull(editorProvider, "Editor provider was not yet initialized");
     }
 
     private void ensureSetup() {
@@ -428,7 +449,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void selectedEncodingChanged() {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }
@@ -502,7 +523,7 @@ public class BinedModule implements XBApplicationModule {
         TextFontService textFontService = new TextFontService() {
             @Override
             public Font getCurrentFont() {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }
@@ -512,7 +533,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public Font getDefaultFont() {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }
@@ -522,7 +543,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void setCurrentFont(Font font) {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }
@@ -603,7 +624,7 @@ public class BinedModule implements XBApplicationModule {
             public void applyPreferencesChanges(TextFontOptionsImpl options) {
                 textFontService.setCurrentFont(options.isUseDefaultFont() ? textFontService.getDefaultFont() : options.getFont(textFontService.getDefaultFont()));
 
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     return;
                 }
@@ -617,7 +638,7 @@ public class BinedModule implements XBApplicationModule {
         EditorOptionsService editorOptionsService = new EditorOptionsService() {
             @Override
             public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }
@@ -636,7 +657,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void setEditorHandlingMode(EnterKeyHandlingMode enterKeyHandlingMode) {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     return;
                 }
@@ -725,7 +746,7 @@ public class BinedModule implements XBApplicationModule {
                 positionCodeTypeActions.setCodeType(options.getPositionCodeType());
                 viewModeActions.setViewMode(options.getViewMode());
 
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     return;
                 }
@@ -952,7 +973,7 @@ public class BinedModule implements XBApplicationModule {
             public void applyPreferencesChanges(CodeAreaThemeOptionsImpl options) {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         return;
                     }
@@ -1135,7 +1156,7 @@ public class BinedModule implements XBApplicationModule {
             public void applyPreferencesChanges(CodeAreaLayoutOptionsImpl options) {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         return;
                     }
@@ -1317,7 +1338,7 @@ public class BinedModule implements XBApplicationModule {
             public void applyPreferencesChanges(CodeAreaColorOptionsImpl options) {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         return;
                     }

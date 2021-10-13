@@ -28,16 +28,17 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.bined.BinEdEditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Hex characters case handler.
  *
- * @version 0.2.1 2021/09/24
+ * @version 0.2.1 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class HexCharactersCaseActions {
+public class HexCharactersCaseActions implements FileDependentAction {
 
     public static final String UPPER_HEX_CHARACTERS_ACTION_ID = "upperHexCharactersAction";
     public static final String LOWER_HEX_CHARACTERS_ACTION_ID = "lowerHexCharactersAction";
@@ -61,10 +62,29 @@ public class HexCharactersCaseActions {
         this.resourceBundle = resourceBundle;
     }
 
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        CodeCharactersCase codeCharactersCase = activeFile.isPresent() ? ((BinEdFileHandler) activeFile.get()).getCodeArea().getCodeCharactersCase() : null;
+
+        if (upperHexCharsAction != null) {
+            upperHexCharsAction.setEnabled(activeFile.isPresent());
+            if (codeCharactersCase == CodeCharactersCase.UPPER) {
+                upperHexCharsAction.putValue(Action.SELECTED_KEY, true);
+            }
+        }
+        if (lowerHexCharsAction != null) {
+            lowerHexCharsAction.setEnabled(activeFile.isPresent());
+            if (codeCharactersCase == CodeCharactersCase.LOWER) {
+                lowerHexCharsAction.putValue(Action.SELECTED_KEY, true);
+            }
+        }
+    }
+
     public void setHexCharactersCase(CodeCharactersCase hexCharactersCase) {
         this.hexCharactersCase = hexCharactersCase;
 
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

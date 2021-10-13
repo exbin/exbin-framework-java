@@ -25,8 +25,8 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Audio operation actions.
@@ -60,7 +60,7 @@ public class AudioOperationActions {
             audioReverseAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         throw new IllegalStateException();
                     }

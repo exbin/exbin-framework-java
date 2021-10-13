@@ -33,7 +33,6 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.xbup.audio.wave.XBWave;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
@@ -51,6 +50,7 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Audio editor.
@@ -64,7 +64,7 @@ public class AudioEditor implements EditorProvider {
     private javax.sound.sampled.AudioFileFormat.Type audioFormatType = null;
 
     private AudioPanel audioPanel;
-    private FileHandlerApi activeFile;
+    private FileHandler activeFile;
     private JPopupMenu popupMenu;
     private MouseMotionListener mouseMotionListener;
     private AudioPanel.StatusChangeListener statusChangeListener;
@@ -76,7 +76,7 @@ public class AudioEditor implements EditorProvider {
     }
     
     private void init() {
-        activeFile = new FileHandlerApi() {
+        activeFile = new FileHandler() {
             private URI fileUri = null;
             private FileType fileType = null;
             private String ext;
@@ -195,7 +195,7 @@ public class AudioEditor implements EditorProvider {
 
     @Nonnull
     @Override
-    public Optional<FileHandlerApi> getActiveFile() {
+    public Optional<FileHandler> getActiveFile() {
         return Optional.of(activeFile);
     }
 
@@ -302,14 +302,6 @@ public class AudioEditor implements EditorProvider {
 
     public void setFileType(javax.sound.sampled.AudioFileFormat.Type fileType) {
         this.audioFormatType = fileType;
-    }
-
-    @Override
-    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
-    }
-
-    @Override
-    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
     }
 
     /**

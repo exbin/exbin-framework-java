@@ -26,7 +26,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Show unprintables actions.
@@ -35,7 +36,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ShowUnprintablesActions {
+public class ShowUnprintablesActions implements FileDependentAction {
 
     public static final String VIEW_UNPRINTABLES_ACTION_ID = "viewUnprintablesAction";
     public static final String VIEW_UNPRINTABLES_TOOLBAR_ACTION_ID = "viewUnprintablesToolbarAction";
@@ -56,8 +57,27 @@ public class ShowUnprintablesActions {
         this.resourceBundle = resourceBundle;
     }
 
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        Boolean showUnprintables = activeFile.isPresent() ? ((BinEdFileHandler) activeFile.get()).getCodeArea().isShowUnprintables() : null;
+        
+        if (viewUnprintablesAction != null) {
+            viewUnprintablesAction.setEnabled(activeFile.isPresent());
+            if (showUnprintables != null) {
+                viewUnprintablesAction.putValue(Action.SELECTED_KEY, showUnprintables);
+            }    
+        }
+        if (viewUnprintablesToolbarAction != null) {
+            viewUnprintablesToolbarAction.setEnabled(activeFile.isPresent());
+            if (showUnprintables != null) {
+                viewUnprintablesToolbarAction.putValue(Action.SELECTED_KEY, showUnprintables);
+            }    
+        }
+    }
+
     public void setShowUnprintables(boolean showUnprintables) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }
@@ -94,7 +114,7 @@ public class ShowUnprintablesActions {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }

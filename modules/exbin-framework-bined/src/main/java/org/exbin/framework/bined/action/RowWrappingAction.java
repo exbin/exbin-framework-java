@@ -16,14 +16,15 @@
 package org.exbin.framework.bined.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.bined.BinEdEditorProvider;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Row wrapping handler.
@@ -32,7 +33,7 @@ import org.exbin.framework.bined.BinEdEditorProvider;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class RowWrappingAction extends AbstractAction {
+public class RowWrappingAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "viewRowWrappingAction";
 
@@ -50,6 +51,12 @@ public class RowWrappingAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
+    }
+
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
     }
 
     @Override

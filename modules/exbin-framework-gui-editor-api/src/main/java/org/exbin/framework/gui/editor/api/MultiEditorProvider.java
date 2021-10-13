@@ -16,12 +16,12 @@
 package org.exbin.framework.gui.editor.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Framework multitab editor interface.
  *
- * @version 0.2.2 2021/10/05
+ * @version 0.2.2 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -35,6 +35,20 @@ public interface MultiEditorProvider extends EditorProvider {
     void setActiveEditor(EditorProvider editorProvider);
 
     /**
+     * Adds active file change listener.
+     *
+     * @param listener listener
+     */
+    void addActiveFileChangeListener(ActiveFileChangeListener listener);
+
+    /**
+     * Removes active file change listener.
+     *
+     * @param listener listener
+     */
+    void removeActiveFileChangeListener(ActiveFileChangeListener listener);
+
+    /**
      * Closes active file.
      */
     void closeFile();
@@ -44,5 +58,5 @@ public interface MultiEditorProvider extends EditorProvider {
      *
      * @param file file handler
      */
-    void closeFile(FileHandlerApi file);
+    void closeFile(FileHandler file);
 }

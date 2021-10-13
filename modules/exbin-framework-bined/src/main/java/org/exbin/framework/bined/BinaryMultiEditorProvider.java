@@ -36,31 +36,40 @@ import javax.swing.JPopupMenu;
 import javax.swing.JViewport;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import org.exbin.bined.CodeAreaCaretPosition;
 import org.exbin.bined.CodeAreaUtils;
+import org.exbin.bined.EditMode;
+import org.exbin.bined.EditOperation;
+import org.exbin.bined.SelectionRange;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
+import org.exbin.framework.gui.editor.MultiEditorUndoHandler;
 import org.exbin.framework.gui.editor.action.CloseFileAction;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.gui.MultiEditorPanel;
 import org.exbin.framework.gui.file.api.FileActionsApi;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
+import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.gui.undo.api.UndoFileHandler;
+import org.exbin.xbup.operation.Command;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/12
+ * @version 0.2.2 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEditorProvider {
+public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEditorProvider, UndoFileHandler {
 
     private XBApplication application;
     private FileTypes fileTypes;
@@ -74,6 +83,9 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     private JPopupMenu codeAreaPopupMenu;
     private PropertyChangeListener propertyChangeListener;
     private EditorModificationListener editorModificationListener;
+    private BinaryStatusApi binaryStatusApi;
+    private TextEncodingStatusApi textEncodingStatusApi;
+    private MultiEditorUndoHandler undoHandler = new MultiEditorUndoHandler();
 
     public BinaryMultiEditorProvider(XBApplication application, ResourceBundle resourceBundle) {
         init(application, resourceBundle);
@@ -84,11 +96,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         multiEditorPanel.setControl(new MultiEditorPanel.Control() {
             @Override
             public void activeIndexChanged(int index) {
-                FileHandlerApi activeFile = multiEditorPanel.getActiveFile();
-
-                for (ActiveFileChangeListener listener : activeFileChangeListeners) {
-                    listener.activeFileChanged(activeFile);
-                }
+                activeFileChanged();
             }
 
             @Override
@@ -98,7 +106,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
                 CloseFileAction closeFileAction = (CloseFileAction) editorModule.getCloseFileAction();
                 JMenuItem closeMenuItem = new JMenuItem(closeFileAction);
                 closeMenuItem.addActionListener((ActionEvent e) -> {
-                    FileHandlerApi fileHandler = multiEditorPanel.getFileHandler(index);
+                    FileHandler fileHandler = multiEditorPanel.getFileHandler(index);
                     if (releaseFile(fileHandler)) {
                         multiEditorPanel.removeFileHandler(fileHandler);
                         closeFile(fileHandler);
@@ -128,7 +136,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     @Nonnull
     @Override
-    public Optional<FileHandlerApi> getActiveFile() {
+    public Optional<FileHandler> getActiveFile() {
         return Optional.ofNullable(multiEditorPanel.getActiveFile());
     }
 
@@ -153,13 +161,13 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Nonnull
     @Override
     public String getWindowTitle(String parentTitle) {
-        FileHandlerApi activeFile = multiEditorPanel.getActiveFile();
+        FileHandler activeFile = multiEditorPanel.getActiveFile();
         return activeFile == null ? "" : ((BinEdFileHandler) activeFile).getWindowTitle(parentTitle);
     }
 
     @Nullable
     private BinEdComponentPanel getComponent() {
-        FileHandlerApi activeFile = multiEditorPanel.getActiveFile();
+        FileHandler activeFile = multiEditorPanel.getActiveFile();
         return activeFile == null ? null : (BinEdComponentPanel) activeFile.getComponent();
     }
 
@@ -167,7 +175,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     public void newFile() {
         int fileIndex = ++lastIndex;
         newFilesMap.put(fileIndex, ++lastNewFileIndex);
-        BinEdFileHandler newFile = new BinEdFileHandler(fileIndex);
+        BinEdFileHandler newFile = createFileHandler(fileIndex);
         newFile.newFile();
         setupFile(newFile);
         multiEditorPanel.addFileHandler(newFile, getFileName(newFile));
@@ -175,10 +183,29 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     @Override
     public void openFile(URI fileUri, FileType fileType) {
-        BinEdFileHandler file = new BinEdFileHandler(++lastIndex);
+        BinEdFileHandler file = createFileHandler(++lastIndex);
         file.loadFromFile(fileUri, fileType);
         setupFile(file);
         multiEditorPanel.addFileHandler(file, file.getFileName().orElse(""));
+    }
+
+    @Nonnull
+    private BinEdFileHandler createFileHandler(int id) {
+        BinEdFileHandler fileHandler = new BinEdFileHandler(id);
+        fileHandler.getComponent().registerBinaryStatus(new BinaryStatusWrapper());
+        fileHandler.getComponent().registerEncodingStatus(new TextEncodingStatusWrapper());
+        fileHandler.getUndoHandler().addUndoUpdateListener(new XBUndoUpdateListener() {
+            @Override
+            public void undoCommandPositionChanged() {
+                undoHandler.notifyUndoUpdate();
+            }
+
+            @Override
+            public void undoCommandAdded(Command cmnd) {
+                undoHandler.notifyUndoCommandAdded(cmnd);
+            }
+        });
+        return fileHandler;
     }
 
     @Override
@@ -204,27 +231,36 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     @Override
     public void saveFile() {
-        FileHandlerApi activeFile = multiEditorPanel.getActiveFile();
+        FileHandler activeFile = multiEditorPanel.getActiveFile();
         if (activeFile == null) {
             throw new IllegalStateException();
         }
 
-        if (activeFile.getFileUri().isEmpty()) {
-            saveAsFile();
-        } else {
+        if (activeFile.getFileUri().isPresent()) {
             ((BinEdFileHandler) activeFile).saveFile();
+        } else {
+            saveAsFile();
         }
     }
 
     @Override
     public void saveAsFile() {
-        FileHandlerApi activeFile = multiEditorPanel.getActiveFile();
+        FileHandler activeFile = multiEditorPanel.getActiveFile();
         if (activeFile == null) {
             throw new IllegalStateException();
         }
 
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
         fileModule.getFileActions().saveAsFile(activeFile, fileTypes);
+    }
+
+    private void activeFileChanged() {
+        FileHandler activeFile = multiEditorPanel.getActiveFile();
+        undoHandler.setActiveFile(activeFile);
+
+        for (ActiveFileChangeListener listener : activeFileChangeListeners) {
+            listener.activeFileChanged(activeFile);
+        }
     }
 
     @Override
@@ -241,7 +277,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean releaseFile(FileHandlerApi fileHandler) {
+    public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes);
@@ -251,7 +287,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     }
 
     @Nonnull
-    private String getFileName(FileHandlerApi fileHandler) {
+    private String getFileName(FileHandler fileHandler) {
         Optional<String> fileName = fileHandler.getFileName();
         if (!fileName.isPresent()) {
             return "New File " + newFilesMap.get(fileHandler.getId());
@@ -267,7 +303,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     @Override
     public void closeFile() {
-        FileHandlerApi activeFile = multiEditorPanel.getActiveFile();
+        FileHandler activeFile = multiEditorPanel.getActiveFile();
         if (activeFile == null) {
             throw new IllegalStateException();
         }
@@ -276,18 +312,18 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     }
 
     @Override
-    public void closeFile(FileHandlerApi file) {
+    public void closeFile(FileHandler file) {
 
     }
 
     @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
-        getComponent().registerBinaryStatus(binaryStatus);
+        this.binaryStatusApi = binaryStatus;
     }
 
     @Override
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatus) {
-        getComponent().registerEncodingStatus(encodingStatus);
+        this.textEncodingStatusApi = encodingStatus;
     }
 
     @Override
@@ -298,6 +334,12 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Override
     public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
         activeFileChangeListeners.remove(listener);
+    }
+
+    @Nonnull
+    @Override
+    public XBUndoHandler getUndoHandler() {
+        return undoHandler;
     }
 
     public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler) {
@@ -345,5 +387,70 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             };
         }
         newFile.getComponent().getCodeArea().setComponentPopupMenu(codeAreaPopupMenu);
+    }
+
+    @ParametersAreNonnullByDefault
+    private class BinaryStatusWrapper implements BinaryStatusApi {
+
+        @Override
+        public void setCursorPosition(CodeAreaCaretPosition cursorPosition) {
+            if (binaryStatusApi != null) {
+                binaryStatusApi.setCursorPosition(cursorPosition);
+            }
+        }
+
+        @Override
+        public void setSelectionRange(SelectionRange selectionRange) {
+            if (binaryStatusApi != null) {
+                binaryStatusApi.setSelectionRange(selectionRange);
+            }
+        }
+
+        @Override
+        public void setEditMode(EditMode mode, EditOperation operation) {
+            if (binaryStatusApi != null) {
+                binaryStatusApi.setEditMode(mode, operation);
+            }
+        }
+
+        @Override
+        public void setControlHandler(BinaryStatusApi.StatusControlHandler statusControlHandler) {
+            if (binaryStatusApi != null) {
+                binaryStatusApi.setControlHandler(statusControlHandler);
+            }
+        }
+
+        @Override
+        public void setCurrentDocumentSize(long documentSize, long initialDocumentSize) {
+            if (binaryStatusApi != null) {
+                binaryStatusApi.setCurrentDocumentSize(documentSize, initialDocumentSize);
+            }
+        }
+
+        @Override
+        public void setMemoryMode(BinaryStatusApi.MemoryMode memoryMode) {
+            if (binaryStatusApi != null) {
+                binaryStatusApi.setMemoryMode(memoryMode);
+            }
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private class TextEncodingStatusWrapper implements TextEncodingStatusApi {
+
+        @Override
+        public String getEncoding() {
+            if (textEncodingStatusApi != null) {
+                return textEncodingStatusApi.getEncoding();
+            }
+            return "";
+        }
+
+        @Override
+        public void setEncoding(String encodingName) {
+            if (textEncodingStatusApi != null) {
+                textEncodingStatusApi.setEncoding(encodingName);
+            }
+        }
     }
 }

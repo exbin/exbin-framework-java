@@ -32,14 +32,12 @@ import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
-import org.exbin.xbup.operation.Command;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
-import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.editor.action.CloseAllFileAction;
 import org.exbin.framework.gui.editor.action.CloseFileAction;
 import org.exbin.framework.gui.editor.action.CloseOtherFileAction;
+import org.exbin.framework.gui.undo.api.UndoFileHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
@@ -233,127 +231,9 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     @Override
     public void registerUndoHandler() {
         GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-        undoModule.setUndoHandler(new XBUndoHandler() {
-            @Override
-            public boolean canRedo() {
-                if (editorProvider != null && editorProvider.getEditorComponent() instanceof UndoActionsHandler) {
-                    return ((UndoActionsHandler) editorProvider.getEditorComponent()).canRedo();
-                }
-
-                return false;
-            }
-
-            @Override
-            public boolean canUndo() {
-                if (editorProvider != null && editorProvider.getEditorComponent() instanceof UndoActionsHandler) {
-                    return ((UndoActionsHandler) editorProvider.getEditorComponent()).canUndo();
-                }
-
-                return false;
-            }
-
-            @Override
-            public void clear() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void doSync() throws Exception {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void execute(Command command) throws Exception {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void addCommand(Command cmnd) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public List<Command> getCommandList() {
-                return new ArrayList<>();
-            }
-
-            @Override
-            public long getCommandPosition() {
-                return 0;
-            }
-
-            @Override
-            public long getMaximumUndo() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public long getSyncPoint() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public long getUndoMaximumSize() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public long getUsedSize() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performRedo() throws Exception {
-                if (editorProvider != null && editorProvider.getEditorComponent() instanceof UndoActionsHandler) {
-                    ((UndoActionsHandler) editorProvider.getEditorComponent()).performRedo();
-                    GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-                    undoModule.updateUndoStatus();
-                }
-            }
-
-            @Override
-            public void performRedo(int count) throws Exception {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void performUndo() throws Exception {
-                if (editorProvider != null && editorProvider.getEditorComponent() instanceof UndoActionsHandler) {
-                    ((UndoActionsHandler) editorProvider.getEditorComponent()).performUndo();
-                    GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-                    undoModule.updateUndoStatus();
-                }
-            }
-
-            @Override
-            public void performUndo(int count) throws Exception {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setCommandPosition(long targetPosition) throws Exception {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setSyncPoint(long syncPoint) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setSyncPoint() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void addUndoUpdateListener(XBUndoUpdateListener listener) {
-            }
-
-            @Override
-            public void removeUndoUpdateListener(XBUndoUpdateListener listener) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
+        if (editorProvider instanceof UndoFileHandler) {
+            undoModule.setUndoHandler(((UndoFileHandler) editorProvider).getUndoHandler());
+        }
     }
 
     @Nonnull

@@ -63,7 +63,7 @@ import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.DefaultOptionsPage;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * XBUP audio editor module.
@@ -180,7 +180,7 @@ public class EditorWaveModule implements XBApplicationModule {
     }
 
     private void updatePositionTime() {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             return;
         }
@@ -192,7 +192,7 @@ public class EditorWaveModule implements XBApplicationModule {
     private void updateStatus() {
         updatePositionTime();
 
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             return;
         }
@@ -211,7 +211,7 @@ public class EditorWaveModule implements XBApplicationModule {
         audioStatusPanel = new AudioStatusPanel(new AudioControlApi() {
             @Override
             public void performPlay() {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }
@@ -222,7 +222,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
             @Override
             public void performStop() {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }
@@ -233,7 +233,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
             @Override
             public void setVolume(int volumeLevel) {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }

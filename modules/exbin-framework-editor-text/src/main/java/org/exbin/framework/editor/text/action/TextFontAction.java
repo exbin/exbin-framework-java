@@ -26,13 +26,14 @@ import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
 import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.gui.OptionsControlPanel;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Text font action handler.
@@ -41,7 +42,7 @@ import org.exbin.framework.gui.utils.gui.OptionsControlPanel;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontAction extends AbstractAction {
+public class TextFontAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "toolsSetFontAction";
 
@@ -62,8 +63,14 @@ public class TextFontAction extends AbstractAction {
     }
 
     @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

@@ -27,7 +27,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Show row position action.
@@ -36,7 +37,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ShowRowPositionAction extends AbstractAction {
+public class ShowRowPositionAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "showRowPositionAction";
 
@@ -56,20 +57,19 @@ public class ShowRowPositionAction extends AbstractAction {
         putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
     }
 
-    public void updateState() {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
-        boolean active = !activeFile.isEmpty();
-        setEnabled(active);
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
 
-        putValue(Action.SELECTED_KEY, active
-                ? ((BinEdFileHandler) activeFile.get()).getCodeArea().getLayoutProfile().isShowRowPosition()
-                : null
-        );
+        if (activeFile.isPresent()) {
+            putValue(Action.SELECTED_KEY, ((BinEdFileHandler) activeFile.get()).getCodeArea().getLayoutProfile().isShowRowPosition());
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

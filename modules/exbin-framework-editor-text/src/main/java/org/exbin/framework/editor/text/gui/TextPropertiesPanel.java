@@ -27,9 +27,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
 import org.exbin.framework.editor.text.TextEditor;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Text file properties panel.
@@ -180,12 +180,12 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
     }
 
     public void setDocument(TextEditor textEditor) {
-        Optional<FileHandlerApi> activeFile = textEditor.getActiveFile();
+        Optional<FileHandler> activeFile = textEditor.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }
         
-        FileHandlerApi fileHandler = activeFile.get();
+        FileHandler fileHandler = activeFile.get();
         Optional<URI> fileUri = fileHandler.getFileUri();
         fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
         TextPanel textPanel = (TextPanel) fileHandler.getComponent();

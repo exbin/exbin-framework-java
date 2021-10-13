@@ -53,11 +53,11 @@ public class UndoHandlerWrapper implements XBUndoHandler {
                 handler.removeUndoUpdateListener(listener);
             }
         }
-        
+
         this.handler = newHandler;
-            for (BinaryDataUndoUpdateListener listener : listenersMap.values()) {
-                handler.addUndoUpdateListener(listener);
-            }
+        for (BinaryDataUndoUpdateListener listener : listenersMap.values()) {
+            handler.addUndoUpdateListener(listener);
+        }
     }
 
     @Override

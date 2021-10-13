@@ -33,7 +33,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Print action.
@@ -42,7 +43,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class PrintAction extends AbstractAction {
+public class PrintAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "printAction";
 
@@ -64,11 +65,18 @@ public class PrintAction extends AbstractAction {
     }
 
     @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty())
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        if (activeFile.isEmpty()) {
             throw new IllegalStateException();
-        
+        }
+
         ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
         PrinterJob job = PrinterJob.getPrinterJob();
         if (job.printDialog()) {

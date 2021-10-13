@@ -20,7 +20,7 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.Optional;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Editor dockable.
@@ -62,12 +62,12 @@ public class EditorCDockable extends DefaultMultipleCDockable {
     public void update() {
         if (content instanceof EditorProvider) {
             EditorProvider editorProvider = ((EditorProvider) content);
-            Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+            Optional<FileHandler> activeFile = editorProvider.getActiveFile();
             if (activeFile.isEmpty()) {
                 return;
             }
 
-            FileHandlerApi fileHandler = activeFile.get();
+            FileHandler fileHandler = activeFile.get();
             Optional<String> fileName = fileHandler.getFileName();
             String name = fileName.isEmpty() ? UNDEFINED_NAME : fileName.get();
             if (fileHandler.isModified()) {

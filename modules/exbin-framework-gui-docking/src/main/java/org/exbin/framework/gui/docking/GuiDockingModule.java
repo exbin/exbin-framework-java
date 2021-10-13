@@ -39,9 +39,9 @@ import org.exbin.framework.gui.docking.api.EditorViewHandling;
 import org.exbin.framework.gui.docking.api.GuiDockingModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Implementation of XBUP framework docking module.
@@ -162,7 +162,7 @@ public class GuiDockingModule implements GuiDockingModuleApi {
                             CDockable dockable = event.getDockable(i);
                             if (dockable instanceof EditorCDockable) {
                                 EditorProvider editor = (EditorProvider) ((EditorCDockable) dockable).getContent();
-                                Optional<FileHandlerApi> activeFile = editor.getActiveFile();
+                                Optional<FileHandler> activeFile = editor.getActiveFile();
                                 if (!activeFile.isEmpty()) {
                                     multiEditorProvider.closeFile(activeFile.get());
                                 }

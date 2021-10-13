@@ -30,11 +30,11 @@ import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileActionsApi;
 import org.exbin.framework.gui.file.api.FileActionsApi.OpenFileResult;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileOperationsProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * File actions.
@@ -71,7 +71,7 @@ public class FileActions implements FileActionsApi {
     }
 
     @Override
-    public void openFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
+    public void openFile(@Nullable FileHandler fileHandler, FileTypes fileTypes) {
         if (fileHandler != null) {
             OpenFileResult openFileResult = FileActions.this.showOpenFileDialog(fileTypes);
             if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
@@ -131,7 +131,7 @@ public class FileActions implements FileActionsApi {
     }
 
     @Override
-    public void saveFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
+    public void saveFile(@Nullable FileHandler fileHandler, FileTypes fileTypes) {
         if (fileHandler != null) {
             Optional<URI> fileUri = fileHandler.getFileUri();
             if (fileUri.isPresent()) {
@@ -143,7 +143,7 @@ public class FileActions implements FileActionsApi {
     }
 
     @Override
-    public void saveAsFile(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
+    public void saveAsFile(@Nullable FileHandler fileHandler, FileTypes fileTypes) {
         if (fileHandler != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             OpenFileResult openFileResult = showSaveFileDialog(fileTypes);
@@ -175,7 +175,7 @@ public class FileActions implements FileActionsApi {
      * @return true if successful
      */
     @Override
-    public boolean showAskForSaveDialog(@Nullable FileHandlerApi fileHandler, FileTypes fileTypes) {
+    public boolean showAskForSaveDialog(@Nullable FileHandler fileHandler, FileTypes fileTypes) {
         if (fileHandler == null) {
             return true;
         }

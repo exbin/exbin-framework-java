@@ -29,7 +29,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * File properties panel.
@@ -148,7 +148,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void setEditorProvider(EditorProvider editorProvider) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

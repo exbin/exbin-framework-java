@@ -17,6 +17,7 @@ package org.exbin.framework.bined.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -29,6 +30,8 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Properties action.
@@ -37,7 +40,7 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class PropertiesAction extends AbstractAction {
+public class PropertiesAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "propertiesAction";
 
@@ -55,6 +58,12 @@ public class PropertiesAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+    }
+
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
     }
 
     @Override

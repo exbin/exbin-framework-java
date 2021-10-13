@@ -37,7 +37,6 @@ import javax.swing.JPopupMenu;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import static org.exbin.framework.editor.picture.gui.ImagePanel.toBufferedImage;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
@@ -54,6 +53,7 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.visual.picture.XBBufferedImage;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Image editor.
@@ -67,7 +67,7 @@ public class ImageEditor implements EditorProvider {
     private static final String DEFAULT_PICTURE_FILE_EXT = "PNG";
 
     private ImagePanel imagePanel;
-    private FileHandlerApi activeFile;
+    private FileHandler activeFile;
     private JPopupMenu popupMenu;
     private MouseMotionListener mouseMotionListener;
 
@@ -76,7 +76,7 @@ public class ImageEditor implements EditorProvider {
     }
     
     private void init() {
-        activeFile = new FileHandlerApi() {
+        activeFile = new FileHandler() {
             private URI fileUri = null;
             private String ext = null;
             private FileType fileType = null;
@@ -206,7 +206,7 @@ public class ImageEditor implements EditorProvider {
 
     @Nonnull
     @Override
-    public Optional<FileHandlerApi> getActiveFile() {
+    public Optional<FileHandler> getActiveFile() {
         return Optional.of(activeFile);
     }
 
@@ -287,14 +287,6 @@ public class ImageEditor implements EditorProvider {
         this.mouseMotionListener = mouseMotionListener;
         ImagePanel imagePanel = (ImagePanel) activeFile.getComponent();
         imagePanel.attachCaretListener(mouseMotionListener);
-    }
-
-    @Override
-    public void addActiveFileChangeListener(ActiveFileChangeListener listener) {
-    }
-
-    @Override
-    public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
     }
 
     /**

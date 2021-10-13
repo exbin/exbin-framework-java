@@ -27,7 +27,8 @@ import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Find/replace actions.
@@ -36,7 +37,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FindReplaceActions {
+public class FindReplaceActions implements FileDependentAction {
 
     public static final String EDIT_FIND_ACTION_ID = "editFindAction";
     public static final String EDIT_FIND_AGAIN_ACTION_ID = "editFindAgainAction";
@@ -59,13 +60,27 @@ public class FindReplaceActions {
         this.resourceBundle = resourceBundle;
     }
 
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        if (editFindAction != null) {
+            editFindAction.setEnabled(activeFile.isPresent());
+        }
+        if (editFindAgainAction != null) {
+            editFindAgainAction.setEnabled(activeFile.isPresent());
+        }
+        if (editReplaceAction != null) {
+            editReplaceAction.setEnabled(activeFile.isPresent());
+        }
+    }
+
     @Nonnull
     public Action getEditFindAction() {
         if (editFindAction == null) {
             editFindAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         throw new IllegalStateException();
                     }
@@ -87,7 +102,7 @@ public class FindReplaceActions {
             editFindAgainAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         throw new IllegalStateException();
                     }
@@ -108,7 +123,7 @@ public class FindReplaceActions {
             editReplaceAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                     if (activeFile.isEmpty()) {
                         throw new IllegalStateException();
                     }

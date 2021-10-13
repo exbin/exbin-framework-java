@@ -29,7 +29,8 @@ import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdEditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * View mode actions.
@@ -38,7 +39,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ViewModeHandlerActions {
+public class ViewModeHandlerActions implements FileDependentAction {
 
     public static final String DUAL_VIEW_MODE_ACTION_ID = "dualViewModeAction";
     public static final String CODE_MATRIX_VIEW_MODE_ACTION_ID = "codeMatrixViewModeAction";
@@ -65,9 +66,33 @@ public class ViewModeHandlerActions {
         this.resourceBundle = resourceBundle;
     }
 
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        CodeAreaViewMode viewMode = activeFile.isPresent() ? ((BinEdFileHandler) activeFile.get()).getCodeArea().getViewMode() : null;
+        if (dualModeAction != null) {
+            dualModeAction.setEnabled(activeFile.isPresent());
+            if (viewMode == CodeAreaViewMode.DUAL) {
+                dualModeAction.putValue(Action.SELECTED_KEY, true);
+            }
+        }
+        if (codeMatrixModeAction != null) {
+            codeMatrixModeAction.setEnabled(activeFile.isPresent());
+            if (viewMode == CodeAreaViewMode.CODE_MATRIX) {
+                codeMatrixModeAction.putValue(Action.SELECTED_KEY, true);
+            }
+        }
+        if (textPreviewModeAction != null) {
+            textPreviewModeAction.setEnabled(activeFile.isPresent());
+            if (viewMode == CodeAreaViewMode.TEXT_PREVIEW) {
+                textPreviewModeAction.putValue(Action.SELECTED_KEY, true);
+            }
+        }
+    }
+
     public void setViewMode(CodeAreaViewMode viewMode) {
         this.viewMode = viewMode;
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

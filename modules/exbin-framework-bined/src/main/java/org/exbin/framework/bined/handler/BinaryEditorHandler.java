@@ -45,11 +45,11 @@ import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.gui.MultiEditorPanel;
 import org.exbin.framework.gui.editor.tab.api.EditorViewHandling;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.bined.BinEdEditorProvider;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Binary editor provider.

@@ -49,7 +49,8 @@ import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlAction
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Insert data action.
@@ -58,7 +59,7 @@ import org.exbin.framework.gui.file.api.FileHandlerApi;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class InsertDataAction extends AbstractAction {
+public class InsertDataAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "insertDataAction";
 
@@ -81,14 +82,20 @@ public class InsertDataAction extends AbstractAction {
     }
 
     @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }
 
         ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
-        CodeAreaUndoHandler undoHandler = ((BinEdFileHandler) activeFile.get()).getUndoHandler();
+        CodeAreaUndoHandler undoHandler = ((BinEdFileHandler) activeFile.get()).getCodeAreaUndoHandler();
 
         final EditableBinaryData sampleBinaryData = new ByteArrayEditableData();
         final InsertDataPanel insertDataPanel = new InsertDataPanel();

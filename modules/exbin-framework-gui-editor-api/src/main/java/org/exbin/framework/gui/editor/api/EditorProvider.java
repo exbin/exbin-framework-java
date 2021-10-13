@@ -22,9 +22,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileOperations;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * XBUP framework editor interface.
@@ -49,7 +49,7 @@ public interface EditorProvider extends FileOperations {
      * @return acftive file
      */
     @Nonnull
-    Optional<FileHandlerApi> getActiveFile();
+    Optional<FileHandler> getActiveFile();
 
     /**
      * Gets window title related to last opened or saved file.
@@ -67,10 +67,6 @@ public interface EditorProvider extends FileOperations {
      * @param fileType file type
      */
     void openFile(URI fileUri, FileType fileType);
-
-    void addActiveFileChangeListener(ActiveFileChangeListener listener);
-
-    void removeActiveFileChangeListener(ActiveFileChangeListener listener);
 
     /**
      * Changes passing listener.
@@ -99,6 +95,6 @@ public interface EditorProvider extends FileOperations {
      */
     public static interface ActiveFileChangeListener {
 
-        void activeFileChanged(@Nullable FileHandlerApi fileHandler);
+        void activeFileChanged(@Nullable FileHandler fileHandler);
     }
 }

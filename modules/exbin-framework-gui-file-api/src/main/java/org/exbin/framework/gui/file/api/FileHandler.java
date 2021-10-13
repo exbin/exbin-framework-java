@@ -23,13 +23,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 
 /**
- * Interface for file handling actions.
+ * Interface for file handling.
  *
- * @version 0.2.2 2021/09/29
+ * @version 0.2.2 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface FileHandlerApi {
+public interface FileHandler {
 
     /**
      * Returns unique identifier of the file.

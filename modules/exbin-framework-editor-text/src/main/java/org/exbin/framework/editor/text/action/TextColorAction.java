@@ -35,7 +35,7 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
 import org.exbin.framework.gui.utils.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Text color action.
@@ -70,7 +70,7 @@ public class TextColorAction extends AbstractAction {
         final TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }
@@ -81,7 +81,7 @@ public class TextColorAction extends AbstractAction {
 
             @Override
             public Color[] getDefaultTextColors() {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }
@@ -92,7 +92,7 @@ public class TextColorAction extends AbstractAction {
 
             @Override
             public void setCurrentTextColors(Color[] colors) {
-                Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
                 if (activeFile.isEmpty()) {
                     throw new IllegalStateException();
                 }

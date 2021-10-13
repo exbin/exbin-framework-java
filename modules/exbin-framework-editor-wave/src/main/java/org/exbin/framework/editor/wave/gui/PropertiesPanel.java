@@ -21,9 +21,9 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sound.sampled.AudioFormat;
 import org.exbin.framework.editor.wave.AudioEditor;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Wave file properties panel.
@@ -153,12 +153,12 @@ public class PropertiesPanel extends javax.swing.JPanel {
     }
 
     public void setDocument(AudioEditor audioEditor) {
-        Optional<FileHandlerApi> activeFile = audioEditor.getActiveFile();
+        Optional<FileHandler> activeFile = audioEditor.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }
 
-        FileHandlerApi fileHandler = activeFile.get();
+        FileHandler fileHandler = activeFile.get();
         AudioPanel audioPanel = (AudioPanel) fileHandler.getComponent();
         if (!audioPanel.isEmpty()) {
             Optional<URI> fileUri = fileHandler.getFileUri();

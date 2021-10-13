@@ -21,19 +21,19 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Multi editor panel.
  *
- * @version 0.2.2 2021/10/10
+ * @version 0.2.2 2021/10/13
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MultiEditorPanel extends javax.swing.JPanel {
 
-    private final List<FileHandlerApi> fileHandlers = new ArrayList<>();
+    private final List<FileHandler> fileHandlers = new ArrayList<>();
     private Control control;
     private int activeIndex = -1;
 
@@ -45,12 +45,7 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     private void init() {
         tabbedPane.addChangeListener((e) -> {
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (activeIndex != selectedIndex) {
-                activeIndex = selectedIndex;
-                if (control != null) {
-                    control.activeIndexChanged(selectedIndex);
-                }
-            }
+            changeActiveIndex(selectedIndex);
         });
 
         tabbedPane.setComponentPopupMenu(new JPopupMenu() {
@@ -73,23 +68,23 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     }
 
     @Nullable
-    public FileHandlerApi getFileHandler(int index) {
+    public FileHandler getFileHandler(int index) {
         return fileHandlers.get(index);
     }
 
-    public void addFileHandler(FileHandlerApi fileHandler, String text) {
+    public void addFileHandler(FileHandler fileHandler, String text) {
         fileHandlers.add(fileHandler);
         tabbedPane.addTab(text, fileHandler.getComponent());
         tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
     }
 
-    public void insertFileHandler(int position, FileHandlerApi fileHandler, String text) {
+    public void insertFileHandler(int position, FileHandler fileHandler, String text) {
         fileHandlers.add(position, fileHandler);
         tabbedPane.insertTab(text, null, fileHandler.getComponent(), null, position);
         tabbedPane.setSelectedIndex(position);
     }
 
-    public void removeFileHandler(FileHandlerApi fileHandler) {
+    public void removeFileHandler(FileHandler fileHandler) {
         int index = fileHandlers.indexOf(fileHandler);
         if (index >= 0) {
             removeFileHandlerAt(index);
@@ -98,13 +93,22 @@ public class MultiEditorPanel extends javax.swing.JPanel {
 
     public void removeFileHandlerAt(int index) {
         if (index == activeIndex) {
-            activeIndex = -1;
+            changeActiveIndex(-1);
         } else if (index < activeIndex) {
-            activeIndex--;
+            changeActiveIndex(activeIndex--);
         }
 
         fileHandlers.remove(index);
         tabbedPane.removeTabAt(index);
+    }
+
+    private void changeActiveIndex(int index) {
+        if (activeIndex != index) {
+            activeIndex = index;
+            if (control != null) {
+                control.activeIndexChanged(index);
+            }
+        }
     }
 
     public void updateFileHandlerAt(int index, String text) {
@@ -113,12 +117,12 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     }
 
     public int getActiveIndex() {
-        return tabbedPane.getSelectedIndex();
+        return activeIndex;
     }
 
     @Nullable
-    public FileHandlerApi getActiveFile() {
-        if (fileHandlers.isEmpty()) {
+    public FileHandler getActiveFile() {
+        if (activeIndex == -1 || fileHandlers.isEmpty()) {
             return null;
         }
         return fileHandlers.get(getActiveIndex());

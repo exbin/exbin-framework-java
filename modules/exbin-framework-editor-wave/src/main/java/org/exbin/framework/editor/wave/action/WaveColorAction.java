@@ -35,7 +35,7 @@ import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlAction
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.editor.wave.service.WaveColorService;
 import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Tools options action handler.
@@ -66,7 +66,7 @@ public class WaveColorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandlerApi> activeFile = editorProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }

@@ -21,9 +21,9 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.picture.ImageEditor;
-import org.exbin.framework.gui.file.api.FileHandlerApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Image file properties panel.
@@ -81,7 +81,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     public void setDocument(ImageEditor imageEditor) {
-        Optional<FileHandlerApi> activeFile = imageEditor.getActiveFile();
+        Optional<FileHandler> activeFile = imageEditor.getActiveFile();
         if (activeFile.isEmpty()) {
             throw new IllegalStateException();
         }
