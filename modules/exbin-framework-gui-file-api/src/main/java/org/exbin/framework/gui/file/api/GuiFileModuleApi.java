@@ -33,6 +33,9 @@ public interface GuiFileModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiFileModuleApi.class);
 
+    public static final String FILE_MENU_GROUP_ID = MODULE_ID + ".fileMenuGroup";
+    public static final String FILE_TOOL_BAR_GROUP_ID = MODULE_ID + ".fileToolBarGroup";
+
     /**
      * Adds file type.
      *
@@ -88,4 +91,6 @@ public interface GuiFileModuleApi extends XBApplicationModule {
 
     @Nonnull
     FileActionsApi getFileActions();
+    
+    void updateForFileOperations();
 }

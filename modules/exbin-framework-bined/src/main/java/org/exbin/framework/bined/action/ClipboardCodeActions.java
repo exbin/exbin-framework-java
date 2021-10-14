@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.bined.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -22,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -33,7 +35,7 @@ import org.exbin.framework.gui.file.api.FileHandler;
 /**
  * Clipboard code actions.
  *
- * @version 0.2.1 2021/10/12
+ * @version 0.2.1 2021/10/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -106,7 +108,11 @@ public class ClipboardCodeActions implements FileDependentAction {
                         throw new IllegalStateException();
                     }
                     // TODO move out of code area
-                    ((BinEdFileHandler) activeFile.get()).getCodeArea().pasteFromCode();
+                    try {
+                        ((BinEdFileHandler) activeFile.get()).getCodeArea().pasteFromCode();
+                    } catch (IllegalArgumentException ex) {
+                        JOptionPane.showMessageDialog((Component) e.getSource(), ex.getMessage(), "Unable to Paste Code", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             };
             ActionUtils.setupAction(pasteFromCodeAction, resourceBundle, PASTE_FROM_CODE_ACTION_ID);

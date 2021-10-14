@@ -54,6 +54,11 @@ public class SaveAsFileAction extends AbstractAction {
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
+    public void updateForFileOperations() {
+        FileOperations fileOperations = fileOperationsProvider.getFileOperations();
+        setEnabled(fileOperations != null ? fileOperations.canSave() : false);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         FileOperations fileOperations = fileOperationsProvider.getFileOperations();

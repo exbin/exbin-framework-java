@@ -1,4 +1,4 @@
-rootProject.name = 'exbin-framework-gui-frame-gui'
+rootProject.name = 'exbin-framework-gui-frame-api'
 
 if (rootProject.path == ':') {
     include ':modules:exbin-framework'

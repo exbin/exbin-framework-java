@@ -503,6 +503,11 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     }
 
     @Override
+    public boolean canSave() {
+        return true;
+    }
+
+    @Override
     public void saveFile() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

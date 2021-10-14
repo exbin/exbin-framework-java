@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -39,8 +40,10 @@ import org.exbin.auxiliary.paged_data.delta.FileDataSource;
 import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
 import org.exbin.bined.operation.swing.CodeAreaUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.bined.gui.BinEdComponentFileApi;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
+import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
@@ -53,18 +56,21 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 /**
  * File handler for binary editor.
  *
- * @version 0.2.2 2021/10/13
+ * @version 0.2.2 2021/10/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComponentFileApi, ClipboardActionsHandler, TextFontApi {
+public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComponentFileApi, ClipboardActionsHandler, TextFontApi, TextCharsetApi {
 
     private SegmentsRepository segmentsRepository;
 
     private final BinEdComponentPanel componentPanel;
-    private XBUndoHandler undoHandler;
+    private XBUndoHandler undoHandlerWrapper;
     private int id = 0;
     private URI fileUri = null;
+    private Font defaultFont;
+    private ExtendedCodeAreaColorProfile defaultColors;
+    private long documentOriginalSize;
 
     public BinEdFileHandler() {
         componentPanel = new BinEdComponentPanel();
@@ -72,8 +78,11 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
     }
 
     private void init() {
-        componentPanel.setUndoHandler(new CodeAreaUndoHandler(componentPanel.getCodeArea()));
-        componentPanel.setFileApi(this);
+        final ExtCodeArea codeArea = getCodeArea();
+        CodeAreaUndoHandler undoHandler = new CodeAreaUndoHandler(componentPanel.getCodeArea());
+        componentPanel.setUndoHandler(undoHandler);
+        defaultFont = codeArea.getCodeFont();
+        defaultColors = (ExtendedCodeAreaColorProfile) codeArea.getColorsProfile();
     }
 
     public BinEdFileHandler(int id) {
@@ -96,7 +105,7 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
 
         try {
             BinaryData oldData = componentPanel.getContentData();
-            FileHandlingMode fileHandlingMode = componentPanel.getFileHandlingMode();
+            FileHandlingMode fileHandlingMode = getFileHandlingMode();
             if (fileHandlingMode == FileHandlingMode.DELTA) {
                 FileDataSource openFileSource = segmentsRepository.openFileSource(file);
                 DeltaDocument document = segmentsRepository.createDocument(openFileSource);
@@ -123,7 +132,8 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
             Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        undoHandler.clear();
+        undoHandlerWrapper.clear();
+        fileSync();
     }
 
     @Override
@@ -159,7 +169,12 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
             Logger.getLogger(BinEdFileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        undoHandler.setSyncPoint();
+        fileSync();
+    }
+    
+    private void fileSync() {
+        documentOriginalSize = getCodeArea().getDataSize();
+        undoHandlerWrapper.setSyncPoint();
     }
 
     public void loadFromStream(InputStream stream) throws IOException {
@@ -207,7 +222,7 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
         }
         setNewData();
         fileUri = null;
-        undoHandler.clear();
+        undoHandlerWrapper.clear();
     }
 
     @Override
@@ -239,6 +254,10 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
         }
 
         return windowTitle;
+    }
+
+    public long getDocumentOriginalSize() {
+        return documentOriginalSize;
     }
 
     public void saveFile() {
@@ -294,7 +313,7 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
 
     @Override
     public void switchFileHandlingMode(FileHandlingMode handlingMode) {
-        FileHandlingMode oldFileHandlingMode = componentPanel.getFileHandlingMode();
+        FileHandlingMode oldFileHandlingMode = getFileHandlingMode();
         ExtCodeArea codeArea = componentPanel.getCodeArea();
         if (handlingMode != oldFileHandlingMode) {
             // Switch memory mode
@@ -305,10 +324,10 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
                     loadFromFile(fileUri, null);
                     codeArea.clearSelection();
                     codeArea.setCaretPosition(0);
-                    componentPanel.setFileHandlingMode(handlingMode);
+                    setFileHandlingMode(handlingMode);
 //                    }
                 } else {
-                    componentPanel.setFileHandlingMode(handlingMode);
+                    setFileHandlingMode(handlingMode);
                     loadFromFile(fileUri, null);
                 }
             } else {
@@ -326,13 +345,22 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
                     componentPanel.setContentData(data);
                 }
 
-                undoHandler.clear();
+                undoHandlerWrapper.clear();
                 if (oldData != null) {
                     oldData.dispose();
                 }
-                componentPanel.setFileHandlingMode(handlingMode);
+                setFileHandlingMode(handlingMode);
             }
         }
+    }
+    
+    @Nonnull
+    public FileHandlingMode getFileHandlingMode() {
+        return getCodeArea().getContentData() instanceof DeltaDocument ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY;
+    }
+    
+    private void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
+        // updateCurrentMemoryMode();
     }
 
     @Nonnull
@@ -358,11 +386,11 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
 
     @Override
     public boolean isModified() {
-        return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();
+        return undoHandlerWrapper.getCommandPosition() != undoHandlerWrapper.getSyncPoint();
     }
 
     private void setNewData() {
-        FileHandlingMode fileHandlingMode = componentPanel.getFileHandlingMode();
+        FileHandlingMode fileHandlingMode = getFileHandlingMode();
         if (fileHandlingMode == FileHandlingMode.DELTA) {
             componentPanel.setContentData(segmentsRepository.createDocument());
         } else {
@@ -374,21 +402,18 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
         this.segmentsRepository = segmentsRepository;
     }
 
-    public void setModifiedChangeListener(BinEdComponentPanel.ModifiedStateListener modifiedChangeListener) {
-        componentPanel.setModifiedChangeListener(modifiedChangeListener);
-    }
-
     public void requestFocus() {
         componentPanel.getCodeArea().requestFocus();
     }
 
+    @Nonnull
     @Override
     public XBUndoHandler getUndoHandler() {
-        if (undoHandler == null) {
-            undoHandler = new UndoHandlerWrapper();
-            ((UndoHandlerWrapper) undoHandler).setHandler(componentPanel.getUndoHandler());
+        if (undoHandlerWrapper == null) {
+            undoHandlerWrapper = new UndoHandlerWrapper();
+            ((UndoHandlerWrapper) undoHandlerWrapper).setHandler(componentPanel.getUndoHandler());
         }
-        return undoHandler;
+        return undoHandlerWrapper;
     }
 
     @Nonnull
@@ -403,32 +428,32 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
 
     @Override
     public void performCut() {
-        componentPanel.performCut();
+        getCodeArea().cut();
     }
 
     @Override
     public void performCopy() {
-        componentPanel.performCopy();
+        getCodeArea().copy();
     }
 
     @Override
     public void performPaste() {
-        componentPanel.performPaste();
+        getCodeArea().paste();
     }
 
     @Override
     public void performDelete() {
-        componentPanel.performDelete();
+        getCodeArea().delete();
     }
 
     @Override
     public void performSelectAll() {
-        componentPanel.performSelectAll();
+        getCodeArea().selectAll();
     }
 
     @Override
     public boolean isSelection() {
-        return componentPanel.isSelection();
+        return getCodeArea().hasSelection();
     }
 
     @Override
@@ -438,38 +463,54 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
 
     @Override
     public boolean canSelectAll() {
-        return componentPanel.canSelectAll();
+        return true;
     }
 
     @Override
     public boolean canPaste() {
-        return componentPanel.canPaste();
+        return getCodeArea().canPaste();
     }
 
     @Override
     public boolean canDelete() {
-        return componentPanel.canDelete();
+        return true;
     }
 
     @Override
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-        componentPanel.setUpdateListener(updateListener);
+    public void setCurrentFont(Font font) {
+        getCodeArea().setCodeFont(font);
     }
 
     @Nonnull
     @Override
     public Font getCurrentFont() {
-        return componentPanel.getCurrentFont();
+        return getCodeArea().getCodeFont();
     }
 
     @Nonnull
     @Override
     public Font getDefaultFont() {
-        return componentPanel.getDefaultFont();
+        return defaultFont;
+    }
+
+    @Nonnull
+    public ExtendedCodeAreaColorProfile getDefaultColors() {
+        return defaultColors;
+    }
+
+    @Nonnull
+    @Override
+    public Charset getCharset() {
+        return getCodeArea().getCharset();
     }
 
     @Override
-    public void setCurrentFont(Font font) {
-        componentPanel.setCurrentFont(font);
+    public void setCharset(Charset charset) {
+        getCodeArea().setCharset(charset);
+    }
+
+    @Override
+    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+        // componentPanel.setUpdateListener(updateListener);
     }
 }

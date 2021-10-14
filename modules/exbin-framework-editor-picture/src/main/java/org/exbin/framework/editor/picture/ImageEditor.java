@@ -263,6 +263,11 @@ public class ImageEditor implements EditorProvider {
     }
 
     @Override
+    public boolean canSave() {
+        return true;
+    }
+
+    @Override
     public void saveFile() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

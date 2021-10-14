@@ -17,73 +17,48 @@ package org.exbin.framework.bined.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.FlavorEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import org.exbin.bined.CaretMovedListener;
-import org.exbin.bined.CodeAreaCaretPosition;
-import org.exbin.bined.EditMode;
-import org.exbin.bined.EditOperation;
-import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.RowWrappingCapable;
 import org.exbin.bined.RowWrappingMode;
 import org.exbin.bined.highlight.swing.extended.ExtendedHighlightNonAsciiCodeAreaPainter;
-import org.exbin.bined.operation.BinaryDataCommand;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.operation.swing.CodeAreaUndoHandler;
-import org.exbin.bined.operation.undo.BinaryDataUndoUpdateListener;
 import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.bined.handler.EncodingStatusHandler;
-import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
-import org.exbin.framework.editor.text.TextFontApi;
-import org.exbin.framework.gui.utils.ClipboardActionsHandler;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
-import org.exbin.framework.bined.BinaryStatusApi;
-import org.exbin.framework.bined.FileHandlingMode;
-import org.exbin.framework.bined.preferences.BinaryEditorPreferences;
+import org.exbin.bined.CodeAreaCaretPosition;
+import org.exbin.bined.EditMode;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 import org.exbin.framework.gui.editor.api.EditorProvider.EditorModificationListener;
-import org.exbin.xbup.core.util.StringUtils;
 import org.exbin.bined.EditModeChangedListener;
+import org.exbin.bined.EditOperation;
 import org.exbin.bined.capability.EditModeCapable;
+import org.exbin.framework.bined.BinaryStatusApi;
+import org.exbin.framework.bined.FileHandlingMode;
 
 /**
  * Binary editor panel.
  *
- * @version 0.2.1 2021/09/25
+ * @version 0.2.1 2021/10/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinEdComponentPanel extends javax.swing.JPanel implements ClipboardActionsHandler, TextCharsetApi, TextFontApi {
+public class BinEdComponentPanel extends javax.swing.JPanel {
 
-    private static final FileHandlingMode DEFAULT_FILE_HANDLING_MODE = FileHandlingMode.MEMORY;
-
-    private BinEdComponentFileApi fileApi = null;
-    private BinaryEditorPreferences preferences;
     private ExtCodeArea codeArea;
     private CodeAreaUndoHandler undoHandler;
-    private Font defaultFont;
-    private ExtendedCodeAreaColorProfile defaultColors;
-    private BinaryStatusApi binaryStatus = null;
     private TextEncodingStatusApi encodingStatus = null;
 
     private BinarySearchPanel binarySearchPanel;
@@ -91,18 +66,10 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     private ValuesPanel valuesPanel;
     private JScrollPane valuesPanelScrollPane;
     private boolean valuesPanelVisible = false;
-    private Action goToPositionAction = null;
-    private Action copyAsCode = null;
-    private Action pasteFromCode = null;
     private EncodingStatusHandler encodingsHandler;
-    private long documentOriginalSize;
 
-    private FileHandlingMode fileHandlingMode = DEFAULT_FILE_HANDLING_MODE;
-
-    private PropertyChangeListener propertyChangeListener;
+//    private PropertyChangeListener propertyChangeListener;
     private CharsetChangeListener charsetChangeListener = null;
-    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private ModifiedStateListener modifiedChangeListener = null;
 
     public BinEdComponentPanel() {
         initComponents();
@@ -113,36 +80,32 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         codeArea = new ExtCodeArea();
         codeArea.setPainter(new ExtendedHighlightNonAsciiCodeAreaPainter(codeArea));
         codeArea.setCodeFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        codeArea.addSelectionChangedListener(() -> {
-            updateClipboardActionsStatus();
-        });
+//        codeArea.addSelectionChangedListener(() -> {
+//            updateClipboardActionsStatus();
+//        });
 
         CodeAreaOperationCommandHandler commandHandler = new CodeAreaOperationCommandHandler(codeArea, undoHandler);
         codeArea.setCommandHandler(commandHandler);
-        codeArea.addDataChangedListener(() -> {
-            if (binarySearchPanelVisible) {
-                binarySearchPanel.dataChanged();
-            }
-            updateCurrentDocumentSize();
-        });
+//        codeArea.addDataChangedListener(() -> {
+//            if (binarySearchPanelVisible) {
+//                binarySearchPanel.dataChanged();
+//            }
+//            updateCurrentDocumentSize();
+//        });
         // TODO use listener in code area component instead
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.addFlavorListener((FlavorEvent e) -> {
-            updateClipboardActionsStatus();
-        });
+//        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+//        clipboard.addFlavorListener((FlavorEvent e) -> {
+//            updateClipboardActionsStatus();
+//        });
 
         add(codeArea);
-        codeArea.setCharset(Charset.forName(StringUtils.ENCODING_UTF8));
-        defaultFont = codeArea.getCodeFont();
+//        codeArea.setCharset(Charset.forName(StringUtils.ENCODING_UTF8));
 
-        defaultColors = getCurrentColors();
-
-        addPropertyChangeListener((PropertyChangeEvent evt) -> {
-            if (propertyChangeListener != null) {
-                propertyChangeListener.propertyChange(evt);
-            }
-        });
-
+//        addPropertyChangeListener((PropertyChangeEvent evt) -> {
+//            if (propertyChangeListener != null) {
+//                propertyChangeListener.propertyChange(evt);
+//            }
+//        });
         binarySearchPanel = new BinarySearchPanel();
         binarySearchPanel.setBinarySearchService(new BinarySearchServiceImpl(codeArea));
         binarySearchPanel.setClosePanelListener(this::hideSearchPanel);
@@ -155,12 +118,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     }
 
     public void setApplication(XBApplication application) {
-        preferences = new BinaryEditorPreferences(application.getAppPreferences());
         binarySearchPanel.setApplication(application);
-    }
-
-    public void setFileApi(BinEdComponentFileApi fileApi) {
-        this.fileApi = fileApi;
     }
 
     public void showSearchPanel(boolean replace) {
@@ -213,93 +171,8 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         return ((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingMode.WRAPPING;
     }
 
-    public boolean isShowNonprintables() {
-        return codeArea.isShowUnprintables();
-    }
-
-    public void setShowNonprintables(boolean show) {
-        codeArea.setShowUnprintables(show);
-    }
-
     public void findAgain() {
         // TODO hexSearchPanel.f
-    }
-
-    private void updateClipboardActionsStatus() {
-        if (clipboardActionsUpdateListener != null) {
-            clipboardActionsUpdateListener.stateChanged();
-        }
-
-        if (copyAsCode != null) {
-            copyAsCode.setEnabled(codeArea.hasSelection());
-        }
-        if (pasteFromCode != null) {
-            pasteFromCode.setEnabled(codeArea.canPaste());
-        }
-    }
-
-    public ExtendedCodeAreaColorProfile getCurrentColors() {
-        return (ExtendedCodeAreaColorProfile) codeArea.getColorsProfile();
-    }
-
-    public ExtendedCodeAreaColorProfile getDefaultColors() {
-        return defaultColors;
-    }
-
-    public void setCurrentColors(ExtendedCodeAreaColorProfile colorsProfile) {
-        codeArea.setColorsProfile(colorsProfile);
-    }
-
-    @Override
-    public void performCopy() {
-        codeArea.copy();
-    }
-
-    public void performCopyAsCode() {
-        codeArea.copyAsCode();
-    }
-
-    @Override
-    public void performCut() {
-        codeArea.cut();
-    }
-
-    @Override
-    public void performDelete() {
-        codeArea.delete();
-    }
-
-    @Override
-    public void performPaste() {
-        codeArea.paste();
-    }
-
-    public void performPasteFromCode() {
-        try {
-            codeArea.pasteFromCode();
-        } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Unable to Paste Code", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    @Override
-    public void performSelectAll() {
-        codeArea.selectAll();
-    }
-
-    @Override
-    public boolean isSelection() {
-        return codeArea.hasSelection();
-    }
-
-    @Override
-    public void setCurrentFont(Font font) {
-        codeArea.setCodeFont(font);
-    }
-
-    @Override
-    public Font getCurrentFont() {
-        return codeArea.getCodeFont();
     }
 
     /**
@@ -326,7 +199,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
+    @Nullable
     public CodeAreaUndoHandler getUndoHandler() {
         return undoHandler;
     }
@@ -340,20 +213,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         }
         // TODO set ENTER KEY mode in apply options
 
-        undoHandler.addUndoUpdateListener(new BinaryDataUndoUpdateListener() {
-            @Override
-            public void undoCommandPositionChanged() {
-                codeArea.repaint();
-                updateCurrentDocumentSize();
-                notifyModified();
-            }
-
-            @Override
-            public void undoCommandAdded(@Nonnull final BinaryDataCommand command) {
-                updateCurrentDocumentSize();
-                notifyModified();
-            }
-        });
     }
 
     public void setPopupMenu(JPopupMenu menu) {
@@ -368,38 +227,31 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         codeArea.addEditModeChangedListener(listener);
     }
 
-    @Override
-    public Charset getCharset() {
-        return codeArea.getCharset();
-    }
-
-    @Override
-    public void setCharset(Charset charset) {
-        codeArea.setCharset(charset);
-    }
-
-    @Override
-    public Font getDefaultFont() {
-        return defaultFont;
-    }
-
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        this.propertyChangeListener = propertyChangeListener;
-    }
-
+//    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+//        this.propertyChangeListener = propertyChangeListener;
+//    }
     public void setCharsetChangeListener(CharsetChangeListener charsetChangeListener) {
         this.charsetChangeListener = charsetChangeListener;
     }
 
-    private void changeCharset(Charset charset) {
-        codeArea.setCharset(charset);
-        if (charsetChangeListener != null) {
-            charsetChangeListener.charsetChanged();
-        }
-    }
-
-    public void registerBinaryStatus(BinaryStatusApi binaryStatusApi) {
-        this.binaryStatus = binaryStatusApi;
+//    private void changeCharset(Charset charset) {
+//        codeArea.setCharset(charset);
+//        if (charsetChangeListener != null) {
+//            charsetChangeListener.charsetChanged();
+//        }
+//    }
+//
+//    public void registerEncodingStatus(TextEncodingStatusApi encodingStatusApi) {
+//        this.encodingStatus = encodingStatusApi;
+//        setCharsetChangeListener(() -> {
+//            encodingStatus.setEncoding(getCharset().name());
+//        });
+//    }
+//
+//    public void setEncodingsHandler(EncodingStatusHandler encodingsHandler) {
+//        this.encodingsHandler = encodingsHandler;
+//    }
+    public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
         attachCaretListener((CodeAreaCaretPosition caretPosition) -> {
             binaryStatus.setCursorPosition(caretPosition);
         });
@@ -420,9 +272,9 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
 
             @Override
             public void changeCursorPosition() {
-                if (goToPositionAction != null) {
-                    goToPositionAction.actionPerformed(null);
-                }
+//                if (goToPositionAction != null) {
+//                    goToPositionAction.actionPerformed(null);
+//                }
             }
 
             @Override
@@ -441,77 +293,15 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
 
             @Override
             public void changeMemoryMode(BinaryStatusApi.MemoryMode memoryMode) {
-                FileHandlingMode newHandlingMode = memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY;
-                if (newHandlingMode != fileHandlingMode) {
-                    fileApi.switchFileHandlingMode(newHandlingMode);
-                    preferences.getEditorPreferences().setFileHandlingMode(newHandlingMode);
-                }
+                throw new IllegalStateException();
+//                FileHandlingMode newHandlingMode = memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY;
+//                if (newHandlingMode != fileHandlingMode) {
+//                    fileApi.switchFileHandlingMode(newHandlingMode);
+//                    preferences.getEditorPreferences().setFileHandlingMode(newHandlingMode);
+//                }
             }
         });
 
-        updateCurrentMemoryMode();
-    }
-
-    public void registerEncodingStatus(TextEncodingStatusApi encodingStatusApi) {
-        this.encodingStatus = encodingStatusApi;
-        setCharsetChangeListener(() -> {
-            encodingStatus.setEncoding(getCharset().name());
-        });
-    }
-
-    @Override
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-        clipboardActionsUpdateListener = updateListener;
-        updateClipboardActionsStatus();
-    }
-
-    @Override
-    public boolean isEditable() {
-        return codeArea.isEditable();
-    }
-
-    @Override
-    public boolean canSelectAll() {
-        return true;
-    }
-
-    @Override
-    public boolean canPaste() {
-        return codeArea.canPaste();
-    }
-
-    @Override
-    public boolean canDelete() {
-        return true;
-    }
-
-    private void updateCurrentDocumentSize() {
-        if (binaryStatus != null) {
-            long dataSize = codeArea.getDataSize();
-            binaryStatus.setCurrentDocumentSize(dataSize, documentOriginalSize);
-        }
-    }
-
-    private void updateCurrentCaretPosition() {
-        if (binaryStatus != null) {
-            CodeAreaCaretPosition caretPosition = codeArea.getCaretPosition();
-            binaryStatus.setCursorPosition(caretPosition);
-        }
-    }
-
-    private void updateCurrentSelectionRange() {
-        if (binaryStatus != null) {
-            SelectionRange selectionRange = codeArea.getSelection();
-            binaryStatus.setSelectionRange(selectionRange);
-        }
-    }
-
-    @Nonnull
-    public FileHandlingMode getFileHandlingMode() {
-        return fileHandlingMode;
-    }
-
-    private void updateCurrentMemoryMode() {
         BinaryStatusApi.MemoryMode newMemoryMode = BinaryStatusApi.MemoryMode.RAM_MEMORY;
         if (((EditModeCapable) codeArea).getEditMode() == EditMode.READ_ONLY) {
             newMemoryMode = BinaryStatusApi.MemoryMode.READ_ONLY;
@@ -519,29 +309,11 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
             newMemoryMode = BinaryStatusApi.MemoryMode.DELTA_MODE;
         }
 
-        if (binaryStatus != null) {
-            binaryStatus.setMemoryMode(newMemoryMode);
-        }
-    }
-
-    public void setGoToPositionAction(Action goToPositionAction) {
-        this.goToPositionAction = goToPositionAction;
-    }
-
-    public void setEncodingsHandler(EncodingStatusHandler encodingsHandler) {
-        this.encodingsHandler = encodingsHandler;
+        binaryStatus.setMemoryMode(newMemoryMode);
     }
 
     public void setCodeAreaPopupMenuHandler(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler) {
         binarySearchPanel.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
-    }
-
-    public void setCopyAsCode(Action copyAsCode) {
-        this.copyAsCode = copyAsCode;
-    }
-
-    public void setPasteFromCode(Action pasteFromCode) {
-        this.pasteFromCode = pasteFromCode;
     }
 
     @Nullable
@@ -552,10 +324,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
     public void setContentData(BinaryData data) {
         codeArea.setContentData(data);
 
-        documentOriginalSize = codeArea.getDataSize();
-        updateCurrentDocumentSize();
-        updateCurrentMemoryMode();
-
         // Autodetect encoding using IDE mechanism
 //        final Charset charset = Charset.forName(FileEncodingQuery.getEncoding(dataObject.getPrimaryFile()).name());
 //        if (charsetChangeListener != null) {
@@ -564,43 +332,8 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
 //        codeArea.setCharset(charset);
     }
 
-    /**
-     * Helper method for notifying listeners, that BinaryPanel tab was switched.
-     */
-    public void notifyListeners() {
-        if (charsetChangeListener != null) {
-            charsetChangeListener.charsetChanged();
-        }
-        if (clipboardActionsUpdateListener != null) {
-            clipboardActionsUpdateListener.stateChanged();
-        }
-
-        if (binaryStatus != null) {
-            updateCurrentDocumentSize();
-            updateCurrentCaretPosition();
-            updateCurrentSelectionRange();
-        }
-
-        encodingStatus.setEncoding(codeArea.getCharset().name());
-    }
-
     public void setModificationListener(final EditorModificationListener editorModificationListener) {
         codeArea.addDataChangedListener(editorModificationListener::modified);
-    }
-
-    public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-        this.fileHandlingMode = fileHandlingMode;
-        updateCurrentMemoryMode();
-    }
-
-    public void setModifiedChangeListener(ModifiedStateListener modifiedChangeListener) {
-        this.modifiedChangeListener = modifiedChangeListener;
-    }
-
-    private void notifyModified() {
-        if (modifiedChangeListener != null) {
-            modifiedChangeListener.modifiedChanged();
-        }
     }
 
     public void addBinaryAreaFocusListener(FocusListener focusListener) {
@@ -616,12 +349,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel implements Clipboard
         void charsetChanged();
     }
 
-    public interface ModifiedStateListener {
-
-        void modifiedChanged();
-    }
-    
     public interface Control {
-        
+
     }
 }

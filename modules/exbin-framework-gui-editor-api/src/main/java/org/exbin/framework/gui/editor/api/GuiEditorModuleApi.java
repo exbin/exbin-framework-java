@@ -70,4 +70,8 @@ public interface GuiEditorModuleApi extends XBApplicationModule {
 
     @Nonnull
     AbstractAction getCloseOtherFileAction();
+
+    void registerMenuFileCloseActions();
+    
+    void updateActionStatus();
 }

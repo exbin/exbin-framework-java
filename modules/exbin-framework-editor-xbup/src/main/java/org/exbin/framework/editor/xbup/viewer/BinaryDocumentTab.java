@@ -131,57 +131,57 @@ public class BinaryDocumentTab implements DocumentTab {
 
     @Override
     public void performCut() {
-        binaryPanel.performCut();
+        binaryPanel.getCodeArea().cut();
     }
 
     @Override
     public void performCopy() {
-        binaryPanel.performCopy();
+        binaryPanel.getCodeArea().copy();
     }
 
     @Override
     public void performPaste() {
-        binaryPanel.performPaste();
+        binaryPanel.getCodeArea().paste();
     }
 
     @Override
     public void performDelete() {
-        binaryPanel.performDelete();
+        binaryPanel.getCodeArea().delete();
     }
 
     @Override
     public void performSelectAll() {
-        binaryPanel.performSelectAll();
+        binaryPanel.getCodeArea().selectAll();
     }
 
     @Override
     public boolean isSelection() {
-        return binaryPanel.isSelection();
+        return binaryPanel.getCodeArea().hasSelection();
     }
 
     @Override
     public boolean isEditable() {
-        return binaryPanel.isEditable();
+        return binaryPanel.getCodeArea().isEditable();
     }
 
     @Override
     public boolean canSelectAll() {
-        return binaryPanel.canSelectAll();
+        return true;
     }
 
     @Override
     public boolean canPaste() {
-        return binaryPanel.canPaste();
+        return binaryPanel.getCodeArea().canPaste();
     }
 
     @Override
     public boolean canDelete() {
-        return binaryPanel.canDelete();
+        return isEditable();
     }
 
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-        binaryPanel.setUpdateListener(updateListener);
+        // binaryPanel.setUpdateListener(updateListener);
     }
 
     @Override

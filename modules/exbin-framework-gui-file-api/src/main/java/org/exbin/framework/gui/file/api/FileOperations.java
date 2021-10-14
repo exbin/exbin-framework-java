@@ -50,6 +50,13 @@ public interface FileOperations {
     void saveAsFile();
 
     /**
+     * Checks if file can be saved.
+     *
+     * @return true if file can be saved
+     */
+    boolean canSave();
+
+    /**
      * Calls file release operation to ask if file can be closed.
      *
      * @return true if file approved for close

@@ -28,7 +28,7 @@ import org.exbin.framework.gui.utils.ActionUtils;
 /**
  * Save file action.
  *
- * @version 0.2.2 2021/10/05
+ * @version 0.2.2 2021/10/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -50,6 +50,11 @@ public class SaveFileAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask()));
+    }
+
+    public void updateForFileOperations() {
+        FileOperations fileOperations = fileOperationsProvider.getFileOperations();
+        setEnabled(fileOperations != null ? fileOperations.canSave() : false);
     }
 
     @Override

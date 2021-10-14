@@ -102,6 +102,10 @@ public class MultiEditorPanel extends javax.swing.JPanel {
         tabbedPane.removeTabAt(index);
     }
 
+    public void removeAllFileHandlers() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     private void changeActiveIndex(int index) {
         if (activeIndex != index) {
             activeIndex = index;

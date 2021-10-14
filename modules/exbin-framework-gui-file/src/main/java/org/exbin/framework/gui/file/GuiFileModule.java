@@ -59,9 +59,6 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 @ParametersAreNonnullByDefault
 public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
 
-    private static final String FILE_MENU_GROUP_ID = MODULE_ID + ".fileMenuGroup";
-    private static final String FILE_TOOL_BAR_GROUP_ID = MODULE_ID + ".fileToolBarGroup";
-
     private java.util.ResourceBundle resourceBundle = null;
     private XBApplication application;
     private FileOperations fileOperations;
@@ -143,7 +140,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
             if (fileOperations != null) {
                 return fileOperations.releaseAllFiles();
             }
-            
+
             return true;
         });
     }
@@ -209,7 +206,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
                 public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
                     fileOperations.loadFromFile(fileUri, fileType);
                 }
-                
+
                 @Nonnull
                 @Override
                 public List<FileType> getRegisteredFileTypes() {
@@ -220,15 +217,16 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
         }
         return recentFilesActions;
     }
-    
+
     @Nonnull
+    @Override
     public FileActions getFileActions() {
         if (fileActions == null) {
             ensureSetup();
             fileActions = new FileActions();
             fileActions.setup(application, resourceBundle, this);
         }
-        
+
         return fileActions;
     }
 
@@ -241,6 +239,15 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
             fileOperations.loadFromFile(filename);
         } catch (URISyntaxException ex) {
             Logger.getLogger(GuiFileModule.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void updateForFileOperations() {
+        if (saveFileAction != null) {
+            saveFileAction.updateForFileOperations();
+        }
+        if (saveAsFileAction != null) {
+            saveAsFileAction.updateForFileOperations();
         }
     }
 }

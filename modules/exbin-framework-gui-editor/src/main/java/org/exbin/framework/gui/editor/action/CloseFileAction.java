@@ -16,22 +16,27 @@
 package org.exbin.framework.gui.editor.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JMenuItem;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.editor.api.MultiEditorPopupMenu;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Close file action.
  *
- * @version 0.2.2 2021/10/05
+ * @version 0.2.2 2021/10/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseFileAction extends AbstractAction {
+public class CloseFileAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "fileCloseAction";
 
@@ -49,11 +54,25 @@ public class CloseFileAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
-        putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+    }
+
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        editorProvider.closeFile();
+        Object source = e.getSource();
+        MultiEditorPopupMenu popupMenu = source instanceof JMenuItem && ((JMenuItem) source).getParent() instanceof MultiEditorPopupMenu ? (MultiEditorPopupMenu) ((JMenuItem) source).getParent() : null;
+        if (popupMenu != null) {
+            Optional<FileHandler> selectedFile = popupMenu.getSelectedFile();
+            if (selectedFile.isPresent()) {
+                editorProvider.closeFile(selectedFile.get());
+            }
+        } else {
+            editorProvider.closeFile();
+        }
     }
 }

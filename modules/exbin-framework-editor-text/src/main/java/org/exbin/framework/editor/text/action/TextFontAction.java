@@ -75,7 +75,7 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
             throw new IllegalStateException();
         }
         
-        TextFontApi textFontApi = (TextFontApi) activeFile.get().getComponent();
+        TextFontApi textFontApi = (TextFontApi) activeFile.get();
 
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();

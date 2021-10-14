@@ -83,7 +83,7 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Override
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        getEditorComponent().setPropertyChangeListener(propertyChangeListener);
+        // getEditorComponent().setPropertyChangeListener(propertyChangeListener);
     }
 
     @Override
@@ -99,12 +99,14 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
-        getEditorComponent().registerBinaryStatus(binaryStatus);
+        throw new UnsupportedOperationException("Not supported yet.");
+        // getEditorComponent().registerBinaryStatus(binaryStatus);
     }
 
     @Override
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatus) {
-        getEditorComponent().registerEncodingStatus(encodingStatus);
+        throw new UnsupportedOperationException("Not supported yet.");
+        // getEditorComponent().registerEncodingStatus(encodingStatus);
     }
 
     @Override
@@ -136,6 +138,11 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     @Override
     public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
         activeFile.loadFromFile(fileUri, fileType);
+    }
+
+    @Override
+    public boolean canSave() {
+        return activeFile.isSaveSupported() && activeFile.isEditable();
     }
 
     @Override

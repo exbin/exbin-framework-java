@@ -20,32 +20,28 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.editor.api.MultiEditorPopupMenu;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.file.api.FileDependentAction;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
- * Close file action.
+ * Save all file action.
  *
- * @version 0.2.2 2021/09/30
+ * @version 0.2.2 2021/10/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseOtherFileAction extends AbstractAction implements FileDependentAction {
+public class SaveAllFileAction extends AbstractAction implements FileDependentAction {
 
-    public static final String ACTION_ID = "fileCloseOtherAction";
+    public static final String ACTION_ID = "fileSaveAllAction";
 
     private ResourceBundle resourceBundle;
     private XBApplication application;
     private MultiEditorProvider editorProvider;
 
-    public CloseOtherFileAction() {
+    public SaveAllFileAction() {
     }
 
     public void setup(XBApplication application, ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
@@ -54,7 +50,6 @@ public class CloseOtherFileAction extends AbstractAction implements FileDependen
         this.editorProvider = editorProvider;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
-        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
     }
 
     @Override
@@ -65,16 +60,6 @@ public class CloseOtherFileAction extends AbstractAction implements FileDependen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
-        MultiEditorPopupMenu popupMenu = source instanceof JMenuItem && ((JMenuItem) source).getParent() instanceof MultiEditorPopupMenu ? (MultiEditorPopupMenu) ((JMenuItem) source).getParent() : null;
-        if (popupMenu != null) {
-            Optional<FileHandler> selectedFile = popupMenu.getSelectedFile();
-            if (selectedFile.isPresent()) {
-                editorProvider.closeOtherFiles(selectedFile.get());
-            }
-        } else {
-            Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-            editorProvider.closeOtherFiles(activeFile.get());
-        }
+        editorProvider.saveAllFiles();
     }
 }

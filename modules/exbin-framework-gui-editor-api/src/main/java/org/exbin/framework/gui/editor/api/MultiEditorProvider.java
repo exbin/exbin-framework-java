@@ -21,7 +21,7 @@ import org.exbin.framework.gui.file.api.FileHandler;
 /**
  * Framework multitab editor interface.
  *
- * @version 0.2.2 2021/10/13
+ * @version 0.2.2 2021/10/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -56,7 +56,24 @@ public interface MultiEditorProvider extends EditorProvider {
     /**
      * Closes specified file.
      *
-     * @param file file handler
+     * @param fileHandler file handler
      */
-    void closeFile(FileHandler file);
+    void closeFile(FileHandler fileHandler);
+
+    /**
+     * Closes other opened files except given file.
+     *
+     * @param fileHandler file handler
+     */
+    void closeOtherFiles(FileHandler fileHandler);
+
+    /**
+     * Closes all opened files.
+     */
+    void closeAllFiles();
+
+    /**
+     * Saves all opened files.
+     */
+    void saveAllFiles();
 }

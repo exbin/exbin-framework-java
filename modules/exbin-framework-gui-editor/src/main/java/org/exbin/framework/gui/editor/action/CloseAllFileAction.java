@@ -16,41 +16,52 @@
 package org.exbin.framework.gui.editor.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.gui.editor.api.MultiEditorProvider;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
 
 /**
  * Close all files action.
  *
- * @version 0.2.2 2021/10/04
+ * @version 0.2.2 2021/10/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseAllFileAction extends AbstractAction {
+public class CloseAllFileAction extends AbstractAction implements FileDependentAction {
 
     public static final String ACTION_ID = "fileCloseAllAction";
 
     private ResourceBundle resourceBundle;
     private XBApplication application;
+    private MultiEditorProvider editorProvider;
 
     public CloseAllFileAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
         this.application = application;
         this.resourceBundle = resourceBundle;
+        this.editorProvider = editorProvider;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
-        putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+    }
+
+    @Override
+    public void updateForActiveFile() {
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+        setEnabled(activeFile.isPresent());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        editorProvider.closeAllFiles();
     }
 }

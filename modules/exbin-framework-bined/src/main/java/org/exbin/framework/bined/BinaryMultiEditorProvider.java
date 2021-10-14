@@ -16,7 +16,9 @@
 package org.exbin.framework.bined;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.FlavorEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -36,20 +38,25 @@ import javax.swing.JPopupMenu;
 import javax.swing.JViewport;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
 import org.exbin.bined.CodeAreaCaretPosition;
 import org.exbin.bined.CodeAreaUtils;
 import org.exbin.bined.EditMode;
-import org.exbin.bined.EditOperation;
 import org.exbin.bined.SelectionRange;
+import org.exbin.bined.capability.EditModeCapable;
+import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.editor.MultiEditorUndoHandler;
+import org.exbin.framework.gui.editor.action.CloseAllFileAction;
 import org.exbin.framework.gui.editor.action.CloseFileAction;
+import org.exbin.framework.gui.editor.action.CloseOtherFileAction;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
+import org.exbin.framework.gui.editor.api.MultiEditorPopupMenu;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.gui.MultiEditorPanel;
 import org.exbin.framework.gui.file.api.FileActionsApi;
@@ -58,6 +65,7 @@ import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.undo.api.UndoFileHandler;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
@@ -65,7 +73,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/13
+ * @version 0.2.2 2021/10/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -81,11 +89,13 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
     private JPopupMenu codeAreaPopupMenu;
-    private PropertyChangeListener propertyChangeListener;
+//    private PropertyChangeListener propertyChangeListener;
+    private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
     private EditorModificationListener editorModificationListener;
-    private BinaryStatusApi binaryStatusApi;
+    private BinaryStatusApi binaryStatus;
     private TextEncodingStatusApi textEncodingStatusApi;
     private MultiEditorUndoHandler undoHandler = new MultiEditorUndoHandler();
+    private Optional<FileHandler> activeFileCache = Optional.empty();
 
     public BinaryMultiEditorProvider(XBApplication application, ResourceBundle resourceBundle) {
         init(application, resourceBundle);
@@ -101,18 +111,22 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
             @Override
             public void showPopupMenu(int index, Component component, int positionX, int positionY) {
+                if (index < 0) {
+                    return;
+                }
+
+                FileHandler fileHandler = multiEditorPanel.getFileHandler(index);
                 GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
-                JPopupMenu fileTabPopupMenu = new JPopupMenu();
+                JPopupMenu fileTabPopupMenu = new EditorPopupMenu(fileHandler);
                 CloseFileAction closeFileAction = (CloseFileAction) editorModule.getCloseFileAction();
                 JMenuItem closeMenuItem = new JMenuItem(closeFileAction);
-                closeMenuItem.addActionListener((ActionEvent e) -> {
-                    FileHandler fileHandler = multiEditorPanel.getFileHandler(index);
-                    if (releaseFile(fileHandler)) {
-                        multiEditorPanel.removeFileHandler(fileHandler);
-                        closeFile(fileHandler);
-                    }
-                });
                 fileTabPopupMenu.add(closeMenuItem);
+                CloseAllFileAction closeAllFileAction = (CloseAllFileAction) editorModule.getCloseAllFileAction();
+                JMenuItem closeAllMenuItem = new JMenuItem(closeAllFileAction);
+                fileTabPopupMenu.add(closeAllMenuItem);
+                CloseOtherFileAction closeOtherFileAction = (CloseOtherFileAction) editorModule.getCloseOtherFileAction();
+                JMenuItem closeOtherMenuItem = new JMenuItem(closeOtherFileAction);
+                fileTabPopupMenu.add(closeOtherMenuItem);
                 fileTabPopupMenu.show(component, positionX, positionY);
             }
         });
@@ -132,12 +146,17 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
                 return new ArrayList<>();
             }
         };
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.addFlavorListener((FlavorEvent e) -> {
+            updateClipboardActionsStatus();
+        });
+
     }
 
     @Nonnull
     @Override
     public Optional<FileHandler> getActiveFile() {
-        return Optional.ofNullable(multiEditorPanel.getActiveFile());
+        return activeFileCache;
     }
 
     @Nonnull
@@ -148,8 +167,9 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     @Override
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        this.propertyChangeListener = propertyChangeListener;
-        ((BinEdComponentPanel) getComponent()).setPropertyChangeListener(propertyChangeListener);
+        throw new UnsupportedOperationException("Not supported yet.");
+//        this.propertyChangeListener = propertyChangeListener;
+//        ((BinEdComponentPanel) getComponent()).setPropertyChangeListener(propertyChangeListener);
     }
 
     @Override
@@ -192,20 +212,46 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Nonnull
     private BinEdFileHandler createFileHandler(int id) {
         BinEdFileHandler fileHandler = new BinEdFileHandler(id);
-        fileHandler.getComponent().registerBinaryStatus(new BinaryStatusWrapper());
-        fileHandler.getComponent().registerEncodingStatus(new TextEncodingStatusWrapper());
         fileHandler.getUndoHandler().addUndoUpdateListener(new XBUndoUpdateListener() {
             @Override
             public void undoCommandPositionChanged() {
                 undoHandler.notifyUndoUpdate();
+                updateCurrentDocumentSize();
+                // notifyModified();
+
             }
 
             @Override
             public void undoCommandAdded(Command cmnd) {
                 undoHandler.notifyUndoCommandAdded(cmnd);
+                updateCurrentDocumentSize();
+                // notifyModified();
             }
         });
+        ExtCodeArea codeArea = fileHandler.getCodeArea();
+        CodeAreaOperationCommandHandler commandHandler = new CodeAreaOperationCommandHandler(codeArea, fileHandler.getCodeAreaUndoHandler());
+        codeArea.setCommandHandler(commandHandler);
+        initCodeArea(codeArea);
+
         return fileHandler;
+    }
+
+    private void initCodeArea(ExtCodeArea codeArea) {
+        codeArea.addSelectionChangedListener(() -> {
+            updateClipboardActionsStatus();
+        });
+
+        codeArea.addDataChangedListener(() -> {
+//            if (binarySearchPanelVisible) {
+//                binarySearchPanel.dataChanged();
+//            }
+            updateCurrentDocumentSize();
+        });
+        // TODO use listener in code area component instead
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.addFlavorListener((FlavorEvent e) -> {
+            updateClipboardActionsStatus();
+        });
     }
 
     @Override
@@ -254,13 +300,40 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         fileModule.getFileActions().saveAsFile(activeFile, fileTypes);
     }
 
+    @Override
+    public boolean canSave() {
+        FileHandler activeFile = multiEditorPanel.getActiveFile();
+        if (activeFile == null) {
+            return false;
+        }
+
+        return ((BinEdFileHandler) activeFile).isSaveSupported() && ((BinEdFileHandler) activeFile).isEditable();
+    }
+
     private void activeFileChanged() {
         FileHandler activeFile = multiEditorPanel.getActiveFile();
+        activeFileCache = Optional.ofNullable(activeFile);
         undoHandler.setActiveFile(activeFile);
 
         for (ActiveFileChangeListener listener : activeFileChangeListeners) {
             listener.activeFileChanged(activeFile);
         }
+
+        if (clipboardActionsUpdateListener != null) {
+            updateClipboardActionsStatus();
+        }
+
+        if (binaryStatus != null) {
+            updateCurrentDocumentSize();
+            updateCurrentCaretPosition();
+            updateCurrentSelectionRange();
+            updateCurrentMemoryMode();
+        }
+
+//        if (charsetChangeListener != null) {
+//            charsetChangeListener.charsetChanged();
+//        }
+//        encodingStatus.setEncoding(codeArea.getCharset().name());
     }
 
     @Override
@@ -303,27 +376,63 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     @Override
     public void closeFile() {
-        FileHandler activeFile = multiEditorPanel.getActiveFile();
-        if (activeFile == null) {
+        if (activeFileCache.isEmpty()) {
             throw new IllegalStateException();
         }
 
-        closeFile(activeFile);
+        closeFile(activeFileCache.get());
     }
 
     @Override
     public void closeFile(FileHandler file) {
+        if (releaseFile(file)) {
+            multiEditorPanel.removeFileHandler(file);
+        }
+    }
 
+    @Override
+    public void closeOtherFiles(FileHandler fileHandler) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void closeAllFiles() {
+        if (releaseAllFiles()) {
+            multiEditorPanel.removeAllFileHandlers();
+        }
+    }
+
+    @Override
+    public void saveAllFiles() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
-        this.binaryStatusApi = binaryStatus;
+        this.binaryStatus = binaryStatus;
+//        attachCaretListener((CodeAreaCaretPosition caretPosition) -> {
+//            binaryStatus.setCursorPosition(caretPosition);
+//        });
+//        codeArea.addSelectionChangedListener(() -> {
+//            binaryStatus.setSelectionRange(codeArea.getSelection());
+//        });
+//
+//        attachEditModeChangedListener((EditMode mode, EditOperation operation) -> {
+//            binaryStatus.setEditMode(mode, operation);
+//        });
+//        binaryStatus.setEditMode(codeArea.getEditMode(), codeArea.getActiveOperation());
+
+        updateCurrentMemoryMode();
     }
 
     @Override
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatus) {
         this.textEncodingStatusApi = encodingStatus;
+    }
+
+    public void setClipboardActionsUpdateListener(ClipboardActionsUpdateListener updateListener) {
+        clipboardActionsUpdateListener = updateListener;
+        updateClipboardActionsStatus();
     }
 
     @Override
@@ -389,55 +498,82 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         newFile.getComponent().getCodeArea().setComponentPopupMenu(codeAreaPopupMenu);
     }
 
-    @ParametersAreNonnullByDefault
-    private class BinaryStatusWrapper implements BinaryStatusApi {
-
-        @Override
-        public void setCursorPosition(CodeAreaCaretPosition cursorPosition) {
-            if (binaryStatusApi != null) {
-                binaryStatusApi.setCursorPosition(cursorPosition);
-            }
+    private void updateClipboardActionsStatus() {
+        if (clipboardActionsUpdateListener != null) {
+            clipboardActionsUpdateListener.stateChanged();
         }
 
-        @Override
-        public void setSelectionRange(SelectionRange selectionRange) {
-            if (binaryStatusApi != null) {
-                binaryStatusApi.setSelectionRange(selectionRange);
-            }
+//        if (copyAsCode != null) {
+//            copyAsCode.setEnabled(codeArea.hasSelection());
+//        }
+//        if (pasteFromCode != null) {
+//            pasteFromCode.setEnabled(codeArea.canPaste());
+//        }
+    }
+
+    private void updateCurrentDocumentSize() {
+        if (binaryStatus == null) {
+            return;
         }
 
-        @Override
-        public void setEditMode(EditMode mode, EditOperation operation) {
-            if (binaryStatusApi != null) {
-                binaryStatusApi.setEditMode(mode, operation);
-            }
+        Optional<FileHandler> activeFile = getActiveFile();
+        if (activeFile.isPresent()) {
+            ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+            long documentOriginalSize = ((BinEdFileHandler) activeFile.get()).getDocumentOriginalSize();
+            long dataSize = codeArea.getDataSize();
+            binaryStatus.setCurrentDocumentSize(dataSize, documentOriginalSize);
+        }
+    }
+
+    private void updateCurrentCaretPosition() {
+        if (binaryStatus == null) {
+            return;
         }
 
-        @Override
-        public void setControlHandler(BinaryStatusApi.StatusControlHandler statusControlHandler) {
-            if (binaryStatusApi != null) {
-                binaryStatusApi.setControlHandler(statusControlHandler);
-            }
+        Optional<FileHandler> activeFile = getActiveFile();
+        if (activeFile.isPresent()) {
+            ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+            CodeAreaCaretPosition caretPosition = codeArea.getCaretPosition();
+            binaryStatus.setCursorPosition(caretPosition);
+        }
+    }
+
+    private void updateCurrentSelectionRange() {
+        if (binaryStatus == null) {
+            return;
         }
 
-        @Override
-        public void setCurrentDocumentSize(long documentSize, long initialDocumentSize) {
-            if (binaryStatusApi != null) {
-                binaryStatusApi.setCurrentDocumentSize(documentSize, initialDocumentSize);
-            }
+        Optional<FileHandler> activeFile = getActiveFile();
+        if (activeFile.isPresent()) {
+            ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+            SelectionRange selectionRange = codeArea.getSelection();
+            binaryStatus.setSelectionRange(selectionRange);
+        }
+    }
+
+    private void updateCurrentMemoryMode() {
+        if (binaryStatus == null) {
+            return;
         }
 
-        @Override
-        public void setMemoryMode(BinaryStatusApi.MemoryMode memoryMode) {
-            if (binaryStatusApi != null) {
-                binaryStatusApi.setMemoryMode(memoryMode);
+        Optional<FileHandler> activeFile = getActiveFile();
+        if (activeFile.isPresent()) {
+            ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+            BinaryStatusApi.MemoryMode newMemoryMode = BinaryStatusApi.MemoryMode.RAM_MEMORY;
+            if (((EditModeCapable) codeArea).getEditMode() == EditMode.READ_ONLY) {
+                newMemoryMode = BinaryStatusApi.MemoryMode.READ_ONLY;
+            } else if (codeArea.getContentData() instanceof DeltaDocument) {
+                newMemoryMode = BinaryStatusApi.MemoryMode.DELTA_MODE;
             }
+
+            binaryStatus.setMemoryMode(newMemoryMode);
         }
     }
 
     @ParametersAreNonnullByDefault
     private class TextEncodingStatusWrapper implements TextEncodingStatusApi {
 
+        @Nonnull
         @Override
         public String getEncoding() {
             if (textEncodingStatusApi != null) {
@@ -451,6 +587,22 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             if (textEncodingStatusApi != null) {
                 textEncodingStatusApi.setEncoding(encodingName);
             }
+        }
+    }
+
+    private class EditorPopupMenu extends JPopupMenu implements MultiEditorPopupMenu {
+
+        @Nullable
+        private final FileHandler selectedFile;
+
+        public EditorPopupMenu(@Nullable FileHandler selectedFile) {
+            super();
+            this.selectedFile = selectedFile;
+        }
+
+        @Override
+        public Optional<FileHandler> getSelectedFile() {
+            return Optional.ofNullable(selectedFile);
         }
     }
 }

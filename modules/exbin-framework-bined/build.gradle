@@ -31,6 +31,7 @@ repositories {
 dependencies {
     implementation moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-core')
     implementation moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-swing')
+    implementation moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-extended')
     implementation moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-swing-extended')
     implementation moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-operation-swing')
     implementation moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-highlight-swing')

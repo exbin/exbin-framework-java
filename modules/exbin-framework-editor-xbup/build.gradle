@@ -35,6 +35,7 @@ dependencies {
     implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
     implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-tree')
     implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-command')
+    implementation moduleDep('BinedLibJava', 'org.exbin.bined', 'bined-swing-extended')
     implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'paged_data')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-bined')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-client')

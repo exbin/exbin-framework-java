@@ -34,9 +34,14 @@ import org.exbin.framework.gui.undo.api.GuiUndoModuleApi;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.action.api.MenuGroup;
+import org.exbin.framework.gui.action.api.MenuPosition;
+import org.exbin.framework.gui.action.api.PositionMode;
 import org.exbin.framework.gui.editor.action.CloseAllFileAction;
 import org.exbin.framework.gui.editor.action.CloseFileAction;
 import org.exbin.framework.gui.editor.action.CloseOtherFileAction;
+import org.exbin.framework.gui.file.api.FileDependentAction;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.undo.api.UndoFileHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -236,6 +241,13 @@ public class GuiEditorModule implements GuiEditorModuleApi {
         }
     }
 
+    @Override
+    public void registerMenuFileCloseActions() {
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        actionModule.registerMenuGroup(GuiFrameModuleApi.FILE_MENU_ID, new MenuGroup(GuiFileModuleApi.FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
+        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getCloseFileAction(), new MenuPosition(GuiFileModuleApi.FILE_MENU_GROUP_ID));
+    }
+
     @Nonnull
     @Override
     public CloseFileAction getCloseFileAction() {
@@ -253,7 +265,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
         if (closeAllFileAction == null) {
             closeAllFileAction = new CloseAllFileAction();
             ensureSetup();
-            closeAllFileAction.setup(application, resourceBundle);
+            closeAllFileAction.setup(application, resourceBundle, (MultiEditorProvider) editorProvider);
         }
         return closeAllFileAction;
     }
@@ -264,8 +276,22 @@ public class GuiEditorModule implements GuiEditorModuleApi {
         if (closeOtherFileAction == null) {
             closeOtherFileAction = new CloseOtherFileAction();
             ensureSetup();
-            closeOtherFileAction.setup(application, resourceBundle);
+            closeOtherFileAction.setup(application, resourceBundle, (MultiEditorProvider) editorProvider);
         }
         return closeOtherFileAction;
+    }
+
+    @Override
+    public void updateActionStatus() {
+        FileDependentAction[] fileDepActions = new FileDependentAction[]{
+            closeFileAction, closeAllFileAction, closeOtherFileAction
+        };
+
+        for (int i = 0; i < fileDepActions.length; i++) {
+            FileDependentAction fileDepAction = fileDepActions[i];
+            if (fileDepAction != null) {
+                fileDepAction.updateForActiveFile();
+            }
+        }
     }
 }
