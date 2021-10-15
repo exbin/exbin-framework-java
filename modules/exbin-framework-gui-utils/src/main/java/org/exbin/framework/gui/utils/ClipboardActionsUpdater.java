@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ClipboardActions extends ClipboardActionsApi {
+public interface ClipboardActionsUpdater extends ClipboardActionsApi {
 
     /**
      * Updates state of these actions according to clipboard handler.

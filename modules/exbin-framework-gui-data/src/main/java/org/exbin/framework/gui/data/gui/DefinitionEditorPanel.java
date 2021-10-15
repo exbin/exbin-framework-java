@@ -26,7 +26,6 @@ import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandler;
 import org.exbin.framework.gui.component.api.toolbar.MoveItemActionsHandlerEmpty;
 import org.exbin.framework.gui.component.gui.ToolBarSidePanel;
 import org.exbin.framework.gui.action.GuiActionModule;
-import org.exbin.framework.gui.utils.ClipboardActions;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsHandlerEmpty;
 import org.exbin.framework.gui.undo.GuiUndoModule;
@@ -38,6 +37,7 @@ import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
 
 /**
  * Data type definition editor panel.
@@ -217,7 +217,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         // toolBarEditorPanel.setUndoHandler(undoHandler, undoActions);
     }
 
-    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActions clipboardActions) {
+    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActionsUpdater clipboardActions) {
         // toolBarEditorPanel.setClipboardHandler(clipboardHandler, clipboardActions);
     }
 

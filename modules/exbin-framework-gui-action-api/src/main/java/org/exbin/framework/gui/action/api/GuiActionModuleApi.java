@@ -15,9 +15,9 @@
  */
 package org.exbin.framework.gui.action.api;
 
+import javax.annotation.Nonnull;
 import org.exbin.framework.gui.utils.ComponentPopupEventDispatcher;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
-import org.exbin.framework.gui.utils.ClipboardActions;
 import org.exbin.framework.gui.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -28,6 +28,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
 
 /**
  * Interface for XBUP framework menu module.
@@ -120,7 +121,11 @@ public interface GuiActionModuleApi extends XBApplicationModule {
      *
      * @return clipboard editing actions
      */
+    @Nonnull
     ClipboardActionsApi getClipboardActions();
+
+    @Nonnull
+    ClipboardActionsApi getClipboardTextActions();
 
     /**
      * Creates new instance of the clipboard actions set.
@@ -128,7 +133,7 @@ public interface GuiActionModuleApi extends XBApplicationModule {
      * @param clipboardHandler clipboard handler
      * @return clipboard actions set
      */
-    ClipboardActions createClipboardActions(ClipboardActionsHandler clipboardHandler);
+    ClipboardActionsUpdater createClipboardActions(ClipboardActionsHandler clipboardHandler);
 
     /**
      * Registers menu clipboard actions.

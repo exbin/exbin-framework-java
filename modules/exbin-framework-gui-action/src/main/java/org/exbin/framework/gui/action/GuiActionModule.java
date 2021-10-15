@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.gui.action;
 
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -25,7 +26,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ClipboardActions;
 import org.exbin.framework.gui.utils.ClipboardActionsApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ComponentPopupEventDispatcher;
@@ -38,20 +38,24 @@ import org.exbin.framework.gui.action.api.ToolBarPosition;
 import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
 
 /**
  * Implementation of framework menu module.
  *
- * @version 0.2.1 2019/07/19
+ * @version 0.2.2 2021/10/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class GuiActionModule implements GuiActionModuleApi {
 
     private XBApplication application;
-    private ClipboardActionsImpl clipboardActions = null;
+    private ClipboardActions clipboardActions = null;
+    private ClipboardTextActions clipboardTextActions = null;
     private MenuHandler menuHandler = null;
     private ToolBarHandler toolBarHandler = null;
+    private ResourceBundle resourceBundle;
 
     public GuiActionModule() {
     }
@@ -66,14 +70,42 @@ public class GuiActionModule implements GuiActionModuleApi {
     }
 
     @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(GuiActionModule.class);
+        }
+
+        return resourceBundle;
+    }
+
+    private void ensureSetup() {
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
+    }
+
+    @Nonnull
     @Override
-    public ClipboardActionsImpl getClipboardActions() {
+    public ClipboardActions getClipboardActions() {
         if (clipboardActions == null) {
-            clipboardActions = new ClipboardActionsImpl();
-            clipboardActions.init();
+            clipboardActions = new ClipboardActions();
+            ensureSetup();
+            clipboardActions.setup(resourceBundle);
         }
 
         return clipboardActions;
+    }
+
+    @Nonnull
+    @Override
+    public ClipboardTextActions getClipboardTextActions() {
+        if (clipboardTextActions == null) {
+            clipboardTextActions = new ClipboardTextActions();
+            ensureSetup();
+            clipboardTextActions.setup(resourceBundle);
+        }
+
+        return clipboardTextActions;
     }
 
     @Override
@@ -151,8 +183,7 @@ public class GuiActionModule implements GuiActionModuleApi {
 
     @Override
     public void registerClipboardMenuItems(String menuId, String moduleId, SeparationMode separationMode) {
-        getClipboardActions();
-        registerClipboardMenuItems(clipboardActions, menuId, moduleId, separationMode);
+        registerClipboardMenuItems(getClipboardActions(), menuId, moduleId, separationMode);
     }
 
     @Override
@@ -202,7 +233,7 @@ public class GuiActionModule implements GuiActionModuleApi {
 
     @Override
     public void registerClipboardHandler(ClipboardActionsHandler clipboardHandler) {
-        getClipboardActions().setClipboardHandler(clipboardHandler);
+        getClipboardTextActions().setClipboardHandler(clipboardHandler);
     }
 
     @Override
@@ -212,12 +243,16 @@ public class GuiActionModule implements GuiActionModuleApi {
 
     @Nonnull
     @Override
-    public ClipboardActions createClipboardActions(ClipboardActionsHandler clipboardActionsHandler) {
+    public ClipboardActionsUpdater createClipboardActions(ClipboardActionsHandler clipboardActionsHandler) {
         return new BasicClipboardActions(clipboardActionsHandler);
     }
 
     @Override
     public void unregisterMenu(String menuId) {
         getMenuHandler().unregisterMenu(menuId);
+    }
+    
+    public void updateClipboardActionsState() {
+        clipboardTextActions.updateClipboardActionsState();
     }
 }

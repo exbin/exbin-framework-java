@@ -19,7 +19,6 @@ import java.awt.BorderLayout;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JToolBar;
 import org.exbin.framework.gui.action.GuiActionModule;
-import org.exbin.framework.gui.utils.ClipboardActions;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsHandlerEmpty;
 import org.exbin.framework.gui.undo.GuiUndoModule;
@@ -29,6 +28,7 @@ import org.exbin.framework.gui.undo.api.UndoActionsHandlerEmpty;
 import org.exbin.framework.gui.utils.GuiUtilsModule;
 import org.exbin.framework.gui.utils.TestApplication;
 import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
 
 /**
  * Panel with edit toolbar.
@@ -89,7 +89,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
         undoActions.updateUndoActions();
     }
 
-    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActions clipboardActions) {
+    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActionsUpdater clipboardActions) {
         this.clipboardHandler = clipboardHandler;
         initToolBar();
         if (undoHandler != null) {

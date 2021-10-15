@@ -25,10 +25,10 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.gui.utils.ClipboardActions;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
 
 /**
  * Basic clipboard action set.
@@ -37,7 +37,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BasicClipboardActions implements ClipboardActions {
+public class BasicClipboardActions implements ClipboardActionsUpdater {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiActionModule.class);
 
