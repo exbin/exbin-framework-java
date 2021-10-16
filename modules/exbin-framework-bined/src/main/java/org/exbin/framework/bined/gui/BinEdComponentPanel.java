@@ -41,17 +41,15 @@ import org.exbin.bined.CodeAreaCaretPosition;
 import org.exbin.bined.EditMode;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
-import org.exbin.framework.gui.editor.api.EditorProvider.EditorModificationListener;
 import org.exbin.bined.EditModeChangedListener;
 import org.exbin.bined.EditOperation;
 import org.exbin.bined.capability.EditModeCapable;
 import org.exbin.framework.bined.BinaryStatusApi;
-import org.exbin.framework.bined.FileHandlingMode;
 
 /**
  * Binary editor panel.
  *
- * @version 0.2.1 2021/10/14
+ * @version 0.2.1 2021/10/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -173,6 +171,12 @@ public class BinEdComponentPanel extends javax.swing.JPanel {
 
     public void findAgain() {
         // TODO hexSearchPanel.f
+    }
+
+    public void notifyDataChanged() {
+        if (binarySearchPanelVisible) {
+            binarySearchPanel.dataChanged();
+        }
     }
 
     /**
@@ -330,10 +334,6 @@ public class BinEdComponentPanel extends javax.swing.JPanel {
 //            charsetChangeListener.charsetChanged();
 //        }
 //        codeArea.setCharset(charset);
-    }
-
-    public void setModificationListener(final EditorModificationListener editorModificationListener) {
-        codeArea.addDataChangedListener(editorModificationListener::modified);
     }
 
     public void addBinaryAreaFocusListener(FocusListener focusListener) {

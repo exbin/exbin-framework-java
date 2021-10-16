@@ -39,9 +39,11 @@ import javax.swing.JViewport;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
+import org.exbin.bined.CaretMovedListener;
 import org.exbin.bined.CodeAreaCaretPosition;
 import org.exbin.bined.CodeAreaUtils;
 import org.exbin.bined.EditMode;
+import org.exbin.bined.EditOperation;
 import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditModeCapable;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
@@ -175,7 +177,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
         this.editorModificationListener = editorModificationListener;
-        ((BinEdComponentPanel) getComponent()).setModificationListener(editorModificationListener);
     }
 
     @Nonnull
@@ -231,27 +232,43 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         ExtCodeArea codeArea = fileHandler.getCodeArea();
         CodeAreaOperationCommandHandler commandHandler = new CodeAreaOperationCommandHandler(codeArea, fileHandler.getCodeAreaUndoHandler());
         codeArea.setCommandHandler(commandHandler);
-        initCodeArea(codeArea);
-
-        return fileHandler;
-    }
-
-    private void initCodeArea(ExtCodeArea codeArea) {
-        codeArea.addSelectionChangedListener(() -> {
-            updateClipboardActionsStatus();
-        });
 
         codeArea.addDataChangedListener(() -> {
-//            if (binarySearchPanelVisible) {
-//                binarySearchPanel.dataChanged();
-//            }
-            updateCurrentDocumentSize();
+            if (fileHandler == activeFileCache.orElse(null)) {
+                ((BinEdFileHandler) activeFileCache.get()).getComponent().notifyDataChanged();
+                if (editorModificationListener != null) {
+                    editorModificationListener.modified();
+                }
+                updateCurrentDocumentSize();
+            }
         });
+
+        codeArea.addSelectionChangedListener(() -> {
+            if (fileHandler == activeFileCache.orElse(null)) {
+                updateCurrentSelectionRange();
+                updateClipboardActionsStatus();
+            }
+        });
+
+        codeArea.addCaretMovedListener((CodeAreaCaretPosition caretPosition) -> {
+            if (fileHandler == activeFileCache.orElse(null)) {
+                updateCurrentCaretPosition();
+            }
+        });
+
+        codeArea.addEditModeChangedListener((EditMode mode, EditOperation operation) -> {
+            if (fileHandler == activeFileCache.orElse(null) && binaryStatus != null) {
+                binaryStatus.setEditMode(mode, operation);
+            }
+        });
+
         // TODO use listener in code area component instead
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.addFlavorListener((FlavorEvent e) -> {
             updateClipboardActionsStatus();
         });
+
+        return fileHandler;
     }
 
     @Override
@@ -328,6 +345,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             updateCurrentCaretPosition();
             updateCurrentSelectionRange();
             updateCurrentMemoryMode();
+            updateCurrentEditMode();
         }
 
 //        if (charsetChangeListener != null) {
@@ -410,19 +428,11 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
         this.binaryStatus = binaryStatus;
-//        attachCaretListener((CodeAreaCaretPosition caretPosition) -> {
-//            binaryStatus.setCursorPosition(caretPosition);
-//        });
-//        codeArea.addSelectionChangedListener(() -> {
-//            binaryStatus.setSelectionRange(codeArea.getSelection());
-//        });
-//
-//        attachEditModeChangedListener((EditMode mode, EditOperation operation) -> {
-//            binaryStatus.setEditMode(mode, operation);
-//        });
-//        binaryStatus.setEditMode(codeArea.getEditMode(), codeArea.getActiveOperation());
-
+        updateCurrentDocumentSize();
+        updateCurrentCaretPosition();
+        updateCurrentSelectionRange();
         updateCurrentMemoryMode();
+        updateCurrentEditMode();
     }
 
     @Override
@@ -502,13 +512,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         if (clipboardActionsUpdateListener != null) {
             clipboardActionsUpdateListener.stateChanged();
         }
-
-//        if (copyAsCode != null) {
-//            copyAsCode.setEnabled(codeArea.hasSelection());
-//        }
-//        if (pasteFromCode != null) {
-//            pasteFromCode.setEnabled(codeArea.canPaste());
-//        }
     }
 
     private void updateCurrentDocumentSize() {
@@ -567,6 +570,18 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             }
 
             binaryStatus.setMemoryMode(newMemoryMode);
+        }
+    }
+
+    private void updateCurrentEditMode() {
+        if (binaryStatus == null) {
+            return;
+        }
+
+        Optional<FileHandler> activeFile = getActiveFile();
+        if (activeFile.isPresent()) {
+            ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+            binaryStatus.setEditMode(codeArea.getEditMode(), codeArea.getActiveOperation());
         }
     }
 

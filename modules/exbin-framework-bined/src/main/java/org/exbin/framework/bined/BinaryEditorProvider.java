@@ -88,7 +88,7 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
-        getEditorComponent().setModificationListener(editorModificationListener);
+        activeFile.getCodeArea().addDataChangedListener(editorModificationListener::modified);
     }
 
     @Nonnull

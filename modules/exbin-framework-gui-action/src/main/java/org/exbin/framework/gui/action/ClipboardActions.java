@@ -15,24 +15,28 @@
  */
 package org.exbin.framework.gui.action;
 
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.FlavorEvent;
+import java.awt.datatransfer.FlavorListener;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.gui.utils.ClipboardActionsApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
+import org.exbin.framework.gui.utils.ClipboardUtils;
 
 /**
  * Clipboard operations.
  *
- * @version 0.2.2 2021/10/15
+ * @version 0.2.2 2021/10/16
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ClipboardActions implements ClipboardActionsApi {
+public class ClipboardActions implements ClipboardActionsUpdater {
 
     public static final String EDIT_SELECT_ALL_ACTION_ID = "editSelectAllAction";
     public static final String EDIT_DELETE_ACTION_ID = "editDeleteAction";
@@ -43,6 +47,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     private ResourceBundle resourceBundle;
 
     private ClipboardActionsHandler clipboardActionsHandler = null;
+    private FlavorListener clipboardFlavorListener;
 
     private Action cutAction;
     private Action copyAction;
@@ -151,16 +156,32 @@ public class ClipboardActions implements ClipboardActionsApi {
         return selectAllAction;
     }
 
+    @Override
     public void setClipboardActionsHandler(ClipboardActionsHandler clipboardActionsHandler) {
         this.clipboardActionsHandler = clipboardActionsHandler;
         updateClipboardActions();
     }
 
+    @Override
     public void updateClipboardActions() {
         cutAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
         copyAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
         pasteAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
         deleteAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
         selectAllAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
+    }
+
+    public void registerClipboardListener() {
+        Clipboard clipboard = ClipboardUtils.getClipboard();
+        clipboardFlavorListener = (FlavorEvent e) -> {
+            updateClipboardActions();
+        };
+        clipboard.addFlavorListener(clipboardFlavorListener);
+    }
+
+    public void unregisterClipboardListener() {
+        Clipboard clipboard = ClipboardUtils.getClipboard();
+        clipboard.removeFlavorListener(clipboardFlavorListener);
+        clipboardFlavorListener = null;
     }
 }

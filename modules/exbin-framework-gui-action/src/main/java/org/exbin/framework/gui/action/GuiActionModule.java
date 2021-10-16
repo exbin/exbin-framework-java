@@ -244,7 +244,10 @@ public class GuiActionModule implements GuiActionModuleApi {
     @Nonnull
     @Override
     public ClipboardActionsUpdater createClipboardActions(ClipboardActionsHandler clipboardActionsHandler) {
-        return new BasicClipboardActions(clipboardActionsHandler);
+        ClipboardActions customClipboardActions = new ClipboardActions();
+        customClipboardActions.setup(resourceBundle);
+        customClipboardActions.setClipboardActionsHandler(clipboardActionsHandler);
+        return customClipboardActions;
     }
 
     @Override
