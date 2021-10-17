@@ -16,7 +16,6 @@
 package org.exbin.framework.editor.wave;
 
 import java.awt.event.MouseMotionListener;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -221,11 +220,6 @@ public class AudioEditor implements EditorProvider {
     }
 
     @Override
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -262,6 +256,11 @@ public class AudioEditor implements EditorProvider {
 
     @Override
     public void saveAsFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean releaseFile(FileHandler fileHandler) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

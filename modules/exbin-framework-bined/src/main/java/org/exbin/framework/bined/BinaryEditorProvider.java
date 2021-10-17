@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.bined;
 
-import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -79,11 +78,6 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     @Override
     public BinEdComponentPanel getEditorComponent() {
         return activeFile.getComponent();
-    }
-
-    @Override
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        // getEditorComponent().setPropertyChangeListener(propertyChangeListener);
     }
 
     @Override
@@ -161,13 +155,18 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     }
 
     @Override
-    public boolean releaseAllFiles() {
-        if (activeFile.isModified()) {
+    public boolean releaseFile(FileHandler fileHandler) {
+        if (fileHandler.isModified()) {
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-            return fileModule.getFileActions().showAskForSaveDialog(activeFile, fileTypes);
+            return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes);
         }
 
         return true;
+    }
+
+    @Override
+    public boolean releaseAllFiles() {
+        return releaseFile(activeFile);
     }
 
     @Nonnull

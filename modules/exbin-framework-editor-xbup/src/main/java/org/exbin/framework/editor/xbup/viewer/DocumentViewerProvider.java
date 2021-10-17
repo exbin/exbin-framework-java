@@ -289,7 +289,6 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         tab.setDevMode(devMode);
     }
 
-    @Override
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         this.propertyChangeListener = propertyChangeListener;
         documentPanel.setPropertyChangeListener(propertyChangeListener);
@@ -514,6 +513,11 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     @Override
     public void saveAsFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean releaseFile(FileHandler fileHandler) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

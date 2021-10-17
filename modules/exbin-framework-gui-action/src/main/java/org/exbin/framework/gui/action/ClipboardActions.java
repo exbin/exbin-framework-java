@@ -164,11 +164,21 @@ public class ClipboardActions implements ClipboardActionsUpdater {
 
     @Override
     public void updateClipboardActions() {
-        cutAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
-        copyAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
-        pasteAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
-        deleteAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
-        selectAllAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
+        if (cutAction != null) {
+            cutAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
+        }
+        if (copyAction != null) {
+            copyAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
+        }
+        if (pasteAction != null) {
+            pasteAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
+        }
+        if (deleteAction != null) {
+            deleteAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
+        }
+        if (selectAllAction != null) {
+            selectAllAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
+        }
     }
 
     public void registerClipboardListener() {

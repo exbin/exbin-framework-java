@@ -311,7 +311,7 @@ public class BinedModule implements XBApplicationModule {
             ((BinaryMultiEditorProvider) editorProvider).setClipboardActionsUpdateListener(() -> {
                 updateClipboardActionStatus();
             });
-
+            
             editorProvider.newFile();
             Optional<FileHandler> activeFile = editorProvider.getActiveFile();
 //            activeFile.setSegmentsRepository(new SegmentsRepository());
@@ -702,10 +702,9 @@ public class BinedModule implements XBApplicationModule {
                 }
 
                 BinEdFileHandler fileHandler = (BinEdFileHandler) activeFile.get();
-                throw new UnsupportedOperationException("Not supported yet.");
-//                if (!fileHandler.isModified() || editorProvider.releaseFile(fileHandler)) {
-//                    fileHandler.switchFileHandlingMode(fileHandlingMode);
-//                }
+                if (!fileHandler.isModified() || editorProvider.releaseFile(fileHandler)) {
+                    fileHandler.switchFileHandlingMode(fileHandlingMode);
+                }
             }
 
             @Override

@@ -18,7 +18,6 @@ package org.exbin.framework.editor.picture;
 import java.awt.Toolkit;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.RenderedImage;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -243,11 +242,6 @@ public class ImageEditor implements EditorProvider {
     }
 
     @Override
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -279,6 +273,11 @@ public class ImageEditor implements EditorProvider {
 
     @Override
     public boolean releaseAllFiles() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean releaseFile(FileHandler fileHandler) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

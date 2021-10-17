@@ -84,7 +84,6 @@ public class ClipboardTextActions implements ClipboardActionsApi {
         this.resourceBundle = resourceBundle;
 
         initializeTextActions();
-        ClipboardUtils.registerDefaultClipboardPopupMenu(resourceBundle, GuiActionModule.class);
     }
 
     private void initializeTextActions() {

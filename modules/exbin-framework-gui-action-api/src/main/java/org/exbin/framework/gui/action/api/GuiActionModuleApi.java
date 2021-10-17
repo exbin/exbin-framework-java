@@ -31,9 +31,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
 
 /**
- * Interface for XBUP framework menu module.
+ * Interface for XBUP framework action module.
  *
- * @version 0.2.2 2020/10/30
+ * @version 0.2.2 2021/10/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -197,6 +197,11 @@ public interface GuiActionModuleApi extends XBApplicationModule {
      * @param clipboardHandler clipboard handler
      */
     void registerClipboardHandler(ClipboardActionsHandler clipboardHandler);
+
+    /**
+     * Registers default clipboard actions in default popup menu.
+     */
+    void registerClipboardTextActions();
 
     /**
      * Unregisters menu and all it's items.

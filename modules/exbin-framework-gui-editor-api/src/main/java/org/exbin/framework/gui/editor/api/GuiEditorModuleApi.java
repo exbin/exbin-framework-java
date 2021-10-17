@@ -42,14 +42,6 @@ public interface GuiEditorModuleApi extends XBApplicationModule {
     void registerEditor(String pluginId, EditorProvider editorProvider);
 
     /**
-     * Registers multi-file editor.
-     *
-     * @param pluginId plugin identifier
-     * @param editorProvider editor provider
-     */
-    void registerMultiEditor(String pluginId, final MultiEditorProvider editorProvider);
-
-    /**
      * Returns main component for editors handling.
      *
      * @return panel component

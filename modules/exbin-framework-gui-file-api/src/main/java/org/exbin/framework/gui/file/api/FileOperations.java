@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Interface for file operations.
  *
- * @version 0.2.2 2021/10/08
+ * @version 0.2.2 2021/10/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -55,6 +55,14 @@ public interface FileOperations {
      * @return true if file can be saved
      */
     boolean canSave();
+
+    /**
+     * Calls file release operation to ask if file can be closed.
+     *
+     * @param fileHandler file handler
+     * @return true if file approved for close
+     */
+    boolean releaseFile(FileHandler fileHandler);
 
     /**
      * Calls file release operation to ask if file can be closed.

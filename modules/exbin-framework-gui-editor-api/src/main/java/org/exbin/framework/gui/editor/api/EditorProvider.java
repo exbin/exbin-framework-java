@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.gui.editor.api;
 
-import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -29,7 +28,7 @@ import org.exbin.framework.gui.file.api.FileHandler;
 /**
  * XBUP framework editor interface.
  *
- * @version 0.2.2 2021/10/12
+ * @version 0.2.2 2021/10/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -67,13 +66,6 @@ public interface EditorProvider extends FileOperations {
      * @param fileType file type
      */
     void openFile(URI fileUri, FileType fileType);
-
-    /**
-     * Changes passing listener.
-     *
-     * @param propertyChangeListener change listener
-     */
-    void setPropertyChangeListener(PropertyChangeListener propertyChangeListener);
 
     /**
      * Sets modification listener.

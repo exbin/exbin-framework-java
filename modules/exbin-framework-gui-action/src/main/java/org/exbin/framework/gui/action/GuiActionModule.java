@@ -195,6 +195,12 @@ public class GuiActionModule implements GuiActionModuleApi {
         registerMenuItem(menuId, moduleId, actions.getDeleteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
         registerMenuItem(menuId, moduleId, actions.getSelectAllAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
+    
+    @Override
+    public void registerClipboardTextActions() {
+        getClipboardTextActions();
+        ClipboardUtils.registerDefaultClipboardPopupMenu(resourceBundle, GuiActionModule.class);
+    }
 
     @Override
     public void buildToolBar(JToolBar targetToolBar, String toolBarId) {
@@ -233,7 +239,7 @@ public class GuiActionModule implements GuiActionModuleApi {
 
     @Override
     public void registerClipboardHandler(ClipboardActionsHandler clipboardHandler) {
-        getClipboardTextActions().setClipboardHandler(clipboardHandler);
+        getClipboardActions().setClipboardActionsHandler(clipboardHandler);
     }
 
     @Override

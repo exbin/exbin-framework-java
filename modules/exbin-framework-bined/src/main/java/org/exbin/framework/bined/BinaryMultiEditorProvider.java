@@ -19,7 +19,6 @@ import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
-import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ import javax.swing.JViewport;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
-import org.exbin.bined.CaretMovedListener;
 import org.exbin.bined.CodeAreaCaretPosition;
 import org.exbin.bined.CodeAreaUtils;
 import org.exbin.bined.EditMode;
@@ -49,9 +47,9 @@ import org.exbin.bined.capability.EditModeCapable;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
+import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.editor.MultiEditorUndoHandler;
 import org.exbin.framework.gui.editor.action.CloseAllFileAction;
 import org.exbin.framework.gui.editor.action.CloseFileAction;
@@ -68,6 +66,7 @@ import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.undo.api.UndoFileHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
@@ -75,7 +74,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/14
+ * @version 0.2.2 2021/10/17
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -91,7 +90,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
     private JPopupMenu codeAreaPopupMenu;
-//    private PropertyChangeListener propertyChangeListener;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
     private EditorModificationListener editorModificationListener;
     private BinaryStatusApi binaryStatus;
@@ -152,7 +150,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         clipboard.addFlavorListener((FlavorEvent e) -> {
             updateClipboardActionsStatus();
         });
-
     }
 
     @Nonnull
@@ -168,13 +165,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     }
 
     @Override
-    public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        this.propertyChangeListener = propertyChangeListener;
-//        ((BinEdComponentPanel) getComponent()).setPropertyChangeListener(propertyChangeListener);
-    }
-
-    @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
         this.editorModificationListener = editorModificationListener;
     }
@@ -184,12 +174,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     public String getWindowTitle(String parentTitle) {
         FileHandler activeFile = multiEditorPanel.getActiveFile();
         return activeFile == null ? "" : ((BinEdFileHandler) activeFile).getWindowTitle(parentTitle);
-    }
-
-    @Nullable
-    private BinEdComponentPanel getComponent() {
-        FileHandler activeFile = multiEditorPanel.getActiveFile();
-        return activeFile == null ? null : (BinEdComponentPanel) activeFile.getComponent();
     }
 
     @Override
@@ -219,7 +203,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
                 undoHandler.notifyUndoUpdate();
                 updateCurrentDocumentSize();
                 // notifyModified();
-
             }
 
             @Override
@@ -260,12 +243,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             if (fileHandler == activeFileCache.orElse(null) && binaryStatus != null) {
                 binaryStatus.setEditMode(mode, operation);
             }
-        });
-
-        // TODO use listener in code area component instead
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.addFlavorListener((FlavorEvent e) -> {
-            updateClipboardActionsStatus();
         });
 
         return fileHandler;
@@ -368,6 +345,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
@@ -512,6 +490,8 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         if (clipboardActionsUpdateListener != null) {
             clipboardActionsUpdateListener.stateChanged();
         }
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        ((ClipboardActionsUpdater) actionModule.getClipboardActions()).updateClipboardActions();
     }
 
     private void updateCurrentDocumentSize() {
@@ -615,6 +595,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             this.selectedFile = selectedFile;
         }
 
+        @Nonnull
         @Override
         public Optional<FileHandler> getSelectedFile() {
             return Optional.ofNullable(selectedFile);

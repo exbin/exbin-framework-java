@@ -266,7 +266,6 @@ public class TextEditor implements EditorProvider {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         this.propertyChangeListener = propertyChangeListener;
     }
@@ -309,6 +308,11 @@ public class TextEditor implements EditorProvider {
 
     @Override
     public void saveAsFile() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean releaseFile(FileHandler fileHandler) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
