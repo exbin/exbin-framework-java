@@ -54,6 +54,7 @@ import org.exbin.framework.gui.editor.MultiEditorUndoHandler;
 import org.exbin.framework.gui.editor.action.CloseAllFileAction;
 import org.exbin.framework.gui.editor.action.CloseFileAction;
 import org.exbin.framework.gui.editor.action.CloseOtherFileAction;
+import org.exbin.framework.gui.editor.action.EditorActions;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.MultiEditorPopupMenu;
@@ -325,10 +326,9 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             updateCurrentEditMode();
         }
 
-//        if (charsetChangeListener != null) {
-//            charsetChangeListener.charsetChanged();
-//        }
-//        encodingStatus.setEncoding(codeArea.getCharset().name());
+        if (textEncodingStatusApi != null) {
+            updateCurrentEncoding();
+        }
     }
 
     @Override
@@ -342,6 +342,8 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             return releaseFile(getActiveFile().get());
         }
 
+        GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
+        EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -416,6 +418,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Override
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatus) {
         this.textEncodingStatusApi = encodingStatus;
+        updateCurrentEncoding();
     }
 
     public void setClipboardActionsUpdateListener(ClipboardActionsUpdateListener updateListener) {
@@ -565,23 +568,14 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         }
     }
 
-    @ParametersAreNonnullByDefault
-    private class TextEncodingStatusWrapper implements TextEncodingStatusApi {
-
-        @Nonnull
-        @Override
-        public String getEncoding() {
-            if (textEncodingStatusApi != null) {
-                return textEncodingStatusApi.getEncoding();
-            }
-            return "";
+    private void updateCurrentEncoding() {
+        if (textEncodingStatusApi == null) {
+            return;
         }
 
-        @Override
-        public void setEncoding(String encodingName) {
-            if (textEncodingStatusApi != null) {
-                textEncodingStatusApi.setEncoding(encodingName);
-            }
+        Optional<FileHandler> activeFile = getActiveFile();
+        if (activeFile.isPresent()) {
+            textEncodingStatusApi.setEncoding(((BinEdFileHandler) activeFile.get()).getCharset().name());
         }
     }
 

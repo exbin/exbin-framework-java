@@ -15,29 +15,41 @@
  */
 package org.exbin.framework.bined;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.FlavorEvent;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
+import org.exbin.bined.CodeAreaCaretPosition;
+import org.exbin.bined.EditMode;
+import org.exbin.bined.EditOperation;
+import org.exbin.bined.capability.EditModeCapable;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
+import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.undo.api.UndoFileHandler;
+import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/12
+ * @version 0.2.2 2021/10/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -45,9 +57,13 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     private XBApplication application;
     private BinEdFileHandler activeFile;
-    private final FileTypes fileTypes;
+    private FileTypes fileTypes;
 
     public BinaryEditorProvider(XBApplication application, BinEdFileHandler activeFile) {
+        init(application, activeFile);
+    }
+
+    private void init(XBApplication application, BinEdFileHandler activeFile) {
         this.application = application;
         this.activeFile = activeFile;
         fileTypes = new FileTypes() {
@@ -66,6 +82,11 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
                 return new ArrayList<>();
             }
         };
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.addFlavorListener((FlavorEvent e) -> {
+            updateClipboardActionsStatus();
+        });
     }
 
     @Nonnull
@@ -93,14 +114,33 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
-        throw new UnsupportedOperationException("Not supported yet.");
-        // getEditorComponent().registerBinaryStatus(binaryStatus);
+        ExtCodeArea codeArea = getEditorComponent().getCodeArea();
+        codeArea.addCaretMovedListener((CodeAreaCaretPosition caretPosition) -> {
+            binaryStatus.setCursorPosition(caretPosition);
+        });
+        codeArea.addSelectionChangedListener(() -> {
+            binaryStatus.setSelectionRange(codeArea.getSelection());
+            updateClipboardActionsStatus();
+        });
+
+        codeArea.addEditModeChangedListener((EditMode mode, EditOperation operation) -> {
+            binaryStatus.setEditMode(mode, operation);
+        });
+        binaryStatus.setEditMode(codeArea.getEditMode(), codeArea.getActiveOperation());
+
+        BinaryStatusApi.MemoryMode newMemoryMode = BinaryStatusApi.MemoryMode.RAM_MEMORY;
+        if (((EditModeCapable) codeArea).getEditMode() == EditMode.READ_ONLY) {
+            newMemoryMode = BinaryStatusApi.MemoryMode.READ_ONLY;
+        } else if (codeArea.getContentData() instanceof DeltaDocument) {
+            newMemoryMode = BinaryStatusApi.MemoryMode.DELTA_MODE;
+        }
+
+        binaryStatus.setMemoryMode(newMemoryMode);
     }
 
     @Override
     public void registerEncodingStatus(TextEncodingStatusApi encodingStatus) {
-        throw new UnsupportedOperationException("Not supported yet.");
-        // getEditorComponent().registerEncodingStatus(encodingStatus);
+        encodingStatus.setEncoding(activeFile.getCharset().name());
     }
 
     @Override
@@ -173,5 +213,10 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     @Override
     public XBUndoHandler getUndoHandler() {
         return activeFile.getUndoHandler();
+    }
+
+    private void updateClipboardActionsStatus() {
+        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        ((ClipboardActionsUpdater) actionModule.getClipboardActions()).updateClipboardActions();
     }
 }

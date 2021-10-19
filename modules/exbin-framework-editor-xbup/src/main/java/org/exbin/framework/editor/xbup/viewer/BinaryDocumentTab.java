@@ -57,7 +57,7 @@ public class BinaryDocumentTab implements DocumentTab {
     public BinaryDocumentTab() {
         binaryPanel = new BinEdComponentPanel();
         binaryStatusPanel = new BinaryStatusPanel();
-        binaryPanel.registerBinaryStatus(binaryStatusPanel);
+//        binaryPanel.registerBinaryStatus(binaryStatusPanel);
         // binaryPanel.setNoBorder();
         init();
     }

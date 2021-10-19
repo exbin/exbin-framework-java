@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -41,6 +40,7 @@ import org.exbin.framework.gui.action.api.PositionMode;
 import org.exbin.framework.gui.editor.action.CloseAllFileAction;
 import org.exbin.framework.gui.editor.action.CloseFileAction;
 import org.exbin.framework.gui.editor.action.CloseOtherFileAction;
+import org.exbin.framework.gui.editor.action.EditorActions;
 import org.exbin.framework.gui.file.api.FileDependentAction;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -50,7 +50,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * XBUP framework editor module.
  *
- * @version 0.2.2 2021/10/17
+ * @version 0.2.2 2021/10/19
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -66,6 +66,7 @@ public class GuiEditorModule implements GuiEditorModuleApi {
     private CloseFileAction closeFileAction;
     private CloseAllFileAction closeAllFileAction;
     private CloseOtherFileAction closeOtherFileAction;
+    private EditorActions editorActions;
 
     public GuiEditorModule() {
     }
@@ -285,6 +286,17 @@ public class GuiEditorModule implements GuiEditorModuleApi {
             closeOtherFileAction.setup(application, resourceBundle, (MultiEditorProvider) editorProvider);
         }
         return closeOtherFileAction;
+    }
+
+    @Nonnull
+    @Override
+    public EditorActions getEditorActions() {
+        if (editorActions == null) {
+            editorActions = new EditorActions();
+            ensureSetup();
+            editorActions.setup(application, resourceBundle, (MultiEditorProvider) editorProvider);
+        }
+        return editorActions;
     }
 
     @Override

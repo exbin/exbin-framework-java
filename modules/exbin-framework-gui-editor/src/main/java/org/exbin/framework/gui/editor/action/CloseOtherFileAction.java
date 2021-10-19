@@ -22,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.MultiEditorPopupMenu;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;

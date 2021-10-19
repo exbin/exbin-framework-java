@@ -15,18 +15,24 @@
  */
 package org.exbin.framework.gui.editor.gui;
 
+import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.DefaultListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
- * Multi editor panel.
+ * Unsaved files panel.
  *
- * @version 0.2.2 2021/09/27
+ * @version 0.2.2 2021/10/18
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UnsavedFilesPanel extends javax.swing.JPanel {
 
+    private List<FileHandler> fileHandlers;
     private Control control;
 
     public UnsavedFilesPanel() {
@@ -35,10 +41,25 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
     }
 
     private void init() {
+        filesList.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                saveButton.setEnabled(filesList.getSelectedIndex() != -1);
+            }
+        });
     }
 
     public void setControl(Control control) {
         this.control = control;
+    }
+
+    public void setUnsavedFiles(List<FileHandler> fileHandlers) {
+        this.fileHandlers = fileHandlers;
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (FileHandler fileHandler : fileHandlers) {
+            String fileName = fileHandler.getFileName().orElse("");
+            listModel.addElement(fileName);
+        }
+        filesList.setModel(listModel);
     }
 
     /**
@@ -65,12 +86,33 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
         filesListScrollPane.setViewportView(filesList);
 
         saveButton.setText("Save");
+        saveButton.setEnabled(false);
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         saveAllButton.setText("Save All");
+        saveAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAllButtonActionPerformed(evt);
+            }
+        });
 
         discardAllButton.setText("Discard All");
+        discardAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                discardAllButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -80,15 +122,17 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(filesListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(filesListScrollPane)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(discardAllButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(saveAllButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(filesListLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(filesListLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -97,7 +141,7 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
                 .addComponent(filesListLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(filesListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                    .addComponent(filesListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(saveButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -110,6 +154,43 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        if (control != null) {
+            int[] selectedIndices = filesList.getSelectedIndices();
+            int shift = 0;
+            for (int i = 0; i < selectedIndices.length; i++) {
+                int selectedIndex = selectedIndices[i];
+                FileHandler fileHandler = fileHandlers.get(selectedIndex - shift);
+                if (control.saveFile(fileHandler)) {
+                    DefaultListModel<String> listModel = (DefaultListModel<String>) filesList.getModel();
+                    listModel.remove(selectedIndex - shift);
+                    fileHandlers.remove(selectedIndex - shift);
+                    shift++;
+                } else {
+                    break;
+                }
+            }
+        }
+    }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void saveAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAllButtonActionPerformed
+        if (control != null) {
+
+        }
+    }//GEN-LAST:event_saveAllButtonActionPerformed
+
+    private void discardAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardAllButtonActionPerformed
+        if (control != null) {
+            control.discardAll(fileHandlers);
+        }
+    }//GEN-LAST:event_discardAllButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        if (control != null) {
+            control.cancel();
+        }
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
      * Test method for this panel.
@@ -130,8 +211,13 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 
+    @ParametersAreNonnullByDefault
     public interface Control {
 
-        void activeIndexChanged(int index);
+        boolean saveFile(FileHandler fileHandler);
+
+        void discardAll(List<FileHandler> fileHandlers);
+
+        void cancel();
     }
 }

@@ -171,7 +171,7 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
 
         fileSync();
     }
-    
+
     private void fileSync() {
         documentOriginalSize = getCodeArea().getDataSize();
         undoHandlerWrapper.setSyncPoint();
@@ -222,7 +222,9 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
         }
         setNewData();
         fileUri = null;
-        undoHandlerWrapper.clear();
+        if (undoHandlerWrapper != null) {
+            undoHandlerWrapper.clear();
+        }
     }
 
     @Override
@@ -345,7 +347,10 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
                     componentPanel.setContentData(data);
                 }
 
-                undoHandlerWrapper.clear();
+                if (undoHandlerWrapper != null) {
+                    undoHandlerWrapper.clear();
+                }
+
                 if (oldData != null) {
                     oldData.dispose();
                 }
@@ -353,12 +358,12 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
             }
         }
     }
-    
+
     @Nonnull
     public FileHandlingMode getFileHandlingMode() {
         return getCodeArea().getContentData() instanceof DeltaDocument ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY;
     }
-    
+
     private void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
         // updateCurrentMemoryMode();
     }
