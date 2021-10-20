@@ -21,12 +21,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.api.EditorActionsApi;
+import org.exbin.framework.gui.editor.gui.UnsavedFilesPanel;
 import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 
 /**
  * Editor actions.
  *
- * @version 0.2.2 2021/10/19
+ * @version 0.2.2 2021/10/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -47,6 +50,32 @@ public class EditorActions implements EditorActionsApi {
 
     @Override
     public boolean showAskForSaveDialog(List<FileHandler> fileHandlers) {
-        return false;
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        UnsavedFilesPanel unsavedFilesPanel = new UnsavedFilesPanel();
+        unsavedFilesPanel.setUnsavedFiles(fileHandlers, editorProvider);
+        final boolean[] result = new boolean[1];
+        final DialogWrapper dialog = frameModule.createDialog(unsavedFilesPanel);
+        unsavedFilesPanel.setControl(new UnsavedFilesPanel.Control() {
+            public boolean saveFile(FileHandler fileHandler) {
+                editorProvider.saveFile(fileHandler);
+                return !fileHandler.isModified();
+            }
+
+            public void discardAll(List<FileHandler> fileHandlers) {
+                result[0] = true;
+                dialog.close();
+            }
+
+            public void cancel() {
+                result[0] = false;
+                dialog.close();
+            }
+        });
+
+        frameModule.setDialogTitle(dialog, unsavedFilesPanel.getResourceBundle());
+        unsavedFilesPanel.assignGlobalKeys();
+        dialog.showCentered(editorProvider.getEditorComponent());
+        
+        return result[0];
     }
 }

@@ -65,7 +65,7 @@ public class ImageEditor implements EditorProvider {
     
     private static final String DEFAULT_PICTURE_FILE_EXT = "PNG";
 
-    private ImagePanel imagePanel;
+    private ImagePanel imagePanel = new ImagePanel();
     private FileHandler activeFile;
     private JPopupMenu popupMenu;
     private MouseMotionListener mouseMotionListener;

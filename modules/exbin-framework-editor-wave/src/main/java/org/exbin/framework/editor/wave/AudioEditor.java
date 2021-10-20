@@ -62,7 +62,7 @@ public class AudioEditor implements EditorProvider {
     
     private javax.sound.sampled.AudioFileFormat.Type audioFormatType = null;
 
-    private AudioPanel audioPanel;
+    private AudioPanel audioPanel = new AudioPanel();
     private FileHandler activeFile;
     private JPopupMenu popupMenu;
     private MouseMotionListener mouseMotionListener;

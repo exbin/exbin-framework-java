@@ -164,7 +164,7 @@ public class EditorTextModule implements XBApplicationModule {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, TEXT_STATUS_BAR_ID, textStatusPanel);
         frameModule.switchStatusBar(TEXT_STATUS_BAR_ID);
-        ((TextPanel) getEditorProvider()).registerTextStatus(textStatusPanel);
+        ((TextPanel) getEditorProvider().getEditorComponent()).registerTextStatus(textStatusPanel);
         if (encodingsHandler != null) {
             encodingsHandler.setTextEncodingStatus(textStatusPanel);
         }
@@ -183,17 +183,17 @@ public class EditorTextModule implements XBApplicationModule {
         TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
-                return ((TextPanel) getEditorProvider()).getCurrentColors();
+                return ((TextPanel) getEditorProvider().getEditorComponent()).getCurrentColors();
             }
 
             @Override
             public Color[] getDefaultTextColors() {
-                return ((TextPanel) getEditorProvider()).getDefaultColors();
+                return ((TextPanel) getEditorProvider().getEditorComponent()).getDefaultColors();
             }
 
             @Override
             public void setCurrentTextColors(Color[] colors) {
-                ((TextPanel) getEditorProvider()).setCurrentColors(colors);
+                ((TextPanel) getEditorProvider().getEditorComponent()).setCurrentColors(colors);
             }
         };
 
@@ -254,17 +254,17 @@ public class EditorTextModule implements XBApplicationModule {
         TextFontService textFontService = new TextFontService() {
             @Override
             public Font getCurrentFont() {
-                return ((TextPanel) getEditorProvider()).getCurrentFont();
+                return ((TextPanel) getEditorProvider().getEditorComponent()).getCurrentFont();
             }
 
             @Override
             public Font getDefaultFont() {
-                return ((TextPanel) getEditorProvider()).getDefaultFont();
+                return ((TextPanel) getEditorProvider().getEditorComponent()).getDefaultFont();
             }
 
             @Override
             public void setCurrentFont(Font font) {
-                ((TextPanel) getEditorProvider()).setCurrentFont(font);
+                ((TextPanel) getEditorProvider().getEditorComponent()).setCurrentFont(font);
             }
         };
 
@@ -356,7 +356,7 @@ public class EditorTextModule implements XBApplicationModule {
 
             @Override
             public void selectedEncodingChanged() {
-                ((TextPanel) getEditorProvider()).setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
+                ((TextPanel) getEditorProvider().getEditorComponent()).setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
             }
         });
 
@@ -364,12 +364,12 @@ public class EditorTextModule implements XBApplicationModule {
         textAppearanceService = new TextAppearanceService() {
             @Override
             public boolean getWordWrapMode() {
-                return ((TextPanel) getEditorProvider()).getWordWrapMode();
+                return ((TextPanel) getEditorProvider().getEditorComponent()).getWordWrapMode();
             }
 
             @Override
             public void setWordWrapMode(boolean mode) {
-                ((TextPanel) getEditorProvider()).setWordWrapMode(mode);
+                ((TextPanel) getEditorProvider().getEditorComponent()).setWordWrapMode(mode);
             }
         };
 

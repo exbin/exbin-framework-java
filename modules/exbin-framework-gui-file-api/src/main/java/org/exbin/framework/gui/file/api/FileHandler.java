@@ -63,7 +63,7 @@ public interface FileHandler {
     void saveToFile(URI fileUri, @Nullable FileType fileType);
 
     /**
-     * Returns currect file URI.
+     * Returns current file URI.
      *
      * @return URI
      */

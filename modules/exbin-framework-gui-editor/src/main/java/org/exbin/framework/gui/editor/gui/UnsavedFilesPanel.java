@@ -16,22 +16,28 @@
 package org.exbin.framework.gui.editor.gui;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Unsaved files panel.
  *
- * @version 0.2.2 2021/10/18
+ * @version 0.2.2 2021/10/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UnsavedFilesPanel extends javax.swing.JPanel {
 
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(UnsavedFilesPanel.class);
     private List<FileHandler> fileHandlers;
     private Control control;
 
@@ -48,18 +54,29 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
         });
     }
 
+    public void assignGlobalKeys() {
+        WindowUtils.assignGlobalKeyListener(this, cancelButton);
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
     public void setControl(Control control) {
         this.control = control;
     }
 
-    public void setUnsavedFiles(List<FileHandler> fileHandlers) {
+    public void setUnsavedFiles(List<FileHandler> fileHandlers, MultiEditorProvider editorProvider) {
         this.fileHandlers = fileHandlers;
         DefaultListModel<String> listModel = new DefaultListModel<>();
         for (FileHandler fileHandler : fileHandlers) {
-            String fileName = fileHandler.getFileName().orElse("");
-            listModel.addElement(fileName);
+            Optional<String> fileName = fileHandler.getFileName();
+            String handlerName = fileName.isPresent() ? fileName.get() : editorProvider.getName(fileHandler);
+            listModel.addElement(handlerName);
         }
         filesList.setModel(listModel);
+        filesList.invalidate();
     }
 
     /**
@@ -81,11 +98,11 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
 
         setPreferredSize(new java.awt.Dimension(400, 300));
 
-        filesListLabel.setText("List of Unsaved Files");
+        filesListLabel.setText(resourceBundle.getString("filesListLabel.text")); // NOI18N
 
         filesListScrollPane.setViewportView(filesList);
 
-        saveButton.setText("Save");
+        saveButton.setText(resourceBundle.getString("saveButton.text")); // NOI18N
         saveButton.setEnabled(false);
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -93,21 +110,21 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
             }
         });
 
-        saveAllButton.setText("Save All");
+        saveAllButton.setText(resourceBundle.getString("saveAllButton.text")); // NOI18N
         saveAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveAllButtonActionPerformed(evt);
             }
         });
 
-        discardAllButton.setText("Discard All");
+        discardAllButton.setText(resourceBundle.getString("discardAllButton.text")); // NOI18N
         discardAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 discardAllButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -176,7 +193,19 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
 
     private void saveAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAllButtonActionPerformed
         if (control != null) {
-
+            int shift = 0;
+            int size = fileHandlers.size();
+            for (int index = 0; index < size; index++) {
+                FileHandler fileHandler = fileHandlers.get(index - shift);
+                if (control.saveFile(fileHandler)) {
+                    DefaultListModel<String> listModel = (DefaultListModel<String>) filesList.getModel();
+                    listModel.remove(index - shift);
+                    fileHandlers.remove(index - shift);
+                    shift++;
+                } else {
+                    break;
+                }
+            }
         }
     }//GEN-LAST:event_saveAllButtonActionPerformed
 

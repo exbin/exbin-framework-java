@@ -81,12 +81,4 @@ public interface EditorProvider extends FileOperations {
 
         void modified();
     }
-
-    /**
-     * Interface for changes of active file in editor listener.
-     */
-    public static interface ActiveFileChangeListener {
-
-        void activeFileChanged(@Nullable FileHandler fileHandler);
-    }
 }

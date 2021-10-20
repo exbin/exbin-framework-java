@@ -15,13 +15,15 @@
  */
 package org.exbin.framework.gui.editor.api;
 
+import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
- * Framework multitab editor interface.
+ * Framework multi-file editor interface.
  *
- * @version 0.2.2 2021/10/14
+ * @version 0.2.2 2021/10/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -47,6 +49,29 @@ public interface MultiEditorProvider extends EditorProvider {
      * @param listener listener
      */
     void removeActiveFileChangeListener(ActiveFileChangeListener listener);
+
+    /**
+     * Returns name for the given file handler.
+     *
+     * @param fileHandler file handler
+     * @return name
+     */
+    @Nonnull
+    String getName(FileHandler fileHandler);
+
+    /**
+     * Calls file saving operation.
+     *
+     * @param fileHandler file handler
+     */
+    void saveFile(FileHandler fileHandler);
+
+    /**
+     * Calls file saving as operation.
+     *
+     * @param fileHandler file handler
+     */
+    void saveAsFile(FileHandler fileHandler);
 
     /**
      * Closes active file.
@@ -76,4 +101,12 @@ public interface MultiEditorProvider extends EditorProvider {
      * Saves all opened files.
      */
     void saveAllFiles();
+
+    /**
+     * Interface for changes of active file in editor listener.
+     */
+    public static interface ActiveFileChangeListener {
+
+        void activeFileChanged(@Nullable FileHandler fileHandler);
+    }
 }

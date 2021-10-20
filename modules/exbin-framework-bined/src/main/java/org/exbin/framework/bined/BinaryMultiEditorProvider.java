@@ -75,7 +75,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/17
+ * @version 0.2.2 2021/10/20
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -184,7 +184,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         BinEdFileHandler newFile = createFileHandler(fileIndex);
         newFile.newFile();
         setupFile(newFile);
-        multiEditorPanel.addFileHandler(newFile, getFileName(newFile));
+        multiEditorPanel.addFileHandler(newFile, getName(newFile));
     }
 
     @Override
@@ -277,10 +277,15 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             throw new IllegalStateException();
         }
 
-        if (activeFile.getFileUri().isPresent()) {
-            ((BinEdFileHandler) activeFile).saveFile();
+        saveFile(activeFile);
+    }
+
+    @Override
+    public void saveFile(FileHandler fileHandler) {
+        if (fileHandler.getFileUri().isPresent()) {
+            ((BinEdFileHandler) fileHandler).saveFile();
         } else {
-            saveAsFile();
+            saveAsFile(fileHandler);
         }
     }
 
@@ -291,8 +296,13 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             throw new IllegalStateException();
         }
 
+        saveAsFile(activeFile);
+    }
+
+    @Override
+    public void saveAsFile(FileHandler fileHandler) {
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-        fileModule.getFileActions().saveAsFile(activeFile, fileTypes);
+        fileModule.getFileActions().saveAsFile(fileHandler, fileTypes);
     }
 
     @Override
@@ -342,9 +352,25 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             return releaseFile(getActiveFile().get());
         }
 
+        List<FileHandler> modifiedFiles = new ArrayList<>();
+        for (int i = 0; i < fileHandlersCount; i++) {
+            FileHandler fileHandler = multiEditorPanel.getFileHandler(i);
+            if (fileHandler.isModified()) {
+                modifiedFiles.add(fileHandler);
+            }
+        }
+
+        if (modifiedFiles.isEmpty()) {
+            return true;
+        }
+
+        if (modifiedFiles.size() == 1) {
+            return releaseFile(modifiedFiles.get(0));
+        }
+
         GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
         EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
-        throw new UnsupportedOperationException("Not supported yet.");
+        return editorActions.showAskForSaveDialog(modifiedFiles);
     }
 
     @Override
@@ -358,13 +384,14 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     }
 
     @Nonnull
-    private String getFileName(FileHandler fileHandler) {
+    @Override
+    public String getName(FileHandler fileHandler) {
         Optional<String> fileName = fileHandler.getFileName();
-        if (!fileName.isPresent()) {
-            return "New File " + newFilesMap.get(fileHandler.getId());
+        if (fileName.isPresent()) {
+            return fileName.get();
         }
 
-        return fileName.orElse("");
+        return "New File " + newFilesMap.get(fileHandler.getId());
     }
 
     @Override
@@ -402,7 +429,31 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     @Override
     public void saveAllFiles() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        int fileHandlersCount = multiEditorPanel.getFileHandlersCount();
+        if (fileHandlersCount == 0) {
+            return;
+        }
+
+        List<FileHandler> modifiedFiles = new ArrayList<>();
+        for (int i = 0; i < fileHandlersCount; i++) {
+            FileHandler fileHandler = multiEditorPanel.getFileHandler(i);
+            if (fileHandler.isModified()) {
+                modifiedFiles.add(fileHandler);
+            }
+        }
+
+        if (modifiedFiles.isEmpty()) {
+            return;
+        }
+
+        if (modifiedFiles.size() == 1) {
+            saveAsFile(modifiedFiles.get(0));
+            return;
+        }
+
+        GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
+        EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
+        editorActions.showAskForSaveDialog(modifiedFiles);
     }
 
     @Override
