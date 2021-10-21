@@ -23,26 +23,27 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Interface for file handling actions.
  *
- * @version 0.2.2 2021/10/10
+ * @version 0.2.2 2021/10/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface FileActionsApi {
 
-    void openFile(@Nullable FileHandler fileHandler, FileTypes fileTypes);
+    void openFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory);
 
-    void saveFile(@Nullable FileHandler fileHandler, FileTypes fileTypes);
+    void saveFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory);
 
-    void saveAsFile(@Nullable FileHandler fileHandler, FileTypes fileTypes);
+    void saveAsFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory);
 
     /**
      * Attempts to release current file and warn if document was modified.
      *
      * @param fileHandler file handler
      * @param fileTypes file types handler
+     * @param usedDirectory used directory
      * @return true if successful
      */
-    boolean showAskForSaveDialog(@Nullable FileHandler fileHandler, FileTypes fileTypes);
+    boolean showAskForSaveDialog(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory);
 
     /**
      * Asks whether it's allowed to overwrite file.
@@ -52,16 +53,16 @@ public interface FileActionsApi {
     boolean showAskToOverwrite();
 
     @Nonnull
-    OpenFileResult showOpenFileDialog(FileTypes fileTypes);
+    OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory);
 
     @Nonnull
-    OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile);
+    OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory);
 
     @Nonnull
-    OpenFileResult showSaveFileDialog(FileTypes fileTypes);
+    OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory);
 
     @Nonnull
-    OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile);
+    OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory);
 
     public class OpenFileResult {
 

@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.editor.text.gui.TextPanel;
@@ -52,6 +53,7 @@ import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
 import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 
 /**
  * Text editor.
@@ -67,6 +69,8 @@ public class TextEditor implements EditorProvider {
 
     private EditorModificationListener editorModificationListener;
     private PropertyChangeListener propertyChangeListener;
+    @Nullable
+    private File lastUsedDirectory;
 
     public TextEditor() {
         init();
@@ -319,6 +323,21 @@ public class TextEditor implements EditorProvider {
     @Override
     public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
+    public Optional<File> getLastUsedDirectory() {
+        return Optional.ofNullable(lastUsedDirectory);
+    }
+
+    @Override
+    public void setLastUsedDirectory(@Nullable File directory) {
+        lastUsedDirectory = directory;
+    }
+
+    @Override
+    public void updateRecentFilesList(URI fileUri, FileType fileType) {
     }
 
     /**

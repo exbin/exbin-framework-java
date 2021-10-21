@@ -59,7 +59,7 @@ import org.exbin.framework.gui.file.api.FileHandler;
  */
 @ParametersAreNonnullByDefault
 public class AudioEditor implements EditorProvider {
-    
+
     private javax.sound.sampled.AudioFileFormat.Type audioFormatType = null;
 
     private AudioPanel audioPanel = new AudioPanel();
@@ -69,11 +69,13 @@ public class AudioEditor implements EditorProvider {
     private AudioPanel.StatusChangeListener statusChangeListener;
     private AudioPanel.WaveRepaintListener waveRepaintListener;
     private XBUndoHandler undoHandler;
+    @Nullable
+    private File lastUsedDirectory;
 
     public AudioEditor() {
         init();
     }
-    
+
     private void init() {
         activeFile = new FileHandler() {
             private URI fileUri = null;
@@ -267,6 +269,21 @@ public class AudioEditor implements EditorProvider {
     @Override
     public boolean releaseAllFiles() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
+    public Optional<File> getLastUsedDirectory() {
+        return Optional.ofNullable(lastUsedDirectory);
+    }
+
+    @Override
+    public void setLastUsedDirectory(@Nullable File directory) {
+        lastUsedDirectory = directory;
+    }
+
+    @Override
+    public void updateRecentFilesList(URI fileUri, FileType fileType) {
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {

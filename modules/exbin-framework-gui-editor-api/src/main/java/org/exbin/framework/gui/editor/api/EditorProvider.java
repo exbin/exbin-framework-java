@@ -24,15 +24,16 @@ import javax.swing.JComponent;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileOperations;
 import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.gui.file.api.UsedDirectoryApi;
 
 /**
  * XBUP framework editor interface.
  *
- * @version 0.2.2 2021/10/17
+ * @version 0.2.2 2021/10/21
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditorProvider extends FileOperations {
+public interface EditorProvider extends FileOperations, UsedDirectoryApi {
 
     /**
      * Returns main editor component.

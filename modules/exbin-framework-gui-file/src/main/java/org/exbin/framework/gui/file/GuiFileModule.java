@@ -218,6 +218,13 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
         return recentFilesActions;
     }
 
+    @Override
+    public void updateRecentFilesList(URI fileUri, FileType fileType) {
+        if (recentFilesActions != null) {
+            recentFilesActions.updateRecentFilesList(fileUri, fileType);
+        }
+    }
+
     @Nonnull
     @Override
     public FileActions getFileActions() {
@@ -242,6 +249,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
         }
     }
 
+    @Override
     public void updateForFileOperations() {
         if (saveFileAction != null) {
             saveFileAction.updateForFileOperations();

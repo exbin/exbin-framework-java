@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.gui.file.api;
 
+import java.net.URI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -91,6 +92,8 @@ public interface GuiFileModuleApi extends XBApplicationModule {
 
     @Nonnull
     FileActionsApi getFileActions();
-    
+
+    void updateRecentFilesList(URI fileUri, FileType fileType);
+
     void updateForFileOperations();
 }

@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -69,6 +70,8 @@ public class ImageEditor implements EditorProvider {
     private FileHandler activeFile;
     private JPopupMenu popupMenu;
     private MouseMotionListener mouseMotionListener;
+    @Nullable
+    private File lastUsedDirectory;
 
     public ImageEditor() {
         init();
@@ -279,6 +282,21 @@ public class ImageEditor implements EditorProvider {
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
+    public Optional<File> getLastUsedDirectory() {
+        return Optional.ofNullable(lastUsedDirectory);
+    }
+
+    @Override
+    public void setLastUsedDirectory(@Nullable File directory) {
+        lastUsedDirectory = directory;
+    }
+
+    @Override
+    public void updateRecentFilesList(URI fileUri, FileType fileType) {
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {

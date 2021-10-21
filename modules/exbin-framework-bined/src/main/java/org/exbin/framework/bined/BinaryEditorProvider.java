@@ -18,12 +18,12 @@ package org.exbin.framework.bined;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -58,6 +58,8 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     private XBApplication application;
     private BinEdFileHandler activeFile;
     private FileTypes fileTypes;
+    @Nullable
+    private File lastUsedDirectory;
 
     public BinaryEditorProvider(XBApplication application, BinEdFileHandler activeFile) {
         init(application, activeFile);
@@ -159,7 +161,7 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     public void openFile() {
         if (releaseAllFiles()) {
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-            fileModule.getFileActions().openFile(activeFile, fileTypes);
+            fileModule.getFileActions().openFile(activeFile, fileTypes, this);
         }
     }
 
@@ -191,14 +193,14 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     @Override
     public void saveAsFile() {
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-        fileModule.getFileActions().saveAsFile(activeFile, fileTypes);
+        fileModule.getFileActions().saveAsFile(activeFile, fileTypes, this);
     }
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-            return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes);
+            return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
         }
 
         return true;
@@ -213,6 +215,23 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     @Override
     public XBUndoHandler getUndoHandler() {
         return activeFile.getUndoHandler();
+    }
+
+    @Nonnull
+    @Override
+    public Optional<File> getLastUsedDirectory() {
+        return Optional.ofNullable(lastUsedDirectory);
+    }
+
+    @Override
+    public void setLastUsedDirectory(@Nullable File directory) {
+        lastUsedDirectory = directory;
+    }
+
+    @Override
+    public void updateRecentFilesList(URI fileUri, FileType fileType) {
+        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
     private void updateClipboardActionsStatus() {

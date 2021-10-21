@@ -50,6 +50,7 @@ import org.exbin.framework.editor.xbup.gui.XBDocumentPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentTab.ActivationListener;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
@@ -97,6 +98,8 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
     private FileHandler activeFile;
+    @Nullable
+    private File lastUsedDirectory;
 
     public DocumentViewerProvider(XBUndoHandler undoHandler) {
         this.undoHandler = undoHandler;
@@ -239,6 +242,23 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     @Override
     public Optional<FileHandler> getActiveFile() {
         return Optional.of(activeFile);
+    }
+
+    @Nonnull
+    @Override
+    public Optional<File> getLastUsedDirectory() {
+        return Optional.ofNullable(lastUsedDirectory);
+    }
+
+    @Override
+    public void setLastUsedDirectory(@Nullable File directory) {
+        lastUsedDirectory = directory;
+    }
+
+    @Override
+    public void updateRecentFilesList(URI fileUri, FileType fileType) {
+        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
     public XBTTreeDocument getDoc() {

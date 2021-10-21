@@ -19,6 +19,7 @@ import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -97,6 +98,8 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     private TextEncodingStatusApi textEncodingStatusApi;
     private MultiEditorUndoHandler undoHandler = new MultiEditorUndoHandler();
     private Optional<FileHandler> activeFileCache = Optional.empty();
+    @Nullable
+    private File lastUsedDirectory;
 
     public BinaryMultiEditorProvider(XBApplication application, ResourceBundle resourceBundle) {
         init(application, resourceBundle);
@@ -253,7 +256,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     public void openFile() {
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
         FileActionsApi fileActions = fileModule.getFileActions();
-        FileActionsApi.OpenFileResult openFileResult = fileActions.showOpenFileDialog(fileTypes);
+        FileActionsApi.OpenFileResult openFileResult = fileActions.showOpenFileDialog(fileTypes, this);
         if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
             openFile(CodeAreaUtils.requireNonNull(openFileResult.selectedFile).toURI(), openFileResult.fileType);
         }
@@ -302,7 +305,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Override
     public void saveAsFile(FileHandler fileHandler) {
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-        fileModule.getFileActions().saveAsFile(fileHandler, fileTypes);
+        fileModule.getFileActions().saveAsFile(fileHandler, fileTypes, this);
     }
 
     @Override
@@ -313,6 +316,23 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         }
 
         return ((BinEdFileHandler) activeFile).isSaveSupported() && ((BinEdFileHandler) activeFile).isEditable();
+    }
+
+    @Nonnull
+    @Override
+    public Optional<File> getLastUsedDirectory() {
+        return Optional.ofNullable(lastUsedDirectory);
+    }
+
+    @Override
+    public void setLastUsedDirectory(@Nullable File directory) {
+        lastUsedDirectory = directory;
+    }
+
+    @Override
+    public void updateRecentFilesList(URI fileUri, FileType fileType) {
+        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
     private void activeFileChanged() {
@@ -377,7 +397,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
-            return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes);
+            return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
         }
 
         return true;
