@@ -30,6 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -182,7 +183,15 @@ public class ClipboardTextActions implements ClipboardActionsApi {
                     Object src = actionFocusOwner;
 
                     if (src instanceof JTextComponent) {
-                        ActionUtils.invokeTextAction((JTextComponent) src, DefaultEditorKit.selectAllAction);
+                        SwingUtilities.invokeLater(() -> {
+                            JTextComponent txtComp = (JTextComponent) src;
+                            txtComp.requestFocus();
+                            ActionUtils.invokeTextAction(txtComp, DefaultEditorKit.selectAllAction);
+                            int docLength = txtComp.getDocument().getLength();
+                            if (txtComp.getSelectionStart() > 0 || txtComp.getSelectionEnd() != docLength) {
+                                txtComp.selectAll();
+                            }
+                        });
                     }
                 }
             });

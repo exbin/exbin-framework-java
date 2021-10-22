@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import javax.swing.JPopupMenu;
@@ -201,6 +202,7 @@ public class EditorPictureModule implements XBApplicationModule {
         actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
+    @Nonnull
     private PictureOperationActions getPictureOperationActions() {
         if (pictureOperationActions == null) {
             ensureSetup();
@@ -240,6 +242,7 @@ public class EditorPictureModule implements XBApplicationModule {
 //        };
     }
 
+    @Nonnull
     private JPopupMenu createPopupMenu() {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.registerMenu(PICTURE_POPUP_MENU_ID, MODULE_ID);
@@ -264,6 +267,7 @@ public class EditorPictureModule implements XBApplicationModule {
         actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomDownAction(), new MenuPosition(PositionMode.TOP));
     }
 
+    @Nonnull
     private PropertiesAction getPropertiesAction() {
         if (propertiesAction == null) {
             ensureSetup();
@@ -274,6 +278,7 @@ public class EditorPictureModule implements XBApplicationModule {
         return propertiesAction;
     }
 
+    @Nonnull
     private ToolColorAction getToolColorAction() {
         if (toolColorAction == null) {
             ensureSetup();
@@ -284,6 +289,7 @@ public class EditorPictureModule implements XBApplicationModule {
         return toolColorAction;
     }
 
+    @Nonnull
     private PrintAction getPrintAction() {
         if (printAction == null) {
             ensureSetup();
@@ -294,6 +300,7 @@ public class EditorPictureModule implements XBApplicationModule {
         return printAction;
     }
 
+    @Nonnull
     private ZoomControlActions getZoomControlActions() {
         if (zoomControlActions == null) {
             ensureSetup();
@@ -322,6 +329,7 @@ public class EditorPictureModule implements XBApplicationModule {
      * @param file Source file
      * @return extension part of file name
      */
+    @Nullable
     public static String getExtension(File file) {
         String ext = null;
         String str = file.getName();
@@ -333,6 +341,7 @@ public class EditorPictureModule implements XBApplicationModule {
         return ext;
     }
 
+    @ParametersAreNonnullByDefault
     public class XBPFileType extends FileFilter implements FileType {
 
         @Override
@@ -355,6 +364,7 @@ public class EditorPictureModule implements XBApplicationModule {
             return "XBUP Picture Files (*.xbp*)";
         }
 
+        @Nonnull
         @Override
         public String getFileTypeId() {
             return XBPFILETYPE;

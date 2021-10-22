@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -221,6 +222,7 @@ public class ToolBarHandler {
         }
     }
 
+    @Nonnull
     private JComponent createDefaultToolBarItem(Action action) {
         JButton newItem = new JButton(action);
         newItem.setFocusable(false);

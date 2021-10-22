@@ -438,8 +438,14 @@ public class DefaultPopupMenu {
 
             @Override
             public void performSelectAll() {
-                txtComp.requestFocus();
-                txtComp.selectAll();
+                SwingUtilities.invokeLater(() -> {
+                    txtComp.requestFocus();
+                    ActionUtils.invokeTextAction(txtComp, DefaultEditorKit.selectAllAction);
+                    int docLength = txtComp.getDocument().getLength();
+                    if (txtComp.getSelectionStart() > 0 || txtComp.getSelectionEnd() != docLength) {
+                        txtComp.selectAll();
+                    }
+                });
             }
 
             @Override

@@ -231,7 +231,7 @@ public class GuiFileModule implements GuiFileModuleApi, FileOperationsProvider {
         if (fileActions == null) {
             ensureSetup();
             fileActions = new FileActions();
-            fileActions.setup(application, resourceBundle, this);
+            fileActions.setup(application, resourceBundle);
         }
 
         return fileActions;

@@ -384,10 +384,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             return true;
         }
 
-        if (modifiedFiles.size() == 1) {
-            return releaseFile(modifiedFiles.get(0));
-        }
-
         GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
         EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
         return editorActions.showAskForSaveDialog(modifiedFiles);
@@ -463,11 +459,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         }
 
         if (modifiedFiles.isEmpty()) {
-            return;
-        }
-
-        if (modifiedFiles.size() == 1) {
-            saveAsFile(modifiedFiles.get(0));
             return;
         }
 

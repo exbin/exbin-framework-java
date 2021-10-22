@@ -17,6 +17,7 @@ package org.exbin.framework.gui.file.action;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -30,7 +31,6 @@ import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.file.api.FileActionsApi;
 import org.exbin.framework.gui.file.api.FileActionsApi.OpenFileResult;
-import org.exbin.framework.gui.file.api.FileOperationsProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -40,7 +40,7 @@ import org.exbin.framework.gui.file.api.UsedDirectoryApi;
 /**
  * File actions.
  *
- * @version 0.2.2 2021/10/21
+ * @version 0.2.2 2021/10/22
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -50,18 +50,17 @@ public class FileActions implements FileActionsApi {
 
     private ResourceBundle resourceBundle;
     private XBApplication application;
-    private FileOperationsProvider fileOperationsProvider;
 
     public FileActions() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle, FileOperationsProvider fileOperationsProvider) {
+    public void setup(XBApplication application, ResourceBundle resourceBundle) {
         this.application = application;
-        this.fileOperationsProvider = fileOperationsProvider;
         this.resourceBundle = resourceBundle;
     }
 
     public void setupFileFilters(JFileChooser fileChooser, FileTypes fileTypes) {
+        fileChooser.setAcceptAllFileFilterUsed(false);
         for (FileType fileType : fileTypes.getFileTypes()) {
             fileChooser.addChoosableFileFilter((FileFilter) fileType);
         }
@@ -76,12 +75,11 @@ public class FileActions implements FileActionsApi {
         if (fileHandler != null) {
             OpenFileResult openFileResult = FileActions.this.showOpenFileDialog(fileTypes, usedDirectory);
             if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
-//                ((CardLayout) statusPanel.getLayout()).show(statusPanel, "busy");
-//                statusPanel.repaint();
-                URI fileUri = openFileResult.selectedFile.toURI();
+                File selectedFile = Objects.requireNonNull(openFileResult.selectedFile);
+                URI fileUri = selectedFile.toURI();
                 fileHandler.loadFromFile(fileUri, openFileResult.fileType);
                 if (usedDirectory != null) {
-                    usedDirectory.setLastUsedDirectory(openFileResult.selectedFile.getParentFile());
+                    usedDirectory.setLastUsedDirectory(selectedFile.getParentFile());
                     usedDirectory.updateRecentFilesList(fileUri, openFileResult.fileType);
                 }
             }
@@ -103,7 +101,9 @@ public class FileActions implements FileActionsApi {
         if (usedDirectory != null) {
             openFileChooser.setCurrentDirectory(usedDirectory.getLastUsedDirectory().orElse(null));
         }
-        openFileChooser.setSelectedFile(selectedFile);
+        if (selectedFile != null) {
+            openFileChooser.setSelectedFile(selectedFile);
+        }
         int dialogResult = openFileChooser.showOpenDialog(frameModule.getFrame());
         OpenFileResult result = new OpenFileResult();
         result.dialogResult = dialogResult;
@@ -129,7 +129,29 @@ public class FileActions implements FileActionsApi {
         if (usedDirectory != null) {
             saveFileChooser.setCurrentDirectory(usedDirectory.getLastUsedDirectory().orElse(null));
         }
-        saveFileChooser.setSelectedFile(selectedFile);
+        if (selectedFile != null) {
+            saveFileChooser.setSelectedFile(selectedFile);
+        }
+        int dialogResult = saveFileChooser.showSaveDialog(frameModule.getFrame());
+        OpenFileResult result = new OpenFileResult();
+        result.dialogResult = dialogResult;
+        result.selectedFile = saveFileChooser.getSelectedFile();
+        FileFilter fileFilter = saveFileChooser.getFileFilter();
+        result.fileType = fileFilter instanceof FileType ? (FileType) fileFilter : null;
+        return result;
+    }
+    
+    @Nonnull
+    private OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        JFileChooser saveFileChooser = new JFileChooser();
+        setupFileFilters(saveFileChooser, fileTypes);
+        if (usedDirectory != null) {
+            saveFileChooser.setCurrentDirectory(usedDirectory.getLastUsedDirectory().orElse(null));
+        }
+        if (selectedFile != null) {
+            saveFileChooser.setSelectedFile(selectedFile);
+        }
         int dialogResult = saveFileChooser.showSaveDialog(frameModule.getFrame());
         OpenFileResult result = new OpenFileResult();
         result.dialogResult = dialogResult;
@@ -157,23 +179,27 @@ public class FileActions implements FileActionsApi {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             OpenFileResult saveFileResult = showSaveFileDialog(fileTypes, usedDirectory);
             if (saveFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
-                if (new File(saveFileResult.selectedFile.getAbsolutePath()).exists()) {
+                File selectedFile = Objects.requireNonNull(saveFileResult.selectedFile);
+                if (selectedFile.exists()) {
                     if (!showAskToOverwrite()) {
                         return;
                     }
                 }
 
                 try {
-                    URI fileUri = saveFileResult.selectedFile.toURI();
+                    URI fileUri = selectedFile.toURI();
                     fileHandler.saveToFile(fileUri, (FileType) saveFileResult.fileType);
                     if (usedDirectory != null) {
-                        usedDirectory.setLastUsedDirectory(saveFileResult.selectedFile.getParentFile());
+                        usedDirectory.setLastUsedDirectory(selectedFile.getParentFile());
                         usedDirectory.updateRecentFilesList(fileUri, saveFileResult.fileType);
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(FileActions.class.getName()).log(Level.SEVERE, null, ex);
                     String errorMessage = ex.getLocalizedMessage();
-                    JOptionPane.showMessageDialog(frameModule.getFrame(), "Unable to save file: " + ex.getClass().getCanonicalName() + (errorMessage == null || errorMessage.isEmpty() ? "" : errorMessage), "Unable to save file", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frameModule.getFrame(),
+                            resourceBundle.getString("Question.unable_to_save") + ": " + ex.getClass().getCanonicalName() + (errorMessage == null || errorMessage.isEmpty() ? "" : errorMessage),
+                            resourceBundle.getString("Question.unable_to_save"), JOptionPane.ERROR_MESSAGE
+                    );
                 }
             }
         }
@@ -252,7 +278,7 @@ public class FileActions implements FileActionsApi {
         @Nonnull
         @Override
         public String getDescription() {
-            return "All files (*)";
+            return resourceBundle.getString("AllFilesFilter.description");
         }
 
         @Nonnull

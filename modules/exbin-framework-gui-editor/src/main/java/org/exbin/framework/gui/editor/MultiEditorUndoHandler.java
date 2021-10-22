@@ -28,7 +28,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Undo handler for multi editor.
  *
- * @version 0.2.2 2021/10/13
+ * @version 0.2.2 2021/10/22
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -153,8 +153,6 @@ public class MultiEditorUndoHandler implements XBUndoHandler {
     public long getUsedSize() {
         if (fileHandler != null) {
             return fileHandler.getUndoHandler().getUsedSize();
-//            GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-//            undoModule.updateUndoStatus();
         }
 
         return 0;
@@ -164,8 +162,6 @@ public class MultiEditorUndoHandler implements XBUndoHandler {
     public void performRedo() throws Exception {
         if (fileHandler != null) {
             fileHandler.getUndoHandler().performRedo();
-//            GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-//            undoModule.updateUndoStatus();
         }
     }
 
@@ -173,8 +169,6 @@ public class MultiEditorUndoHandler implements XBUndoHandler {
     public void performRedo(int count) throws Exception {
         if (fileHandler != null) {
             fileHandler.getUndoHandler().performRedo(count);
-//            GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-//            undoModule.updateUndoStatus();
         }
     }
 
@@ -182,8 +176,6 @@ public class MultiEditorUndoHandler implements XBUndoHandler {
     public void performUndo() throws Exception {
         if (fileHandler != null) {
             fileHandler.getUndoHandler().performUndo();
-//            GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-//            undoModule.updateUndoStatus();
         }
     }
 
@@ -191,14 +183,14 @@ public class MultiEditorUndoHandler implements XBUndoHandler {
     public void performUndo(int count) throws Exception {
         if (fileHandler != null) {
             fileHandler.getUndoHandler().performUndo();
-//            GuiUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(GuiUndoModuleApi.class);
-//            undoModule.updateUndoStatus();
         }
     }
 
     @Override
     public void setCommandPosition(long targetPosition) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (fileHandler != null) {
+            fileHandler.getUndoHandler().setCommandPosition(targetPosition);
+        }
     }
 
     @Override
