@@ -132,7 +132,7 @@ public class GuiDockingModule implements GuiDockingModuleApi {
                         public void focusGained(CDockable dockable) {
                             EditorProvider editor = (EditorProvider) ((EditorCDockable) dockable).getContent();
                             if (editor != null) {
-                                multiEditorProvider.setActiveEditor(editor);
+                                //multiEditorProvider.setActiveEditor(editor);
                             }
                         }
 

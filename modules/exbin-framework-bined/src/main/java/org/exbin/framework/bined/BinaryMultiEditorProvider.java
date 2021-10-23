@@ -56,7 +56,6 @@ import org.exbin.framework.gui.editor.action.CloseAllFileAction;
 import org.exbin.framework.gui.editor.action.CloseFileAction;
 import org.exbin.framework.gui.editor.action.CloseOtherFileAction;
 import org.exbin.framework.gui.editor.action.EditorActions;
-import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.MultiEditorPopupMenu;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
@@ -76,7 +75,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/20
+ * @version 0.2.2 2021/10/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -201,6 +200,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Nonnull
     private BinEdFileHandler createFileHandler(int id) {
         BinEdFileHandler fileHandler = new BinEdFileHandler(id);
+        fileHandler.setApplication(application);
         fileHandler.getUndoHandler().addUndoUpdateListener(new XBUndoUpdateListener() {
             @Override
             public void undoCommandPositionChanged() {
@@ -248,6 +248,8 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
                 binaryStatus.setEditMode(mode, operation);
             }
         });
+
+        fileHandler.getComponent().setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
 
         return fileHandler;
     }
@@ -363,19 +365,24 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     @Override
     public boolean releaseAllFiles() {
+        return releaseOtherFiles(null);
+    }
+
+    private boolean releaseOtherFiles(@Nullable FileHandler excludedFile) {
         int fileHandlersCount = multiEditorPanel.getFileHandlersCount();
         if (fileHandlersCount == 0) {
             return true;
         }
 
         if (fileHandlersCount == 1) {
-            return releaseFile(getActiveFile().get());
+            FileHandler activeFile = getActiveFile().get();
+            return (activeFile == excludedFile) || releaseFile(activeFile);
         }
 
         List<FileHandler> modifiedFiles = new ArrayList<>();
         for (int i = 0; i < fileHandlersCount; i++) {
             FileHandler fileHandler = multiEditorPanel.getFileHandler(i);
-            if (fileHandler.isModified()) {
+            if (fileHandler.isModified() && fileHandler != excludedFile) {
                 modifiedFiles.add(fileHandler);
             }
         }
@@ -387,6 +394,15 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
         EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
         return editorActions.showAskForSaveDialog(modifiedFiles);
+    }
+
+    @Override
+    public List<FileHandler> getFileHandlers() {
+        List<FileHandler> fileHandlers = new ArrayList<>();
+        for (int i = 0; i < multiEditorPanel.getFileHandlersCount(); i++) {
+            fileHandlers.add(multiEditorPanel.getFileHandler(i));
+        }
+        return fileHandlers;
     }
 
     @Override
@@ -411,11 +427,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     }
 
     @Override
-    public void setActiveEditor(EditorProvider editorProvider) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public void closeFile() {
         if (activeFileCache.isEmpty()) {
             throw new IllegalStateException();
@@ -428,18 +439,24 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     public void closeFile(FileHandler file) {
         if (releaseFile(file)) {
             multiEditorPanel.removeFileHandler(file);
+            newFilesMap.remove(file.getId());
         }
     }
 
     @Override
-    public void closeOtherFiles(FileHandler fileHandler) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void closeOtherFiles(FileHandler exceptHandler) {
+        if (releaseOtherFiles(exceptHandler)) {
+            multiEditorPanel.removeAllFileHandlersExceptFile(exceptHandler);
+            int exceptionFileId = exceptHandler.getId();
+            newFilesMap.keySet().retainAll(List.of(exceptionFileId));
+        }
     }
 
     @Override
     public void closeAllFiles() {
         if (releaseAllFiles()) {
             multiEditorPanel.removeAllFileHandlers();
+            newFilesMap.clear();
         }
     }
 

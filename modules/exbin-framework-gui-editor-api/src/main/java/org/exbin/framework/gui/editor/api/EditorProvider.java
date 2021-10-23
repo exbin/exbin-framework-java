@@ -18,7 +18,6 @@ package org.exbin.framework.gui.editor.api;
 import java.net.URI;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.gui.file.api.FileType;

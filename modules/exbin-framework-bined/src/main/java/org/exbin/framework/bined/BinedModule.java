@@ -265,6 +265,7 @@ public class BinedModule implements XBApplicationModule {
 
             BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(editorPreferences.getMemoryMode());
             BinEdFileHandler editorFile = new BinEdFileHandler();
+            editorFile.setApplication(application);
             editorFile.setSegmentsRepository(new SegmentsRepository());
             editorFile.switchFileHandlingMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY);
             editorFile.newFile();
@@ -1987,6 +1988,7 @@ public class BinedModule implements XBApplicationModule {
         binaryStatusPanel.loadFromPreferences(new StatusPreferences(preferences));
     }
 
+    @Nonnull
     public CodeAreaPopupMenuHandler getCodeAreaPopupMenuHandler(PopupMenuVariant variant) {
         if (codeAreaPopupMenuHandler == null) {
             codeAreaPopupMenuHandler = new CodeAreaPopupMenuHandler() {

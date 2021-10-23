@@ -49,6 +49,7 @@ import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlAction
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.gui.file.api.FileDependentAction;
 import org.exbin.framework.gui.file.api.FileHandler;
 
@@ -106,6 +107,7 @@ public class InsertDataAction extends AbstractAction implements FileDependentAct
         insertDataPanel.setControl(new InsertDataPanel.Control() {
             @Override
             public void sampleDataAction() {
+                BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
                 final BinaryMultilinePanel multilinePanel = new BinaryMultilinePanel();
                 SearchCondition searchCondition = new SearchCondition();
                 EditableBinaryData conditionData = new ByteArrayEditableData();
@@ -113,12 +115,11 @@ public class InsertDataAction extends AbstractAction implements FileDependentAct
                 searchCondition.setBinaryData(conditionData);
                 searchCondition.setSearchMode(SearchCondition.SearchMode.BINARY);
                 multilinePanel.setCondition(searchCondition);
-//                    multilinePanel.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
+                multilinePanel.setCodeAreaPopupMenuHandler(binedModule.getCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC));
                 DefaultControlPanel controlPanel = new DefaultControlPanel();
                 JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
                 GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
                 final DialogWrapper multilineDialog = frameModule.createDialog(dialog.getWindow(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
-//                    WindowUtils.addHeaderPanel(multilineDialog.getWindow(), multilinePanel.getClass(), multilinePanel.getResourceBundle());
                 frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
                 controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                     if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -139,6 +140,7 @@ public class InsertDataAction extends AbstractAction implements FileDependentAct
 //                    multilinePanel.detachMenu();
             }
         });
+        WindowUtils.addHeaderPanel(dialog.getWindow(), insertDataPanel.getClass(), insertDataPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, insertDataPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == ControlActionType.OK) {

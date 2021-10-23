@@ -18,6 +18,7 @@ package org.exbin.framework.gui.editor.gui;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
@@ -67,7 +68,7 @@ public class MultiEditorPanel extends javax.swing.JPanel {
         return fileHandlers.size();
     }
 
-    @Nullable
+    @Nonnull
     public FileHandler getFileHandler(int index) {
         return fileHandlers.get(index);
     }
@@ -103,7 +104,19 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     }
 
     public void removeAllFileHandlers() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        for (int i = fileHandlers.size() - 1; i >= 0; i--) {
+            removeFileHandlerAt(i);
+        }
+    }
+
+    public void removeAllFileHandlersExceptFile(FileHandler exceptHandler) {
+        for (int i = fileHandlers.size() - 1; i >= 0; i--) {
+            if (fileHandlers.get(i) == exceptHandler) {
+                continue;
+            } else {
+                removeFileHandlerAt(i);
+            }
+        }
     }
 
     private void changeActiveIndex(int index) {

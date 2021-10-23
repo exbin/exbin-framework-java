@@ -117,6 +117,7 @@ public class BinaryMultilinePanel extends javax.swing.JPanel {
                         }
                         JPopupMenu popupMenu = codeAreaPopupMenuHandler.createPopupMenu(codeArea, POPUP_MENU_POSTFIX, clickedX, clickedY);
                         popupMenu.show(invoker, x, y);
+                        codeAreaPopupMenuHandler.dropPopupMenu(POPUP_MENU_POSTFIX);
                     }
                 });
             }

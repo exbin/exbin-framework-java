@@ -17,8 +17,14 @@ package org.exbin.framework.bined.action;
 
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
@@ -30,6 +36,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
@@ -72,15 +79,34 @@ public class CompareFilesAction extends AbstractAction {
             compareFilesPanel.setLeftFile(((BinEdFileHandler) activeFile.get()).getCodeArea().getContentData());
         }
 
+        List<FileHandler> fileHandlers;
+        if (editorProvider instanceof MultiEditorProvider) {
+            fileHandlers = ((MultiEditorProvider) editorProvider).getFileHandlers();
+            List<String> availableFiles = new ArrayList<>();
+            for (FileHandler fileHandler : fileHandlers) {
+                Optional<URI> fileUri = fileHandler.getFileUri();
+                availableFiles.add(fileUri.isPresent() ? fileUri.get().toString() : "Unsaved file");
+            }
+            compareFilesPanel.setAvailableFiles(availableFiles);
+        } else {
+            fileHandlers = new ArrayList<>();
+            Optional<URI> fileUri = editorProvider.getActiveFile().get().getFileUri();
+            List<String> availableFiles = new ArrayList<>();
+            availableFiles.add(fileUri.isPresent() ? fileUri.get().toString() : "Unsaved file");
+            compareFilesPanel.setAvailableFiles(availableFiles);
+        }
+
         compareFilesPanel.setControl(new CompareFilesPanel.Control() {
+            @Nullable
             @Override
-            public void openRightFile() {
+            public File openFile() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            @Nonnull
             @Override
-            public void openLeftFile() {
-                throw new UnsupportedOperationException("Not supported yet.");
+            public FileHandler getFileHandler(int index) {
+                return fileHandlers.get(index);
             }
         });
         dialog.showCentered(editorProvider.getEditorComponent());

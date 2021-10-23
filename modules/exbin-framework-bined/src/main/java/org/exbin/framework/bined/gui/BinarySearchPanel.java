@@ -30,7 +30,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -62,6 +64,7 @@ import org.exbin.framework.bined.service.BinarySearchService.FoundMatches;
  * @version 0.2.1 2021/02/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class BinarySearchPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(BinarySearchPanel.class);
@@ -94,7 +97,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         initComponents();
         searchStatusListener = new BinarySearchService.SearchStatusListener() {
             @Override
-            public void setStatus(FoundMatches foundMatches) {
+            public void setStatus(@Nonnull FoundMatches foundMatches) {
                 BinarySearchPanel.this.foundMatches = foundMatches;
                 switch (foundMatches.getMatchesCount()) {
                     case 0:
@@ -147,7 +150,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
 
         final KeyAdapter editorKeyListener = new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
+            public void keyPressed(@Nonnull KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     SearchCondition condition = searchParameters.getCondition();
                     if (!condition.isEmpty()) {
@@ -165,8 +168,9 @@ public class BinarySearchPanel extends javax.swing.JPanel {
             private final JPanel panel = new JPanel();
             private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
 
+            @Nonnull
             @Override
-            public Component getListCellRendererComponent(JList<? extends SearchCondition> list, SearchCondition value, int index, boolean isSelected, boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList<? extends SearchCondition> list, @Nullable SearchCondition value, int index, boolean isSelected, boolean cellHasFocus) {
                 if (value == null) {
                     return panel;
                 }
@@ -245,6 +249,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
             private final JPanel panel = new JPanel();
             private final DefaultListCellRenderer listCellRenderer = new DefaultListCellRenderer();
 
+            @Nonnull
             @Override
             public Component getListCellRendererComponent(JList<? extends SearchCondition> list, SearchCondition value, int index, boolean isSelected, boolean cellHasFocus) {
                 if (value == null) {

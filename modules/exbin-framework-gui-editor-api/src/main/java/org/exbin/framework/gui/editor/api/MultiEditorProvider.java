@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.gui.editor.api;
 
+import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -23,18 +24,11 @@ import org.exbin.framework.gui.file.api.FileHandler;
 /**
  * Framework multi-file editor interface.
  *
- * @version 0.2.2 2021/10/20
+ * @version 0.2.2 2021/10/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface MultiEditorProvider extends EditorProvider {
-
-    /**
-     * Sets currently active editor provider.
-     *
-     * @param editorProvider editor provider
-     */
-    void setActiveEditor(EditorProvider editorProvider);
 
     /**
      * Adds active file change listener.
@@ -49,6 +43,14 @@ public interface MultiEditorProvider extends EditorProvider {
      * @param listener listener
      */
     void removeActiveFileChangeListener(ActiveFileChangeListener listener);
+
+    /**
+     * Returns all file handlers.
+     *
+     * @return list of file handlers
+     */
+    @Nonnull
+    List<FileHandler> getFileHandlers();
 
     /**
      * Returns name for the given file handler.

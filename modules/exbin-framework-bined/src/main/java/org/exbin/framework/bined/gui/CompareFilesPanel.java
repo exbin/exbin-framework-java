@@ -15,19 +15,24 @@
  */
 package org.exbin.framework.bined.gui;
 
+import java.io.File;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.DefaultComboBoxModel;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.diff.DiffHighlightCodeAreaPainter;
+import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Compare files panel.
  *
- * @version 0.2.1 2021/09/26
+ * @version 0.2.1 2021/10/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -52,6 +57,18 @@ public class CompareFilesPanel extends javax.swing.JPanel {
 
     public void setControl(Control control) {
         this.control = control;
+    }
+
+    public void setAvailableFiles(List<String> availableFiles) {
+        DefaultComboBoxModel<String> leftComboBoxModel = new DefaultComboBoxModel<>();
+        leftComboBoxModel.addElement("Load file...");
+        leftComboBoxModel.addAll(availableFiles);
+        leftComboBox.setModel(leftComboBoxModel);
+
+        DefaultComboBoxModel<String> rightComboBoxModel = new DefaultComboBoxModel<>();
+        rightComboBoxModel.addElement("Load file...");
+        rightComboBoxModel.addAll(availableFiles);
+        rightComboBox.setModel(rightComboBoxModel);
     }
 
     public void setLeftFile(BinaryData contentData) {
@@ -83,7 +100,7 @@ public class CompareFilesPanel extends javax.swing.JPanel {
         optionsPanel = new javax.swing.JPanel();
         leftLabel = new javax.swing.JLabel();
         leftComboBox = new javax.swing.JComboBox<>();
-        leftOpenButton1 = new javax.swing.JButton();
+        leftOpenButton = new javax.swing.JButton();
         rightLabel = new javax.swing.JLabel();
         rightComboBox = new javax.swing.JComboBox<>();
         rightOpenButton = new javax.swing.JButton();
@@ -93,11 +110,11 @@ public class CompareFilesPanel extends javax.swing.JPanel {
 
         leftLabel.setText(resourceBundle.getString("leftLabel.text")); // NOI18N
 
-        leftOpenButton1.setText("...");
-        leftOpenButton1.setToolTipText(resourceBundle.getString("leftOpenButton1.toolTipText")); // NOI18N
-        leftOpenButton1.addActionListener(new java.awt.event.ActionListener() {
+        leftOpenButton.setText("...");
+        leftOpenButton.setToolTipText(resourceBundle.getString("leftOpenButton1.toolTipText")); // NOI18N
+        leftOpenButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                leftOpenButton1ActionPerformed(evt);
+                leftOpenButtonActionPerformed(evt);
             }
         });
 
@@ -121,7 +138,7 @@ public class CompareFilesPanel extends javax.swing.JPanel {
                     .addGroup(optionsPanelLayout.createSequentialGroup()
                         .addComponent(leftComboBox, 0, 470, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(leftOpenButton1)
+                        .addComponent(leftOpenButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rightComboBox, 0, 445, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -143,26 +160,27 @@ public class CompareFilesPanel extends javax.swing.JPanel {
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(leftComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rightComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(leftOpenButton1)
+                    .addComponent(leftOpenButton)
                     .addComponent(rightOpenButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(optionsPanel, java.awt.BorderLayout.PAGE_START);
+
         add(codeAreaDiffPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void rightOpenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightOpenButtonActionPerformed
         if (control == null) {
-            control.openRightFile();
+            control.openFile();
         }
     }//GEN-LAST:event_rightOpenButtonActionPerformed
 
-    private void leftOpenButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftOpenButton1ActionPerformed
+    private void leftOpenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftOpenButtonActionPerformed
         if (control == null) {
-            control.openLeftFile();
+            control.openFile();
         }
-    }//GEN-LAST:event_leftOpenButton1ActionPerformed
+    }//GEN-LAST:event_leftOpenButtonActionPerformed
 
     /**
      * Test method for this panel.
@@ -177,7 +195,7 @@ public class CompareFilesPanel extends javax.swing.JPanel {
     private org.exbin.bined.swing.extended.diff.ExtCodeAreaDiffPanel codeAreaDiffPanel;
     private javax.swing.JComboBox<String> leftComboBox;
     private javax.swing.JLabel leftLabel;
-    private javax.swing.JButton leftOpenButton1;
+    private javax.swing.JButton leftOpenButton;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JComboBox<String> rightComboBox;
     private javax.swing.JLabel rightLabel;
@@ -186,8 +204,10 @@ public class CompareFilesPanel extends javax.swing.JPanel {
 
     public interface Control {
 
-        void openRightFile();
+        @Nullable
+        File openFile();
 
-        void openLeftFile();
+        @Nonnull
+        FileHandler getFileHandler(int index);
     }
 }

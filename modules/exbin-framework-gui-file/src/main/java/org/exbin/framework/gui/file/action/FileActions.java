@@ -40,7 +40,7 @@ import org.exbin.framework.gui.file.api.UsedDirectoryApi;
 /**
  * File actions.
  *
- * @version 0.2.2 2021/10/22
+ * @version 0.2.2 2021/10/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -123,34 +123,23 @@ public class FileActions implements FileActionsApi {
     @Nonnull
     @Override
     public OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        JFileChooser saveFileChooser = new JFileChooser();
-        setupFileFilters(saveFileChooser, fileTypes);
-        if (usedDirectory != null) {
-            saveFileChooser.setCurrentDirectory(usedDirectory.getLastUsedDirectory().orElse(null));
-        }
-        if (selectedFile != null) {
-            saveFileChooser.setSelectedFile(selectedFile);
-        }
-        int dialogResult = saveFileChooser.showSaveDialog(frameModule.getFrame());
-        OpenFileResult result = new OpenFileResult();
-        result.dialogResult = dialogResult;
-        result.selectedFile = saveFileChooser.getSelectedFile();
-        FileFilter fileFilter = saveFileChooser.getFileFilter();
-        result.fileType = fileFilter instanceof FileType ? (FileType) fileFilter : null;
-        return result;
+        return showSaveFileDialog(fileTypes, selectedFile, usedDirectory, null);
     }
-    
+
     @Nonnull
-    private OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
+    private OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         JFileChooser saveFileChooser = new JFileChooser();
+        saveFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         setupFileFilters(saveFileChooser, fileTypes);
         if (usedDirectory != null) {
             saveFileChooser.setCurrentDirectory(usedDirectory.getLastUsedDirectory().orElse(null));
         }
         if (selectedFile != null) {
             saveFileChooser.setSelectedFile(selectedFile);
+        }
+        if (dialogName != null) {
+            saveFileChooser.setDialogTitle(dialogName);
         }
         int dialogResult = saveFileChooser.showSaveDialog(frameModule.getFrame());
         OpenFileResult result = new OpenFileResult();
@@ -177,7 +166,8 @@ public class FileActions implements FileActionsApi {
     public void saveAsFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
         if (fileHandler != null) {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            OpenFileResult saveFileResult = showSaveFileDialog(fileTypes, usedDirectory);
+            Optional<URI> currentFileUri = fileHandler.getFileUri();
+            OpenFileResult saveFileResult = showSaveFileDialog(fileTypes, currentFileUri.isPresent() ? new File(currentFileUri.get()) : null, usedDirectory, resourceBundle.getString("SaveAsDialog.title"));
             if (saveFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = Objects.requireNonNull(saveFileResult.selectedFile);
                 if (selectedFile.exists()) {

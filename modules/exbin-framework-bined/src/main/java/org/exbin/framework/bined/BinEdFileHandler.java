@@ -41,6 +41,7 @@ import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
 import org.exbin.bined.operation.swing.CodeAreaUndoHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.color.ExtendedCodeAreaColorProfile;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentFileApi;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextCharsetApi;
@@ -88,6 +89,10 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
     public BinEdFileHandler(int id) {
         this();
         this.id = id;
+    }
+    
+    public void setApplication(XBApplication application) {
+        componentPanel.setApplication(application);
     }
 
     @Override

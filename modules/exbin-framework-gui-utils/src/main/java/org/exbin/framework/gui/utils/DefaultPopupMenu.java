@@ -489,7 +489,7 @@ public class DefaultPopupMenu {
 
             @Override
             public void performCut() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new IllegalStateException();
             }
 
             @Override
@@ -510,12 +510,12 @@ public class DefaultPopupMenu {
 
             @Override
             public void performPaste() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new IllegalStateException();
             }
 
             @Override
             public void performDelete() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new IllegalStateException();
             }
 
             @Override
@@ -566,7 +566,7 @@ public class DefaultPopupMenu {
 
             @Override
             public void performCut() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new IllegalStateException();
             }
 
             @Override
@@ -611,12 +611,12 @@ public class DefaultPopupMenu {
 
             @Override
             public void performPaste() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new IllegalStateException();
             }
 
             @Override
             public void performDelete() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new IllegalStateException();
             }
 
             @Override
