@@ -73,7 +73,7 @@ public class CompareFilesAction extends AbstractAction {
         CloseControlPanel controlPanel = new CloseControlPanel(compareFilesPanel.getResourceBundle());
         JPanel dialogPanel = WindowUtils.createDialogPanel(compareFilesPanel, controlPanel);
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        final WindowUtils.DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "", Dialog.ModalityType.APPLICATION_MODAL);
+        final WindowUtils.DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "Compare two files", Dialog.ModalityType.APPLICATION_MODAL);
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isPresent()) {
             compareFilesPanel.setLeftFile(((BinEdFileHandler) activeFile.get()).getCodeArea().getContentData());
