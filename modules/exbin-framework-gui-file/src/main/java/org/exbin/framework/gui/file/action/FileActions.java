@@ -35,6 +35,7 @@ import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.gui.file.api.FileLoading;
 import org.exbin.framework.gui.file.api.UsedDirectoryApi;
 
 /**
@@ -71,7 +72,7 @@ public class FileActions implements FileActionsApi {
     }
 
     @Override
-    public void openFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
+    public void openFile(@Nullable FileLoading fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
         if (fileHandler != null) {
             OpenFileResult openFileResult = FileActions.this.showOpenFileDialog(fileTypes, usedDirectory);
             if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {

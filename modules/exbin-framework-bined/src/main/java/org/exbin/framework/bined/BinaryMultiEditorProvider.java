@@ -60,6 +60,7 @@ import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
 import org.exbin.framework.gui.editor.api.MultiEditorPopupMenu;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.editor.gui.MultiEditorPanel;
+import org.exbin.framework.gui.file.api.AllFileTypes;
 import org.exbin.framework.gui.file.api.FileActionsApi;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
@@ -133,22 +134,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
                 fileTabPopupMenu.show(component, positionX, positionY);
             }
         });
-        fileTypes = new FileTypes() {
-            @Override
-            public boolean allowAllFiles() {
-                return true;
-            }
-
-            @Override
-            public Optional<FileType> getFileType(String fileTypeId) {
-                return Optional.empty();
-            }
-
-            @Override
-            public List<FileType> getFileTypes() {
-                return new ArrayList<>();
-            }
-        };
+        fileTypes = new AllFileTypes();
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.addFlavorListener((FlavorEvent e) -> {
             updateClipboardActionsStatus();

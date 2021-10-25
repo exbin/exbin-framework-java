@@ -15,16 +15,23 @@
  */
 package org.exbin.framework.bined.gui;
 
+import java.awt.event.ItemEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultComboBoxModel;
 import org.exbin.auxiliary.paged_data.BinaryData;
+import org.exbin.auxiliary.paged_data.PagedData;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.bined.swing.extended.diff.DiffHighlightCodeAreaPainter;
+import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -32,7 +39,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Compare files panel.
  *
- * @version 0.2.1 2021/10/23
+ * @version 0.2.1 2021/10/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -41,6 +48,8 @@ public class CompareFilesPanel extends javax.swing.JPanel {
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CompareFilesPanel.class);
 
     private Control control;
+    private File leftCustomFile;
+    private File rightCustomFile;
 
     public CompareFilesPanel() {
         initComponents();
@@ -48,6 +57,38 @@ public class CompareFilesPanel extends javax.swing.JPanel {
     }
 
     private void init() {
+        leftComboBox.addItemListener((ItemEvent e) -> {
+            int selectedIndex = leftComboBox.getSelectedIndex();
+            if (selectedIndex < 0) {
+                return;
+            }
+            if (selectedIndex == 0) {
+                if (leftCustomFile == null) {
+                    leftOpenButtonActionPerformed(null);
+                } else {
+                    switchToLeftCustomFile();
+                }
+            } else {
+                BinEdFileHandler fileHandler = (BinEdFileHandler) control.getFileHandler(selectedIndex - 1);
+                setLeftFile(fileHandler.getCodeArea().getContentData());
+            }
+        });
+        rightComboBox.addItemListener((ItemEvent e) -> {
+            int selectedIndex = rightComboBox.getSelectedIndex();
+            if (selectedIndex < 0) {
+                return;
+            }
+            if (selectedIndex == 0) {
+                if (rightCustomFile == null) {
+                    rightOpenButtonActionPerformed(null);
+                } else {
+                    switchToRightCustomFile();
+                }
+            } else {
+                BinEdFileHandler fileHandler = (BinEdFileHandler) control.getFileHandler(selectedIndex - 1);
+                setRightFile(fileHandler.getCodeArea().getContentData());
+            }
+        });
     }
 
     @Nonnull
@@ -171,16 +212,50 @@ public class CompareFilesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void rightOpenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightOpenButtonActionPerformed
-        if (control == null) {
-            control.openFile();
+        if (control != null) {
+            File file = control.openFile();
+            if (file != null) {
+                rightCustomFile = file;
+                rightComboBox.setSelectedIndex(0);
+                rightComboBox.removeItemAt(0);
+                rightComboBox.insertItemAt(file.getAbsolutePath(), 0);
+                switchToRightCustomFile();
+            }
         }
     }//GEN-LAST:event_rightOpenButtonActionPerformed
 
     private void leftOpenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftOpenButtonActionPerformed
-        if (control == null) {
-            control.openFile();
+        if (control != null) {
+            File file = control.openFile();
+            if (file != null) {
+                leftCustomFile = file;
+                leftComboBox.setSelectedIndex(0);
+                leftComboBox.removeItemAt(0);
+                leftComboBox.insertItemAt(file.getAbsolutePath(), 0);
+                switchToLeftCustomFile();
+            }
         }
     }//GEN-LAST:event_leftOpenButtonActionPerformed
+
+    private void switchToLeftCustomFile() {
+        try (FileInputStream fileStream = new FileInputStream(leftCustomFile)) {
+            PagedData data = new PagedData();
+            data.loadFromStream(fileStream);
+            setLeftFile(data);
+        } catch (IOException ex) {
+            Logger.getLogger(CompareFilesPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void switchToRightCustomFile() {
+        try (FileInputStream fileStream = new FileInputStream(rightCustomFile)) {
+            PagedData data = new PagedData();
+            data.loadFromStream(fileStream);
+            setRightFile(data);
+        } catch (IOException ex) {
+            Logger.getLogger(CompareFilesPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * Test method for this panel.

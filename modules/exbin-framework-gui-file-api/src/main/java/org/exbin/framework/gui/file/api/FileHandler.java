@@ -25,11 +25,11 @@ import javax.swing.JComponent;
 /**
  * Interface for file handling.
  *
- * @version 0.2.2 2021/10/13
+ * @version 0.2.2 2021/10/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface FileHandler {
+public interface FileHandler extends FileLoading, FileSaving {
 
     /**
      * Returns unique identifier of the file.
@@ -45,22 +45,6 @@ public interface FileHandler {
      */
     @Nonnull
     JComponent getComponent();
-
-    /**
-     * Loads file from given filename.
-     *
-     * @param fileUri file Uri
-     * @param fileType file type
-     */
-    void loadFromFile(URI fileUri, @Nullable FileType fileType);
-
-    /**
-     * Saves file to given filename.
-     *
-     * @param fileUri file Uri
-     * @param fileType file type
-     */
-    void saveToFile(URI fileUri, @Nullable FileType fileType);
 
     /**
      * Returns current file URI.
