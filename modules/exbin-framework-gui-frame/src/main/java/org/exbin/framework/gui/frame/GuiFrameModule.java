@@ -26,7 +26,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JDialog;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationExitListener;
@@ -43,11 +42,12 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.frame.action.FrameActions;
 
 /**
  * Implementation of XBUP framework frame module.
  *
- * @version 0.2.1 2019/07/14
+ * @version 0.2.1 2021/10/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -63,7 +63,7 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     private XBApplicationFrame frame;
     private ApplicationExitHandler exitHandler = null;
     private StatusBarHandler statusBarHandler = null;
-    private boolean showFrame = false;
+    private FrameActions frameActions;
 
     public GuiFrameModule() {
     }
@@ -71,6 +71,28 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     @Override
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(GuiFrameModule.class);
+        }
+
+        return resourceBundle;
+    }
+
+    private void ensureSetup() {
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
+    }
+
+    @Override
+    public void createMainMenu() {
+        ensureSetup();
+        initMainMenu();
+        initMainToolBar();
     }
 
     private void initMainMenu() {
@@ -97,19 +119,20 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     }
 
     @Override
-    public void createMainMenu() {
-        resourceBundle = LanguageUtils.getResourceBundleByClass(GuiFrameModule.class);
-        initMainMenu();
-        initMainToolBar();
-    }
-
-    @Override
     public void unregisterModule(String moduleId) {
     }
 
+    @Nonnull
     @Override
     public Frame getFrame() {
         return getFrameHandler().getFrame();
+    }
+
+    @Override
+    public void notifyFrameUpdated() {
+        if (frameActions != null) {
+            frameActions.notifyFrameUpdated();
+        }
     }
 
     @Override
@@ -164,7 +187,10 @@ public class GuiFrameModule implements GuiFrameModuleApi {
             frame.loadMainMenu(application);
             frame.loadMainToolBar(application);
             frame.setApplicationExitHandler(exitHandler);
-            frame.setToolBarVisible(showFrame);
+
+            if (frameActions != null) {
+                frameActions.setApplicationFrame(frame);
+            }
         }
 
         return frame;
@@ -213,57 +239,17 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     }
 
     @Nonnull
-    @Override
-    public Action getViewToolBarAction() {
-        final Action viewToolBarAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Object source = e.getSource();
-                if (source instanceof JMenuItem) {
-                    frame.setToolBarVisible(((JMenuItem) source).isSelected());
-                }
+    public FrameActions getFrameActions() {
+        if (frameActions == null) {
+            frameActions = new FrameActions();
+            ensureSetup();
+            frameActions.setup(application, resourceBundle);
+            if (frame != null) {
+                frameActions.setApplicationFrame(frame);
             }
-        };
-        ActionUtils.setupAction(viewToolBarAction, resourceBundle, "viewToolBarAction");
-        viewToolBarAction.putValue(Action.SELECTED_KEY, true);
-        viewToolBarAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
-        return viewToolBarAction;
-    }
+        }
 
-    @Nonnull
-    @Override
-    public Action getViewToolBarCaptionsAction() {
-        final Action viewToolBarCaptionsAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Object source = e.getSource();
-                if (source instanceof JMenuItem) {
-                    frame.setToolBarCaptionsVisible(((JMenuItem) source).isSelected());
-                }
-            }
-        };
-        ActionUtils.setupAction(viewToolBarCaptionsAction, resourceBundle, "viewToolBarCaptionsAction");
-        viewToolBarCaptionsAction.putValue(Action.SELECTED_KEY, true);
-        viewToolBarCaptionsAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
-        return viewToolBarCaptionsAction;
-    }
-
-    @Nonnull
-    @Override
-    public Action getViewStatusBarAction() {
-        final Action viewStatusBarAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Object source = e.getSource();
-                if (source instanceof JMenuItem) {
-                    frame.setStatusBarVisible(((JMenuItem) source).isSelected());
-                }
-            }
-        };
-        ActionUtils.setupAction(viewStatusBarAction, resourceBundle, "viewStatusBarAction");
-        viewStatusBarAction.putValue(Action.SELECTED_KEY, true);
-        viewStatusBarAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
-        return viewStatusBarAction;
+        return frameActions;
     }
 
     @Override
@@ -275,17 +261,18 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     @Override
     public void registerToolBarVisibilityActions() {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        getFrameActions();
         createViewBarsMenuGroup();
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, getViewToolBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, getViewToolBarCaptionsAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
-        showFrame = true;
+        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, frameActions.getViewToolBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, frameActions.getViewToolBarCaptionsAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
     }
 
     @Override
     public void registerStatusBarVisibilityActions() {
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        getFrameActions();
         createViewBarsMenuGroup();
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, getViewStatusBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
+        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, frameActions.getViewStatusBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
     }
 
     private void createViewBarsMenuGroup() {

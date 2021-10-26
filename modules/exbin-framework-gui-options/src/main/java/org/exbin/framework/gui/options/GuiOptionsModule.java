@@ -15,16 +15,13 @@
  */
 package org.exbin.framework.gui.options;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JPanel;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
@@ -38,11 +35,7 @@ import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsData;
 import org.exbin.framework.gui.options.gui.OptionsTreePanel;
-import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.gui.OptionsControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.options.api.OptionsPathItem;
 import org.exbin.framework.gui.options.options.impl.AppearanceOptionsImpl;
@@ -54,11 +47,12 @@ import org.exbin.framework.gui.utils.ComponentResourceProvider;
 import org.exbin.framework.preferences.FrameworkPreferences;
 import org.exbin.framework.gui.options.api.OptionsPage;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.options.action.OptionsAction;
 
 /**
  * Implementation of framework options module.
  *
- * @version 0.2.1 2019/07/21
+ * @version 0.2.1 2021/10/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -67,7 +61,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
-    private Action optionsAction;
+    private OptionsAction optionsAction;
     private final List<OptionsPageRecord> optionsPages = new ArrayList<>();
     private OptionsPage<?> mainOptionsExtPage = null;
     private OptionsPage<?> appearanceOptionsExtPage = null;
@@ -80,6 +74,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         this.application = (XBApplication) moduleHandler;
 
         OptionsPage<FrameworkOptionsImpl> mainOptionsPage = new DefaultOptionsPage<FrameworkOptionsImpl>() {
+            @Nonnull
             @Override
             public OptionsCapable<FrameworkOptionsImpl> createPanel() {
                 return new MainOptionsPanel();
@@ -91,6 +86,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
                 return LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public FrameworkOptionsImpl createOptions() {
                 return new FrameworkOptionsImpl();
@@ -118,6 +114,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
 
         OptionsPage<AppearanceOptionsImpl> appearanceOptionsPage;
         appearanceOptionsPage = new DefaultOptionsPage<AppearanceOptionsImpl>() {
+            @Nonnull
             @Override
             public OptionsCapable<AppearanceOptionsImpl> createPanel() {
                 return new AppearanceOptionsPanel();
@@ -129,6 +126,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
                 return LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public AppearanceOptionsImpl createOptions() {
                 return new AppearanceOptionsImpl();
@@ -153,6 +151,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
                 frame.setToolBarVisible(options.isShowToolBar());
                 frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
                 frame.setStatusBarVisible(options.isShowStatusBar());
+                frameModule.notifyFrameUpdated();
             }
         };
         ResourceBundle optionsResourceBundle = LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
@@ -174,58 +173,29 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         return resourceBundle;
     }
 
+    private void ensureSetup() {
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
+    }
+
     @Nonnull
     @Override
     public Action getOptionsAction() {
         if (optionsAction == null) {
-            getResourceBundle();
-            optionsAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    OptionsTreePanel optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
-                    optionsPages.forEach((record) -> {
-                        optionsTreePanel.addOptionsPage(record.optionsPage, record.path);
-                    });
-                    if (mainOptionsExtPage != null) {
-                        optionsTreePanel.extendMainOptionsPage(mainOptionsExtPage);
-                    }
-                    if (appearanceOptionsExtPage != null) {
-                        optionsTreePanel.extendAppearanceOptionsPage(appearanceOptionsExtPage);
-                    }
-                    optionsTreePanel.setLanguageLocales(application.getLanguageLocales());
-
-                    optionsTreePanel.setAppEditor(application);
-                    optionsTreePanel.setPreferences(application.getAppPreferences());
-                    optionsTreePanel.pagesFinished();
-                    optionsTreePanel.loadAllFromPreferences();
-
-                    OptionsControlPanel controlPanel = new OptionsControlPanel();
-                    JPanel dialogPanel = WindowUtils.createDialogPanel(optionsTreePanel, controlPanel);
-                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-                    frameModule.setDialogTitle(dialog, optionsTreePanel.getResourceBundle());
-                    controlPanel.setHandler((actionType) -> {
-                        switch (actionType) {
-                            case SAVE: {
-                                optionsTreePanel.saveAndApplyAll();
-                                break;
-                            }
-                            case CANCEL: {
-                                break;
-                            }
-                            case APPLY_ONCE: {
-                                optionsTreePanel.applyPreferencesChanges();
-                                break;
-                            }
-                        }
-                        dialog.close();
-                    });
-                    dialog.showCentered(frameModule.getFrame());
+            ensureSetup();
+            optionsAction = new OptionsAction();
+            optionsAction.setup(application, resourceBundle, (OptionsTreePanel optionsTreePanel) -> {
+                optionsPages.forEach((record) -> {
+                    optionsTreePanel.addOptionsPage(record.optionsPage, record.path);
+                });
+                if (mainOptionsExtPage != null) {
+                    optionsTreePanel.extendMainOptionsPage(mainOptionsExtPage);
                 }
-            };
-
-            ActionUtils.setupAction(optionsAction, resourceBundle, "optionsAction");
-            optionsAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+                if (appearanceOptionsExtPage != null) {
+                    optionsTreePanel.extendAppearanceOptionsPage(appearanceOptionsExtPage);
+                }
+            });
         }
 
         return optionsAction;

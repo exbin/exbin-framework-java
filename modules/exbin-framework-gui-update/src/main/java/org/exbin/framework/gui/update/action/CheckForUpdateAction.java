@@ -46,6 +46,8 @@ import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 @ParametersAreNonnullByDefault
 public class CheckForUpdateAction extends AbstractAction {
 
+    private static final String ACTION_ID = "checkUpdateAction";
+
     private XBApplication application;
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdateAction.class);
 
@@ -60,7 +62,7 @@ public class CheckForUpdateAction extends AbstractAction {
     }
 
     private void init() {
-        ActionUtils.setupAction(this, resourceBundle, "checkUpdateAction");
+        ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 

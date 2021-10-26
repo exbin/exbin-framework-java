@@ -131,7 +131,9 @@ public class CodeTypeActions implements FileDependentAction {
     }
 
     private void updateCycleButtonName() {
-        cycleCodeTypesAction.putValue(Action.NAME, codeType.name().substring(0, 3));
+        if (cycleCodeTypesAction != null) {
+            cycleCodeTypesAction.putValue(Action.NAME, codeType.name().substring(0, 3));
+        }
     }
 
     @Nonnull

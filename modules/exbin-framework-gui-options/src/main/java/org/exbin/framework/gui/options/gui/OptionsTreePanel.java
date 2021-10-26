@@ -218,7 +218,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
             establishPath(path);
         }
 
-        PageRecord<?> pageRecord = new PageRecord(optionPage);
+        PageRecord<?> pageRecord = new PageRecord<>(optionPage);
         if (pageRecord.panel instanceof MainOptionsPanel) {
             mainOptionsPanel = (MainOptionsPanel) pageRecord.panel;
         } else if (pageRecord.panel instanceof AppearanceOptionsPanel) {
@@ -364,6 +364,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
         }
     }
 
+    @ParametersAreNonnullByDefault
     private static class PageRecord<T extends OptionsData> {
 
         private final OptionsPage<T> page;

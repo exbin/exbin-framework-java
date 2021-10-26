@@ -261,16 +261,15 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private EditorProvider createSingleEditorProvider() {
         if (editorProvider == null) {
-            EditorPreferences editorPreferences = new EditorPreferences(application.getAppPreferences());
 
-            BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(editorPreferences.getMemoryMode());
             BinEdFileHandler editorFile = new BinEdFileHandler();
             editorFile.setApplication(application);
             editorFile.setSegmentsRepository(new SegmentsRepository());
+            EditorPreferences editorPreferences = new EditorPreferences(application.getAppPreferences());
+            BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(editorPreferences.getMemoryMode());
             editorFile.switchFileHandlingMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY);
             editorFile.newFile();
             BinEdComponentPanel panel = (BinEdComponentPanel) editorFile.getComponent();
-            // TODO panel.setMemoryMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE);
             editorProvider = new BinaryEditorProvider(application, editorFile);
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             fileModule.setFileOperations(editorProvider);
@@ -278,19 +277,6 @@ public class BinedModule implements XBApplicationModule {
             panel.setApplication(application);
             panel.setPopupMenu(createPopupMenu(editorFile.getId(), editorFile.getComponent().getCodeArea()));
             panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
-            ExtCodeArea codeArea = panel.getCodeArea();
-//            panel.setGoToPositionAction(getGoToPositionAction());
-//            panel.setEncodingsHandler(new EncodingStatusHandler() {
-//                @Override
-//                public void cycleEncodings() {
-//                    encodingsHandler.cycleEncodings();
-//                }
-//
-//                @Override
-//                public void popupEncodingsMenu(MouseEvent mouseEvent) {
-//                    encodingsHandler.popupEncodingsMenu(mouseEvent);
-//                }
-//            });
         }
 
         return editorProvider;
@@ -299,9 +285,10 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private EditorProvider createMultiEditorProvider() {
         if (editorProvider == null) {
-//            GuiEditorTabModuleApi editorTabModule = application.getModuleRepository().getModuleByInterface(GuiEditorTabModuleApi.class);
-//            GuiDockingModuleApi dockingModule = application.getModuleRepository().getModuleByInterface(GuiDockingModuleApi.class);
             editorProvider = new BinaryMultiEditorProvider(application, resourceBundle);
+            EditorPreferences editorPreferences = new EditorPreferences(application.getAppPreferences());
+            BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(editorPreferences.getMemoryMode());
+            ((BinaryMultiEditorProvider) editorProvider).setDefaultFileHandlingMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY);
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
             fileModule.setFileOperations(editorProvider);
             ((BinaryMultiEditorProvider) editorProvider).setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
@@ -312,34 +299,9 @@ public class BinedModule implements XBApplicationModule {
             ((BinaryMultiEditorProvider) editorProvider).setClipboardActionsUpdateListener(() -> {
                 updateClipboardActionStatus();
             });
-            
-            editorProvider.newFile();
-            Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-//            activeFile.setSegmentsRepository(new SegmentsRepository());
-//            activeFile.newFile();
-
-//            activeFile.setBinaryPanelInit((BinEdFileHandler file) -> {
-//                BinEdComponentPanel panel = (BinEdComponentPanel) ((BinEdFileHandler) activeFile).getComponent();
-//                panel.setApplication(application);
-//                panel.setPopupMenu(createPopupMenu(((BinaryEditorControl) editorProvider).getId(), ((BinaryEditorControl) editorProvider).getCodeArea()));
-//                panel.setCodeAreaPopupMenuHandler(getCodeAreaPopupMenuHandler(PopupMenuVariant.EDITOR));
-//                panel.setGoToPositionAction(getGoToPositionAction());
-//                panel.setEncodingsHandler(new EncodingStatusHandler() {
-//                    @Override
-//                    public void cycleEncodings() {
-//                        encodingsHandler.cycleEncodings();
-//                    }
-//
-//                    @Override
-//                    public void popupEncodingsMenu(MouseEvent mouseEvent) {
-//                        encodingsHandler.popupEncodingsMenu(mouseEvent);
-//                    }
-//                });
-//            });
-            //((BinaryEditorControl) editorProvider).getComponentPanel().setEditorViewHandling(editorTabModule.getEditorViewHandling());
-//            activeFile.setSegmentsRepository(new SegmentsRepository());
-//            activeFile.init();
             fileModule.setFileOperations(editorProvider);
+
+            editorProvider.newFile();
         }
 
         return editorProvider;

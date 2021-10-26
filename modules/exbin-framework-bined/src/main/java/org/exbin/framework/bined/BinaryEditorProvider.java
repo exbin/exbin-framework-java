@@ -21,8 +21,6 @@ import java.awt.datatransfer.FlavorEvent;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +36,7 @@ import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.AllFileTypes;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.FileTypes;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
@@ -68,22 +67,7 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     private void init(XBApplication application, BinEdFileHandler activeFile) {
         this.application = application;
         this.activeFile = activeFile;
-        fileTypes = new FileTypes() {
-            @Override
-            public boolean allowAllFiles() {
-                return true;
-            }
-
-            @Override
-            public Optional<FileType> getFileType(String fileTypeId) {
-                return Optional.empty();
-            }
-
-            @Override
-            public List<FileType> getFileTypes() {
-                return new ArrayList<>();
-            }
-        };
+        fileTypes = new AllFileTypes();
 
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.addFlavorListener((FlavorEvent e) -> {

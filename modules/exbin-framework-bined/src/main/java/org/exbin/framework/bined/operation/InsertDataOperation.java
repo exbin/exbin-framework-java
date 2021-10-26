@@ -74,7 +74,7 @@ public class InsertDataOperation extends CodeAreaOperation {
     @Nullable
     private CodeAreaOperation execute(boolean withUndo) {
         CodeAreaOperation undoOperation = null;
-        EditableBinaryData contentData = ((EditableBinaryData) codeArea.getContentData());
+        EditableBinaryData contentData = CodeAreaUtils.requireNonNull(((EditableBinaryData) codeArea.getContentData()));
 
         switch (fillWithType) {
             case EMPTY: {
@@ -140,7 +140,7 @@ public class InsertDataOperation extends CodeAreaOperation {
         RANDOM,
         SAMPLE
     }
-    
+
     @ParametersAreNonnullByDefault
     public static class InsertDataCommand extends CodeAreaCommand {
 

@@ -129,7 +129,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel {
         return codeArea;
     }
 
-    public boolean changeLineWrap() {
+    public boolean changeRowWrapping() {
         ((RowWrappingCapable) codeArea).setRowWrapping(((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingMode.WRAPPING ? RowWrappingMode.NO_WRAPPING : RowWrappingMode.WRAPPING);
         return ((RowWrappingCapable) codeArea).getRowWrapping() == RowWrappingMode.WRAPPING;
     }

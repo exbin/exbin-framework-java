@@ -75,6 +75,11 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
     DialogWrapper createDialog();
 
     /**
+     * Notifies frame was updated.
+     */
+    void notifyFrameUpdated();
+
+    /**
      * Creates basic dialog and sets it up.
      *
      * @param parentWindow parent window
@@ -101,6 +106,7 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * @param panel panel
      * @return dialog
      */
+    @Nonnull
     DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel);
 
     /**
@@ -137,15 +143,6 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
      * @param listener listener
      */
     void removeExitListener(ApplicationExitListener listener);
-
-    @Nonnull
-    Action getViewToolBarAction();
-
-    @Nonnull
-    Action getViewToolBarCaptionsAction();
-
-    @Nonnull
-    Action getViewStatusBarAction();
 
     void registerBarsVisibilityActions();
 

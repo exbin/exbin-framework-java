@@ -76,7 +76,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/23
+ * @version 0.2.2 2021/10/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -88,6 +88,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     private int lastIndex = 0;
     private int lastNewFileIndex = 0;
     private final Map<Integer, Integer> newFilesMap = new HashMap<>();
+    private FileHandlingMode defaultFileHandlingMode = FileHandlingMode.MEMORY;
     private final List<ActiveFileChangeListener> activeFileChangeListeners = new ArrayList<>();
 
     private CodeAreaPopupMenuHandler codeAreaPopupMenuHandler;
@@ -158,6 +159,10 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         this.editorModificationListener = editorModificationListener;
     }
 
+    public void setDefaultFileHandlingMode(FileHandlingMode defaultFileHandlingMode) {
+        this.defaultFileHandlingMode = defaultFileHandlingMode;
+    }
+
     @Nonnull
     @Override
     public String getWindowTitle(String parentTitle) {
@@ -187,6 +192,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     private BinEdFileHandler createFileHandler(int id) {
         BinEdFileHandler fileHandler = new BinEdFileHandler(id);
         fileHandler.setApplication(application);
+        fileHandler.switchFileHandlingMode(defaultFileHandlingMode);
         fileHandler.getUndoHandler().addUndoUpdateListener(new XBUndoUpdateListener() {
             @Override
             public void undoCommandPositionChanged() {

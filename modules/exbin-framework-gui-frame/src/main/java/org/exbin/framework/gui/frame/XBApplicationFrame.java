@@ -40,7 +40,7 @@ import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 /**
  * Basic appplication frame.
  *
- * @version 0.2.0 2016/07/23
+ * @version 0.2.2 2021/10/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -49,11 +49,11 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     private XBApplication application;
     private ApplicationExitHandler exitHandler;
     private JPanel currentStatusBarPanel = null;
+    private boolean captionsVisible = true;
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
 
     public XBApplicationFrame() {
         initComponents();
-        toolBar.setVisible(false);
 
         // Actions on change of look&feel
         UIManager.addPropertyChangeListener((PropertyChangeEvent evt) -> {
@@ -197,8 +197,18 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     }
 
     @Override
+    public boolean isToolBarVisible() {
+        return toolBar.isVisible();
+    }
+
+    @Override
     public void setToolBarVisible(boolean toolBarVisible) {
         toolBar.setVisible(toolBarVisible);
+    }
+
+    @Override
+    public boolean isStatusBarVisible() {
+        return statusBar.isVisible();
     }
 
     @Override
@@ -207,7 +217,13 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     }
 
     @Override
+    public boolean isToolBarCaptionsVisible() {
+        return captionsVisible;
+    }
+
+    @Override
     public void setToolBarCaptionsVisible(boolean captionsVisible) {
+        this.captionsVisible = captionsVisible;
         Component[] comps = toolBar.getComponents();
 
         for (Component comp : comps) {

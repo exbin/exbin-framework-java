@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.gui.undo;
 
+import org.exbin.framework.gui.undo.action.BasicUndoActions;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -201,6 +202,7 @@ public class GuiUndoModule implements GuiUndoModuleApi {
         dialog.showCentered(frameModule.getFrame());
     }
 
+    @Nonnull
     @Override
     public UndoActions createUndoActions(UndoActionsHandler undoActionsHandler) {
         BasicUndoActions undoActions = new BasicUndoActions();

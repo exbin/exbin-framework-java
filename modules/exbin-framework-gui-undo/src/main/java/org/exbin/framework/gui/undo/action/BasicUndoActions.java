@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.undo;
+package org.exbin.framework.gui.undo.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.gui.undo.GuiUndoModule;
 import org.exbin.framework.gui.undo.api.UndoActions;
 import org.exbin.framework.gui.undo.api.UndoActionsHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -31,6 +32,10 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @author ExBin Project (http://exbin.org)
  */
 public class BasicUndoActions implements UndoActions {
+
+    private static final String EDIT_UNDO_ACTION_ID = "editUndoAction";
+    private static final String EDIT_REDO_ACTION_ID = "editRedoAction";
+    private static final String EDIT_UNDO_MANAGER_ACTION_ID = "editUndoManagerAction";
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiUndoModule.class);
 
@@ -68,7 +73,7 @@ public class BasicUndoActions implements UndoActions {
                     undoHandler.performUndo();
                 }
             };
-            ActionUtils.setupAction(undoAction, resourceBundle, "editUndoAction");
+            ActionUtils.setupAction(undoAction, resourceBundle, EDIT_UNDO_ACTION_ID);
             undoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, ActionUtils.getMetaMask()));
             undoAction.setEnabled(false);
         }
@@ -84,7 +89,7 @@ public class BasicUndoActions implements UndoActions {
                     undoHandler.performRedo();
                 }
             };
-            ActionUtils.setupAction(redoAction, resourceBundle, "editRedoAction");
+            ActionUtils.setupAction(redoAction, resourceBundle, EDIT_REDO_ACTION_ID);
             redoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_DOWN_MASK | ActionUtils.getMetaMask()));
             redoAction.setEnabled(false);
         }
@@ -101,7 +106,7 @@ public class BasicUndoActions implements UndoActions {
                 }
             };
             undoManagerAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-            ActionUtils.setupAction(undoManagerAction, resourceBundle, "editUndoManagerAction");
+            ActionUtils.setupAction(undoManagerAction, resourceBundle, EDIT_UNDO_MANAGER_ACTION_ID);
         }
         return undoManagerAction;
     }

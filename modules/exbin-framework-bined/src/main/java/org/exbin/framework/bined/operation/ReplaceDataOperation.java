@@ -19,13 +19,10 @@ import java.util.Random;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.EditableBinaryData;
 import org.exbin.auxiliary.paged_data.PagedData;
 import org.exbin.bined.CodeAreaUtils;
-import org.exbin.bined.EditMode;
 import org.exbin.bined.capability.CaretCapable;
-import org.exbin.bined.capability.EditModeCapable;
 import org.exbin.bined.capability.ScrollingCapable;
 import org.exbin.bined.operation.BinaryDataOperationException;
 import org.exbin.bined.operation.swing.CodeAreaOperation;
@@ -36,7 +33,6 @@ import org.exbin.bined.operation.swing.command.CodeAreaCommand;
 import org.exbin.bined.operation.swing.command.CodeAreaCommandType;
 import org.exbin.bined.swing.CodeAreaCore;
 import org.exbin.framework.bined.operation.InsertDataOperation.FillWithType;
-import org.exbin.xbup.operation.CompoundCommand;
 
 /**
  * Replace data operation.
@@ -86,7 +82,7 @@ public class ReplaceDataOperation extends CodeAreaOperation {
         }
 
         CodeAreaOperation undoOperation = null;
-        EditableBinaryData contentData = ((EditableBinaryData) codeArea.getContentData());
+        EditableBinaryData contentData = CodeAreaUtils.requireNonNull(((EditableBinaryData) codeArea.getContentData()));
 
         if (position == dataSize) {
             undoOperation = new RemoveDataOperation(codeArea, position, 0, length);

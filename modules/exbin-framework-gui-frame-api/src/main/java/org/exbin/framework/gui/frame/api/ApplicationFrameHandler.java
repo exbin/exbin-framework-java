@@ -18,15 +18,18 @@ package org.exbin.framework.gui.frame.api;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.utils.gui.WindowHeaderPanel;
 
 /**
  * Interface for application frame.
  *
- * @version 0.2.0 2016/07/23
+ * @version 0.2.1 2021/10/26
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface ApplicationFrameHandler {
 
     /**
@@ -34,7 +37,15 @@ public interface ApplicationFrameHandler {
      *
      * @return frame
      */
+    @Nonnull
     Frame getFrame();
+
+    /**
+     * Returns tool bar visibility.
+     *
+     * @return true if toolbar visible
+     */
+    boolean isToolBarVisible();
 
     /**
      * Sets tool bar visibility.
@@ -44,11 +55,25 @@ public interface ApplicationFrameHandler {
     void setToolBarVisible(boolean toolBarVisible);
 
     /**
+     * Returns status bar visibility.
+     *
+     * @return true if status visible
+     */
+    boolean isStatusBarVisible();
+
+    /**
      * Sets status bar visibility.
      *
      * @param statusBarVisible statusbar visible
      */
     void setStatusBarVisible(boolean statusBarVisible);
+
+    /**
+     * Returns tool bar captions visibility.
+     *
+     * @return true if toolbar captions visible
+     */
+    boolean isToolBarCaptionsVisible();
 
     /**
      * Sets tool bar captions visibility.
