@@ -113,7 +113,7 @@ public interface ApplicationFrameHandler {
     /**
      * Shows this frame.
      */
-    void show();
+    void showFrame();
 
     /**
      * Sets default frame size.

@@ -46,7 +46,7 @@ import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 @ParametersAreNonnullByDefault
 public class CheckForUpdateAction extends AbstractAction {
 
-    private static final String ACTION_ID = "checkUpdateAction";
+    public static final String ACTION_ID = "checkUpdateAction";
 
     private XBApplication application;
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdateAction.class);

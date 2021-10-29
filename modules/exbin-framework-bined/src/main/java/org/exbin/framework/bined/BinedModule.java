@@ -38,6 +38,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +167,7 @@ import org.exbin.framework.gui.utils.ClipboardActionsApi;
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2021/10/16
+ * @version 0.2.1 2021/10/29
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -300,8 +302,6 @@ public class BinedModule implements XBApplicationModule {
                 updateClipboardActionStatus();
             });
             fileModule.setFileOperations(editorProvider);
-
-            editorProvider.newFile();
         }
 
         return editorProvider;
@@ -1708,6 +1708,18 @@ public class BinedModule implements XBApplicationModule {
         actionModule.registerMenuItem(HEX_CHARACTERS_CASE_SUBMENU_ID, MODULE_ID, hexCharactersCaseActions.getLowerHexCharsAction(), new MenuPosition(PositionMode.TOP));
     }
 
+    public void start() {
+        if (editorProvider instanceof MultiEditorProvider) {
+            editorProvider.newFile();
+        }
+    }
+
+    public void startWithFile(String filePath) {
+        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        URI uri = new File(filePath).toURI();
+        fileModule.loadFromFile(uri.toASCIIString());
+    }
+
     @Nonnull
     private JPopupMenu createPopupMenu(int postfix, ExtCodeArea codeArea) {
         String popupMenuId = BINARY_POPUP_MENU_ID + "." + postfix;
@@ -1865,6 +1877,7 @@ public class BinedModule implements XBApplicationModule {
         return popupMenu;
     }
 
+    @Nonnull
     public JPopupMenu createBinEdComponentPopupMenu(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler, BinEdComponentPanel binaryPanel, int clickedX, int clickedY) {
         return codeAreaPopupMenuHandler.createPopupMenu(binaryPanel.getCodeArea(), "", clickedX, clickedY);
     }
@@ -2034,6 +2047,7 @@ public class BinedModule implements XBApplicationModule {
                 return false;
             }
 
+            @Nullable
             private Component getSource(MouseEvent e) {
                 return SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
             }

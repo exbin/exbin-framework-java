@@ -35,9 +35,9 @@ import org.exbin.framework.gui.utils.ActionUtils;
 @ParametersAreNonnullByDefault
 public class FrameActions {
 
-    private static final String VIEW_TOOL_BAR_ACTION_ID = "viewToolBarAction";
-    private static final String VIEW_TOOL_BAR_CAPTIONS_ACTION_ID = "viewToolBarCaptionsAction";
-    private static final String VIEW_STATUS_BAR_ACTION_ID = "viewStatusBarAction";
+    public static final String VIEW_TOOL_BAR_ACTION_ID = "viewToolBarAction";
+    public static final String VIEW_TOOL_BAR_CAPTIONS_ACTION_ID = "viewToolBarCaptionsAction";
+    public static final String VIEW_STATUS_BAR_ACTION_ID = "viewStatusBarAction";
 
     private XBApplication application;
     private ResourceBundle resourceBundle;

@@ -33,9 +33,9 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  */
 public class BasicUndoActions implements UndoActions {
 
-    private static final String EDIT_UNDO_ACTION_ID = "editUndoAction";
-    private static final String EDIT_REDO_ACTION_ID = "editRedoAction";
-    private static final String EDIT_UNDO_MANAGER_ACTION_ID = "editUndoManagerAction";
+    public static final String EDIT_UNDO_ACTION_ID = "editUndoAction";
+    public static final String EDIT_REDO_ACTION_ID = "editRedoAction";
+    public static final String EDIT_UNDO_MANAGER_ACTION_ID = "editUndoManagerAction";
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(GuiUndoModule.class);
 

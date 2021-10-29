@@ -262,6 +262,11 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
         actionModule.buildToolBar(toolBar, GuiFrameModule.MAIN_TOOL_BAR_ID);
     }
+    
+    @Override
+    public void showFrame() {
+        setVisible(true);
+    }
 
     public void switchStatusBar(@Nullable JPanel panel) {
         if (currentStatusBarPanel != null) {

@@ -27,10 +27,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.SwingUtilities;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.PagedData;
-import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.bined.swing.extended.diff.DiffHighlightCodeAreaPainter;
 import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -58,35 +57,43 @@ public class CompareFilesPanel extends javax.swing.JPanel {
 
     private void init() {
         leftComboBox.addItemListener((ItemEvent e) -> {
-            int selectedIndex = leftComboBox.getSelectedIndex();
-            if (selectedIndex < 0) {
-                return;
-            }
-            if (selectedIndex == 0) {
-                if (leftCustomFile == null) {
-                    leftOpenButtonActionPerformed(null);
-                } else {
-                    switchToLeftCustomFile();
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                int selectedIndex = leftComboBox.getSelectedIndex();
+                if (selectedIndex < 0) {
+                    return;
                 }
-            } else {
-                BinEdFileHandler fileHandler = (BinEdFileHandler) control.getFileHandler(selectedIndex - 1);
-                setLeftFile(fileHandler.getCodeArea().getContentData());
+                if (selectedIndex == 0) {
+                    if (leftCustomFile == null) {
+                        SwingUtilities.invokeLater(() -> {
+                            leftOpenButtonActionPerformed(null);
+                        });
+                    } else {
+                        switchToLeftCustomFile();
+                    }
+                } else {
+                    BinEdFileHandler fileHandler = (BinEdFileHandler) control.getFileHandler(selectedIndex - 1);
+                    setLeftFile(fileHandler.getCodeArea().getContentData());
+                }
             }
         });
         rightComboBox.addItemListener((ItemEvent e) -> {
-            int selectedIndex = rightComboBox.getSelectedIndex();
-            if (selectedIndex < 0) {
-                return;
-            }
-            if (selectedIndex == 0) {
-                if (rightCustomFile == null) {
-                    rightOpenButtonActionPerformed(null);
-                } else {
-                    switchToRightCustomFile();
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                int selectedIndex = rightComboBox.getSelectedIndex();
+                if (selectedIndex < 0) {
+                    return;
                 }
-            } else {
-                BinEdFileHandler fileHandler = (BinEdFileHandler) control.getFileHandler(selectedIndex - 1);
-                setRightFile(fileHandler.getCodeArea().getContentData());
+                if (selectedIndex == 0) {
+                    if (rightCustomFile == null) {
+                        SwingUtilities.invokeLater(() -> {
+                            rightOpenButtonActionPerformed(null);
+                        });
+                    } else {
+                        switchToRightCustomFile();
+                    }
+                } else {
+                    BinEdFileHandler fileHandler = (BinEdFileHandler) control.getFileHandler(selectedIndex - 1);
+                    setRightFile(fileHandler.getCodeArea().getContentData());
+                }
             }
         });
     }
@@ -113,20 +120,11 @@ public class CompareFilesPanel extends javax.swing.JPanel {
     }
 
     public void setLeftFile(BinaryData contentData) {
-        // TODO replace with setLeftContentData once fixed
-        ExtCodeArea leftCodeArea = codeAreaDiffPanel.getLeftCodeArea();
-        leftCodeArea.setContentData(contentData);
-
-        ExtCodeArea rightCodeArea = codeAreaDiffPanel.getRightCodeArea();
-        ((DiffHighlightCodeAreaPainter) rightCodeArea.getPainter()).setComparedData(contentData);
+        codeAreaDiffPanel.setLeftContentData(contentData);
     }
 
     public void setRightFile(BinaryData contentData) {
-        ExtCodeArea rightCodeArea = codeAreaDiffPanel.getRightCodeArea();
-        rightCodeArea.setContentData(contentData);
-
-        ExtCodeArea leftCodeArea = codeAreaDiffPanel.getLeftCodeArea();
-        ((DiffHighlightCodeAreaPainter) leftCodeArea.getPainter()).setComparedData(contentData);
+        codeAreaDiffPanel.setRightContentData(contentData);
     }
 
     /**
