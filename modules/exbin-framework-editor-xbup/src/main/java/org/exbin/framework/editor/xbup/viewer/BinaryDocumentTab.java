@@ -68,7 +68,7 @@ public class BinaryDocumentTab implements DocumentTab {
     @Override
     public void setApplication(XBApplication application) {
         BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
-        CodeAreaPopupMenuHandler codeAreaPopupMenuHandler = binedModule.getCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC);
+        CodeAreaPopupMenuHandler codeAreaPopupMenuHandler = binedModule.createCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC);
         JPopupMenu popupMenu = new JPopupMenu() {
             @Override
             public void show(Component invoker, int x, int y) {

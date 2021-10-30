@@ -36,6 +36,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.gui.editor.api.MultiEditorProvider;
 import org.exbin.framework.gui.file.api.AllFileTypes;
 import org.exbin.framework.gui.file.api.FileHandler;
@@ -72,11 +73,12 @@ public class CompareFilesAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         final CompareFilesPanel compareFilesPanel = new CompareFilesPanel();
-        CloseControlPanel controlPanel = new CloseControlPanel(compareFilesPanel.getResourceBundle());
+        ResourceBundle panelResourceBundle = compareFilesPanel.getResourceBundle();
+        CloseControlPanel controlPanel = new CloseControlPanel(panelResourceBundle);
         JPanel dialogPanel = WindowUtils.createDialogPanel(compareFilesPanel, controlPanel);
         Dimension preferredSize = dialogPanel.getPreferredSize();
         dialogPanel.setPreferredSize(new Dimension(preferredSize.width, preferredSize.height + 450));
-        final WindowUtils.DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "Compare two files", Dialog.ModalityType.APPLICATION_MODAL);
+        final WindowUtils.DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), panelResourceBundle.getString("dialog.title"), Dialog.ModalityType.APPLICATION_MODAL);
         controlPanel.setHandler(dialog::close);
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isPresent()) {
@@ -89,17 +91,19 @@ public class CompareFilesAction extends AbstractAction {
             List<String> availableFiles = new ArrayList<>();
             for (FileHandler fileHandler : fileHandlers) {
                 Optional<URI> fileUri = fileHandler.getFileUri();
-                availableFiles.add(fileUri.isPresent() ? fileUri.get().toString() : "Unsaved file");
+                availableFiles.add(fileUri.isPresent() ? fileUri.get().toString() : panelResourceBundle.getString("unsavedFile"));
             }
             compareFilesPanel.setAvailableFiles(availableFiles);
         } else {
             fileHandlers = new ArrayList<>();
             Optional<URI> fileUri = editorProvider.getActiveFile().get().getFileUri();
             List<String> availableFiles = new ArrayList<>();
-            availableFiles.add(fileUri.isPresent() ? fileUri.get().toString() : "Unsaved file");
+            availableFiles.add(fileUri.isPresent() ? fileUri.get().toString() : panelResourceBundle.getString("unsavedFile"));
             compareFilesPanel.setAvailableFiles(availableFiles);
         }
 
+        BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
+        compareFilesPanel.setCodeAreaPopupMenu(binedModule.createCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC));
         compareFilesPanel.setControl(new CompareFilesPanel.Control() {
             @Nullable
             @Override
@@ -108,7 +112,7 @@ public class CompareFilesAction extends AbstractAction {
                 GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
                 fileModule.getFileActions().openFile((URI fileUri, FileType fileType) -> {
                     result[0] = new File(fileUri);
-                }, new AllFileTypes(), null);
+                }, new AllFileTypes(), editorProvider);
 
                 return result[0];
             }

@@ -72,7 +72,7 @@ public class RecentFilesActions {
     @Nonnull
     public JMenu getOpenRecentMenu() {
         if (fileOpenRecentMenu == null) {
-            fileOpenRecentMenu = new JMenu("Open Recent File");
+            fileOpenRecentMenu = new JMenu(resourceBundle.getString("openRecentMenu.text"));
             recentFiles = new ArrayList<>();
             if (preferences != null) {
                 loadState();
@@ -131,9 +131,9 @@ public class RecentFilesActions {
             }
             menuItem.addActionListener((ActionEvent e) -> {
                 if (e.getSource() instanceof JMenuItem) {
-                    JMenuItem menuItem1 = (JMenuItem) e.getSource();
+                    JMenuItem sourceMenuItem = (JMenuItem) e.getSource();
                     for (int itemIndex = 0; itemIndex < fileOpenRecentMenu.getItemCount(); itemIndex++) {
-                        if (menuItem1.equals(fileOpenRecentMenu.getItem(itemIndex))) {
+                        if (sourceMenuItem.equals(fileOpenRecentMenu.getItem(itemIndex))) {
                             RecentItem recentItem = recentFiles.get(itemIndex);
                             FileType fileType = null;
                             List<FileType> registeredFileTypes = filesControl.getRegisteredFileTypes();
@@ -179,7 +179,6 @@ public class RecentFilesActions {
 
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
         if (recentFiles != null) {
-            // Update recent files list
             int i = 0;
             while (i < recentFiles.size()) {
                 RecentItem recentItem = recentFiles.get(i);

@@ -104,41 +104,38 @@ public class InsertDataAction extends AbstractAction implements FileDependentAct
         JPanel dialogPanel = WindowUtils.createDialogPanel(insertDataPanel, controlPanel);
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "", Dialog.ModalityType.APPLICATION_MODAL);
-        insertDataPanel.setControl(new InsertDataPanel.Control() {
-            @Override
-            public void sampleDataAction() {
-                BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
-                final BinaryMultilinePanel multilinePanel = new BinaryMultilinePanel();
-                SearchCondition searchCondition = new SearchCondition();
-                EditableBinaryData conditionData = new ByteArrayEditableData();
-                conditionData.insert(0, sampleBinaryData);
-                searchCondition.setBinaryData(conditionData);
-                searchCondition.setSearchMode(SearchCondition.SearchMode.BINARY);
-                multilinePanel.setCondition(searchCondition);
-                multilinePanel.setCodeAreaPopupMenuHandler(binedModule.getCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC));
-                DefaultControlPanel controlPanel = new DefaultControlPanel();
-                JPanel dialogPanel = WindowUtils.createDialogPanel(multilinePanel, controlPanel);
-                GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                final DialogWrapper multilineDialog = frameModule.createDialog(dialog.getWindow(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
-                frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
-                controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                    if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                        SearchCondition condition = multilinePanel.getCondition();
-                        sampleBinaryData.clear();
-                        sampleBinaryData.insert(0, condition.getBinaryData());
-                        insertDataPanel.setFillWith(InsertDataOperation.FillWithType.SAMPLE);
-                        long dataLength = insertDataPanel.getDataLength();
-                        if (dataLength < sampleBinaryData.getDataSize()) {
-                            insertDataPanel.setDataLength(sampleBinaryData.getDataSize());
-                        }
+        insertDataPanel.setControl(() -> {
+            BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
+            final BinaryMultilinePanel multilinePanel = new BinaryMultilinePanel();
+            SearchCondition searchCondition = new SearchCondition();
+            EditableBinaryData conditionData = new ByteArrayEditableData();
+            conditionData.insert(0, sampleBinaryData);
+            searchCondition.setBinaryData(conditionData);
+            searchCondition.setSearchMode(SearchCondition.SearchMode.BINARY);
+            multilinePanel.setCondition(searchCondition);
+            multilinePanel.setCodeAreaPopupMenuHandler(binedModule.createCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC));
+            DefaultControlPanel controlPanel1 = new DefaultControlPanel();
+            JPanel dialogPanel1 = WindowUtils.createDialogPanel(multilinePanel, controlPanel1);
+            GuiFrameModuleApi frameModule1 = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            final DialogWrapper multilineDialog = frameModule1.createDialog(dialog.getWindow(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel1);
+            frameModule1.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
+            controlPanel1.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                    SearchCondition condition = multilinePanel.getCondition();
+                    sampleBinaryData.clear();
+                    sampleBinaryData.insert(0, condition.getBinaryData());
+                    insertDataPanel.setFillWith(InsertDataOperation.FillWithType.SAMPLE);
+                    long dataLength = insertDataPanel.getDataLength();
+                    if (dataLength < sampleBinaryData.getDataSize()) {
+                        insertDataPanel.setDataLength(sampleBinaryData.getDataSize());
                     }
+                }
 
-                    multilineDialog.close();
-                    multilineDialog.dispose();
-                });
-                multilineDialog.showCentered(dialog.getWindow());
+                multilineDialog.close();
+                multilineDialog.dispose();
+            });
+            multilineDialog.showCentered(dialog.getWindow());
 //                    multilinePanel.detachMenu();
-            }
         });
         WindowUtils.addHeaderPanel(dialog.getWindow(), insertDataPanel.getClass(), insertDataPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, insertDataPanel.getResourceBundle());

@@ -240,7 +240,9 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
             }
         });
 
-        fileHandler.getComponent().setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
+        BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
+        CodeAreaPopupMenuHandler normalCodeAreaPopupMenuHandler = binedModule.createCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.NORMAL);
+        fileHandler.getComponent().setCodeAreaPopupMenuHandler(normalCodeAreaPopupMenuHandler);
 
         return fileHandler;
     }

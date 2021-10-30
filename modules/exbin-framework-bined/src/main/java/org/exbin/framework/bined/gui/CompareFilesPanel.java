@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.bined.gui;
 
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,10 +28,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JPopupMenu;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.PagedData;
+import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.bined.BinEdFileHandler;
+import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -125,6 +132,51 @@ public class CompareFilesPanel extends javax.swing.JPanel {
 
     public void setRightFile(BinaryData contentData) {
         codeAreaDiffPanel.setRightContentData(contentData);
+    }
+
+    public void setCodeAreaPopupMenu(CodeAreaPopupMenuHandler codeAreaPopupMenuHandler) {
+
+        codeAreaDiffPanel.getLeftCodeArea().setComponentPopupMenu(createPopupMenu(codeAreaPopupMenuHandler, "compareLeft"));
+        codeAreaDiffPanel.getRightCodeArea().setComponentPopupMenu(createPopupMenu(codeAreaPopupMenuHandler, "compareRight"));
+    }
+
+    @Nonnull
+    private JPopupMenu createPopupMenu(final CodeAreaPopupMenuHandler codeAreaPopupMenuHandler, String popupMenuId) {
+        return new JPopupMenu() {
+            @Override
+            public void show(Component invoker, int x, int y) {
+                if (codeAreaPopupMenuHandler == null || invoker == null) {
+                    return;
+                }
+
+                int clickedX = x;
+                int clickedY = y;
+                if (invoker instanceof JViewport) {
+                    clickedX += ((JViewport) invoker).getParent().getX();
+                    clickedY += ((JViewport) invoker).getParent().getY();
+                }
+
+                ExtCodeArea codeArea = invoker instanceof ExtCodeArea ? (ExtCodeArea) invoker
+                        : (ExtCodeArea) ((JViewport) invoker).getParent().getParent();
+
+                JPopupMenu popupMenu = codeAreaPopupMenuHandler.createPopupMenu(codeArea, popupMenuId, clickedX, clickedY);
+                popupMenu.addPopupMenuListener(new PopupMenuListener() {
+                    @Override
+                    public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    }
+
+                    @Override
+                    public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                        codeAreaPopupMenuHandler.dropPopupMenu(popupMenuId);
+                    }
+
+                    @Override
+                    public void popupMenuCanceled(PopupMenuEvent e) {
+                    }
+                });
+                popupMenu.show(invoker, x, y);
+            }
+        };
     }
 
     /**

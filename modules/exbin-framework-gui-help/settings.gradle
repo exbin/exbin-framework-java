@@ -3,9 +3,9 @@ rootProject.name = 'exbin-framework-gui-help'
 if (rootProject.path == ':') {
     include ':modules:exbin-framework'
     include ':modules:exbin-framework-api'
+    include ':modules:exbin-framework-gui-action-api'
     include ':modules:exbin-framework-gui-frame-api'
     include ':modules:exbin-framework-gui-help-api'
-    include ':modules:exbin-framework-gui-action-api'
     include ':modules:exbin-framework-gui-utils'
 }
 
