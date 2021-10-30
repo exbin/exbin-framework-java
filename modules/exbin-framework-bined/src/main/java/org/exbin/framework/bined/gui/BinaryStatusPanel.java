@@ -656,10 +656,10 @@ public class BinaryStatusPanel extends javax.swing.JPanel implements BinaryStatu
         boolean enabled = memoryMode != MemoryMode.READ_ONLY;
         deltaMemoryModeRadioButtonMenuItem.setEnabled(enabled);
         ramMemoryModeRadioButtonMenuItem.setEnabled(enabled);
-        if (memoryMode == MemoryMode.RAM_MEMORY) {
-            ramMemoryModeRadioButtonMenuItem.setSelected(true);
-        } else {
+        if (memoryMode == MemoryMode.DELTA_MODE) {
             deltaMemoryModeRadioButtonMenuItem.setSelected(true);
+        } else {
+            ramMemoryModeRadioButtonMenuItem.setSelected(true);
         }
     }
 

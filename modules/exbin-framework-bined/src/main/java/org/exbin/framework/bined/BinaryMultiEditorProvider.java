@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -76,7 +75,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/26
+ * @version 0.2.2 2021/10/30
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -102,11 +101,11 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Nullable
     private File lastUsedDirectory;
 
-    public BinaryMultiEditorProvider(XBApplication application, ResourceBundle resourceBundle) {
-        init(application, resourceBundle);
+    public BinaryMultiEditorProvider(XBApplication application) {
+        init(application);
     }
 
-    private void init(XBApplication application, ResourceBundle resourceBundle) {
+    private void init(XBApplication application) {
         this.application = application;
         multiEditorPanel.setControl(new MultiEditorPanel.Control() {
             @Override
@@ -192,7 +191,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     private BinEdFileHandler createFileHandler(int id) {
         BinEdFileHandler fileHandler = new BinEdFileHandler(id);
         fileHandler.setApplication(application);
-        fileHandler.switchFileHandlingMode(defaultFileHandlingMode);
+        fileHandler.setNewData(defaultFileHandlingMode);
         fileHandler.getUndoHandler().addUndoUpdateListener(new XBUndoUpdateListener() {
             @Override
             public void undoCommandPositionChanged() {
@@ -343,11 +342,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         }
 
         if (binaryStatus != null) {
-            updateCurrentDocumentSize();
-            updateCurrentCaretPosition();
-            updateCurrentSelectionRange();
-            updateCurrentMemoryMode();
-            updateCurrentEditMode();
+            updateStatus();
         }
 
         if (textEncodingStatusApi != null) {
@@ -479,6 +474,11 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
         this.binaryStatus = binaryStatus;
+        updateStatus();
+    }
+
+    @Override
+    public void updateStatus() {
         updateCurrentDocumentSize();
         updateCurrentCaretPosition();
         updateCurrentSelectionRange();

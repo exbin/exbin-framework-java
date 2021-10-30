@@ -29,6 +29,7 @@ import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
 import org.exbin.bined.CodeAreaCaretPosition;
 import org.exbin.bined.EditMode;
 import org.exbin.bined.EditOperation;
+import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditModeCapable;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
@@ -48,7 +49,7 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/19
+ * @version 0.2.2 2021/10/30
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -59,6 +60,8 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     private FileTypes fileTypes;
     @Nullable
     private File lastUsedDirectory;
+    private BinaryStatusApi binaryStatus;
+    private EditorModificationListener editorModificationListener;
 
     public BinaryEditorProvider(XBApplication application, BinEdFileHandler activeFile) {
         init(application, activeFile);
@@ -89,7 +92,7 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
-        activeFile.getCodeArea().addDataChangedListener(editorModificationListener::modified);
+        this.editorModificationListener = editorModificationListener;
     }
 
     @Nonnull
@@ -100,20 +103,79 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Override
     public void registerBinaryStatus(BinaryStatusApi binaryStatus) {
+        this.binaryStatus = binaryStatus;
+
         ExtCodeArea codeArea = getEditorComponent().getCodeArea();
-        codeArea.addCaretMovedListener((CodeAreaCaretPosition caretPosition) -> {
-            binaryStatus.setCursorPosition(caretPosition);
+        codeArea.addDataChangedListener(() -> {
+            activeFile.getComponent().notifyDataChanged();
+            if (editorModificationListener != null) {
+                editorModificationListener.modified();
+            }
+            updateCurrentDocumentSize();
         });
+
         codeArea.addSelectionChangedListener(() -> {
             binaryStatus.setSelectionRange(codeArea.getSelection());
             updateClipboardActionsStatus();
         });
 
+        codeArea.addCaretMovedListener((CodeAreaCaretPosition caretPosition) -> {
+            binaryStatus.setCursorPosition(caretPosition);
+        });
+
         codeArea.addEditModeChangedListener((EditMode mode, EditOperation operation) -> {
             binaryStatus.setEditMode(mode, operation);
         });
-        binaryStatus.setEditMode(codeArea.getEditMode(), codeArea.getActiveOperation());
 
+        updateStatus();
+    }
+
+    @Override
+    public void updateStatus() {
+        updateCurrentDocumentSize();
+        updateCurrentCaretPosition();
+        updateCurrentSelectionRange();
+        updateCurrentMemoryMode();
+        updateCurrentEditMode();
+    }
+
+    private void updateCurrentDocumentSize() {
+        if (binaryStatus == null) {
+            return;
+        }
+
+        ExtCodeArea codeArea = activeFile.getCodeArea();
+        long documentOriginalSize = activeFile.getDocumentOriginalSize();
+        long dataSize = codeArea.getDataSize();
+        binaryStatus.setCurrentDocumentSize(dataSize, documentOriginalSize);
+    }
+
+    private void updateCurrentCaretPosition() {
+        if (binaryStatus == null) {
+            return;
+        }
+
+        ExtCodeArea codeArea = activeFile.getCodeArea();
+        CodeAreaCaretPosition caretPosition = codeArea.getCaretPosition();
+        binaryStatus.setCursorPosition(caretPosition);
+    }
+
+    private void updateCurrentSelectionRange() {
+        if (binaryStatus == null) {
+            return;
+        }
+
+        ExtCodeArea codeArea = activeFile.getCodeArea();
+        SelectionRange selectionRange = codeArea.getSelection();
+        binaryStatus.setSelectionRange(selectionRange);
+    }
+
+    private void updateCurrentMemoryMode() {
+        if (binaryStatus == null) {
+            return;
+        }
+
+        ExtCodeArea codeArea = activeFile.getCodeArea();
         BinaryStatusApi.MemoryMode newMemoryMode = BinaryStatusApi.MemoryMode.RAM_MEMORY;
         if (((EditModeCapable) codeArea).getEditMode() == EditMode.READ_ONLY) {
             newMemoryMode = BinaryStatusApi.MemoryMode.READ_ONLY;
@@ -122,6 +184,15 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
         }
 
         binaryStatus.setMemoryMode(newMemoryMode);
+    }
+
+    private void updateCurrentEditMode() {
+        if (binaryStatus == null) {
+            return;
+        }
+
+        ExtCodeArea codeArea = activeFile.getCodeArea();
+        binaryStatus.setEditMode(codeArea.getEditMode(), codeArea.getActiveOperation());
     }
 
     @Override

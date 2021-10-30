@@ -57,7 +57,7 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 /**
  * File handler for binary editor.
  *
- * @version 0.2.2 2021/10/14
+ * @version 0.2.2 2021/10/30
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -90,13 +90,17 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
         this();
         this.id = id;
     }
-    
+
     public void setApplication(XBApplication application) {
         componentPanel.setApplication(application);
     }
 
     @Override
     public void loadFromFile(URI fileUri, FileType fileType) {
+        loadFromFile(fileUri, fileType, getFileHandlingMode());
+    }
+
+    private void loadFromFile(URI fileUri, FileType fileType, FileHandlingMode fileHandlingMode) {
         File file = new File(fileUri);
         if (!file.isFile()) {
             JOptionPane.showOptionDialog(componentPanel,
@@ -110,7 +114,6 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
 
         try {
             BinaryData oldData = componentPanel.getContentData();
-            FileHandlingMode fileHandlingMode = getFileHandlingMode();
             if (fileHandlingMode == FileHandlingMode.DELTA) {
                 FileDataSource openFileSource = segmentsRepository.openFileSource(file);
                 DeltaDocument document = segmentsRepository.createDocument(openFileSource);
@@ -219,13 +222,14 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
 
     @Override
     public void newFile() {
+        FileHandlingMode fileHandlingMode = getFileHandlingMode();
         closeData();
         ExtCodeArea codeArea = componentPanel.getCodeArea();
         BinaryData data = codeArea.getContentData();
         if (data instanceof DeltaDocument) {
             segmentsRepository.dropDocument(Objects.requireNonNull((DeltaDocument) codeArea.getContentData()));
         }
-        setNewData();
+        setNewData(fileHandlingMode);
         fileUri = null;
         if (undoHandlerWrapper != null) {
             undoHandlerWrapper.clear();
@@ -323,33 +327,20 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
         FileHandlingMode oldFileHandlingMode = getFileHandlingMode();
         ExtCodeArea codeArea = componentPanel.getCodeArea();
         if (handlingMode != oldFileHandlingMode) {
-            // Switch memory mode
             if (fileUri != null) {
-                // If document is connected to file, attempt to release first if modified and then simply reload
-                if (isModified()) {
-//                    if (releaseFile()) {
-                    loadFromFile(fileUri, null);
-                    codeArea.clearSelection();
-                    codeArea.setCaretPosition(0);
-                    setFileHandlingMode(handlingMode);
-//                    }
-                } else {
-                    setFileHandlingMode(handlingMode);
-                    loadFromFile(fileUri, null);
-                }
+                loadFromFile(fileUri, null, handlingMode);
             } else {
-                // If document is unsaved in memory, switch data in code area
                 BinaryData oldData = codeArea.getContentData();
                 if (oldData instanceof DeltaDocument) {
-                    DeltaDocument document = segmentsRepository.createDocument();
-                    document.insert(0, oldData);
-                    componentPanel.setContentData(document);
-                } else {
                     XBData data = new XBData();
-                    if (oldData != null) {
-                        data.insert(0, oldData);
-                    }
+                    data.insert(0, oldData);
                     componentPanel.setContentData(data);
+                } else {
+                    DeltaDocument document = segmentsRepository.createDocument();
+                    if (oldData != null) {
+                        document.insert(0, oldData);
+                    }
+                    componentPanel.setContentData(document);
                 }
 
                 if (undoHandlerWrapper != null) {
@@ -359,7 +350,6 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
                 if (oldData != null) {
                     oldData.dispose();
                 }
-                setFileHandlingMode(handlingMode);
             }
         }
     }
@@ -367,10 +357,6 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
     @Nonnull
     public FileHandlingMode getFileHandlingMode() {
         return getCodeArea().getContentData() instanceof DeltaDocument ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY;
-    }
-
-    private void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
-        // updateCurrentMemoryMode();
     }
 
     @Nonnull
@@ -399,8 +385,7 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
         return undoHandlerWrapper.getCommandPosition() != undoHandlerWrapper.getSyncPoint();
     }
 
-    private void setNewData() {
-        FileHandlingMode fileHandlingMode = getFileHandlingMode();
+    public void setNewData(FileHandlingMode fileHandlingMode) {
         if (fileHandlingMode == FileHandlingMode.DELTA) {
             componentPanel.setContentData(segmentsRepository.createDocument());
         } else {

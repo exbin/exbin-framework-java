@@ -40,4 +40,9 @@ public interface BinEdEditorProvider {
      * @param encodingStatus encoding status
      */
     void registerEncodingStatus(TextEncodingStatusApi encodingStatus);
+
+    /**
+     * Requests update of the status for current file.
+     */
+    void updateStatus();
 }

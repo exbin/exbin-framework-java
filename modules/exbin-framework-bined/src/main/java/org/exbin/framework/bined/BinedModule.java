@@ -269,8 +269,8 @@ public class BinedModule implements XBApplicationModule {
             editorFile.setSegmentsRepository(new SegmentsRepository());
             EditorPreferences editorPreferences = new EditorPreferences(application.getAppPreferences());
             BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(editorPreferences.getMemoryMode());
-            editorFile.switchFileHandlingMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY);
-            editorFile.newFile();
+            FileHandlingMode fileHandlingMode = memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY;
+            editorFile.setNewData(fileHandlingMode);
             BinEdComponentPanel panel = (BinEdComponentPanel) editorFile.getComponent();
             editorProvider = new BinaryEditorProvider(application, editorFile);
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
@@ -287,7 +287,7 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private EditorProvider createMultiEditorProvider() {
         if (editorProvider == null) {
-            editorProvider = new BinaryMultiEditorProvider(application, resourceBundle);
+            editorProvider = new BinaryMultiEditorProvider(application);
             EditorPreferences editorPreferences = new EditorPreferences(application.getAppPreferences());
             BinaryStatusApi.MemoryMode memoryMode = BinaryStatusApi.MemoryMode.findByPreferencesValue(editorPreferences.getMemoryMode());
             ((BinaryMultiEditorProvider) editorProvider).setDefaultFileHandlingMode(memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY);
@@ -388,8 +388,11 @@ public class BinedModule implements XBApplicationModule {
                     FileHandlingMode newHandlingMode = memoryMode == BinaryStatusApi.MemoryMode.DELTA_MODE ? FileHandlingMode.DELTA : FileHandlingMode.MEMORY;
                     if (newHandlingMode != fileHandlingMode) {
                         BinaryEditorPreferences preferences = new BinaryEditorPreferences(application.getAppPreferences());
-                        fileHandler.switchFileHandlingMode(newHandlingMode);
-                        preferences.getEditorPreferences().setFileHandlingMode(newHandlingMode);
+                        if (editorProvider.releaseFile(fileHandler)) {
+                            fileHandler.switchFileHandlingMode(newHandlingMode);
+                            preferences.getEditorPreferences().setFileHandlingMode(newHandlingMode);
+                        }
+                        ((BinEdEditorProvider) editorProvider).updateStatus();
                     }
                 }
             }
@@ -667,6 +670,7 @@ public class BinedModule implements XBApplicationModule {
                 BinEdFileHandler fileHandler = (BinEdFileHandler) activeFile.get();
                 if (!fileHandler.isModified() || editorProvider.releaseFile(fileHandler)) {
                     fileHandler.switchFileHandlingMode(fileHandlingMode);
+                    ((BinEdEditorProvider) editorProvider).updateStatus();
                 }
             }
 
