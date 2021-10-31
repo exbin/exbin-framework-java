@@ -97,7 +97,7 @@ public class PositionCodeTypeActions implements FileDependentAction {
     public void setCodeType(PositionCodeType codeType) {
         this.positionCodeType = codeType;
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 

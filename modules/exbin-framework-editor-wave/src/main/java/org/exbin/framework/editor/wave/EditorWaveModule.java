@@ -181,7 +181,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     private void updatePositionTime() {
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             return;
         }
 
@@ -193,7 +193,7 @@ public class EditorWaveModule implements XBApplicationModule {
         updatePositionTime();
 
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             return;
         }
 
@@ -212,7 +212,7 @@ public class EditorWaveModule implements XBApplicationModule {
             @Override
             public void performPlay() {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
+                if (!activeFile.isPresent()) {
                     throw new IllegalStateException();
                 }
 
@@ -223,7 +223,7 @@ public class EditorWaveModule implements XBApplicationModule {
             @Override
             public void performStop() {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
+                if (!activeFile.isPresent()) {
                     throw new IllegalStateException();
                 }
 
@@ -234,7 +234,7 @@ public class EditorWaveModule implements XBApplicationModule {
             @Override
             public void setVolume(int volumeLevel) {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
+                if (!activeFile.isPresent()) {
                     throw new IllegalStateException();
                 }
 

@@ -45,7 +45,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * Compare files panel.
  *
- * @version 0.2.1 2021/10/25
+ * @version 0.2.1 2021/10/31
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -117,12 +117,17 @@ public class CompareFilesPanel extends javax.swing.JPanel {
     public void setAvailableFiles(List<String> availableFiles) {
         DefaultComboBoxModel<String> leftComboBoxModel = new DefaultComboBoxModel<>();
         leftComboBoxModel.addElement("Load file...");
-        leftComboBoxModel.addAll(availableFiles);
+        // addAll not in Java 8
+        for (String fileName : availableFiles) {
+            leftComboBoxModel.addElement(fileName);
+        }
         leftComboBox.setModel(leftComboBoxModel);
 
         DefaultComboBoxModel<String> rightComboBoxModel = new DefaultComboBoxModel<>();
         rightComboBoxModel.addElement("Load file...");
-        rightComboBoxModel.addAll(availableFiles);
+        for (String fileName : availableFiles) {
+            rightComboBoxModel.addElement(fileName);
+        }
         rightComboBox.setModel(rightComboBoxModel);
     }
 

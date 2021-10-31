@@ -157,7 +157,7 @@ public class EditorPictureModule implements XBApplicationModule {
     private void updateCurrentPosition() {
         if (imageStatusPanel != null) {
             Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-            if (activeFile.isEmpty()) {
+            if (!activeFile.isPresent()) {
                 throw new IllegalStateException();
             }
 
@@ -183,7 +183,7 @@ public class EditorPictureModule implements XBApplicationModule {
         frameModule.switchStatusBar(IMAGE_STATUS_BAR_ID);
 
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             return;
         }
 

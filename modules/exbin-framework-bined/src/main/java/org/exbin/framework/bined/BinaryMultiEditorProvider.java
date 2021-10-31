@@ -38,6 +38,7 @@ import javax.swing.JViewport;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
+import org.exbin.auxiliary.paged_data.delta.SegmentsRepository;
 import org.exbin.bined.CodeAreaCaretPosition;
 import org.exbin.bined.CodeAreaUtils;
 import org.exbin.bined.EditMode;
@@ -46,6 +47,7 @@ import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditModeCapable;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
+import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
@@ -75,13 +77,14 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 /**
  * Binary editor provider.
  *
- * @version 0.2.2 2021/10/30
+ * @version 0.2.2 2021/10/31
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEditorProvider, UndoFileHandler {
 
     private XBApplication application;
+    private SegmentsRepository segmentsRepository;
     private FileTypes fileTypes;
     private final MultiEditorPanel multiEditorPanel = new MultiEditorPanel();
     private int lastIndex = 0;
@@ -141,6 +144,10 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         });
     }
 
+    public void setSegmentsRepository(SegmentsRepository segmentsRepository) {
+        this.segmentsRepository = segmentsRepository;
+    }
+
     @Nonnull
     @Override
     public Optional<FileHandler> getActiveFile() {
@@ -175,7 +182,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         newFilesMap.put(fileIndex, ++lastNewFileIndex);
         BinEdFileHandler newFile = createFileHandler(fileIndex);
         newFile.newFile();
-        setupFile(newFile);
         multiEditorPanel.addFileHandler(newFile, getName(newFile));
     }
 
@@ -183,7 +189,6 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     public void openFile(URI fileUri, FileType fileType) {
         BinEdFileHandler file = createFileHandler(++lastIndex);
         file.loadFromFile(fileUri, fileType);
-        setupFile(file);
         multiEditorPanel.addFileHandler(file, file.getFileName().orElse(""));
     }
 
@@ -191,6 +196,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     private BinEdFileHandler createFileHandler(int id) {
         BinEdFileHandler fileHandler = new BinEdFileHandler(id);
         fileHandler.setApplication(application);
+        fileHandler.setSegmentsRepository(segmentsRepository);
         fileHandler.setNewData(defaultFileHandlingMode);
         fileHandler.getUndoHandler().addUndoUpdateListener(new XBUndoUpdateListener() {
             @Override
@@ -242,6 +248,8 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
         BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
         CodeAreaPopupMenuHandler normalCodeAreaPopupMenuHandler = binedModule.createCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.NORMAL);
+        binedModule.initFileHandler(fileHandler);
+        attachFilePopupMenu(fileHandler);
         fileHandler.getComponent().setCodeAreaPopupMenuHandler(normalCodeAreaPopupMenuHandler);
 
         return fileHandler;
@@ -417,7 +425,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
 
     @Override
     public void closeFile() {
-        if (activeFileCache.isEmpty()) {
+        if (!activeFileCache.isPresent()) {
             throw new IllegalStateException();
         }
 
@@ -437,7 +445,10 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         if (releaseOtherFiles(exceptHandler)) {
             multiEditorPanel.removeAllFileHandlersExceptFile(exceptHandler);
             int exceptionFileId = exceptHandler.getId();
-            newFilesMap.keySet().retainAll(List.of(exceptionFileId));
+            // I miss List.of()
+            List<Integer> list = new ArrayList<>();
+            list.add(exceptionFileId);
+            newFilesMap.keySet().retainAll(list);
         }
     }
 
@@ -519,7 +530,7 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
         this.codeAreaPopupMenuHandler = codeAreaPopupMenuHandler;
     }
 
-    private void setupFile(BinEdFileHandler newFile) {
+    private void attachFilePopupMenu(BinEdFileHandler newFile) {
         if (codeAreaPopupMenu == null) {
             String popupMenuId = BinedModule.BINARY_POPUP_MENU_ID + ".multi";
 

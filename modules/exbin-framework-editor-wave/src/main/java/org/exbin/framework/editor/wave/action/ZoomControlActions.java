@@ -67,7 +67,7 @@ public class ZoomControlActions {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (activeFile.isEmpty()) {
+                    if (!activeFile.isPresent()) {
                         throw new IllegalStateException();
                     }
 
@@ -87,7 +87,7 @@ public class ZoomControlActions {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (activeFile.isEmpty()) {
+                    if (!activeFile.isPresent()) {
                         throw new IllegalStateException();
                     }
 
@@ -108,7 +108,7 @@ public class ZoomControlActions {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (activeFile.isEmpty()) {
+                    if (!activeFile.isPresent()) {
                         throw new IllegalStateException();
                     }
 

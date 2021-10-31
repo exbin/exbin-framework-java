@@ -82,11 +82,11 @@ public class CatalogsBrowserPanel extends javax.swing.JPanel {
                 Optional<Date> lastUpdate = catalogRoot.getLastUpdate();
                 String lastUpdateText = lastUpdate.isPresent() ? lastUpdate.get().toString() : "";
                 Object[] row;
-                if (catalogRoot.getUrl().isEmpty()) {
-                    row = new Object[]{"Main", "(build-in)", lastUpdateText};
-                } else {
+                if (catalogRoot.getUrl().isPresent()) {
                     String nodeName = nameService.getDefaultText(catalogRoot.getNode());
                     row = new Object[]{"Catalog " + nodeName, catalogRoot.getUrl().orElse(""), lastUpdateText};
+                } else {
+                    row = new Object[]{"Main", "(build-in)", lastUpdateText};
                 }
                 ((DefaultTableModel) catalogsTable.getModel()).addRow(row);
             }

@@ -48,6 +48,7 @@ import org.exbin.framework.preferences.FrameworkPreferences;
 import org.exbin.framework.gui.options.api.OptionsPage;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.options.action.OptionsAction;
+import org.exbin.framework.gui.options.options.AppearanceOptions;
 
 /**
  * Implementation of framework options module.
@@ -202,6 +203,12 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
     }
 
     @Override
+    public void notifyOptionsChanged() {
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        frameModule.notifyFrameUpdated();
+    }
+
+    @Override
     public void addOptionsPage(OptionsPage<?> optionsPage, List<OptionsPathItem> path) {
         optionsPages.add(new OptionsPageRecord(path, optionsPage));
     }
@@ -255,7 +262,12 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
             OptionsPage page = optionsPage.optionsPage;
             OptionsData options = page.createOptions();
             page.loadFromPreferences(preferences, options);
+
+            if (options instanceof AppearanceOptions) {
+                page.applyPreferencesChanges(options);
+            }
         }
+        notifyOptionsChanged();
     }
 
     @Override
@@ -266,6 +278,7 @@ public class GuiOptionsModule implements GuiOptionsModuleApi {
         actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
     }
 
+    @ParametersAreNonnullByDefault
     private static class OptionsPageRecord {
 
         List<OptionsPathItem> path;

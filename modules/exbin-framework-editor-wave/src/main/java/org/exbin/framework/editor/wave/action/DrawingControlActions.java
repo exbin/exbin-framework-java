@@ -65,7 +65,7 @@ public class DrawingControlActions {
 
     public void setDrawMode(XBWavePanel.DrawMode mode) {
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 

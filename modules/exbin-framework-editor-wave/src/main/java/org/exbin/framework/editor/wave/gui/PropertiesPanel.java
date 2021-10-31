@@ -154,7 +154,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
 
     public void setDocument(AudioEditor audioEditor) {
         Optional<FileHandler> activeFile = audioEditor.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 

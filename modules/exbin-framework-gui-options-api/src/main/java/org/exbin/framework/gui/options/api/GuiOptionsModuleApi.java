@@ -84,4 +84,9 @@ public interface GuiOptionsModuleApi extends XBApplicationModule {
      * Loads all settings from preferences and applies it.
      */
     void initialLoadFromPreferences();
+    
+    /**
+     * 
+     */
+    void notifyOptionsChanged();
 }

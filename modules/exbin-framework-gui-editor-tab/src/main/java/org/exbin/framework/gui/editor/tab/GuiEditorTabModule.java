@@ -26,7 +26,6 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.editor.tab.api.GuiEditorTabModuleApi;
 import org.exbin.framework.gui.editor.tab.api.EditorViewHandling;
-import sun.jvm.hotspot.ui.EditorFactory;
 
 /**
  * Implementation of XBUP framework multi-tab editor module.
@@ -44,7 +43,7 @@ public class GuiEditorTabModule implements GuiEditorTabModuleApi {
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
-    private EditorFactory factory = null;
+//    private EditorFactory factory = null;
     private MultiEditorProvider multiEditorProvider = null;
 
     public GuiEditorTabModule() {

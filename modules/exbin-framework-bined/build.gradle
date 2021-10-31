@@ -1,20 +1,14 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
 group = 'org.exbin.framework'
 ext.libraryName = 'BinEd Hexadecimal Editor Framework Library'
 ext.libraryDescription = 'BinEd hexadecimal editor framework library'
 
 apply from: '../exbin-framework-java-modules.gradle'
-
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-    if (!gradle.startParameter.taskNames.contains("offline")) {
-        dependencies {
-            classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
-        }
-    }
-}
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = ''
@@ -49,7 +43,7 @@ dependencies {
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-undo-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-options-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-tab-api')
-//    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-docking-api')
+    //    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-docking-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-utils')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-editor-text')
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'

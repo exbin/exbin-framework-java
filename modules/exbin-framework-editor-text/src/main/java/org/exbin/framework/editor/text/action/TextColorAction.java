@@ -71,7 +71,7 @@ public class TextColorAction extends AbstractAction {
             @Override
             public Color[] getCurrentTextColors() {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
+                if (!activeFile.isPresent()) {
                     throw new IllegalStateException();
                 }
 
@@ -82,7 +82,7 @@ public class TextColorAction extends AbstractAction {
             @Override
             public Color[] getDefaultTextColors() {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
+                if (!activeFile.isPresent()) {
                     throw new IllegalStateException();
                 }
 
@@ -93,7 +93,7 @@ public class TextColorAction extends AbstractAction {
             @Override
             public void setCurrentTextColors(Color[] colors) {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
+                if (!activeFile.isPresent()) {
                     throw new IllegalStateException();
                 }
 

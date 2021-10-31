@@ -1,20 +1,14 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
 group = 'org.exbin.framework'
 ext.libraryName = 'ExBin Framework Core Library'
 ext.libraryDescription = 'Library for core functionality in ExBin Framework'
 
 apply from: '../exbin-framework-java-modules.gradle'
-
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-    if (!gradle.startParameter.taskNames.contains("offline")) {
-        dependencies {
-            classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
-        }
-    }
-}
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = ''
@@ -30,7 +24,7 @@ repositories {
 
 dependencies {
     api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-editor-tab-api')
-//    implementation 'org.dockingframes:docking-frames-common:1.1.1'
+    // implementation 'org.dockingframes:docking-frames-common:1.1.1'
     implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')

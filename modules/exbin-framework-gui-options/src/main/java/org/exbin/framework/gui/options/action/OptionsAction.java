@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.gui.options.action;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -60,8 +61,9 @@ public class OptionsAction extends AbstractAction {
         OptionsTreePanel optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
         optionsPagesProvider.registerOptionsPages(optionsTreePanel);
         optionsTreePanel.setLanguageLocales(application.getLanguageLocales());
-
-        optionsTreePanel.setAppEditor(application);
+        Dimension preferredSize = optionsTreePanel.getPreferredSize();
+        optionsTreePanel.setPreferredSize(new Dimension(preferredSize.width + 200, preferredSize.height + 200));
+        optionsTreePanel.setApplication(application);
         optionsTreePanel.setPreferences(application.getAppPreferences());
         optionsTreePanel.pagesFinished();
         optionsTreePanel.loadAllFromPreferences();

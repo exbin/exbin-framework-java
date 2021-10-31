@@ -181,9 +181,6 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /**
-         * Create and display the form.
-         */
         java.awt.EventQueue.invokeLater(() -> {
             XBApplicationFrame frame = new XBApplicationFrame();
             frame.setVisible(true);

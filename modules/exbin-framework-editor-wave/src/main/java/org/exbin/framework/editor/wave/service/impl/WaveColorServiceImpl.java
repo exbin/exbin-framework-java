@@ -43,7 +43,7 @@ public class WaveColorServiceImpl implements WaveColorService {
     @Override
     public Color[] getCurrentWaveColors() {
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 
@@ -55,7 +55,7 @@ public class WaveColorServiceImpl implements WaveColorService {
     @Override
     public Color[] getDefaultWaveColors() {
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 
@@ -66,7 +66,7 @@ public class WaveColorServiceImpl implements WaveColorService {
     @Override
     public void setCurrentWaveColors(Color[] colors) {
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 

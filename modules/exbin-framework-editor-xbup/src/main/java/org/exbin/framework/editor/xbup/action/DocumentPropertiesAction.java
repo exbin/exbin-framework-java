@@ -64,7 +64,7 @@ public class DocumentPropertiesAction extends AbstractAction {
         DocumentPropertiesPanel propertiesPanel = new DocumentPropertiesPanel();
         propertiesPanel.setDocument(viewerProvider.getDoc());
         Optional<FileHandler> activeFile = viewerProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             return;
         }
         propertiesPanel.setDocumentUri(activeFile.get().getFileUri().orElse(null));

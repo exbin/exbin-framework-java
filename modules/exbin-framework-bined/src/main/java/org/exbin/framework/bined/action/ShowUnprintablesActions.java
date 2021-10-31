@@ -78,7 +78,7 @@ public class ShowUnprintablesActions implements FileDependentAction {
 
     public void setShowUnprintables(boolean showUnprintables) {
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 
@@ -115,7 +115,7 @@ public class ShowUnprintablesActions implements FileDependentAction {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
+                if (!activeFile.isPresent()) {
                     throw new IllegalStateException();
                 }
 

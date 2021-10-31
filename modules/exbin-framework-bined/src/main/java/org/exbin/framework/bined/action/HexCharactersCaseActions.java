@@ -85,7 +85,7 @@ public class HexCharactersCaseActions implements FileDependentAction {
         this.hexCharactersCase = hexCharactersCase;
 
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 

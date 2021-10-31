@@ -149,7 +149,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
 
     public void setEditorProvider(EditorProvider editorProvider) {
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 

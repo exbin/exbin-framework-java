@@ -53,6 +53,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -269,6 +270,7 @@ public class BinedModule implements XBApplicationModule {
             EditorPreferences editorPreferences = new EditorPreferences(application.getAppPreferences());
             FileHandlingMode fileHandlingMode = editorPreferences.getFileHandlingMode();
             editorFile.setNewData(fileHandlingMode);
+            initFileHandler(editorFile);
             BinEdComponentPanel panel = (BinEdComponentPanel) editorFile.getComponent();
             editorProvider = new BinaryEditorProvider(application, editorFile);
             GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
@@ -286,6 +288,7 @@ public class BinedModule implements XBApplicationModule {
     private EditorProvider createMultiEditorProvider() {
         if (editorProvider == null) {
             editorProvider = new BinaryMultiEditorProvider(application);
+            ((BinaryMultiEditorProvider) editorProvider).setSegmentsRepository(new SegmentsRepository());
             EditorPreferences editorPreferences = new EditorPreferences(application.getAppPreferences());
             FileHandlingMode fileHandlingMode = editorPreferences.getFileHandlingMode();
             ((BinaryMultiEditorProvider) editorProvider).setDefaultFileHandlingMode(fileHandlingMode);
@@ -303,6 +306,17 @@ public class BinedModule implements XBApplicationModule {
         }
 
         return editorProvider;
+    }
+
+    public void initFileHandler(BinEdFileHandler fileHandler) {
+        Preferences preferences = application.getAppPreferences();
+        String encoding = new BinaryEditorPreferences(preferences).getEncodingPreferences().getSelectedEncoding();
+        if (encoding != null && !encoding.isEmpty()) {
+            fileHandler.setCharset(Charset.forName(encoding));
+        }
+        TextFontPreferences textFontPreferences = new BinaryEditorPreferences(preferences).getFontPreferences();
+        ExtCodeArea codeArea = fileHandler.getCodeArea();
+        ((FontCapable) codeArea).setCodeFont(textFontPreferences.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : textFontPreferences.getFont(CodeAreaPreferences.DEFAULT_FONT));
     }
 
     public void updateActionStatus() {
@@ -472,11 +486,9 @@ public class BinedModule implements XBApplicationModule {
             @Override
             public void selectedEncodingChanged() {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
-                    throw new IllegalStateException();
+                if (activeFile.isPresent()) {
+                    ((BinEdFileHandler) activeFile.get()).setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
                 }
-
-                ((BinEdFileHandler) activeFile.get()).setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
             }
         });
 
@@ -546,31 +558,29 @@ public class BinedModule implements XBApplicationModule {
             @Override
             public Font getCurrentFont() {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
-                    throw new IllegalStateException();
+                if (activeFile.isPresent()) {
+                    return ((BinEdFileHandler) activeFile.get()).getCurrentFont();
                 }
 
-                return ((BinEdFileHandler) activeFile.get()).getCurrentFont();
+                return new JLabel().getFont();
             }
 
             @Override
             public Font getDefaultFont() {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
-                    throw new IllegalStateException();
+                if (activeFile.isPresent()) {
+                    return ((BinEdFileHandler) activeFile.get()).getDefaultFont();
                 }
 
-                return ((BinEdFileHandler) activeFile.get()).getDefaultFont();
+                return new JLabel().getFont();
             }
 
             @Override
             public void setCurrentFont(Font font) {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
-                    throw new IllegalStateException();
+                if (activeFile.isPresent()) {
+                    ((BinEdFileHandler) activeFile.get()).setCurrentFont(font);
                 }
-
-                ((BinEdFileHandler) activeFile.get()).setCurrentFont(font);
             }
         };
         textFontOptionsPage = new DefaultOptionsPage<TextFontOptionsImpl>() {
@@ -627,6 +637,7 @@ public class BinedModule implements XBApplicationModule {
                 return LanguageUtils.getResourceBundleByClass(TextFontOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public TextFontOptionsImpl createOptions() {
                 return new TextFontOptionsImpl();
@@ -647,12 +658,10 @@ public class BinedModule implements XBApplicationModule {
                 textFontService.setCurrentFont(options.isUseDefaultFont() ? textFontService.getDefaultFont() : options.getFont(textFontService.getDefaultFont()));
 
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
-                    return;
+                if (activeFile.isPresent()) {
+                    ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+                    ((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getFont(CodeAreaPreferences.DEFAULT_FONT));
                 }
-
-                ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
-                ((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getFont(CodeAreaPreferences.DEFAULT_FONT));
             }
         };
         optionsModule.addOptionsPage(textFontOptionsPage);
@@ -661,14 +670,12 @@ public class BinedModule implements XBApplicationModule {
             @Override
             public void setFileHandlingMode(FileHandlingMode fileHandlingMode) {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
-                    throw new IllegalStateException();
-                }
-
-                BinEdFileHandler fileHandler = (BinEdFileHandler) activeFile.get();
-                if (!fileHandler.isModified() || editorProvider.releaseFile(fileHandler)) {
-                    fileHandler.switchFileHandlingMode(fileHandlingMode);
-                    ((BinEdEditorProvider) editorProvider).updateStatus();
+                if (activeFile.isPresent()) {
+                    BinEdFileHandler fileHandler = (BinEdFileHandler) activeFile.get();
+                    if (!fileHandler.isModified() || editorProvider.releaseFile(fileHandler)) {
+                        fileHandler.switchFileHandlingMode(fileHandlingMode);
+                        ((BinEdEditorProvider) editorProvider).updateStatus();
+                    }
                 }
             }
 
@@ -678,20 +685,19 @@ public class BinedModule implements XBApplicationModule {
             }
 
             @Override
-            public void setEditorHandlingMode(EnterKeyHandlingMode enterKeyHandlingMode) {
+            public void setEnterKeyHandlingMode(EnterKeyHandlingMode enterKeyHandlingMode) {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
-                    return;
+                if (activeFile.isPresent()) {
+                    ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
+                    CodeAreaCommandHandler commandHandler = codeArea.getCommandHandler();
+                    ((CodeAreaOperationCommandHandler) commandHandler).setEnterKeyHandlingMode(enterKeyHandlingMode);
                 }
-
-                ExtCodeArea codeArea = ((BinEdFileHandler) activeFile.get()).getCodeArea();
-                CodeAreaCommandHandler commandHandler = codeArea.getCommandHandler();
-                ((CodeAreaOperationCommandHandler) commandHandler).setEnterKeyHandlingMode(enterKeyHandlingMode);
             }
         };
         editorOptionsPage = new DefaultOptionsPage<EditorOptionsImpl>() {
             private EditorOptionsPanel panel;
 
+            @Nonnull
             @Override
             public OptionsCapable<EditorOptionsImpl> createPanel() {
                 if (panel == null) {
@@ -707,6 +713,7 @@ public class BinedModule implements XBApplicationModule {
                 return LanguageUtils.getResourceBundleByClass(EditorOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public EditorOptionsImpl createOptions() {
                 return new EditorOptionsImpl();
@@ -726,12 +733,13 @@ public class BinedModule implements XBApplicationModule {
             public void applyPreferencesChanges(EditorOptionsImpl options) {
                 editorOptionsService.setFileHandlingMode(options.getFileHandlingMode());
                 editorOptionsService.setShowValuesPanel(options.isShowValuesPanel());
-                editorOptionsService.setEditorHandlingMode(options.getEnterKeyHandlingMode());
+                editorOptionsService.setEnterKeyHandlingMode(options.getEnterKeyHandlingMode());
             }
         };
         optionsModule.addOptionsPage(editorOptionsPage);
 
         codeAreaOptionsPage = new DefaultOptionsPage<CodeAreaOptionsImpl>() {
+            @Nonnull
             @Override
             public OptionsCapable<CodeAreaOptionsImpl> createPanel() {
                 return new CodeAreaOptionsPanel();
@@ -743,6 +751,7 @@ public class BinedModule implements XBApplicationModule {
                 return LanguageUtils.getResourceBundleByClass(CodeAreaOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public CodeAreaOptionsImpl createOptions() {
                 return new CodeAreaOptionsImpl();
@@ -761,15 +770,13 @@ public class BinedModule implements XBApplicationModule {
             @Override
             public void applyPreferencesChanges(CodeAreaOptionsImpl options) {
                 codeTypeActions.setCodeType(options.getCodeType());
-                // font
-                //((FontCapable) codeArea).setCodeFont(options.isUseDefaultFont() ? CodeAreaPreferences.DEFAULT_FONT : options.getCodeFont());
                 showUnprintablesActions.setShowUnprintables(options.isShowUnprintables());
                 hexCharactersCaseActions.setHexCharactersCase(options.getCodeCharactersCase());
                 positionCodeTypeActions.setCodeType(options.getPositionCodeType());
                 viewModeActions.setViewMode(options.getViewMode());
 
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (activeFile.isEmpty()) {
+                if (!activeFile.isPresent()) {
                     return;
                 }
 
@@ -779,7 +786,7 @@ public class BinedModule implements XBApplicationModule {
                 codeArea.setMaxBytesPerRow(options.getMaxBytesPerRow());
                 codeArea.setMinRowPositionLength(options.getMinRowPositionLength());
                 codeArea.setMaxRowPositionLength(options.getMaxRowPositionLength());
-//                CodeAreaOptionsImpl.applyToCodeArea(options, ((BinaryEditorControl) editorProvider).getCodeArea());
+                CodeAreaOptionsImpl.applyToCodeArea(options, codeArea);
             }
         };
         optionsModule.addOptionsPage(codeAreaOptionsPage);
@@ -787,6 +794,7 @@ public class BinedModule implements XBApplicationModule {
         statusOptionsPage = new DefaultOptionsPage<StatusOptionsImpl>() {
             private StatusOptionsPanel panel;
 
+            @Nonnull
             @Override
             public OptionsCapable<StatusOptionsImpl> createPanel() {
                 if (panel == null) {
@@ -802,6 +810,7 @@ public class BinedModule implements XBApplicationModule {
                 return LanguageUtils.getResourceBundleByClass(StatusOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public StatusOptionsImpl createOptions() {
                 return new StatusOptionsImpl();
@@ -976,6 +985,7 @@ public class BinedModule implements XBApplicationModule {
                 return LanguageUtils.getResourceBundleByClass(ThemeProfilesOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public CodeAreaThemeOptionsImpl createOptions() {
                 return new CodeAreaThemeOptionsImpl();
@@ -996,7 +1006,7 @@ public class BinedModule implements XBApplicationModule {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
                     Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (activeFile.isEmpty()) {
+                    if (!activeFile.isPresent()) {
                         return;
                     }
 
@@ -1159,6 +1169,7 @@ public class BinedModule implements XBApplicationModule {
                 return LanguageUtils.getResourceBundleByClass(LayoutProfilesOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public CodeAreaLayoutOptionsImpl createOptions() {
                 return new CodeAreaLayoutOptionsImpl();
@@ -1179,7 +1190,7 @@ public class BinedModule implements XBApplicationModule {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
                     Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (activeFile.isEmpty()) {
+                    if (!activeFile.isPresent()) {
                         return;
                     }
 
@@ -1341,6 +1352,7 @@ public class BinedModule implements XBApplicationModule {
                 return LanguageUtils.getResourceBundleByClass(ColorProfilesOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public CodeAreaColorOptionsImpl createOptions() {
                 return new CodeAreaColorOptionsImpl();
@@ -1361,7 +1373,7 @@ public class BinedModule implements XBApplicationModule {
                 int selectedProfile = options.getSelectedProfile();
                 if (selectedProfile >= 0) {
                     Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (activeFile.isEmpty()) {
+                    if (!activeFile.isPresent()) {
                         return;
                     }
 

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.SwingUtilities;
@@ -34,6 +35,7 @@ import javax.swing.tree.DefaultTreeModel;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
+import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
 import org.exbin.framework.gui.options.api.OptionsCapable;
 import org.exbin.framework.gui.options.api.OptionsData;
 import org.exbin.framework.gui.options.api.OptionsModifiedListener;
@@ -47,7 +49,7 @@ import org.exbin.framework.gui.utils.LazyComponentsIssuable;
 /**
  * Panel for application options and preferences setting.
  *
- * @version 0.2.1 2019/08/20
+ * @version 0.2.1 2021/10/31
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -62,7 +64,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
     private boolean modified;
     private OptionsMutableTreeNode top;
-    private XBApplication appEditor;
+    private XBApplication application;
     private final ApplicationFrameHandler frame;
     private MainOptionsPanel mainOptionsPanel;
     private AppearanceOptionsPanel appearanceOptionsPanel;
@@ -70,14 +72,12 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
     private PageRecord<?> appearanceOptionsExtPage = null;
 
     public OptionsTreePanel(ApplicationFrameHandler frame) {
-        initComponents();
         this.frame = frame;
+        initComponents();
         init();
     }
 
     private void init() {
-        initComponents();
-
         optionPages = new HashMap<>();
         modified = false;
         optionsModifiedListener = () -> {
@@ -123,6 +123,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
         });
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
@@ -265,6 +266,9 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
         if (appearanceOptionsExtPage != null) {
             appearanceOptionsExtPage.saveAndApply(preferences);
         }
+
+        GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
+        optionsModule.notifyOptionsChanged();
     }
 
     public void applyPreferencesChanges() {
@@ -279,6 +283,9 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
         if (appearanceOptionsExtPage != null) {
             appearanceOptionsExtPage.applyPreferencesChanges(preferences);
         }
+
+        GuiOptionsModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
+        frameModule.notifyOptionsChanged();
     }
 
     private void establishPath(List<OptionsPathItem> path) {
@@ -324,12 +331,12 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
         this.preferences = preferences;
     }
 
-    public XBApplication getAppEditor() {
-        return appEditor;
+    public XBApplication getApplication() {
+        return application;
     }
 
-    public void setAppEditor(XBApplication appEditor) {
-        this.appEditor = appEditor;
+    public void setApplication(XBApplication application) {
+        this.application = application;
     }
 
     public void setLanguageLocales(Collection<Locale> locales) {

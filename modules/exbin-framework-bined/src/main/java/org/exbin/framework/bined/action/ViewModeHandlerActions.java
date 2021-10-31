@@ -93,7 +93,7 @@ public class ViewModeHandlerActions implements FileDependentAction {
     public void setViewMode(CodeAreaViewMode viewMode) {
         this.viewMode = viewMode;
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 

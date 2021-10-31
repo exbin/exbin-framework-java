@@ -63,13 +63,13 @@ public class EditorCDockable extends DefaultMultipleCDockable {
         if (content instanceof EditorProvider) {
             EditorProvider editorProvider = ((EditorProvider) content);
             Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-            if (activeFile.isEmpty()) {
+            if (!activeFile.isPresent()) {
                 return;
             }
 
             FileHandler fileHandler = activeFile.get();
             Optional<String> fileName = fileHandler.getFileName();
-            String name = fileName.isEmpty() ? UNDEFINED_NAME : fileName.get();
+            String name = fileName.orElse(UNDEFINED_NAME);
             if (fileHandler.isModified()) {
                 name += " *";
             }

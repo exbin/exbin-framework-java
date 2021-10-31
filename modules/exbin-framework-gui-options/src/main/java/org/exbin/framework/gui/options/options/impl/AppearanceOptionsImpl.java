@@ -23,7 +23,7 @@ import org.exbin.framework.gui.options.preferences.AppearancePreferences;
 /**
  * Appearance options.
  *
- * @version 0.2.1 2019/07/20
+ * @version 0.2.1 2021/10/31
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -72,6 +72,6 @@ public class AppearanceOptionsImpl implements OptionsData, AppearanceOptions {
     public void saveToParameters(AppearancePreferences preferences) {
         preferences.setShowToolBar(showToolBar);
         preferences.setShowToolBarCaptions(showToolBarCaptions);
-        preferences.setShowStatusBar(showToolBar);
+        preferences.setShowStatusBar(showStatusBar);
     }
 }

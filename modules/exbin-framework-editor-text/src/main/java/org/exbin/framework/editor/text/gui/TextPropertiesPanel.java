@@ -181,7 +181,7 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
 
     public void setDocument(TextEditor textEditor) {
         Optional<FileHandler> activeFile = textEditor.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
         

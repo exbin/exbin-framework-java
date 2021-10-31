@@ -82,7 +82,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
 
     public void setDocument(ImageEditor imageEditor) {
         Optional<FileHandler> activeFile = imageEditor.getActiveFile();
-        if (activeFile.isEmpty()) {
+        if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
 

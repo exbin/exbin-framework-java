@@ -1,20 +1,14 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
 group = 'org.exbin.framework'
 ext.libraryName = 'ExBin Framework Help Support Library'
 ext.libraryDescription = 'Library for help support in ExBin Framework'
 
 apply from: '../exbin-framework-java-modules.gradle'
-
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-    if (!gradle.startParameter.taskNames.contains("offline")) {
-        dependencies {
-            classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
-        }
-    }
-}
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = ''
