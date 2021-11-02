@@ -19,16 +19,22 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
+import org.exbin.auxiliary.paged_data.BinaryData;
+import org.exbin.auxiliary.paged_data.PagedData;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.CompareFilesPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -107,20 +113,32 @@ public class CompareFilesAction extends AbstractAction {
         compareFilesPanel.setControl(new CompareFilesPanel.Control() {
             @Nullable
             @Override
-            public File openFile() {
+            public CompareFilesPanel.FileRecord openFile() {
                 final File[] result = new File[1];
                 GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
                 fileModule.getFileActions().openFile((URI fileUri, FileType fileType) -> {
                     result[0] = new File(fileUri);
                 }, new AllFileTypes(), editorProvider);
 
-                return result[0];
+                if (result[0] == null) {
+                    return null;
+                }
+
+                try (FileInputStream stream = new FileInputStream(result[0])) {
+                    PagedData pagedData = new PagedData();
+                    pagedData.loadFromStream(stream);
+                    return new CompareFilesPanel.FileRecord(result[0].getAbsolutePath(), pagedData);
+                } catch (IOException ex) {
+                    Logger.getLogger(CompareFilesAction.class.getName()).log(Level.SEVERE, null, ex);
+
+                }
+                return null;
             }
 
             @Nonnull
             @Override
-            public FileHandler getFileHandler(int index) {
-                return fileHandlers.get(index);
+            public BinaryData getFileData(int index) {
+                return ((BinEdFileHandler) fileHandlers.get(index)).getCodeArea().getContentData();
             }
         });
         dialog.showCentered(editorProvider.getEditorComponent());

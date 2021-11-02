@@ -116,9 +116,8 @@ public class InsertDataAction extends AbstractAction implements FileDependentAct
             multilinePanel.setCodeAreaPopupMenuHandler(binedModule.createCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC));
             DefaultControlPanel controlPanel1 = new DefaultControlPanel();
             JPanel dialogPanel1 = WindowUtils.createDialogPanel(multilinePanel, controlPanel1);
-            GuiFrameModuleApi frameModule1 = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final DialogWrapper multilineDialog = frameModule1.createDialog(dialog.getWindow(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel1);
-            frameModule1.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
+            final DialogWrapper multilineDialog = frameModule.createDialog(dialog.getWindow(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel1);
+            frameModule.setDialogTitle(multilineDialog, multilinePanel.getResourceBundle());
             controlPanel1.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {
                     SearchCondition condition = multilinePanel.getCondition();

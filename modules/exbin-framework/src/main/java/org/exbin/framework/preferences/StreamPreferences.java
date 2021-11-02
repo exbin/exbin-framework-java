@@ -76,7 +76,7 @@ public class StreamPreferences extends AbstractPreferences {
         try {
             flush();
         } catch (BackingStoreException ex) {
-            Logger.getLogger(FilePreferences.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StreamPreferences.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
