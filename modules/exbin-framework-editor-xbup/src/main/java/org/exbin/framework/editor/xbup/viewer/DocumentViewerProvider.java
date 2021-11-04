@@ -538,12 +538,17 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (fileHandler.isModified()) {
+            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            return fileModule.getFileActions().showAskForSaveDialog(fileHandler, null, this);
+        }
+
+        return true;
     }
 
     @Override
     public boolean releaseAllFiles() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return releaseFile(activeFile);
     }
 
     @ParametersAreNonnullByDefault

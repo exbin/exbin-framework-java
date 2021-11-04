@@ -217,7 +217,9 @@ public class GuiEditorModule implements GuiEditorModuleApi {
         if (editorProvider instanceof ClipboardActionsHandler) {
             ((ClipboardActionsHandler) editorProvider).setUpdateListener(() -> {
                 if (editorProvider == this.editorProvider) {
-                    clipboardActionsUpdateListener.stateChanged();
+                    if (clipboardActionsUpdateListener != null) {
+                        clipboardActionsUpdateListener.stateChanged();
+                    }
                 }
             });
         }
