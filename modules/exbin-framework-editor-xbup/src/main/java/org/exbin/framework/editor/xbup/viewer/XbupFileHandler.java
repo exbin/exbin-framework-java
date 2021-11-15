@@ -58,7 +58,7 @@ import org.exbin.framework.gui.file.api.FileHandler;
 /**
  * XBUP file handler.
  *
- * @version 0.2.1 2021/11/14
+ * @version 0.2.1 2021/11/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -67,6 +67,7 @@ public class XbupFileHandler implements FileHandler {
     private final XBDocumentPanel documentPanel;
     private final TreeDocument treeDocument;
     private XBUndoHandler undoHandler;
+    private int id = 0;
     private XBApplication application;
     private XBACatalog catalog;
     private XBPluginRepository pluginRepository;
@@ -81,16 +82,23 @@ public class XbupFileHandler implements FileHandler {
     private URI fileUri = null;
     private FileType fileType = null;
 
-    public XbupFileHandler(XBUndoHandler undoHandler) {
-        this.undoHandler = undoHandler;
-
+    public XbupFileHandler() {
+        documentPanel = new XBDocumentPanel();
         treeDocument = new TreeDocument(null);
+        init();
+    }
+
+    public XbupFileHandler(int id) {
+        this();
+        this.id = id;
+    }
+
+    private void init() {
         tabs.put(ViewerTab.VIEW, new ViewerDocumentTab());
         tabs.put(ViewerTab.PROPERTIES, new PropertiesDocumentTab());
         tabs.put(ViewerTab.TEXT, new TextDocumentTab());
         tabs.put(ViewerTab.BINARY, new BinaryDocumentTab());
 
-        documentPanel = new XBDocumentPanel();
         documentPanel.addTabSwitchListener(this::setSelectedTab);
         documentPanel.addItemSelectionListener((item) -> {
             this.selectedItem = item;
@@ -119,10 +127,10 @@ public class XbupFileHandler implements FileHandler {
         selectedTab = ViewerTab.VIEW;
         activeHandler = treeDocument;
     }
-
+    
     @Override
     public int getId() {
-        return -1;
+        return id;
     }
 
     @Nonnull
@@ -205,6 +213,10 @@ public class XbupFileHandler implements FileHandler {
     @Override
     public boolean isModified() {
         return getDoc().wasModified();
+    }
+
+    public void setUndoHandler(XBUndoHandler undoHandler) {
+        this.undoHandler = undoHandler;
     }
 
     public XBTTreeDocument getDoc() {
@@ -330,6 +342,14 @@ public class XbupFileHandler implements FileHandler {
         treeDocument.setModified(true);
         treeDocument.processSpec();
         // TODO updateItemStatus();
+    }
+
+    public boolean isSaveSupported() {
+        return true;
+    }
+    
+    public boolean isEditable() {
+        return treeDocument.isEditable();
     }
 
     @ParametersAreNonnullByDefault

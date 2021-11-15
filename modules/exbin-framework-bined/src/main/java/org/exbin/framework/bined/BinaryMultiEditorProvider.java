@@ -47,7 +47,6 @@ import org.exbin.bined.SelectionRange;
 import org.exbin.bined.capability.EditModeCapable;
 import org.exbin.bined.operation.swing.CodeAreaOperationCommandHandler;
 import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
@@ -83,7 +82,7 @@ import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 @ParametersAreNonnullByDefault
 public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEditorProvider, UndoFileHandler {
 
-    private XBApplication application;
+    private final XBApplication application;
     private SegmentsRepository segmentsRepository;
     private FileTypes fileTypes;
     private final MultiEditorPanel multiEditorPanel = new MultiEditorPanel();
@@ -105,11 +104,11 @@ public class BinaryMultiEditorProvider implements MultiEditorProvider, BinEdEdit
     private File lastUsedDirectory;
 
     public BinaryMultiEditorProvider(XBApplication application) {
-        init(application);
+        this.application = application;
+        init();
     }
 
-    private void init(XBApplication application) {
-        this.application = application;
+    private void init() {
         multiEditorPanel.setControl(new MultiEditorPanel.Control() {
             @Override
             public void activeIndexChanged(int index) {

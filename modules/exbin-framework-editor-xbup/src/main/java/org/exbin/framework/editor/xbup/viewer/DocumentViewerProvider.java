@@ -66,7 +66,8 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     private File lastUsedDirectory;
 
     public DocumentViewerProvider(XBUndoHandler undoHandler) {
-        activeFile = new XbupFileHandler(undoHandler);
+        activeFile = new XbupFileHandler();
+        activeFile.setUndoHandler(undoHandler);
         activeFile.setItemSelectionListener((block) -> {
             itemSelectionListeners.forEach(listener -> {
                 listener.itemSelected(block);

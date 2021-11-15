@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
-import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -37,7 +36,6 @@ import org.exbin.framework.editor.xbup.action.ImportItemAction;
 import org.exbin.framework.editor.xbup.action.ItemPropertiesAction;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.action.api.MenuGroup;
@@ -58,7 +56,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * XBUP editor module.
  *
- * @version 0.2.1 2021/09/25
+ * @version 0.2.1 2021/11/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -345,40 +343,6 @@ public class EditorXbupModule implements XBApplicationModule {
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         ((DocumentViewerProvider) editorProvider).setPluginRepository(pluginRepository);
-    }
-
-    /**
-     * FileFilter for *.xb* files.
-     */
-    @ParametersAreNonnullByDefault
-    public class XBFileFilter extends FileFilter implements FileType {
-
-        @Override
-        public boolean accept(File file) {
-            if (file.isDirectory()) {
-                return true;
-            }
-            String extension = getExtension(file);
-            if (extension != null) {
-                if (extension.length() >= 2) {
-                    return extension.substring(0, 2).equals("xb");
-                }
-            }
-
-            return false;
-        }
-
-        @Nonnull
-        @Override
-        public String getDescription() {
-            return "All XB Files (*.xb*)";
-        }
-
-        @Nonnull
-        @Override
-        public String getFileTypeId() {
-            return XB_FILE_TYPE;
-        }
     }
 
     /**

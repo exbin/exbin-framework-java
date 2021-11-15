@@ -78,17 +78,17 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
         init();
     }
 
+    public BinEdFileHandler(int id) {
+        this();
+        this.id = id;
+    }
+
     private void init() {
         final ExtCodeArea codeArea = getCodeArea();
         CodeAreaUndoHandler undoHandler = new CodeAreaUndoHandler(componentPanel.getCodeArea());
         componentPanel.setUndoHandler(undoHandler);
         defaultFont = codeArea.getCodeFont();
         defaultColors = (ExtendedCodeAreaColorProfile) codeArea.getColorsProfile();
-    }
-
-    public BinEdFileHandler(int id) {
-        this();
-        this.id = id;
     }
 
     public void setApplication(XBApplication application) {

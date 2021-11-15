@@ -13,27 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.file.api;
+package org.exbin.framework.editor.xbup;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.gui.file.api.FileTypes;
 
 /**
- * Interface for file types passing.
+ * File types with just all files filter.
  *
  * @version 0.2.2 2021/11/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface FileTypes {
+public class XBFileTypes implements FileTypes {
+    
+    private Map<String, FileType> fileTypes = new HashMap<>();
 
-    boolean allowAllFiles();
+    public XBFileTypes() {
+        XBFileFilter xbType = new XBFileFilter();
+        fileTypes.put(xbType.getFileTypeId(), xbType);
+    }
+
+    @Override
+    public boolean allowAllFiles() {
+        return true;
+    }
 
     @Nonnull
-    Optional<FileType> getFileType(String fileTypeId);
+    @Override
+    public Optional<FileType> getFileType(String fileTypeId) {
+        return Optional.ofNullable(fileTypes.get(fileTypeId));
+    }
 
     @Nonnull
-    Collection<FileType> getFileTypes();
+    @Override
+    public Collection<FileType> getFileTypes() {
+        return fileTypes.values();
+    }
 }
