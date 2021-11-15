@@ -66,17 +66,27 @@ public class BinaryEditorPreferences {
         themePreferences = new CodeAreaThemePreferences(preferences);
         colorPreferences = new CodeAreaColorPreferences(preferences);
 
+        convertOlderPreferences();
+    }
+
+    private void convertOlderPreferences() {
         final String legacyDef = "LEGACY";
         String storedVersion = preferences.get(PREFERENCES_VERSION, legacyDef);
-        if ("0.2.0".equals(storedVersion)) {
-            convertPreferences_0_2_0();
-        } else if (legacyDef.equals(storedVersion)) {
+        if (PREFERENCES_VERSION_VALUE.equals(storedVersion)) {
+            return;
+        }
+
+        if (legacyDef.equals(storedVersion)) {
             try {
                 importLegacyPreferences();
             } finally {
                 preferences.put(PREFERENCES_VERSION, PREFERENCES_VERSION_VALUE);
                 preferences.flush();
             }
+        }
+        
+        if ("0.2.0".equals(storedVersion)) {
+            convertPreferences_0_2_0();
         }
     }
 

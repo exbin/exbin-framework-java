@@ -23,7 +23,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider.ViewerTab;
+import org.exbin.framework.editor.xbup.viewer.ViewerTab;
+import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.utils.ActionUtils;
 
@@ -65,7 +66,8 @@ public class ViewModeActions {
     public void setViewerTab(ViewerTab viewTab) {
         this.viewTab = viewTab;
         DocumentViewerProvider viewerProvider = (DocumentViewerProvider) editorProvider;
-        viewerProvider.switchToTab(viewTab);
+        XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+        xbupFile.switchToTab(viewTab);
     }
 
     @Nonnull

@@ -26,7 +26,9 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.core.parser.XBProcessingException;
 
@@ -70,13 +72,14 @@ public class SampleFilesActions {
                     if (editorProvider instanceof DocumentViewerProvider) {
                         DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
                         provider.newFile();
+                        XbupFileHandler xbupFile = (XbupFileHandler) provider.getActiveFile().get();
                         try {
-                            provider.getDoc().fromStreamUB(getClass().getResourceAsStream(SAMPLE_FILES_DIR + "xhtml_example.xb"));
-                            provider.getDoc().processSpec();
+                            xbupFile.getDoc().fromStreamUB(getClass().getResourceAsStream(SAMPLE_FILES_DIR + "xhtml_example.xb"));
+                            xbupFile.getDoc().processSpec();
                         } catch (XBProcessingException | IOException ex) {
                             Logger.getLogger(SampleFilesActions.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        provider.reportStructureChange(null);
+                        xbupFile.reportStructureChange(null);
 //                    provider.updateItem();
                     }
                 }
@@ -95,13 +98,14 @@ public class SampleFilesActions {
                     if (editorProvider instanceof DocumentViewerProvider) {
                         DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
                         provider.newFile();
+                        XbupFileHandler xbupFile = (XbupFileHandler) provider.getActiveFile().get();
                         try {
-                            provider.getDoc().fromStreamUB(getClass().getResourceAsStream(SAMPLE_FILES_DIR + "xblogo.xbp"));
-                            provider.getDoc().processSpec();
+                            xbupFile.getDoc().fromStreamUB(getClass().getResourceAsStream(SAMPLE_FILES_DIR + "xblogo.xbp"));
+                            xbupFile.getDoc().processSpec();
                         } catch (XBProcessingException | IOException ex) {
                             Logger.getLogger(SampleFilesActions.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        provider.reportStructureChange(null);
+                        xbupFile.reportStructureChange(null);
 //                    provider.updateItem();
                     }
                 }
@@ -121,13 +125,14 @@ public class SampleFilesActions {
                     if (editorProvider instanceof DocumentViewerProvider) {
                         DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
                         provider.newFile();
+                        XbupFileHandler xbupFile = (XbupFileHandler) provider.getActiveFile().get();
                         try {
-                            provider.getDoc().fromStreamUB(getClass().getResourceAsStream(SAMPLE_FILES_DIR + "xbtypes.xb"));
-                            provider.getDoc().processSpec();
+                            xbupFile.getDoc().fromStreamUB(getClass().getResourceAsStream(SAMPLE_FILES_DIR + "xbtypes.xb"));
+                            xbupFile.getDoc().processSpec();
                         } catch (XBProcessingException | IOException ex) {
                             Logger.getLogger(SampleFilesActions.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        provider.reportStructureChange(null);
+                        xbupFile.reportStructureChange(null);
 //                    provider.updateItem();
                     }
                 }

@@ -60,25 +60,14 @@ import org.xml.sax.SAXParseException;
 /**
  * File preferences class.
  *
- * @version 0.2.1 2021/09/22
+ * @version 0.2.1 2021/11/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FilePreferences extends AbstractPreferences {
 
-    public static final String PRECERENCES_DTD_URI = "http://java.sun.com/dtd/preferences.dtd";
     private static final String MAP_XML_VERSION_ATTRIBUTE = "MAP_XML_VERSION";
     private static final String MAP_XML_VERSION_VALUE = "1.0";
-    public static final String PREFERENCES_DTD
-            = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            + "<!-- DTD for preferences -->"
-            + "<!ELEMENT map (entry*) >"
-            + "<!ATTLIST map"
-            + "  MAP_XML_VERSION CDATA \"0.0\"  >"
-            + "<!ELEMENT entry EMPTY >"
-            + "<!ATTLIST entry"
-            + "          key CDATA #REQUIRED"
-            + "          value CDATA #REQUIRED >";
 
     private final File preferencesFile;
     private final Map<String, String> spiValues;
@@ -238,7 +227,7 @@ public class FilePreferences extends AbstractPreferences {
         try {
             DOMImplementation di = DocumentBuilderFactory.newInstance().
                     newDocumentBuilder().getDOMImplementation();
-            DocumentType dt = di.createDocumentType(qname, null, PRECERENCES_DTD_URI);
+            DocumentType dt = di.createDocumentType(qname, null, StreamPreferences.PRECERENCES_DTD_URI);
             return di.createDocument(null, qname, dt);
         } catch (ParserConfigurationException e) {
             throw new AssertionError(e);
@@ -360,9 +349,9 @@ public class FilePreferences extends AbstractPreferences {
         @Override
         public InputSource resolveEntity(String publicId, String systemId)
                 throws SAXException {
-            if (systemId.equals(PRECERENCES_DTD_URI)) {
-                InputSource is = new InputSource(new StringReader(PREFERENCES_DTD));
-                is.setSystemId(PRECERENCES_DTD_URI);
+            if (systemId.equals(StreamPreferences.PRECERENCES_DTD_URI)) {
+                InputSource is = new InputSource(new StringReader(StreamPreferences.PREFERENCES_DTD));
+                is.setSystemId(StreamPreferences.PRECERENCES_DTD_URI);
                 return is;
             }
             throw new SAXException("Invalid system identifier: " + systemId);

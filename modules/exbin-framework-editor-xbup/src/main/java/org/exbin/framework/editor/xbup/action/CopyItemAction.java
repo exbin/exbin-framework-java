@@ -21,6 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
@@ -51,7 +52,8 @@ public class CopyItemAction extends AbstractAction {
     }
     
     static void performCopy(DocumentViewerProvider viewerProvider) {
-        XBTBlock block = viewerProvider.getSelectedItem().get();
+        XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+        XBTBlock block = xbupFile.getSelectedItem().get();
         if (!(block instanceof XBTTreeNode)) {
             throw new UnsupportedOperationException("Not supported yet.");
         }

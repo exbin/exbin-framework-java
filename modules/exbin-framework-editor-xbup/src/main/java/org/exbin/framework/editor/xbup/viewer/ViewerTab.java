@@ -15,16 +15,30 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Listener for tab selection events.
+ * Supported view tabs.
  *
- * @version 0.2.1 2020/03/08
+ * @version 0.2.1 2021/11/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DocumentTabSelectionListener {
+public enum ViewerTab {
+    VIEW("Viewer"),
+    PROPERTIES("Properties"),
+    TEXT("Text"),
+    BINARY("Binary");
 
-    void tabSelected(ViewerTab tab);
+    private final String tabName;
+
+    private ViewerTab(String tabName) {
+        this.tabName = tabName;
+    }
+
+    @Nonnull
+    public String getTabName() {
+        return tabName;
+    }
 }

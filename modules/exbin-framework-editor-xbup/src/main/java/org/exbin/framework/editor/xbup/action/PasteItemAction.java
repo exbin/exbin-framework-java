@@ -27,6 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.parser.XBProcessingException;
@@ -60,11 +61,12 @@ public class PasteItemAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Clipboard clipboard = ClipboardUtils.getClipboard();
         if (clipboard.isDataFlavorAvailable(XBDocTreeTransferHandler.XB_DATA_FLAVOR)) {
-            XBUndoHandler undoHandler = viewerProvider.getUndoHandler();
-            XBTTreeDocument mainDoc = viewerProvider.getDoc();
+            XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+            XBUndoHandler undoHandler = xbupFile.getUndoHandler();
+            XBTTreeDocument mainDoc = xbupFile.getDoc();
             try {
                 ByteArrayOutputStream stream = (ByteArrayOutputStream) clipboard.getData(XBDocTreeTransferHandler.XB_DATA_FLAVOR);
-                XBTBlock block = viewerProvider.getSelectedItem().get();
+                XBTBlock block = xbupFile.getSelectedItem().get();
                 if (!(block instanceof XBTTreeNode)) {
                     throw new UnsupportedOperationException("Not supported yet.");
                 }
@@ -78,7 +80,7 @@ public class PasteItemAction extends AbstractAction {
                         int childIndex = node == null ? 0 : node.getChildCount();
                         XBTDocCommand step = new XBTAddBlockCommand(mainDoc, parentPosition, childIndex, newNode);
                         undoHandler.execute(step);
-                        viewerProvider.reportStructureChange(node);
+                        xbupFile.reportStructureChange(node);
 //                        updateItemStatus();
                     } catch (Exception ex) {
                         Logger.getLogger(PasteItemAction.class.getName()).log(Level.SEVERE, null, ex);

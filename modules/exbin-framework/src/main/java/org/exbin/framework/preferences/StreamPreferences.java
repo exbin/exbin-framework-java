@@ -50,6 +50,18 @@ import org.xml.sax.SAXParseException;
 @ParametersAreNonnullByDefault
 public class StreamPreferences extends AbstractPreferences {
 
+    public static final String PRECERENCES_DTD_URI = "http://java.sun.com/dtd/preferences.dtd";
+    public static final String PREFERENCES_DTD
+            = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            + "<!-- DTD for preferences -->"
+            + "<!ELEMENT map (entry*) >"
+            + "<!ATTLIST map"
+            + "  MAP_XML_VERSION CDATA \"0.0\"  >"
+            + "<!ELEMENT entry EMPTY >"
+            + "<!ATTLIST entry"
+            + "          key CDATA #REQUIRED"
+            + "          value CDATA #REQUIRED >";
+
     private final InputStream stream;
     private final Map<String, String> spiValues;
     private Map<String, StreamPreferences> children;
@@ -197,9 +209,9 @@ public class StreamPreferences extends AbstractPreferences {
         @Override
         public InputSource resolveEntity(String publicId, String systemId)
                 throws SAXException {
-            if (systemId.equals(FilePreferences.PRECERENCES_DTD_URI)) {
-                InputSource is = new InputSource(new StringReader(FilePreferences.PREFERENCES_DTD));
-                is.setSystemId(FilePreferences.PRECERENCES_DTD_URI);
+            if (systemId.equals(PRECERENCES_DTD_URI)) {
+                InputSource is = new InputSource(new StringReader(PREFERENCES_DTD));
+                is.setSystemId(PRECERENCES_DTD_URI);
                 return is;
             }
             throw new SAXException("Invalid system identifier: " + systemId);

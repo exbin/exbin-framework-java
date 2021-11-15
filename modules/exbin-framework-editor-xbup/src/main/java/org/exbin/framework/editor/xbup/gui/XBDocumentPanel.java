@@ -28,7 +28,7 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.EditorXbupModule;
 import org.exbin.framework.editor.xbup.viewer.DocumentTab;
 import org.exbin.framework.editor.xbup.viewer.DocumentTabSelectionListener;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider.ViewerTab;
+import org.exbin.framework.editor.xbup.viewer.ViewerTab;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBTBlock;

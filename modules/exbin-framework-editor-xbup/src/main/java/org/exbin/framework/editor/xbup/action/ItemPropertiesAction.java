@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -65,7 +66,8 @@ public class ItemPropertiesAction extends AbstractAction {
         panel.setApplication(application);
         panel.setCatalog(catalog);
         panel.setDevMode(devMode);
-        panel.setBlock(viewerProvider.getSelectedItem().get());
+        XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+        panel.setBlock(xbupFile.getSelectedItem().get());
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);

@@ -15,66 +15,37 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
-import java.awt.datatransfer.Clipboard;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.action.CopyItemAction;
-import org.exbin.framework.editor.xbup.action.CutItemAction;
-import org.exbin.framework.editor.xbup.action.DeleteItemAction;
-import org.exbin.framework.editor.xbup.action.PasteItemAction;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
-import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
-import org.exbin.framework.editor.xbup.gui.XBDocumentPanel;
-import org.exbin.framework.editor.xbup.viewer.DocumentTab.ActivationListener;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ClipboardActionsHandler;
 import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
-import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.core.catalog.XBCatalog;
-import org.exbin.xbup.core.parser.XBProcessingException;
-import org.exbin.xbup.operation.Operation;
-import org.exbin.xbup.operation.OperationEvent;
-import org.exbin.xbup.operation.OperationListener;
-import org.exbin.xbup.operation.XBTDocOperation;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
-import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.gui.file.api.FileHandler;
 
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2020/09/24
+ * @version 0.2.1 2021/11/14
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -83,159 +54,30 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     private XBACatalog catalog;
     private PropertyChangeListener propertyChangeListener = null;
 
-    private final XBDocumentPanel documentPanel;
-
-    private XBTBlock selectedItem = null;
-    private ViewerTab selectedTab;
     private ClipboardActionsHandler activeHandler;
 
-    private final TreeDocument treeDocument;
-    private final SortedMap<ViewerTab, DocumentTab> tabs = new TreeMap<>();
-
     private XBApplication application;
-    private XBUndoHandler undoHandler;
     private XBPluginRepository pluginRepository;
     private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private FileHandler activeFile;
+    private XbupFileHandler activeFile;
+    private boolean devMode = false;
     @Nullable
     private File lastUsedDirectory;
 
     public DocumentViewerProvider(XBUndoHandler undoHandler) {
-        this.undoHandler = undoHandler;
-
-        treeDocument = new TreeDocument(null);
-        tabs.put(ViewerTab.VIEW, new ViewerDocumentTab());
-        tabs.put(ViewerTab.PROPERTIES, new PropertiesDocumentTab());
-        tabs.put(ViewerTab.TEXT, new TextDocumentTab());
-        tabs.put(ViewerTab.BINARY, new BinaryDocumentTab());
-
-        documentPanel = new XBDocumentPanel();
-        documentPanel.addTabSwitchListener(this::setSelectedTab);
-        documentPanel.addItemSelectionListener((item) -> {
-            this.selectedItem = item;
-            notifySelectedItem();
-            notifyItemSelectionChanged();
-        });
-
-        treeDocument.setActivationListener(() -> {
-            activeHandler = treeDocument;
-            notifyActiveChanged();
-        });
-
-        documentPanel.setMainDoc(treeDocument);
-
-        tabs.values().forEach(tab -> {
-            tab.setActivationListener(() -> {
-                activeHandler = tab;
-                notifyActiveChanged();
+        activeFile = new XbupFileHandler(undoHandler);
+        activeFile.setItemSelectionListener((block) -> {
+            itemSelectionListeners.forEach(listener -> {
+                listener.itemSelected(block);
             });
         });
-
-        for (Map.Entry<ViewerTab, DocumentTab> entry : tabs.entrySet()) {
-            documentPanel.addTabComponent(entry.getKey(), entry.getValue());
-        }
-
-        selectedTab = ViewerTab.VIEW;
-        activeHandler = treeDocument;
-
-        activeFile = new FileHandler() {
-            private URI fileUri = null;
-            private FileType fileType = null;
-
-            @Override
-            public int getId() {
-                return -1;
-            }
-
-            @Nonnull
-            @Override
-            public JComponent getComponent() {
-                return documentPanel;
-            }
-
-            @Override
-            public void loadFromFile(URI fileUri, FileType fileType) {
-                File file = new File(fileUri);
-                try (FileInputStream fileStream = new FileInputStream(file)) {
-                    getDoc().fromStreamUB(fileStream);
-                    getDoc().processSpec();
-                    reportStructureChange((XBTTreeNode) getDoc().getRootBlock().get());
-                    performSelectAll();
-                    undoHandler.clear();
-                    this.fileUri = fileUri;
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (XBProcessingException ex) {
-                    Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new UnsupportedOperationException("Not supported yet.");
-                    // TODO JOptionPane.showMessageDialog(WindowUtils.getFrame(this), ex.getMessage(), "Parsing Exception", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-
-            @Override
-            public void saveToFile(URI fileUri, FileType fileType) {
-                File file = new File(fileUri);
-                try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-                    getDoc().toStreamUB(fileOutputStream);
-                    undoHandler.setSyncPoint();
-                    getDoc().setModified(false);
-                    this.fileUri = fileUri;
-                } catch (IOException ex) {
-                    Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-            @Nonnull
-            @Override
-            public Optional<URI> getFileUri() {
-                return Optional.ofNullable(fileUri);
-            }
-
-            @Override
-            public void newFile() {
-                undoHandler.clear();
-                getDoc().clear();
-                reportStructureChange(null);
-//        updateItem();
-            }
-
-            @Nonnull
-            @Override
-            public Optional<String> getFileName() {
-                if (fileUri != null) {
-                    String path = fileUri.getPath();
-                    int lastSegment = path.lastIndexOf("/");
-                    return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
-                }
-
-                return Optional.empty();
-            }
-
-            @Nonnull
-            @Override
-            public Optional<FileType> getFileType() {
-                return Optional.ofNullable(fileType);
-            }
-
-            @Override
-            public void setFileType(FileType fileType) {
-                this.fileType = fileType;
-            }
-
-            @Override
-            public boolean isModified() {
-                return getDoc().wasModified();
-            }
-        };
     }
 
     @Nonnull
     @Override
     public JPanel getEditorComponent() {
-        return documentPanel;
+        return activeFile.getComponent();
     }
 
     @Nonnull
@@ -261,8 +103,9 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
-    public XBTTreeDocument getDoc() {
-        return treeDocument;
+    @Override
+    public void setModificationListener(EditorProvider.EditorModificationListener editorModificationListener) {
+        // TODO
     }
 
     public XBACatalog getCatalog() {
@@ -271,13 +114,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        documentPanel.setCatalog(catalog);
-        treeDocument.setCatalog(catalog);
-        treeDocument.processSpec();
-
-        tabs.values().forEach(tab -> {
-            tab.setCatalog(catalog);
-        });
+        activeFile.setCatalog(catalog);
     }
 
     public XBApplication getApplication() {
@@ -286,10 +123,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     public void setApplication(XBApplication application) {
         this.application = application;
-        documentPanel.setApplication(application);
-        tabs.values().forEach(tab -> {
-            tab.setApplication(application);
-        });
+        activeFile.setApplication(application);
     }
 
     public XBPluginRepository getPluginRepository() {
@@ -298,32 +132,31 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
-        documentPanel.setPluginRepository(pluginRepository);
-        tabs.values().forEach(tab -> {
-            tab.setPluginRepository(pluginRepository);
-        });
+        activeFile.setPluginRepository(pluginRepository);
     }
 
     public void setDevMode(boolean devMode) {
-        PropertiesDocumentTab tab = (PropertiesDocumentTab) tabs.get(ViewerTab.PROPERTIES);
-        tab.setDevMode(devMode);
+        this.devMode = devMode;
+        activeFile.setDevMode(devMode);
     }
 
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         this.propertyChangeListener = propertyChangeListener;
-        documentPanel.setPropertyChangeListener(propertyChangeListener);
+        activeFile.getComponent().setPropertyChangeListener(propertyChangeListener);
     }
 
     @Override
     public String getWindowTitle(String frameTitle) {
-        if (!"".equals(getDoc().getFileName())) {
+        XBTTreeDocument treeDocument = activeFile.getDoc();
+        String fileName = treeDocument.getFileName();
+        if (!"".equals(fileName)) {
             int pos;
             int newpos = 0;
             do {
                 pos = newpos;
-                newpos = getDoc().getFileName().indexOf(File.separatorChar, pos) + 1;
+                newpos = fileName.indexOf(File.separatorChar, pos) + 1;
             } while (newpos > 0);
-            return getDoc().getFileName().substring(pos) + " - " + frameTitle;
+            return fileName.substring(pos) + " - " + frameTitle;
         }
 
         return frameTitle;
@@ -382,77 +215,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     @Override
     public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
         clipboardActionsUpdateListener = updateListener;
-        treeDocument.setUpdateListener(updateListener);
-        tabs.values().forEach(tab -> {
-            tab.setUpdateListener(updateListener);
-        });
-    }
-
-    public void postWindowOpened() {
-        documentPanel.postWindowOpened();
-    }
-
-    @Override
-    public void setModificationListener(EditorModificationListener editorModificationListener) {
-        // TODO
-    }
-
-    public void reportStructureChange(XBTBlock block) {
-        documentPanel.reportStructureChange(block);
-    }
-
-    @Nonnull
-    public Optional<XBTBlock> getSelectedItem() {
-        return Optional.ofNullable(selectedItem);
-    }
-
-    public void setSelectedTab(ViewerTab selectedTab) {
-        if (this.selectedTab != selectedTab) {
-            this.selectedTab = selectedTab;
-            notifySelectedItem();
-            notifyItemSelectionChanged();
-            DocumentTab currentTab = getCurrentTab();
-            if (activeHandler != currentTab && activeHandler != treeDocument) {
-                activeHandler = treeDocument;
-                notifyActiveChanged();
-            }
-
-//            mainFrame.getEditFindAction().setEnabled(mode != PanelMode.TREE);
-//            mainFrame.getEditFindAgainAction().setEnabled(mode == PanelMode.TEXT);
-//            mainFrame.getEditGotoAction().setEnabled(mode == PanelMode.TEXT);
-//            mainFrame.getEditReplaceAction().setEnabled(mode == PanelMode.TEXT);
-//            mainFrame.getItemAddAction().setEnabled(false);
-//            mainFrame.getItemModifyAction().setEnabled(false);
-//            showPanel();
-//            updateItem();
-//            updateActionStatus(null);
-//            if (clipboardActionsUpdateListener != null) {
-//                clipboardActionsUpdateListener.stateChanged();
-//            }
-        }
-    }
-
-    public void switchToTab(ViewerTab selectedTab) {
-        documentPanel.switchToTab(selectedTab);
-    }
-
-    private void notifySelectedItem() {
-        DocumentTab currentTab = getCurrentTab();
-        try {
-            currentTab.setSelectedItem(selectedItem);
-        } catch (Exception ex) {
-            Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private DocumentTab getCurrentTab() {
-        return tabs.get(selectedTab);
-    }
-
-    private void notifyActiveChanged() {
-        if (clipboardActionsUpdateListener != null) {
-            clipboardActionsUpdateListener.stateChanged();
-        }
+        activeFile.setUpdateListener(updateListener);
     }
 
     public void actionItemProperties() {
@@ -460,7 +223,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         BlockPropertiesPanel panel = new BlockPropertiesPanel();
         panel.setApplication(application);
         panel.setCatalog(catalog);
-        panel.setBlock(getSelectedItem().orElse(null));
+        panel.setBlock(activeFile.getSelectedItem().orElse(null));
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
@@ -471,29 +234,12 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         dialog.showCentered(null);
     }
 
-    public XBUndoHandler getUndoHandler() {
-        return undoHandler;
-    }
-
-    public void itemWasModified(XBTTreeNode newNode) {
-        reportStructureChange(newNode);
-        treeDocument.setModified(true);
-        treeDocument.processSpec();
-        // TODO updateItemStatus();
-    }
-
     public void addItemSelectionListener(DocumentItemSelectionListener listener) {
         itemSelectionListeners.add(listener);
     }
 
     public void removeItemSelectionListener(DocumentItemSelectionListener listener) {
         itemSelectionListeners.remove(listener);
-    }
-
-    public void notifyItemSelectionChanged() {
-        itemSelectionListeners.forEach(listener -> {
-            listener.itemSelected(selectedItem);
-        });
     }
 
     @Override
@@ -549,131 +295,5 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     @Override
     public boolean releaseAllFiles() {
         return releaseFile(activeFile);
-    }
-
-    @ParametersAreNonnullByDefault
-    private class TreeDocument extends XBTTreeDocument implements OperationListener, ClipboardActionsHandler {
-
-        public TreeDocument() {
-            super((XBCatalog) null);
-        }
-
-        public TreeDocument(@Nullable XBCatalog catalog) {
-            super(catalog);
-        }
-
-        @Override
-        public void notifyChange(OperationEvent event) {
-            Operation operation = event.getOperation();
-            // TODO Consolidate
-            processSpec();
-            reportStructureChange(null);
-            // getDoc().setModified(true);
-//            updateItem();
-//            updateActionStatus(null);
-//            if (clipboardActionsUpdateListener != null) {
-//                clipboardActionsUpdateListener.stateChanged();
-//            }
-
-            if (operation instanceof XBTDocOperation) {
-                setSelectedTab(ViewerTab.VIEW);
-            } else {
-                // TODO
-            }
-        }
-
-        public void setActivationListener(final ActivationListener listener) {
-            documentPanel.addTreeFocusListener(new FocusAdapter() {
-                @Override
-                public void focusGained(FocusEvent e) {
-                    listener.activated();
-                }
-            });
-        }
-
-        @Override
-        public void performCut() {
-            CutItemAction action = new CutItemAction();
-            action.setup(DocumentViewerProvider.this);
-            action.actionPerformed(null);
-        }
-
-        @Override
-        public void performCopy() {
-            CopyItemAction action = new CopyItemAction();
-            action.setup(DocumentViewerProvider.this);
-            action.actionPerformed(null);
-        }
-
-        @Override
-        public void performPaste() {
-            PasteItemAction action = new PasteItemAction();
-            action.setup(DocumentViewerProvider.this);
-            action.actionPerformed(null);
-        }
-
-        @Override
-        public void performDelete() {
-            DeleteItemAction action = new DeleteItemAction();
-            action.setup(DocumentViewerProvider.this);
-            action.actionPerformed(null);
-        }
-
-        @Override
-        public void performSelectAll() {
-            documentPanel.performSelectAll();
-        }
-
-        @Override
-        public boolean isSelection() {
-            return documentPanel.hasSelection();
-        }
-
-        @Override
-        public boolean isEditable() {
-            return documentPanel.hasSelection();
-        }
-
-        @Override
-        public boolean canSelectAll() {
-            return true;
-        }
-
-        @Override
-        public boolean canPaste() {
-            Clipboard clipboard = ClipboardUtils.getClipboard();
-            return clipboard.isDataFlavorAvailable(XBDocTreeTransferHandler.XB_DATA_FLAVOR);
-        }
-
-        @Override
-        public boolean canDelete() {
-            return documentPanel.hasSelection();
-        }
-
-        @Override
-        public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-            documentPanel.addUpdateListener((e) -> {
-                updateListener.stateChanged();
-            });
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    public enum ViewerTab {
-        VIEW("Viewer"),
-        PROPERTIES("Properties"),
-        TEXT("Text"),
-        BINARY("Binary");
-
-        private final String tabName;
-
-        private ViewerTab(String tabName) {
-            this.tabName = tabName;
-        }
-
-        @Nonnull
-        public String getTabName() {
-            return tabName;
-        }
     }
 }

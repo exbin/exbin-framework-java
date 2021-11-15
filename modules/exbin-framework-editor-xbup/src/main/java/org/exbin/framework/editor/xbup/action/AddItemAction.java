@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.AddBlockPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -69,9 +70,10 @@ public class AddItemAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         XBApplication application = viewerProvider.getApplication();
         XBACatalog catalog = viewerProvider.getCatalog();
-        XBUndoHandler undoHandler = viewerProvider.getUndoHandler();
+        XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+        XBUndoHandler undoHandler = xbupFile.getUndoHandler();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        XBTBlock block = viewerProvider.getSelectedItem().orElse(null);
+        XBTBlock block = xbupFile.getSelectedItem().orElse(null);
         if (!(block instanceof XBTTreeNode) && block != null) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
@@ -91,7 +93,7 @@ public class AddItemAction extends AbstractAction {
                 case FINISH: {
                     XBTTreeNode newNode = addItemPanel.getWorkNode();
                     try {
-                        XBTTreeDocument mainDoc = viewerProvider.getDoc();
+                        XBTTreeDocument mainDoc = xbupFile.getDoc();
                         long parentPosition = node == null ? -1 : node.getBlockIndex();
                         int childIndex = node == null ? 0 : node.getChildCount();
                         XBTDocCommand step = new XBTAddBlockCommand(mainDoc, parentPosition, childIndex, newNode);
@@ -100,7 +102,7 @@ public class AddItemAction extends AbstractAction {
                         Logger.getLogger(AddItemAction.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                    viewerProvider.itemWasModified(newNode);
+                    xbupFile.itemWasModified(newNode);
 
                     dialog.close();
                     dialog.dispose();

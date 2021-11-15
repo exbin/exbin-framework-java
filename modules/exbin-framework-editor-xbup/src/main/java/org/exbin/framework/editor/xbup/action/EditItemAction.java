@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.ModifyBlockPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -78,11 +79,12 @@ public class EditItemAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         XBApplication application = viewerProvider.getApplication();
         XBACatalog catalog = viewerProvider.getCatalog();
-        XBUndoHandler undoHandler = viewerProvider.getUndoHandler();
-        XBTTreeDocument mainDoc = viewerProvider.getDoc();
+        XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+        XBUndoHandler undoHandler = xbupFile.getUndoHandler();
+        XBTTreeDocument mainDoc = xbupFile.getDoc();
         XBPluginRepository pluginRepository = viewerProvider.getPluginRepository();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        XBTBlock block = viewerProvider.getSelectedItem().get();
+        XBTBlock block = xbupFile.getSelectedItem().get();
         if (!(block instanceof XBTTreeNode)) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
@@ -127,7 +129,7 @@ public class EditItemAction extends AbstractAction {
                     Logger.getLogger(EditItemAction.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                viewerProvider.itemWasModified(node);
+                xbupFile.itemWasModified(node);
             }
 
             dialog.close();

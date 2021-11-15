@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.DocumentPropertiesPanel;
 import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -62,11 +63,12 @@ public class DocumentPropertiesAction extends AbstractAction {
         XBApplication application = viewerProvider.getApplication();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         DocumentPropertiesPanel propertiesPanel = new DocumentPropertiesPanel();
-        propertiesPanel.setDocument(viewerProvider.getDoc());
         Optional<FileHandler> activeFile = viewerProvider.getActiveFile();
         if (!activeFile.isPresent()) {
             return;
         }
+        XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+        propertiesPanel.setDocument(xbupFile.getDoc());
         propertiesPanel.setDocumentUri(activeFile.get().getFileUri().orElse(null));
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
