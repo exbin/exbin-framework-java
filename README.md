@@ -19,15 +19,17 @@ Project is constructed from multiple repositories.
 Compiling
 ---------
 
+Build commands: "gradle build" and "gradle distZip"
+
 Java Development Kit (JDK) version 8 or later is required to build this project.
 
-For project compiling Gradle 6.0 build system is used: http://gradle.org
+For project compiling Gradle 7.1 build system is used: https://gradle.org
 
 You can either download and install gradle or use gradlew or gradlew.bat scripts to download separate copy of gradle to perform the project build.
 
-Build commands: "gradle build" and "gradle distZip"
+On the first build there will be an attempt to download all required dependecy modules and currently it's necessary to execute build twice.
 
-Currently it might be necessary to use local Maven - Manually download all dependencies from GitHub (clone repositories from github.com/exbin - see. deps directory for names) and run "gradle publish" on each of them.
+Alternative is to have all dependecy modules stored in local maven repository - Manually download all dependencies from GitHub (clone repositories from github.com/exbin - see. deps directory for names) and run "gradle publish" on each of them.
 
 License
 -------
