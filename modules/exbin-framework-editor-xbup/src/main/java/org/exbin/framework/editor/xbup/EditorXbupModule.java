@@ -18,11 +18,13 @@ package org.exbin.framework.editor.xbup;
 import org.exbin.framework.editor.xbup.action.SampleFilesActions;
 import org.exbin.framework.editor.xbup.action.ViewModeActions;
 import java.io.File;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
+import org.exbin.framework.XBFrameworkUtils;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -34,7 +36,9 @@ import org.exbin.framework.editor.xbup.action.EditItemAction;
 import org.exbin.framework.editor.xbup.action.ExportItemAction;
 import org.exbin.framework.editor.xbup.action.ImportItemAction;
 import org.exbin.framework.editor.xbup.action.ItemPropertiesAction;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupSingleEditorProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupMultiEditorProvider;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -51,12 +55,13 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
+import org.exbin.framework.gui.editor.api.EditorProviderVariant;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
 /**
  * XBUP editor module.
  *
- * @version 0.2.1 2021/11/15
+ * @version 0.2.1 2021/12/05
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -73,7 +78,7 @@ public class EditorXbupModule implements XBApplicationModule {
     public static final String SAMPLE_FILE_SUBMENU_ID = MODULE_ID + ".sampleFileSubMenu";
 
     private XBApplication application;
-    private EditorProvider editorProvider;
+    private XbupEditorProvider editorProvider;
     private ResourceBundle resourceBundle;
     private XBACatalog catalog;
     private XBUndoHandler undoHandler;
@@ -99,28 +104,43 @@ public class EditorXbupModule implements XBApplicationModule {
         this.application = (XBApplication) application;
     }
 
+    public void initEditorProvider(EditorProviderVariant variant) {
+        switch (variant) {
+            case SINGLE: {
+                editorProvider = createSingleEditorProvider();
+                break;
+            }
+            case MULTI: {
+                editorProvider = createMultiEditorProvider();
+                break;
+            }
+            default:
+                throw XBFrameworkUtils.getInvalidTypeException(variant);
+        }
+    }
+
     @Override
     public void unregisterModule(String moduleId) {
     }
 
-    private void ensureSetup() {
-        if (editorProvider == null) {
-            getEditorProvider();
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = LanguageUtils.getResourceBundleByClass(EditorXbupModule.class);
         }
 
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
+        return resourceBundle;
     }
 
-    public EditorProvider getEditorProvider() {
+    @Nonnull
+    private XbupEditorProvider createSingleEditorProvider() {
         if (editorProvider == null) {
-            editorProvider = new DocumentViewerProvider(undoHandler);
-            ((DocumentViewerProvider) editorProvider).setApplication(application);
-            ((DocumentViewerProvider) editorProvider).setDevMode(devMode);
+            editorProvider = new XbupSingleEditorProvider(undoHandler);
+            ((XbupSingleEditorProvider) editorProvider).setApplication(application);
+            ((XbupSingleEditorProvider) editorProvider).setDevMode(devMode);
 
-            final DocumentViewerProvider docPanel = (DocumentViewerProvider) editorProvider;
-
+//            final DocumentViewerProvider docPanel = (DocumentViewerProvider) editorProvider;
+//
 //            docPanel.getComponentPanel().setPopupMenu(createPopupMenu());
 //            docPanel.addUpdateListener((ActionEvent e) -> {
 //                if (docEditingHandler != null) {
@@ -135,17 +155,33 @@ public class EditorXbupModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public ResourceBundle getResourceBundle() {
-        if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(EditorXbupModule.class);
+    private XbupEditorProvider createMultiEditorProvider() {
+        if (editorProvider == null) {
+            editorProvider = new XbupMultiEditorProvider(application);
+            ((XbupMultiEditorProvider) editorProvider).setDevMode(devMode);
         }
 
-        return resourceBundle;
+        return editorProvider;
     }
 
     public void registerFileTypes() {
         GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
         fileModule.addFileType(new XBFileType());
+    }
+
+    @Nonnull
+    public EditorProvider getEditorProvider() {
+        return Objects.requireNonNull(editorProvider, "Editor provider was not yet initialized");
+    }
+
+    private void ensureSetup() {
+        if (editorProvider == null) {
+            getEditorProvider();
+        }
+
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
     }
 
     private ViewModeActions getViewModeHandler() {
@@ -194,7 +230,7 @@ public class EditorXbupModule implements XBApplicationModule {
         if (itemPropertiesAction == null) {
             ensureSetup();
             itemPropertiesAction = new ItemPropertiesAction();
-            itemPropertiesAction.setup((DocumentViewerProvider) editorProvider);
+            itemPropertiesAction.setup(editorProvider);
             itemPropertiesAction.setDevMode(devMode);
         }
         return itemPropertiesAction;
@@ -205,7 +241,7 @@ public class EditorXbupModule implements XBApplicationModule {
         if (documentPropertiesAction == null) {
             ensureSetup();
             documentPropertiesAction = new DocumentPropertiesAction();
-            documentPropertiesAction.setup((DocumentViewerProvider) editorProvider);
+            documentPropertiesAction.setup(editorProvider);
         }
         return documentPropertiesAction;
     }
@@ -233,7 +269,7 @@ public class EditorXbupModule implements XBApplicationModule {
     public AddItemAction getAddItemAction() {
         if (addItemAction == null) {
             addItemAction = new AddItemAction();
-            addItemAction.setup((DocumentViewerProvider) editorProvider);
+            addItemAction.setup(editorProvider);
         }
         return addItemAction;
     }
@@ -241,7 +277,7 @@ public class EditorXbupModule implements XBApplicationModule {
     public EditItemAction getEditItemAction() {
         if (editItemAction == null) {
             editItemAction = new EditItemAction();
-            editItemAction.setup((DocumentViewerProvider) editorProvider);
+            editItemAction.setup(editorProvider);
         }
         return editItemAction;
     }
@@ -331,7 +367,7 @@ public class EditorXbupModule implements XBApplicationModule {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
-        ((DocumentViewerProvider) editorProvider).setCatalog(catalog);
+        editorProvider.setCatalog(catalog);
         if (catalogBrowserAction != null) {
             catalogBrowserAction.setCatalog(catalog);
         }
@@ -342,7 +378,7 @@ public class EditorXbupModule implements XBApplicationModule {
     }
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
-        ((DocumentViewerProvider) editorProvider).setPluginRepository(pluginRepository);
+        editorProvider.setPluginRepository(pluginRepository);
     }
 
     /**

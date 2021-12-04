@@ -22,7 +22,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -44,13 +44,13 @@ public class ItemPropertiesAction extends AbstractAction {
     public static final String ACTION_ID = "itemPropertiesAction";
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ItemPropertiesAction.class);
-    private DocumentViewerProvider viewerProvider;
+    private XbupEditorProvider viewerProvider;
     private boolean devMode = false;
 
     public ItemPropertiesAction() {
     }
 
-    public void setup(DocumentViewerProvider viewerProvider) {
+    public void setup(XbupEditorProvider viewerProvider) {
         this.viewerProvider = viewerProvider;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);

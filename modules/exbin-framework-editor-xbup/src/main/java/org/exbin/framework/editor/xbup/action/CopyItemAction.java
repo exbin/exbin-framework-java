@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.core.block.XBTBlock;
@@ -37,21 +37,21 @@ public class CopyItemAction extends AbstractAction {
 
     public static final String ACTION_ID = "copyItemAction";
 
-    private DocumentViewerProvider viewerProvider;
+    private XbupEditorProvider editorProvider;
 
     public CopyItemAction() {
     }
-    
-    public void setup(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
+
+    public void setup(XbupEditorProvider editorProvider) {
+        this.editorProvider = editorProvider;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        CopyItemAction.performCopy(viewerProvider);
+        CopyItemAction.performCopy(editorProvider);
     }
-    
-    static void performCopy(DocumentViewerProvider viewerProvider) {
+
+    static void performCopy(XbupEditorProvider viewerProvider) {
         XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
         XBTBlock block = xbupFile.getSelectedItem().get();
         if (!(block instanceof XBTTreeNode)) {

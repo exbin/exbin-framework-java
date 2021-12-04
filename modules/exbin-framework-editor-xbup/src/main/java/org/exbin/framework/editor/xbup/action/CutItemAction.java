@@ -18,7 +18,7 @@ package org.exbin.framework.editor.xbup.action;
 import java.awt.event.ActionEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 
 /**
  * Cut item to clipboard action.
@@ -31,18 +31,18 @@ public class CutItemAction extends AbstractAction {
 
     public static final String ACTION_ID = "cutItemAction";
 
-    private DocumentViewerProvider viewerProvider;
+    private XbupEditorProvider editorProvider;
 
     public CutItemAction() {
     }
-    
-    public void setup(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
+
+    public void setup(XbupEditorProvider editorProvider) {
+        this.editorProvider = editorProvider;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        CopyItemAction.performCopy(viewerProvider);
-        DeleteItemAction.performDelete(viewerProvider);
+        CopyItemAction.performCopy(editorProvider);
+        DeleteItemAction.performDelete(editorProvider);
     }
 }

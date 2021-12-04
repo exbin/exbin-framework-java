@@ -127,7 +127,7 @@ public class XbupFileHandler implements FileHandler {
         selectedTab = ViewerTab.VIEW;
         activeHandler = treeDocument;
     }
-    
+
     @Override
     public int getId() {
         return id;
@@ -303,16 +303,19 @@ public class XbupFileHandler implements FileHandler {
         try {
             currentTab.setSelectedItem(selectedItem);
         } catch (Exception ex) {
-            Logger.getLogger(DocumentViewerProvider.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(XbupSingleEditorProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void notifyItemSelectionChanged() {
-        itemSelectionListener.itemSelected(selectedItem);
+        if (itemSelectionListener != null) {
+            itemSelectionListener.itemSelected(selectedItem);
+        }
     }
 
     public void setItemSelectionListener(DocumentItemSelectionListener itemSelectionListener) {
         this.itemSelectionListener = itemSelectionListener;
+        notifyItemSelectionChanged();
     }
 
     private DocumentTab getCurrentTab() {
@@ -347,7 +350,7 @@ public class XbupFileHandler implements FileHandler {
     public boolean isSaveSupported() {
         return true;
     }
-    
+
     public boolean isEditable() {
         return treeDocument.isEditable();
     }

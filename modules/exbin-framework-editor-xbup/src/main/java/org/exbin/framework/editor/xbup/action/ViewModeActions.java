@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupSingleEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.ViewerTab;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.editor.api.EditorProvider;
@@ -65,8 +65,7 @@ public class ViewModeActions {
 
     public void setViewerTab(ViewerTab viewTab) {
         this.viewTab = viewTab;
-        DocumentViewerProvider viewerProvider = (DocumentViewerProvider) editorProvider;
-        XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+        XbupFileHandler xbupFile = (XbupFileHandler) editorProvider.getActiveFile().get();
         xbupFile.switchToTab(viewTab);
     }
 
@@ -81,7 +80,7 @@ public class ViewModeActions {
             showViewTabAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof DocumentViewerProvider) {
+                    if (editorProvider instanceof XbupSingleEditorProvider) {
                         setViewerTab(ViewerTab.VIEW);
                     }
                 }
@@ -100,7 +99,7 @@ public class ViewModeActions {
             showPropertiesTabAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof DocumentViewerProvider) {
+                    if (editorProvider instanceof XbupSingleEditorProvider) {
                         setViewerTab(ViewerTab.PROPERTIES);
                     }
                 }
@@ -119,7 +118,7 @@ public class ViewModeActions {
             showTextTabAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof DocumentViewerProvider) {
+                    if (editorProvider instanceof XbupSingleEditorProvider) {
                         setViewerTab(ViewerTab.TEXT);
                     }
                 }
@@ -139,7 +138,7 @@ public class ViewModeActions {
             showBinaryTabAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof DocumentViewerProvider) {
+                    if (editorProvider instanceof XbupSingleEditorProvider) {
                         setViewerTab(ViewerTab.BINARY);
                     }
                 }

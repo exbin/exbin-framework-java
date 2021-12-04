@@ -69,11 +69,11 @@ import org.exbin.framework.gui.file.api.FileTypes;
 /**
  * Multi editor provider.
  *
- * @version 0.2.1 2021/11/15
+ * @version 0.2.1 2021/12/05
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class XbupMultiEditorProvider implements MultiEditorProvider, ClipboardActionsHandler {
+public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorProvider, ClipboardActionsHandler {
 
     private final XBApplication application;
     private FileTypes fileTypes;
@@ -186,10 +186,12 @@ public class XbupMultiEditorProvider implements MultiEditorProvider, ClipboardAc
         // TODO
     }
 
+    @Override
     public XBACatalog getCatalog() {
         return catalog;
     }
 
+    @Override
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
         if (activeFileCache.isPresent()) {
@@ -197,14 +199,17 @@ public class XbupMultiEditorProvider implements MultiEditorProvider, ClipboardAc
         }
     }
 
+    @Override
     public XBApplication getApplication() {
         return application;
     }
 
+    @Override
     public XBPluginRepository getPluginRepository() {
         return pluginRepository;
     }
 
+    @Override
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
         // activeFile.setPluginRepository(pluginRepository);
@@ -313,10 +318,12 @@ public class XbupMultiEditorProvider implements MultiEditorProvider, ClipboardAc
         dialog.showCentered(null);
     }
 
+    @Override
     public void addItemSelectionListener(DocumentItemSelectionListener listener) {
         itemSelectionListeners.add(listener);
     }
 
+    @Override
     public void removeItemSelectionListener(DocumentItemSelectionListener listener) {
         itemSelectionListeners.remove(listener);
     }
@@ -345,6 +352,7 @@ public class XbupMultiEditorProvider implements MultiEditorProvider, ClipboardAc
                 listener.itemSelected(block);
             });
         });
+        fileHandler.setUndoHandler(undoHandler);
         fileHandler.setCatalog(catalog);
 
         return fileHandler;

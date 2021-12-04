@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreeTransferHandler;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.utils.ClipboardUtils;
 import org.exbin.xbup.core.block.XBTBlock;
@@ -48,20 +48,20 @@ public class PasteItemAction extends AbstractAction {
 
     public static final String ACTION_ID = "pasteItemAction";
 
-    private DocumentViewerProvider viewerProvider;
+    private XbupEditorProvider editorProvider;
 
     public PasteItemAction() {
     }
 
-    public void setup(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
+    public void setup(XbupEditorProvider editorProvider) {
+        this.editorProvider = editorProvider;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Clipboard clipboard = ClipboardUtils.getClipboard();
         if (clipboard.isDataFlavorAvailable(XBDocTreeTransferHandler.XB_DATA_FLAVOR)) {
-            XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+            XbupFileHandler xbupFile = (XbupFileHandler) editorProvider.getActiveFile().get();
             XBUndoHandler undoHandler = xbupFile.getUndoHandler();
             XBTTreeDocument mainDoc = xbupFile.getDoc();
             try {

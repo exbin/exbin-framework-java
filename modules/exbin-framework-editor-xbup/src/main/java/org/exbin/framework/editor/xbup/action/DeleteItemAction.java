@@ -21,7 +21,8 @@ import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreePanel;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupSingleEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.operation.XBTDocCommand;
@@ -41,21 +42,21 @@ public class DeleteItemAction extends AbstractAction {
 
     public static final String ACTION_ID = "deleteItemAction";
 
-    private DocumentViewerProvider viewerProvider;
+    private XbupEditorProvider editorProvider;
 
     public DeleteItemAction() {
     }
 
-    public void setup(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
+    public void setup(XbupEditorProvider editorProvider) {
+        this.editorProvider = editorProvider;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DeleteItemAction.performDelete(viewerProvider);
+        DeleteItemAction.performDelete(editorProvider);
     }
 
-    static void performDelete(DocumentViewerProvider viewerProvider) {
+    static void performDelete(XbupEditorProvider viewerProvider) {
         XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
         XBTBlock block = xbupFile.getSelectedItem().get();
         if (!(block instanceof XBTTreeNode)) {

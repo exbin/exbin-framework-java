@@ -24,7 +24,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.DocumentPropertiesPanel;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupSingleEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -45,14 +46,14 @@ public class DocumentPropertiesAction extends AbstractAction {
 
     public static final String ACTION_ID = "propertiesAction";
 
-    private DocumentViewerProvider viewerProvider;
+    private XbupEditorProvider editorProvider;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DocumentPropertiesAction.class);
 
     public DocumentPropertiesAction() {
     }
 
-    public void setup(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
+    public void setup(XbupEditorProvider editorProvider) {
+        this.editorProvider = editorProvider;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
@@ -60,14 +61,14 @@ public class DocumentPropertiesAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        XBApplication application = viewerProvider.getApplication();
+        XBApplication application = editorProvider.getApplication();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         DocumentPropertiesPanel propertiesPanel = new DocumentPropertiesPanel();
-        Optional<FileHandler> activeFile = viewerProvider.getActiveFile();
+        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (!activeFile.isPresent()) {
             return;
         }
-        XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+        XbupFileHandler xbupFile = (XbupFileHandler) editorProvider.getActiveFile().get();
         propertiesPanel.setDocument(xbupFile.getDoc());
         propertiesPanel.setDocumentUri(activeFile.get().getFileUri().orElse(null));
         CloseControlPanel controlPanel = new CloseControlPanel();

@@ -25,7 +25,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.ModifyBlockPanel;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
@@ -59,30 +59,30 @@ public class EditItemAction extends AbstractAction {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditItemAction.class);
 
-    private DocumentViewerProvider viewerProvider;
+    private XbupEditorProvider editorProvider;
 
     public EditItemAction() {
     }
 
-    public void setup(DocumentViewerProvider viewerProvider) {
-        this.viewerProvider = viewerProvider;
+    public void setup(XbupEditorProvider editorProvider) {
+        this.editorProvider = editorProvider;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         setEnabled(false);
-        viewerProvider.addItemSelectionListener((@Nullable XBTBlock item) -> {
+        editorProvider.addItemSelectionListener((@Nullable XBTBlock item) -> {
             setEnabled(item != null);
         });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        XBApplication application = viewerProvider.getApplication();
-        XBACatalog catalog = viewerProvider.getCatalog();
-        XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
+        XBApplication application = editorProvider.getApplication();
+        XBACatalog catalog = editorProvider.getCatalog();
+        XbupFileHandler xbupFile = (XbupFileHandler) editorProvider.getActiveFile().get();
         XBUndoHandler undoHandler = xbupFile.getUndoHandler();
         XBTTreeDocument mainDoc = xbupFile.getDoc();
-        XBPluginRepository pluginRepository = viewerProvider.getPluginRepository();
+        XBPluginRepository pluginRepository = editorProvider.getPluginRepository();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         XBTBlock block = xbupFile.getSelectedItem().get();
         if (!(block instanceof XBTTreeNode)) {
@@ -135,6 +135,6 @@ public class EditItemAction extends AbstractAction {
             dialog.close();
             dialog.dispose();
         });
-        dialog.showCentered(viewerProvider.getEditorComponent());
+        dialog.showCentered(editorProvider.getEditorComponent());
     }
 }

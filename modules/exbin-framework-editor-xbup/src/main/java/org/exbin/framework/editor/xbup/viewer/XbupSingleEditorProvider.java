@@ -45,11 +45,11 @@ import org.exbin.framework.gui.file.api.FileHandler;
 /**
  * Viewer provider.
  *
- * @version 0.2.1 2021/11/14
+ * @version 0.2.1 2021/12/05
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DocumentViewerProvider implements EditorProvider, ClipboardActionsHandler {
+public class XbupSingleEditorProvider implements XbupEditorProvider, ClipboardActionsHandler {
 
     private XBACatalog catalog;
     private PropertyChangeListener propertyChangeListener = null;
@@ -65,7 +65,7 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
     @Nullable
     private File lastUsedDirectory;
 
-    public DocumentViewerProvider(XBUndoHandler undoHandler) {
+    public XbupSingleEditorProvider(XBUndoHandler undoHandler) {
         activeFile = new XbupFileHandler();
         activeFile.setUndoHandler(undoHandler);
         activeFile.setItemSelectionListener((block) -> {
@@ -109,15 +109,18 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         // TODO
     }
 
+    @Override
     public XBACatalog getCatalog() {
         return catalog;
     }
 
+    @Override
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
         activeFile.setCatalog(catalog);
     }
 
+    @Override
     public XBApplication getApplication() {
         return application;
     }
@@ -127,10 +130,12 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         activeFile.setApplication(application);
     }
 
+    @Override
     public XBPluginRepository getPluginRepository() {
         return pluginRepository;
     }
 
+    @Override
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
         activeFile.setPluginRepository(pluginRepository);
@@ -235,10 +240,12 @@ public class DocumentViewerProvider implements EditorProvider, ClipboardActionsH
         dialog.showCentered(null);
     }
 
+    @Override
     public void addItemSelectionListener(DocumentItemSelectionListener listener) {
         itemSelectionListeners.add(listener);
     }
 
+    @Override
     public void removeItemSelectionListener(DocumentItemSelectionListener listener) {
         itemSelectionListeners.remove(listener);
     }

@@ -25,10 +25,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.viewer.DocumentViewerProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.xbup.core.parser.XBProcessingException;
 
@@ -69,8 +68,8 @@ public class SampleFilesActions {
             sampleHtmlFileAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof DocumentViewerProvider) {
-                        DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
+                    if (editorProvider instanceof XbupEditorProvider) {
+                        XbupEditorProvider provider = (XbupEditorProvider) editorProvider;
                         provider.newFile();
                         XbupFileHandler xbupFile = (XbupFileHandler) provider.getActiveFile().get();
                         try {
@@ -95,8 +94,8 @@ public class SampleFilesActions {
             samplePictureFileAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof DocumentViewerProvider) {
-                        DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
+                    if (editorProvider instanceof XbupEditorProvider) {
+                        XbupEditorProvider provider = (XbupEditorProvider) editorProvider;
                         provider.newFile();
                         XbupFileHandler xbupFile = (XbupFileHandler) provider.getActiveFile().get();
                         try {
@@ -122,8 +121,8 @@ public class SampleFilesActions {
             sampleTypesFileAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (editorProvider instanceof DocumentViewerProvider) {
-                        DocumentViewerProvider provider = (DocumentViewerProvider) editorProvider;
+                    if (editorProvider instanceof XbupEditorProvider) {
+                        XbupEditorProvider provider = (XbupEditorProvider) editorProvider;
                         provider.newFile();
                         XbupFileHandler xbupFile = (XbupFileHandler) provider.getActiveFile().get();
                         try {
