@@ -15,19 +15,6 @@
  */
 package org.exbin.framework.gui.service.catalog.gui;
 
-import com.lightdev.app.shtm.DefaultTextResources;
-import com.lightdev.app.shtm.SHTMLPanel;
-import com.lightdev.app.shtm.SHTMLPanelImpl;
-import com.lightdev.app.shtm.TextResources;
-import com.lightdev.app.shtm.Util;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.annotation.Nullable;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -36,37 +23,20 @@ import org.exbin.framework.gui.utils.WindowUtils;
 /**
  * XBManager catalog specification selection panel.
  *
- * @version 0.2.1 2019/06/28
+ * @version 0.2.1 2021/12/05
  * @author ExBin Project (http://exbin.org)
  */
 public class CatalogEditDocumentationPanel extends javax.swing.JPanel {
 
     private String documentation;
-    private final SHTMLPanel mainPanel;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogEditDocumentationPanel.class);
 
     public CatalogEditDocumentationPanel() {
-        mainPanel = SHTMLPanel.createSHTMLPanel();
         initComponents();
         init();
     }
 
     private void init() {
-        SHTMLPanelImpl.setTextResources(createResources());
-        SHTMLPanel.getResources();
-        mainPanel.setOpenHyperlinkHandler((ActionEvent e) -> {
-            java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-            if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
-                try {
-                    java.net.URI uri = new java.net.URI(e.getActionCommand());
-                    desktop.browse(uri);
-                } catch (IOException | URISyntaxException ex) {
-                    Util.errMsg((Component) e.getSource(), ex.getMessage(), ex);
-                }
-            }
-        });
-
-        add(mainPanel, java.awt.BorderLayout.CENTER);
     }
 
     public ResourceBundle getResourceBundle() {
@@ -82,7 +52,15 @@ public class CatalogEditDocumentationPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        scrollPane = new javax.swing.JScrollPane();
+        editorPane = new javax.swing.JEditorPane();
+
         setLayout(new java.awt.BorderLayout());
+
+        editorPane.setContentType("text/html"); // NOI18N
+        scrollPane.setViewportView(editorPane);
+
+        add(scrollPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -95,30 +73,16 @@ public class CatalogEditDocumentationPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JEditorPane editorPane;
+    private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
+
     public String getDocumentation() {
         return documentation;
     }
 
     public void setDocumentation(@Nullable String documentation) {
         this.documentation = documentation;
-        mainPanel.setCurrentDocumentContent(documentation == null ? "<html><body></body></html>" : documentation);
-    }
-
-    private static TextResources createResources() {
-        try {
-            final String propsLoc = "org/exbin/framework/gui/service/resources/SimplyHTML.properties";
-            final URL defaultPropsURL = ClassLoader.getSystemResource(propsLoc);
-            final Properties props = new Properties();
-            try (InputStream in = defaultPropsURL.openStream()) {
-                props.load(in);
-            }
-            final ResourceBundle resourceBundle = ResourceBundle.getBundle(
-                    "com.lightdev.app.shtm.resources.SimplyHTML", Locale.getDefault());
-            return new DefaultTextResources(resourceBundle, props);
-        } catch (final IOException ex) {
-            Util.errMsg(null, "resources not found", ex);
-            return null;
-        }
+        editorPane.setText(documentation == null ? "<html><body></body></html>" : documentation);
     }
 }

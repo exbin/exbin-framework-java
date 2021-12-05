@@ -31,7 +31,6 @@ dependencies {
     implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-tree')
     implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-parser-command')
     implementation moduleDep('XbupDataJava', 'org.exbin.xbup.data', 'xbup-data-visual')
-    implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'simplyhtml')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-action-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-gui-frame-api')
