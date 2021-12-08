@@ -17,6 +17,7 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Name edit dialog.
@@ -34,7 +35,7 @@ public class RenamePanel extends javax.swing.JPanel {
     public void setNameText(String name) {
         nameTextField.setText(name);
     }
-    
+
     @Nonnull
     public String getNameText() {
         return nameTextField.getText();
@@ -79,6 +80,14 @@ public class RenamePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new RenamePanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel nameLabel;

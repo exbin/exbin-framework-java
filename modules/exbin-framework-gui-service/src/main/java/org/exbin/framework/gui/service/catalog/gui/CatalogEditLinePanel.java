@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.service.catalog.gui;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.gui.utils.WindowUtils;
 
 /**
  * Editor for line panel selection.
@@ -50,6 +51,15 @@ public class CatalogEditLinePanel extends javax.swing.JPanel {
             .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogEditLinePanel());
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

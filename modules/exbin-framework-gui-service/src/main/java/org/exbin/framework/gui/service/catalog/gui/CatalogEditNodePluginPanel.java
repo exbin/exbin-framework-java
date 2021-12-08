@@ -106,7 +106,7 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
     public void setPanelEditorsCount(long panelEditorsCount) {
         panelEditorsCountTextField.setText(String.valueOf(panelEditorsCount));
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -211,6 +211,14 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
         dialog.dispose();
     }//GEN-LAST:event_fileSelectButtonActionPerformed
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogEditNodePluginPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel fileLabel;

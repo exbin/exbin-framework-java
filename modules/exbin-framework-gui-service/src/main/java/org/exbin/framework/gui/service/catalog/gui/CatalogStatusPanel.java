@@ -17,6 +17,7 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.Date;
 import java.util.Optional;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JList;
@@ -37,6 +38,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
  * @version 0.2.1 2020/08/18
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogStatusPanel extends javax.swing.JPanel {
 
     private static final String UNKNOWN = "unknown";
