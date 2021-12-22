@@ -15,6 +15,9 @@
  */
 package org.exbin.framework.editor.xbup.gui;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.core.block.definition.XBParamType;
 import org.exbin.xbup.core.catalog.base.XBCSpecDef;
 import org.exbin.xbup.plugin.XBRowEditor;
@@ -25,6 +28,7 @@ import org.exbin.xbup.plugin.XBRowEditor;
  * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBPropertyTableItem {
 
     private XBCSpecDef specDef;
@@ -32,7 +36,7 @@ public class XBPropertyTableItem {
     private String typeName;
     private XBRowEditor rowEditor;
 
-    public XBPropertyTableItem(XBCSpecDef specDef, String valueName, String typeName, XBRowEditor rowEditor) {
+    public XBPropertyTableItem(XBCSpecDef specDef, String valueName, String typeName, @Nullable XBRowEditor rowEditor) {
         this.specDef = specDef;
         this.valueName = valueName;
         this.typeName = typeName;
@@ -43,6 +47,7 @@ public class XBPropertyTableItem {
         this(specDef, name, type, null);
     }
 
+    @Nonnull
     public XBCSpecDef getSpecDef() {
         return specDef;
     }
@@ -51,6 +56,7 @@ public class XBPropertyTableItem {
         this.specDef = specDef;
     }
 
+    @Nonnull
     public String getValueName() {
         return valueName;
     }
@@ -59,6 +65,7 @@ public class XBPropertyTableItem {
         this.valueName = valueName;
     }
 
+    @Nonnull
     public String getTypeName() {
         return typeName;
     }
@@ -67,14 +74,16 @@ public class XBPropertyTableItem {
         this.typeName = typeName;
     }
 
+    @Nullable
     public XBRowEditor getRowEditor() {
         return rowEditor;
     }
 
-    public void setRowEditor(XBRowEditor rowEditor) {
+    public void setRowEditor(@Nullable XBRowEditor rowEditor) {
         this.rowEditor = rowEditor;
     }
 
+    @Nonnull
     public String getDefTypeName() {
         String defTypeName = "";
         if (!specDef.getTargetRev().isPresent()) {

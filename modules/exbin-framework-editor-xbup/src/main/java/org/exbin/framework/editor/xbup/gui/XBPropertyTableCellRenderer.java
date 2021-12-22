@@ -16,6 +16,8 @@
 package org.exbin.framework.editor.xbup.gui;
 
 import java.awt.Component;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -31,6 +33,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBPropertyTableCellRenderer implements TableCellRenderer {
 
     private XBACatalog catalog;
@@ -43,6 +46,7 @@ public class XBPropertyTableCellRenderer implements TableCellRenderer {
         this.doc = doc;
     }
 
+    @Nonnull
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         XBPropertyTableItem tableItem = ((XBPropertyTableModel) table.getModel()).getRow(row);

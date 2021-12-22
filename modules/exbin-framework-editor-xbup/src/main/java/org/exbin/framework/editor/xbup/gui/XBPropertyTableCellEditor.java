@@ -18,6 +18,7 @@ package org.exbin.framework.editor.xbup.gui;
 import java.awt.Component;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -37,6 +38,7 @@ import org.exbin.xbup.plugin.XBRowEditor;
  * @version 0.2.1 2020/09/20
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBPropertyTableCellEditor extends DefaultCellEditor {
 
     private XBApplication application;

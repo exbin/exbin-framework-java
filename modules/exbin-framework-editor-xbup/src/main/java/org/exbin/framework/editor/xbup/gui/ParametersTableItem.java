@@ -15,6 +15,9 @@
  */
 package org.exbin.framework.editor.xbup.gui;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.core.block.definition.XBParamType;
 import org.exbin.xbup.core.catalog.base.XBCSpecDef;
 import org.exbin.xbup.plugin.XBRowEditor;
@@ -25,24 +28,26 @@ import org.exbin.xbup.plugin.XBRowEditor;
  * @version 0.1.24 2015/01/10
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ParametersTableItem {
 
     private XBCSpecDef specDef;
     private String valueName;
     private String typeName;
-    private XBRowEditor lineEditor;
+    private XBRowEditor rowEditor;
 
-    public ParametersTableItem(XBCSpecDef specDef, String valueName, String typeName, XBRowEditor lineEditor) {
+    public ParametersTableItem(XBCSpecDef specDef, String valueName, String typeName, @Nullable XBRowEditor rowEditor) {
         this.specDef = specDef;
         this.valueName = valueName;
         this.typeName = typeName;
-        this.lineEditor = lineEditor;
+        this.rowEditor = rowEditor;
     }
 
     public ParametersTableItem(XBCSpecDef specDef, String name, String type) {
         this(specDef, name, type, null);
     }
 
+    @Nonnull
     public XBCSpecDef getSpecDef() {
         return specDef;
     }
@@ -51,6 +56,7 @@ public class ParametersTableItem {
         this.specDef = spec;
     }
 
+    @Nonnull
     public String getValueName() {
         return valueName;
     }
@@ -59,6 +65,7 @@ public class ParametersTableItem {
         this.valueName = valueName;
     }
 
+    @Nonnull
     public String getTypeName() {
         return typeName;
     }
@@ -67,14 +74,16 @@ public class ParametersTableItem {
         this.typeName = typeName;
     }
 
-    public XBRowEditor getLineEditor() {
-        return lineEditor;
+    @Nullable
+    public XBRowEditor getRowEditor() {
+        return rowEditor;
     }
 
-    public void setLineEditor(XBRowEditor lineEditor) {
-        this.lineEditor = lineEditor;
+    public void setRowEditor(@Nullable XBRowEditor rowEditor) {
+        this.rowEditor = rowEditor;
     }
 
+    @Nonnull
     public String getDefTypeName() {
         String defTypeName = "";
         if (!specDef.getTargetRev().isPresent()) {

@@ -18,6 +18,8 @@ package org.exbin.framework.editor.xbup.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.xbup.core.parser.token.XBAttribute;
@@ -28,6 +30,7 @@ import org.exbin.xbup.core.parser.token.XBAttribute;
  * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class AttributesTableModel extends AbstractTableModel {
 
     private final ResourceBundle resourceBundle;
@@ -42,7 +45,10 @@ public class AttributesTableModel extends AbstractTableModel {
 
     public AttributesTableModel() {
         resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockPanel.class);
-        columnNames = new String[]{resourceBundle.getString("attributesTableModel.itemOrder"), resourceBundle.getString("attributesTableModel.itemValue")};
+        columnNames = new String[]{
+            resourceBundle.getString("attributesTableModel.itemOrder"),
+            resourceBundle.getString("attributesTableModel.itemValue")
+        };
         attributes = new ArrayList<>();
     }
 
@@ -92,6 +98,7 @@ public class AttributesTableModel extends AbstractTableModel {
         }
     }
 
+    @Nonnull
     public List<XBAttribute> getAttribs() {
         return attributes;
     }
@@ -101,6 +108,7 @@ public class AttributesTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    @Nonnull
     public Class[] getTypes() {
         return columnTypes;
     }

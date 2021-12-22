@@ -22,6 +22,8 @@ import java.util.Optional;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -64,6 +66,7 @@ import org.exbin.xbup.core.block.XBTBlock;
  * @version 0.2.1 2020/09/22
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBPropertyTablePanel extends javax.swing.JPanel {
 
     private XBApplication application;
@@ -419,6 +422,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         }
     }
 
+    @Nullable
     private XBRowEditor getCustomEditor(XBCBlockRev rev) {
         if (rev == null || catalog == null) {
             return null;
@@ -522,6 +526,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         valueCellEditor.setPluginRepository(pluginRepository);
     }
 
+    @ParametersAreNonnullByDefault
     private class RowEditorChangeListener implements XBRowEditor.ChangeListener {
 
         private final XBATreeParamExtractor paramExtractor;

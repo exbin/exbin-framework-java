@@ -17,10 +17,10 @@ package org.exbin.framework.editor.xbup;
 
 import java.io.File;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.filechooser.FileFilter;
 import static org.exbin.framework.editor.xbup.EditorXbupModule.XB_FILE_TYPE;
-import static org.exbin.framework.editor.xbup.EditorXbupModule.getExtension;
 import org.exbin.framework.gui.file.api.FileType;
 
 /**
@@ -57,5 +57,23 @@ public class XBFileFilter extends FileFilter implements FileType {
     @Override
     public String getFileTypeId() {
         return XB_FILE_TYPE;
+    }
+
+    /**
+     * Gets the extension part of file name.
+     *
+     * @param file Source file
+     * @return extension part of file name
+     */
+    @Nullable
+    public static String getExtension(File file) {
+        String ext = null;
+        String str = file.getName();
+        int i = str.lastIndexOf('.');
+
+        if (i > 0 && i < str.length() - 1) {
+            ext = str.substring(i + 1).toLowerCase();
+        }
+        return ext;
     }
 }

@@ -18,6 +18,9 @@ package org.exbin.framework.editor.xbup.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -27,6 +30,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.1.24 2015/01/10
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ParametersTableModel extends AbstractTableModel {
 
     private final ResourceBundle resourceBundle;
@@ -40,7 +44,12 @@ public class ParametersTableModel extends AbstractTableModel {
 
     public ParametersTableModel() {
         resourceBundle = LanguageUtils.getResourceBundleByClass(ModifyBlockPanel.class);
-        columnNames = new String[]{resourceBundle.getString("parametersTableModel.itemOrder"), resourceBundle.getString("parametersTableModel.itemName"), resourceBundle.getString("parametersTableModel.itemType"), resourceBundle.getString("parametersTableModel.itemValue")};
+        columnNames = new String[]{
+            resourceBundle.getString("parametersTableModel.itemOrder"),
+            resourceBundle.getString("parametersTableModel.itemName"), 
+            resourceBundle.getString("parametersTableModel.itemType"), 
+            resourceBundle.getString("parametersTableModel.itemValue")
+        };
         parameters = new ArrayList<>();
     }
 
@@ -100,6 +109,7 @@ public class ParametersTableModel extends AbstractTableModel {
         }
     }
 
+    @Nonnull
     public List<ParametersTableItem> getParameters() {
         return parameters;
     }
@@ -108,6 +118,7 @@ public class ParametersTableModel extends AbstractTableModel {
         this.parameters = attributes;
     }
 
+    @Nonnull
     public Class[] getTypes() {
         return columnTypes;
     }
@@ -116,6 +127,7 @@ public class ParametersTableModel extends AbstractTableModel {
         this.columnTypes = types;
     }
 
+    @Nullable
     public ParametersTableItem getParameter(int index) {
         if (index >= parameters.size()) {
             return null;

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.xbup;
+package org.exbin.framework.editor.xbup.catalog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.gui.AddCatalogPanel;
-import org.exbin.framework.editor.xbup.gui.CatalogEditorWrapperPanel;
+import org.exbin.framework.editor.xbup.catalog.gui.AddCatalogPanel;
+import org.exbin.framework.editor.xbup.catalog.gui.CatalogEditorWrapperPanel;
 import org.exbin.framework.editor.xbup.gui.CatalogsBrowserPanel;
 import org.exbin.framework.gui.component.action.DefaultEditItemActions;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;

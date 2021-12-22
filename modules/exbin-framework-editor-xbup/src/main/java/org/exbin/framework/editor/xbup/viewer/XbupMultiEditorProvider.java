@@ -352,8 +352,10 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
                 listener.itemSelected(block);
             });
         });
-        fileHandler.setUndoHandler(undoHandler);
+        fileHandler.setApplication(application);
+        fileHandler.setPluginRepository(pluginRepository);
         fileHandler.setCatalog(catalog);
+        fileHandler.setUndoHandler(undoHandler);
 
         return fileHandler;
     }

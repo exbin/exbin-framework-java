@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.xbup.gui;
+package org.exbin.framework.editor.xbup.catalog.gui;
 
 import java.awt.BorderLayout;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.service.catalog.gui.CatalogEditorPanel;
@@ -32,6 +34,7 @@ import org.exbin.xbup.core.catalog.XBACatalog;
  * @version 0.2.1 2019/06/29
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
 
     private XBApplication application;
@@ -89,7 +92,7 @@ public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements Cat
     }
 
     @Override
-    public void setCatalog(XBACatalog catalog) {
+    public void setCatalog(@Nullable XBACatalog catalog) {
         if (this.catalog == null && catalog != null) {
             catalogAvailabilityPanel.setCatalog(catalog);
             catalogEditorPanel.setCatalog(catalog);

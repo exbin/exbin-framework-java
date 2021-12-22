@@ -18,6 +18,9 @@ package org.exbin.framework.editor.xbup.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 
@@ -27,6 +30,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.0 2016/02/01
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBPropertyTableModel extends AbstractTableModel {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(XBPropertyTablePanel.class);
@@ -68,6 +72,7 @@ public class XBPropertyTableModel extends AbstractTableModel {
         return columnsEditable[columnIndex];
     }
 
+    @Nullable
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
@@ -94,6 +99,7 @@ public class XBPropertyTableModel extends AbstractTableModel {
         fireTableRowsInserted(parameters.size() - 1, parameters.size() - 1);
     }
 
+    @Nonnull
     public List<XBPropertyTableItem> getParameters() {
         return parameters;
     }
@@ -102,6 +108,7 @@ public class XBPropertyTableModel extends AbstractTableModel {
         this.parameters = attributes;
     }
 
+    @Nonnull
     public Class[] getTypes() {
         return columnTypes;
     }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.xbup.gui;
+package org.exbin.framework.editor.xbup.catalog.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;

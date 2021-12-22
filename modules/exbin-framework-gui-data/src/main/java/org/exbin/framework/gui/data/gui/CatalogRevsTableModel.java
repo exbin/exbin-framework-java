@@ -17,6 +17,8 @@ package org.exbin.framework.gui.data.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.xbup.core.catalog.XBCatalog;
 import org.exbin.xbup.core.catalog.base.XBCRev;
@@ -31,6 +33,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
  * @version 0.1.24 2014/12/09
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogRevsTableModel extends AbstractTableModel {
 
     private XBCatalog catalog;
@@ -55,6 +58,7 @@ public class CatalogRevsTableModel extends AbstractTableModel {
         return classes.length;
     }
 
+    @Nullable
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
@@ -125,6 +129,7 @@ public class CatalogRevsTableModel extends AbstractTableModel {
         return revs;
     }
 
+    @Nullable
     public Long getRevisionForIndex(Long xbIndex) {
         long limitSum = 0;
 

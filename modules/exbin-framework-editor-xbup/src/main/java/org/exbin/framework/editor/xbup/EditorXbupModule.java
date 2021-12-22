@@ -17,11 +17,9 @@ package org.exbin.framework.editor.xbup;
 
 import org.exbin.framework.editor.xbup.action.SampleFilesActions;
 import org.exbin.framework.editor.xbup.action.ViewModeActions;
-import java.io.File;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.XBFrameworkUtils;
@@ -30,7 +28,7 @@ import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.client.api.ClientConnectionListener;
 import org.exbin.framework.editor.xbup.action.AddItemAction;
-import org.exbin.framework.editor.xbup.action.CatalogBrowserAction;
+import org.exbin.framework.editor.xbup.catalog.action.CatalogBrowserAction;
 import org.exbin.framework.editor.xbup.action.DocumentPropertiesAction;
 import org.exbin.framework.editor.xbup.action.EditItemAction;
 import org.exbin.framework.editor.xbup.action.ExportItemAction;
@@ -184,6 +182,7 @@ public class EditorXbupModule implements XBApplicationModule {
         }
     }
 
+    @Nonnull
     private ViewModeActions getViewModeHandler() {
         if (viewModeHandler == null) {
             ensureSetup();
@@ -194,6 +193,7 @@ public class EditorXbupModule implements XBApplicationModule {
         return viewModeHandler;
     }
 
+    @Nonnull
     private StatusPanelHandler getStatusPanelHandler() {
         if (statusPanelHandler == null) {
             ensureSetup();
@@ -204,6 +204,7 @@ public class EditorXbupModule implements XBApplicationModule {
         return statusPanelHandler;
     }
 
+    @Nonnull
     private SampleFilesActions getSampleFilesHandler() {
         if (sampleFilesHandler == null) {
             ensureSetup();
@@ -214,6 +215,7 @@ public class EditorXbupModule implements XBApplicationModule {
         return sampleFilesHandler;
     }
 
+    @Nonnull
     private CatalogBrowserAction getCatalogBrowserAction() {
         if (catalogBrowserAction == null) {
             ensureSetup();
@@ -266,6 +268,7 @@ public class EditorXbupModule implements XBApplicationModule {
         return exportItemAction;
     }
 
+    @Nonnull
     public AddItemAction getAddItemAction() {
         if (addItemAction == null) {
             addItemAction = new AddItemAction();
@@ -274,6 +277,7 @@ public class EditorXbupModule implements XBApplicationModule {
         return addItemAction;
     }
 
+    @Nonnull
     public EditItemAction getEditItemAction() {
         if (editItemAction == null) {
             editItemAction = new EditItemAction();
@@ -379,23 +383,5 @@ public class EditorXbupModule implements XBApplicationModule {
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         editorProvider.setPluginRepository(pluginRepository);
-    }
-
-    /**
-     * Gets the extension part of file name.
-     *
-     * @param file Source file
-     * @return extension part of file name
-     */
-    @Nullable
-    public static String getExtension(File file) {
-        String ext = null;
-        String str = file.getName();
-        int i = str.lastIndexOf('.');
-
-        if (i > 0 && i < str.length() - 1) {
-            ext = str.substring(i + 1).toLowerCase();
-        }
-        return ext;
     }
 }

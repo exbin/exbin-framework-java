@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.xbup.gui;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -35,6 +36,7 @@ import org.exbin.xbup.parser_tree.XBTTreeNode;
  * @version 0.2.1 2020/09/24
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ContextTypeChoicePanel extends javax.swing.JPanel {
 
     private XBTTreeNode parentNode;

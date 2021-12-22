@@ -17,6 +17,7 @@ package org.exbin.framework.editor.xbup.gui;
 
 import java.net.URI;
 import java.util.ResourceBundle;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBTEditableDocument;
@@ -28,6 +29,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
  * @version 0.2.1 2019/06/21
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DocumentPropertiesPanel extends javax.swing.JPanel {
 
     private XBTEditableDocument doc;

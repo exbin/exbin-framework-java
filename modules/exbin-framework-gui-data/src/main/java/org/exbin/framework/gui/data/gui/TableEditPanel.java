@@ -19,6 +19,7 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTable;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -29,6 +30,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.0 2016/02/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TableEditPanel extends javax.swing.JPanel {
 
     private final TableModelSource tableModel;

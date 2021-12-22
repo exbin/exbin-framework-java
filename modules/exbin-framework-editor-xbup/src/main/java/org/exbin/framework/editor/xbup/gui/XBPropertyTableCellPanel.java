@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
@@ -44,6 +45,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBPropertyTableCellPanel extends ComponentPropertyTableCellPanel {
 
     private XBApplication application;

@@ -61,7 +61,7 @@ public class ParametersTableCellEditor extends DefaultCellEditor {
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         ParametersTableItem tableItem = ((ParametersTableModel) table.getModel()).getRow(row);
-        lineEditor = tableItem.getLineEditor();
+        lineEditor = tableItem.getRowEditor();
         lineEditorComponent = lineEditor == null ? null : lineEditor.getEditor();
         XBPropertyTableCellPanel cellPanel;
         if (lineEditorComponent == null) {
