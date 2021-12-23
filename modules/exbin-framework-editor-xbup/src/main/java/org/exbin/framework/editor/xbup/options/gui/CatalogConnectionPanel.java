@@ -17,6 +17,7 @@ package org.exbin.framework.editor.xbup.options.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.xbup.options.impl.CatalogConnectionOptionsImpl;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.options.api.OptionsCapable;
@@ -29,6 +30,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
  * @version 0.2.1 2019/07/20
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogConnectionPanel extends javax.swing.JPanel implements OptionsCapable<CatalogConnectionOptionsImpl> {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogConnectionPanel.class);

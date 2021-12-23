@@ -43,7 +43,6 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.service.YamlFileType;
-import org.exbin.framework.gui.service.gui.CatalogManagerPanelable;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
@@ -62,6 +61,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCSpecService;
 import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
+import org.exbin.framework.gui.service.gui.CatalogManagementAware;
 
 /**
  * Catalog items search panel.
@@ -69,7 +69,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
  * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogItemsSearchPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
+public class CatalogItemsSearchPanel extends javax.swing.JPanel implements CatalogManagementAware {
 
     private XBApplication application;
     private XBCItem currentItem;

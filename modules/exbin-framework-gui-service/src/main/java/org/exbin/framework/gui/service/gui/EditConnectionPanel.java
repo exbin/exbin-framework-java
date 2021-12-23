@@ -16,6 +16,8 @@
 package org.exbin.framework.gui.service.gui;
 
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 
@@ -25,6 +27,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2019/06/25
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class EditConnectionPanel extends javax.swing.JPanel {
 
     private static final int DEFAULT_PORT = 22594;
@@ -104,6 +107,7 @@ public class EditConnectionPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner connectionPortSpinner;
     // End of variables declaration//GEN-END:variables
 
+    @Nonnull
     public String getConnection() {
         return connectionHostTextField.getText() + ":" + String.valueOf((Integer) connectionPortSpinner.getValue());
     }

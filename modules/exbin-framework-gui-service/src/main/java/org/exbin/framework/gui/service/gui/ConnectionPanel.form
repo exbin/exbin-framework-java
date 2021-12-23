@@ -209,7 +209,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="&lt;loginPanel.border.title&gt;">
+                <TitledBorder title="Login account">
                   <ResourceString PropertyName="titleX" bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="loginPanel.border.title" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </TitledBorder>
               </Border>

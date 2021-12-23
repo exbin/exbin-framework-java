@@ -26,7 +26,7 @@ import org.exbin.xbup.core.catalog.XBACatalog;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface CatalogManagerPanelable {
+public interface CatalogManagementAware {
 
     /**
      * Passes menu management.

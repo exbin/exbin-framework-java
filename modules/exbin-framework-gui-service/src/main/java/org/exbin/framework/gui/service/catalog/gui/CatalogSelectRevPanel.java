@@ -17,6 +17,8 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.awt.Component;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import org.exbin.framework.api.XBApplication;
@@ -34,6 +36,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCRevService;
  * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogSelectRevPanel extends javax.swing.JPanel {
 
     private XBApplication application;
@@ -94,6 +97,7 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
         selectSpecPanel.setApplication(application);
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
@@ -108,7 +112,7 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         revisionSelectionPanel = new javax.swing.JPanel();
-        targetRevisionComboBox = new javax.swing.JComboBox();
+        targetRevisionComboBox = new javax.swing.JComboBox<>();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -145,7 +149,7 @@ public class CatalogSelectRevPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel revisionSelectionPanel;
-    private javax.swing.JComboBox targetRevisionComboBox;
+    private javax.swing.JComboBox<XBCRev> targetRevisionComboBox;
     // End of variables declaration//GEN-END:variables
 
     public boolean isSelectEnabled() {

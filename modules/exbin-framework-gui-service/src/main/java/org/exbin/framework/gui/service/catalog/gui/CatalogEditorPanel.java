@@ -47,7 +47,6 @@ import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.service.XBFileType;
 import org.exbin.framework.gui.service.YamlFileType;
 import org.exbin.framework.gui.service.catalog.gui.CatalogNodesTreeModel.CatalogNodesTreeItem;
-import org.exbin.framework.gui.service.gui.CatalogManagerPanelable;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
@@ -90,6 +89,7 @@ import org.exbin.xbup.core.parser.token.event.convert.XBTListenerToEventListener
 import org.exbin.xbup.core.parser.token.event.convert.XBTToXBEventConvertor;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.serial.XBSerializable;
+import org.exbin.framework.gui.service.gui.CatalogManagementAware;
 
 /**
  * Catalog editor panel.
@@ -97,7 +97,7 @@ import org.exbin.xbup.core.serial.XBSerializable;
  * @version 0.2.1 2020/09/01
  * @author ExBin Project (http://exbin.org)
  */
-public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
+public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogManagementAware {
 
     private XBApplication application;
     private XBCItem currentItem;

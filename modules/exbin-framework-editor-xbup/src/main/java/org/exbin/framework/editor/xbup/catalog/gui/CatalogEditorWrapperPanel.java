@@ -24,9 +24,9 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.service.catalog.gui.CatalogEditorPanel;
 import org.exbin.framework.gui.service.gui.CatalogAvailabilityPanel;
-import org.exbin.framework.gui.service.gui.CatalogManagerPanelable;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.framework.gui.service.gui.CatalogManagementAware;
 
 /**
  * Panel for showing information about document block.
@@ -35,7 +35,7 @@ import org.exbin.xbup.core.catalog.XBACatalog;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements CatalogManagerPanelable {
+public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements CatalogManagementAware {
 
     private XBApplication application;
     private final CatalogEditorPanel catalogEditorPanel;

@@ -75,7 +75,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         operationLabel = new javax.swing.JLabel();
-        operationComboBox = new javax.swing.JComboBox();
+        operationComboBox = new javax.swing.JComboBox<>();
         definitionTargetLabel = new javax.swing.JLabel();
         definitionTargetTextField = new javax.swing.JTextField();
         selectTargetButton = new javax.swing.JButton();
@@ -88,7 +88,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
 
         operationLabel.setText(resourceBundle.getString("operationLabel.text")); // NOI18N
 
-        operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Consist", "Join" }));
+        operationComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Consist", "Join" }));
         operationComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 operationComboBoxItemStateChanged(evt);
@@ -204,7 +204,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField descriptionTextField;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
-    private javax.swing.JComboBox operationComboBox;
+    private javax.swing.JComboBox<String> operationComboBox;
     private javax.swing.JLabel operationLabel;
     private javax.swing.JButton selectTargetButton;
     private javax.swing.JLabel stringIdLabel;
@@ -218,10 +218,10 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
     public void setSpec(XBCSpec spec) {
         this.spec = spec;
         if (spec instanceof XBCBlockSpec) {
-            operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(CatalogDefOperationType.getAsArray()));
+            operationComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(CatalogDefOperationType.getAsArray()));
             switchSpecDefType(CatalogItemType.BLOCK);
         } else {
-            operationComboBox.setModel(new javax.swing.DefaultComboBoxModel(CatalogDefOperationType.getAsArray(2)));
+            operationComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(CatalogDefOperationType.getAsArray(2)));
             if (spec instanceof XBCGroupSpec) {
                 switchSpecDefType(CatalogItemType.BLOCK);
             } else {

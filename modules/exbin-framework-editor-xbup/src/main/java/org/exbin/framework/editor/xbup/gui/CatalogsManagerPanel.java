@@ -39,18 +39,18 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * Panel for list of catalogs.
  *
- * @version 0.2.2 2020/10/03
+ * @version 0.2.2 2021/12/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CatalogsBrowserPanel extends javax.swing.JPanel {
+public class CatalogsManagerPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogsBrowserPanel.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogsManagerPanel.class);
 
     private final ToolBarSidePanel toolBar = new ToolBarSidePanel();
     private XBACatalog catalog;
 
-    public CatalogsBrowserPanel() {
+    public CatalogsManagerPanel() {
         initComponents();
         init();
     }
@@ -146,7 +146,7 @@ public class CatalogsBrowserPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        CatalogsBrowserPanel catalogsBrowserPanel = new CatalogsBrowserPanel();
+        CatalogsManagerPanel catalogsBrowserPanel = new CatalogsManagerPanel();
         DefaultEditItemActions defaultEditItemActions = new DefaultEditItemActions();
         defaultEditItemActions.setEditItemActionsHandler(new EditItemActionsHandlerEmpty());
         catalogsBrowserPanel.addActions(defaultEditItemActions);

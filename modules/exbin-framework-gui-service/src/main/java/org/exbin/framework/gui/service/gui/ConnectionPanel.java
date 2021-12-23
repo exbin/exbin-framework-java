@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.persistence.Persistence;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -46,6 +47,7 @@ import org.exbin.xbup.client.XBCatalogServiceClient;
  * @version 0.2.1 2020/03/15
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ConnectionPanel extends javax.swing.JPanel {
 
     private XBApplication application;
@@ -452,7 +454,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
             switch (actionType) {
                 case OK: {
                     List<String> connectionList = panel.getConnectionList();
-                    DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) connectionComboBox.getModel();
+                    DefaultComboBoxModel<String> comboBoxModel = (DefaultComboBoxModel<String>) connectionComboBox.getModel();
                     comboBoxModel.removeAllElements();
                     connectionList.forEach((connection) -> {
                         comboBoxModel.addElement(connection);
@@ -592,7 +594,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
             pos++;
         }
 
-        if (connectionList.size() > 0) {
+        if (!connectionList.isEmpty()) {
             setConnectionList(connectionList);
         }
     }

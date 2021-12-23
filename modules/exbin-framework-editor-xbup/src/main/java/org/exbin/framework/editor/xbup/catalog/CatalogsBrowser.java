@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.catalog.gui.AddCatalogPanel;
 import org.exbin.framework.editor.xbup.catalog.gui.CatalogEditorWrapperPanel;
-import org.exbin.framework.editor.xbup.gui.CatalogsBrowserPanel;
+import org.exbin.framework.editor.xbup.gui.CatalogsManagerPanel;
 import org.exbin.framework.gui.component.action.DefaultEditItemActions;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActionsUpdateListener;
@@ -42,13 +42,13 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 @ParametersAreNonnullByDefault
 public class CatalogsBrowser {
 
-    private final CatalogsBrowserPanel browserPanel;
+    private final CatalogsManagerPanel browserPanel;
     private final DefaultEditItemActions actions;
     private XBApplication application;
     private XBACatalog catalog;
 
     public CatalogsBrowser() {
-        browserPanel = new CatalogsBrowserPanel();
+        browserPanel = new CatalogsManagerPanel();
         actions = new DefaultEditItemActions();
         actions.setEditItemActionsHandler(new EditItemActionsHandler() {
             @Override
@@ -119,7 +119,7 @@ public class CatalogsBrowser {
     }
 
     @Nonnull
-    public CatalogsBrowserPanel getBrowserPanel() {
+    public CatalogsManagerPanel getBrowserPanel() {
         return browserPanel;
     }
 

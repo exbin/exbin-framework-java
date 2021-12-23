@@ -28,7 +28,7 @@ import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
 import org.exbin.framework.client.api.ClientConnectionListener;
 import org.exbin.framework.editor.xbup.action.AddItemAction;
-import org.exbin.framework.editor.xbup.catalog.action.CatalogBrowserAction;
+import org.exbin.framework.editor.xbup.catalog.action.CatalogsManagerAction;
 import org.exbin.framework.editor.xbup.action.DocumentPropertiesAction;
 import org.exbin.framework.editor.xbup.action.EditItemAction;
 import org.exbin.framework.editor.xbup.action.ExportItemAction;
@@ -84,7 +84,7 @@ public class EditorXbupModule implements XBApplicationModule {
     private ViewModeActions viewModeHandler;
     private StatusPanelHandler statusPanelHandler;
     private SampleFilesActions sampleFilesHandler;
-    private CatalogBrowserAction catalogBrowserAction;
+    private CatalogsManagerAction catalogBrowserAction;
     private ItemPropertiesAction itemPropertiesAction;
     private DocumentPropertiesAction documentPropertiesAction;
     private ImportItemAction importItemAction;
@@ -216,10 +216,10 @@ public class EditorXbupModule implements XBApplicationModule {
     }
 
     @Nonnull
-    private CatalogBrowserAction getCatalogBrowserAction() {
+    private CatalogsManagerAction getCatalogBrowserAction() {
         if (catalogBrowserAction == null) {
             ensureSetup();
-            catalogBrowserAction = new CatalogBrowserAction();
+            catalogBrowserAction = new CatalogsManagerAction();
             catalogBrowserAction.setup(application);
             catalogBrowserAction.setCatalog(catalog);
         }

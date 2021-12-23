@@ -303,7 +303,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
                 if (panelStringCode != null) {
                     currentPanelCode = panelStringCode;
                     Component panel = panelMap.get(panelStringCode);
-                    if (panel instanceof CatalogManagerPanelable && catalog == null) {
+                    if (panel instanceof CatalogManagementAware && catalog == null) {
                         panel = panelMap.get("catalog_availability");
 
                     }

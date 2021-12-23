@@ -23,7 +23,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.catalog.CatalogsBrowser;
-import org.exbin.framework.editor.xbup.gui.CatalogsBrowserPanel;
+import org.exbin.framework.editor.xbup.gui.AddBlockPanel;
+import org.exbin.framework.editor.xbup.gui.CatalogsManagerPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -33,22 +34,22 @@ import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
- * Catalog browser action.
+ * Catalogs manager action.
  *
- * @version 0.2.1 2020/07/19
+ * @version 0.2.2 2020/12/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CatalogBrowserAction extends AbstractAction {
+public class CatalogsManagerAction extends AbstractAction {
 
-    public static final String ACTION_ID = "catalogBrowserAction";
+    public static final String ACTION_ID = "catalogsManagerAction";
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogBrowserAction.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogsManagerAction.class);
 
     private XBApplication application;
     private XBACatalog catalog;
 
-    public CatalogBrowserAction() {
+    public CatalogsManagerAction() {
     }
 
     public void setup(XBApplication application) {
@@ -68,10 +69,11 @@ public class CatalogBrowserAction extends AbstractAction {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         catalogsBrowser.setApplication(application);
         catalogsBrowser.setCatalog(catalog);
-        CatalogsBrowserPanel panel = catalogsBrowser.getBrowserPanel();
+        CatalogsManagerPanel panel = catalogsBrowser.getBrowserPanel();
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
         final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, panel.getResourceBundle());
         controlPanel.setHandler(() -> {
             dialog.close();
             dialog.dispose();
