@@ -18,6 +18,7 @@ package org.exbin.framework.gui.service.catalog.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.Nullable;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.XBCatalog;
@@ -93,7 +94,7 @@ public class CatalogSpecsTableModel extends AbstractTableModel {
         return node;
     }
 
-    public void setNode(XBCNode node) {
+    public void setNode(@Nullable XBCNode node) {
         this.node = node;
         XBCSpecService specService = catalog.getCatalogService(XBCSpecService.class);
 

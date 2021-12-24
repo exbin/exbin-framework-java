@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -31,6 +32,10 @@ import javax.swing.tree.TreeSelectionModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.service.XBDbServiceClient;
+import org.exbin.framework.gui.service.catalog.action.AddItemAction;
+import org.exbin.framework.gui.service.catalog.action.EditItemAction;
+import org.exbin.framework.gui.service.catalog.action.ExportItemAction;
+import org.exbin.framework.gui.service.catalog.action.ImportItemAction;
 import org.exbin.framework.gui.service.catalog.gui.CatalogBrowserPanel;
 import org.exbin.framework.gui.service.catalog.gui.CatalogEditorPanel;
 import org.exbin.framework.gui.service.catalog.gui.CatalogSearchPanel;
@@ -58,6 +63,8 @@ import org.exbin.xbup.client.catalog.remote.service.XBRXNameService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXPlugService;
 import org.exbin.xbup.client.catalog.remote.service.XBRXStriService;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCItem;
+import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
 import org.exbin.xbup.core.catalog.base.service.XBCXHDocService;
@@ -74,6 +81,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
  * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ServiceManagerPanel extends javax.swing.JPanel {
 
     private XBApplication application;
@@ -91,6 +99,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
 
     private final Map<String, Component> panelMap = new HashMap<>();
     private XBACatalog catalog = null;
+    private MenuManagement menuManagement;
 
     public ServiceManagerPanel() {
         initComponents();
@@ -109,6 +118,56 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
         catalogAvailabilityPanel = new CatalogAvailabilityPanel();
         catalogBrowserPanel = new CatalogBrowserPanel();
         catalogEditorPanel = new CatalogEditorPanel();
+        catalogEditorPanel.setControl(new CatalogEditorPanel.Control() {
+            @Override
+            public void exportItem(Component parentComponent, XBCItem currentItem) {
+                ExportItemAction exportItemAction = new ExportItemAction();
+                exportItemAction.setCatalog(catalog);
+                exportItemAction.setParentComponent(parentComponent);
+                exportItemAction.setCurrentItem(currentItem);
+                exportItemAction.actionPerformed(null);
+            }
+
+            @Override
+            public void importItem(Component parentComponent, XBCItem currentItem) {
+                ImportItemAction importItemAction = new ImportItemAction();
+                importItemAction.setCatalog(catalog);
+                importItemAction.setParentComponent(parentComponent);
+                importItemAction.setCurrentItem(currentItem);
+                importItemAction.actionPerformed(null);
+            }
+
+            @Override
+            public void addItem(Component parentComponent, XBCItem currentItem) {
+                AddItemAction addItemAction = new AddItemAction();
+                addItemAction.setCatalog(catalog);
+                addItemAction.setParentComponent(parentComponent);
+                addItemAction.setCurrentItem(currentItem);
+                addItemAction.actionPerformed(null);
+                XBCItem resultItem = addItemAction.getResultItem();
+                if (resultItem != null) {
+                    catalogEditorPanel.reloadNodesTree();
+                    catalogEditorPanel.setNode(resultItem instanceof XBCNode ? (XBCNode) resultItem : catalogEditorPanel.getSpecsNode());
+                    catalogEditorPanel.selectSpecTableRow(resultItem);
+                }
+            }
+
+            @Override
+            public void editItem(Component parentComponent, XBCItem currentItem) {
+                EditItemAction editItemAction = new EditItemAction();
+                editItemAction.setCatalog(catalog);
+                editItemAction.setMenuManagement(menuManagement);
+                editItemAction.setParentComponent(parentComponent);
+                editItemAction.setCurrentItem(currentItem);
+                editItemAction.actionPerformed(null);
+                XBCItem resultItem = editItemAction.getResultItem();
+                if (resultItem != null) {
+                    catalogEditorPanel.setItem(currentItem);
+                    catalogEditorPanel.setSpecsNode(catalogEditorPanel.getSpecsNode());
+                    catalogEditorPanel.selectSpecTableRow(currentItem);
+                }
+            }
+        });
         catalogSearchPanel = new CatalogSearchPanel();
 
         panelMap.put("catalog", catalogStatusPanel);
@@ -226,6 +285,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
 //        // return false;
 //    }
     public void setMenuManagement(MenuManagement menuManagement) {
+        this.menuManagement = menuManagement;
         catalogBrowserPanel.setMenuManagement(menuManagement);
         catalogEditorPanel.setMenuManagement(menuManagement);
         catalogSearchPanel.setMenuManagement(menuManagement);
