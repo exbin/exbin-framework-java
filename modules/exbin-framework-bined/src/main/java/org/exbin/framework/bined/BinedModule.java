@@ -246,6 +246,10 @@ public class BinedModule implements XBApplicationModule {
                 throw XBFrameworkUtils.getInvalidTypeException(variant);
         }
     }
+    
+    public void setEditorProvider(EditorProvider editorProvider) {
+        this.editorProvider = editorProvider;
+    }
 
     @Override
     public void unregisterModule(String moduleId) {

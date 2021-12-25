@@ -236,6 +236,7 @@ public class TextDocumentTab implements DocumentTab {
         return (Integer.toHexString(hi) + Integer.toHexString(low)).toUpperCase();
     }
 
+    @Nonnull
     private String getCaption(XBTTreeNode node) {
         if (node.getDataMode() == XBBlockDataMode.DATA_BLOCK) {
             return "Data Block";

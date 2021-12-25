@@ -140,6 +140,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
             @Override
             public void addItem(Component parentComponent, XBCItem currentItem) {
                 AddItemAction addItemAction = new AddItemAction();
+                addItemAction.setApplication(application);
                 addItemAction.setCatalog(catalog);
                 addItemAction.setParentComponent(parentComponent);
                 addItemAction.setCurrentItem(currentItem);
@@ -155,6 +156,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
             @Override
             public void editItem(Component parentComponent, XBCItem currentItem) {
                 EditItemAction editItemAction = new EditItemAction();
+                editItemAction.setApplication(application);
                 editItemAction.setCatalog(catalog);
                 editItemAction.setMenuManagement(menuManagement);
                 editItemAction.setParentComponent(parentComponent);

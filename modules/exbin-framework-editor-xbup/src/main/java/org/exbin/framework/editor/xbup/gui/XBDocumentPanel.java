@@ -81,7 +81,7 @@ public class XBDocumentPanel extends javax.swing.JPanel {
         treePanel.setApplication(application);
 
         EditorXbupModule xbupModule = application.getModuleRepository().getModuleByInterface(EditorXbupModule.class);
-        setPopupMenu(xbupModule.createItemPopupMenu());
+        setPopupMenu(xbupModule.getItemPopupMenu());
     }
 
     public void setCatalog(XBACatalog catalog) {
@@ -97,7 +97,8 @@ public class XBDocumentPanel extends javax.swing.JPanel {
     }
 
     public void addTabComponent(ViewerTab viewerTab, DocumentTab tab) {
-        mainTabbedPane.add(viewerTab.getTabName(), tab.getComponent());
+        String tabTitle = resourceBundle.getString("documentTab" + viewerTab.ordinal() + ".title");
+        mainTabbedPane.add(tabTitle, tab.getComponent());
     }
 
 //    /**

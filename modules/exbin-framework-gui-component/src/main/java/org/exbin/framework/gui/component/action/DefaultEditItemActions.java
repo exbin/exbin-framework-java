@@ -31,7 +31,7 @@ import org.exbin.framework.gui.utils.LanguageUtils;
 /**
  * Item edit default action set.
  *
- * @version 0.2.0 2016/03/22
+ * @version 0.2.2 2021/12/24
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -123,5 +123,6 @@ public class DefaultEditItemActions implements EditItemActions {
         sideToolBar.addAction(getEditItemAction());
         sideToolBar.addAction(getDeleteItemAction());
         updateEditItemActions();
+        actionsHandler.setUpdateListener(this::updateEditItemActions);
     }
 }

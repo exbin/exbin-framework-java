@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.service.catalog.gui;
 
 import java.awt.event.ActionEvent;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -33,6 +34,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXIconService;
  * @version 0.2.1 2019/06/28
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogBIconPropertyTableCellPanel extends CatalogPropertyTableCellPanel {
 
     private XBApplication application;

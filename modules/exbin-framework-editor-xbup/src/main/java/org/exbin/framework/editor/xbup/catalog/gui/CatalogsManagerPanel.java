@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.xbup.gui;
+package org.exbin.framework.editor.xbup.catalog.gui;
 
 import java.awt.BorderLayout;
 import java.util.Date;
@@ -23,6 +23,8 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.component.action.DefaultEditItemActions;
@@ -39,7 +41,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * Panel for list of catalogs.
  *
- * @version 0.2.2 2021/12/23
+ * @version 0.2.2 2021/12/24
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -49,6 +51,7 @@ public class CatalogsManagerPanel extends javax.swing.JPanel {
 
     private final ToolBarSidePanel toolBar = new ToolBarSidePanel();
     private XBACatalog catalog;
+    private List<XBCRoot> catalogRoots;
 
     public CatalogsManagerPanel() {
         initComponents();
@@ -75,26 +78,46 @@ public class CatalogsManagerPanel extends javax.swing.JPanel {
     public void setCatalog(@Nullable XBACatalog catalog) {
         this.catalog = catalog;
         if (catalog != null) {
-            XBCRootService rootService = catalog.getCatalogService(XBCRootService.class);
-            XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
-            List<XBCRoot> catalogRoots = rootService.getAllItems();
-            for (XBCRoot catalogRoot : catalogRoots) {
-                Optional<Date> lastUpdate = catalogRoot.getLastUpdate();
-                String lastUpdateText = lastUpdate.isPresent() ? lastUpdate.get().toString() : "";
-                Object[] row;
-                if (catalogRoot.getUrl().isPresent()) {
-                    String nodeName = nameService.getDefaultText(catalogRoot.getNode());
-                    row = new Object[]{"Catalog " + nodeName, catalogRoot.getUrl().orElse(""), lastUpdateText};
-                } else {
-                    row = new Object[]{"Main", "(build-in)", lastUpdateText};
-                }
-                ((DefaultTableModel) catalogsTable.getModel()).addRow(row);
-            }
+            reload();
         }
     }
 
-    public XBACatalog getSelectedItem() {
-        return catalog;
+    public void reload() {
+        DefaultTableModel tableModel = ((DefaultTableModel) catalogsTable.getModel());
+        for (int i = tableModel.getRowCount() - 1; i >= 0; i--) {
+            tableModel.removeRow(i);
+        }
+
+        XBCRootService rootService = catalog.getCatalogService(XBCRootService.class);
+        XBCXNameService nameService = catalog.getCatalogService(XBCXNameService.class);
+
+        catalogRoots = rootService.getAllItems();
+        for (XBCRoot catalogRoot : catalogRoots) {
+            Optional<Date> lastUpdate = catalogRoot.getLastUpdate();
+            String lastUpdateText = lastUpdate.isPresent() ? lastUpdate.get().toString() : "";
+            Object[] row;
+            if (catalogRoot.getUrl().isPresent()) {
+                String nodeName = nameService.getDefaultText(catalogRoot.getNode());
+                row = new Object[]{"Catalog " + nodeName, catalogRoot.getUrl().orElse(""), lastUpdateText};
+            } else {
+                row = new Object[]{"Main", "(build-in)", lastUpdateText};
+            }
+            tableModel.addRow(row);
+        }
+    }
+
+    public void addRowSelectionListener(ListSelectionListener listener) {
+        catalogsTable.getSelectionModel().addListSelectionListener(listener);
+    }
+
+    @Nullable
+    public XBCRoot getSelectedItem() {
+        int selectedRow = catalogsTable.getSelectedRow();
+        return selectedRow < 0 ? null : catalogRoots.get(selectedRow);
+    }
+
+    public boolean hasSelection() {
+        return catalogsTable.getSelectedRow() >= 0;
     }
 
     /**

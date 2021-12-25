@@ -22,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.editor.xbup.gui.XBDocTreePanel;
 import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
-import org.exbin.framework.editor.xbup.viewer.XbupSingleEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.operation.XBTDocCommand;

@@ -17,6 +17,8 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Enumeration of specification definition's operation types.
@@ -24,6 +26,7 @@ import java.util.Map;
  * @version 0.2.0 2016/02/01
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public enum CatalogDefOperationType {
 
     CONSIST(0, "Consist"),
@@ -54,10 +57,12 @@ public enum CatalogDefOperationType {
         return map.get(rowIndex);
     }
 
+    @Nonnull
     public static String[] getAsArray() {
         return getAsArray(map.size());
     }
 
+    @Nonnull
     public static String[] getAsArray(int rowsCount) {
         String[] rows = new String[rowsCount];
         for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
@@ -70,6 +75,7 @@ public enum CatalogDefOperationType {
         return rowIndex;
     }
 
+    @Nonnull
     public String getCaption() {
         return caption;
     }

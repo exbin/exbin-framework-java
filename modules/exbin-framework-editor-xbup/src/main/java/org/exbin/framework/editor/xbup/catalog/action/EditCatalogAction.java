@@ -22,34 +22,36 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.catalog.CatalogsManager;
-import org.exbin.framework.editor.xbup.gui.AddBlockPanel;
-import org.exbin.framework.editor.xbup.catalog.gui.CatalogsManagerPanel;
+import org.exbin.framework.editor.xbup.catalog.gui.CatalogEditorWrapperPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCRoot;
 
 /**
- * Catalogs manager action.
+ * Edit catalog root action.
  *
- * @version 0.2.2 2020/12/23
+ * @version 0.2.2 2021/12/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CatalogsManagerAction extends AbstractAction {
+public class EditCatalogAction extends AbstractAction {
 
-    public static final String ACTION_ID = "catalogsManagerAction";
+    public static final String ACTION_ID = "editCatalogAction";
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogsManagerAction.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(EditCatalogAction.class);
 
     private XBApplication application;
     private XBACatalog catalog;
 
-    public CatalogsManagerAction() {
+    private Component parentComponent;
+    private XBCRoot activeItem;
+
+    public EditCatalogAction() {
     }
 
     public void setup(XBApplication application) {
@@ -63,22 +65,31 @@ public class CatalogsManagerAction extends AbstractAction {
         this.catalog = catalog;
     }
 
+    public void setParentComponent(Component parentComponent) {
+        this.parentComponent = parentComponent;
+    }
+
+    public void setActiveItem(XBCRoot activeItem) {
+        this.activeItem = activeItem;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        CatalogsManager catalogsBrowser = new CatalogsManager();
+        // TODO catalogsManagerPanel.getSelectedItem();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        catalogsBrowser.setApplication(application);
-        catalogsBrowser.setCatalog(catalog);
-        CatalogsManagerPanel panel = catalogsBrowser.getCatalogsManagerPanel();
+        ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
+        CatalogEditorWrapperPanel panel = new CatalogEditorWrapperPanel();
+        panel.setApplication(application);
+        panel.setMenuManagement(managerModule.getDefaultMenuManagement());
+        panel.setCatalog(catalog);
         CloseControlPanel controlPanel = new CloseControlPanel();
         JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, panel.getResourceBundle());
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
         controlPanel.setHandler(() -> {
             dialog.close();
             dialog.dispose();
         });
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
-        dialog.showCentered((Component) e.getSource());
+        dialog.showCentered(parentComponent);
     }
 }

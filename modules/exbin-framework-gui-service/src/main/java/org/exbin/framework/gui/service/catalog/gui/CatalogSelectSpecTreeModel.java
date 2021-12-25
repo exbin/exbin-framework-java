@@ -48,6 +48,7 @@ public class CatalogSelectSpecTreeModel implements TreeModel {
         specService = catalog == null ? null : catalog.getCatalogService(XBCSpecService.class);
     }
 
+    @Nullable
     @Override
     public Object getRoot() {
         return nodeService == null ? null : nodeService.getMainRootNode().get();

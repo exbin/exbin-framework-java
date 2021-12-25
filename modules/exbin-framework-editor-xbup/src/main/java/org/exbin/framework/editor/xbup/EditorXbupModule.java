@@ -91,6 +91,7 @@ public class EditorXbupModule implements XBApplicationModule {
     private ExportItemAction exportItemAction;
     private AddItemAction addItemAction;
     private EditItemAction editItemAction;
+    private JPopupMenu itemPopupMenu;
 
     private boolean devMode;
 
@@ -348,23 +349,27 @@ public class EditorXbupModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public JPopupMenu createItemPopupMenu() {
-        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenu(XBUP_POPUP_MENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getAddItemAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getEditItemAction(), new MenuPosition(PositionMode.TOP));
+    public JPopupMenu getItemPopupMenu() {
+        if (itemPopupMenu == null) {
+            GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+            actionModule.registerMenu(XBUP_POPUP_MENU_ID, MODULE_ID);
+            actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getAddItemAction(), new MenuPosition(PositionMode.TOP));
+            actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getEditItemAction(), new MenuPosition(PositionMode.TOP));
 
-        actionModule.registerClipboardMenuItems(XBUP_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
+            actionModule.registerClipboardMenuItems(XBUP_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
 
-        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getImportItemAction(), new MenuPosition(PositionMode.BOTTOM));
-        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getExportItemAction(), new MenuPosition(PositionMode.BOTTOM));
+            actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getImportItemAction(), new MenuPosition(PositionMode.BOTTOM));
+            actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getExportItemAction(), new MenuPosition(PositionMode.BOTTOM));
 
-        actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getItemPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
-        JPopupMenu popupMenu = new JPopupMenu();
-        actionModule.buildMenu(popupMenu, XBUP_POPUP_MENU_ID);
-        return popupMenu;
+            actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getItemPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+            itemPopupMenu = new JPopupMenu();
+            actionModule.buildMenu(itemPopupMenu, XBUP_POPUP_MENU_ID);
+        }
+
+        return itemPopupMenu;
     }
 
+    @Nonnull
     public ClientConnectionListener getClientConnectionListener() {
         return getStatusPanelHandler().getClientConnectionListener();
     }

@@ -16,6 +16,7 @@
 package org.exbin.framework.gui.service.catalog.gui;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -32,6 +33,7 @@ import org.exbin.xbup.core.catalog.base.XBCXPlugUi;
  * @version 0.2.1 2020/08/17
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogSelectUiPanelViewerPanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;

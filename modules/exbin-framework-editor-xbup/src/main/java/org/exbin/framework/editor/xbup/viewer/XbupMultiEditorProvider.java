@@ -225,6 +225,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
         // activeFile.getComponent().setPropertyChangeListener(propertyChangeListener);
     }
 
+    @Nonnull
     @Override
     public String getWindowTitle(String frameTitle) {
         XbupFileHandler activeFile = (XbupFileHandler) multiEditorPanel.getActiveFile();

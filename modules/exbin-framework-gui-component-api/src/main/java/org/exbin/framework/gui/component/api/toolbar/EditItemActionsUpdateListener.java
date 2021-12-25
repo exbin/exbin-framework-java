@@ -16,7 +16,7 @@
 package org.exbin.framework.gui.component.api.toolbar;
 
 /**
- * Move actions update listener.
+ * Edit actions update listener.
  *
  * @version 0.2.0 2016/02/20
  * @author ExBin Project (http://exbin.org)
@@ -24,7 +24,7 @@ package org.exbin.framework.gui.component.api.toolbar;
 public interface EditItemActionsUpdateListener {
 
     /**
-     * Notify about change in movement state.
+     * Notify about change in edit item state.
      */
     void stateChanged();
 }

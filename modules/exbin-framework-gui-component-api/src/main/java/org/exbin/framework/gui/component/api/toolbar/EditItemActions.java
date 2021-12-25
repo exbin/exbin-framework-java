@@ -21,7 +21,7 @@ import javax.swing.Action;
 import org.exbin.framework.gui.component.api.ActionsProvider;
 
 /**
- * Interface for item movement action set.
+ * Interface for item edit action set.
  *
  * @version 0.2.1 2019/07/16
  * @author ExBin Project (http://exbin.org)

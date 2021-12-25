@@ -16,17 +16,24 @@
 package org.exbin.framework.editor.xbup.catalog.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.action.api.MenuManagement;
+import org.exbin.framework.gui.service.catalog.action.AddItemAction;
+import org.exbin.framework.gui.service.catalog.action.EditItemAction;
+import org.exbin.framework.gui.service.catalog.action.ExportItemAction;
+import org.exbin.framework.gui.service.catalog.action.ImportItemAction;
 import org.exbin.framework.gui.service.catalog.gui.CatalogEditorPanel;
 import org.exbin.framework.gui.service.gui.CatalogAvailabilityPanel;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.framework.gui.service.gui.CatalogManagementAware;
+import org.exbin.xbup.core.catalog.base.XBCItem;
+import org.exbin.xbup.core.catalog.base.XBCNode;
 
 /**
  * Panel for showing information about document block.
@@ -41,10 +48,63 @@ public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements Cat
     private final CatalogEditorPanel catalogEditorPanel;
     private final CatalogAvailabilityPanel catalogAvailabilityPanel;
     private XBACatalog catalog = null;
+    private MenuManagement menuManagement;
 
     public CatalogEditorWrapperPanel() {
         initComponents();
         catalogEditorPanel = new CatalogEditorPanel();
+        catalogEditorPanel.setControl(new CatalogEditorPanel.Control() {
+            @Override
+            public void exportItem(Component parentComponent, XBCItem currentItem) {
+                ExportItemAction exportItemAction = new ExportItemAction();
+                exportItemAction.setCatalog(catalog);
+                exportItemAction.setParentComponent(parentComponent);
+                exportItemAction.setCurrentItem(currentItem);
+                exportItemAction.actionPerformed(null);
+            }
+
+            @Override
+            public void importItem(Component parentComponent, XBCItem currentItem) {
+                ImportItemAction importItemAction = new ImportItemAction();
+                importItemAction.setCatalog(catalog);
+                importItemAction.setParentComponent(parentComponent);
+                importItemAction.setCurrentItem(currentItem);
+                importItemAction.actionPerformed(null);
+            }
+
+            @Override
+            public void addItem(Component parentComponent, XBCItem currentItem) {
+                AddItemAction addItemAction = new AddItemAction();
+                addItemAction.setApplication(application);
+                addItemAction.setCatalog(catalog);
+                addItemAction.setParentComponent(parentComponent);
+                addItemAction.setCurrentItem(currentItem);
+                addItemAction.actionPerformed(null);
+                XBCItem resultItem = addItemAction.getResultItem();
+                if (resultItem != null) {
+                    catalogEditorPanel.reloadNodesTree();
+                    catalogEditorPanel.setNode(resultItem instanceof XBCNode ? (XBCNode) resultItem : catalogEditorPanel.getSpecsNode());
+                    catalogEditorPanel.selectSpecTableRow(resultItem);
+                }
+            }
+
+            @Override
+            public void editItem(Component parentComponent, XBCItem currentItem) {
+                EditItemAction editItemAction = new EditItemAction();
+                editItemAction.setApplication(application);
+                editItemAction.setCatalog(catalog);
+                editItemAction.setMenuManagement(menuManagement);
+                editItemAction.setParentComponent(parentComponent);
+                editItemAction.setCurrentItem(currentItem);
+                editItemAction.actionPerformed(null);
+                XBCItem resultItem = editItemAction.getResultItem();
+                if (resultItem != null) {
+                    catalogEditorPanel.setItem(currentItem);
+                    catalogEditorPanel.setSpecsNode(catalogEditorPanel.getSpecsNode());
+                    catalogEditorPanel.selectSpecTableRow(currentItem);
+                }
+            }
+        });
         catalogAvailabilityPanel = new CatalogAvailabilityPanel();
         init();
     }
@@ -88,6 +148,7 @@ public class CatalogEditorWrapperPanel extends javax.swing.JPanel implements Cat
     // End of variables declaration//GEN-END:variables
     @Override
     public void setMenuManagement(MenuManagement menuManagement) {
+        this.menuManagement = menuManagement;
         catalogEditorPanel.setMenuManagement(menuManagement);
     }
 

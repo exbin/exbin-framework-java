@@ -18,6 +18,7 @@ package org.exbin.framework.gui.service.catalog.gui;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
@@ -37,6 +38,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXFileService;
  * @version 0.2.0 2020/07/23
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogSelectFilePanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
@@ -175,6 +177,14 @@ public class CatalogSelectFilePanel extends javax.swing.JPanel {
         dialog.dispose();
     }//GEN-LAST:event_nodeSelectButtonActionPerformed
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new CatalogSelectFilePanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filesLabel;

@@ -15,30 +15,18 @@
  */
 package org.exbin.framework.editor.xbup.viewer;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Supported view tabs.
  *
- * @version 0.2.1 2021/11/14
+ * @version 0.2.1 2021/12/24
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public enum ViewerTab {
-    VIEW("Viewer"),
-    PROPERTIES("Properties"),
-    TEXT("Text"),
-    BINARY("Binary");
-
-    private final String tabName;
-
-    private ViewerTab(String tabName) {
-        this.tabName = tabName;
-    }
-
-    @Nonnull
-    public String getTabName() {
-        return tabName;
-    }
+    VIEW,
+    PROPERTIES,
+    TEXT,
+    BINARY;
 }

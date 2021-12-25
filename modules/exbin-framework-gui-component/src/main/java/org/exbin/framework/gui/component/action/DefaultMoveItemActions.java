@@ -146,5 +146,6 @@ public class DefaultMoveItemActions implements MoveItemActions {
         sideToolBar.addAction(getMoveDownAction());
         sideToolBar.addAction(getMoveBottomAction());
         updateMoveItemActions();
+        actionsHandler.setUpdateListener(this::updateMoveItemActions);
     }
 }

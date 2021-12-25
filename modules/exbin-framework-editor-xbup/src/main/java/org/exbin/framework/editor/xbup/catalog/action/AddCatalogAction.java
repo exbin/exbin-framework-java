@@ -15,42 +15,42 @@
  */
 package org.exbin.framework.editor.xbup.catalog.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.xbup.catalog.gui.AddCatalogPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.service.catalog.gui.CatalogDefsTableItem;
-import org.exbin.framework.gui.service.catalog.gui.CatalogSpecDefEditorPanel;
+import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.core.catalog.base.XBCSpec;
 
 /**
- * Add catalog item action.
+ * Add catalog root action.
  *
- * @version 0.2.2 2021/12/22
+ * @version 0.2.2 2021/12/25
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddCatalogItemAction extends AbstractAction {
+public class AddCatalogAction extends AbstractAction {
 
-    public static final String ACTION_ID = "addCatalogItemAction";
+    public static final String ACTION_ID = "addCatalogAction";
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AddCatalogItemAction.class);
+    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AddCatalogAction.class);
 
     private XBApplication application;
     private XBACatalog catalog;
 
-    public AddCatalogItemAction() {
+    private Component parentComponent;
+
+    public AddCatalogAction() {
     }
 
     public void setup(XBApplication application) {
@@ -64,7 +64,28 @@ public class AddCatalogItemAction extends AbstractAction {
         this.catalog = catalog;
     }
 
+    public void setParentComponent(Component parentComponent) {
+        this.parentComponent = parentComponent;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
+        AddCatalogPanel panel = new AddCatalogPanel();
+        panel.setApplication(application);
+        panel.setCatalog(catalog);
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        controlPanel.setHandler((actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+            dialog.close();
+            dialog.dispose();
+        });
+        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+        dialog.showCentered(parentComponent);
     }
 }
