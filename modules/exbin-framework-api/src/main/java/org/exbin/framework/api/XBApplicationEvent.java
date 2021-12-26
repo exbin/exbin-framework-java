@@ -15,18 +15,23 @@
  */
 package org.exbin.framework.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Framework application event class.
  *
  * @version 0.2.0 2015/11/16
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class XBApplicationEvent {
 
     private XBApplication application;
     private XBApplicationEventType eventType;
     private Object parameter;
 
+    @Nonnull
     public XBApplication getApplication() {
         return application;
     }
@@ -35,6 +40,7 @@ public class XBApplicationEvent {
         this.application = application;
     }
 
+    @Nonnull
     public XBApplicationEventType getEventType() {
         return eventType;
     }

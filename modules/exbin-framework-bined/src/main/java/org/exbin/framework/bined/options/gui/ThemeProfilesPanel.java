@@ -40,6 +40,7 @@ import org.exbin.framework.gui.utils.WindowUtils;
  * @version 0.2.1 2019/08/20
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ThemeProfilesPanel extends javax.swing.JPanel implements ProfileListPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ThemeProfilesPanel.class);

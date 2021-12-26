@@ -18,24 +18,29 @@ package org.exbin.framework.editor.xbup.catalog.action;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.catalog.gui.AddCatalogPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.service.ServiceManagerModule;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.xbup.catalog.modifiable.XBMNode;
+import org.exbin.xbup.catalog.modifiable.XBMRoot;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCRoot;
+import org.exbin.xbup.core.catalog.base.manager.XBCRootManager;
+import org.exbin.xbup.core.catalog.base.service.XBCNodeService;
 
 /**
  * Add catalog root action.
  *
- * @version 0.2.2 2021/12/25
+ * @version 0.2.2 2021/12/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -47,6 +52,9 @@ public class AddCatalogAction extends AbstractAction {
 
     private XBApplication application;
     private XBACatalog catalog;
+    private XBCNodeService nodeService;
+
+    private XBCRoot resultRoot;
 
     private Component parentComponent;
 
@@ -62,16 +70,22 @@ public class AddCatalogAction extends AbstractAction {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
+        nodeService = catalog == null ? null : catalog.getCatalogService(XBCNodeService.class);
     }
 
     public void setParentComponent(Component parentComponent) {
         this.parentComponent = parentComponent;
     }
 
+    @Nullable
+    public XBCRoot getResultRoot() {
+        return resultRoot;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
+        resultRoot = null;
         AddCatalogPanel panel = new AddCatalogPanel();
         panel.setApplication(application);
         panel.setCatalog(catalog);
@@ -80,7 +94,14 @@ public class AddCatalogAction extends AbstractAction {
         final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
         controlPanel.setHandler((actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                XBCRootManager rootManager = catalog.getCatalogManager(XBCRootManager.class);
+                XBMRoot catalogRoot = (XBMRoot) rootManager.createItem();
+                catalogRoot.setUrl(panel.getCatalogUrl());
+                XBMNode rootNode = (XBMNode) nodeService.createItem();
+                nodeService.persistItem(rootNode);
+                catalogRoot.setNode(rootNode);
+                rootManager.persistItem(catalogRoot);
+                resultRoot = catalogRoot;
             }
             dialog.close();
             dialog.dispose();

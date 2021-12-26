@@ -17,6 +17,8 @@ package org.exbin.framework.bined.options.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
@@ -36,6 +38,7 @@ public class ColorCellTableEditor extends AbstractCellEditor implements TableCel
     public ColorCellTableEditor() {
     }
 
+    @Nonnull
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         currentColor = (Color) value;
@@ -55,6 +58,7 @@ public class ColorCellTableEditor extends AbstractCellEditor implements TableCel
         });
     }
 
+    @Nullable
     @Override
     public Object getCellEditorValue() {
         return currentColor;

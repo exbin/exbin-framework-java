@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.xbup.gui;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -185,6 +186,7 @@ public class ContextTypeChoicePanel extends javax.swing.JPanel {
         this.parentNode = parentNode;
     }
 
+    @Nullable
     public XBBlockType getBlockType() {
         if (selectedGroup >= 0) {
             XBContext context = parentNode.getContext();

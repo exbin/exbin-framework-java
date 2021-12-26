@@ -20,7 +20,6 @@ import javax.swing.Action;
 import org.exbin.framework.bined.BinedModule;
 import org.exbin.framework.bined.service.BinaryAppearanceService;
 import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.bined.BinEdEditorProvider;
 
 /**
  * Appearance service implementation.

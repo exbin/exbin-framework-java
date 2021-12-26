@@ -18,7 +18,9 @@ package org.exbin.framework.editor.xbup.gui;
 import java.awt.CardLayout;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
@@ -56,10 +58,12 @@ import org.exbin.xbup.parser_tree.XBTTreeReader;
  * @version 0.2.1 2019/06/27
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class AddBlockPanel extends javax.swing.JPanel {
 
     private XBApplication application;
 
+    @Nullable
     private XBTTreeNode parentNode;
     private XBTTreeNode workNode = null;
     private XBACatalog catalog;
@@ -80,6 +84,11 @@ public class AddBlockPanel extends javax.swing.JPanel {
 
     public void setApplication(XBApplication application) {
         this.application = application;
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     public void setActionStateListener(ActionStateListener listener) {
@@ -385,10 +394,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
     private javax.swing.JPanel typePanel;
     // End of variables declaration//GEN-END:variables
 
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
-    }
-
+    @Nonnull
     public XBTTreeNode getWorkNode() {
         workNode = new XBTTreeNode();
         if (parentNode != null) {

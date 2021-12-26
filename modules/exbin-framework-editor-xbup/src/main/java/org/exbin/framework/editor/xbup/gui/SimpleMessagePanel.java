@@ -29,7 +29,7 @@ public class SimpleMessagePanel extends javax.swing.JPanel {
 
     public SimpleMessagePanel(String message) {
         this();
-        setMessage(message);
+        SimpleMessagePanel.this.setMessage(message);
     }
 
     public SimpleMessagePanel() {

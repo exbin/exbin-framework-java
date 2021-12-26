@@ -118,6 +118,7 @@ public class XBDocTreeCellRenderer extends DefaultTreeCellRenderer {
      * @param blockDecl block declaration
      * @return caption
      */
+    @Nullable
     public String getCaption(XBBlockDecl blockDecl) {
         if (blockDecl instanceof XBCBlockDecl) {
             XBCBlockSpec blockSpec = (XBCBlockSpec) ((XBCBlockDecl) blockDecl).getBlockSpecRev().getParent();

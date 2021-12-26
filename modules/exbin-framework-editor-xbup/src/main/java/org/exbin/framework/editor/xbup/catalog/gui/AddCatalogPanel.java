@@ -27,7 +27,7 @@ import org.exbin.xbup.core.catalog.XBACatalog;
 /**
  * Catalog browser.
  *
- * @version 0.2.1 2021/04/14
+ * @version 0.2.2 2021/12/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -69,7 +69,7 @@ public class AddCatalogPanel extends javax.swing.JPanel {
         catalogUrlLabel = new javax.swing.JLabel();
         catalogUrlTextField = new javax.swing.JTextField();
         publicRadioButton = new javax.swing.JRadioButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        publicCatalogsComboBox = new javax.swing.JComboBox<>();
 
         buttonGroup.add(newRadioButton);
         newRadioButton.setSelected(true);
@@ -85,7 +85,7 @@ public class AddCatalogPanel extends javax.swing.JPanel {
         buttonGroup.add(publicRadioButton);
         publicRadioButton.setText("Public Catalogs");
 
-        jComboBox1.setEnabled(false);
+        publicCatalogsComboBox.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -102,7 +102,7 @@ public class AddCatalogPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(21, 21, 21)
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(publicCatalogsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(newRadioButton)
@@ -128,7 +128,7 @@ public class AddCatalogPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(publicRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(publicCatalogsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -147,8 +147,8 @@ public class AddCatalogPanel extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup;
     private javax.swing.JLabel catalogUrlLabel;
     private javax.swing.JTextField catalogUrlTextField;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JRadioButton newRadioButton;
+    private javax.swing.JComboBox<String> publicCatalogsComboBox;
     private javax.swing.JRadioButton publicRadioButton;
     private javax.swing.JRadioButton urlRadioButton;
     // End of variables declaration//GEN-END:variables
@@ -159,5 +159,14 @@ public class AddCatalogPanel extends javax.swing.JPanel {
 
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
+    }
+    
+    @Nonnull
+    public String getCatalogUrl() {
+        if (urlRadioButton.isSelected()) {
+            return catalogUrlTextField.getText();
+        }
+        
+        return "";
     }
 }

@@ -64,6 +64,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXDescService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 import org.exbin.framework.gui.service.gui.CatalogManagementAware;
+import org.exbin.xbup.core.catalog.base.XBCRoot;
 
 /**
  * Catalog editor panel.
@@ -95,6 +96,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     private final Map<String, ActionListener> actionListenerMap = new HashMap<>();
     private MenuManagement menuManagement;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CatalogEditorPanel.class);
+    private XBCRoot catalogRoot;
 
     public CatalogEditorPanel() {
         nodesModel = new CatalogNodesTreeModel();
@@ -481,9 +483,13 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         descService = catalog == null ? null : catalog.getCatalogService(XBCXDescService.class);
         striService = catalog == null ? null : catalog.getCatalogService(XBCXStriService.class);
 
-        reloadNodesTree();
         specsModel.setCatalog(catalog);
         itemPanel.setCatalog(catalog);
+    }
+
+    public void setCatalogRoot(XBCRoot catalogRoot) {
+        this.catalogRoot = catalogRoot;
+        reloadNodesTree();
     }
 
     public void selectSpecTableRow(XBCItem item) {
@@ -586,7 +592,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     }
 
     public void reloadNodesTree() {
-        nodesModel = new CatalogNodesTreeModel(catalog == null ? null : nodeService.getMainRootNode().get());
+        nodesModel = new CatalogNodesTreeModel(catalogRoot.getNode());
         nodesModel.setCatalog(catalog);
         catalogTree.setModel(nodesModel);
     }
@@ -597,15 +603,16 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         popupAddMenuItem.setEnabled(currentItem instanceof XBCNode);
         popupImportItemMenuItem.setEnabled(currentItem instanceof XBCNode);
     }
-    
+
     @ParametersAreNonnullByDefault
     public interface Control {
+
         void exportItem(Component parentComponent, XBCItem currentItem);
 
         void importItem(Component parentComponent, XBCItem currentItem);
-        
+
         void addItem(Component parentComponent, XBCItem currentItem);
-        
+
         void editItem(Component parentComponent, XBCItem currentItem);
     }
 }

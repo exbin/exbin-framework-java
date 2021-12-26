@@ -26,11 +26,12 @@ import org.exbin.framework.gui.component.action.DefaultEditItemActions;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
 import org.exbin.framework.gui.component.api.toolbar.EditItemActionsUpdateListener;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCRoot;
 
 /**
  * Catalogs manager.
  *
- * @version 0.2.1 2021/12/25
+ * @version 0.2.1 2021/12/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -49,23 +50,31 @@ public class CatalogsManager {
             public void performAddItem() {
                 AddCatalogAction action = new AddCatalogAction();
                 action.setup(application);
+                action.setCatalog(catalog);
                 action.setParentComponent(catalogsManagerPanel);
                 action.actionPerformed(null);
+                XBCRoot resultRoot = action.getResultRoot();
+                if (resultRoot != null) {
+                    catalogsManagerPanel.reload();
+                }
             }
 
             @Override
             public void performEditItem() {
                 EditCatalogAction action = new EditCatalogAction();
                 action.setup(application);
+                action.setCatalog(catalog);
                 action.setParentComponent(catalogsManagerPanel);
                 action.setActiveItem(catalogsManagerPanel.getSelectedItem());
                 action.actionPerformed(null);
+                catalogsManagerPanel.reload();
             }
 
             @Override
             public void performDeleteItem() {
                 DeleteCatalogAction action = new DeleteCatalogAction();
                 action.setup(application);
+                action.setCatalog(catalog);
                 action.setParentComponent(catalogsManagerPanel);
                 action.setActiveItem(catalogsManagerPanel.getSelectedItem());
                 action.actionPerformed(null);
@@ -108,5 +117,9 @@ public class CatalogsManager {
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
         catalogsManagerPanel.setCatalog(catalog);
+    }
+    
+    public void setCatalogRoot(XBCRoot root) {
+        
     }
 }

@@ -17,6 +17,7 @@ package org.exbin.framework.bined.options.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.bined.options.impl.BinaryAppearanceOptionsImpl;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -29,6 +30,7 @@ import org.exbin.framework.gui.options.api.OptionsModifiedListener;
  * @version 0.2.1 2021/10/17
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable<BinaryAppearanceOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;

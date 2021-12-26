@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.TransferHandler;
@@ -57,6 +58,7 @@ public class XBDocTreeTransferHandler extends TransferHandler {
         return COPY_OR_MOVE;
     }
 
+    @Nullable
     @Override
     public Transferable createTransferable(JComponent c) {
         if (c instanceof JTree) {

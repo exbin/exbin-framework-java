@@ -22,20 +22,27 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.xbup.catalog.gui.CatalogEditorWrapperPanel;
+import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.ServiceManagerModule;
+import org.exbin.framework.gui.service.catalog.action.AddItemAction;
+import org.exbin.framework.gui.service.catalog.action.EditItemAction;
+import org.exbin.framework.gui.service.catalog.action.ExportItemAction;
+import org.exbin.framework.gui.service.catalog.action.ImportItemAction;
+import org.exbin.framework.gui.service.catalog.gui.CatalogEditorPanel;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCItem;
+import org.exbin.xbup.core.catalog.base.XBCNode;
 import org.exbin.xbup.core.catalog.base.XBCRoot;
 
 /**
  * Edit catalog root action.
  *
- * @version 0.2.2 2021/12/25
+ * @version 0.2.2 2021/12/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -75,21 +82,74 @@ public class EditCatalogAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO catalogsManagerPanel.getSelectedItem();
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
-        CatalogEditorWrapperPanel panel = new CatalogEditorWrapperPanel();
-        panel.setApplication(application);
-        panel.setMenuManagement(managerModule.getDefaultMenuManagement());
-        panel.setCatalog(catalog);
+        MenuManagement menuManagement = managerModule.getDefaultMenuManagement();
+        CatalogEditorPanel catalogEditorPanel = new CatalogEditorPanel();
+        catalogEditorPanel.setControl(new CatalogEditorPanel.Control() {
+            @Override
+            public void exportItem(Component parentComponent, XBCItem currentItem) {
+                ExportItemAction exportItemAction = new ExportItemAction();
+                exportItemAction.setCatalog(catalog);
+                exportItemAction.setParentComponent(parentComponent);
+                exportItemAction.setCurrentItem(currentItem);
+                exportItemAction.actionPerformed(null);
+            }
+
+            @Override
+            public void importItem(Component parentComponent, XBCItem currentItem) {
+                ImportItemAction importItemAction = new ImportItemAction();
+                importItemAction.setCatalog(catalog);
+                importItemAction.setParentComponent(parentComponent);
+                importItemAction.setCurrentItem(currentItem);
+                importItemAction.actionPerformed(null);
+            }
+
+            @Override
+            public void addItem(Component parentComponent, XBCItem currentItem) {
+                AddItemAction addItemAction = new AddItemAction();
+                addItemAction.setApplication(application);
+                addItemAction.setCatalog(catalog);
+                addItemAction.setParentComponent(parentComponent);
+                addItemAction.setCurrentItem(currentItem);
+                addItemAction.actionPerformed(null);
+                XBCItem resultItem = addItemAction.getResultItem();
+                if (resultItem != null) {
+                    catalogEditorPanel.reloadNodesTree();
+                    catalogEditorPanel.setNode(resultItem instanceof XBCNode ? (XBCNode) resultItem : catalogEditorPanel.getSpecsNode());
+                    catalogEditorPanel.selectSpecTableRow(resultItem);
+                }
+            }
+
+            @Override
+            public void editItem(Component parentComponent, XBCItem currentItem) {
+                EditItemAction editItemAction = new EditItemAction();
+                editItemAction.setApplication(application);
+                editItemAction.setCatalog(catalog);
+                editItemAction.setMenuManagement(menuManagement);
+                editItemAction.setParentComponent(parentComponent);
+                editItemAction.setCurrentItem(currentItem);
+                editItemAction.actionPerformed(null);
+                XBCItem resultItem = editItemAction.getResultItem();
+                if (resultItem != null) {
+                    catalogEditorPanel.setItem(currentItem);
+                    catalogEditorPanel.setSpecsNode(catalogEditorPanel.getSpecsNode());
+                    catalogEditorPanel.selectSpecTableRow(currentItem);
+                }
+            }
+        });
+        catalogEditorPanel.setApplication(application);
+        catalogEditorPanel.setMenuManagement(menuManagement);
+        catalogEditorPanel.setCatalog(catalog);
+        catalogEditorPanel.setCatalogRoot(activeItem);
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
+        JPanel dialogPanel = WindowUtils.createDialogPanel(catalogEditorPanel, controlPanel);
         final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
         controlPanel.setHandler(() -> {
             dialog.close();
             dialog.dispose();
         });
-        frameModule.setDialogTitle(dialog, panel.getResourceBundle());
+        frameModule.setDialogTitle(dialog, catalogEditorPanel.getResourceBundle());
         dialog.showCentered(parentComponent);
     }
 }
