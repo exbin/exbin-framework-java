@@ -61,11 +61,14 @@ import org.exbin.framework.gui.utils.gui.WindowHeaderPanel;
 /**
  * Utility static methods usable for windows and dialogs.
  *
- * @version 0.2.1 2019/10/15
+ * @version 0.2.1 2021/12/29
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class WindowUtils {
+
+    public static final String ESC_CANCEL_KEY = "esc-cancel";
+    public static final String ENTER_OK_KEY = "enter-ok";
 
     private static final int BUTTON_CLICK_TIME = 150;
     private static LookAndFeel lookAndFeel = null;
@@ -74,14 +77,14 @@ public class WindowUtils {
     }
 
     @Nonnull
-    public static WindowHeaderPanel addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle) {
+    public static WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull Class<?> resourceClass, @Nonnull ResourceBundle resourceBundle) {
         URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
         Icon headerIcon = iconUrl != null ? new ImageIcon(iconUrl) : null;
         return addHeaderPanel(window, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
     }
 
     @Nonnull
-    public static WindowHeaderPanel addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon) {
+    public static WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull String headerTitle, @Nonnull String headerDescription, @Nullable Icon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
         headerPanel.setDescription(headerDescription);
@@ -102,7 +105,7 @@ public class WindowUtils {
         return headerPanel;
     }
 
-    public static void invokeWindow(final Window window) {
+    public static void invokeWindow(final @Nonnull Window window) {
         if (lookAndFeel != null) {
             try {
                 javax.swing.UIManager.setLookAndFeel(lookAndFeel);
@@ -293,10 +296,8 @@ public class WindowUtils {
      */
     public static void assignGlobalKeyListener(Component component, @Nullable final OkCancelListener listener) {
         JRootPane rootPane = SwingUtilities.getRootPane(component);
-        final String ESC_CANCEL = "esc-cancel";
-        final String ENTER_OK = "enter-ok";
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ESC_CANCEL);
-        rootPane.getActionMap().put(ESC_CANCEL, new AbstractAction() {
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ESC_CANCEL_KEY);
+        rootPane.getActionMap().put(ESC_CANCEL_KEY, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 if (listener == null) {
@@ -322,8 +323,8 @@ public class WindowUtils {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), ENTER_OK);
-        rootPane.getActionMap().put(ENTER_OK, new AbstractAction() {
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), ENTER_OK_KEY);
+        rootPane.getActionMap().put(ENTER_OK_KEY, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 if (listener == null) {
@@ -460,6 +461,12 @@ public class WindowUtils {
         public DialogPanel(OkCancelService okCancelService) {
             super(new BorderLayout());
             this.okCancelService = okCancelService;
+        }
+
+        @Nullable
+        @Override
+        public JButton getDefaultButton() {
+            return null;
         }
 
         @Nonnull

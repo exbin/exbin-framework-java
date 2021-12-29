@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.data.gui.cell.ComponentPropertyTableCellPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -120,8 +119,7 @@ public class XBPropertyTableCellPanel extends ComponentPropertyTableCellPanel {
         panel.setPluginRepository(pluginRepository);
         panel.setNode(paramNode, doc);
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), ModifyBlockPanel.class, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {

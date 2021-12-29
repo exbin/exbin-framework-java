@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.gui.TextGoToPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
@@ -78,9 +77,8 @@ public class GoToLineAction extends AbstractAction {
             goToPanel.setMaxLine(activePanel.getLineCount());
             goToPanel.setCharPos(1);
             DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
-            JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            final DialogWrapper dialog = frameModule.createDialog(goToPanel, controlPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
             frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {

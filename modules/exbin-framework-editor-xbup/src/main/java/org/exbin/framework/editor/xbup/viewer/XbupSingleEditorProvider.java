@@ -231,8 +231,7 @@ public class XbupSingleEditorProvider implements XbupEditorProvider, ClipboardAc
         panel.setCatalog(catalog);
         panel.setBlock(activeFile.getSelectedItem().orElse(null));
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         controlPanel.setHandler(() -> {
             dialog.close();
             dialog.dispose();

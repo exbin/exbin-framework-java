@@ -34,14 +34,14 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
  */
 @ParametersAreNonnullByDefault
 public class EditorActions implements EditorActionsApi {
-    
+
     private ResourceBundle resourceBundle;
     private XBApplication application;
     private MultiEditorProvider editorProvider;
 
     public EditorActions() {
     }
-    
+
     public void setup(XBApplication application, ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
         this.application = application;
         this.resourceBundle = resourceBundle;
@@ -56,16 +56,19 @@ public class EditorActions implements EditorActionsApi {
         final boolean[] result = new boolean[1];
         final DialogWrapper dialog = frameModule.createDialog(unsavedFilesPanel);
         unsavedFilesPanel.setControl(new UnsavedFilesPanel.Control() {
+            @Override
             public boolean saveFile(FileHandler fileHandler) {
                 editorProvider.saveFile(fileHandler);
                 return !fileHandler.isModified();
             }
 
+            @Override
             public void discardAll(List<FileHandler> fileHandlers) {
                 result[0] = true;
                 dialog.close();
             }
 
+            @Override
             public void cancel() {
                 result[0] = false;
                 dialog.close();
@@ -75,7 +78,7 @@ public class EditorActions implements EditorActionsApi {
         frameModule.setDialogTitle(dialog, unsavedFilesPanel.getResourceBundle());
         unsavedFilesPanel.assignGlobalKeys();
         dialog.showCentered(editorProvider.getEditorComponent());
-        
+
         return result[0];
     }
 }

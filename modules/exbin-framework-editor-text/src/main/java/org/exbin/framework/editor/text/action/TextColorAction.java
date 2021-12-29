@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
 import org.exbin.framework.editor.text.options.gui.TextColorPanel;
@@ -107,8 +106,7 @@ public class TextColorAction extends AbstractAction {
 
         colorPanel.setColorsFromArray(textColorService.getCurrentTextColors());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(colorPanel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(colorPanel, controlPanel);
 
         WindowUtils.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, colorPanel.getResourceBundle());

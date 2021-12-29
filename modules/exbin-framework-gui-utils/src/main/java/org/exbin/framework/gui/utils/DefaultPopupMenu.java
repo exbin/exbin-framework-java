@@ -61,6 +61,12 @@ public class DefaultPopupMenu {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DefaultPopupMenu.class);
 
+    public static final String EDIT_CUT_ACTION_ID = "editCutAction";
+    public static final String EDIT_COPY_ACTION_ID = "editCopyAction";
+    public static final String EDIT_PASTE_ACTION_ID = "editPasteAction";
+    public static final String EDIT_DELETE_ACTION_ID = "editDeleteAction";
+    public static final String EDIT_SELECT_ALL_ACTION_ID = "editSelectAllAction";
+
     private ActionMap defaultTextActionMap;
     private JPopupMenu defaultPopupMenu;
     private JPopupMenu defaultEditPopupMenu;
@@ -129,7 +135,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.isEditable() && clipboardHandler.isSelection());
             }
         };
-        ActionUtils.setupAction(defaultCutAction, resourceBundle, resourceClass, "editCutAction");
+        ActionUtils.setupAction(defaultCutAction, resourceBundle, resourceClass, EDIT_CUT_ACTION_ID);
         defaultCutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
         defaultCutAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), defaultCutAction);
@@ -145,7 +151,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.isSelection());
             }
         };
-        ActionUtils.setupAction(defaultCopyAction, resourceBundle, resourceClass, "editCopyAction");
+        ActionUtils.setupAction(defaultCopyAction, resourceBundle, resourceClass, EDIT_COPY_ACTION_ID);
         defaultCopyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
         defaultCopyAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getCopyAction().getValue(Action.NAME), defaultCopyAction);
@@ -161,7 +167,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.isEditable());
             }
         };
-        ActionUtils.setupAction(defaultPasteAction, resourceBundle, resourceClass, "editPasteAction");
+        ActionUtils.setupAction(defaultPasteAction, resourceBundle, resourceClass, EDIT_PASTE_ACTION_ID);
         defaultPasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
         defaultPasteAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getPasteAction().getValue(Action.NAME), defaultPasteAction);
@@ -177,7 +183,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.canDelete() && clipboardHandler.isSelection());
             }
         };
-        ActionUtils.setupAction(defaultDeleteAction, resourceBundle, resourceClass, "editDeleteAction");
+        ActionUtils.setupAction(defaultDeleteAction, resourceBundle, resourceClass, EDIT_DELETE_ACTION_ID);
         defaultDeleteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         defaultDeleteAction.setEnabled(false);
         defaultTextActionMap.put("delete", defaultDeleteAction);
@@ -193,7 +199,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.canSelectAll());
             }
         };
-        ActionUtils.setupAction(defaultSelectAllAction, resourceBundle, resourceClass, "editSelectAllAction");
+        ActionUtils.setupAction(defaultSelectAllAction, resourceBundle, resourceClass, EDIT_SELECT_ALL_ACTION_ID);
         defaultSelectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         defaultTextActionMap.put("selectAll", defaultSelectAllAction);
 
@@ -408,6 +414,7 @@ public class DefaultPopupMenu {
             return SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
         }
 
+        @ParametersAreNonnullByDefault
         private class TextComponentClipboardHandler implements ClipboardActionsHandler {
 
             private final JTextComponent txtComp;
@@ -479,6 +486,7 @@ public class DefaultPopupMenu {
             }
         }
 
+        @ParametersAreNonnullByDefault
         private class ListClipboardHandler implements ClipboardActionsHandler {
 
             private final JList listComp;
@@ -556,6 +564,7 @@ public class DefaultPopupMenu {
             }
         }
 
+        @ParametersAreNonnullByDefault
         private class TableClipboardHandler implements ClipboardActionsHandler {
 
             private final JTable tableComp;

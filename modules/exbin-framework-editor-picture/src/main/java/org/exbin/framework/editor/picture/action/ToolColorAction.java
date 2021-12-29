@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ToolColorPanel;
@@ -76,8 +75,7 @@ public class ToolColorAction extends AbstractAction {
         toolColorPanel.setToolColor(imagePanel.getToolColor());
         toolColorPanel.setSelectionColor(imagePanel.getSelectionColor());
         DefaultControlPanel controlPanel = new DefaultControlPanel(toolColorPanel.getResourceBundle());
-        JPanel dialogPanel = WindowUtils.createDialogPanel(toolColorPanel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(toolColorPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), toolColorPanel.getClass(), toolColorPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, toolColorPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {

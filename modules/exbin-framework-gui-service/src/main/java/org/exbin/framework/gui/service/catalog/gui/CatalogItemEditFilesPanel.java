@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.api.XBApplication;
@@ -248,8 +247,7 @@ public class CatalogItemEditFilesPanel extends javax.swing.JPanel {
             renamePanel.setNameText(file.getFilename());
 
             DefaultControlPanel controlPanel = new DefaultControlPanel();
-            JPanel dialogPanel = WindowUtils.createDialogPanel(renamePanel, controlPanel);
-            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(renamePanel, controlPanel);
             //        WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {

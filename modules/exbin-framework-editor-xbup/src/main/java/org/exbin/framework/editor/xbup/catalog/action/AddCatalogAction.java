@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.catalog.gui.AddCatalogPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -90,8 +89,7 @@ public class AddCatalogAction extends AbstractAction {
         panel.setApplication(application);
         panel.setCatalog(catalog);
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         controlPanel.setHandler((actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 XBCRootManager rootManager = catalog.getCatalogManager(XBCRootManager.class);

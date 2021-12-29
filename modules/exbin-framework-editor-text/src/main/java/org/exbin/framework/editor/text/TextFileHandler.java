@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.text;
 
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,7 +31,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.file.api.FileType;
@@ -57,7 +57,7 @@ import org.exbin.xbup.core.type.XBEncodingText;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFileHandler implements FileHandler {
+public class TextFileHandler implements FileHandler, TextFontApi {
 
     private final TextPanel textPanel = new TextPanel();
 
@@ -211,6 +211,23 @@ public class TextFileHandler implements FileHandler {
     @Override
     public boolean isModified() {
         return textPanel.isModified();
+    }
+
+    @Nonnull
+    @Override
+    public Font getCurrentFont() {
+        return textPanel.getCurrentFont();
+    }
+
+    @Nonnull
+    @Override
+    public Font getDefaultFont() {
+        return textPanel.getDefaultFont();
+    }
+
+    @Override
+    public void setCurrentFont(Font font) {
+        textPanel.setCurrentFont(font);
     }
 
     /**

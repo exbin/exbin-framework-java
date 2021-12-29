@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.wave.options.gui.WaveColorPanel;
@@ -80,8 +79,7 @@ public class WaveColorAction extends AbstractAction {
         waveColorPanel.setWaveColorService(waveColorService);
         waveColorPanel.setWaveColorsFromArray(audioPanel.getAudioPanelColors());
         DefaultControlPanel controlPanel = new DefaultControlPanel(waveColorPanel.getResourceBundle());
-        JPanel dialogPanel = WindowUtils.createDialogPanel(waveColorPanel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(waveColorPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), waveColorPanel.getClass(), waveColorPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, waveColorPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {

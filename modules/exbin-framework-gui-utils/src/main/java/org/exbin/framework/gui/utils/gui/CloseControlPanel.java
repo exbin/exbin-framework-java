@@ -17,6 +17,7 @@ package org.exbin.framework.gui.utils.gui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JButton;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.OkCancelListener;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -109,6 +110,12 @@ public class CloseControlPanel extends javax.swing.JPanel implements CloseContro
     @Override
     public void performCloseClick() {
         WindowUtils.doButtonClick(closeButton);
+    }
+
+    @Nonnull
+    @Override
+    public JButton getDefaultButton() {
+        return closeButton;
     }
 
     @Nonnull

@@ -16,10 +16,8 @@
 package org.exbin.framework.gui.service.catalog.gui;
 
 import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.RemovalControlHandler;
 import org.exbin.framework.gui.utils.gui.RemovalControlPanel;
@@ -59,8 +57,7 @@ public class CatalogSIconPropertyTableCellPanel extends CatalogPropertyTableCell
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         CatalogEditIconPanel iconPanel = new CatalogEditIconPanel(catalog, icon);
         RemovalControlPanel controlPanel = new RemovalControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(iconPanel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(iconPanel, controlPanel);
         frameModule.setDialogTitle(dialog, iconPanel.getResourceBundle());
         controlPanel.setHandler((RemovalControlHandler.ControlActionType actionType) -> {
             switch (actionType) {

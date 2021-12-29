@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.text.DefaultEditorKit;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -172,8 +171,7 @@ public class CatalogBrowserPanel extends javax.swing.JPanel {
             editPanel.setCatalogItem(currentItem);
 
             DefaultControlPanel controlPanel = new DefaultControlPanel();
-            JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
-            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(editPanel, controlPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {

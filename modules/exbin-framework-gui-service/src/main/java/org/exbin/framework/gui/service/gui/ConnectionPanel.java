@@ -27,7 +27,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.persistence.Persistence;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
@@ -447,8 +446,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
         }
 
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             switch (actionType) {

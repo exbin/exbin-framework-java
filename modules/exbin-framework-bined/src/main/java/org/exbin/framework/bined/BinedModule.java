@@ -510,8 +510,7 @@ public class BinedModule implements XBApplicationModule {
                         final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
                         addEncodingPanel.setUsedEncodings(usedEncodings);
                         DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
-                        JPanel dialogPanel = WindowUtils.createDialogPanel(addEncodingPanel, controlPanel);
-                        final DialogWrapper addEncodingDialog = frameModule.createDialog(dialogPanel);
+                        final DialogWrapper addEncodingDialog = frameModule.createDialog(addEncodingPanel, controlPanel);
                         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                                 result.addAll(addEncodingPanel.getEncodings());
@@ -603,8 +602,7 @@ public class BinedModule implements XBApplicationModule {
                             final TextFontPanel fontPanel = new TextFontPanel();
                             fontPanel.setStoredFont(currentFont);
                             DefaultControlPanel controlPanel = new DefaultControlPanel();
-                            JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
-                            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                            final DialogWrapper dialog = frameModule.createDialog(fontPanel, controlPanel);
                             WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
                             frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {

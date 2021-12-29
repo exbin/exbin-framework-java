@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.catalog.CatalogsManager;
 import org.exbin.framework.editor.xbup.gui.AddBlockPanel;
@@ -71,8 +70,7 @@ public class CatalogsManagerAction extends AbstractAction {
         catalogsBrowser.setCatalog(catalog);
         CatalogsManagerPanel panel = catalogsBrowser.getCatalogsManagerPanel();
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, panel.getResourceBundle());
         controlPanel.setHandler(() -> {
             dialog.close();

@@ -18,6 +18,8 @@ package org.exbin.framework.bined.gui;
 import java.net.URI;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import org.exbin.auxiliary.paged_data.delta.DataSegment;
 import org.exbin.auxiliary.paged_data.delta.DeltaDocument;
@@ -37,6 +39,7 @@ import org.exbin.framework.gui.file.api.FileHandler;
  * @version 0.2.2 2021/10/12
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PropertiesPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(PropertiesPanel.class);
@@ -173,6 +176,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
         }
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }

@@ -15,18 +15,22 @@
  */
 package org.exbin.framework.gui.frame;
 
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Image;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.ApplicationExitListener;
 import org.exbin.framework.gui.frame.api.ApplicationFrameHandler;
@@ -43,11 +47,12 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.gui.action.api.GuiActionModuleApi;
 import org.exbin.framework.gui.frame.action.FrameActions;
+import org.exbin.framework.gui.utils.handler.OkCancelService;
 
 /**
  * Implementation of XBUP framework frame module.
  *
- * @version 0.2.1 2021/10/26
+ * @version 0.2.1 2021/12/29
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -285,28 +290,45 @@ public class GuiFrameModule implements GuiFrameModuleApi {
     @Nonnull
     @Override
     public DialogWrapper createDialog() {
-        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL);
+        return createDialog(null, null);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType) {
-        return createDialog(parentWindow, modalityType, null);
+    public DialogWrapper createDialog(@Nullable JPanel panel) {
+        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, panel, null);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(JPanel panel) {
-        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, panel);
+    public DialogWrapper createDialog(@Nullable JPanel panel, @Nullable JPanel controlPanel) {
+        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, panel, controlPanel);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel) {
-        DialogWrapper dialog = WindowUtils.createDialog(panel, parentWindow, "", modalityType);
+    public DialogWrapper createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JPanel panel) {
+        return createDialog(parentComponent, modalityType, panel, null);
+    }
+
+    @Nonnull
+    @Override
+    public DialogWrapper createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JPanel panel, @Nullable JPanel controlPanel) {
+        JPanel dialogPanel = controlPanel != null ? WindowUtils.createDialogPanel(panel, controlPanel) : panel;
+
+        DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "", modalityType);
         Image applicationIcon = application.getApplicationIcon();
         if (applicationIcon != null) {
             ((JDialog) dialog.getWindow()).setIconImage(applicationIcon);
+        }
+        if (controlPanel instanceof OkCancelService) {
+            JButton defaultButton = ((OkCancelService) controlPanel).getDefaultButton();
+            if (defaultButton != null) {
+                JRootPane rootPane = SwingUtilities.getRootPane(dialog.getWindow());
+                if (rootPane != null) {
+                    rootPane.setDefaultButton(defaultButton);
+                }
+            }
         }
         return dialog;
     }

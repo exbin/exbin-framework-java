@@ -17,7 +17,6 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -166,8 +165,7 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
         CatalogSpecRevEditorPanel panel = new CatalogSpecRevEditorPanel();
         panel.setRevItem(new CatalogRevsTableItem());
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -204,8 +202,7 @@ public class CatalogItemEditRevsPanel extends javax.swing.JPanel {
         CatalogSpecRevEditorPanel panel = new CatalogSpecRevEditorPanel();
         panel.setRevItem(row);
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {

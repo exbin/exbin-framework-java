@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.update.gui.CheckForUpdatePanel;
@@ -75,9 +74,7 @@ public class CheckForUpdateAction extends AbstractAction {
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(checkForUpdatePanel, controlPanel);
-
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(checkForUpdatePanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
         controlPanel.setHandler(dialog::close);
@@ -146,9 +143,7 @@ public class CheckForUpdateAction extends AbstractAction {
             GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
             CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
             CloseControlPanel controlPanel = new CloseControlPanel();
-            JPanel dialogPanel = WindowUtils.createDialogPanel(checkForUpdatePanel, controlPanel);
-
-            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            final DialogWrapper dialog = frameModule.createDialog(checkForUpdatePanel, controlPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
             frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
             controlPanel.setHandler(dialog::close);

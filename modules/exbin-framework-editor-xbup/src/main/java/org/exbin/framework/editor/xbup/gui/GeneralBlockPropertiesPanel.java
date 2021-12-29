@@ -325,8 +325,7 @@ public class GeneralBlockPropertiesPanel extends javax.swing.JPanel {
 
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(itemPanel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(itemPanel, controlPanel);
         controlPanel.setHandler(() -> {
             dialog.close();
             dialog.dispose();

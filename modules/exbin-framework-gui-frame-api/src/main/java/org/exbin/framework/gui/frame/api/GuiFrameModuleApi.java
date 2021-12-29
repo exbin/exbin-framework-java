@@ -15,11 +15,12 @@
  */
 package org.exbin.framework.gui.frame.api;
 
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
-import java.awt.Window;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -30,7 +31,7 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 /**
  * Interface for framework frame module.
  *
- * @version 0.2.1 2019/07/15
+ * @version 0.2.1 2021/12/27
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -67,6 +68,11 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
     void createMainMenu();
 
     /**
+     * Notifies frame was updated.
+     */
+    void notifyFrameUpdated();
+
+    /**
      * Creates basic dialog and sets it up.
      *
      * @return dialog
@@ -75,39 +81,46 @@ public interface GuiFrameModuleApi extends XBApplicationModule {
     DialogWrapper createDialog();
 
     /**
-     * Notifies frame was updated.
-     */
-    void notifyFrameUpdated();
-
-    /**
-     * Creates basic dialog and sets it up.
-     *
-     * @param parentWindow parent window
-     * @param modalityType modality type
-     * @return dialog
-     */
-    @Nonnull
-    DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType);
-
-    /**
      * Creates basic dialog and sets it up.
      *
      * @param panel panel
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(JPanel panel);
+    DialogWrapper createDialog(@Nullable JPanel panel);
 
     /**
      * Creates basic dialog and sets it up.
      *
-     * @param parentWindow parent window
+     * @param panel panel
+     * @param controlPanel control panel
+     * @return dialog
+     */
+    @Nonnull
+    DialogWrapper createDialog(@Nullable JPanel panel, @Nullable JPanel controlPanel);
+
+    /**
+     * Creates basic dialog and sets it up.
+     *
+     * @param parentComponent parent component
      * @param modalityType modality type
      * @param panel panel
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(Window parentWindow, Dialog.ModalityType modalityType, JPanel panel);
+    DialogWrapper createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JPanel panel);
+
+    /**
+     * Creates basic dialog and sets it up.
+     *
+     * @param parentComponent parent component
+     * @param controlPanel control panel
+     * @param modalityType modality type
+     * @param panel panel
+     * @return dialog
+     */
+    @Nonnull
+    DialogWrapper createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JPanel panel, @Nullable JPanel controlPanel);
 
     /**
      * Returns frame instance.

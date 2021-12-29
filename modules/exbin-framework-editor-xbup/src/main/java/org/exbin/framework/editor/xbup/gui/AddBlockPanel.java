@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.service.catalog.gui.CatalogSelectRevPanel;
@@ -276,8 +275,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
             final ContextTypeChoicePanel panel = new ContextTypeChoicePanel(catalog, parentNode);
             panel.setCanProceedListener(controlPanel.createEnablementListener());
 
-            JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 switch (actionType) {
                     case OK: {
@@ -331,8 +329,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
             panel.setApplication(application);
 
             DefaultControlPanel controlPanel = new DefaultControlPanel();
-            JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 switch (actionType) {
                     case OK: {

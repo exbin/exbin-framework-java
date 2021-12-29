@@ -17,7 +17,6 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -198,8 +197,7 @@ public class CatalogEditNodePluginPanel extends javax.swing.JPanel {
         selectPanel.setNode(node);
 
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(selectPanel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(selectPanel, controlPanel);
 //        WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {

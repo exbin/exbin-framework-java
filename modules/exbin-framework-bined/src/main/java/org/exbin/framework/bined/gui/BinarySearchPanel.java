@@ -639,7 +639,7 @@ public class BinarySearchPanel extends javax.swing.JPanel {
         findBinaryPanel.setReplaceParameters(replaceParameters);
         findBinaryPanel.setCodeAreaPopupMenuHandler(codeAreaPopupMenuHandler);
         DefaultControlPanel controlPanel = new DefaultControlPanel(findBinaryPanel.getResourceBundle());
-        final DialogWrapper dialog = frameModule.createDialog(WindowUtils.createDialogPanel(findBinaryPanel, controlPanel));
+        final DialogWrapper dialog = frameModule.createDialog(findBinaryPanel, controlPanel);
         frameModule.setDialogTitle(dialog, findBinaryPanel.getResourceBundle());
         WindowUtils.addHeaderPanel(dialog.getWindow(), findBinaryPanel.getClass(), findBinaryPanel.getResourceBundle());
         findBinaryPanel.setMultilineEditorListener(new FindBinaryPanel.MultilineEditorListener() {

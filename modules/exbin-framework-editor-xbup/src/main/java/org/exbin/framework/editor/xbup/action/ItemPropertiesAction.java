@@ -69,8 +69,7 @@ public class ItemPropertiesAction extends AbstractAction {
         XbupFileHandler xbupFile = (XbupFileHandler) viewerProvider.getActiveFile().get();
         panel.setBlock(xbupFile.getSelectedItem().get());
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         controlPanel.setHandler(() -> {
             dialog.close();
             dialog.dispose();

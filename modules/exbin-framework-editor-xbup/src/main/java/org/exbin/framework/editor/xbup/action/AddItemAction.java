@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.AddBlockPanel;
 import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
@@ -85,8 +84,7 @@ public class AddItemAction extends AbstractAction {
         addItemPanel.setCatalog(catalog);
         addItemPanel.setParentNode(node);
         MultiStepControlPanel controlPanel = new MultiStepControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(addItemPanel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(addItemPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), AddBlockPanel.class, addItemPanel.getResourceBundle());
         controlPanel.setHandler((MultiStepControlHandler.ControlActionType actionType) -> {
             switch (actionType) {

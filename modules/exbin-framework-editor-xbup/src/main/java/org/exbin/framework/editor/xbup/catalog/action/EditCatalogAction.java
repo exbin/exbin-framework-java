@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.action.api.MenuManagement;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -143,8 +142,7 @@ public class EditCatalogAction extends AbstractAction {
         catalogEditorPanel.setCatalog(catalog);
         catalogEditorPanel.setCatalogRoot(activeItem);
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(catalogEditorPanel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(catalogEditorPanel, controlPanel);
         controlPanel.setHandler(() -> {
             dialog.close();
             dialog.dispose();

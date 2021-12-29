@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.AbstractListModel;
-import javax.swing.JPanel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
@@ -232,8 +231,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
         final EditConnectionPanel panel = new EditConnectionPanel();
 
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             switch (actionType) {
@@ -306,8 +304,7 @@ public class ConnectionsManagerPanel extends javax.swing.JPanel {
         panel.setConnection((String) connectionsList.getSelectedValue());
 
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             switch (actionType) {

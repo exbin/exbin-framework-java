@@ -17,6 +17,7 @@ package org.exbin.framework.gui.utils.gui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JButton;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.OkCancelListener;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -185,6 +186,12 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
             default:
                 throw new IllegalStateException("Illegal action type " + actionType.name());
         }
+    }
+
+    @Nonnull
+    @Override
+    public JButton getDefaultButton() {
+        return finishButton;
     }
 
     @Nonnull

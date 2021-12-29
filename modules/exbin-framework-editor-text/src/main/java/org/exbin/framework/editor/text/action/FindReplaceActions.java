@@ -15,14 +15,12 @@
  */
 package org.exbin.framework.editor.text.action;
 
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.FindTextPanel;
@@ -71,8 +69,7 @@ public class FindReplaceActions {
         findPanel.setShallReplace(shallReplace);
         findPanel.setSelected();
         DefaultControlPanel controlPanel = new DefaultControlPanel(findPanel.getResourceBundle());
-        JPanel dialogPanel = WindowUtils.createDialogPanel(findPanel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(findPanel, controlPanel);
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 if (editorProvider instanceof TextEditor) {

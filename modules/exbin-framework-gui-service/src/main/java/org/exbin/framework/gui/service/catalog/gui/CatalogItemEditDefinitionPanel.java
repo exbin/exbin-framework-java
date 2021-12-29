@@ -18,7 +18,6 @@ package org.exbin.framework.gui.service.catalog.gui;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -28,7 +27,6 @@ import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.xbup.catalog.entity.XBERev;
-import org.exbin.xbup.catalog.entity.XBESpec;
 import org.exbin.xbup.catalog.entity.XBESpecDef;
 import org.exbin.xbup.catalog.entity.service.XBEXDescService;
 import org.exbin.xbup.catalog.entity.service.XBEXNameService;
@@ -211,8 +209,7 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
         panel.setSpec((XBCSpec) catalogItem);
         panel.setDefItem(new CatalogDefsTableItem());
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -255,8 +252,7 @@ public class CatalogItemEditDefinitionPanel extends javax.swing.JPanel {
         panel.setSpec((XBCSpec) catalogItem);
         panel.setDefItem(row);
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {

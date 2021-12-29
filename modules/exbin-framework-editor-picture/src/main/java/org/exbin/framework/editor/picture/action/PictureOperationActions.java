@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ImageResizePanel;
@@ -80,9 +79,8 @@ public class PictureOperationActions {
                     final ImageResizePanel imageResizePanel = new ImageResizePanel();
                     imageResizePanel.setResolution(imagePanel.getImageSize());
                     DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
-                    JPanel dialogPanel = WindowUtils.createDialogPanel(imageResizePanel, controlPanel);
                     GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-                    final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+                    final DialogWrapper dialog = frameModule.createDialog(imageResizePanel, controlPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {

@@ -21,13 +21,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.about.gui.AboutPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.ActionUtils;
 import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.gui.CloseControlPanel;
 
@@ -66,9 +64,8 @@ public class AboutAction extends AbstractAction {
         aboutPanel.setApplication(application);
         aboutPanel.setSideComponent(sideComponent);
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
-        final DialogWrapper aboutDialog = frameModule.createDialog(dialogPanel);
-        ((JDialog) aboutDialog.getWindow()).setTitle("About");
+        final DialogWrapper aboutDialog = frameModule.createDialog(aboutPanel, controlPanel);
+        ((JDialog) aboutDialog.getWindow()).setTitle(resourceBundle.getString("aboutAction.dialogTitle"));
         controlPanel.setHandler(aboutDialog::close);
         aboutDialog.showCentered((Component) e.getSource());
         aboutDialog.dispose();

@@ -18,10 +18,8 @@ package org.exbin.framework.gui.service.catalog.gui;
 import java.awt.event.ActionEvent;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.WindowUtils;
 import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
 import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
@@ -76,8 +74,7 @@ public class CatalogREditorPropertyTableCellPanel extends CatalogPropertyTableCe
         uiSelectPanel.setCatalog(catalog);
         uiSelectPanel.setPlugUi(plugUi);
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(uiSelectPanel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(uiSelectPanel, controlPanel);
 //        frameModule.setDialogTitle(dialog, lineSelectPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             switch (actionType) {

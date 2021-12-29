@@ -31,7 +31,6 @@ import javax.persistence.EntityTransaction;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.CellEditorListener;
@@ -308,8 +307,7 @@ public class CatalogItemsSearchPanel extends javax.swing.JPanel implements Catal
             editPanel.setVisible(true);
 
             DefaultControlPanel controlPanel = new DefaultControlPanel();
-            JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
-            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            final WindowUtils.DialogWrapper dialog = frameModule.createDialog(editPanel, controlPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {

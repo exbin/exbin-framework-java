@@ -34,7 +34,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import org.exbin.bined.CodeAreaUtils;
 import org.exbin.framework.api.XBApplication;
@@ -310,8 +309,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
             panel.setBlock(activeFile.getSelectedItem().orElse(null));
         }
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         controlPanel.setHandler(() -> {
             dialog.close();
             dialog.dispose();

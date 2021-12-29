@@ -20,10 +20,8 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.picture.ImageEditor;
-import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.PropertiesPanel;
 import org.exbin.framework.gui.editor.api.EditorProvider;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -67,9 +65,7 @@ public class PropertiesAction extends AbstractAction {
             PropertiesPanel propertiesPanel = new PropertiesPanel();
             propertiesPanel.setDocument((ImageEditor) editorProvider);
             CloseControlPanel controlPanel = new CloseControlPanel();
-            JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
-
-            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            final DialogWrapper dialog = frameModule.createDialog(propertiesPanel, controlPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
             frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
             controlPanel.setHandler(dialog::close);

@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.PropertiesPanel;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -72,9 +71,7 @@ public class PropertiesAction extends AbstractAction implements FileDependentAct
         PropertiesPanel propertiesPanel = new PropertiesPanel();
         propertiesPanel.setEditorProvider(editorProvider);
         CloseControlPanel controlPanel = new CloseControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
-
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(propertiesPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
         controlPanel.setHandler(() -> {

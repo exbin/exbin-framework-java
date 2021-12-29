@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
@@ -81,8 +80,7 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
         final TextFontPanel fontPanel = new TextFontPanel();
         fontPanel.setStoredFont(textFontApi.getCurrentFont());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(fontPanel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(fontPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
         controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {

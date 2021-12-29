@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.TextPropertiesPanel;
@@ -65,8 +64,7 @@ public class PropertiesAction extends AbstractAction {
             TextPropertiesPanel propertiesPanel = new TextPropertiesPanel();
             propertiesPanel.setDocument((TextEditor) editorProvider);
             CloseControlPanel controlPanel = new CloseControlPanel();
-            JPanel dialogPanel = WindowUtils.createDialogPanel(propertiesPanel, controlPanel);
-            final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+            final DialogWrapper dialog = frameModule.createDialog(propertiesPanel, controlPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
             frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
             controlPanel.setHandler(() -> {

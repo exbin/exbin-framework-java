@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.options.gui.OptionsTreePanel;
@@ -69,8 +68,7 @@ public class OptionsAction extends AbstractAction {
         optionsTreePanel.loadAllFromPreferences();
 
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(optionsTreePanel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(optionsTreePanel, controlPanel);
         frameModule.setDialogTitle(dialog, optionsTreePanel.getResourceBundle());
         controlPanel.setHandler((actionType) -> {
             switch (actionType) {

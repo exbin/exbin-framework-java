@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
@@ -85,9 +84,8 @@ public class GoToPositionAction extends AbstractAction implements FileDependentA
         goToPanel.setCursorPosition(codeArea.getDataPosition());
         goToPanel.setMaxPosition(codeArea.getDataSize());
         DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
-        JPanel dialogPanel = WindowUtils.createDialogPanel(goToPanel, controlPanel);
         GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
-        final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "", Dialog.ModalityType.APPLICATION_MODAL);
+        final DialogWrapper dialog = frameModule.createDialog(editorProvider.getEditorComponent(), Dialog.ModalityType.APPLICATION_MODAL, goToPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {

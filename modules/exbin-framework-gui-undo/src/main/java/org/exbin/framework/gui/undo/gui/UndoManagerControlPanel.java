@@ -17,6 +17,7 @@ package org.exbin.framework.gui.undo.gui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JButton;
 import org.exbin.framework.gui.undo.handler.UndoManagerControlHandler;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.OkCancelListener;
@@ -137,6 +138,12 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
                 WindowUtils.doButtonClick(closeButton);
             }
         }
+    }
+
+    @Nonnull
+    @Override
+    public JButton getDefaultButton() {
+        return closeButton;
     }
 
     @Nonnull

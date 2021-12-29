@@ -17,7 +17,6 @@ package org.exbin.framework.gui.service.catalog.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 import org.exbin.framework.gui.utils.LanguageUtils;
@@ -175,8 +174,7 @@ public class CatalogSpecDefEditorPanel extends javax.swing.JPanel {
         CatalogSelectRevPanel panel = new CatalogSelectRevPanel(catalog, targetType);
         panel.setApplication(application);
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(panel, controlPanel);
-        final DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final DialogWrapper dialog = frameModule.createDialog(panel, controlPanel);
         frameModule.setDialogTitle(dialog, panel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {

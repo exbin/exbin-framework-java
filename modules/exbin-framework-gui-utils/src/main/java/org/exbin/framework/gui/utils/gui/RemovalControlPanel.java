@@ -17,6 +17,7 @@ package org.exbin.framework.gui.utils.gui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JButton;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.OkCancelListener;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -147,6 +148,12 @@ public class RemovalControlPanel extends javax.swing.JPanel implements RemovalCo
     @Override
     public void performClick(RemovalControlHandler.ControlActionType actionType) {
         WindowUtils.doButtonClick(actionType == RemovalControlHandler.ControlActionType.OK ? okButton : cancelButton);
+    }
+
+    @Nonnull
+    @Override
+    public JButton getDefaultButton() {
+        return okButton;
     }
 
     @Nonnull

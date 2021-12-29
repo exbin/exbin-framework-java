@@ -32,7 +32,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.PagedData;
 import org.exbin.framework.api.XBApplication;
@@ -48,6 +47,7 @@ import org.exbin.framework.gui.file.api.AllFileTypes;
 import org.exbin.framework.gui.file.api.FileHandler;
 import org.exbin.framework.gui.file.api.FileType;
 import org.exbin.framework.gui.file.api.GuiFileModuleApi;
+import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
 
 /**
  * Compare files action.
@@ -81,10 +81,12 @@ public class CompareFilesAction extends AbstractAction {
         final CompareFilesPanel compareFilesPanel = new CompareFilesPanel();
         ResourceBundle panelResourceBundle = compareFilesPanel.getResourceBundle();
         CloseControlPanel controlPanel = new CloseControlPanel(panelResourceBundle);
-        JPanel dialogPanel = WindowUtils.createDialogPanel(compareFilesPanel, controlPanel);
-        Dimension preferredSize = dialogPanel.getPreferredSize();
-        dialogPanel.setPreferredSize(new Dimension(preferredSize.width, preferredSize.height + 450));
-        final WindowUtils.DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), panelResourceBundle.getString("dialog.title"), Dialog.ModalityType.APPLICATION_MODAL);
+        
+        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(editorProvider.getEditorComponent(), Dialog.ModalityType.APPLICATION_MODAL, compareFilesPanel, controlPanel);
+        frameModule.setDialogTitle(dialog, panelResourceBundle);
+        Dimension preferredSize = dialog.getWindow().getPreferredSize();
+        dialog.getWindow().setPreferredSize(new Dimension(preferredSize.width, preferredSize.height + 450));
         controlPanel.setHandler(dialog::close);
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (activeFile.isPresent()) {

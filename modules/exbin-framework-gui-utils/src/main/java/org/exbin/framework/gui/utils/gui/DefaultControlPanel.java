@@ -17,6 +17,7 @@ package org.exbin.framework.gui.utils.gui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JButton;
 import org.exbin.framework.gui.utils.LanguageUtils;
 import org.exbin.framework.gui.utils.OkCancelListener;
 import org.exbin.framework.gui.utils.WindowUtils;
@@ -128,6 +129,12 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
     @Override
     public void performClick(DefaultControlHandler.ControlActionType actionType) {
         WindowUtils.doButtonClick(actionType == DefaultControlHandler.ControlActionType.OK ? okButton : cancelButton);
+    }
+
+    @Nonnull
+    @Override
+    public JButton getDefaultButton() {
+        return okButton;
     }
 
     @Nonnull

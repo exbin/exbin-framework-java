@@ -18,7 +18,6 @@ package org.exbin.framework.gui.service.catalog.gui;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
@@ -140,8 +139,7 @@ public class CatalogItemEditPluginsPanel extends javax.swing.JPanel {
         editPanel.setNode(node);
 
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(editPanel, controlPanel);
 //        WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -220,8 +218,7 @@ public class CatalogItemEditPluginsPanel extends javax.swing.JPanel {
         editPanel.setPanelEditorsCount(panelEditorsCount);
 
         DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(editPanel, controlPanel);
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(dialogPanel);
+        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(editPanel, controlPanel);
 //        WindowUtils.addHeaderPanel(dialog.getWindow(), editPanel.getClass(), editPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
