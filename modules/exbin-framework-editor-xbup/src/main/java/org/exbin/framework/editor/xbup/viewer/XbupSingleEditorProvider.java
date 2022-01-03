@@ -151,6 +151,7 @@ public class XbupSingleEditorProvider implements XbupEditorProvider, ClipboardAc
         activeFile.getComponent().setPropertyChangeListener(propertyChangeListener);
     }
 
+    @Nonnull
     @Override
     public String getWindowTitle(String frameTitle) {
         XBTTreeDocument treeDocument = activeFile.getDoc();

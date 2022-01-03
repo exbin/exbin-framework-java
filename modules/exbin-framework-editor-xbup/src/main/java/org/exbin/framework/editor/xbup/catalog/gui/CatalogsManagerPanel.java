@@ -175,7 +175,6 @@ public class CatalogsManagerPanel extends javax.swing.JPanel {
         WindowUtils.invokeDialog(catalogsBrowserPanel);
     }
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane catalogsScrollPane;
     private javax.swing.JTable catalogsTable;

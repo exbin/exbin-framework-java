@@ -174,6 +174,7 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
+    @ParametersAreNonnullByDefault
     public interface Control {
 
         void activeIndexChanged(int index);

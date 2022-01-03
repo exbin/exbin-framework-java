@@ -198,6 +198,7 @@ public class StreamPreferences extends AbstractPreferences {
         }
     }
 
+    @Nonnull
     private static IllegalStateException throwCannotEdit() {
         return new IllegalStateException("Cannot edit stream preferences");
     }

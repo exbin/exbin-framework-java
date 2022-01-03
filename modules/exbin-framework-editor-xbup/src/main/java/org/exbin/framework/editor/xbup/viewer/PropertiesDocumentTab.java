@@ -16,6 +16,7 @@
 package org.exbin.framework.editor.xbup.viewer;
 
 import java.awt.BorderLayout;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
@@ -83,6 +84,7 @@ public class PropertiesDocumentTab implements DocumentTab {
         viewerPanel.repaint();
     }
 
+    @Nonnull
     @Override
     public JComponent getComponent() {
         return panel;

@@ -468,6 +468,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
         return editorActions.showAskForSaveDialog(modifiedFiles);
     }
 
+    @Nonnull
     @Override
     public List<FileHandler> getFileHandlers() {
         List<FileHandler> fileHandlers = new ArrayList<>();

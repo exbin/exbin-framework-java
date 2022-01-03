@@ -16,6 +16,7 @@
 package org.exbin.framework.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -49,6 +50,7 @@ public class XBApplicationEvent {
         this.eventType = eventType;
     }
 
+    @Nullable
     public Object getParameter() {
         return parameter;
     }

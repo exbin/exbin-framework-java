@@ -116,6 +116,7 @@ public class PreferencesWrapper implements Preferences {
         preferences.putByteArray(key, value);
     }
 
+    @Nonnull
     @Override
     public byte[] getByteArray(String key, byte[] def) {
         return preferences.getByteArray(key, def);
