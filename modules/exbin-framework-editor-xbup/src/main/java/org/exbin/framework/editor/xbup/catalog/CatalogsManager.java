@@ -22,9 +22,9 @@ import org.exbin.framework.editor.xbup.catalog.action.AddCatalogAction;
 import org.exbin.framework.editor.xbup.catalog.action.DeleteCatalogAction;
 import org.exbin.framework.editor.xbup.catalog.action.EditCatalogAction;
 import org.exbin.framework.editor.xbup.catalog.gui.CatalogsManagerPanel;
-import org.exbin.framework.gui.component.action.DefaultEditItemActions;
-import org.exbin.framework.gui.component.api.toolbar.EditItemActionsHandler;
-import org.exbin.framework.gui.component.api.toolbar.EditItemActionsUpdateListener;
+import org.exbin.framework.component.action.DefaultEditItemActions;
+import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
+import org.exbin.framework.component.api.toolbar.EditItemActionsUpdateListener;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCRoot;
 

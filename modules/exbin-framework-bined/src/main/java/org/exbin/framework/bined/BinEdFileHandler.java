@@ -46,12 +46,12 @@ import org.exbin.framework.bined.gui.BinEdComponentFileApi;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextFontApi;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.utils.ClipboardActionsHandler;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.file.api.FileType;
+import org.exbin.framework.utils.ClipboardActionsHandler;
+import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.type.XBData;
-import org.exbin.framework.gui.file.api.FileHandler;
-import org.exbin.framework.gui.undo.api.UndoFileHandler;
+import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.undo.api.UndoFileHandler;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**

@@ -19,7 +19,7 @@ import org.exbin.framework.editor.wave.options.WaveColorOptions;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.wave.preferences.WaveColorPreferences;
-import org.exbin.framework.gui.options.api.OptionsData;
+import org.exbin.framework.options.api.OptionsData;
 
 /**
  * Wave color options.

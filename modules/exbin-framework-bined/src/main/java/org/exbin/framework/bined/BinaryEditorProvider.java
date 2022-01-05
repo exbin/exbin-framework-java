@@ -35,16 +35,16 @@ import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.BinEdComponentPanel;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
-import org.exbin.framework.gui.action.api.GuiActionModuleApi;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.AllFileTypes;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.file.api.FileTypes;
-import org.exbin.framework.gui.file.api.GuiFileModuleApi;
-import org.exbin.framework.gui.file.api.FileHandler;
-import org.exbin.framework.gui.undo.api.UndoFileHandler;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdater;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.AllFileTypes;
+import org.exbin.framework.file.api.FileType;
+import org.exbin.framework.file.api.FileTypes;
+import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.undo.api.UndoFileHandler;
+import org.exbin.framework.utils.ClipboardActionsUpdater;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.file.api.FileModuleApi;
 
 /**
  * Binary editor provider.
@@ -215,7 +215,7 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
     @Override
     public void openFile() {
         if (releaseAllFiles()) {
-            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
             fileModule.getFileActions().openFile(activeFile, fileTypes, this);
         }
     }
@@ -247,14 +247,14 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Override
     public void saveAsFile() {
-        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
         fileModule.getFileActions().saveAsFile(activeFile, fileTypes, this);
     }
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
-            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
             return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
         }
 
@@ -285,12 +285,12 @@ public class BinaryEditorProvider implements EditorProvider, BinEdEditorProvider
 
     @Override
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
-        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
         fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
     private void updateClipboardActionsStatus() {
-        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         ((ClipboardActionsUpdater) actionModule.getClipboardActions()).updateClipboardActions();
     }
 }

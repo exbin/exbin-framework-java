@@ -18,7 +18,7 @@ package org.exbin.framework.editor.xbup.viewer;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.plugin.XBPluginRepository;
 

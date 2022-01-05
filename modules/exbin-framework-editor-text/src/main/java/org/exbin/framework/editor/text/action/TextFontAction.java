@@ -24,15 +24,15 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
 import org.exbin.framework.editor.text.preferences.TextFontPreferences;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileDependentAction;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
-import org.exbin.framework.gui.utils.gui.OptionsControlPanel;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.FileDependentAction;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.handler.OptionsControlHandler;
+import org.exbin.framework.utils.gui.OptionsControlPanel;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Text font action handler.
@@ -76,7 +76,7 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
         
         TextFontApi textFontApi = (TextFontApi) activeFile.get();
 
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();
         fontPanel.setStoredFont(textFontApi.getCurrentFont());
         OptionsControlPanel controlPanel = new OptionsControlPanel();

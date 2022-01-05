@@ -26,15 +26,15 @@ import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
 import org.exbin.framework.editor.text.options.gui.TextColorPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.preferences.TextColorPreferences;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.OptionsControlHandler;
-import org.exbin.framework.gui.utils.gui.OptionsControlPanel;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.handler.OptionsControlHandler;
+import org.exbin.framework.utils.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Text color action.
@@ -65,7 +65,7 @@ public class TextColorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         final TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {

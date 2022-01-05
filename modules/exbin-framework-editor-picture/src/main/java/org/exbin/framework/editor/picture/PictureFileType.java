@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.filechooser.FileFilter;
-import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.file.api.FileType;
 
 /**
  * Image File Filter.

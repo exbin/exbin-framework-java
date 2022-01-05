@@ -25,9 +25,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.gui.TextPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.FileType;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Text editor.

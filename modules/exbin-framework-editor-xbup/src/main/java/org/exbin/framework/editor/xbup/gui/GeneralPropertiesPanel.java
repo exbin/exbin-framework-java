@@ -19,7 +19,7 @@ import java.awt.BorderLayout;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.service.catalog.gui.CatalogItemInfoPanel;
+import org.exbin.framework.service.catalog.gui.CatalogItemInfoPanel;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;
 import org.exbin.xbup.core.block.declaration.catalog.XBCBlockDecl;

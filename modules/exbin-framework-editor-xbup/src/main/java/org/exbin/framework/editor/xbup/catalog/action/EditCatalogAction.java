@@ -21,18 +21,18 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.action.api.MenuManagement;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.service.ServiceManagerModule;
-import org.exbin.framework.gui.service.catalog.action.AddItemAction;
-import org.exbin.framework.gui.service.catalog.action.EditItemAction;
-import org.exbin.framework.gui.service.catalog.action.ExportItemAction;
-import org.exbin.framework.gui.service.catalog.action.ImportItemAction;
-import org.exbin.framework.gui.service.catalog.gui.CatalogEditorPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
+import org.exbin.framework.action.api.MenuManagement;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.service.ServiceManagerModule;
+import org.exbin.framework.service.catalog.action.AddItemAction;
+import org.exbin.framework.service.catalog.action.EditItemAction;
+import org.exbin.framework.service.catalog.action.ExportItemAction;
+import org.exbin.framework.service.catalog.action.ImportItemAction;
+import org.exbin.framework.service.catalog.gui.CatalogEditorPanel;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
 import org.exbin.xbup.core.catalog.base.XBCNode;
@@ -81,7 +81,7 @@ public class EditCatalogAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
         MenuManagement menuManagement = managerModule.getDefaultMenuManagement();
         CatalogEditorPanel catalogEditorPanel = new CatalogEditorPanel();

@@ -27,8 +27,8 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.utils.ActionUtils;
 import org.exbin.xbup.core.parser.XBProcessingException;
 
 /**

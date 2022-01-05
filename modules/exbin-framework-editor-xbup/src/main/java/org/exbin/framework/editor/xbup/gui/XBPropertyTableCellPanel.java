@@ -22,12 +22,12 @@ import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.data.gui.cell.ComponentPropertyTableCellPanel;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.data.gui.cell.ComponentPropertyTableCellPanel;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.handler.DefaultControlHandler;
+import org.exbin.framework.utils.gui.DefaultControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.parser.token.XBTToken;
@@ -112,7 +112,7 @@ public class XBPropertyTableCellPanel extends ComponentPropertyTableCellPanel {
             Logger.getLogger(XBPropertyTableCellPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         ModifyBlockPanel panel = new ModifyBlockPanel();
         panel.setApplication(application);
         panel.setCatalog(catalog);

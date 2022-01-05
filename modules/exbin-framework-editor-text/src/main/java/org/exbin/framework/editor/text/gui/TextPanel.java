@@ -44,14 +44,14 @@ import javax.swing.undo.UndoableEdit;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
-import org.exbin.framework.gui.utils.ClipboardActionsHandler;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.gui.undo.api.UndoActionsHandler;
-import org.exbin.framework.gui.undo.api.UndoUpdateListener;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.ClipboardActionsHandler;
+import org.exbin.framework.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.undo.api.UndoActionsHandler;
+import org.exbin.framework.undo.api.UndoUpdateListener;
+import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.utils.ClipboardUtils;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.xbup.core.util.StringUtils;
 
 /**

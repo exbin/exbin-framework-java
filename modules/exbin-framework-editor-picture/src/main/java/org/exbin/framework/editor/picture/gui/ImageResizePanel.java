@@ -17,8 +17,8 @@ package org.exbin.framework.editor.picture.gui;
 
 import java.awt.Point;
 import java.util.ResourceBundle;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Image resize panel.

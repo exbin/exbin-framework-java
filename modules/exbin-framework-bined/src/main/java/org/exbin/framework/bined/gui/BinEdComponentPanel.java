@@ -32,7 +32,7 @@ import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
 import org.exbin.auxiliary.paged_data.BinaryData;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.bined.service.impl.BinarySearchServiceImpl;
 
 /**

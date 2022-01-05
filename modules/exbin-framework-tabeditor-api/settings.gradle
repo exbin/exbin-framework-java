@@ -1,0 +1,12 @@
+rootProject.name = 'exbin-framework-editor-tab-api'
+
+if (rootProject.path == ':') {
+    include ':modules:exbin-framework'
+    include ':modules:exbin-framework-api'
+    include ':modules:exbin-framework-action-api'
+    include ':modules:exbin-framework-editor-api'
+    include ':modules:exbin-framework-file-api'
+    include ':modules:exbin-framework-utils'
+}
+
+apply from: '../exbin-framework-java-modules-settings.gradle'

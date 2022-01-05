@@ -23,12 +23,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.catalog.gui.AddCatalogPanel;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.gui.DefaultControlPanel;
+import org.exbin.framework.utils.handler.DefaultControlHandler;
 import org.exbin.xbup.catalog.modifiable.XBMNode;
 import org.exbin.xbup.catalog.modifiable.XBMRoot;
 import org.exbin.xbup.core.catalog.XBACatalog;
@@ -83,7 +83,7 @@ public class AddCatalogAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         resultRoot = null;
         AddCatalogPanel panel = new AddCatalogPanel();
         panel.setApplication(application);

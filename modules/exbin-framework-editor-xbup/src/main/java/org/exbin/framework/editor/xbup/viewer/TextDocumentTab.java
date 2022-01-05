@@ -27,7 +27,7 @@ import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
 import org.exbin.xbup.core.block.XBFBlockType;

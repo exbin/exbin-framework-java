@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.filechooser.FileFilter;
 import static org.exbin.framework.editor.xbup.EditorXbupModule.XB_FILE_TYPE;
-import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.file.api.FileType;
 
 /**
  * File types with just all files filter.

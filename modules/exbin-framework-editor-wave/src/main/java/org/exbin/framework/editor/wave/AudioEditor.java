@@ -25,10 +25,10 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.FileType;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Audio editor.

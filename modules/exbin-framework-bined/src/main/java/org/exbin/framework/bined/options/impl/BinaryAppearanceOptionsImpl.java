@@ -18,7 +18,7 @@ package org.exbin.framework.bined.options.impl;
 import org.exbin.framework.bined.options.BinaryAppearanceOptions;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.bined.preferences.BinaryAppearancePreferences;
-import org.exbin.framework.gui.options.api.OptionsData;
+import org.exbin.framework.options.api.OptionsData;
 
 /**
  * Binary component appearance options.

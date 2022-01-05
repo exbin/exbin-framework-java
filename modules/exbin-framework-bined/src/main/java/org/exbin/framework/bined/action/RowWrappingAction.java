@@ -21,10 +21,10 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileDependentAction;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.FileDependentAction;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Row wrapping handler.

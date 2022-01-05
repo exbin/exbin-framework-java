@@ -26,17 +26,17 @@ import javax.swing.SwingUtilities;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.GoToBinaryPanel;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
-import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.handler.DefaultControlHandler;
+import org.exbin.framework.utils.handler.DefaultControlHandler.ControlActionType;
+import org.exbin.framework.utils.gui.DefaultControlPanel;
+import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileDependentAction;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.file.api.FileDependentAction;
+import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
  * Go to position action.
@@ -84,7 +84,7 @@ public class GoToPositionAction extends AbstractAction implements FileDependentA
         goToPanel.setCursorPosition(codeArea.getDataPosition());
         goToPanel.setMaxPosition(codeArea.getDataSize());
         DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         final DialogWrapper dialog = frameModule.createDialog(editorProvider.getEditorComponent(), Dialog.ModalityType.APPLICATION_MODAL, goToPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
         frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());

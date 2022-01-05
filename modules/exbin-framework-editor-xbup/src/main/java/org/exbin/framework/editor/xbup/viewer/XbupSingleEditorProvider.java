@@ -28,19 +28,19 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.file.api.GuiFileModuleApi;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ClipboardActionsHandler;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.FileType;
+import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.ClipboardActionsHandler;
+import org.exbin.framework.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.plugin.XBPluginRepository;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Viewer provider.
@@ -100,7 +100,7 @@ public class XbupSingleEditorProvider implements XbupEditorProvider, ClipboardAc
 
     @Override
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
-        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
         fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
@@ -226,7 +226,7 @@ public class XbupSingleEditorProvider implements XbupEditorProvider, ClipboardAc
     }
 
     public void actionItemProperties() {
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         BlockPropertiesPanel panel = new BlockPropertiesPanel();
         panel.setApplication(application);
         panel.setCatalog(catalog);
@@ -293,7 +293,7 @@ public class XbupSingleEditorProvider implements XbupEditorProvider, ClipboardAc
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
-            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
             return fileModule.getFileActions().showAskForSaveDialog(fileHandler, null, this);
         }
 

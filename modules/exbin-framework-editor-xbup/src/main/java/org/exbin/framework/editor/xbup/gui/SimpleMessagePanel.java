@@ -16,7 +16,7 @@
 package org.exbin.framework.editor.xbup.gui;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Simple message panel.

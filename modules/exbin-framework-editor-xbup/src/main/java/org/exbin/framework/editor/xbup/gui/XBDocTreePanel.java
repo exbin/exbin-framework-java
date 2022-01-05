@@ -26,7 +26,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.viewer.DocumentItemSelectionListener;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.operation.undo.XBUndoHandler;

@@ -16,8 +16,8 @@
 package org.exbin.framework.bined.gui;
 
 import javax.swing.DefaultListModel;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
  * File properties panel.

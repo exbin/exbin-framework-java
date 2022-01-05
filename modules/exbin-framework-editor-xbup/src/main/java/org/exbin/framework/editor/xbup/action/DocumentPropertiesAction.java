@@ -25,13 +25,13 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.DocumentPropertiesPanel;
 import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.gui.CloseControlPanel;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Document properties action.
@@ -60,7 +60,7 @@ public class DocumentPropertiesAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         XBApplication application = editorProvider.getApplication();
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         DocumentPropertiesPanel propertiesPanel = new DocumentPropertiesPanel();
         Optional<FileHandler> activeFile = editorProvider.getActiveFile();
         if (!activeFile.isPresent()) {

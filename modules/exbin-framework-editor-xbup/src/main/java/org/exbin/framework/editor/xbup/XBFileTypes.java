@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.file.api.FileTypes;
+import org.exbin.framework.file.api.FileType;
+import org.exbin.framework.file.api.FileTypes;
 
 /**
  * File types with just all files filter.

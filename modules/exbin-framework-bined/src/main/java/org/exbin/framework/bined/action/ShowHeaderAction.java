@@ -24,11 +24,11 @@ import javax.swing.Action;
 import org.exbin.bined.extended.layout.ExtendedCodeAreaLayoutProfile;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileDependentAction;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.file.api.FileDependentAction;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Show header action.

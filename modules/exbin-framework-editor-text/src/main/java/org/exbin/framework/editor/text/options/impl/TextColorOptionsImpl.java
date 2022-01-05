@@ -19,7 +19,7 @@ import org.exbin.framework.editor.text.options.TextColorOptions;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.preferences.TextColorPreferences;
-import org.exbin.framework.gui.options.api.OptionsData;
+import org.exbin.framework.options.api.OptionsData;
 
 /**
  * Text color options.

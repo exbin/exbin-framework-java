@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
-import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.xbup.core.parser.token.XBAttribute;
 
 /**

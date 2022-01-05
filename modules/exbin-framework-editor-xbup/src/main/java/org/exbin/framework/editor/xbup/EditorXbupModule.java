@@ -37,24 +37,24 @@ import org.exbin.framework.editor.xbup.action.ItemPropertiesAction;
 import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupSingleEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupMultiEditorProvider;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.GuiFileModuleApi;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.action.api.MenuGroup;
-import org.exbin.framework.gui.action.api.MenuPosition;
-import org.exbin.framework.gui.action.api.PositionMode;
-import org.exbin.framework.gui.action.api.SeparationMode;
-import org.exbin.framework.gui.action.api.ToolBarGroup;
-import org.exbin.framework.gui.action.api.ToolBarPosition;
-import org.exbin.framework.gui.options.api.GuiOptionsModuleApi;
-import org.exbin.framework.gui.service.XBFileType;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.action.api.MenuGroup;
+import org.exbin.framework.action.api.MenuPosition;
+import org.exbin.framework.action.api.PositionMode;
+import org.exbin.framework.action.api.SeparationMode;
+import org.exbin.framework.action.api.ToolBarGroup;
+import org.exbin.framework.action.api.ToolBarPosition;
+import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.service.XBFileType;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.xbup.plugin.XBPluginRepository;
-import org.exbin.framework.gui.action.api.GuiActionModuleApi;
-import org.exbin.framework.gui.editor.api.EditorProviderVariant;
-import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.editor.api.EditorProviderVariant;
+import org.exbin.framework.utils.LanguageUtils;
 
 /**
  * XBUP editor module.
@@ -164,7 +164,7 @@ public class EditorXbupModule implements XBApplicationModule {
     }
 
     public void registerFileTypes() {
-        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
         fileModule.addFileType(new XBFileType());
     }
 
@@ -288,32 +288,32 @@ public class EditorXbupModule implements XBApplicationModule {
     }
 
     public void registerDocEditingMenuActions() {
-        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuGroup(GuiFrameModuleApi.EDIT_MENU_ID, new MenuGroup(EDIT_ITEM_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.AROUND));
-        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, getAddItemAction(), new MenuPosition(EDIT_ITEM_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.EDIT_MENU_ID, MODULE_ID, getEditItemAction(), new MenuPosition(EDIT_ITEM_MENU_GROUP_ID));
+        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        actionModule.registerMenuGroup(FrameModuleApi.EDIT_MENU_ID, new MenuGroup(EDIT_ITEM_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.AROUND));
+        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, getAddItemAction(), new MenuPosition(EDIT_ITEM_MENU_GROUP_ID));
+        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, getEditItemAction(), new MenuPosition(EDIT_ITEM_MENU_GROUP_ID));
     }
 
     public void registerDocEditingToolBarActions() {
-        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerToolBarGroup(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(EDIT_ITEM_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.BOTTOM), SeparationMode.AROUND));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getAddItemAction(), new ToolBarPosition(EDIT_ITEM_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(GuiFrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getEditItemAction(), new ToolBarPosition(EDIT_ITEM_TOOL_BAR_GROUP_ID));
+        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        actionModule.registerToolBarGroup(FrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(EDIT_ITEM_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.BOTTOM), SeparationMode.AROUND));
+        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getAddItemAction(), new ToolBarPosition(EDIT_ITEM_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getEditItemAction(), new ToolBarPosition(EDIT_ITEM_TOOL_BAR_GROUP_ID));
     }
 
     public void registerViewModeMenu() {
         getViewModeHandler();
-        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuGroup(GuiFrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_MODE_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowViewTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowPropertiesTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowTextTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(GuiFrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowBinaryTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        actionModule.registerMenuGroup(FrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_MODE_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
+        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowViewTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowPropertiesTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowTextTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, viewModeHandler.getShowBinaryTabAction(), new MenuPosition(VIEW_MODE_MENU_GROUP_ID));
     }
 
     public void registerStatusBar() {
         getStatusPanelHandler();
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, DOC_STATUS_BAR_ID, statusPanelHandler.getDocStatusPanel());
         frameModule.switchStatusBar(DOC_STATUS_BAR_ID);
         // ((XBDocumentPanel) getEditorProvider()).registerTextStatus(docStatusPanel);
@@ -321,17 +321,17 @@ public class EditorXbupModule implements XBApplicationModule {
 
     public void registerSampleFilesSubMenuActions() {
         getSampleFilesHandler();
-        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         actionModule.registerMenu(SAMPLE_FILE_SUBMENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, SAMPLE_FILE_SUBMENU_ID, "Open Sample File", new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, SAMPLE_FILE_SUBMENU_ID, "Open Sample File", new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenuItem(SAMPLE_FILE_SUBMENU_ID, MODULE_ID, sampleFilesHandler.getSampleHtmlFileAction(), new MenuPosition(PositionMode.TOP));
         actionModule.registerMenuItem(SAMPLE_FILE_SUBMENU_ID, MODULE_ID, sampleFilesHandler.getSamplePictureFileAction(), new MenuPosition(PositionMode.TOP));
         actionModule.registerMenuItem(SAMPLE_FILE_SUBMENU_ID, MODULE_ID, sampleFilesHandler.getSampleTypesFileAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerCatalogBrowserMenu() {
-        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getCatalogBrowserAction(), new MenuPosition(PositionMode.TOP));
+        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getCatalogBrowserAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void setDevMode(boolean devMode) {
@@ -339,19 +339,19 @@ public class EditorXbupModule implements XBApplicationModule {
     }
 
     public void registerOptionsPanels() {
-        GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
+        OptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(OptionsModuleApi.class);
         // TODO
     }
 
     public void registerPropertiesMenuAction() {
-        GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
-        actionModule.registerMenuItem(GuiFrameModuleApi.FILE_MENU_ID, MODULE_ID, getDocumentPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getDocumentPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     @Nonnull
     public JPopupMenu getItemPopupMenu() {
         if (itemPopupMenu == null) {
-            GuiActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(GuiActionModuleApi.class);
+            ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
             actionModule.registerMenu(XBUP_POPUP_MENU_ID, MODULE_ID);
             actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getAddItemAction(), new MenuPosition(PositionMode.TOP));
             actionModule.registerMenuItem(XBUP_POPUP_MENU_ID, MODULE_ID, getEditItemAction(), new MenuPosition(PositionMode.TOP));

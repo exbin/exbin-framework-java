@@ -25,8 +25,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.viewer.XbupSingleEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.ViewerTab;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.utils.ActionUtils;
 
 /**
  * View mode actions.

@@ -18,7 +18,7 @@ package org.exbin.framework.editor.text.options.impl;
 import org.exbin.framework.editor.text.options.TextAppearanceOptions;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.preferences.TextAppearancePreferences;
-import org.exbin.framework.gui.options.api.OptionsData;
+import org.exbin.framework.options.api.OptionsData;
 
 /**
  * Text appearance options.

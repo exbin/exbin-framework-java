@@ -36,18 +36,18 @@ import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.PagedData;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.CompareFilesPanel;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.gui.CloseControlPanel;
+import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.bined.BinedModule;
-import org.exbin.framework.gui.editor.api.MultiEditorProvider;
-import org.exbin.framework.gui.file.api.AllFileTypes;
-import org.exbin.framework.gui.file.api.FileHandler;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.file.api.GuiFileModuleApi;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.editor.api.MultiEditorProvider;
+import org.exbin.framework.file.api.AllFileTypes;
+import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.file.api.FileType;
+import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
  * Compare files action.
@@ -82,7 +82,7 @@ public class CompareFilesAction extends AbstractAction {
         ResourceBundle panelResourceBundle = compareFilesPanel.getResourceBundle();
         CloseControlPanel controlPanel = new CloseControlPanel(panelResourceBundle);
         
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         final WindowUtils.DialogWrapper dialog = frameModule.createDialog(editorProvider.getEditorComponent(), Dialog.ModalityType.APPLICATION_MODAL, compareFilesPanel, controlPanel);
         frameModule.setDialogTitle(dialog, panelResourceBundle);
         Dimension preferredSize = dialog.getWindow().getPreferredSize();
@@ -117,7 +117,7 @@ public class CompareFilesAction extends AbstractAction {
             @Override
             public CompareFilesPanel.FileRecord openFile() {
                 final File[] result = new File[1];
-                GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+                FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
                 fileModule.getFileActions().openFile((URI fileUri, FileType fileType) -> {
                     result[0] = new File(fileUri);
                 }, new AllFileTypes(), editorProvider);

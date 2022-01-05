@@ -23,14 +23,14 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultComboBoxModel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.service.catalog.gui.CatalogSelectRevPanel;
-import org.exbin.framework.gui.service.catalog.gui.CatalogItemType;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.service.catalog.gui.CatalogSelectRevPanel;
+import org.exbin.framework.service.catalog.gui.CatalogItemType;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.handler.DefaultControlHandler;
+import org.exbin.framework.utils.gui.DefaultControlPanel;
 import org.exbin.xbup.core.block.XBBasicBlockType;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockType;
@@ -270,7 +270,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
 
     private void contextTypeSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contextTypeSelectButtonActionPerformed
         if (catalog != null) {
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
             DefaultControlPanel controlPanel = new DefaultControlPanel();
             final ContextTypeChoicePanel panel = new ContextTypeChoicePanel(catalog, parentNode);
             panel.setCanProceedListener(controlPanel.createEnablementListener());
@@ -324,7 +324,7 @@ public class AddBlockPanel extends javax.swing.JPanel {
 
     private void catalogTypeSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_catalogTypeSelectButtonActionPerformed
         if (catalog != null) {
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
             final CatalogSelectRevPanel panel = new CatalogSelectRevPanel(catalog, CatalogItemType.BLOCK);
             panel.setApplication(application);
 

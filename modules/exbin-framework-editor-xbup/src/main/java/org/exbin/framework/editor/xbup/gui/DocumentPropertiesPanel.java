@@ -18,8 +18,8 @@ package org.exbin.framework.editor.xbup.gui;
 import java.net.URI;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
 import org.exbin.xbup.core.block.XBTEditableDocument;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 

@@ -22,8 +22,8 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.client.api.ClientConnectionEvent;
 import org.exbin.framework.client.api.ClientConnectionListener;
 import org.exbin.framework.editor.xbup.gui.XBDocStatusPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
  * Status panel handler.
@@ -53,7 +53,7 @@ public class StatusPanelHandler {
     public XBDocStatusPanel getDocStatusPanel() {
         if (docStatusPanel == null) {
             docStatusPanel = new XBDocStatusPanel();
-            GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+            FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
             frameModule.registerStatusBar(EditorXbupModule.MODULE_ID, EditorXbupModule.DOC_STATUS_BAR_ID, docStatusPanel);
             frameModule.switchStatusBar(EditorXbupModule.DOC_STATUS_BAR_ID);
             // ((XBDocumentPanel) getEditorProvider()).registerTextStatus(docStatusPanel);

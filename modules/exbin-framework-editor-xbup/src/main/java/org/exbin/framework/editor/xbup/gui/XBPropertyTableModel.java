@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
-import org.exbin.framework.gui.utils.LanguageUtils;
+import org.exbin.framework.utils.LanguageUtils;
 
 /**
  * Parameters list table model for item editing.

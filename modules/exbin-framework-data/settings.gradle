@@ -1,0 +1,17 @@
+rootProject.name = 'exbin-framework-data'
+
+if (rootProject.path == ':') {
+    include ':modules:exbin-framework'
+    include ':modules:exbin-framework-api'
+    include ':modules:exbin-framework-action'
+    include ':modules:exbin-framework-action-api'
+    include ':modules:exbin-framework-component'
+    include ':modules:exbin-framework-component-api'
+    include ':modules:exbin-framework-data-api'
+    include ':modules:exbin-framework-frame-api'
+    include ':modules:exbin-framework-undo'
+    include ':modules:exbin-framework-undo-api'
+    include ':modules:exbin-framework-utils'
+}
+
+apply from: '../exbin-framework-java-modules-settings.gradle'

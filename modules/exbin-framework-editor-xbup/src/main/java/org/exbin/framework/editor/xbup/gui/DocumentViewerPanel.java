@@ -22,7 +22,7 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JToggleButton;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Document viewer panel.

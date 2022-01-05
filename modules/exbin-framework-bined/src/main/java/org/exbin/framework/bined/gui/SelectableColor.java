@@ -19,7 +19,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Simple color selection component.

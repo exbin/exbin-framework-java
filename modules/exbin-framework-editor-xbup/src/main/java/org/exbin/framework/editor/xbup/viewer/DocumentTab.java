@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.utils.ClipboardActionsHandler;
+import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.plugin.XBPluginRepository;

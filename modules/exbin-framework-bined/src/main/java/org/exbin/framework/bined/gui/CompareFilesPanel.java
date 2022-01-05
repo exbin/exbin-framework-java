@@ -31,8 +31,8 @@ import javax.swing.event.PopupMenuListener;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.bined.handler.CodeAreaPopupMenuHandler;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Compare files panel.

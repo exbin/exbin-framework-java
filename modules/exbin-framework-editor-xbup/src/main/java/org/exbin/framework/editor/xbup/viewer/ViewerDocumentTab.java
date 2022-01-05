@@ -32,7 +32,7 @@ import org.exbin.framework.editor.xbup.gui.BlockRowEditorPanel;
 import org.exbin.framework.editor.xbup.gui.DocumentViewerPanel;
 import org.exbin.framework.editor.xbup.gui.ModifyBlockPanel;
 import org.exbin.framework.editor.xbup.gui.SimpleMessagePanel;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.block.declaration.XBBlockDecl;

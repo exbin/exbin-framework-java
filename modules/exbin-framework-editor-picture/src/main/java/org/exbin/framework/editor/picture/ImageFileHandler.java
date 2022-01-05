@@ -31,7 +31,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import static org.exbin.framework.editor.picture.gui.ImagePanel.toBufferedImage;
-import org.exbin.framework.gui.file.api.FileType;
+import org.exbin.framework.file.api.FileType;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
 import org.exbin.xbup.core.catalog.XBPCatalog;
@@ -47,7 +47,7 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.visual.picture.XBBufferedImage;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Image file handler.

@@ -13,7 +13,7 @@ Project is constructed from multiple repositories.
   * modules - Sources split in separate modules
   * src - Sources related to building distribution packages
   * deps - Folder for downloading libraries for dependency resolution
-  * doc - Documentation + related presentations
+  * lib - Additional libraries
   * gradle - Gradle wrapper
 
 Compiling

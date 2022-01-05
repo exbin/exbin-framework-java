@@ -23,14 +23,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.gui.PropertiesPanel;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.file.api.FileDependentAction;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.gui.CloseControlPanel;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.FileDependentAction;
+import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
  * Properties action.
@@ -67,7 +67,7 @@ public class PropertiesAction extends AbstractAction implements FileDependentAct
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         PropertiesPanel propertiesPanel = new PropertiesPanel();
         propertiesPanel.setEditorProvider(editorProvider);
         CloseControlPanel controlPanel = new CloseControlPanel();

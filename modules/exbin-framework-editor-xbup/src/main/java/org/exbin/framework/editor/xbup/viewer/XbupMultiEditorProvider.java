@@ -40,30 +40,30 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinEdFileHandler;
 import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
-import org.exbin.framework.gui.editor.MultiEditorUndoHandler;
-import org.exbin.framework.gui.editor.action.CloseAllFileAction;
-import org.exbin.framework.gui.editor.action.CloseFileAction;
-import org.exbin.framework.gui.editor.action.CloseOtherFileAction;
-import org.exbin.framework.gui.editor.action.EditorActions;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.editor.api.GuiEditorModuleApi;
-import org.exbin.framework.gui.editor.api.MultiEditorPopupMenu;
-import org.exbin.framework.gui.editor.api.MultiEditorProvider;
-import org.exbin.framework.gui.editor.gui.MultiEditorPanel;
-import org.exbin.framework.gui.file.api.AllFileTypes;
-import org.exbin.framework.gui.file.api.FileActionsApi;
-import org.exbin.framework.gui.file.api.FileType;
-import org.exbin.framework.gui.file.api.GuiFileModuleApi;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ClipboardActionsHandler;
-import org.exbin.framework.gui.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
+import org.exbin.framework.editor.MultiEditorUndoHandler;
+import org.exbin.framework.editor.action.CloseAllFileAction;
+import org.exbin.framework.editor.action.CloseFileAction;
+import org.exbin.framework.editor.action.CloseOtherFileAction;
+import org.exbin.framework.editor.action.EditorActions;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.editor.api.EditorModuleApi;
+import org.exbin.framework.editor.api.MultiEditorPopupMenu;
+import org.exbin.framework.editor.api.MultiEditorProvider;
+import org.exbin.framework.editor.gui.MultiEditorPanel;
+import org.exbin.framework.file.api.AllFileTypes;
+import org.exbin.framework.file.api.FileActionsApi;
+import org.exbin.framework.file.api.FileType;
+import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.ClipboardActionsHandler;
+import org.exbin.framework.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.plugin.XBPluginRepository;
-import org.exbin.framework.gui.file.api.FileHandler;
-import org.exbin.framework.gui.file.api.FileTypes;
+import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.file.api.FileTypes;
 
 /**
  * Multi editor provider.
@@ -116,7 +116,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
                 }
 
                 FileHandler fileHandler = multiEditorPanel.getFileHandler(index);
-                GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
+                EditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(EditorModuleApi.class);
                 JPopupMenu fileTabPopupMenu = new EditorPopupMenu(fileHandler);
                 CloseFileAction closeFileAction = (CloseFileAction) editorModule.getCloseFileAction();
                 JMenuItem closeMenuItem = new JMenuItem(closeFileAction);
@@ -162,7 +162,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
 
     @Override
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
-        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
         fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
@@ -300,7 +300,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
     }
 
     public void actionItemProperties() {
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         BlockPropertiesPanel panel = new BlockPropertiesPanel();
         panel.setApplication(application);
         panel.setCatalog(catalog);
@@ -361,7 +361,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
 
     @Override
     public void openFile() {
-        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
         FileActionsApi fileActions = fileModule.getFileActions();
         FileActionsApi.OpenFileResult openFileResult = fileActions.showOpenFileDialog(fileTypes, this);
         if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
@@ -421,14 +421,14 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
 
     @Override
     public void saveAsFile(FileHandler fileHandler) {
-        GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
         fileModule.getFileActions().saveAsFile(fileHandler, fileTypes, this);
     }
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
-            GuiFileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(GuiFileModuleApi.class);
+            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
             return fileModule.getFileActions().showAskForSaveDialog(fileHandler, null, this);
         }
 
@@ -463,7 +463,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
             return true;
         }
 
-        GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
+        EditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(EditorModuleApi.class);
         EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
         return editorActions.showAskForSaveDialog(modifiedFiles);
     }
@@ -545,7 +545,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
             return;
         }
 
-        GuiEditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(GuiEditorModuleApi.class);
+        EditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(EditorModuleApi.class);
         EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
         editorActions.showAskForSaveDialog(modifiedFiles);
     }

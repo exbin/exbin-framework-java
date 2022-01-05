@@ -17,8 +17,8 @@ package org.exbin.framework.editor.wave.gui;
 
 import javax.swing.ImageIcon;
 import org.exbin.framework.editor.wave.AudioControlApi;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Audio editor status panel.

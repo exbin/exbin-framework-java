@@ -26,11 +26,11 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileDependentAction;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.file.api.FileDependentAction;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Clipboard code actions.

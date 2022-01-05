@@ -25,10 +25,10 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.utils.ActionUtils;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.utils.ActionUtils;
 import org.exbin.xbup.audio.swing.XBWavePanel;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Edit tool actions.

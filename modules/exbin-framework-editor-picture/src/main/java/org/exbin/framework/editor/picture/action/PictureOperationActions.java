@@ -27,15 +27,15 @@ import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ImageResizePanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler;
-import org.exbin.framework.gui.utils.handler.DefaultControlHandler.ControlActionType;
-import org.exbin.framework.gui.utils.gui.DefaultControlPanel;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.handler.DefaultControlHandler;
+import org.exbin.framework.utils.handler.DefaultControlHandler.ControlActionType;
+import org.exbin.framework.utils.gui.DefaultControlPanel;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Picture operation actions.
@@ -79,7 +79,7 @@ public class PictureOperationActions {
                     final ImageResizePanel imageResizePanel = new ImageResizePanel();
                     imageResizePanel.setResolution(imagePanel.getImageSize());
                     DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
-                    GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+                    FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
                     final DialogWrapper dialog = frameModule.createDialog(imageResizePanel, controlPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());

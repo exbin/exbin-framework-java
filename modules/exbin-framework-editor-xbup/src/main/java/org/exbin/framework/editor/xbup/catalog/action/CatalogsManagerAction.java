@@ -24,12 +24,12 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.catalog.CatalogsManager;
 import org.exbin.framework.editor.xbup.gui.AddBlockPanel;
 import org.exbin.framework.editor.xbup.catalog.gui.CatalogsManagerPanel;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
@@ -65,7 +65,7 @@ public class CatalogsManagerAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         CatalogsManager catalogsBrowser = new CatalogsManager();
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         catalogsBrowser.setApplication(application);
         catalogsBrowser.setCatalog(catalog);
         CatalogsManagerPanel panel = catalogsBrowser.getCatalogsManagerPanel();

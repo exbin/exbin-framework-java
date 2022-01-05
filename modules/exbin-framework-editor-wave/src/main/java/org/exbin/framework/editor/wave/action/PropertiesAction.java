@@ -25,13 +25,13 @@ import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.wave.gui.PropertiesPanel;
-import org.exbin.framework.gui.editor.api.EditorProvider;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.utils.ActionUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.utils.gui.CloseControlPanel;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Properties action.
@@ -68,7 +68,7 @@ public class PropertiesAction extends AbstractAction {
         }
 
         AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
 
         PropertiesPanel propertiesPanel = new PropertiesPanel();
         propertiesPanel.setDocument((AudioEditor) editorProvider);

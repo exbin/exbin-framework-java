@@ -27,11 +27,11 @@ import org.exbin.auxiliary.paged_data.delta.FileSegment;
 import org.exbin.auxiliary.paged_data.delta.MemorySegment;
 import org.exbin.auxiliary.paged_data.delta.list.DefaultDoublyLinkedList;
 import org.exbin.bined.swing.extended.ExtCodeArea;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.editor.api.EditorProvider;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.gui.file.api.FileHandler;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * File properties panel.

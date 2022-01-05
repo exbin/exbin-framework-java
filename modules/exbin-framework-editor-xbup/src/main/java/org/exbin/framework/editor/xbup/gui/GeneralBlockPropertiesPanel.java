@@ -32,12 +32,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.gui.frame.api.GuiFrameModuleApi;
-import org.exbin.framework.gui.service.catalog.gui.CatalogItemPanel;
-import org.exbin.framework.gui.utils.BareBonesBrowserLaunch;
-import org.exbin.framework.gui.utils.LanguageUtils;
-import org.exbin.framework.gui.utils.WindowUtils;
-import org.exbin.framework.gui.utils.gui.CloseControlPanel;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.service.catalog.gui.CatalogItemPanel;
+import org.exbin.framework.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.block.XBBlockDataMode;
 import org.exbin.xbup.core.block.XBBlockTerminationMode;
 import org.exbin.xbup.core.block.XBBlockType;
@@ -323,7 +323,7 @@ public class GeneralBlockPropertiesPanel extends javax.swing.JPanel {
             itemPanel.setItem(spec);
         }
 
-        GuiFrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(GuiFrameModuleApi.class);
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         CloseControlPanel controlPanel = new CloseControlPanel();
         final WindowUtils.DialogWrapper dialog = frameModule.createDialog(itemPanel, controlPanel);
         controlPanel.setHandler(() -> {
