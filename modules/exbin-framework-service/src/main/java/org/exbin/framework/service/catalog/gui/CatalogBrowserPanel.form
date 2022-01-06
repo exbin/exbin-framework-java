@@ -14,10 +14,10 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupEditMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogBrowserPanel.properties" key="editMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogBrowserPanel.properties" key="editMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogBrowserPanel.properties" key="editMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogBrowserPanel.properties" key="editMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupEditMenuItem" noResource="true"/>
           </Properties>
@@ -28,10 +28,10 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupRefreshMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogBrowserPanel.properties" key="refreshMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogBrowserPanel.properties" key="refreshMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogBrowserPanel.properties" key="refreshMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogBrowserPanel.properties" key="refreshMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupRefreshMenuItem" noResource="true"/>
           </Properties>

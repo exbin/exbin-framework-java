@@ -14,10 +14,10 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupAddFileMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="addFileMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="addFileMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="addMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="addMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="name" type="java.lang.String" value="popupAddFileMenuItem" noResource="true"/>
           </Properties>
@@ -28,10 +28,10 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupImportItemMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="importItemMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="importItemMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="importItemMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="importItemMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="popupImportItemMenuItem" noResource="true"/>
@@ -43,10 +43,10 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupExportItemMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="exportItemMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="exportItemMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="exportItemMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="exportItemMenuItem.toolTipText" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="popupExportItemMenuItem" noResource="true"/>
@@ -77,7 +77,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="popupPropertiesMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="propertiesMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditFilesPanel.properties" key="propertiesMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="popupPropertiesMenuItem" noResource="true"/>

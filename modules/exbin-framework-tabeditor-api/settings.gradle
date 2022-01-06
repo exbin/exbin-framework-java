@@ -1,4 +1,4 @@
-rootProject.name = 'exbin-framework-editor-tab-api'
+rootProject.name = 'exbin-framework-tabeditor-api'
 
 if (rootProject.path == ':') {
     include ':modules:exbin-framework'

@@ -87,7 +87,7 @@
                       <Color blue="ff" green="ff" id="EditorPane.background" palette="3" red="ff" type="palette"/>
                     </Property>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="org/exbin/framework/gui/options/gui/resources/OptionsTreePanel.properties" key="optionsAreaTitleLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="org/exbin/framework/options/gui/resources/OptionsTreePanel.properties" key="optionsAreaTitleLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="opaque" type="boolean" value="true"/>
                     <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>

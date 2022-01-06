@@ -136,7 +136,7 @@ public class ConnectionPanel extends javax.swing.JPanel {
         jLayeredPane1.add(serviceLabel);
         serviceLabel.setBounds(100, 0, 480, 43);
 
-        logoImageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/service/resources/images/xbup_maskot4_small.png"))); // NOI18N
+        logoImageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/service/resources/images/xbup_maskot4_small.png"))); // NOI18N
         jLayeredPane2.add(logoImageLabel);
         logoImageLabel.setBounds(20, 0, 50, 80);
 

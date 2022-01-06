@@ -80,7 +80,7 @@
         <Component class="javax.swing.JLabel" name="prereleaseWarningLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="prereleaseWarningLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="prereleaseWarningLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -102,7 +102,7 @@
                   <Font name="Tahoma" size="36" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="serviceLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="serviceLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Constraints>
@@ -122,7 +122,7 @@
             <Component class="javax.swing.JLabel" name="logoImageLabel">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/org/exbin/framework/gui/service/resources/images/xbup_maskot4_small.png"/>
+                  <Image iconType="3" name="/org/exbin/framework/service/resources/images/xbup_maskot4_small.png"/>
                 </Property>
               </Properties>
               <Constraints>
@@ -210,7 +210,7 @@
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Login account">
-                  <ResourceString PropertyName="titleX" bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="loginPanel.border.title" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString PropertyName="titleX" bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="loginPanel.border.title" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -251,7 +251,7 @@
             <Component class="javax.swing.JLabel" name="usernameLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="usernameLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="usernameLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
@@ -265,7 +265,7 @@
             <Component class="javax.swing.JLabel" name="passwordLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="passwordLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="passwordLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
@@ -280,7 +280,7 @@
         <Component class="javax.swing.JButton" name="okButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="okButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="okButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
@@ -291,7 +291,7 @@
         <Component class="javax.swing.JButton" name="cancelButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="cancelButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="cancelButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -301,7 +301,7 @@
         <Component class="javax.swing.JLabel" name="connectionPointLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="connectionPointLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="connectionPointLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -320,7 +320,7 @@
         <Component class="javax.swing.JButton" name="connectionManageButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="connectionManageButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="connectionManageButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -331,7 +331,7 @@
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="anonymousRadioButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="anonymousRadioButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -341,7 +341,7 @@
         <Component class="javax.swing.JRadioButton" name="loginRadioButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/gui/resources/ConnectionPanel.properties" key="loginRadioButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/gui/resources/ConnectionPanel.properties" key="loginRadioButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>

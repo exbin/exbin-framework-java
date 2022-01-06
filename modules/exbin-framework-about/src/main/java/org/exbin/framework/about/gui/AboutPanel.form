@@ -34,7 +34,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
-    <AuxValue name="FormSettings_formBundle" type="java.lang.String" value="org/exbin/framework/gui/about/gui/resources/AboutPanel"/>
+    <AuxValue name="FormSettings_formBundle" type="java.lang.String" value="org/exbin/framework/about/gui/resources/AboutPanel"/>
     <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
@@ -139,7 +139,7 @@
                   </FontInfo>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/gui/about/gui/resources/AboutPanel.properties" key="nameLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/about/gui/resources/AboutPanel.properties" key="nameLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <AuxValues>
@@ -166,7 +166,7 @@
                   </FontInfo>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/gui/about/gui/resources/AboutPanel.properties" key="versionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/about/gui/resources/AboutPanel.properties" key="versionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <AuxValues>
@@ -193,7 +193,7 @@
                   </FontInfo>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/gui/about/gui/resources/AboutPanel.properties" key="vendorLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/about/gui/resources/AboutPanel.properties" key="vendorLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <AuxValues>
@@ -220,7 +220,7 @@
                   </FontInfo>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/gui/about/gui/resources/AboutPanel.properties" key="appLicenseLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/about/gui/resources/AboutPanel.properties" key="appLicenseLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <AuxValues>
@@ -247,7 +247,7 @@
                   </FontInfo>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/exbin/framework/gui/about/gui/resources/AboutPanel.properties" key="homepageLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="org/exbin/framework/about/gui/resources/AboutPanel.properties" key="homepageLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <AuxValues>

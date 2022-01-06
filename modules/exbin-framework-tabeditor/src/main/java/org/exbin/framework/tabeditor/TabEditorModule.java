@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.editor.tab;
+package org.exbin.framework.tabeditor;
 
 import java.awt.Component;
 import java.util.ResourceBundle;
@@ -24,8 +24,8 @@ import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
-import org.exbin.framework.editor.tab.api.GuiEditorTabModuleApi;
-import org.exbin.framework.editor.tab.api.EditorViewHandling;
+import org.exbin.framework.tabeditor.api.TabEditorModuleApi;
+import org.exbin.framework.tabeditor.api.EditorViewHandling;
 
 /**
  * Implementation of XBUP framework multi-tab editor module.
@@ -34,7 +34,7 @@ import org.exbin.framework.editor.tab.api.EditorViewHandling;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class GuiEditorTabModule implements GuiEditorTabModuleApi {
+public class TabEditorModule implements TabEditorModuleApi {
 
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";
     public static final String VIEW_BARS_GROUP_ID = MODULE_ID + ".view";
@@ -46,7 +46,7 @@ public class GuiEditorTabModule implements GuiEditorTabModuleApi {
 //    private EditorFactory factory = null;
     private MultiEditorProvider multiEditorProvider = null;
 
-    public GuiEditorTabModule() {
+    public TabEditorModule() {
     }
 
     @Override

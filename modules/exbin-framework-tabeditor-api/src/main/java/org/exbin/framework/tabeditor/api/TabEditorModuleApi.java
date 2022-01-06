@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.gui.editor.tab.api;
+package org.exbin.framework.tabeditor.api;
 
 import java.awt.Component;
 import javax.annotation.Nonnull;
@@ -28,9 +28,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface GuiEditorTabModuleApi extends XBApplicationModule {
+public interface TabEditorModuleApi extends XBApplicationModule {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(GuiEditorTabModuleApi.class);
+    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(TabEditorModuleApi.class);
 
     /**
      * Returns docking viewport panel.

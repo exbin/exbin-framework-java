@@ -71,7 +71,7 @@
         <Component class="javax.swing.JButton" name="addButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditRevsPanel.properties" key="addButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditRevsPanel.properties" key="addButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -116,7 +116,7 @@
         <Component class="javax.swing.JButton" name="modifyButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditRevsPanel.properties" key="modifyButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditRevsPanel.properties" key="modifyButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -126,7 +126,7 @@
         <Component class="javax.swing.JButton" name="removeDefButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogItemEditRevsPanel.properties" key="removeDefButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogItemEditRevsPanel.properties" key="removeDefButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>

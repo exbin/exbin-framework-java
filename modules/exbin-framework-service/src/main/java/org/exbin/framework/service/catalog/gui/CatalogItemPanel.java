@@ -182,7 +182,7 @@ public class CatalogItemPanel extends javax.swing.JPanel {
         iconPanel.setName("iconPanel"); // NOI18N
         iconPanel.setLayout(new java.awt.BorderLayout());
 
-        itemIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/service/resources/images/empty.png"))); // NOI18N
+        itemIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/service/resources/images/empty.png"))); // NOI18N
         itemIconLabel.setName("itemIconLabel"); // NOI18N
         iconPanel.add(itemIconLabel, java.awt.BorderLayout.CENTER);
 
@@ -545,7 +545,7 @@ public class CatalogItemPanel extends javax.swing.JPanel {
                 ImageIcon icon = iconService.getDefaultImageIcon(item);
                 itemIconLabel.setIcon(icon);
             } else {
-                itemIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/gui/service/resources/images/empty.png")));
+                itemIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/service/resources/images/empty.png")));
             }
 //            itemHD
         } else {

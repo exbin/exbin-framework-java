@@ -59,7 +59,7 @@
     <Component class="javax.swing.JLabel" name="limitLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/gui/service/catalog/gui/resources/CatalogSpecRevEditorPanel.properties" key="limitLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/service/catalog/gui/resources/CatalogSpecRevEditorPanel.properties" key="limitLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
