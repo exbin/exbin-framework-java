@@ -5,8 +5,8 @@ plugins {
 }
 
 group = 'org.exbin.framework'
-ext.libraryName = 'ExBin Framework Component Library'
-ext.libraryDescription = 'Library for extra components for ExBin Framework'
+ext.libraryName = 'ExBin Framework Project Library'
+ext.libraryDescription = 'Library for project functionality in ExBin Framework'
 
 apply from: '../exbin-framework-java-modules.gradle'
 
@@ -23,12 +23,10 @@ repositories {
 }
 
 dependencies {
-    api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-component-api')
+    api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-project-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-utils')
-    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-action')
-    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-undo')
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 
     testImplementation group : 'junit', name: 'junit', version: '4.10'
