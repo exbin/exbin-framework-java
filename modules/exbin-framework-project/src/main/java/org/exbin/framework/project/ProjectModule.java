@@ -15,21 +15,26 @@
  */
 package org.exbin.framework.project;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.project.api.ProjectModuleApi;
+import org.exbin.framework.project.api.ProjectType;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of framework project module.
  *
- * @version 0.2.2 2022/01/07
+ * @version 0.2.2 2022/01/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ProjectModule implements ProjectModuleApi {
 
     private XBApplication application;
+
+    private static final List<ProjectType> projectTypes = new ArrayList<>();
 
     public ProjectModule() {
     }
@@ -43,4 +48,8 @@ public class ProjectModule implements ProjectModuleApi {
     public void unregisterModule(String moduleId) {
     }
 
+    @Override
+    public void registerProjetType(ProjectType projectType) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -22,7 +22,7 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 /**
  * Interface for framework project module.
  *
- * @version 0.2.2 2022/01/06
+ * @version 0.2.2 2022/01/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -30,4 +30,5 @@ public interface ProjectModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(ProjectModuleApi.class);
 
+    void registerProjetType(ProjectType projectType);
 }

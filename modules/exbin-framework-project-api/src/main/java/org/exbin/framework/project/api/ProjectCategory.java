@@ -25,8 +25,16 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ProjectType {
-    
+public interface ProjectCategory {
+
+    /**
+     * Slash separated identifier.
+     *
+     * @return identifier
+     */
     @Nonnull
-    ProjectCategory getCategory();
+    String getId();
+
+    @Nonnull
+    String getName();
 }

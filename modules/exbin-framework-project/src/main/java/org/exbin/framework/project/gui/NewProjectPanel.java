@@ -39,19 +39,50 @@ public class NewProjectPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 884, Short.MAX_VALUE)
+        splitPane = new javax.swing.JSplitPane();
+        categoryPanel = new javax.swing.JPanel();
+        categoryLabel = new javax.swing.JLabel();
+        categoryScrollPane = new javax.swing.JScrollPane();
+        categoryTree = new javax.swing.JTree();
+
+        setLayout(new java.awt.BorderLayout());
+
+        categoryLabel.setText("Category");
+
+        categoryScrollPane.setViewportView(categoryTree);
+
+        javax.swing.GroupLayout categoryPanelLayout = new javax.swing.GroupLayout(categoryPanel);
+        categoryPanel.setLayout(categoryPanelLayout);
+        categoryPanelLayout.setHorizontalGroup(
+            categoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(categoryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(categoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(categoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(categoryLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 453, Short.MAX_VALUE)
+        categoryPanelLayout.setVerticalGroup(
+            categoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(categoryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(categoryLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(categoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        splitPane.setLeftComponent(categoryPanel);
+
+        add(splitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel categoryLabel;
+    private javax.swing.JPanel categoryPanel;
+    private javax.swing.JScrollPane categoryScrollPane;
+    private javax.swing.JTree categoryTree;
+    private javax.swing.JSplitPane splitPane;
     // End of variables declaration//GEN-END:variables
 }
