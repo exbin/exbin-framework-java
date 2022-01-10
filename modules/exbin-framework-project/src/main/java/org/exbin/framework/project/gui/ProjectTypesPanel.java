@@ -16,6 +16,7 @@
 package org.exbin.framework.project.gui;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Project types panel.
@@ -73,6 +74,15 @@ public class ProjectTypesPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ProjectTypesPanel());
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

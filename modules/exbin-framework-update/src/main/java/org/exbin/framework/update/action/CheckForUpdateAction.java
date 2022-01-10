@@ -79,7 +79,7 @@ public class CheckForUpdateAction extends AbstractAction {
         frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
         controlPanel.setHandler(dialog::close);
         checkForUpdatePanel.setCheckForUpdateService(getCheckForUpdateService());
-        checkForUpdatePanel.checkForUpdate();
+        checkForUpdatePanel.performCheckForUpdate();
         dialog.showCentered((Component) e.getSource());
         dialog.dispose();
     }

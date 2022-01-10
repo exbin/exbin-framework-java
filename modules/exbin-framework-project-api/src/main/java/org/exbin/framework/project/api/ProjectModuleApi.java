@@ -15,9 +15,13 @@
  */
 package org.exbin.framework.project.api;
 
+import java.util.Collection;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
  * Interface for framework project module.
@@ -29,6 +33,27 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
 public interface ProjectModuleApi extends XBApplicationModule {
 
     public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(ProjectModuleApi.class);
+    public static String PROJECT_MENU_ID = FrameModuleApi.MAIN_MENU_ID + "/File";
+    public static final String PROJECT_MENU_GROUP_ID = MODULE_ID + ".projectMenuGroup";
 
-    void registerProjetType(ProjectType projectType);
+    void registerProjectCategory(ProjectCategory projectCategory);
+
+    void registerProjectType(ProjectType projectType);
+
+    @Nonnull
+    Collection<ProjectCategory> getProjectCategories();
+
+    @Nonnull
+    Collection<ProjectType> getProjectTypes();
+
+    void registerMenuFileHandlingActions();
+
+    @Nonnull
+    AbstractAction getNewProjectAction();
+
+    @Nonnull
+    AbstractAction getOpenProjectAction();
+
+    @Nonnull
+    AbstractAction getSaveProjectAction();
 }

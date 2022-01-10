@@ -30,7 +30,7 @@ import org.exbin.framework.utils.WindowUtils;
 /**
  * Check for update panel.
  *
- * @version 0.2.1 2019/07/15
+ * @version 0.2.2 2022/01/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -38,6 +38,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdatePanel.class);
     private CheckForUpdateService checkForUpdateService;
+    private Control control;
 
     public CheckForUpdatePanel() {
         initComponents();
@@ -46,6 +47,10 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
     @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void setControl(Control control) {
+        this.control = control;
     }
 
     public void setCheckForUpdateService(CheckForUpdateService checkForUpdateService) {
@@ -61,7 +66,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
         }
     }
 
-    public void checkForUpdate() {
+    public void performCheckForUpdate() {
         recheckButton.setEnabled(false);
         statusTextLabel.setText(resourceBundle.getString("status.checking.text"));
         statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("status.checking.icon"))));
@@ -205,7 +210,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
     }// </editor-fold>//GEN-END:initComponents
 
     private void recheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recheckButtonActionPerformed
-        checkForUpdate();
+        performCheckForUpdate();
     }//GEN-LAST:event_recheckButtonActionPerformed
 
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
@@ -282,5 +287,10 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
                 break;
             }
         }
+    }
+
+    public interface Control {
+
+        void checkForUpdate();
     }
 }

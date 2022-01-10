@@ -16,6 +16,8 @@
 package org.exbin.framework.service.catalog.gui;
 
 import java.awt.event.ActionEvent;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -93,10 +95,12 @@ public class CatalogBIconPropertyTableCellPanel extends CatalogPropertyTableCell
         setPropertyText(icon == null || icon.length == 0 ? "" : "[" + icon.length + " bytes]");
     }
 
+    @Nullable
     public byte[] getIcon() {
         return icon;
     }
 
+    @Nonnull
     public XBACatalog getCatalog() {
         return catalog;
     }

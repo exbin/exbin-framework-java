@@ -26,6 +26,8 @@ dependencies {
     api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-project-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-action-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-frame-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-utils')
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 

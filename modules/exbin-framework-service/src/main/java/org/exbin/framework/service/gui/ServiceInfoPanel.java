@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.service.gui;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.service.XBDbServiceClient;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
@@ -26,6 +27,7 @@ import org.exbin.xbup.client.XBCatalogServiceClient;
  * @version 0.2.1 2019/06/24
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ServiceInfoPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ServiceInfoPanel.class);

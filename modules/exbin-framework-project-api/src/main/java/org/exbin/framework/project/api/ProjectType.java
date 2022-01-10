@@ -21,12 +21,18 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Project type interface.
  *
- * @version 0.2.2 2022/01/07
+ * @version 0.2.2 2022/01/10
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ProjectType {
-    
+
+    @Nonnull
+    String getId();
+
     @Nonnull
     ProjectCategory getCategory();
+
+    @Nonnull
+    String getName();
 }

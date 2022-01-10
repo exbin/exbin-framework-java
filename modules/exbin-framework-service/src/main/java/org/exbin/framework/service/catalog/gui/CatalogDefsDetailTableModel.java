@@ -15,6 +15,9 @@
  */
 package org.exbin.framework.service.catalog.gui;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.xbup.core.catalog.base.XBCBlockCons;
 import org.exbin.xbup.core.catalog.base.XBCBlockJoin;
@@ -30,6 +33,7 @@ import org.exbin.xbup.core.catalog.base.XBCSpecDef;
  * @version 0.2.0 2016/02/01
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogDefsDetailTableModel extends AbstractTableModel {
 
     private CatalogDefsTableItem item = null;
@@ -88,6 +92,7 @@ public class CatalogDefsDetailTableModel extends AbstractTableModel {
         }
     }
 
+    @Nullable
     public CatalogDefsTableItem getItem() {
         return item;
     }
@@ -97,11 +102,13 @@ public class CatalogDefsDetailTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    @Nonnull
     @Override
     public String getColumnName(int columnIndex) {
         return columnNames[columnIndex];
     }
 
+    @Nonnull
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return columnClasses[columnIndex];

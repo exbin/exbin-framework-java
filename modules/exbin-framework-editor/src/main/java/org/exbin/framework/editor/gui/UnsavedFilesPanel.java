@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.utils.LanguageUtils;
@@ -47,10 +46,8 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        filesList.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                saveButton.setEnabled(filesList.getSelectedIndex() != -1);
-            }
+        filesList.addListSelectionListener((ListSelectionEvent e) -> {
+            saveButton.setEnabled(filesList.getSelectedIndex() != -1);
         });
     }
 

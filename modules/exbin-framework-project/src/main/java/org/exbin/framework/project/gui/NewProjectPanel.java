@@ -16,6 +16,7 @@
 package org.exbin.framework.project.gui;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
  * New project panel.
@@ -68,8 +69,8 @@ public class NewProjectPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(categoryLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(categoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(categoryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         splitPane.setLeftComponent(categoryPanel);
@@ -77,6 +78,14 @@ public class NewProjectPanel extends javax.swing.JPanel {
         add(splitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new NewProjectPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel categoryLabel;

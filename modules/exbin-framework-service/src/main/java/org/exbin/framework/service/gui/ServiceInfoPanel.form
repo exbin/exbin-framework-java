@@ -58,7 +58,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="&lt;connectionInfoBorderPanel.border.title&gt;">
+            <TitledBorder title="Connection Information">
               <ResourceString PropertyName="titleX" bundle="org/exbin/framework/service/gui/resources/ServiceManagerPanel.properties" key="connectionInfoBorderPanel.border.title" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
@@ -150,7 +150,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="&lt;serviceInfoBorderPanel.border.title&gt;">
+            <TitledBorder title="Service information">
               <ResourceString PropertyName="titleX" bundle="org/exbin/framework/service/gui/resources/ServiceManagerPanel.properties" key="serviceInfoBorderPanel.border.title" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
@@ -254,7 +254,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="&lt;managerInfoBorderPanel.border.title&gt;">
+            <TitledBorder title="Manager Information">
               <ResourceString PropertyName="titleX" bundle="org/exbin/framework/service/gui/resources/ServiceManagerPanel.properties" key="managerInfoBorderPanel.border.title" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
