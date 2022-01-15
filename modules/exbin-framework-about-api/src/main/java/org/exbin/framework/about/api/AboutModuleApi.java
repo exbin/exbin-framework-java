@@ -42,6 +42,9 @@ public interface AboutModuleApi extends XBApplicationModule {
     @Nonnull
     Action getAboutAction();
 
+    /**
+     * Registers About action in default menu.
+     */
     void registerDefaultMenuItem();
 
     /**

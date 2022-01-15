@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.EventObject;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -195,12 +196,8 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
         tableModel.addRow(new String[]{"Name", nameService.getDefaultText(catalogItem)});
         tableModel.addRow(new String[]{"Description", descService.getDefaultText(catalogItem)});
         tableModel.addRow(new String[]{"Parent Node", parentId});
-        String itemIndex = null;
-        Long xbIndex = catalogItem.getXBIndex();
-        if (xbIndex != null) {
-            itemIndex = xbIndex.toString();
-        }
-        tableModel.addRow(new String[]{"XBIndex", itemIndex});
+        long xbIndex = catalogItem.getXBIndex();
+        tableModel.addRow(new String[]{"XBIndex", String.valueOf(xbIndex)});
 
         String pathName = null;
         XBCXStri stringId = striService.getItemStringId(catalogItem);
@@ -365,9 +362,9 @@ public class CatalogItemEditPanel extends javax.swing.JPanel {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
-            XBCNode parentNode = parentCellPanel.getParentNode();
-            if (parentNode.equals(((XBEItem) catalogItem).getParentItem().orElse(null))) {
-                ((XBEItem) catalogItem).setParentItem((XBENode) parentNode);
+            Optional<XBCNode> parentNode = parentCellPanel.getParentNode();
+            if (parentNode.isPresent() && parentNode.get().equals(((XBEItem) catalogItem).getParentItem().orElse(null))) {
+                ((XBEItem) catalogItem).setParentItem((XBENode) parentNode.get());
             }
 
             itemService.persistItem((XBCItem) catalogItem);

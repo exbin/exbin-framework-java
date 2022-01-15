@@ -29,7 +29,6 @@ import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.gui.DefaultControlPanel;
 import org.exbin.framework.utils.handler.DefaultControlHandler;
-import org.exbin.xbup.catalog.modifiable.XBMNode;
 import org.exbin.xbup.catalog.modifiable.XBMRoot;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCRoot;
@@ -39,7 +38,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCNodeService;
 /**
  * Add catalog root action.
  *
- * @version 0.2.2 2021/12/26
+ * @version 0.2.2 2022/01/15
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -93,13 +92,7 @@ public class AddCatalogAction extends AbstractAction {
         controlPanel.setHandler((actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 XBCRootManager rootManager = catalog.getCatalogManager(XBCRootManager.class);
-                XBMRoot catalogRoot = (XBMRoot) rootManager.createItem();
-                catalogRoot.setUrl(panel.getCatalogUrl());
-                XBMNode rootNode = (XBMNode) nodeService.createItem();
-                nodeService.persistItem(rootNode);
-                catalogRoot.setNode(rootNode);
-                rootManager.persistItem(catalogRoot);
-                resultRoot = catalogRoot;
+                resultRoot = (XBMRoot) rootManager.createEmptyRoot(panel.getCatalogUrl());
             }
             dialog.close();
             dialog.dispose();

@@ -16,6 +16,8 @@
 package org.exbin.framework.service.catalog.gui;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import javax.swing.JOptionPane;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -103,8 +105,9 @@ public class CatalogParentPropertyTableCellPanel extends CatalogPropertyTableCel
         setPropertyText(targetCaption);
     }
 
-    public XBCNode getParentNode() {
-        return parent;
+    @Nonnull
+    public Optional<XBCNode> getParentNode() {
+        return Optional.ofNullable(parent);
     }
 
     public XBACatalog getCatalog() {

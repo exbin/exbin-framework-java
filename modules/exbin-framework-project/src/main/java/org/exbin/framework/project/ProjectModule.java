@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
@@ -83,7 +84,17 @@ public class ProjectModule implements ProjectModuleApi {
 
     @Override
     public void registerProjectCategory(ProjectCategory projectCategory) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String parentId = getParentId(projectCategory.getId());
+        if (parentId != null) {
+            if (!projectCategories.stream().anyMatch(category -> parentId.equals(category.getId()))) {
+                throw new IllegalStateException("Missing parent category");
+            }
+        }
+        if (!projectCategories.stream().anyMatch(category -> projectCategory.getId().equals(category.getId()))) {
+            throw new IllegalStateException("Project category already registered");
+        }
+
+        projectCategories.add(projectCategory);
     }
 
     @Override
@@ -143,5 +154,15 @@ public class ProjectModule implements ProjectModuleApi {
             saveProjectAction.setup(application, resourceBundle);
         }
         return saveProjectAction;
+    }
+
+    @Nullable
+    public static String getParentId(String id) {
+        int lastIndex = id.lastIndexOf("/");
+        if (lastIndex > 0) {
+            return id.substring(lastIndex + 1);
+        }
+
+        return null;
     }
 }
