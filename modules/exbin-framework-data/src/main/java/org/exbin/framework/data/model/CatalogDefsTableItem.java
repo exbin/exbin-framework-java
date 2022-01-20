@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.service.catalog.gui;
+package org.exbin.framework.data.model;
 
 import org.exbin.xbup.catalog.entity.XBERev;
 import org.exbin.xbup.core.block.definition.XBParamType;

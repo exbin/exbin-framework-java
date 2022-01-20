@@ -15,9 +15,11 @@
  */
 package org.exbin.framework.service.catalog.gui;
 
+import org.exbin.framework.data.model.CatalogDefOperationType;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.data.model.CatalogDefsTableItem;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;

@@ -21,7 +21,7 @@ package org.exbin.framework.bined.gui;
  * @version 0.2.1 2019/07/12
  * @author ExBin Project (http://exbin.org)
  */
-public enum GoToBinaryPositionMode {
+public enum RelativePositionMode {
     /**
      * Count from start of the document.
      */

@@ -15,6 +15,9 @@
  */
 package org.exbin.framework.data.gui;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.data.model.CatalogDefsTableItem;
+import org.exbin.framework.data.model.CatalogDefsDetailTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -24,6 +27,7 @@ import javax.swing.JTable;
  * @version 0.2.1 2020/05/02
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DefinitionPropertiesComponent extends JScrollPane {
 
     private final JTable propertiesTable;
@@ -38,7 +42,7 @@ public class DefinitionPropertiesComponent extends JScrollPane {
         propertiesTable.setModel(model);
         setViewportView(propertiesTable);
     }
-    
+
     public void setItem(CatalogDefsTableItem item) {
         model.setItem(item);
     }

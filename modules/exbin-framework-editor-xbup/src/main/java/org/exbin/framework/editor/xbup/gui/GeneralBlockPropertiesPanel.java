@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.service.catalog.gui.CatalogItemPanel;

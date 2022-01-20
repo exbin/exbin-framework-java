@@ -13,14 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.data.gui;
+package org.exbin.framework.data.model;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.xbup.core.catalog.XBACatalog;
+import org.exbin.xbup.core.catalog.base.XBCBlockCons;
+import org.exbin.xbup.core.catalog.base.XBCBlockJoin;
+import org.exbin.xbup.core.catalog.base.XBCBlockListCons;
+import org.exbin.xbup.core.catalog.base.XBCBlockListJoin;
+import org.exbin.xbup.core.catalog.base.XBCConsDef;
 import org.exbin.xbup.core.catalog.base.XBCItem;
+import org.exbin.xbup.core.catalog.base.XBCJoinDef;
 import org.exbin.xbup.core.catalog.base.XBCRev;
 import org.exbin.xbup.core.catalog.base.XBCSpec;
 import org.exbin.xbup.core.catalog.base.XBCSpecDef;
@@ -33,9 +42,10 @@ import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
 /**
  * Table model for catalog definition bindings.
  *
- * @version 0.2.0 2016/02/01
+ * @version 0.2.2 2022/01/20
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogDefsTableModel extends AbstractTableModel {
 
     private XBACatalog catalog;
@@ -66,6 +76,7 @@ public class CatalogDefsTableModel extends AbstractTableModel {
         return columnClasses.length;
     }
 
+    @Nullable
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (spec == null) {
@@ -88,16 +99,19 @@ public class CatalogDefsTableModel extends AbstractTableModel {
         }
     }
 
+    @Nonnull
     @Override
     public String getColumnName(int columnIndex) {
         return columnNames[columnIndex];
     }
 
+    @Nonnull
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return columnClasses[columnIndex];
     }
 
+    @Nonnull
     public List<CatalogDefsTableItem> getDefs() {
         return items;
     }
@@ -144,29 +158,30 @@ public class CatalogDefsTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    @Nonnull
     public String getOperation(XBCSpecDef specDef) {
-//        CatalogDefOperationType operation;
-//        if (specDef instanceof XBCBlockJoin) {
-//            operation = specDef.getTarget() == null
-//                    ? CatalogDefOperationType.ATTRIBUTE : CatalogDefOperationType.JOIN;
-//        } else if (specDef instanceof XBCBlockCons) {
-//            operation = specDef.getTarget() == null
-//                    ? CatalogDefOperationType.ANY : CatalogDefOperationType.CONSIST;
-//        } else if (specDef instanceof XBCBlockListJoin) {
-//            operation = specDef.getTarget() == null
-//                    ? CatalogDefOperationType.ATTRIBUTE_LIST : CatalogDefOperationType.JOIN_LIST;
-//        } else if (specDef instanceof XBCBlockListCons) {
-//            operation = specDef.getTarget() == null
-//                    ? CatalogDefOperationType.ANY_LIST : CatalogDefOperationType.CONSIST_LIST;
-//        } else if (specDef instanceof XBCJoinDef) {
-//            operation = CatalogDefOperationType.JOIN;
-//        } else if (specDef instanceof XBCConsDef) {
-//            operation = CatalogDefOperationType.CONSIST;
-//        } else {
+        CatalogDefOperationType operation;
+        if (specDef instanceof XBCBlockJoin) {
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.JOIN : CatalogDefOperationType.ATTRIBUTE;
+        } else if (specDef instanceof XBCBlockCons) {
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.CONSIST : CatalogDefOperationType.ANY;
+        } else if (specDef instanceof XBCBlockListJoin) {
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.JOIN_LIST : CatalogDefOperationType.ATTRIBUTE_LIST;
+        } else if (specDef instanceof XBCBlockListCons) {
+            operation = specDef.getTargetRev().isPresent()
+                    ? CatalogDefOperationType.CONSIST_LIST : CatalogDefOperationType.ANY_LIST;
+        } else if (specDef instanceof XBCJoinDef) {
+            operation = CatalogDefOperationType.JOIN;
+        } else if (specDef instanceof XBCConsDef) {
+            operation = CatalogDefOperationType.CONSIST;
+        } else {
             return "Unknown";
-//        }
-//
-//        return operation.getCaption();
+        }
+
+        return operation.getCaption();
     }
 
     public CatalogDefsTableItem getRowItem(int rowIndex) {

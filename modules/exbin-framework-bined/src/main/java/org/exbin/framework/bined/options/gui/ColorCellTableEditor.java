@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.bined.options.gui;
 
+import org.exbin.framework.bined.model.ColorProfileTableModel;
 import java.awt.Color;
 import java.awt.Component;
 import javax.annotation.Nonnull;

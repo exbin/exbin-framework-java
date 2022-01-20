@@ -11,7 +11,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="copyLinkMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/BlockPropertiesPanel.properties" key="copyLinkMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/GeneralBlockPropertiesPanel.properties" key="copyLinkMenuItem.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -155,7 +155,7 @@
     <Component class="javax.swing.JLabel" name="dataModeLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/BlockPropertiesPanel.properties" key="dataModeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/GeneralBlockPropertiesPanel.properties" key="dataModeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -167,7 +167,7 @@
     <Component class="javax.swing.JLabel" name="terminationModeLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/BlockPropertiesPanel.properties" key="terminationModeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/GeneralBlockPropertiesPanel.properties" key="terminationModeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -179,7 +179,7 @@
     <Component class="javax.swing.JLabel" name="nodeSizeLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/BlockPropertiesPanel.properties" key="nodeSizeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/GeneralBlockPropertiesPanel.properties" key="nodeSizeLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -191,7 +191,7 @@
     <Component class="javax.swing.JLabel" name="attributesCountLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/BlockPropertiesPanel.properties" key="attributesCountLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/GeneralBlockPropertiesPanel.properties" key="attributesCountLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -203,7 +203,7 @@
     <Component class="javax.swing.JLabel" name="childrenCountLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/BlockPropertiesPanel.properties" key="childrenCountLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/GeneralBlockPropertiesPanel.properties" key="childrenCountLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -215,7 +215,7 @@
     <Component class="javax.swing.JLabel" name="webCatalogLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/BlockPropertiesPanel.properties" key="webCatalogLabell.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/GeneralBlockPropertiesPanel.properties" key="webCatalogLabell.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -233,7 +233,7 @@
               <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/BlockPropertiesPanel.properties" key="webCatalogLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/editor/xbup/gui/resources/GeneralBlockPropertiesPanel.properties" key="webCatalogLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>

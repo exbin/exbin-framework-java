@@ -15,10 +15,12 @@
  */
 package org.exbin.framework.service.catalog.gui;
 
+import org.exbin.framework.data.model.CatalogDefOperationType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
+import org.exbin.framework.data.model.CatalogDefsTableItem;
 import org.exbin.xbup.core.catalog.base.XBCBlockCons;
 import org.exbin.xbup.core.catalog.base.XBCBlockJoin;
 import org.exbin.xbup.core.catalog.base.XBCBlockListCons;

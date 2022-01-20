@@ -20,6 +20,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.data.model.CatalogDefsTableItem;
+import org.exbin.framework.data.model.CatalogDefsTableModel;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;

@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.bined.options.gui;
 
+import org.exbin.framework.bined.model.ColorProfileTableModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.Objects;

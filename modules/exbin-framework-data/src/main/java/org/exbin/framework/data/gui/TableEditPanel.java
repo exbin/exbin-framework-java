@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.data.gui;
 
+import org.exbin.framework.data.model.TableModelSource;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.MouseEvent;

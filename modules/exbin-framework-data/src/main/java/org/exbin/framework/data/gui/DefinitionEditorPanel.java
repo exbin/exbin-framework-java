@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.data.gui;
 
+import org.exbin.framework.data.model.CatalogDefsTableModel;
 import java.awt.BorderLayout;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.component.ComponentModule;
 import org.exbin.framework.component.api.toolbar.EditItemActions;
@@ -45,12 +47,13 @@ import org.exbin.framework.utils.ClipboardActionsUpdater;
  * @version 0.2.1 2020/04/19
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DefinitionEditorPanel extends javax.swing.JPanel {
 
     private XBACatalog catalog;
     private XBCItem catalogItem;
 //    private XBCSpecService specService;
-    private final CatalogDefsTableModel defsModel = new CatalogDefsTableModel();
+    private CatalogDefsTableModel defsModel;
     DefinitionPropertiesComponent propertiesComponent = new DefinitionPropertiesComponent();
 //    private List<CatalogDefsTableItem> removeList;
 //    private List<CatalogDefsTableItem> updateList;
@@ -127,7 +130,13 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
         definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.createClipboardActions(clipboardActionsHandler));
         WindowUtils.invokeDialog(definitionEditorPanel);
-        definitionEditorPanel.registerToolBarActions(guiComponentModule);
+
+        MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
+        MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
+        EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
+        EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
+        editItemActions.setEditItemActionsHandler(editItemActionsHandler);
+        definitionEditorPanel.registerToolBarActions(editItemActions, moveItemActions);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -209,6 +218,10 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         defsModel.setCatalog(catalog);
     }
 
+    public void setDefsTableMode(CatalogDefsTableModel defsTableModel) {
+        this.defsModel = defsTableModel;
+    }
+
     public CatalogDefsTableModel getDefsModel() {
         return defsModel;
     }
@@ -221,13 +234,9 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         // toolBarEditorPanel.setClipboardHandler(clipboardHandler, clipboardActions);
     }
 
-    public void registerToolBarActions(ComponentModule guiComponentModule) {
-        MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
-        MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
-        toolBarSidePanel.addActions(moveItemActions);
-        toolBarSidePanel.addSeparator();
-        EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
-        EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
+    public void registerToolBarActions(EditItemActions editItemActions, MoveItemActions moveItemActions) {
         toolBarSidePanel.addActions(editItemActions);
+        toolBarSidePanel.addSeparator();
+        toolBarSidePanel.addActions(moveItemActions);
     }
 }

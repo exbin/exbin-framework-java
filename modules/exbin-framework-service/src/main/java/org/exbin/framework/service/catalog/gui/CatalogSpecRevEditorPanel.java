@@ -18,6 +18,7 @@ package org.exbin.framework.service.catalog.gui;
 import java.util.ResourceBundle;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.data.model.CatalogRevsTableItem;
 
 /**
  * Catalog specification revision editor panel.
