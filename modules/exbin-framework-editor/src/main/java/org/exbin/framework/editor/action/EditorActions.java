@@ -55,7 +55,7 @@ public class EditorActions implements EditorActionsApi {
         unsavedFilesPanel.setUnsavedFiles(fileHandlers, editorProvider);
         final boolean[] result = new boolean[1];
         final DialogWrapper dialog = frameModule.createDialog(unsavedFilesPanel);
-        unsavedFilesPanel.setControl(new UnsavedFilesPanel.Control() {
+        unsavedFilesPanel.setController(new UnsavedFilesPanel.Controller() {
             @Override
             public boolean saveFile(FileHandler fileHandler) {
                 editorProvider.saveFile(fileHandler);

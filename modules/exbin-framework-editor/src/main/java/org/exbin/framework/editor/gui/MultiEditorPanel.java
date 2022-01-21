@@ -35,7 +35,7 @@ import org.exbin.framework.file.api.FileHandler;
 public class MultiEditorPanel extends javax.swing.JPanel {
 
     private final List<FileHandler> fileHandlers = new ArrayList<>();
-    private Control control;
+    private Controller controller;
     private int activeIndex = -1;
 
     public MultiEditorPanel() {
@@ -53,15 +53,15 @@ public class MultiEditorPanel extends javax.swing.JPanel {
             @Override
             public void show(Component invoker, int x, int y) {
                 int index = tabbedPane.indexAtLocation(x, y);
-                if (control != null) {
-                    control.showPopupMenu(index, invoker, x, y);
+                if (controller != null) {
+                    controller.showPopupMenu(index, invoker, x, y);
                 }
             }
         });
     }
 
-    public void setControl(Control control) {
-        this.control = control;
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public int getFileHandlersCount() {
@@ -122,8 +122,8 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     private void changeActiveIndex(int index) {
         if (activeIndex != index) {
             activeIndex = index;
-            if (control != null) {
-                control.activeIndexChanged(index);
+            if (controller != null) {
+                controller.activeIndexChanged(index);
             }
         }
     }
@@ -175,7 +175,7 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     @ParametersAreNonnullByDefault
-    public interface Control {
+    public interface Controller {
 
         void activeIndexChanged(int index);
 

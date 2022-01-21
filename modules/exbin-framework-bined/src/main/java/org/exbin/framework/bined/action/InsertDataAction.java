@@ -104,7 +104,7 @@ public class InsertDataAction extends AbstractAction implements FileDependentAct
         JPanel dialogPanel = WindowUtils.createDialogPanel(insertDataPanel, controlPanel);
         FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         final DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, editorProvider.getEditorComponent(), "", Dialog.ModalityType.APPLICATION_MODAL);
-        insertDataPanel.setControl(() -> {
+        insertDataPanel.setController(() -> {
             BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
             final BinaryMultilinePanel multilinePanel = new BinaryMultilinePanel();
             SearchCondition searchCondition = new SearchCondition();

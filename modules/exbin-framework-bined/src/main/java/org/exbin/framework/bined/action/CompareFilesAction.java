@@ -112,7 +112,7 @@ public class CompareFilesAction extends AbstractAction {
 
         BinedModule binedModule = application.getModuleRepository().getModuleByInterface(BinedModule.class);
         compareFilesPanel.setCodeAreaPopupMenu(binedModule.createCodeAreaPopupMenuHandler(BinedModule.PopupMenuVariant.BASIC));
-        compareFilesPanel.setControl(new CompareFilesPanel.Control() {
+        compareFilesPanel.setController(new CompareFilesPanel.Controller() {
             @Nullable
             @Override
             public CompareFilesPanel.FileRecord openFile() {

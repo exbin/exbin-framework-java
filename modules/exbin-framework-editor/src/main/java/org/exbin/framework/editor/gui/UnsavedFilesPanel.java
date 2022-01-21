@@ -38,7 +38,7 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(UnsavedFilesPanel.class);
     private List<FileHandler> fileHandlers;
-    private Control control;
+    private Controller controller;
 
     public UnsavedFilesPanel() {
         initComponents();
@@ -60,8 +60,8 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    public void setControl(Control control) {
-        this.control = control;
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public void setUnsavedFiles(List<FileHandler> fileHandlers, MultiEditorProvider editorProvider) {
@@ -170,13 +170,13 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        if (control != null) {
+        if (controller != null) {
             int[] selectedIndices = filesList.getSelectedIndices();
             int shift = 0;
             for (int i = 0; i < selectedIndices.length; i++) {
                 int selectedIndex = selectedIndices[i];
                 FileHandler fileHandler = fileHandlers.get(selectedIndex - shift);
-                if (control.saveFile(fileHandler)) {
+                if (controller.saveFile(fileHandler)) {
                     DefaultListModel<String> listModel = (DefaultListModel<String>) filesList.getModel();
                     listModel.remove(selectedIndex - shift);
                     fileHandlers.remove(selectedIndex - shift);
@@ -189,12 +189,12 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void saveAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAllButtonActionPerformed
-        if (control != null) {
+        if (controller != null) {
             int shift = 0;
             int size = fileHandlers.size();
             for (int index = 0; index < size; index++) {
                 FileHandler fileHandler = fileHandlers.get(index - shift);
-                if (control.saveFile(fileHandler)) {
+                if (controller.saveFile(fileHandler)) {
                     DefaultListModel<String> listModel = (DefaultListModel<String>) filesList.getModel();
                     listModel.remove(index - shift);
                     fileHandlers.remove(index - shift);
@@ -207,14 +207,14 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_saveAllButtonActionPerformed
 
     private void discardAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardAllButtonActionPerformed
-        if (control != null) {
-            control.discardAll(fileHandlers);
+        if (controller != null) {
+            controller.discardAll(fileHandlers);
         }
     }//GEN-LAST:event_discardAllButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        if (control != null) {
-            control.cancel();
+        if (controller != null) {
+            controller.cancel();
         }
     }//GEN-LAST:event_cancelButtonActionPerformed
 
@@ -238,7 +238,7 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     @ParametersAreNonnullByDefault
-    public interface Control {
+    public interface Controller {
 
         boolean saveFile(FileHandler fileHandler);
 

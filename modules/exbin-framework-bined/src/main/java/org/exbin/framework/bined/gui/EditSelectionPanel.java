@@ -335,7 +335,7 @@ public class EditSelectionPanel extends javax.swing.JPanel {
     public long getEndTargetPosition() {
         long absolutePosition;
         long position = getEndPositionValue();
-        switch (startPosMode) {
+        switch (endPosMode) {
             case FROM_START:
                 absolutePosition = position;
                 break;
@@ -346,7 +346,7 @@ public class EditSelectionPanel extends javax.swing.JPanel {
                 absolutePosition = cursorPosition + position;
                 break;
             default:
-                throw CodeAreaUtils.getInvalidTypeException(startPosMode);
+                throw CodeAreaUtils.getInvalidTypeException(endPosMode);
         }
 
         if (absolutePosition < 0) {
@@ -385,7 +385,7 @@ public class EditSelectionPanel extends javax.swing.JPanel {
         } else if (absolutePosition > maxPosition) {
             absolutePosition = maxPosition;
         }
-        switch (startPosMode) {
+        switch (endPosMode) {
             case FROM_START:
                 setEndPositionValue(absolutePosition);
                 break;
@@ -396,7 +396,7 @@ public class EditSelectionPanel extends javax.swing.JPanel {
                 setEndPositionValue(absolutePosition - cursorPosition);
                 break;
             default:
-                throw CodeAreaUtils.getInvalidTypeException(startPosMode);
+                throw CodeAreaUtils.getInvalidTypeException(endPosMode);
         }
         updateEndTargetPosition();
     }
@@ -453,12 +453,12 @@ public class EditSelectionPanel extends javax.swing.JPanel {
     }
 
     private void switchEndPosMode(RelativePositionMode positionMode) {
-        if (this.startPosMode == positionMode) {
+        if (this.endPosMode == positionMode) {
             return;
         }
 
         long absolutePosition = getEndTargetPosition();
-        this.startPosMode = positionMode;
+        this.endPosMode = positionMode;
         switch (positionMode) {
             case FROM_START:
             case FROM_END: {

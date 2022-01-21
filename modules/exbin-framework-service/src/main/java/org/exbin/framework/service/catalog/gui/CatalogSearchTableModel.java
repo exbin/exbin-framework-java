@@ -15,6 +15,9 @@
  */
 package org.exbin.framework.service.catalog.gui;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -23,6 +26,7 @@ import javax.swing.table.AbstractTableModel;
  * @version 0.1.24 2014/12/10
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogSearchTableModel extends AbstractTableModel {
 
     private CatalogSearchTableItem searchConditions = new CatalogSearchTableItem();
@@ -41,6 +45,7 @@ public class CatalogSearchTableModel extends AbstractTableModel {
         return CatalogItemsTableModel.columnNames.length;
     }
 
+    @Nullable
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
@@ -60,11 +65,13 @@ public class CatalogSearchTableModel extends AbstractTableModel {
         return "";
     }
 
+    @Nonnull
     @Override
     public String getColumnName(int columnIndex) {
         return CatalogItemsTableModel.columnNames[columnIndex];
     }
 
+    @Nonnull
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return CatalogItemsTableModel.columnClasses[columnIndex];
@@ -105,7 +112,8 @@ public class CatalogSearchTableModel extends AbstractTableModel {
         this.searchConditions = searchConditions;
     }
 
-    public class CatalogSearchTableItem {
+    @ParametersAreNonnullByDefault
+    public static class CatalogSearchTableItem {
 
         private String name;
         private String description;
@@ -115,35 +123,39 @@ public class CatalogSearchTableModel extends AbstractTableModel {
         public CatalogSearchTableItem() {
         }
 
+        @Nullable
         public String getName() {
             return name;
         }
 
-        public void setName(String name) {
+        public void setName(@Nullable String name) {
             this.name = name;
         }
 
+        @Nullable
         public String getDescription() {
             return description;
         }
 
-        public void setDescription(String description) {
+        public void setDescription(@Nullable String description) {
             this.description = description;
         }
 
+        @Nullable
         public String getStringId() {
             return stringId;
         }
 
-        public void setStringId(String stringId) {
+        public void setStringId(@Nullable String stringId) {
             this.stringId = stringId;
         }
 
+        @Nullable
         public String getType() {
             return type;
         }
 
-        public void setType(String type) {
+        public void setType(@Nullable String type) {
             this.type = type;
         }
     }

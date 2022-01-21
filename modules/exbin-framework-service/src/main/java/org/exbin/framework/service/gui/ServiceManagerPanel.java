@@ -118,7 +118,7 @@ public class ServiceManagerPanel extends javax.swing.JPanel {
         catalogAvailabilityPanel = new CatalogAvailabilityPanel();
         catalogBrowserPanel = new CatalogBrowserPanel();
         catalogEditorPanel = new CatalogEditorPanel();
-        catalogEditorPanel.setControl(new CatalogEditorPanel.Control() {
+        catalogEditorPanel.setController(new CatalogEditorPanel.Controller() {
             @Override
             public void exportItem(Component parentComponent, XBCItem currentItem) {
                 ExportItemAction exportItemAction = new ExportItemAction();

@@ -85,7 +85,7 @@ public class EditCatalogAction extends AbstractAction {
         ServiceManagerModule managerModule = application.getModuleRepository().getModuleByInterface(ServiceManagerModule.class);
         MenuManagement menuManagement = managerModule.getDefaultMenuManagement();
         CatalogEditorPanel catalogEditorPanel = new CatalogEditorPanel();
-        catalogEditorPanel.setControl(new CatalogEditorPanel.Control() {
+        catalogEditorPanel.setController(new CatalogEditorPanel.Controller() {
             @Override
             public void exportItem(Component parentComponent, XBCItem currentItem) {
                 ExportItemAction exportItemAction = new ExportItemAction();

@@ -78,7 +78,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     private XBApplication application;
     private XBCItem currentItem;
 
-    private Control control;
+    private Controller controller;
     private XBACatalog catalog;
 //    private MainFrameManagement mainFrameManagement;
     private CatalogNodesTreeModel nodesModel;
@@ -176,8 +176,8 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
         return resourceBundle;
     }
 
-    public void setControl(Control control) {
-        this.control = control;
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     /**
@@ -334,19 +334,19 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     }//GEN-LAST:event_catalogTreeValueChanged
 
     private void popupEditMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupEditMenuItemActionPerformed
-        control.editItem(catalogItemListScrollPane, currentItem);
+        controller.editItem(catalogItemListScrollPane, currentItem);
     }//GEN-LAST:event_popupEditMenuItemActionPerformed
 
     private void popupExportItemMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupExportItemMenuItemActionPerformed
-        control.exportItem(catalogItemListScrollPane, currentItem);
+        controller.exportItem(catalogItemListScrollPane, currentItem);
     }//GEN-LAST:event_popupExportItemMenuItemActionPerformed
 
     private void popupImportItemMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupImportItemMenuItemActionPerformed
-        control.importItem(catalogItemListScrollPane, currentItem);
+        controller.importItem(catalogItemListScrollPane, currentItem);
     }//GEN-LAST:event_popupImportItemMenuItemActionPerformed
 
     private void popupAddMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupAddMenuItemActionPerformed
-        control.addItem(catalogItemListScrollPane, currentItem);
+        controller.addItem(catalogItemListScrollPane, currentItem);
     }//GEN-LAST:event_popupAddMenuItemActionPerformed
 
     private void popupRefreshMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupRefreshMenuItemActionPerformed
@@ -605,7 +605,7 @@ public class CatalogEditorPanel extends javax.swing.JPanel implements CatalogMan
     }
 
     @ParametersAreNonnullByDefault
-    public interface Control {
+    public interface Controller {
 
         void exportItem(Component parentComponent, XBCItem currentItem);
 

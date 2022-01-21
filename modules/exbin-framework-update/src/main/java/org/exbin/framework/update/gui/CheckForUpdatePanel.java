@@ -38,7 +38,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdatePanel.class);
     private CheckForUpdateService checkForUpdateService;
-    private Control control;
+    private Controller controller;
 
     public CheckForUpdatePanel() {
         initComponents();
@@ -49,8 +49,8 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
         return resourceBundle;
     }
 
-    public void setControl(Control control) {
-        this.control = control;
+    public void setController(Controller control) {
+        this.controller = control;
     }
 
     public void setCheckForUpdateService(CheckForUpdateService checkForUpdateService) {
@@ -289,7 +289,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
         }
     }
 
-    public interface Control {
+    public interface Controller {
 
         void checkForUpdate();
     }

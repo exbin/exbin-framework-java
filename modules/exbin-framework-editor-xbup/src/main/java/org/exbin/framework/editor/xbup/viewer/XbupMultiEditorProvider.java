@@ -103,7 +103,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
     }
 
     private void init() {
-        multiEditorPanel.setControl(new MultiEditorPanel.Control() {
+        multiEditorPanel.setController(new MultiEditorPanel.Controller() {
             @Override
             public void activeIndexChanged(int index) {
                 activeFileChanged();

@@ -246,7 +246,7 @@ public class BinedModule implements XBApplicationModule {
                 throw XBFrameworkUtils.getInvalidTypeException(variant);
         }
     }
-    
+
     public void setEditorProvider(EditorProvider editorProvider) {
         this.editorProvider = editorProvider;
     }
@@ -365,7 +365,7 @@ public class BinedModule implements XBApplicationModule {
 
     public void registerStatusBar() {
         binaryStatusPanel = new BinaryStatusPanel();
-        binaryStatusPanel.setControlHandler(new BinaryStatusApi.StatusControlHandler() {
+        binaryStatusPanel.setControlHandler(new BinaryStatusPanel.StatusControlHandler() {
             @Override
             public void changeEditOperation(EditOperation editOperation) {
                 Optional<FileHandler> activeFile = editorProvider.getActiveFile();
