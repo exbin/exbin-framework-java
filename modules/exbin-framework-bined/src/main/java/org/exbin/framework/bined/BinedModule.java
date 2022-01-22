@@ -161,6 +161,7 @@ import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.bined.action.EditSelectionAction;
 import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -168,7 +169,7 @@ import org.exbin.framework.frame.api.FrameModuleApi;
 /**
  * Binary data editor module.
  *
- * @version 0.2.1 2021/10/29
+ * @version 0.2.2 2022/01/22
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -211,6 +212,7 @@ public class BinedModule implements XBApplicationModule {
     private CodeAreaFontAction codeAreaFontAction;
     private RowWrappingAction rowWrappingAction;
     private GoToPositionAction goToPositionAction;
+    private EditSelectionAction editSelectionAction;
     private PropertiesAction propertiesAction;
     private PrintAction printAction;
     private ViewModeHandlerActions viewModeActions;
@@ -328,7 +330,7 @@ public class BinedModule implements XBApplicationModule {
         editorModule.updateActionStatus();
         FileDependentAction[] fileDepActions = new FileDependentAction[]{
             findReplaceActions, showUnprintablesActions, showValuesPanelAction, codeAreaFontAction, rowWrappingAction,
-            goToPositionAction, propertiesAction, printAction, viewModeActions, showRowPositionAction, showHeaderAction,
+            goToPositionAction, editSelectionAction, propertiesAction, printAction, viewModeActions, showRowPositionAction, showHeaderAction,
             insertDataAction, codeTypeActions, positionCodeTypeActions, hexCharactersCaseActions, clipboardCodeActions
         };
 
@@ -1398,6 +1400,11 @@ public class BinedModule implements XBApplicationModule {
         actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, getGoToPositionAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
+    public void registerEditSelection() {
+        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, getEditSelectionAction(), new MenuPosition(PositionMode.BOTTOM));
+    }
+
     public void registerInsertDataAction() {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, getInsertDataAction(), new MenuPosition(PositionMode.BOTTOM));
@@ -1505,6 +1512,17 @@ public class BinedModule implements XBApplicationModule {
         }
 
         return goToPositionAction;
+    }
+
+    @Nonnull
+    public AbstractAction getEditSelectionAction() {
+        if (editSelectionAction == null) {
+            ensureSetup();
+            editSelectionAction = new EditSelectionAction();
+            editSelectionAction.setup(application, editorProvider, resourceBundle);
+        }
+
+        return editSelectionAction;
     }
 
     @Nonnull
@@ -1862,6 +1880,9 @@ public class BinedModule implements XBApplicationModule {
 
                     JMenuItem goToMenuItem = createGoToMenuItem();
                     popupMenu.add(goToMenuItem);
+
+                    JMenuItem editSelectionMenuItem = createEditSelectionMenuItem();
+                    popupMenu.add(editSelectionMenuItem);
                 }
 
                 if (variant == PopupMenuVariant.EDITOR) {
@@ -1913,6 +1934,11 @@ public class BinedModule implements XBApplicationModule {
     @Nonnull
     private JMenuItem createGoToMenuItem() {
         return ActionUtils.actionToMenuItem(getGoToPositionAction());
+    }
+
+    @Nonnull
+    private JMenuItem createEditSelectionMenuItem() {
+        return ActionUtils.actionToMenuItem(getEditSelectionAction());
     }
 
     @Nonnull
