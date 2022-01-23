@@ -105,7 +105,7 @@ public class EditorPictureModule implements XBApplicationModule {
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            ImageEditor imageEditor = new ImageEditor();
+            ImageEditor imageEditor = new ImageEditor(application);
 
             UndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(UndoModuleApi.class);
             // imagePanel.setUndoHandler(undoModule.getUndoHandler());

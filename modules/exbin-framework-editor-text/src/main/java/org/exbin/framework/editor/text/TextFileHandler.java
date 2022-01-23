@@ -76,7 +76,7 @@ public class TextFileHandler implements FileHandler, TextFontApi {
     }
 
     @Override
-    public void loadFromFile(URI fileUri, FileType fileType) {
+    public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
         File file = new File(fileUri);
         switch (fileType.getFileTypeId()) {
             case EditorTextModule.XBT_FILE_TYPE: {

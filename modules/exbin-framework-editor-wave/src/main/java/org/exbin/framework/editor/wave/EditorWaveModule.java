@@ -125,7 +125,7 @@ public class EditorWaveModule implements XBApplicationModule {
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            AudioEditor audioEditor = new AudioEditor();
+            AudioEditor audioEditor = new AudioEditor(application);
 
             UndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(UndoModuleApi.class);
             audioEditor.setUndoHandler(undoModule.getUndoHandler());

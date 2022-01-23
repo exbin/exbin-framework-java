@@ -131,6 +131,7 @@ public class EncodingsHandler {
                         addEncodingDialog.close();
                         addEncodingDialog.dispose();
                     });
+                    WindowUtils.addHeaderPanel(addEncodingDialog.getWindow(), addEncodingPanel.getClass(), addEncodingPanel.getResourceBundle());
                     addEncodingDialog.showCentered(addEncodingPanel);
                     return result;
                 });

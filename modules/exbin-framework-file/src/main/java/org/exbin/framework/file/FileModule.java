@@ -18,6 +18,8 @@ package org.exbin.framework.file;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -112,6 +114,12 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void addFileType(FileType fileType) {
         registeredFileTypes.add(fileType);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<FileType> getFileTypes() {
+        return Collections.unmodifiableCollection(registeredFileTypes);
     }
 
     @Override

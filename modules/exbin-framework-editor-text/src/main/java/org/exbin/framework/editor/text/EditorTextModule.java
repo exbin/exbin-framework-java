@@ -137,7 +137,7 @@ public class EditorTextModule implements XBApplicationModule {
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            editorProvider = new TextEditor();
+            editorProvider = new TextEditor(application);
         }
 
         return editorProvider;

@@ -24,32 +24,43 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.DefaultFileTypes;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.file.api.FileTypes;
 
 /**
  * Image editor.
  *
- * @version 0.2.2 2021/11/14
+ * @version 0.2.2 2022/01/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ImageEditor implements EditorProvider {
 
+    private final XBApplication application;
     private ImageFileHandler activeFile;
+    private FileTypes fileTypes;
+
+    private EditorModificationListener editorModificationListener;
     private JPopupMenu popupMenu;
     private MouseMotionListener mouseMotionListener;
     @Nullable
     private File lastUsedDirectory;
 
-    public ImageEditor() {
+    public ImageEditor(XBApplication application) {
+        this.application = application;
         init();
     }
 
     private void init() {
         activeFile = new ImageFileHandler();
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
     }
 
     @Nonnull
@@ -82,7 +93,7 @@ public class ImageEditor implements EditorProvider {
 
     @Override
     public void openFile(URI fileUri, FileType fileType) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        activeFile.loadFromFile(fileUri, fileType);
     }
 
     @Override
@@ -98,17 +109,22 @@ public class ImageEditor implements EditorProvider {
 
     @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.editorModificationListener = editorModificationListener;
     }
 
     @Override
     public void newFile() {
-        activeFile.newFile();
+        if (releaseAllFiles()) {
+            activeFile.newFile();
+        }
     }
 
     @Override
     public void openFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (releaseAllFiles()) {
+            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            fileModule.getFileActions().openFile(activeFile, fileTypes, this);
+        }
     }
 
     @Override
@@ -118,22 +134,33 @@ public class ImageEditor implements EditorProvider {
 
     @Override
     public void saveFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Optional<URI> fileUri = activeFile.getFileUri();
+        if (fileUri.isPresent()) {
+            activeFile.saveToFile(fileUri.get(), activeFile.getFileType().orElse(null));
+        } else {
+            saveAsFile();
+        }
     }
 
     @Override
     public void saveAsFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        fileModule.getFileActions().saveAsFile(activeFile, fileTypes, this);
     }
 
     @Override
     public boolean releaseAllFiles() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return releaseFile(activeFile);
     }
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (fileHandler.isModified()) {
+            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
+        }
+
+        return true;
     }
 
     @Nonnull
@@ -149,6 +176,8 @@ public class ImageEditor implements EditorProvider {
 
     @Override
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {

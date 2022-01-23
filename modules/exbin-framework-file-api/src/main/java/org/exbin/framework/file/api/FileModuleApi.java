@@ -16,6 +16,7 @@
 package org.exbin.framework.file.api;
 
 import java.net.URI;
+import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -43,6 +44,9 @@ public interface FileModuleApi extends XBApplicationModule {
      * @param fileType file type
      */
     void addFileType(FileType fileType);
+
+    @Nonnull
+    Collection<FileType> getFileTypes();
 
     /**
      * Sets file operations handler.

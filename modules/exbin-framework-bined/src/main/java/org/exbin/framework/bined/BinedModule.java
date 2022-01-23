@@ -521,6 +521,7 @@ public class BinedModule implements XBApplicationModule {
                             addEncodingDialog.close();
                             addEncodingDialog.dispose();
                         });
+                        WindowUtils.addHeaderPanel(addEncodingDialog.getWindow(), addEncodingPanel.getClass(), addEncodingPanel.getResourceBundle());
                         frameModule.setDialogTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
                         addEncodingDialog.showCentered(panel);
                         return result;

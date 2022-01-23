@@ -24,22 +24,30 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
+import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.DefaultFileTypes;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.file.api.FileTypes;
 
 /**
  * Audio editor.
  *
- * @version 0.2.2 2021/11/14
+ * @version 0.2.2 2022/01/23
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AudioEditor implements EditorProvider {
 
+    private final XBApplication application;
     private AudioFileHandler activeFile;
+    private FileTypes fileTypes;
+
+    private EditorModificationListener editorModificationListener;
     private JPopupMenu popupMenu;
     private MouseMotionListener mouseMotionListener;
     private AudioPanel.StatusChangeListener statusChangeListener;
@@ -48,11 +56,15 @@ public class AudioEditor implements EditorProvider {
     @Nullable
     private File lastUsedDirectory;
 
-    public AudioEditor() {
+    public AudioEditor(XBApplication application) {
+        this.application = application;
         init();
     }
 
     private void init() {
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
+
         activeFile = new AudioFileHandler();
     }
 
@@ -86,32 +98,39 @@ public class AudioEditor implements EditorProvider {
 
     @Override
     public void openFile(URI fileUri, FileType fileType) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        activeFile.loadFromFile(fileUri, fileType);
     }
 
     @Override
     public void setModificationListener(EditorModificationListener editorModificationListener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.editorModificationListener = editorModificationListener;
+//        activeFile.getComponent().setEditorModificationListener(editorModificationListener);
     }
 
     @Override
     public void newFile() {
-        activeFile.newFile();
+        if (releaseAllFiles()) {
+            activeFile.newFile();
+        }
     }
 
     @Override
     public void openFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (releaseAllFiles()) {
+            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            fileModule.getFileActions().openFile(activeFile, fileTypes, this);
+        }
     }
 
     @Override
     public void loadFromFile(String fileName) throws URISyntaxException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        URI fileUri = new URI(fileName);
+        activeFile.loadFromFile(fileUri, null);
     }
 
     @Override
     public void loadFromFile(URI fileUri, FileType fileType) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        activeFile.loadFromFile(fileUri, fileType);
     }
 
     @Override
@@ -121,22 +140,33 @@ public class AudioEditor implements EditorProvider {
 
     @Override
     public void saveFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Optional<URI> fileUri = activeFile.getFileUri();
+        if (fileUri.isPresent()) {
+            activeFile.saveToFile(fileUri.get(), activeFile.getFileType().orElse(null));
+        } else {
+            saveAsFile();
+        }
     }
 
     @Override
     public void saveAsFile() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        fileModule.getFileActions().saveAsFile(activeFile, fileTypes, this);
     }
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (fileHandler.isModified()) {
+            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
+        }
+
+        return true;
     }
 
     @Override
     public boolean releaseAllFiles() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return releaseFile(activeFile);
     }
 
     @Nonnull
@@ -152,6 +182,8 @@ public class AudioEditor implements EditorProvider {
 
     @Override
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {
