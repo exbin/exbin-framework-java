@@ -48,13 +48,13 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
 
     @Override
     public void loadFromOptions(BinaryAppearanceOptionsImpl options) {
-        showValuesPanelCheckBox.setSelected(options.isShowValuesPanel());
+        showParsingPanelCheckBox.setSelected(options.isShowParsingPanel());
         multiFileModeCheckBox.setSelected(options.isMultiFileMode());
     }
 
     @Override
     public void saveToOptions(BinaryAppearanceOptionsImpl options) {
-        options.setShowValuesPanel(showValuesPanelCheckBox.isSelected());
+        options.setShowParsingPanel(showParsingPanelCheckBox.isSelected());
         options.setMultiFileMode(multiFileModeCheckBox.isSelected());
     }
 
@@ -68,7 +68,7 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
     private void initComponents() {
 
         multiFileModeCheckBox = new javax.swing.JCheckBox();
-        showValuesPanelCheckBox = new javax.swing.JCheckBox();
+        showParsingPanelCheckBox = new javax.swing.JCheckBox();
 
         setName("Form"); // NOI18N
 
@@ -76,9 +76,9 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
         multiFileModeCheckBox.setText(resourceBundle.getString("multiFileModeCheckBox.text")); // NOI18N
         multiFileModeCheckBox.setName("multiFileModeCheckBox"); // NOI18N
 
-        showValuesPanelCheckBox.setSelected(true);
-        showValuesPanelCheckBox.setText(resourceBundle.getString("showValuesPanelCheckBox.text")); // NOI18N
-        showValuesPanelCheckBox.setName("showValuesPanelCheckBox"); // NOI18N
+        showParsingPanelCheckBox.setSelected(true);
+        showParsingPanelCheckBox.setText(resourceBundle.getString("showParsingPanelCheckBox.text")); // NOI18N
+        showParsingPanelCheckBox.setName("showParsingPanelCheckBox"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -87,7 +87,7 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(showValuesPanelCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(showParsingPanelCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(multiFileModeCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -95,7 +95,7 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(showValuesPanelCheckBox)
+                .addComponent(showParsingPanelCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(multiFileModeCheckBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -113,7 +113,7 @@ public class BinaryAppearanceOptionsPanel extends javax.swing.JPanel implements 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox multiFileModeCheckBox;
-    private javax.swing.JCheckBox showValuesPanelCheckBox;
+    private javax.swing.JCheckBox showParsingPanelCheckBox;
     // End of variables declaration//GEN-END:variables
 
     private void setModified(boolean modified) {

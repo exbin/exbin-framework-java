@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileDependentAction;
@@ -51,7 +50,6 @@ public class CloseAllFileAction extends AbstractAction implements FileDependentA
         this.editorProvider = editorProvider;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
-        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
     }
 
     @Override

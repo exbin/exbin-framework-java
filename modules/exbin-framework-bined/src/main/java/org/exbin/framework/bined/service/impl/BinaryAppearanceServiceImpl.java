@@ -51,7 +51,7 @@ public class BinaryAppearanceServiceImpl implements BinaryAppearanceService {
     }
 
     @Override
-    public void setShowValuesPanel(boolean showValuesPanel) {
-        binedModule.getShowValuesPanelAction().setShowValuesPanel(showValuesPanel);
+    public void setShowParsingPanel(boolean showValuesPanel) {
+        binedModule.getShowParsingPanelAction().setShowValuesPanel(showValuesPanel);
     }
 }

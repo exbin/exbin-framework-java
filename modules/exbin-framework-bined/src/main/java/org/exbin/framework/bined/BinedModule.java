@@ -18,7 +18,7 @@ package org.exbin.framework.bined;
 import org.exbin.framework.bined.action.ShowRowPositionAction;
 import org.exbin.framework.bined.action.ClipboardCodeActions;
 import org.exbin.framework.bined.action.GoToPositionAction;
-import org.exbin.framework.bined.action.ShowValuesPanelAction;
+import org.exbin.framework.bined.action.ShowParsingPanelAction;
 import org.exbin.framework.bined.action.CodeTypeActions;
 import org.exbin.framework.bined.action.CodeAreaFontAction;
 import org.exbin.framework.bined.action.ViewModeHandlerActions;
@@ -185,7 +185,7 @@ public class BinedModule implements XBApplicationModule {
 
     private static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
     private static final String VIEW_UNPRINTABLES_MENU_GROUP_ID = MODULE_ID + ".viewUnprintablesMenuGroup";
-    private static final String VIEW_VALUES_PANEL_MENU_GROUP_ID = MODULE_ID + ".viewValuesPanelMenuGroup";
+    private static final String VIEW_PARSING_PANEL_MENU_GROUP_ID = MODULE_ID + ".viewParsingPanelMenuGroup";
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
     private static final String BINED_TOOL_BAR_GROUP_ID = MODULE_ID + ".binedToolBarGroup";
 
@@ -208,7 +208,7 @@ public class BinedModule implements XBApplicationModule {
 
     private FindReplaceActions findReplaceActions;
     private ShowUnprintablesActions showUnprintablesActions;
-    private ShowValuesPanelAction showValuesPanelAction;
+    private ShowParsingPanelAction showParsingPanelAction;
     private CodeAreaFontAction codeAreaFontAction;
     private RowWrappingAction rowWrappingAction;
     private GoToPositionAction goToPositionAction;
@@ -329,7 +329,7 @@ public class BinedModule implements XBApplicationModule {
         EditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(EditorModuleApi.class);
         editorModule.updateActionStatus();
         FileDependentAction[] fileDepActions = new FileDependentAction[]{
-            findReplaceActions, showUnprintablesActions, showValuesPanelAction, codeAreaFontAction, rowWrappingAction,
+            findReplaceActions, showUnprintablesActions, showParsingPanelAction, codeAreaFontAction, rowWrappingAction,
             goToPositionAction, editSelectionAction, propertiesAction, printAction, viewModeActions, showRowPositionAction, showHeaderAction,
             insertDataAction, codeTypeActions, positionCodeTypeActions, hexCharactersCaseActions, clipboardCodeActions
         };
@@ -477,7 +477,7 @@ public class BinedModule implements XBApplicationModule {
             @Override
             public void applyPreferencesChanges(BinaryAppearanceOptionsImpl options) {
                 binaryAppearanceService.setWordWrapMode(options.isLineWrapping());
-                binaryAppearanceService.setShowValuesPanel(options.isShowValuesPanel());
+                binaryAppearanceService.setShowParsingPanel(options.isShowParsingPanel());
             }
         };
         optionsModule.extendAppearanceOptionsPage(binaryAppearanceOptionsPage);
@@ -686,7 +686,7 @@ public class BinedModule implements XBApplicationModule {
 
             @Override
             public void setShowValuesPanel(boolean showValuesPanel) {
-                binaryAppearanceService.setShowValuesPanel(showValuesPanel);
+                binaryAppearanceService.setShowParsingPanel(showValuesPanel);
             }
 
             @Override
@@ -1483,14 +1483,14 @@ public class BinedModule implements XBApplicationModule {
     }
 
     @Nonnull
-    public ShowValuesPanelAction getShowValuesPanelAction() {
-        if (showValuesPanelAction == null) {
+    public ShowParsingPanelAction getShowParsingPanelAction() {
+        if (showParsingPanelAction == null) {
             ensureSetup();
-            showValuesPanelAction = new ShowValuesPanelAction();
-            showValuesPanelAction.setup(application, editorProvider, resourceBundle);
+            showParsingPanelAction = new ShowParsingPanelAction();
+            showParsingPanelAction.setup(application, editorProvider, resourceBundle);
         }
 
-        return showValuesPanelAction;
+        return showParsingPanelAction;
     }
 
     @Nonnull
@@ -1668,8 +1668,8 @@ public class BinedModule implements XBApplicationModule {
 
     public void registerViewValuesPanelMenuActions() {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
-        actionModule.registerMenuGroup(FrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_VALUES_PANEL_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
-        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, getShowValuesPanelAction(), new MenuPosition(VIEW_VALUES_PANEL_MENU_GROUP_ID));
+        actionModule.registerMenuGroup(FrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_PARSING_PANEL_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM), SeparationMode.NONE));
+        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, getShowParsingPanelAction(), new MenuPosition(VIEW_PARSING_PANEL_MENU_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {

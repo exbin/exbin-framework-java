@@ -50,7 +50,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel {
     private BinarySearchPanel binarySearchPanel;
     private boolean binarySearchPanelVisible = false;
     private ValuesPanel valuesPanel;
-    private boolean valuesPanelVisible = false;
+    private boolean parsingPanelVisible = false;
 
     private JScrollPane valuesPanelScrollPane;
 
@@ -77,7 +77,7 @@ public class BinEdComponentPanel extends javax.swing.JPanel {
         valuesPanel.setCodeArea(codeArea, undoHandler);
         valuesPanelScrollPane = new JScrollPane(valuesPanel);
         valuesPanelScrollPane.setBorder(null);
-        setShowValuesPanel(true);
+        setShowParsingPanel(true);
     }
 
     public void setApplication(XBApplication application) {
@@ -104,24 +104,24 @@ public class BinEdComponentPanel extends javax.swing.JPanel {
         }
     }
 
-    public void setShowValuesPanel(boolean show) {
-        if (valuesPanelVisible != show) {
+    public void setShowParsingPanel(boolean show) {
+        if (parsingPanelVisible != show) {
             if (show) {
                 add(valuesPanelScrollPane, BorderLayout.EAST);
                 revalidate();
-                valuesPanelVisible = true;
+                parsingPanelVisible = true;
                 valuesPanel.enableUpdate();
             } else {
                 valuesPanel.disableUpdate();
                 BinEdComponentPanel.this.remove(valuesPanelScrollPane);
                 BinEdComponentPanel.this.revalidate();
-                valuesPanelVisible = false;
+                parsingPanelVisible = false;
             }
         }
     }
 
-    public boolean isShowValuesPanel() {
-        return valuesPanelVisible;
+    public boolean isShowParsingPanel() {
+        return parsingPanelVisible;
     }
 
     @Nonnull
