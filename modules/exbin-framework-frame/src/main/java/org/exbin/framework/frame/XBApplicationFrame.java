@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -45,6 +46,9 @@ import org.exbin.framework.action.api.ActionModuleApi;
  */
 @ParametersAreNonnullByDefault
 public class XBApplicationFrame extends javax.swing.JFrame implements ApplicationFrameHandler, WindowHeaderPanel.WindowHeaderDecorationProvider {
+
+    private static final String APPLICATION_NAME = "Application.name";
+    private static final String APPLICATION_ICON = "Application.icon";
 
     private XBApplication application;
     private ApplicationExitHandler exitHandler;
@@ -239,8 +243,11 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     @Override
     public void setApplication(XBApplication application) {
         this.application = application;
-        setTitle(application.getAppBundle().getString("Application.name"));
-        setIconImage(new ImageIcon(getClass().getResource(application.getAppBundle().getString("Application.icon"))).getImage());
+        ResourceBundle appBundle = application.getAppBundle();
+        setTitle(appBundle.getString(APPLICATION_NAME));
+        if (appBundle.containsKey(APPLICATION_ICON)) {
+            setIconImage(new ImageIcon(getClass().getResource(application.getAppBundle().getString(APPLICATION_ICON))).getImage());
+        }
     }
 
     @Override
@@ -259,7 +266,7 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         actionModule.buildToolBar(toolBar, FrameModule.MAIN_TOOL_BAR_ID);
     }
-    
+
     @Override
     public void showFrame() {
         setVisible(true);

@@ -31,6 +31,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import org.exbin.xbup.plugin.LookAndFeelApplier;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
@@ -250,9 +251,10 @@ public class TestApplication implements XBApplication {
         };
     }
 
+    @Nonnull
     @Override
-    public Image getApplicationIcon() {
-        return null;
+    public Optional<Image> getApplicationIcon() {
+        return Optional.empty();
     }
 
     @Override

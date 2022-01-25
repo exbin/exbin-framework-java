@@ -20,6 +20,7 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -317,9 +318,9 @@ public class FrameModule implements FrameModuleApi {
         JPanel dialogPanel = controlPanel != null ? WindowUtils.createDialogPanel(panel, controlPanel) : panel;
 
         DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "", modalityType);
-        Image applicationIcon = application.getApplicationIcon();
-        if (applicationIcon != null) {
-            ((JDialog) dialog.getWindow()).setIconImage(applicationIcon);
+        Optional<Image> applicationIcon = application.getApplicationIcon();
+        if (applicationIcon.isPresent()) {
+            ((JDialog) dialog.getWindow()).setIconImage(applicationIcon.get());
         }
         if (controlPanel instanceof OkCancelService) {
             JButton defaultButton = ((OkCancelService) controlPanel).getDefaultButton();

@@ -18,10 +18,10 @@ package org.exbin.framework.api;
 import org.exbin.xbup.plugin.LookAndFeelApplier;
 import java.awt.Image;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
@@ -64,8 +64,8 @@ public interface XBApplication extends XBModuleHandler {
      *
      * @return application icon image
      */
-    @Nullable
-    Image getApplicationIcon();
+    @Nonnull
+    Optional<Image> getApplicationIcon();
 
     /**
      * Registers locale and class loader which should be used to load resources

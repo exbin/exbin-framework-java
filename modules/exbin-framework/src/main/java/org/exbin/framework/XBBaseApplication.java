@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.jar.Attributes;
@@ -54,6 +55,8 @@ import org.exbin.framework.preferences.FrameworkPreferences;
  */
 @ParametersAreNonnullByDefault
 public class XBBaseApplication implements XBApplication {
+
+    private static final String APPLICATION_ICON = "Application.icon";
 
     private ResourceBundle appBundle;
     private Preferences appPreferences;
@@ -206,8 +209,12 @@ public class XBBaseApplication implements XBApplication {
 
     @Nonnull
     @Override
-    public Image getApplicationIcon() {
-        return new ImageIcon(getClass().getResource(getAppBundle().getString("Application.icon"))).getImage();
+    public Optional<Image> getApplicationIcon() {
+        if (!appBundle.containsKey(APPLICATION_ICON)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new ImageIcon(getClass().getResource(appBundle.getString(APPLICATION_ICON))).getImage());
     }
 
     @Nonnull
