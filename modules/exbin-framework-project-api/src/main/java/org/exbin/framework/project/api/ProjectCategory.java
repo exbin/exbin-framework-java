@@ -15,11 +15,13 @@
  */
 package org.exbin.framework.project.api;
 
+import java.awt.Image;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Project type interface.
+ * Project category interface.
  *
  * @version 0.2.2 2022/01/07
  * @author ExBin Project (http://exbin.org)
@@ -35,6 +37,18 @@ public interface ProjectCategory {
     @Nonnull
     String getId();
 
+    /**
+     * Returns name of the category.
+     *
+     * @return category name
+     */
     @Nonnull
     String getName();
+
+    /**
+     * Returns icon of the category.
+     *
+     * @return icon
+     */
+    Optional<Image> getIcon();
 }

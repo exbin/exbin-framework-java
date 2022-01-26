@@ -15,8 +15,10 @@
  */
 package org.exbin.framework.project.api;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 
 /**
  * Project type interface.
@@ -33,6 +35,18 @@ public interface ProjectType {
     @Nonnull
     ProjectCategory getCategory();
 
+    /**
+     * Returns project type name.
+     *
+     * @return name
+     */
     @Nonnull
     String getName();
+
+    /**
+     * Returns component for the new project creation.
+     *
+     * @return
+     */
+    Optional<JComponent> getNewProjectComponent();
 }

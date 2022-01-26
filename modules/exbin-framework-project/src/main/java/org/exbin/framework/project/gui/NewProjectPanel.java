@@ -15,20 +15,42 @@
  */
 package org.exbin.framework.project.gui;
 
+import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
+import javax.swing.tree.TreeModel;
+import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
  * New project panel.
  *
- * @version 0.2.2 2022/01/07
+ * @version 0.2.2 2022/01/26
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class NewProjectPanel extends javax.swing.JPanel {
 
+    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(NewProjectPanel.class);
+
     public NewProjectPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
+    public void setCategoryModel(TreeModel treeModel) {
+        categoryTree.setModel(treeModel);
+    }
+
+    public void setProjectComponent(JComponent component) {
+        splitPane.setRightComponent(component);
     }
 
     /**
