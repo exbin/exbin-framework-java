@@ -43,6 +43,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.xbup.plugin.LookAndFeelApplier;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.api.XBApplicationBundle;
 import org.exbin.framework.api.XBApplicationModuleRepository;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.preferences.FrameworkPreferences;
@@ -55,8 +56,6 @@ import org.exbin.framework.preferences.FrameworkPreferences;
  */
 @ParametersAreNonnullByDefault
 public class XBBaseApplication implements XBApplication {
-
-    private static final String APPLICATION_ICON = "Application.icon";
 
     private ResourceBundle appBundle;
     private Preferences appPreferences;
@@ -210,11 +209,11 @@ public class XBBaseApplication implements XBApplication {
     @Nonnull
     @Override
     public Optional<Image> getApplicationIcon() {
-        if (!appBundle.containsKey(APPLICATION_ICON)) {
+        if (!appBundle.containsKey(XBApplicationBundle.APPLICATION_ICON)) {
             return Optional.empty();
         }
 
-        return Optional.of(new ImageIcon(getClass().getResource(appBundle.getString(APPLICATION_ICON))).getImage());
+        return Optional.of(new ImageIcon(getClass().getResource(appBundle.getString(XBApplicationBundle.APPLICATION_ICON))).getImage());
     }
 
     @Nonnull

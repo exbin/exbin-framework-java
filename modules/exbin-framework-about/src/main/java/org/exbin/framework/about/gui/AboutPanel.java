@@ -31,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.api.XBApplicationBundle;
 import org.exbin.framework.utils.BareBonesBrowserLaunch;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
@@ -404,8 +405,8 @@ public class AboutPanel extends javax.swing.JPanel {
 
         // Load license
         try {
-            String licenseFilePath = appBundle.getString("Application.licenseFile");
-            if (licenseFilePath != null && !licenseFilePath.isEmpty()) {
+            if (appBundle.containsKey(XBApplicationBundle.APPLICATION_LICENSE_FILE)) {
+                String licenseFilePath = appBundle.getString(XBApplicationBundle.APPLICATION_LICENSE_FILE);
                 licenseEditorPane.setPage(getClass().getResource(licenseFilePath));
             }
             licenseEditorPane.addHyperlinkListener((HyperlinkEvent event) -> {
@@ -417,17 +418,17 @@ public class AboutPanel extends javax.swing.JPanel {
             Logger.getLogger(AboutPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        nameTextField.setText(appBundle.getString("Application.name"));
-        versionTextField.setText(appBundle.getString("Application.version"));
-        vendorTextField.setText(appBundle.getString("Application.vendor"));
-        licenseTextField.setText(appBundle.getString("Application.license"));
-        appHomepageLabel.setText(appBundle.getString("Application.homepage"));
-        String aboutImagePath = appBundle.getString("Application.aboutImage");
-        if (aboutImagePath != null) {
-            imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(appBundle.getString("Application.aboutImage"))));
+        nameTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_NAME));
+        versionTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_VERSION));
+        vendorTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_VENDOR));
+        licenseTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_LICENSE));
+        appHomepageLabel.setText(appBundle.getString(XBApplicationBundle.APPLICATION_HOMEPAGE));
+        if (appBundle.containsKey(XBApplicationBundle.APPLICATION_ABOUT_IMAGE)) {
+            String aboutImagePath = appBundle.getString(XBApplicationBundle.APPLICATION_ABOUT_IMAGE);
+            imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(aboutImagePath)));
             aboutHeaderPanel.add(aboutHeaderImagePanel, BorderLayout.WEST);
         }
-        appTitleLabel.setText(appBundle.getString("Application.title"));
-        appDescLabel.setText(appBundle.getString("Application.description"));
+        appTitleLabel.setText(appBundle.getString(XBApplicationBundle.APPLICATION_TITLE));
+        appDescLabel.setText(appBundle.getString(XBApplicationBundle.APPLICATION_DESCRIPTION));
     }
 }

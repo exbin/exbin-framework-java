@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.api.XBApplicationBundle;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.update.gui.CheckForUpdatePanel;
 import org.exbin.framework.update.preferences.CheckForUpdatePreferences;
@@ -87,7 +88,7 @@ public class CheckForUpdateAction extends AbstractAction {
     @Nonnull
     public VersionNumbers getCurrentVersion() {
         ResourceBundle appBundle = application.getAppBundle();
-        String releaseString = appBundle.getString("Application.release");
+        String releaseString = appBundle.getString(XBApplicationBundle.APPLICATION_RELEASE);
         VersionNumbers versionNumbers = new VersionNumbers();
         versionNumbers.versionFromString(releaseString);
         return versionNumbers;

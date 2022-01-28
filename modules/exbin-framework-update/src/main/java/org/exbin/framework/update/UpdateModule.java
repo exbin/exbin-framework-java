@@ -45,6 +45,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.update.action.CheckForUpdateAction;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.api.XBApplicationBundle;
 
 /**
  * Implementation of framework check update module.
@@ -137,7 +138,7 @@ public class UpdateModule implements UpdateModuleApi {
     @Nonnull
     public VersionNumbers getCurrentVersion() {
         ResourceBundle appBundle = application.getAppBundle();
-        String releaseString = appBundle.getString("Application.release");
+        String releaseString = appBundle.getString(XBApplicationBundle.APPLICATION_RELEASE);
         VersionNumbers versionNumbers = new VersionNumbers();
         versionNumbers.versionFromString(releaseString);
         return versionNumbers;

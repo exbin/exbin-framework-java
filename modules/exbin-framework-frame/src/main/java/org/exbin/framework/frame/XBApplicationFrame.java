@@ -37,6 +37,7 @@ import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.gui.WindowHeaderPanel;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.api.XBApplicationBundle;
 
 /**
  * Basic appplication frame.
@@ -46,9 +47,6 @@ import org.exbin.framework.action.api.ActionModuleApi;
  */
 @ParametersAreNonnullByDefault
 public class XBApplicationFrame extends javax.swing.JFrame implements ApplicationFrameHandler, WindowHeaderPanel.WindowHeaderDecorationProvider {
-
-    private static final String APPLICATION_NAME = "Application.name";
-    private static final String APPLICATION_ICON = "Application.icon";
 
     private XBApplication application;
     private ApplicationExitHandler exitHandler;
@@ -244,9 +242,9 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     public void setApplication(XBApplication application) {
         this.application = application;
         ResourceBundle appBundle = application.getAppBundle();
-        setTitle(appBundle.getString(APPLICATION_NAME));
-        if (appBundle.containsKey(APPLICATION_ICON)) {
-            setIconImage(new ImageIcon(getClass().getResource(application.getAppBundle().getString(APPLICATION_ICON))).getImage());
+        setTitle(appBundle.getString(XBApplicationBundle.APPLICATION_NAME));
+        if (appBundle.containsKey(XBApplicationBundle.APPLICATION_ICON)) {
+            setIconImage(new ImageIcon(getClass().getResource(application.getAppBundle().getString(XBApplicationBundle.APPLICATION_ICON))).getImage());
         }
     }
 
