@@ -37,8 +37,8 @@ public class XBApplicationBundle {
     public static final String APPLICATION_LICENSE_FILE = "Application.licenseFile";
 
     public static final String APPLICATION_ICON = "Application.icon";
-    public static final String APPLICATION_ABOUT_IMAGE = "Application.homepage";
-    public static final String APPLICATION_HOMEPAGE = "Application.aboutImage";
+    public static final String APPLICATION_ABOUT_IMAGE = "Application.aboutImage";
+    public static final String APPLICATION_HOMEPAGE = "Application.homepage";
 
     private XBApplicationBundle() {
     }

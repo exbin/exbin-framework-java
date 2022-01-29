@@ -394,11 +394,7 @@ public class AboutPanel extends javax.swing.JPanel {
 
     public void setApplication(XBApplication application) {
         this.application = application;
-        if (application != null) {
-            appBundle = application.getAppBundle();
-        } else {
-            appBundle = resourceBundle;
-        }
+        appBundle = application != null ? application.getAppBundle() : resourceBundle;
 
         aboutModulesPanel.setApplication(application);
         aboutAuthorsPanel.setApplication(application);
