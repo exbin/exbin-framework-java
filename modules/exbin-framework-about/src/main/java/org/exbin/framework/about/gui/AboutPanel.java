@@ -45,7 +45,6 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class AboutPanel extends javax.swing.JPanel {
 
-    private XBApplication application;
     private ResourceBundle appBundle;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutPanel.class);
     private JComponent sideComponent = null;
@@ -95,8 +94,8 @@ public class AboutPanel extends javax.swing.JPanel {
             tableModel.addRow(line);
         });
 
-        productTabbedPane.insertTab("Authors", null, aboutAuthorsPanel, null, 1);
-        productTabbedPane.insertTab("Modules", null, aboutModulesPanel, null, 3);
+        productTabbedPane.insertTab(resourceBundle.getString("authorsPanel.TabConstraints.tabTitle"), null, aboutAuthorsPanel, null, 1);
+        productTabbedPane.insertTab(resourceBundle.getString("modulesPanel.TabConstraints.tabTitle"), null, aboutModulesPanel, null, 3);
     }
 
     /**
@@ -246,11 +245,10 @@ public class AboutPanel extends javax.swing.JPanel {
                 .addContainerGap(93, Short.MAX_VALUE))
         );
 
-        productTabbedPane.addTab("Application", applicationPanel);
+        productTabbedPane.addTab(resourceBundle.getString("applicationPanel.TabConstraints.tabTitle"), applicationPanel); // NOI18N
 
         licenseEditorPane.setEditable(false);
         licenseEditorPane.setContentType("text/html"); // NOI18N
-        licenseEditorPane.setText("<html>   <head>    </head>   <body>     <p style=\"margin-top: 0\"></p>   </body> </html> ");
         licenseScrollPane.setViewportView(licenseEditorPane);
 
         javax.swing.GroupLayout licensePanelLayout = new javax.swing.GroupLayout(licensePanel);
@@ -264,24 +262,8 @@ public class AboutPanel extends javax.swing.JPanel {
             .addComponent(licenseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
         );
 
-        productTabbedPane.addTab("License", licensePanel);
+        productTabbedPane.addTab(resourceBundle.getString("licensePanel.TabConstraints.tabTitle"), licensePanel); // NOI18N
 
-        environmentTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Property", "Value"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
         environmentScrollPane.setViewportView(environmentTable);
 
         javax.swing.GroupLayout environmentPanelLayout = new javax.swing.GroupLayout(environmentPanel);
@@ -295,7 +277,7 @@ public class AboutPanel extends javax.swing.JPanel {
             .addComponent(environmentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
         );
 
-        productTabbedPane.addTab("Environment", environmentPanel);
+        productTabbedPane.addTab(resourceBundle.getString("environmentPanel.TabConstraints.tabTitle"), environmentPanel); // NOI18N
 
         add(productTabbedPane, java.awt.BorderLayout.CENTER);
 
@@ -306,11 +288,11 @@ public class AboutPanel extends javax.swing.JPanel {
         aboutHeaderTitlePanel.setOpaque(false);
 
         appDescLabel.setForeground(java.awt.Color.black);
-        appDescLabel.setText("Description");
+        appDescLabel.setText(resourceBundle.getString("appDescLabel.text")); // NOI18N
 
         appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
         appTitleLabel.setForeground(java.awt.Color.black);
-        appTitleLabel.setText("Application Title");
+        appTitleLabel.setText(resourceBundle.getString("appTitleLabel.text")); // NOI18N
 
         javax.swing.GroupLayout aboutHeaderTitlePanelLayout = new javax.swing.GroupLayout(aboutHeaderTitlePanel);
         aboutHeaderTitlePanel.setLayout(aboutHeaderTitlePanelLayout);
@@ -393,7 +375,6 @@ public class AboutPanel extends javax.swing.JPanel {
     }
 
     public void setApplication(XBApplication application) {
-        this.application = application;
         appBundle = application != null ? application.getAppBundle() : resourceBundle;
 
         aboutModulesPanel.setApplication(application);
