@@ -27,13 +27,6 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="targetPositionTextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="targetPositionTextField1" alignment="0" max="32767" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="targetPositionLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="330" pref="330" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="targetPositionLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
                   <Component id="selectionLengthPanel" alignment="1" max="32767" attributes="0"/>
                   <Component id="currentPositionTextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="startPositionPanel" alignment="0" max="32767" attributes="0"/>
@@ -41,6 +34,13 @@
                   <Group type="102" attributes="0">
                       <Component id="currentPositionLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="targetPositionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="targetPositionLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="330" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>

@@ -28,7 +28,7 @@ import org.exbin.framework.utils.WindowUtils;
 /**
  * Edit selection for binary editor.
  *
- * @version 0.2.2 2022/01/23
+ * @version 0.2.2 2022/02/02
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -442,6 +442,7 @@ public class EditSelectionPanel extends javax.swing.JPanel {
     public void setMaxPosition(long maxPosition) {
         this.maxPosition = maxPosition;
         baseSwitchableSpinnerPanel.setMaximum(maxPosition);
+        baseSwitchableSpinnerPanel2.setMaximum(maxPosition - cursorPosition);
         updateStartTargetPosition();
     }
 
@@ -532,11 +533,13 @@ public class EditSelectionPanel extends javax.swing.JPanel {
 
     private void setStartPositionValue(long value) {
         baseSwitchableSpinnerPanel.setValue(value);
+        baseSwitchableSpinnerPanel2.setValue(getEndPositionValue() - value);
         updateStartTargetPosition();
     }
 
     private void setEndPositionValue(long value) {
         baseSwitchableSpinnerPanel1.setValue(value);
+        baseSwitchableSpinnerPanel2.setValue(value - getStartPositionValue());
         updateEndTargetPosition();
     }
 
