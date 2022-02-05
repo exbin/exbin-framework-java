@@ -20,7 +20,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.undo.api.UndoFileHandler;
+import org.exbin.framework.operation.undo.api.UndoFileHandler;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;

@@ -40,7 +40,7 @@ import org.exbin.framework.file.api.AllFileTypes;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.undo.api.UndoFileHandler;
+import org.exbin.framework.operation.undo.api.UndoFileHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdater;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.framework.action.api.ActionModuleApi;

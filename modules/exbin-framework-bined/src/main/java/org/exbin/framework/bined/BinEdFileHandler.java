@@ -51,7 +51,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.core.type.XBData;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.undo.api.UndoFileHandler;
+import org.exbin.framework.operation.undo.api.UndoFileHandler;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
@@ -65,6 +65,7 @@ public class BinEdFileHandler implements FileHandler, UndoFileHandler, BinEdComp
 
     private SegmentsRepository segmentsRepository;
 
+    @Nonnull
     private final BinEdComponentPanel componentPanel;
     private XBUndoHandler undoHandlerWrapper;
     private int id = 0;

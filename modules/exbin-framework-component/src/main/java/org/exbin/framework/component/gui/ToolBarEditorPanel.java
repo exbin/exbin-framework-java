@@ -21,10 +21,10 @@ import javax.swing.JToolBar;
 import org.exbin.framework.action.ActionModule;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsHandlerEmpty;
-import org.exbin.framework.undo.UndoModule;
-import org.exbin.framework.undo.api.UndoActions;
-import org.exbin.framework.undo.api.UndoActionsHandler;
-import org.exbin.framework.undo.api.UndoActionsHandlerEmpty;
+import org.exbin.framework.operation.undo.OperationUndoModule;
+import org.exbin.framework.operation.undo.api.UndoActions;
+import org.exbin.framework.operation.undo.api.UndoActionsHandler;
+import org.exbin.framework.operation.undo.api.UndoActionsHandlerEmpty;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
@@ -68,8 +68,8 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
      */
     public static void main(String args[]) {
         TestApplication testApplication = UtilsModule.getDefaultAppEditor();
-        UndoModule guiUndoModule = new UndoModule();
-        testApplication.addModule(UndoModule.MODULE_ID, guiUndoModule);
+        OperationUndoModule guiUndoModule = new OperationUndoModule();
+        testApplication.addModule(OperationUndoModule.MODULE_ID, guiUndoModule);
         ActionModule guiActionModule = new ActionModule();
         testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
 

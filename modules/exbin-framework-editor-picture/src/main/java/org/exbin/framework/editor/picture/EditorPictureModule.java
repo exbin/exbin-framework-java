@@ -45,7 +45,7 @@ import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
-import org.exbin.framework.undo.api.UndoModuleApi;
+import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.LanguageUtils;
@@ -107,7 +107,7 @@ public class EditorPictureModule implements XBApplicationModule {
         if (editorProvider == null) {
             ImageEditor imageEditor = new ImageEditor(application);
 
-            UndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(UndoModuleApi.class);
+            OperationUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(OperationUndoModuleApi.class);
             // imagePanel.setUndoHandler(undoModule.getUndoHandler());
 
             editorProvider = imageEditor;

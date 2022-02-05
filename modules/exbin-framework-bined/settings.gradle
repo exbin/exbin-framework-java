@@ -12,7 +12,7 @@ if (rootProject.path == ':') {
     include ':modules:exbin-framework-file-api'
     include ':modules:exbin-framework-frame-api'
     include ':modules:exbin-framework-options-api'
-    include ':modules:exbin-framework-undo-api'
+    include ':modules:exbin-framework-operation-undo-api'
     include ':modules:exbin-framework-utils'
 }
 

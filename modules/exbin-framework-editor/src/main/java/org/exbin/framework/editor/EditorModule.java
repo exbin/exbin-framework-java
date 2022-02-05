@@ -31,8 +31,8 @@ import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.undo.api.UndoModuleApi;
-import org.exbin.framework.undo.api.UndoActionsHandler;
+import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
+import org.exbin.framework.operation.undo.api.UndoActionsHandler;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
@@ -44,7 +44,7 @@ import org.exbin.framework.editor.action.EditorActions;
 import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.undo.api.UndoFileHandler;
+import org.exbin.framework.operation.undo.api.UndoFileHandler;
 import org.exbin.framework.utils.LanguageUtils;
 
 /**
@@ -210,7 +210,7 @@ public class EditorModule implements EditorModuleApi {
     public void registerEditor(String pluginId, final EditorProvider editorProvider) {
         if (editorProvider instanceof UndoActionsHandler) {
             ((UndoActionsHandler) editorProvider).setUndoUpdateListener(() -> {
-                UndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(UndoModuleApi.class);
+                OperationUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(OperationUndoModuleApi.class);
                 undoModule.updateUndoStatus();
             });
         }
@@ -244,7 +244,7 @@ public class EditorModule implements EditorModuleApi {
 
     @Override
     public void registerUndoHandler() {
-        UndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(UndoModuleApi.class);
+        OperationUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(OperationUndoModuleApi.class);
         if (editorProvider instanceof UndoFileHandler) {
             undoModule.setUndoHandler(((UndoFileHandler) editorProvider).getUndoHandler());
         }
