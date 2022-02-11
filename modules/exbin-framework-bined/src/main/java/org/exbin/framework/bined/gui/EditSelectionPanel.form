@@ -25,8 +25,8 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="targetPositionTextField" alignment="0" max="32767" attributes="0"/>
-                  <Component id="targetPositionTextField1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="startPositionTextField" alignment="0" max="32767" attributes="0"/>
+                  <Component id="endPositionTextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="selectionLengthPanel" alignment="1" max="32767" attributes="0"/>
                   <Component id="currentPositionTextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="startPositionPanel" alignment="0" max="32767" attributes="0"/>
@@ -37,8 +37,8 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="targetPositionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="targetPositionLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="startPositionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="endPositionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="330" max="-2" attributes="0"/>
                   </Group>
@@ -61,13 +61,13 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="selectionLengthPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="targetPositionLabel" min="-2" max="-2" attributes="0"/>
+              <Component id="startPositionLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="targetPositionTextField" min="-2" max="-2" attributes="0"/>
+              <Component id="startPositionTextField" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="targetPositionLabel1" min="-2" max="-2" attributes="0"/>
+              <Component id="endPositionLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="targetPositionTextField1" min="-2" max="-2" attributes="0"/>
+              <Component id="endPositionTextField" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -321,27 +321,27 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="targetPositionLabel">
+    <Component class="javax.swing.JLabel" name="startPositionLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/exbin/framework/bined/gui/resources/EditSelectionPanel.properties" key="startPositionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="targetPositionTextField">
+    <Component class="javax.swing.JTextField" name="startPositionTextField">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
         <Property name="text" type="java.lang.String" value="0" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="targetPositionLabel1">
+    <Component class="javax.swing.JLabel" name="endPositionLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/exbin/framework/bined/gui/resources/EditSelectionPanel.properties" key="endPositionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="targetPositionTextField1">
+    <Component class="javax.swing.JTextField" name="endPositionTextField">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
         <Property name="text" type="java.lang.String" value="0" noResource="true"/>

@@ -1,15 +1,21 @@
-/////////////////////////////////////////////////////////
-//  Bare Bones Browser Launch                          //
-//  Version 1.5 (December 10, 2005)                    //
-//  By Dem Pilafian                                    //
-//  Supports: Mac OS X, GNU/Linux, Unix, Windows XP    //
-//  Example Usage:                                     //
-//     String url = "http://www.centerkey.com/";       //
-//     BareBonesBrowserLaunch.openURL(url);            //
-//  Public Domain Software -- Free to Use as You Like  //
-/////////////////////////////////////////////////////////
+/*
+ * Copyright (C) ExBin Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.exbin.framework.utils;
 
+import java.awt.Desktop;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -28,6 +34,16 @@ public class BareBonesBrowserLaunch {
 
     private static final String ERROR_MESSAGE = "Error attempting to launch web browser";
 
+    /////////////////////////////////////////////////////////
+    //  Bare Bones Browser Launch                          //
+    //  Version 1.5 (December 10, 2005)                    //
+    //  By Dem Pilafian                                    //
+    //  Supports: Mac OS X, GNU/Linux, Unix, Windows XP    //
+    //  Example Usage:                                     //
+    //     String url = "http://www.centerkey.com/";       //
+    //     BareBonesBrowserLaunch.openURL(url);            //
+    //  Public Domain Software -- Free to Use as You Like  //
+    /////////////////////////////////////////////////////////
     @SuppressWarnings("unchecked")
     public static void openURL(String url) {
         String osName = System.getProperty("os.name");
@@ -57,47 +73,65 @@ public class BareBonesBrowserLaunch {
         }
     }
 
-    public static void openDesktopURL(String url) {
-        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+    public static void openDesktopURL(final String url) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop desktop = Desktop.getDesktop();
+                    if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                        try {
+                            java.net.URI uri = new java.net.URI(url);
+                            desktop.browse(uri);
+                            return;
+                        } catch (IOException | URISyntaxException ex) {
+                            Logger.getLogger(BareBonesBrowserLaunch.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
 
-        if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
-            try {
-                java.net.URI uri = new java.net.URI(url);
-                desktop.browse(uri);
-            } catch (IOException | URISyntaxException ex) {
-                Logger.getLogger(BareBonesBrowserLaunch.class.getName()).log(Level.SEVERE, null, ex);
+                BareBonesBrowserLaunch.openURL(url);
             }
-        } else {
-            BareBonesBrowserLaunch.openURL(url);
-        }
+        });
     }
 
-    public static void openDesktopURL(URI uri) {
-        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+    public static void openDesktopURL(final URI uri) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop desktop = Desktop.getDesktop();
+                    if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                        try {
+                            desktop.browse(uri);
+                            return;
+                        } catch (IOException ex) {
+                            Logger.getLogger(BareBonesBrowserLaunch.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
 
-        if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
-            try {
-                desktop.browse(uri);
-            } catch (IOException ex) {
-                Logger.getLogger(BareBonesBrowserLaunch.class.getName()).log(Level.SEVERE, null, ex);
+                BareBonesBrowserLaunch.openURL(uri.toString());
             }
-        } else {
-            BareBonesBrowserLaunch.openURL(uri.toString());
-        }
+        });
     }
 
-    public static void openDesktopURL(URL url) {
-        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+    public static void openDesktopURL(final URL url) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop desktop = Desktop.getDesktop();
+                    if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                        try {
+                            java.net.URI uri = url.toURI();
+                            desktop.browse(uri);
+                            return;
+                        } catch (IOException | URISyntaxException ex) {
+                            Logger.getLogger(BareBonesBrowserLaunch.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
 
-        if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
-            try {
-                java.net.URI uri = url.toURI();
-                desktop.browse(uri);
-            } catch (IOException | URISyntaxException ex) {
-                Logger.getLogger(BareBonesBrowserLaunch.class.getName()).log(Level.SEVERE, null, ex);
+                BareBonesBrowserLaunch.openURL(url.toString());
             }
-        } else {
-            BareBonesBrowserLaunch.openURL(url.toString());
-        }
+        });
     }
 }
