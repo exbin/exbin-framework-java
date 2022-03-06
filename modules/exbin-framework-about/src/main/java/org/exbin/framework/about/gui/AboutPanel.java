@@ -58,7 +58,6 @@ public class AboutPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        initComponents();
         darkMode = WindowUtils.isDarkUI();
         if (darkMode) {
             aboutHeaderPanel.setBackground(Color.BLACK);
