@@ -35,11 +35,11 @@ public interface TextFontOptions {
     Font getFont(Font initialFont);
 
     @Nullable
-    Map<TextAttribute, Object> getFontAttributes();
+    Map<TextAttribute, ?> getFontAttributes();
 
     boolean isUseDefaultFont();
 
-    void setFontAttributes(@Nullable Map<TextAttribute, Object> fontAttributes);
+    void setFontAttributes(@Nullable Map<TextAttribute, ?> fontAttributes);
 
     void setUseDefaultFont(boolean useDefaultFont);
 }

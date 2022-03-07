@@ -105,7 +105,7 @@ public class TextFontPreferences implements TextFontOptions {
     public void setFont(Font font) {
         if (font != null) {
             Map<TextAttribute, ?> attribs = font.getAttributes();
-            setFontAttributes((Map<TextAttribute, Object>) attribs);
+            setFontAttributes(attribs);
         } else {
             preferences.remove(PREFERENCES_TEXT_FONT_FAMILY);
             preferences.remove(PREFERENCES_TEXT_FONT_SIZE);
@@ -119,7 +119,7 @@ public class TextFontPreferences implements TextFontOptions {
     }
 
     @Override
-    public void setFontAttributes(Map<TextAttribute, Object> attribs) {
+    public void setFontAttributes(Map<TextAttribute, ?> attribs) {
         String value = (String) attribs.get(TextAttribute.FAMILY);
         if (value != null) {
             preferences.put(PREFERENCES_TEXT_FONT_FAMILY, value);

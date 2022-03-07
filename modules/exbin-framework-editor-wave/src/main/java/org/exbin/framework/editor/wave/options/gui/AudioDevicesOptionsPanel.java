@@ -105,9 +105,9 @@ public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements Opti
         outputSoundDeviceLabel = new javax.swing.JLabel();
         outputSampleRateLabel = new javax.swing.JLabel();
         outputBufferSizeLabel = new javax.swing.JLabel();
-        outputSoundDeviceComboBox = new javax.swing.JComboBox();
-        outputSampleRateComboBox = new javax.swing.JComboBox();
-        outputBufferSizeComboBox = new javax.swing.JComboBox();
+        outputSoundDeviceComboBox = new javax.swing.JComboBox<>();
+        outputSampleRateComboBox = new javax.swing.JComboBox<>();
+        javax.swing.JComboBox<String> outputBufferSizeComboBox = new javax.swing.JComboBox<>();
         testAudioButton = new javax.swing.JButton();
 
         setAutoscrolls(true);
@@ -124,13 +124,13 @@ public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements Opti
         outputBufferSizeLabel.setText(resourceBundle.getString("outputBufferSizeLabel.text")); // NOI18N
         outputBufferSizeLabel.setName("outputBufferSizeLabel"); // NOI18N
 
-        outputSoundDeviceComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<default>" }));
+        outputSoundDeviceComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<default>" }));
         outputSoundDeviceComboBox.setName("outputSoundDeviceComboBox"); // NOI18N
 
-        outputSampleRateComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<default>" }));
+        outputSampleRateComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<default>" }));
         outputSampleRateComboBox.setName("outputSampleRateComboBox"); // NOI18N
 
-        outputBufferSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<default>" }));
+        outputBufferSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<default>" }));
         outputBufferSizeComboBox.setName("outputBufferSizeComboBox"); // NOI18N
 
         testAudioButton.setText(resourceBundle.getString("testAudioButton.text")); // NOI18N
@@ -205,11 +205,10 @@ public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements Opti
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JPanel audioOutputPanel;
-    public javax.swing.JComboBox outputBufferSizeComboBox;
     public javax.swing.JLabel outputBufferSizeLabel;
-    public javax.swing.JComboBox outputSampleRateComboBox;
+    public javax.swing.JComboBox<String> outputSampleRateComboBox;
     public javax.swing.JLabel outputSampleRateLabel;
-    public javax.swing.JComboBox outputSoundDeviceComboBox;
+    public javax.swing.JComboBox<String> outputSoundDeviceComboBox;
     public javax.swing.JLabel outputSoundDeviceLabel;
     public javax.swing.JButton testAudioButton;
     // End of variables declaration//GEN-END:variables

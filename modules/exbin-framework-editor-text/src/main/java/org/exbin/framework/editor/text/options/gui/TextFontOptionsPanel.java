@@ -17,8 +17,6 @@ package org.exbin.framework.editor.text.options.gui;
 
 import java.awt.Font;
 import java.awt.event.ItemEvent;
-import java.awt.font.TextAttribute;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,7 +60,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     @Override
     public void saveToOptions(TextFontOptionsImpl options) {
         options.setUseDefaultFont(defaultFontCheckBox.isSelected());
-        options.setFontAttributes(codeFont != null ? (Map<TextAttribute, Object>) codeFont.getAttributes() : null);
+        options.setFontAttributes(codeFont != null ? codeFont.getAttributes() : null);
     }
 
     @Override
