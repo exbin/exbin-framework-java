@@ -101,7 +101,6 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         definitionsTable = new javax.swing.JTable();
         definitionControlSplitPane = new javax.swing.JSplitPane();
 
-        definitionsTable.setModel(defsModel);
         definitionsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         definitionScrollPane.setViewportView(definitionsTable);
 
@@ -215,11 +214,11 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
 //        specService = catalog.getCatalogService(XBCSpecService.class);
-        defsModel.setCatalog(catalog);
     }
 
     public void setDefsTableMode(CatalogDefsTableModel defsTableModel) {
         this.defsModel = defsTableModel;
+        definitionsTable.setModel(defsModel);
     }
 
     public CatalogDefsTableModel getDefsModel() {
