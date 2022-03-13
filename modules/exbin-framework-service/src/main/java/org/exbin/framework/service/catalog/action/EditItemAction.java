@@ -72,7 +72,7 @@ public class EditItemAction extends AbstractAction {
     }
 
     @Override
-    public void actionPerformed(@Nullable ActionEvent arg0) {
+    public void actionPerformed(@Nullable ActionEvent event) {
         resultItem = null;
         if (currentItem != null) {
             FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);

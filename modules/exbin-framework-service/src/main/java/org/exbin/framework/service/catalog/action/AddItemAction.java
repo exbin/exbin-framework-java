@@ -85,7 +85,7 @@ public class AddItemAction extends AbstractAction {
     }
     
     @Override
-    public void actionPerformed(@Nullable ActionEvent arg0) {
+    public void actionPerformed(@Nullable ActionEvent event) {
         resultItem = null;
         FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         final CatalogAddItemPanel panel = new CatalogAddItemPanel();

@@ -178,7 +178,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         jSeparator14.setName("jSeparator14"); // NOI18N
         propertyPopupMenu.add(jSeparator14);
 
-        popupUndoMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        popupUndoMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         popupUndoMenuItem.setText(resourceBundle.getString("popupUndoMenuItem.text")); // NOI18N
         popupUndoMenuItem.setToolTipText(resourceBundle.getString("popupUndoMenuItem.toolTipText")); // NOI18N
         popupUndoMenuItem.setEnabled(false);
@@ -288,6 +288,7 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
         new PropertyThread(this, (XBTTreeNode) block).start();
     }
 
+    @Nullable
     public XBACatalog getCatalog() {
         return catalog;
     }
@@ -366,57 +367,55 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
                 if (propertyThread != this) {
                     return;
                 }
-                if (spec != null) {
-                    if (propertyThread != this) {
-                        return;
-                    }
-                    long bindCount = specService.getSpecDefsCount(spec);
-                    try {
-                        getValueFillingSemaphore().acquire();
-                        XBATreeParamExtractor paramExtractor = new XBATreeParamExtractor(node, catalog);
+                if (propertyThread != this) {
+                    return;
+                }
+                long bindCount = specService.getSpecDefsCount(spec);
+                try {
+                    getValueFillingSemaphore().acquire();
+                    XBATreeParamExtractor paramExtractor = new XBATreeParamExtractor(node, catalog);
 
-                        if (propertyPanel.getPropertyThread() == this) {
-                            for (int parameterIndex = 0; parameterIndex < bindCount; parameterIndex++) {
-                                String rowNameText = "";
-                                String typeNameText = "";
-                                XBPropertyTableItem row;
-                                XBCSpecDef def = specService.getSpecDefByOrder(spec, parameterIndex);
-                                XBCBlockSpec rowSpec;
-                                XBRowEditor lineEditor = null;
-                                if (def != null) {
-                                    try {
-                                        rowNameText = nameService.getDefaultText(def);
-                                        Optional<XBCRev> rowRev = def.getTargetRev();
-                                        if (rowRev.isPresent()) {
-                                            rowSpec = (XBCBlockSpec) rowRev.get().getParent();
-                                            typeNameText = nameService.getDefaultText(rowSpec);
-                                            if (rowNameText.isEmpty()) {
-                                                rowNameText = typeNameText;
-                                            }
-
-                                            lineEditor = getCustomEditor((XBCBlockRev) rowRev.get());
-                                            if (lineEditor != null) {
-                                                paramExtractor.setParameterIndex(parameterIndex);
-                                                XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);
-                                                serialReader.read(lineEditor);
-
-                                                lineEditor.attachChangeListener(new RowEditorChangeListener(lineEditor, paramExtractor, parameterIndex));
-                                            }
+                    if (propertyPanel.getPropertyThread() == this) {
+                        for (int parameterIndex = 0; parameterIndex < bindCount; parameterIndex++) {
+                            String rowNameText = "";
+                            String typeNameText = "";
+                            XBPropertyTableItem row;
+                            XBCSpecDef def = specService.getSpecDefByOrder(spec, parameterIndex);
+                            XBCBlockSpec rowSpec;
+                            XBRowEditor lineEditor = null;
+                            if (def != null) {
+                                try {
+                                    rowNameText = nameService.getDefaultText(def);
+                                    Optional<XBCRev> rowRev = def.getTargetRev();
+                                    if (rowRev.isPresent()) {
+                                        rowSpec = (XBCBlockSpec) rowRev.get().getParent();
+                                        typeNameText = nameService.getDefaultText(rowSpec);
+                                        if (rowNameText.isEmpty()) {
+                                            rowNameText = typeNameText;
                                         }
-                                    } catch (XBProcessingException | IOException ex) {
-                                        Logger.getLogger(XBPropertyTablePanel.class.getName()).log(Level.SEVERE, null, ex);
-                                        JOptionPane.showMessageDialog(propertyPanel, ex.getMessage(), "Exception in property panel", JOptionPane.ERROR_MESSAGE);
-                                    }
-                                }
 
-                                row = new XBPropertyTableItem(def, rowNameText, typeNameText, lineEditor);
-                                tableModel.addRow(row);
+                                        lineEditor = getCustomEditor((XBCBlockRev) rowRev.get());
+                                        if (lineEditor != null) {
+                                            paramExtractor.setParameterIndex(parameterIndex);
+                                            XBPSerialReader serialReader = new XBPSerialReader(paramExtractor);
+                                            serialReader.read(lineEditor);
+
+                                            lineEditor.attachChangeListener(new RowEditorChangeListener(lineEditor, paramExtractor, parameterIndex));
+                                        }
+                                    }
+                                } catch (XBProcessingException | IOException ex) {
+                                    Logger.getLogger(XBPropertyTablePanel.class.getName()).log(Level.SEVERE, null, ex);
+                                    JOptionPane.showMessageDialog(propertyPanel, ex.getMessage(), "Exception in property panel", JOptionPane.ERROR_MESSAGE);
+                                }
                             }
+
+                            row = new XBPropertyTableItem(def, rowNameText, typeNameText, lineEditor);
+                            tableModel.addRow(row);
                         }
-                        getValueFillingSemaphore().release();
-                    } catch (InterruptedException | HeadlessException ex) {
-                        Logger.getLogger(XBPropertyTablePanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    getValueFillingSemaphore().release();
+                } catch (InterruptedException | HeadlessException ex) {
+                    Logger.getLogger(XBPropertyTablePanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

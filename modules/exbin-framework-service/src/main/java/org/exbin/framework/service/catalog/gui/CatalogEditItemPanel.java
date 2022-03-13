@@ -17,6 +17,7 @@ package org.exbin.framework.service.catalog.gui;
 
 import java.awt.Container;
 import java.util.ResourceBundle;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.data.gui.DefinitionEditorPanel;
@@ -34,6 +35,7 @@ import org.exbin.xbup.core.catalog.base.XBCSpec;
  * @version 0.2.2 2022/01/20
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogEditItemPanel extends javax.swing.JPanel {
 
     private XBApplication application;

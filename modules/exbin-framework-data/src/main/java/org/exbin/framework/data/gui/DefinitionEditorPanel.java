@@ -17,6 +17,7 @@ package org.exbin.framework.data.gui;
 
 import org.exbin.framework.data.model.CatalogDefsTableModel;
 import java.awt.BorderLayout;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.component.ComponentModule;
@@ -194,19 +195,23 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         definitionsTable.repaint();
     }
 
-    public void setCatalogItem(XBCItem catalogItem) {
-        this.catalogItem = catalogItem;
-//        addButton.setEnabled(!(catalogItem instanceof XBCNode));
-        defsModel.setCatalogItem(catalogItem);
-//        updateList = new ArrayList<>();
-//        removeList = new ArrayList<>();
-        updateItemStatus();
-    }
-
+    @Nullable
     public XBCItem getCatalogItem() {
         return catalogItem;
     }
 
+    public void setCatalogItem(XBCItem catalogItem) {
+        this.catalogItem = catalogItem;
+//        addButton.setEnabled(!(catalogItem instanceof XBCNode));
+        if (defsModel != null) {
+            defsModel.setCatalogItem(catalogItem);
+            updateItemStatus();
+        }
+//        updateList = new ArrayList<>();
+//        removeList = new ArrayList<>();
+    }
+
+    @Nullable
     public XBACatalog getCatalog() {
         return catalog;
     }
@@ -219,8 +224,13 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     public void setDefsTableMode(CatalogDefsTableModel defsTableModel) {
         this.defsModel = defsTableModel;
         definitionsTable.setModel(defsModel);
+        if (catalogItem != null) {
+            defsModel.setCatalogItem(catalogItem);
+            updateItemStatus();
+        }
     }
 
+    @Nullable
     public CatalogDefsTableModel getDefsModel() {
         return defsModel;
     }
