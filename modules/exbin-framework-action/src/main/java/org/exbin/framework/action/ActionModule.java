@@ -35,16 +35,17 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
-import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.api.XBApplicationModuleRepository;
+import org.exbin.framework.popup.api.PopupModuleApi;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.ClipboardActionsUpdater;
 
 /**
  * Implementation of framework menu module.
  *
- * @version 0.2.2 2021/10/15
+ * @version 0.2.2 2022/05/01
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -110,17 +111,23 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        ClipboardUtils.addComponentPopupEventDispatcher(dispatcher);
+        XBApplicationModuleRepository moduleRepository = application.getModuleRepository();
+        PopupModuleApi popupModule = moduleRepository.getModuleByInterface(PopupModuleApi.class);
+        popupModule.addComponentPopupEventDispatcher(dispatcher);
     }
 
     @Override
     public void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        ClipboardUtils.removeComponentPopupEventDispatcher(dispatcher);
+        XBApplicationModuleRepository moduleRepository = application.getModuleRepository();
+        PopupModuleApi popupModule = moduleRepository.getModuleByInterface(PopupModuleApi.class);
+        popupModule.removeComponentPopupEventDispatcher(dispatcher);
     }
 
     @Override
     public void fillPopupMenu(JPopupMenu popupMenu, int position) {
-        ClipboardUtils.fillDefaultEditPopupMenu(popupMenu, position);
+        XBApplicationModuleRepository moduleRepository = application.getModuleRepository();
+        PopupModuleApi popupModule = moduleRepository.getModuleByInterface(PopupModuleApi.class);
+        popupModule.fillDefaultEditPopupMenu(popupMenu, position);
     }
 
     @Nonnull
@@ -195,11 +202,13 @@ public class ActionModule implements ActionModuleApi {
         registerMenuItem(menuId, moduleId, actions.getDeleteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
         registerMenuItem(menuId, moduleId, actions.getSelectAllAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
-    
+
     @Override
     public void registerClipboardTextActions() {
         getClipboardTextActions();
-        ClipboardUtils.registerDefaultClipboardPopupMenu(resourceBundle, ActionModule.class);
+        XBApplicationModuleRepository moduleRepository = application.getModuleRepository();
+        PopupModuleApi popupModule = moduleRepository.getModuleByInterface(PopupModuleApi.class);
+        popupModule.registerDefaultClipboardPopupMenu(resourceBundle, ActionModule.class);
     }
 
     @Override
@@ -260,7 +269,7 @@ public class ActionModule implements ActionModuleApi {
     public void unregisterMenu(String menuId) {
         getMenuHandler().unregisterMenu(menuId);
     }
-    
+
     public void updateClipboardActionsState() {
         clipboardTextActions.updateClipboardActionsState();
     }

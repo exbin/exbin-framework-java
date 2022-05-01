@@ -53,35 +53,4 @@ public class ClipboardUtils {
 
         return clipboard;
     }
-
-    /**
-     * Registers popup menu show for various supported components accross all
-     * AWT popup menu events.
-     */
-    public static void registerDefaultClipboardPopupMenu() {
-        DefaultPopupMenu.register();
-    }
-
-    /**
-     * Registers popup menu show for various supported components accross all
-     * AWT popup menu events.
-     *
-     * @param resourceBundle resource bundle
-     * @param resourceClass resource class
-     */
-    public static void registerDefaultClipboardPopupMenu(ResourceBundle resourceBundle, Class resourceClass) {
-        DefaultPopupMenu.register(resourceBundle, resourceClass);
-    }
-
-    public static void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        DefaultPopupMenu.getInstance().addClipboardEventDispatcher(dispatcher);
-    }
-
-    public static void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        DefaultPopupMenu.getInstance().removeClipboardEventDispatcher(dispatcher);
-    }
-
-    public static void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position) {
-        DefaultPopupMenu.getInstance().fillDefaultEditPopupMenu(popupMenu, position);
-    }
 }

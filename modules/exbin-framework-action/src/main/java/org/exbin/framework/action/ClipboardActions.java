@@ -38,11 +38,11 @@ import org.exbin.framework.utils.ClipboardUtils;
 @ParametersAreNonnullByDefault
 public class ClipboardActions implements ClipboardActionsUpdater {
 
-    public static final String EDIT_SELECT_ALL_ACTION_ID = "editSelectAllAction";
-    public static final String EDIT_DELETE_ACTION_ID = "editDeleteAction";
-    public static final String EDIT_PASTE_ACTION_ID = "editPasteAction";
-    public static final String EDIT_COPY_ACTION_ID = "editCopyAction";
-    public static final String EDIT_CUT_ACTION_ID = "editCutAction";
+    public static final String EDIT_SELECT_ALL_ACTION_ID = "popupSelectAllAction";
+    public static final String EDIT_DELETE_ACTION_ID = "popupDeleteAction";
+    public static final String EDIT_PASTE_ACTION_ID = "popupPasteAction";
+    public static final String EDIT_COPY_ACTION_ID = "popupCopyAction";
+    public static final String EDIT_CUT_ACTION_ID = "popupCutAction";
 
     private ResourceBundle resourceBundle;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.utils;
+package org.exbin.framework.popup;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -23,7 +23,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.ScrollPane;
 import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -36,24 +35,31 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
-import javax.swing.DefaultListSelectionModel;
+import javax.swing.JEditorPane;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
+import org.exbin.framework.popup.handler.EditorPanePopupHandler;
+import org.exbin.framework.popup.handler.ListPopupHandler;
+import org.exbin.framework.popup.handler.TablePopupHandler;
+import org.exbin.framework.popup.handler.TextComponentPopupHandler;
+import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.utils.ClipboardActionsHandler;
+import org.exbin.framework.utils.ComponentPopupEventDispatcher;
+import org.exbin.framework.utils.LanguageUtils;
 
 /**
  * Utilities for default menu generation.
  *
- * @version 0.2.1 2019/07/19
+ * @version 0.2.1 2022/05/01
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -61,21 +67,28 @@ public class DefaultPopupMenu {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DefaultPopupMenu.class);
 
-    public static final String EDIT_CUT_ACTION_ID = "editCutAction";
-    public static final String EDIT_COPY_ACTION_ID = "editCopyAction";
-    public static final String EDIT_PASTE_ACTION_ID = "editPasteAction";
-    public static final String EDIT_DELETE_ACTION_ID = "editDeleteAction";
-    public static final String EDIT_SELECT_ALL_ACTION_ID = "editSelectAllAction";
+    public static final String POPUP_CUT_ACTION_ID = "popupCutAction";
+    public static final String POPUP_COPY_ACTION_ID = "popupCopyAction";
+    public static final String POPUP_PASTE_ACTION_ID = "popupPasteAction";
+    public static final String POPUP_DELETE_ACTION_ID = "popupDeleteAction";
+    public static final String POPUP_SELECT_ALL_ACTION_ID = "popupSelectAllAction";
+    public static final String POPUP_COPY_LINK_ACTION_ID = "popupCopyLinkAction";
+    public static final String POPUP_OPEN_LINK_ACTION_ID = "popupOpenLinkAction";
+    public static final String POPUP_COPY_LINK_ACTION_NAME = "copy-link";
+    public static final String POPUP_OPEN_LINK_ACTION_NAME = "open-link";
 
     private ActionMap defaultTextActionMap;
     private JPopupMenu defaultPopupMenu;
     private JPopupMenu defaultEditPopupMenu;
+    private JPopupMenu defaultLinkPopupMenu;
     private DefaultPopupClipboardAction defaultCutAction;
     private DefaultPopupClipboardAction defaultCopyAction;
     private DefaultPopupClipboardAction defaultPasteAction;
     private DefaultPopupClipboardAction defaultDeleteAction;
     private DefaultPopupClipboardAction defaultSelectAllAction;
     private DefaultPopupClipboardAction[] defaultTextActions;
+    private Action copyLinkAction;
+    private Action openLinkAction;
 
     private final List<ComponentPopupEventDispatcher> clipboardEventDispatchers = new ArrayList<>();
 
@@ -135,7 +148,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.isEditable() && clipboardHandler.isSelection());
             }
         };
-        ActionUtils.setupAction(defaultCutAction, resourceBundle, resourceClass, EDIT_CUT_ACTION_ID);
+        ActionUtils.setupAction(defaultCutAction, resourceBundle, resourceClass, POPUP_CUT_ACTION_ID);
         defaultCutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
         defaultCutAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), defaultCutAction);
@@ -151,7 +164,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.isSelection());
             }
         };
-        ActionUtils.setupAction(defaultCopyAction, resourceBundle, resourceClass, EDIT_COPY_ACTION_ID);
+        ActionUtils.setupAction(defaultCopyAction, resourceBundle, resourceClass, POPUP_COPY_ACTION_ID);
         defaultCopyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
         defaultCopyAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getCopyAction().getValue(Action.NAME), defaultCopyAction);
@@ -167,7 +180,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.isEditable());
             }
         };
-        ActionUtils.setupAction(defaultPasteAction, resourceBundle, resourceClass, EDIT_PASTE_ACTION_ID);
+        ActionUtils.setupAction(defaultPasteAction, resourceBundle, resourceClass, POPUP_PASTE_ACTION_ID);
         defaultPasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
         defaultPasteAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getPasteAction().getValue(Action.NAME), defaultPasteAction);
@@ -183,7 +196,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.canDelete() && clipboardHandler.isSelection());
             }
         };
-        ActionUtils.setupAction(defaultDeleteAction, resourceBundle, resourceClass, EDIT_DELETE_ACTION_ID);
+        ActionUtils.setupAction(defaultDeleteAction, resourceBundle, resourceClass, POPUP_DELETE_ACTION_ID);
         defaultDeleteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         defaultDeleteAction.setEnabled(false);
         defaultTextActionMap.put("delete", defaultDeleteAction);
@@ -199,12 +212,27 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.canSelectAll());
             }
         };
-        ActionUtils.setupAction(defaultSelectAllAction, resourceBundle, resourceClass, EDIT_SELECT_ALL_ACTION_ID);
+        ActionUtils.setupAction(defaultSelectAllAction, resourceBundle, resourceClass, POPUP_SELECT_ALL_ACTION_ID);
         defaultSelectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         defaultTextActionMap.put("selectAll", defaultSelectAllAction);
 
         DefaultPopupClipboardAction[] actions = {defaultCutAction, defaultCopyAction, defaultPasteAction, defaultDeleteAction, defaultSelectAllAction};
         defaultTextActions = actions;
+
+        copyLinkAction = new DefaultPopupLinkAction(POPUP_COPY_LINK_ACTION_NAME) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                linkHandler.performCopyLink();
+            }
+        };
+        ActionUtils.setupAction(copyLinkAction, resourceBundle, resourceClass, POPUP_COPY_LINK_ACTION_ID);
+        openLinkAction = new DefaultPopupLinkAction(POPUP_OPEN_LINK_ACTION_NAME) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                linkHandler.performOpenLink();
+            }
+        };
+        ActionUtils.setupAction(openLinkAction, resourceBundle, resourceClass, POPUP_OPEN_LINK_ACTION_ID);
 
         buildDefaultPopupMenu();
         buildDefaultEditPopupMenu();
@@ -314,12 +342,14 @@ public class DefaultPopupMenu {
                         component = ((JViewport) component).getView();
                     }
 
-                    if (component instanceof JTextComponent) {
-                        activateMousePopup(mouseEvent, component, new TextComponentClipboardHandler((JTextComponent) component));
+                    if (component instanceof JEditorPane) {
+                        activateMousePopup(mouseEvent, component, new EditorPanePopupHandler((JEditorPane) component));
+                    } else if (component instanceof JTextComponent) {
+                        activateMousePopup(mouseEvent, component, new TextComponentPopupHandler((JTextComponent) component));
                     } else if (component instanceof JList) {
-                        activateMousePopup(mouseEvent, component, new ListClipboardHandler((JList) component));
+                        activateMousePopup(mouseEvent, component, new ListPopupHandler((JList) component));
                     } else if (component instanceof JTable) {
-                        activateMousePopup(mouseEvent, component, new TableClipboardHandler((JTable) component));
+                        activateMousePopup(mouseEvent, component, new TablePopupHandler((JTable) component));
                     }
                 }
             } else if (event.getID() == KeyEvent.KEY_PRESSED) {
@@ -346,7 +376,7 @@ public class DefaultPopupMenu {
                         } catch (BadLocationException ex) {
                             point = null;
                         }
-                        activateKeyPopup(component, point, new TextComponentClipboardHandler((JTextComponent) component));
+                        activateKeyPopup(component, point, new TextComponentPopupHandler((JTextComponent) component));
                     } else if (component instanceof JList) {
                         Point point = null;
                         int selectedIndex = ((JList) component).getSelectedIndex();
@@ -354,7 +384,7 @@ public class DefaultPopupMenu {
                             Rectangle cellBounds = ((JList) component).getCellBounds(selectedIndex, selectedIndex);
                             point = new Point(component.getWidth() / 2, cellBounds.y);
                         }
-                        activateKeyPopup(component, point, new ListClipboardHandler((JList) component));
+                        activateKeyPopup(component, point, new ListPopupHandler((JList) component));
                     } else if (component instanceof JTable) {
                         Point point = null;
                         int selectedRow = ((JTable) component).getSelectedRow();
@@ -366,7 +396,7 @@ public class DefaultPopupMenu {
                             Rectangle cellBounds = ((JTable) component).getCellRect(selectedRow, selectedColumn, false);
                             point = new Point(cellBounds.x, cellBounds.y);
                         }
-                        activateKeyPopup(component, point, new TableClipboardHandler((JTable) component));
+                        activateKeyPopup(component, point, new TablePopupHandler((JTable) component));
                     }
                 }
             }
@@ -381,7 +411,7 @@ public class DefaultPopupMenu {
             Point locationOnScreen = component.getLocationOnScreen();
             point.translate(-locationOnScreen.x, -locationOnScreen.y);
 
-            showPopupMenu(component, point, clipboardHandler.isEditable());
+            showPopupMenu(component, point, clipboardHandler);
         }
 
         private void activateKeyPopup(Component component, Point point, ClipboardActionsHandler clipboardHandler) {
@@ -398,10 +428,15 @@ public class DefaultPopupMenu {
                 }
             }
 
-            showPopupMenu(component, point, clipboardHandler.isEditable());
+            showPopupMenu(component, point, clipboardHandler);
         }
 
-        private void showPopupMenu(Component component, Point point, boolean editable) {
+        private void showPopupMenu(Component component, Point point, ClipboardActionsHandler handler) {
+            if (handler instanceof LinkActionsHandler) {
+                // TODO
+            }
+
+            boolean editable = handler.isEditable();
             if (editable) {
                 defaultEditPopupMenu.show(component, (int) point.getX(), (int) point.getY());
             } else {
@@ -412,256 +447,6 @@ public class DefaultPopupMenu {
         @Nullable
         private Component getSource(MouseEvent e) {
             return SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
-        }
-
-        @ParametersAreNonnullByDefault
-        private class TextComponentClipboardHandler implements ClipboardActionsHandler {
-
-            private final JTextComponent txtComp;
-
-            public TextComponentClipboardHandler(JTextComponent txtComp) {
-                this.txtComp = txtComp;
-            }
-
-            @Override
-            public void performCut() {
-                txtComp.cut();
-            }
-
-            @Override
-            public void performCopy() {
-                txtComp.copy();
-            }
-
-            @Override
-            public void performPaste() {
-                txtComp.paste();
-            }
-
-            @Override
-            public void performDelete() {
-                ActionUtils.invokeTextAction(txtComp, DefaultEditorKit.deleteNextCharAction);
-            }
-
-            @Override
-            public void performSelectAll() {
-                SwingUtilities.invokeLater(() -> {
-                    txtComp.requestFocus();
-                    ActionUtils.invokeTextAction(txtComp, DefaultEditorKit.selectAllAction);
-                    int docLength = txtComp.getDocument().getLength();
-                    if (txtComp.getSelectionStart() > 0 || txtComp.getSelectionEnd() != docLength) {
-                        txtComp.selectAll();
-                    }
-                });
-            }
-
-            @Override
-            public boolean isSelection() {
-                return txtComp.isEnabled() && txtComp.getSelectionStart() != txtComp.getSelectionEnd();
-            }
-
-            @Override
-            public boolean isEditable() {
-                return txtComp.isEnabled() && txtComp.isEditable();
-            }
-
-            @Override
-            public boolean canSelectAll() {
-                return txtComp.isEnabled() && !txtComp.getText().isEmpty();
-            }
-
-            @Override
-            public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-                // Ignore
-            }
-
-            @Override
-            public boolean canPaste() {
-                return true;
-            }
-
-            @Override
-            public boolean canDelete() {
-                return true;
-            }
-        }
-
-        @ParametersAreNonnullByDefault
-        private class ListClipboardHandler implements ClipboardActionsHandler {
-
-            private final JList listComp;
-
-            public ListClipboardHandler(JList listComp) {
-                this.listComp = listComp;
-            }
-
-            @Override
-            public void performCut() {
-                throw new IllegalStateException();
-            }
-
-            @Override
-            public void performCopy() {
-                StringBuilder builder = new StringBuilder();
-                List rows = listComp.getSelectedValuesList();
-                boolean empty = true;
-                for (Object row : rows) {
-                    builder.append(empty ? row.toString() : System.getProperty("line.separator") + row);
-
-                    if (empty) {
-                        empty = false;
-                    }
-                }
-
-                ClipboardUtils.getClipboard().setContents(new StringSelection(builder.toString()), null);
-            }
-
-            @Override
-            public void performPaste() {
-                throw new IllegalStateException();
-            }
-
-            @Override
-            public void performDelete() {
-                throw new IllegalStateException();
-            }
-
-            @Override
-            public void performSelectAll() {
-                if (listComp.getModel().getSize() > 0) {
-                    listComp.setSelectionInterval(0, listComp.getModel().getSize() - 1);
-                }
-            }
-
-            @Override
-            public boolean isSelection() {
-                return listComp.isEnabled() && !listComp.isSelectionEmpty();
-            }
-
-            @Override
-            public boolean isEditable() {
-                return false;
-            }
-
-            @Override
-            public boolean canSelectAll() {
-                return listComp.isEnabled() && listComp.getSelectionMode() != DefaultListSelectionModel.SINGLE_SELECTION;
-            }
-
-            @Override
-            public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-                // Ignore
-            }
-
-            @Override
-            public boolean canPaste() {
-                return true;
-            }
-
-            @Override
-            public boolean canDelete() {
-                return true;
-            }
-        }
-
-        @ParametersAreNonnullByDefault
-        private class TableClipboardHandler implements ClipboardActionsHandler {
-
-            private final JTable tableComp;
-
-            public TableClipboardHandler(JTable tableComp) {
-                this.tableComp = tableComp;
-            }
-
-            @Override
-            public void performCut() {
-                throw new IllegalStateException();
-            }
-
-            @Override
-            public void performCopy() {
-                StringBuilder builder = new StringBuilder();
-                int[] rows = tableComp.getSelectedRows();
-                int[] columns;
-                if (tableComp.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) {
-                    columns = new int[tableComp.getColumnCount()];
-                    for (int i = 0; i < tableComp.getColumnCount(); i++) {
-                        columns[i] = i;
-                    }
-                } else {
-                    columns = tableComp.getSelectedColumns();
-                }
-
-                boolean empty = true;
-                for (int rowIndex : rows) {
-                    if (!empty) {
-                        builder.append(System.getProperty("line.separator"));
-                    } else {
-                        empty = false;
-                    }
-
-                    boolean columnEmpty = true;
-                    for (int columnIndex : columns) {
-                        if (!columnEmpty) {
-                            builder.append("\t");
-                        } else {
-                            columnEmpty = false;
-                        }
-
-                        Object value = tableComp.getModel().getValueAt(rowIndex, columnIndex);
-                        if (value != null) {
-                            builder.append(value.toString());
-                        }
-                    }
-                }
-
-                ClipboardUtils.getClipboard().setContents(new StringSelection(builder.toString()), null);
-            }
-
-            @Override
-            public void performPaste() {
-                throw new IllegalStateException();
-            }
-
-            @Override
-            public void performDelete() {
-                throw new IllegalStateException();
-            }
-
-            @Override
-            public void performSelectAll() {
-                tableComp.selectAll();
-            }
-
-            @Override
-            public boolean isSelection() {
-                return tableComp.isEnabled() && (tableComp.getSelectedColumn() >= 0 || tableComp.getSelectedRow() >= 0);
-            }
-
-            @Override
-            public boolean isEditable() {
-                return false;
-            }
-
-            @Override
-            public boolean canSelectAll() {
-                return tableComp.isEnabled() && tableComp.getSelectionModel().getSelectionMode() != ListSelectionModel.SINGLE_SELECTION;
-            }
-
-            @Override
-            public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
-                // Ignore
-            }
-
-            @Override
-            public boolean canPaste() {
-                return true;
-            }
-
-            @Override
-            public boolean canDelete() {
-                return false;
-            }
         }
     }
 
@@ -683,5 +468,22 @@ public class DefaultPopupMenu {
         }
 
         protected abstract void postTextComponentInitialize();
+    }
+
+    /**
+     * Link action for default popup menu.
+     */
+    @ParametersAreNonnullByDefault
+    private static abstract class DefaultPopupLinkAction extends AbstractAction {
+
+        protected LinkActionsHandler linkHandler;
+
+        public DefaultPopupLinkAction(String name) {
+            super(name);
+        }
+
+        public void setLinkHandler(LinkActionsHandler linkHandler) {
+            this.linkHandler = linkHandler;
+        }
     }
 }
