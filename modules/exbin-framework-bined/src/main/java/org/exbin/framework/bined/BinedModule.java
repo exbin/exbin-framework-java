@@ -1874,6 +1874,9 @@ public class BinedModule implements XBApplicationModule {
                     codeArea.selectAll();
                 });
                 popupMenu.add(selectAllMenuItem);
+                JMenuItem editSelectionMenuItem = createEditSelectionMenuItem();
+                popupMenu.add(editSelectionMenuItem);
+
                 if (variant != PopupMenuVariant.BASIC) {
                     popupMenu.addSeparator();
                     JMenuItem insertDataMenuItem = createInsertDataMenuItem();
@@ -1881,9 +1884,6 @@ public class BinedModule implements XBApplicationModule {
 
                     JMenuItem goToMenuItem = createGoToMenuItem();
                     popupMenu.add(goToMenuItem);
-
-                    JMenuItem editSelectionMenuItem = createEditSelectionMenuItem();
-                    popupMenu.add(editSelectionMenuItem);
                 }
 
                 if (variant == PopupMenuVariant.EDITOR) {

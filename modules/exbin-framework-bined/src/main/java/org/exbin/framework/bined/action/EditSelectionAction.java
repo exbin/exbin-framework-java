@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
+import org.exbin.bined.SelectionRange;
 import org.exbin.bined.swing.extended.ExtCodeArea;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.utils.ActionUtils;
@@ -90,7 +91,12 @@ public class EditSelectionAction extends AbstractAction implements FileDependent
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == ControlActionType.OK) {
                 editSelectionPanel.acceptInput();
-                codeArea.setSelection(editSelectionPanel.getSelectionRange().orElse(null));
+                Optional<SelectionRange> selectionRange = editSelectionPanel.getSelectionRange();
+                if (selectionRange.isPresent()) {
+                    codeArea.setSelection(selectionRange.get());
+                } else {
+                    codeArea.clearSelection();
+                }
                 codeArea.revealCursor();
             }
 
