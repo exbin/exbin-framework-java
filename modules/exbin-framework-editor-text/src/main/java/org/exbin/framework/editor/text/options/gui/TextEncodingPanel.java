@@ -339,7 +339,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
     }
 
     @ParametersAreNonnullByDefault
-    private class EncodingsListModel extends AbstractListModel {
+    private class EncodingsListModel extends AbstractListModel<String> {
 
         private final List<String> charsets = new ArrayList<>();
 
@@ -349,7 +349,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
         }
 
         @Override
-        public Object getElementAt(int index) {
+        public String getElementAt(int index) {
             return charsets.get(index);
         }
 
