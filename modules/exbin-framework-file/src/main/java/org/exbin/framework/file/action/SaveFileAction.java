@@ -50,6 +50,7 @@ public class SaveFileAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask()));
+        updateForFileOperations();
     }
 
     public void updateForFileOperations() {

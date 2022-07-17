@@ -367,9 +367,6 @@ public class XBPropertyTablePanel extends javax.swing.JPanel {
                 if (propertyThread != this) {
                     return;
                 }
-                if (propertyThread != this) {
-                    return;
-                }
                 long bindCount = specService.getSpecDefsCount(spec);
                 try {
                     getValueFillingSemaphore().acquire();

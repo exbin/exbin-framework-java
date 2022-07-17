@@ -19,12 +19,15 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.editor.xbup.gui.AddBlockPanel;
 import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
+import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.LanguageUtils;
@@ -63,6 +66,12 @@ public class AddItemAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        if (editorProvider instanceof MultiEditorProvider) {
+            setEnabled(editorProvider.getActiveFile().isPresent());
+            ((MultiEditorProvider) editorProvider).addActiveFileChangeListener((@Nullable FileHandler fileHandler) -> {
+                setEnabled(fileHandler != null);
+            });
+        }
     }
 
     @Override

@@ -54,6 +54,7 @@ public class CloseFileAction extends AbstractAction implements FileDependentActi
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
+        updateForActiveFile();
     }
 
     @Override

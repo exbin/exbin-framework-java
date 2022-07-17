@@ -17,9 +17,9 @@ package org.exbin.framework.editor.xbup.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
 import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
@@ -27,9 +27,9 @@ import org.exbin.framework.editor.xbup.viewer.XbupFileHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.utils.gui.CloseControlPanel;
+import org.exbin.xbup.core.block.XBTBlock;
 import org.exbin.xbup.core.catalog.XBACatalog;
 
 /**
@@ -55,6 +55,10 @@ public class ItemPropertiesAction extends AbstractAction {
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        setEnabled(false);
+        viewerProvider.addItemSelectionListener((@Nullable XBTBlock item) -> {
+            setEnabled(item != null);
+        });
     }
 
     @Override

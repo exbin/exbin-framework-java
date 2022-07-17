@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.operation.undo.api.UndoFileHandler;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
@@ -29,7 +30,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface XbupEditorProvider extends EditorProvider {
+public interface XbupEditorProvider extends EditorProvider, UndoFileHandler {
 
     @Nonnull
     XBACatalog getCatalog();

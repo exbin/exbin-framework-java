@@ -317,7 +317,7 @@ public class BinedModule implements XBApplicationModule {
     public void initFileHandler(BinEdFileHandler fileHandler) {
         Preferences preferences = application.getAppPreferences();
         String encoding = new BinaryEditorPreferences(preferences).getEncodingPreferences().getSelectedEncoding();
-        if (encoding != null && !encoding.isEmpty()) {
+        if (!encoding.isEmpty()) {
             fileHandler.setCharset(Charset.forName(encoding));
         }
         TextFontPreferences textFontPreferences = new BinaryEditorPreferences(preferences).getFontPreferences();
@@ -334,8 +334,7 @@ public class BinedModule implements XBApplicationModule {
             insertDataAction, codeTypeActions, positionCodeTypeActions, hexCharactersCaseActions, clipboardCodeActions
         };
 
-        for (int i = 0; i < fileDepActions.length; i++) {
-            FileDependentAction fileDepAction = fileDepActions[i];
+        for (FileDependentAction fileDepAction : fileDepActions) {
             if (fileDepAction != null) {
                 fileDepAction.updateForActiveFile();
             }

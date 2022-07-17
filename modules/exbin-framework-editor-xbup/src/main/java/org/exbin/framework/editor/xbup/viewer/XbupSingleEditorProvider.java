@@ -37,10 +37,10 @@ import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.gui.CloseControlPanel;
 import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Viewer provider.
@@ -65,9 +65,8 @@ public class XbupSingleEditorProvider implements XbupEditorProvider, ClipboardAc
     @Nullable
     private File lastUsedDirectory;
 
-    public XbupSingleEditorProvider(XBUndoHandler undoHandler) {
+    public XbupSingleEditorProvider() {
         activeFile = new XbupFileHandler();
-        activeFile.setUndoHandler(undoHandler);
         activeFile.setItemSelectionListener((block) -> {
             itemSelectionListeners.forEach(listener -> {
                 listener.itemSelected(block);
@@ -149,6 +148,11 @@ public class XbupSingleEditorProvider implements XbupEditorProvider, ClipboardAc
     public void setPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         this.propertyChangeListener = propertyChangeListener;
         activeFile.getComponent().setPropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    public XBUndoHandler getUndoHandler() {
+        return activeFile.getUndoHandler();
     }
 
     @Nonnull

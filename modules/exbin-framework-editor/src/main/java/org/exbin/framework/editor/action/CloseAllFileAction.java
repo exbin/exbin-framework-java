@@ -50,6 +50,7 @@ public class CloseAllFileAction extends AbstractAction implements FileDependentA
         this.editorProvider = editorProvider;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
+        updateForActiveFile();
     }
 
     @Override

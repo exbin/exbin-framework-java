@@ -54,6 +54,7 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.parser_tree.XBTTreeNode;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.xbup.operation.undo.XBTLinearUndo;
 
 /**
  * XBUP file handler.
@@ -85,6 +86,7 @@ public class XbupFileHandler implements FileHandler {
     public XbupFileHandler() {
         documentPanel = new XBDocumentPanel();
         treeDocument = new TreeDocument(null);
+        undoHandler = new XBTLinearUndo(treeDocument);
         init();
     }
 

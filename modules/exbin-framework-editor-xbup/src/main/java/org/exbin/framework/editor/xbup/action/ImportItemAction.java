@@ -17,11 +17,13 @@ package org.exbin.framework.editor.xbup.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.editor.xbup.viewer.XbupEditorProvider;
 import org.exbin.framework.utils.ActionUtils;
+import org.exbin.xbup.core.block.XBTBlock;
 
 /**
  * Import item action.
@@ -34,20 +36,24 @@ public class ImportItemAction extends AbstractAction {
 
     public static final String ACTION_ID = "importItemAction";
 
-    private EditorProvider editorProvider;
+    private XbupEditorProvider editorProvider;
     private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public ImportItemAction() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
+    public void setup(XBApplication application, XbupEditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.application = application;
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        setEnabled(false);
+        editorProvider.addItemSelectionListener((@Nullable XBTBlock item) -> {
+            setEnabled(item != null);
+        });
     }
 
     @Override

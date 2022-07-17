@@ -38,7 +38,6 @@ import javax.swing.JPopupMenu;
 import org.exbin.bined.CodeAreaUtils;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.bined.BinEdFileHandler;
-import org.exbin.framework.bined.FileHandlingMode;
 import org.exbin.framework.editor.xbup.gui.BlockPropertiesPanel;
 import org.exbin.framework.editor.MultiEditorUndoHandler;
 import org.exbin.framework.editor.action.CloseAllFileAction;
@@ -64,6 +63,10 @@ import org.exbin.xbup.parser_tree.XBTTreeDocument;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.file.api.FileTypes;
+import org.exbin.xbup.core.block.XBTBlock;
+import org.exbin.xbup.operation.Command;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 
 /**
  * Multi editor provider.
@@ -83,15 +86,15 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
     private int lastIndex = 0;
     private int lastNewFileIndex = 0;
     private final Map<Integer, Integer> newFilesMap = new HashMap<>();
-    private FileHandlingMode defaultFileHandlingMode = FileHandlingMode.MEMORY;
-    private final List<ActiveFileChangeListener> activeFileChangeListeners = new ArrayList<>();
 
+    private MultiEditorUndoHandler undoHandler = new MultiEditorUndoHandler();
     private ClipboardActionsHandler activeHandler;
 
     private XBPluginRepository pluginRepository;
+    private final List<ActiveFileChangeListener> activeFileChangeListeners = new ArrayList<>();
     private final List<DocumentItemSelectionListener> itemSelectionListeners = new ArrayList<>();
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private MultiEditorUndoHandler undoHandler = new MultiEditorUndoHandler();
+
     private Optional<FileHandler> activeFileCache = Optional.empty();
     private boolean devMode = false;
     @Nullable
@@ -166,14 +169,17 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
         fileModule.updateRecentFilesList(fileUri, fileType);
     }
 
+    @Override
+    public XBUndoHandler getUndoHandler() {
+        return undoHandler;
+    }
+
     private void activeFileChanged() {
         FileHandler activeFile = multiEditorPanel.getActiveFile();
         activeFileCache = Optional.ofNullable(activeFile);
         undoHandler.setActiveFile(activeFile);
 
-        for (ActiveFileChangeListener listener : activeFileChangeListeners) {
-            listener.activeFileChanged(activeFile);
-        }
+        notifyActiveFileChanged(activeFile);
 
         if (clipboardActionsUpdateListener != null) {
             // TODO updateClipboardActionsStatus();
@@ -185,6 +191,7 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
         // TODO
     }
 
+    @Nonnull
     @Override
     public XBACatalog getCatalog() {
         return catalog;
@@ -198,11 +205,13 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
         }
     }
 
+    @Nonnull
     @Override
     public XBApplication getApplication() {
         return application;
     }
 
+    @Nonnull
     @Override
     public XBPluginRepository getPluginRepository() {
         return pluginRepository;
@@ -211,7 +220,10 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
     @Override
     public void setPluginRepository(XBPluginRepository pluginRepository) {
         this.pluginRepository = pluginRepository;
-        // activeFile.setPluginRepository(pluginRepository);
+        for (int i = 0; i < multiEditorPanel.getFileHandlersCount(); i++) {
+            XbupFileHandler fileHandler = (XbupFileHandler) multiEditorPanel.getFileHandler(i);
+            fileHandler.setPluginRepository(pluginRepository);
+        }
     }
 
     public void setDevMode(boolean devMode) {
@@ -327,6 +339,12 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
         itemSelectionListeners.remove(listener);
     }
 
+    private void notifyItemSelectionChanged(@Nullable XBTBlock item) {
+        itemSelectionListeners.forEach(listener -> {
+            listener.itemSelected(item);
+        });
+    }
+
     @Override
     public void newFile() {
         int fileIndex = ++lastIndex;
@@ -346,15 +364,23 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
     @Nonnull
     private XbupFileHandler createFileHandler(int id) {
         XbupFileHandler fileHandler = new XbupFileHandler(id);
-        fileHandler.setItemSelectionListener((block) -> {
-            itemSelectionListeners.forEach(listener -> {
-                listener.itemSelected(block);
-            });
-        });
         fileHandler.setApplication(application);
-        fileHandler.setPluginRepository(pluginRepository);
+        fileHandler.setItemSelectionListener((block) -> {
+            notifyItemSelectionChanged(block);
+        });
         fileHandler.setCatalog(catalog);
-        fileHandler.setUndoHandler(undoHandler);
+        fileHandler.setPluginRepository(pluginRepository);
+        fileHandler.getUndoHandler().addUndoUpdateListener(new XBUndoUpdateListener() {
+            @Override
+            public void undoCommandPositionChanged() {
+                undoHandler.notifyUndoUpdate();
+            }
+
+            @Override
+            public void undoCommandAdded(Command cmnd) {
+                undoHandler.notifyUndoCommandAdded(cmnd);
+            }
+        });
 
         return fileHandler;
     }
@@ -558,6 +584,16 @@ public class XbupMultiEditorProvider implements XbupEditorProvider, MultiEditorP
     @Override
     public void removeActiveFileChangeListener(ActiveFileChangeListener listener) {
         activeFileChangeListeners.remove(listener);
+    }
+
+    private void notifyActiveFileChanged(@Nullable FileHandler fileHandler) {
+        for (ActiveFileChangeListener listener : activeFileChangeListeners) {
+            listener.activeFileChanged(fileHandler);
+        }
+
+        if (fileHandler == null) {
+            notifyItemSelectionChanged(null);
+        }
     }
 
     private class EditorPopupMenu extends JPopupMenu implements MultiEditorPopupMenu {

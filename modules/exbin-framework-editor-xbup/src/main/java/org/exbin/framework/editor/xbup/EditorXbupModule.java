@@ -49,11 +49,12 @@ import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.service.XBFileType;
 import org.exbin.xbup.core.catalog.XBACatalog;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.xbup.plugin.XBPluginRepository;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.editor.api.EditorProviderVariant;
+import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.utils.LanguageUtils;
 
 /**
@@ -79,7 +80,6 @@ public class EditorXbupModule implements XBApplicationModule {
     private XbupEditorProvider editorProvider;
     private ResourceBundle resourceBundle;
     private XBACatalog catalog;
-    private XBUndoHandler undoHandler;
 
     private ViewModeActions viewModeHandler;
     private StatusPanelHandler statusPanelHandler;
@@ -134,7 +134,7 @@ public class EditorXbupModule implements XBApplicationModule {
     @Nonnull
     private XbupEditorProvider createSingleEditorProvider() {
         if (editorProvider == null) {
-            editorProvider = new XbupSingleEditorProvider(undoHandler);
+            editorProvider = new XbupSingleEditorProvider();
             ((XbupSingleEditorProvider) editorProvider).setApplication(application);
             ((XbupSingleEditorProvider) editorProvider).setDevMode(devMode);
 
@@ -158,9 +158,19 @@ public class EditorXbupModule implements XBApplicationModule {
         if (editorProvider == null) {
             editorProvider = new XbupMultiEditorProvider(application);
             ((XbupMultiEditorProvider) editorProvider).setDevMode(devMode);
+            ((MultiEditorProvider) editorProvider).addActiveFileChangeListener(e -> {
+                updateActionStatus();
+            });
         }
 
         return editorProvider;
+    }
+
+    public void updateActionStatus() {
+        EditorModuleApi editorModule = application.getModuleRepository().getModuleByInterface(EditorModuleApi.class);
+        editorModule.updateActionStatus();
+        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        fileModule.updateForFileOperations();
     }
 
     public void registerFileTypes() {
@@ -380,10 +390,6 @@ public class EditorXbupModule implements XBApplicationModule {
         if (catalogBrowserAction != null) {
             catalogBrowserAction.setCatalog(catalog);
         }
-    }
-
-    public void setUndoHandler(XBUndoHandler undoHandler) {
-        this.undoHandler = undoHandler;
     }
 
     public void setPluginRepository(XBPluginRepository pluginRepository) {

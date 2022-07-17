@@ -122,9 +122,13 @@ public class MultiEditorPanel extends javax.swing.JPanel {
     private void changeActiveIndex(int index) {
         if (activeIndex != index) {
             activeIndex = index;
-            if (controller != null) {
-                controller.activeIndexChanged(index);
-            }
+            notifyActiveIndexChanged();
+        }
+    }
+
+    private void notifyActiveIndexChanged() {
+        if (controller != null) {
+            controller.activeIndexChanged(activeIndex);
         }
     }
 
