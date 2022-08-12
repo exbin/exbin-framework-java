@@ -18,27 +18,27 @@ package org.exbin.framework.popup;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for link handler for visual component / context menu.
+ * Interface for text handler for visual component / context menu.
  *
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface LinkActionsHandler {
+public interface PositionTextActionsHandler {
 
     /**
-     * Performs copy link to clipboard operation.
-     */
-    void performCopyLink();
-
-    /**
-     * Opens link using default browser.
-     */
-    void performOpenLink();
-
-    /**
-     * Returns if true if link is selected.
+     * Performs copy text on given relative position to clipboard operation.
      *
-     * @return true if link is selected
+     * @param x component x position
+     * @param y component y position
      */
-    boolean isLinkSelected();
+    void performCopyText(int x, int y);
+
+    /**
+     * Returns if true if text is selected on given relative position.
+     *
+     * @param x component x position
+     * @param y component y position
+     * @return true if image is selected
+     */
+    boolean isTextSelected(int x, int y);
 }

@@ -28,7 +28,6 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 /**
  * Implementation of framework popup module.
  *
- * @version 0.2.2 2022/05/01
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault

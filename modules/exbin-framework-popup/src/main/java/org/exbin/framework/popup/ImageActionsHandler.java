@@ -18,27 +18,22 @@ package org.exbin.framework.popup;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for link handler for visual component / context menu.
+ * Interface for image handler for visual component / context menu.
  *
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface LinkActionsHandler {
+public interface ImageActionsHandler {
 
     /**
-     * Performs copy link to clipboard operation.
+     * Performs copy image to clipboard operation.
      */
-    void performCopyLink();
+    void performCopyImage();
 
     /**
-     * Opens link using default browser.
-     */
-    void performOpenLink();
-
-    /**
-     * Returns if true if link is selected.
+     * Returns if true if image is selected.
      *
-     * @return true if link is selected
+     * @return true if image is selected
      */
-    boolean isLinkSelected();
+    boolean isImageSelected();
 }

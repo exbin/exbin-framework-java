@@ -18,7 +18,10 @@ package org.exbin.framework.popup.handler;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JEditorPane;
 import javax.swing.text.DefaultEditorKit;
+import org.exbin.framework.popup.ImageActionsHandler;
 import org.exbin.framework.popup.LinkActionsHandler;
+import org.exbin.framework.popup.PositionImageActionsHandler;
+import org.exbin.framework.popup.PositionLinkActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
@@ -26,11 +29,10 @@ import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 /**
  * Popup handler for JEditorPane.
  *
- * @version 0.2.1 2022/05/01
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActionsHandler {
+public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {
 
     private final JEditorPane editorPane;
 
@@ -105,6 +107,41 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
 
     @Override
     public boolean isLinkSelected() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void performCopyImage() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isImageSelected() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void performCopyLink(int x, int y) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void performOpenLink(int x, int y) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isLinkSelected(int x, int y) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void performCopyImage(int x, int y) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isImageSelected(int x, int y) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

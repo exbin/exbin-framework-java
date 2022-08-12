@@ -59,7 +59,6 @@ import org.exbin.framework.utils.LanguageUtils;
 /**
  * Utilities for default menu generation.
  *
- * @version 0.2.1 2022/05/01
  * @author ExBin Project (http://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -67,14 +66,18 @@ public class DefaultPopupMenu {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DefaultPopupMenu.class);
 
-    public static final String POPUP_CUT_ACTION_ID = "popupCutAction";
     public static final String POPUP_COPY_ACTION_ID = "popupCopyAction";
+    public static final String POPUP_COPY_TEXT_ACTION_ID = "popupCopyTextAction";
+    public static final String POPUP_COPY_LINK_ACTION_ID = "popupCopyLinkAction";
+    public static final String POPUP_COPY_IMAGE_ACTION_ID = "popupCopyImageAction";
+    public static final String POPUP_CUT_ACTION_ID = "popupCutAction";
     public static final String POPUP_PASTE_ACTION_ID = "popupPasteAction";
     public static final String POPUP_DELETE_ACTION_ID = "popupDeleteAction";
     public static final String POPUP_SELECT_ALL_ACTION_ID = "popupSelectAllAction";
-    public static final String POPUP_COPY_LINK_ACTION_ID = "popupCopyLinkAction";
     public static final String POPUP_OPEN_LINK_ACTION_ID = "popupOpenLinkAction";
+    public static final String POPUP_COPY_TEXT_ACTION_NAME = "copy-text";
     public static final String POPUP_COPY_LINK_ACTION_NAME = "copy-link";
+    public static final String POPUP_COPY_IMAGE_ACTION_NAME = "copy-image";
     public static final String POPUP_OPEN_LINK_ACTION_NAME = "open-link";
 
     private ActionMap defaultTextActionMap;
