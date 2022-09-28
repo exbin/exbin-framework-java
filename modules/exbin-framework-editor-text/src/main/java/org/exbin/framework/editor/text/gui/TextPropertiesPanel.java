@@ -194,8 +194,8 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
         charCountTextField.setText(Integer.toString(document.getLength()));
         CharBuffer buffer = CharBuffer.wrap(new StringBuffer(textPanel.getText()));
 
-        CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
         try {
+            CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
             ByteBuffer result = encoder.encode(buffer);
             int length = 0;
             while (result.hasRemaining()) {
@@ -203,7 +203,7 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
                 length++;
             }
             fileSizeTextField.setText(Integer.toString(length));
-        } catch (CharacterCodingException ex) {
+        } catch (UnsupportedOperationException | CharacterCodingException ex) {
             Logger.getLogger(TextPropertiesPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

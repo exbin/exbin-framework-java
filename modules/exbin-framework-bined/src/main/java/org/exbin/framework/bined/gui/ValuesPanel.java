@@ -24,6 +24,7 @@ import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
@@ -860,6 +861,7 @@ public class ValuesPanel extends javax.swing.JPanel {
         return ((EditModeCapable) codeArea).isEditable();
     }
 
+    @Nonnull
     private ByteOrder getByteOrder() {
         return littleEndianRadioButton.isSelected() ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
     }

@@ -17,6 +17,9 @@ package org.exbin.framework.bined.gui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import org.exbin.framework.utils.WindowUtils;
@@ -27,6 +30,7 @@ import org.exbin.framework.utils.WindowUtils;
  * @version 0.1.0 2016/06/23
  * @author ExBin Project (http://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class SelectableColor extends javax.swing.JPanel {
 
     private ColorChangedListener colorChangedListener = null;
@@ -131,6 +135,7 @@ public class SelectableColor extends javax.swing.JPanel {
         colorSelectionButton.setEnabled(enabled);
     }
 
+    @Nonnull
     public Color getColor() {
         return colorPreviewPanel.getBackground();
     }
@@ -139,6 +144,7 @@ public class SelectableColor extends javax.swing.JPanel {
         colorPreviewPanel.setBackground(color);
     }
 
+    @Nullable
     public ColorChangedListener getColorChangedListener() {
         return colorChangedListener;
     }
@@ -147,6 +153,7 @@ public class SelectableColor extends javax.swing.JPanel {
         this.colorChangedListener = colorChangedListener;
     }
 
+    @ParametersAreNonnullByDefault
     public static interface ColorChangedListener {
 
         void colorChanged(Color color);

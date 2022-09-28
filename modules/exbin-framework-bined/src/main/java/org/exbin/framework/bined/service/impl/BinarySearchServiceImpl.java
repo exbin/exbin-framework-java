@@ -29,6 +29,7 @@ import org.exbin.framework.bined.SearchParameters;
 import org.exbin.framework.bined.service.BinarySearchService;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.EditableBinaryData;
+import org.exbin.bined.CharsetStreamTranslator;
 import org.exbin.bined.CodeAreaUtils;
 
 /**
@@ -166,8 +167,13 @@ public class BinarySearchServiceImpl implements BinarySearchService {
         List<ExtendedHighlightNonAsciiCodeAreaPainter.SearchMatch> foundMatches = new ArrayList<>();
 
         Charset charset = codeArea.getCharset();
-        CharsetEncoder encoder = charset.newEncoder();
-        int maxBytesPerChar = (int) encoder.maxBytesPerChar();
+        int maxBytesPerChar;
+        try {
+            CharsetEncoder encoder = charset.newEncoder();
+            maxBytesPerChar = (int) encoder.maxBytesPerChar();
+        } catch (UnsupportedOperationException ex) {
+            maxBytesPerChar = CharsetStreamTranslator.DEFAULT_MAX_BYTES_PER_CHAR;
+        }
         byte[] charData = new byte[maxBytesPerChar];
         long dataSize = data.getDataSize();
         while (position <= dataSize - findText.length()) {
