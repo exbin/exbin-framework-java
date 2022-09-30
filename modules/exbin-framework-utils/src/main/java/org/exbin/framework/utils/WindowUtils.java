@@ -204,6 +204,7 @@ public class WindowUtils {
         invokeWindow(dialog);
     }
 
+    @Nullable
     public static LookAndFeel getLookAndFeel() {
         return lookAndFeel;
     }
@@ -449,7 +450,8 @@ public class WindowUtils {
         dialogPanel.add(controlPanel, BorderLayout.SOUTH);
         Dimension mainPreferredSize = mainPanel.getPreferredSize();
         Dimension controlPreferredSize = controlPanel.getPreferredSize();
-        dialogPanel.setPreferredSize(new Dimension(mainPreferredSize.width, mainPreferredSize.height + controlPreferredSize.height));
+        int height = mainPreferredSize.height + (controlPreferredSize != null ? controlPreferredSize.height : 0);
+        dialogPanel.setPreferredSize(new Dimension(mainPreferredSize.width, height));
         return dialogPanel;
     }
 

@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.popup;
 
+import java.awt.Point;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -28,25 +29,22 @@ public interface PositionLinkActionsHandler {
     /**
      * Performs copy link on given relative position to clipboard operation.
      *
-     * @param x component x position
-     * @param y component y position
+     * @param locationOnScreen location on screen
      */
-    void performCopyLink(int x, int y);
+    void performCopyLink(Point locationOnScreen);
 
     /**
      * Opens link on given relative position using default browser.
      *
-     * @param x component x position
-     * @param y component y position
+     * @param locationOnScreen location on screen
      */
-    void performOpenLink(int x, int y);
+    void performOpenLink(Point locationOnScreen);
 
     /**
      * Returns if true if link is selected on given relative position.
      *
-     * @param x component x position
-     * @param y component y position
+     * @param locationOnScreen location on screen
      * @return true if link is selected
      */
-    boolean isLinkSelected(int x, int y);
+    boolean isLinkSelected(Point locationOnScreen);
 }

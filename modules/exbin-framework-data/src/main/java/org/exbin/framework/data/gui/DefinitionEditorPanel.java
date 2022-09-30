@@ -55,7 +55,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     private XBCItem catalogItem;
 //    private XBCSpecService specService;
     private CatalogDefsTableModel defsModel;
-    DefinitionPropertiesComponent propertiesComponent = new DefinitionPropertiesComponent();
+    private DefinitionPropertiesComponent propertiesComponent = new DefinitionPropertiesComponent();
 //    private List<CatalogDefsTableItem> removeList;
 //    private List<CatalogDefsTableItem> updateList;
 

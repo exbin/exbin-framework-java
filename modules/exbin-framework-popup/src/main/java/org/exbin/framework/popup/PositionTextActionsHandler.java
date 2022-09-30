@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.popup;
 
+import java.awt.Point;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -28,17 +29,15 @@ public interface PositionTextActionsHandler {
     /**
      * Performs copy text on given relative position to clipboard operation.
      *
-     * @param x component x position
-     * @param y component y position
+     * @param locationOnScreen location on screen
      */
-    void performCopyText(int x, int y);
+    void performCopyText(Point locationOnScreen);
 
     /**
      * Returns if true if text is selected on given relative position.
      *
-     * @param x component x position
-     * @param y component y position
+     * @param locationOnScreen location on screen
      * @return true if image is selected
      */
-    boolean isTextSelected(int x, int y);
+    boolean isTextSelected(Point locationOnScreen);
 }

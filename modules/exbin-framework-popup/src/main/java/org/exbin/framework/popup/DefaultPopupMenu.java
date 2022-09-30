@@ -80,18 +80,19 @@ public class DefaultPopupMenu {
     public static final String POPUP_COPY_IMAGE_ACTION_NAME = "copy-image";
     public static final String POPUP_OPEN_LINK_ACTION_NAME = "open-link";
 
+    public static final String DELETE_ACTION = "delete";
+    public static final String SELECT_ALL_ACTION = "selectAll";
+
     private ActionMap defaultTextActionMap;
-    private JPopupMenu defaultPopupMenu;
-    private JPopupMenu defaultEditPopupMenu;
-    private JPopupMenu defaultLinkPopupMenu;
+    private DefaultPopupClipboardAction[] defaultTextActions;
     private DefaultPopupClipboardAction defaultCutAction;
     private DefaultPopupClipboardAction defaultCopyAction;
     private DefaultPopupClipboardAction defaultPasteAction;
     private DefaultPopupClipboardAction defaultDeleteAction;
     private DefaultPopupClipboardAction defaultSelectAllAction;
-    private DefaultPopupClipboardAction[] defaultTextActions;
-    private Action copyLinkAction;
-    private Action openLinkAction;
+    private DefaultPopupClipboardAction copyLinkAction;
+    private DefaultPopupClipboardAction openLinkAction;
+    private DefaultPopupClipboardAction copyImageAction;
 
     private final List<ComponentPopupEventDispatcher> clipboardEventDispatchers = new ArrayList<>();
 
@@ -147,7 +148,8 @@ public class DefaultPopupMenu {
             }
 
             @Override
-            protected void postTextComponentInitialize() {
+            public void updateFor(ClipboardActionsHandler clipboardHandler, @Nullable MouseEvent mouseEvent) {
+                super.updateFor(clipboardHandler, mouseEvent);
                 setEnabled(clipboardHandler.isEditable() && clipboardHandler.isSelection());
             }
         };
@@ -163,7 +165,8 @@ public class DefaultPopupMenu {
             }
 
             @Override
-            protected void postTextComponentInitialize() {
+            public void updateFor(ClipboardActionsHandler clipboardHandler, @Nullable MouseEvent mouseEvent) {
+                super.updateFor(clipboardHandler, mouseEvent);
                 setEnabled(clipboardHandler.isSelection());
             }
         };
@@ -179,7 +182,8 @@ public class DefaultPopupMenu {
             }
 
             @Override
-            protected void postTextComponentInitialize() {
+            public void updateFor(ClipboardActionsHandler clipboardHandler, @Nullable MouseEvent mouseEvent) {
+                super.updateFor(clipboardHandler, mouseEvent);
                 setEnabled(clipboardHandler.isEditable());
             }
         };
@@ -195,14 +199,15 @@ public class DefaultPopupMenu {
             }
 
             @Override
-            protected void postTextComponentInitialize() {
+            public void updateFor(ClipboardActionsHandler clipboardHandler, @Nullable MouseEvent mouseEvent) {
+                super.updateFor(clipboardHandler, mouseEvent);
                 setEnabled(clipboardHandler.canDelete() && clipboardHandler.isSelection());
             }
         };
         ActionUtils.setupAction(defaultDeleteAction, resourceBundle, resourceClass, POPUP_DELETE_ACTION_ID);
         defaultDeleteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         defaultDeleteAction.setEnabled(false);
-        defaultTextActionMap.put("delete", defaultDeleteAction);
+        defaultTextActionMap.put(DELETE_ACTION, defaultDeleteAction);
 
         defaultSelectAllAction = new DefaultPopupClipboardAction(DefaultEditorKit.selectAllAction) {
             @Override
@@ -211,48 +216,87 @@ public class DefaultPopupMenu {
             }
 
             @Override
-            protected void postTextComponentInitialize() {
+            public void updateFor(ClipboardActionsHandler clipboardHandler, @Nullable MouseEvent mouseEvent) {
+                super.updateFor(clipboardHandler, mouseEvent);
                 setEnabled(clipboardHandler.canSelectAll());
             }
         };
         ActionUtils.setupAction(defaultSelectAllAction, resourceBundle, resourceClass, POPUP_SELECT_ALL_ACTION_ID);
         defaultSelectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
-        defaultTextActionMap.put("selectAll", defaultSelectAllAction);
+        defaultTextActionMap.put(SELECT_ALL_ACTION, defaultSelectAllAction);
 
         DefaultPopupClipboardAction[] actions = {defaultCutAction, defaultCopyAction, defaultPasteAction, defaultDeleteAction, defaultSelectAllAction};
         defaultTextActions = actions;
 
-        copyLinkAction = new DefaultPopupLinkAction(POPUP_COPY_LINK_ACTION_NAME) {
+        copyLinkAction = new DefaultPopupClipboardAction(POPUP_COPY_LINK_ACTION_NAME) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                linkHandler.performCopyLink();
+                if (mouseEvent != null && clipboardHandler instanceof PositionLinkActionsHandler) {
+                    ((PositionLinkActionsHandler) clipboardHandler).performCopyLink(mouseEvent.getLocationOnScreen());
+                } else {
+                    ((LinkActionsHandler) clipboardHandler).performCopyLink();
+                }
+            }
+
+            @Override
+            public void updateFor(ClipboardActionsHandler clipboardHandler, @Nullable MouseEvent mouseEvent) {
+                super.updateFor(clipboardHandler, mouseEvent);
+                boolean updateEnabled;
+                if (mouseEvent != null && clipboardHandler instanceof PositionLinkActionsHandler) {
+                    updateEnabled = ((PositionLinkActionsHandler) clipboardHandler).isLinkSelected(mouseEvent.getLocationOnScreen());
+                } else {
+                    updateEnabled = clipboardHandler instanceof LinkActionsHandler ? ((LinkActionsHandler) clipboardHandler).isLinkSelected() : false;
+                }
+                setEnabled(updateEnabled);
             }
         };
         ActionUtils.setupAction(copyLinkAction, resourceBundle, resourceClass, POPUP_COPY_LINK_ACTION_ID);
-        openLinkAction = new DefaultPopupLinkAction(POPUP_OPEN_LINK_ACTION_NAME) {
+        openLinkAction = new DefaultPopupClipboardAction(POPUP_OPEN_LINK_ACTION_NAME) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                linkHandler.performOpenLink();
+                if (mouseEvent != null && clipboardHandler instanceof PositionLinkActionsHandler) {
+                    ((PositionLinkActionsHandler) clipboardHandler).performCopyLink(mouseEvent.getLocationOnScreen());
+                } else {
+                    ((LinkActionsHandler) clipboardHandler).performOpenLink();
+                }
+            }
+
+            @Override
+            public void updateFor(ClipboardActionsHandler clipboardHandler, @Nullable MouseEvent mouseEvent) {
+                super.updateFor(clipboardHandler, mouseEvent);
+                boolean updateEnabled;
+                if (mouseEvent != null && clipboardHandler instanceof PositionLinkActionsHandler) {
+                    updateEnabled = ((PositionLinkActionsHandler) clipboardHandler).isLinkSelected(mouseEvent.getLocationOnScreen());
+                } else {
+                    updateEnabled = clipboardHandler instanceof LinkActionsHandler ? ((LinkActionsHandler) clipboardHandler).isLinkSelected() : false;
+                }
+                setEnabled(updateEnabled);
             }
         };
         ActionUtils.setupAction(openLinkAction, resourceBundle, resourceClass, POPUP_OPEN_LINK_ACTION_ID);
+        copyImageAction = new DefaultPopupClipboardAction(POPUP_COPY_IMAGE_ACTION_NAME) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (mouseEvent != null && clipboardHandler instanceof PositionImageActionsHandler) {
+                    ((PositionImageActionsHandler) clipboardHandler).performCopyImage(mouseEvent.getLocationOnScreen());
+                } else {
+                    ((ImageActionsHandler) clipboardHandler).performCopyImage();
+                }
+            }
 
-        buildDefaultPopupMenu();
-        buildDefaultEditPopupMenu();
-    }
-
-    private void buildDefaultPopupMenu() {
-        defaultPopupMenu = new JPopupMenu();
-
-        defaultPopupMenu.setName("defaultPopupMenu"); // NOI18N
-        fillDefaultPopupMenu(defaultPopupMenu, -1);
-    }
-
-    private void buildDefaultEditPopupMenu() {
-        defaultEditPopupMenu = new JPopupMenu();
-
-        defaultEditPopupMenu.setName("defaultEditPopupMenu"); // NOI18N
-        fillDefaultEditPopupMenu(defaultEditPopupMenu, -1);
+            @Override
+            public void updateFor(ClipboardActionsHandler clipboardHandler, @Nullable MouseEvent mouseEvent) {
+                super.updateFor(clipboardHandler, mouseEvent);
+                boolean updateEnabled;
+                if (mouseEvent != null && clipboardHandler instanceof PositionImageActionsHandler) {
+                    updateEnabled = ((PositionImageActionsHandler) clipboardHandler).isImageSelected(mouseEvent.getLocationOnScreen());
+                } else {
+                    updateEnabled = clipboardHandler instanceof ImageActionsHandler ? ((ImageActionsHandler) clipboardHandler).isImageSelected() : false;
+                }
+                setEnabled(updateEnabled);
+            }
+        };
+        ActionUtils.setupAction(copyImageAction, resourceBundle, resourceClass, POPUP_COPY_IMAGE_ACTION_ID);
     }
 
     public void fillDefaultPopupMenu(JPopupMenu popupMenu, int position) {
@@ -371,7 +415,16 @@ public class DefaultPopupMenu {
 
                     Component component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 
-                    if (component instanceof JTextComponent) {
+                    if (component instanceof JEditorPane) {
+                        Point point;
+                        try {
+                            Rectangle relativeRect = ((JEditorPane) component).modelToView(((JTextComponent) component).getCaretPosition());
+                            point = relativeRect == null ? null : new Point(relativeRect.x + relativeRect.width, relativeRect.y + relativeRect.height);
+                        } catch (BadLocationException ex) {
+                            point = null;
+                        }
+                        activateKeyPopup(component, point, new EditorPanePopupHandler((JEditorPane) component));
+                    } else if (component instanceof JTextComponent) {
                         Point point;
                         try {
                             Rectangle relativeRect = ((JTextComponent) component).modelToView(((JTextComponent) component).getCaretPosition());
@@ -407,7 +460,10 @@ public class DefaultPopupMenu {
 
         private void activateMousePopup(MouseEvent mouseEvent, Component component, ClipboardActionsHandler clipboardHandler) {
             for (Object action : defaultTextActions) {
-                ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
+                ((DefaultPopupClipboardAction) action).updateFor(clipboardHandler, mouseEvent);
+                copyLinkAction.updateFor(clipboardHandler, mouseEvent);
+                openLinkAction.updateFor(clipboardHandler, mouseEvent);
+                copyImageAction.updateFor(clipboardHandler, mouseEvent);
             }
 
             Point point = mouseEvent.getLocationOnScreen();
@@ -419,7 +475,10 @@ public class DefaultPopupMenu {
 
         private void activateKeyPopup(Component component, Point point, ClipboardActionsHandler clipboardHandler) {
             for (Object action : defaultTextActions) {
-                ((DefaultPopupClipboardAction) action).setClipboardHandler(clipboardHandler);
+                ((DefaultPopupClipboardAction) action).updateFor(clipboardHandler, null);
+                copyLinkAction.updateFor(clipboardHandler, null);
+                openLinkAction.updateFor(clipboardHandler, null);
+                copyImageAction.updateFor(clipboardHandler, null);
             }
 
             if (point == null) {
@@ -435,16 +494,51 @@ public class DefaultPopupMenu {
         }
 
         private void showPopupMenu(Component component, Point point, ClipboardActionsHandler handler) {
-            if (handler instanceof LinkActionsHandler) {
-                // TODO
+            boolean editable = handler.isEditable();
+
+            JPopupMenu popupMenu = new JPopupMenu();
+            popupMenu.setName("defaultPopupMenu");
+
+            boolean hasExtra = false;
+            if (handler instanceof ImageActionsHandler) {
+                if (copyImageAction.isEnabled()) {
+                    JMenuItem copyImageMenuItem = new JMenuItem();
+                    copyImageMenuItem.setAction(copyImageAction);
+                    copyImageMenuItem.setName("basicCopyImageMenuItem");
+                    popupMenu.add(copyImageMenuItem);
+                    hasExtra = true;
+                }
             }
 
-            boolean editable = handler.isEditable();
-            if (editable) {
-                defaultEditPopupMenu.show(component, (int) point.getX(), (int) point.getY());
-            } else {
-                defaultPopupMenu.show(component, (int) point.getX(), (int) point.getY());
+            if (handler instanceof LinkActionsHandler) {
+                if (openLinkAction.isEnabled()) {
+                    JMenuItem openLinkMenuItem = new JMenuItem();
+                    openLinkMenuItem.setAction(openLinkAction);
+                    openLinkMenuItem.setName("basicOpenLinkMenuItem");
+                    popupMenu.add(openLinkMenuItem);
+                    hasExtra = true;
+                }
+
+                if (copyLinkAction.isEnabled()) {
+                    JMenuItem copyLinkMenuItem = new JMenuItem();
+                    copyLinkMenuItem.setAction(copyLinkAction);
+                    copyLinkMenuItem.setName("basicCopyLinkMenuItem");
+                    popupMenu.add(copyLinkMenuItem);
+                    hasExtra = true;
+                }
             }
+
+            if (hasExtra) {
+                popupMenu.addSeparator();
+            }
+
+            if (editable) {
+                fillDefaultEditPopupMenu(popupMenu, -1);
+            } else {
+                fillDefaultPopupMenu(popupMenu, -1);
+            }
+
+            popupMenu.show(component, (int) point.getX(), (int) point.getY());
         }
 
         @Nullable
@@ -460,33 +554,15 @@ public class DefaultPopupMenu {
     private static abstract class DefaultPopupClipboardAction extends AbstractAction {
 
         protected ClipboardActionsHandler clipboardHandler;
+        protected MouseEvent mouseEvent;
 
         public DefaultPopupClipboardAction(String name) {
             super(name);
         }
 
-        public void setClipboardHandler(ClipboardActionsHandler clipboardHandler) {
+        public void updateFor(ClipboardActionsHandler clipboardHandler, @Nullable MouseEvent mouseEvent) {
             this.clipboardHandler = clipboardHandler;
-            postTextComponentInitialize();
-        }
-
-        protected abstract void postTextComponentInitialize();
-    }
-
-    /**
-     * Link action for default popup menu.
-     */
-    @ParametersAreNonnullByDefault
-    private static abstract class DefaultPopupLinkAction extends AbstractAction {
-
-        protected LinkActionsHandler linkHandler;
-
-        public DefaultPopupLinkAction(String name) {
-            super(name);
-        }
-
-        public void setLinkHandler(LinkActionsHandler linkHandler) {
-            this.linkHandler = linkHandler;
+            this.mouseEvent = mouseEvent;
         }
     }
 }

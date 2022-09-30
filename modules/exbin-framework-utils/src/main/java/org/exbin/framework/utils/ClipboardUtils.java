@@ -17,10 +17,8 @@ package org.exbin.framework.utils;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPopupMenu;
 
 /**
  * Clipboard utility methods
