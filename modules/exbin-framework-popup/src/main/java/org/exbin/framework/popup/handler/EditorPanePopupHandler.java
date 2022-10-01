@@ -110,12 +110,34 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
 
     @Override
     public boolean canPaste() {
-        return true;
+        return isEditable();
     }
 
     @Override
     public boolean canDelete() {
         return isEditable();
+    }
+
+    @Override
+    public boolean isLinkSelected() {
+        return EditorPanePopupHandler.getLinkUrl(editorPane, editorPane.getCaretPosition()) != null;
+    }
+
+    @Override
+    public boolean isLinkSelected(Point locationOnScreen) {
+        SwingUtilities.convertPointFromScreen(locationOnScreen, editorPane);
+        return EditorPanePopupHandler.getLinkUrl(editorPane, locationOnScreen) != null;
+    }
+
+    @Override
+    public boolean isImageSelected() {
+        return EditorPanePopupHandler.hasImage(editorPane, editorPane.getCaretPosition());
+    }
+
+    @Override
+    public boolean isImageSelected(Point locationOnScreen) {
+        SwingUtilities.convertPointFromScreen(locationOnScreen, editorPane);
+        return EditorPanePopupHandler.hasImage(editorPane, locationOnScreen);
     }
 
     @Override
@@ -129,21 +151,6 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
     public void performOpenLink() {
         String url = EditorPanePopupHandler.getLinkUrl(editorPane, editorPane.getCaretPosition());
         BareBonesBrowserLaunch.openDesktopURL(url);
-    }
-
-    @Override
-    public boolean isLinkSelected() {
-        return EditorPanePopupHandler.getLinkUrl(editorPane, editorPane.getCaretPosition()) != null;
-    }
-
-    @Override
-    public void performCopyImage() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isImageSelected() {
-        return false;
     }
 
     @Override
@@ -162,21 +169,14 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
     }
 
     @Override
-    public boolean isLinkSelected(Point locationOnScreen) {
-        SwingUtilities.convertPointFromScreen(locationOnScreen, editorPane);
-        return EditorPanePopupHandler.getLinkUrl(editorPane, locationOnScreen) != null;
+    public void performCopyImage() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void performCopyImage(Point locationOnScreen) {
         SwingUtilities.convertPointFromScreen(locationOnScreen, editorPane);
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isImageSelected(Point locationOnScreen) {
-        SwingUtilities.convertPointFromScreen(locationOnScreen, editorPane);
-        return false;
     }
 
     @Nullable
@@ -254,5 +254,35 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
         }
 
         return null;
+    }
+
+    public static boolean hasImage(JEditorPane editorPane, int caretPosition) {
+        return hasImage(editorPane, caretPosition, 0, 0);
+    }
+
+    public static boolean hasImage(JEditorPane editorPane, Point position) {
+        // Note: From HTMLEditorKit.LinkController.mouseMoved
+        Document document = editorPane.getDocument();
+        if (document instanceof HTMLDocument) {
+            int pos = editorPane.viewToModel(position);
+            if (pos >= 0) {
+                return hasImage(editorPane, pos, position.x, position.y);
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean hasImage(JEditorPane editorPane, int caretPosition, int offsetX, int offsetY) {
+        Document document = editorPane.getDocument();
+        if (document instanceof HTMLDocument) {
+            HTMLDocument htmlDocument = (HTMLDocument) document;
+            // Note: From HTMLEditorKit.activateLink
+            Element e = htmlDocument.getCharacterElement(caretPosition);
+            AttributeSet a = e.getAttributes();
+            AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.IMG);
+        }
+
+        return false;
     }
 }

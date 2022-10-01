@@ -66,6 +66,9 @@ public class DefaultPopupMenu {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DefaultPopupMenu.class);
 
+    public static final String DELETE_ACTION = "delete";
+    public static final String SELECT_ALL_ACTION = "selectAll";
+
     public static final String POPUP_COPY_ACTION_ID = "popupCopyAction";
     public static final String POPUP_COPY_TEXT_ACTION_ID = "popupCopyTextAction";
     public static final String POPUP_COPY_LINK_ACTION_ID = "popupCopyLinkAction";
@@ -79,9 +82,6 @@ public class DefaultPopupMenu {
     public static final String POPUP_COPY_LINK_ACTION_NAME = "copy-link";
     public static final String POPUP_COPY_IMAGE_ACTION_NAME = "copy-image";
     public static final String POPUP_OPEN_LINK_ACTION_NAME = "open-link";
-
-    public static final String DELETE_ACTION = "delete";
-    public static final String SELECT_ALL_ACTION = "selectAll";
 
     private ActionMap defaultTextActionMap;
     private DefaultPopupClipboardAction[] defaultTextActions;
