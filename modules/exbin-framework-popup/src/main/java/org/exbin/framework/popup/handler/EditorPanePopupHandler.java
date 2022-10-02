@@ -15,17 +15,30 @@
  */
 package org.exbin.framework.popup.handler;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.TextUI;
@@ -35,6 +48,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import org.exbin.framework.popup.ImageActionsHandler;
@@ -56,6 +70,7 @@ import org.exbin.framework.utils.ClipboardUtils;
 public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {
 
     private static String MAP_PROPERTY = "__MAP__";
+    private static String IMAGE_CACHE_PROPERTY = "imageCache";
 
     private final JEditorPane editorPane;
 
@@ -131,13 +146,13 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
 
     @Override
     public boolean isImageSelected() {
-        return EditorPanePopupHandler.hasImage(editorPane, editorPane.getCaretPosition());
+        return EditorPanePopupHandler.hasImageSrc(editorPane, editorPane.getCaretPosition()) != null;
     }
 
     @Override
     public boolean isImageSelected(Point locationOnScreen) {
         SwingUtilities.convertPointFromScreen(locationOnScreen, editorPane);
-        return EditorPanePopupHandler.hasImage(editorPane, locationOnScreen);
+        return EditorPanePopupHandler.hasImageSrc(editorPane, locationOnScreen) != null;
     }
 
     @Override
@@ -170,13 +185,19 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
 
     @Override
     public void performCopyImage() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String imageSrc = EditorPanePopupHandler.hasImageSrc(editorPane, editorPane.getCaretPosition());
+        if (imageSrc != null) {
+            EditorPanePopupHandler.copyImageToClipboard((HTMLDocument) editorPane.getDocument(), imageSrc);
+        }
     }
 
     @Override
     public void performCopyImage(Point locationOnScreen) {
         SwingUtilities.convertPointFromScreen(locationOnScreen, editorPane);
-        throw new UnsupportedOperationException("Not supported yet.");
+        String imageSrc = EditorPanePopupHandler.hasImageSrc(editorPane, locationOnScreen);
+        if (imageSrc != null) {
+            copyImageToClipboard((HTMLDocument) editorPane.getDocument(), imageSrc);
+        }
     }
 
     @Nullable
@@ -256,33 +277,66 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
         return null;
     }
 
-    public static boolean hasImage(JEditorPane editorPane, int caretPosition) {
-        return hasImage(editorPane, caretPosition, 0, 0);
+    @Nullable
+    public static String hasImageSrc(JEditorPane editorPane, int caretPosition) {
+        return EditorPanePopupHandler.hasImageSrc(editorPane, caretPosition, 0, 0);
     }
 
-    public static boolean hasImage(JEditorPane editorPane, Point position) {
-        // Note: From HTMLEditorKit.LinkController.mouseMoved
+    @Nullable
+    public static String hasImageSrc(JEditorPane editorPane, Point position) {
         Document document = editorPane.getDocument();
         if (document instanceof HTMLDocument) {
             int pos = editorPane.viewToModel(position);
             if (pos >= 0) {
-                return hasImage(editorPane, pos, position.x, position.y);
+                return EditorPanePopupHandler.hasImageSrc(editorPane, pos, position.x, position.y);
             }
         }
 
-        return false;
+        return null;
     }
 
-    public static boolean hasImage(JEditorPane editorPane, int caretPosition, int offsetX, int offsetY) {
+    @Nullable
+    public static String hasImageSrc(JEditorPane editorPane, int caretPosition, int offsetX, int offsetY) {
         Document document = editorPane.getDocument();
         if (document instanceof HTMLDocument) {
             HTMLDocument htmlDocument = (HTMLDocument) document;
-            // Note: From HTMLEditorKit.activateLink
             Element e = htmlDocument.getCharacterElement(caretPosition);
             AttributeSet a = e.getAttributes();
-            AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.IMG);
+            Object tagName = a.getAttribute(StyleConstants.NameAttribute);
+            if (tagName instanceof HTML.Tag) {
+                HTML.Tag tag = (HTML.Tag) tagName;
+                if (tag == HTML.Tag.IMG) {
+                    return (String) a.getAttribute(HTML.Attribute.SRC);
+                }
+            }
         }
 
-        return false;
+        return null;
+    }
+
+    private static void copyImageToClipboard(HTMLDocument document, String imageSrc) {
+        try {
+            // From ImageView.loadImage
+            URL reference = document.getBase();
+            URL imageUrl = new URL(reference, imageSrc);
+            Image image;
+            Dictionary<URL, Image> cache = (Dictionary<URL, Image>) document.getProperty(IMAGE_CACHE_PROPERTY);
+            if (cache != null) {
+                image = cache.get(imageUrl);
+            } else {
+                image = Toolkit.getDefaultToolkit().createImage(imageUrl);
+                if (image != null) {
+                    // Force the image to be loaded by using an ImageIcon.
+                    ImageIcon ii = new ImageIcon();
+                    ii.setImage(image);
+                }
+            }
+
+            if (image != null) {
+                ClipboardUtils.pasteImage(image);
+            }
+        } catch (MalformedURLException ex) {
+
+        }
     }
 }
