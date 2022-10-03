@@ -33,9 +33,9 @@ import org.exbin.framework.utils.ClipboardUtils;
 @ParametersAreNonnullByDefault
 public class ListPopupHandler implements ClipboardActionsHandler {
 
-    private final JList listComp;
+    private final JList<?> listComp;
 
-    public ListPopupHandler(JList listComp) {
+    public ListPopupHandler(JList<?> listComp) {
         this.listComp = listComp;
     }
 
@@ -47,7 +47,7 @@ public class ListPopupHandler implements ClipboardActionsHandler {
     @Override
     public void performCopy() {
         StringBuilder builder = new StringBuilder();
-        List rows = listComp.getSelectedValuesList();
+        List<?> rows = listComp.getSelectedValuesList();
         boolean empty = true;
         for (Object row : rows) {
             builder.append(empty ? row.toString() : System.getProperty("line.separator") + row);
