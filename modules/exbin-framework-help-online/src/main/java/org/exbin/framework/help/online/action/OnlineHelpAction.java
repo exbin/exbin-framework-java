@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.LanguageUtils;
 
 /**
@@ -58,6 +58,6 @@ public class OnlineHelpAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        BareBonesBrowserLaunch.openDesktopURL(helpUrl.toExternalForm());
+        DesktopUtils.openDesktopURL(helpUrl.toExternalForm());
     }
 }

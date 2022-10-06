@@ -23,7 +23,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.update.api.VersionNumbers;
 import org.exbin.framework.update.service.CheckForUpdateService;
-import org.exbin.framework.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
 
@@ -89,7 +89,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
     @Override
     public void hyperlinkUpdate(HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            BareBonesBrowserLaunch.openURL(event.getURL().toExternalForm());
+            DesktopUtils.openDesktopURL(event.getURL().toExternalForm());
         }
     }
 
@@ -214,7 +214,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
     }//GEN-LAST:event_recheckButtonActionPerformed
 
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        BareBonesBrowserLaunch.openDesktopURL(checkForUpdateService.getDownloadUrl());
+        DesktopUtils.openDesktopURL(checkForUpdateService.getDownloadUrl());
     }//GEN-LAST:event_downloadButtonActionPerformed
 
     private void setVersionNumbers(VersionNumbers versionNumbers) {

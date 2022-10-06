@@ -32,7 +32,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationBundle;
-import org.exbin.framework.utils.BareBonesBrowserLaunch;
+import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
 
@@ -326,7 +326,7 @@ public class AboutPanel extends javax.swing.JPanel {
     private void appHomepageLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_appHomepageLabelMouseClicked
         if (!evt.isPopupTrigger()) {
             String targetURL = ((JLabel) evt.getSource()).getText();
-            BareBonesBrowserLaunch.openDesktopURL(targetURL);
+            DesktopUtils.openDesktopURL(targetURL);
         }
     }//GEN-LAST:event_appHomepageLabelMouseClicked
 
@@ -387,7 +387,7 @@ public class AboutPanel extends javax.swing.JPanel {
             }
             licenseEditorPane.addHyperlinkListener((HyperlinkEvent event) -> {
                 if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
+                    DesktopUtils.openDesktopURL(event.getURL().toExternalForm());
                 }
             });
         } catch (IOException ex) {
