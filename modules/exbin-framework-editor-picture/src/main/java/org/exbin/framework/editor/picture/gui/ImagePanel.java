@@ -364,7 +364,8 @@ public class ImagePanel extends javax.swing.JPanel implements ClipboardActionsHa
 
     // This method returns a buffered image with the contents of an image
     // From: http://www.exampledepot.com/egs/java.awt.image/Image2Buf.html
-    public static BufferedImage toBufferedImage(Image image) {
+    @Nullable
+    public static BufferedImage toBufferedImage(@Nullable Image image) {
         if (image == null) {
             return null;
         }
@@ -480,16 +481,16 @@ public class ImagePanel extends javax.swing.JPanel implements ClipboardActionsHa
         graphics.fillRect(0, 0, 100, 100);
         graphics.setColor(toolColor);
     }
-    
+
     @Nullable
     public Image getImage() {
         return image;
     }
-    
+
     public void initImage() {
         image = createImage(1, 1);
     }
-    
+
     public void setImage(Image image) {
         this.image = image;
 
@@ -546,6 +547,8 @@ public class ImagePanel extends javax.swing.JPanel implements ClipboardActionsHa
 
         private int width;
         private int height;
+        private int scaledWidth;
+        private int scaledHeight;
 
         public ImageAreaPanel() {
         }
@@ -558,17 +561,22 @@ public class ImagePanel extends javax.swing.JPanel implements ClipboardActionsHa
             Rectangle clipBounds = g.getClipBounds();
             g.setColor(Color.WHITE);
             g.fillRect(clipBounds.x, clipBounds.y, clipBounds.x + clipBounds.width, clipBounds.y + clipBounds.height);
-            int srcX = (int) (clipBounds.x * scaleRatio);
-            int srcY = (int) (clipBounds.y * scaleRatio);
-            int srcWidth = (int) (clipBounds.width * scaleRatio);
-            int srcHeigth = (int) (clipBounds.height * scaleRatio);
-            g.drawImage(image, clipBounds.x, clipBounds.y, clipBounds.x + clipBounds.width, clipBounds.y + clipBounds.height, srcX, srcY, srcX + srcWidth, srcY + srcHeigth, imageObserver);
+            g.drawImage(image, 0, 0, scaledWidth, scaledHeight, 0, 0, width, height, imageObserver);
         }
 
         public void updateSize() {
             width = image.getWidth(imageObserver);
             height = image.getHeight(imageObserver);
-            setPreferredSize(new Dimension((int) (width / scaleRatio), (int) (height / scaleRatio)));
+            scaledWidth = (int) Math.ceil(width / scaleRatio);
+            if (scaledWidth < 1) {
+                scaledWidth = 1;
+            }
+            scaledHeight = (int) Math.ceil(height / scaleRatio);
+            if (scaledHeight < 1) {
+                scaledHeight = 1;
+            }
+
+            setPreferredSize(new Dimension(scaledWidth, scaledHeight));
             revalidate();
         }
     }
