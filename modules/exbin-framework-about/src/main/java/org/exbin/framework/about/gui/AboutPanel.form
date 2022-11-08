@@ -89,7 +89,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="nameTextField" alignment="0" pref="299" max="32767" attributes="2"/>
+                          <Component id="nameTextField" alignment="0" pref="296" max="32767" attributes="2"/>
                           <Component id="vendorTextField" alignment="0" max="32767" attributes="2"/>
                           <Component id="licenseTextField" alignment="0" max="32767" attributes="2"/>
                           <Component id="appHomepageLabel" alignment="0" max="32767" attributes="2"/>
@@ -125,9 +125,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="homepageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="appHomepageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="appHomepageLabel" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="93" max="32767" attributes="0"/>
+                      <EmptySpace pref="83" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

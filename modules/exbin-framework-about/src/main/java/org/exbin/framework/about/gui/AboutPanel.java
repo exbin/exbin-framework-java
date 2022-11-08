@@ -17,6 +17,9 @@ package org.exbin.framework.about.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,10 +31,14 @@ import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationBundle;
+import org.exbin.framework.popup.DefaultPopupMenu;
+import org.exbin.framework.popup.LinkActionsHandler;
+import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
@@ -211,7 +218,7 @@ public class AboutPanel extends javax.swing.JPanel {
                     .addComponent(nameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
                     .addComponent(vendorTextField)
                     .addComponent(licenseTextField)
                     .addComponent(appHomepageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -240,8 +247,8 @@ public class AboutPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(applicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(homepageLabel)
-                    .addComponent(appHomepageLabel))
-                .addContainerGap(93, Short.MAX_VALUE))
+                    .addComponent(appHomepageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(83, Short.MAX_VALUE))
         );
 
         productTabbedPane.addTab(resourceBundle.getString("applicationPanel.TabConstraints.tabTitle"), applicationPanel); // NOI18N
@@ -324,7 +331,7 @@ public class AboutPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void appHomepageLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_appHomepageLabelMouseClicked
-        if (!evt.isPopupTrigger()) {
+        if (evt.getButton() == MouseEvent.BUTTON1 && !evt.isPopupTrigger()) {
             String targetURL = ((JLabel) evt.getSource()).getText();
             DesktopUtils.openDesktopURL(targetURL);
         }
@@ -406,5 +413,37 @@ public class AboutPanel extends javax.swing.JPanel {
         }
         appTitleLabel.setText(appBundle.getString(XBApplicationBundle.APPLICATION_TITLE));
         appDescLabel.setText(appBundle.getString(XBApplicationBundle.APPLICATION_DESCRIPTION));
+
+        appHomepageLabel.setComponentPopupMenu(new JPopupMenu() {
+            private boolean initialized = false;
+
+            @Override
+            public void show(Component invoker, int x, int y) {
+                if (!initialized) {
+                    DefaultPopupMenu.getInstance().appendLinkMenu(this, new LinkActionsHandler() {
+                        @Override
+                        public void performCopyLink() {
+                            String targetURL = appHomepageLabel.getText();
+                            StringSelection stringSelection = new StringSelection(targetURL);
+                            ClipboardUtils.getClipboard().setContents(stringSelection, stringSelection);
+                        }
+
+                        @Override
+                        public void performOpenLink() {
+                            String targetURL = appHomepageLabel.getText();
+                            DesktopUtils.openDesktopURL(targetURL);
+                        }
+
+                        @Override
+                        public boolean isLinkSelected() {
+                            return true;
+                        }
+                    });
+
+                    initialized = true;
+                    super.show(invoker, x, y);
+                }
+            }
+        });
     }
 }
