@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -61,8 +61,7 @@ import org.exbin.framework.utils.gui.WindowHeaderPanel;
 /**
  * Utility static methods usable for windows and dialogs.
  *
- * @version 0.2.1 2021/12/29
- * @author ExBin Project (http://exbin.org)
+ * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class WindowUtils {
@@ -420,7 +419,7 @@ public class WindowUtils {
                 ((Frame) window).setExtendedState(Frame.MAXIMIZED_BOTH);
             } else {
                 if (window instanceof Window) {
-                    // TODO 
+                    // TODO
 //                    final EventQueue eventQueue = AccessController.doPrivileged(
 //                            (PrivilegedAction<EventQueue>) Toolkit.getDefaultToolkit()::getSystemEventQueue);
 //                    eventQueue.postEvent(new AWTEvent(window, WindowEvent.WINDOW_ICONIFIED) {});

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,8 +46,7 @@ import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 /**
  * Add item to catalog action.
  *
- * @version 0.2.2 2021/12/24
- * @author ExBin Project (http://exbin.org)
+ * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddItemAction extends AbstractAction {
@@ -83,7 +82,7 @@ public class AddItemAction extends AbstractAction {
     public void setParentComponent(Component parentComponent) {
         this.parentComponent = parentComponent;
     }
-    
+
     @Override
     public void actionPerformed(@Nullable ActionEvent event) {
         resultItem = null;
@@ -163,7 +162,7 @@ public class AddItemAction extends AbstractAction {
     public void setApplication(XBApplication application) {
         this.application = application;
     }
-    
+
     public void setCatalog(XBACatalog catalog) {
         this.catalog = catalog;
 

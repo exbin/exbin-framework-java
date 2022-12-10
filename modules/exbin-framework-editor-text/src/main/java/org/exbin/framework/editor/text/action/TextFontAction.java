@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,8 +37,7 @@ import org.exbin.framework.file.api.FileHandler;
 /**
  * Text font action handler.
  *
- * @version 0.2.1 2021/10/12
- * @author ExBin Project (http://exbin.org)
+ * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextFontAction extends AbstractAction implements FileDependentAction {
@@ -73,7 +72,7 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
         if (!activeFile.isPresent()) {
             throw new IllegalStateException();
         }
-        
+
         TextFontApi textFontApi = (TextFontApi) activeFile.get();
 
         FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
