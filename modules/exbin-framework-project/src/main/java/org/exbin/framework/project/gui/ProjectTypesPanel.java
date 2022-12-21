@@ -26,9 +26,6 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class ProjectTypesPanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form ProjectTypesPanel
-     */
     public ProjectTypesPanel() {
         initComponents();
     }

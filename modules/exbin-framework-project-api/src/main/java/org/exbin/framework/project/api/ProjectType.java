@@ -45,7 +45,8 @@ public interface ProjectType {
     /**
      * Returns component for the new project creation.
      *
-     * @return
+     * @return component
      */
+    @Nonnull
     Optional<JComponent> getNewProjectComponent();
 }

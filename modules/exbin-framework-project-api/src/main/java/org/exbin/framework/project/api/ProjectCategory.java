@@ -49,5 +49,6 @@ public interface ProjectCategory {
      *
      * @return icon
      */
+    @Nonnull
     Optional<Image> getIcon();
 }
