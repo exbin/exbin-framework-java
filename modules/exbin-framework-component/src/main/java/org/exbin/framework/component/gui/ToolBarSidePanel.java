@@ -91,13 +91,14 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
     }
 
     @Override
+    public void addActions(ActionsProvider actionsProvider) {
+        actionsProvider.registerActions(this);
+    }
+
+    @Override
     public void addSeparator() {
         initToolBar();
         toolBar.addSeparator();
-    }
-
-    public void addActions(ActionsProvider actionsProvider) {
-        actionsProvider.registerActions(this);
     }
 
     private void initToolBar() {

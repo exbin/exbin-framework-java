@@ -17,6 +17,7 @@ package org.exbin.framework.component.api.toolbar;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import org.exbin.framework.component.api.ActionsProvider;
 
 /**
  * Interface for side tool bar.
@@ -27,6 +28,8 @@ import javax.swing.Action;
 public interface SideToolBar {
 
     void addAction(Action action);
+
+    void addActions(ActionsProvider actionsProvider);
 
     void addSeparator();
 }
