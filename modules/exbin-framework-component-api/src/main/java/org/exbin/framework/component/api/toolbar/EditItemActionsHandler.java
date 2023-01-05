@@ -41,18 +41,25 @@ public interface EditItemActionsHandler {
     void performDeleteItem();
 
     /**
-     * Returns if selection for clipboard operation is available.
+     * Returns true if it is allowed to add new item.
      *
-     * @return true if selection is available
+     * @return true if item can be added
      */
-    boolean isSelection();
+    boolean canAddItem();
 
     /**
-     * Returns true if it is possible to edit currently selected item.
+     * Returns true if it is allowed to delete currently selected item.
      *
-     * @return true if item is editable
+     * @return true if item can be deleted
      */
-    boolean isEditable();
+    boolean canDeleteItem();
+
+    /**
+     * Returns true if it is allowed to edit currently selected item.
+     *
+     * @return true if item can be edited
+     */
+    boolean canEditItem();
 
     /**
      * Set listener for actions related updates.

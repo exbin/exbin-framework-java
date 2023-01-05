@@ -118,13 +118,13 @@ public class DefaultEditItemActions implements EditItemActions {
     @Override
     public void updateEditItemActions() {
         if (addItemAction != null) {
-            addItemAction.setEnabled(actionsHandler.isEditable());
+            addItemAction.setEnabled(actionsHandler.canAddItem());
         }
         if (editItemAction != null) {
-            editItemAction.setEnabled(actionsHandler.isSelection() && actionsHandler.isEditable());
+            editItemAction.setEnabled(actionsHandler.canEditItem());
         }
         if (deleteItemAction != null) {
-            deleteItemAction.setEnabled(actionsHandler.isSelection() && actionsHandler.isEditable());
+            deleteItemAction.setEnabled(actionsHandler.canDeleteItem());
         }
     }
 

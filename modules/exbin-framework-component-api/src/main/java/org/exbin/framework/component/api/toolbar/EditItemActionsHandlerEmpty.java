@@ -39,12 +39,17 @@ public class EditItemActionsHandlerEmpty implements EditItemActionsHandler {
     }
 
     @Override
-    public boolean isSelection() {
+    public boolean canAddItem() {
         return false;
     }
 
     @Override
-    public boolean isEditable() {
+    public boolean canEditItem() {
+        return false;
+    }
+
+    @Override
+    public boolean canDeleteItem() {
         return false;
     }
 
