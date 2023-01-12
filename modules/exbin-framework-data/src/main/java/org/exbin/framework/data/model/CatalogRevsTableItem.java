@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.data.model;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.core.catalog.base.XBCRev;
 
 /**
@@ -22,6 +24,7 @@ import org.exbin.xbup.core.catalog.base.XBCRev;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class CatalogRevsTableItem {
 
     private XBCRev rev;
@@ -46,11 +49,12 @@ public class CatalogRevsTableItem {
         this.xbIndex = xbIndex;
     }
 
+    @Nullable
     public Long getLimit() {
         return limit;
     }
 
-    public void setLimit(Long limit) {
+    public void setLimit(@Nullable Long limit) {
         this.limit = limit;
     }
 

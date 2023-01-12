@@ -43,16 +43,16 @@ public class DefaultEditItemActions implements EditItemActions {
     public static final String EDIT_ITEM_ACTION_ID = "editItemAction";
     public static final String DELETE_ITEM_ACTION_ID = "deleteItemAction";
 
-    private final MODE mode;
+    private final Mode mode;
     private Action addItemAction = null;
     private Action editItemAction = null;
     private Action deleteItemAction = null;
 
     public DefaultEditItemActions() {
-        this(MODE.NORMAL);
+        this(Mode.NORMAL);
     }
 
-    public DefaultEditItemActions(MODE mode) {
+    public DefaultEditItemActions(Mode mode) {
         this.mode = mode;
     }
 
@@ -72,7 +72,7 @@ public class DefaultEditItemActions implements EditItemActions {
                 }
             };
             ActionUtils.setupAction(addItemAction, resourceBundle, ADD_ITEM_ACTION_ID);
-            if (mode == MODE.DIALOG) {
+            if (mode == Mode.DIALOG) {
                 addItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
             }
             addItemAction.setEnabled(false);
@@ -91,7 +91,7 @@ public class DefaultEditItemActions implements EditItemActions {
                 }
             };
             ActionUtils.setupAction(editItemAction, resourceBundle, EDIT_ITEM_ACTION_ID);
-            if (mode == MODE.DIALOG) {
+            if (mode == Mode.DIALOG) {
                 editItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
             }
             editItemAction.setEnabled(false);
@@ -137,7 +137,7 @@ public class DefaultEditItemActions implements EditItemActions {
         actionsHandler.setUpdateListener(this::updateEditItemActions);
     }
     
-    public enum MODE {
+    public enum Mode {
         NORMAL, DIALOG
     }
 }
