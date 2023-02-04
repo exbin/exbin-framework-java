@@ -440,8 +440,8 @@ public class AboutPanel extends javax.swing.JPanel {
                     });
 
                     initialized = true;
-                    super.show(invoker, x, y);
                 }
+                super.show(invoker, x, y);
             }
         });
     }

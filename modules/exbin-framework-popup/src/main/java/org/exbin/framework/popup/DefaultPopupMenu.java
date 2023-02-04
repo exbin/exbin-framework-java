@@ -361,7 +361,7 @@ public class DefaultPopupMenu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mouseEvent != null && clipboardHandler instanceof PositionLinkActionsHandler) {
-                    ((PositionLinkActionsHandler) clipboardHandler).performCopyLink(mouseEvent.getLocationOnScreen());
+                    ((PositionLinkActionsHandler) clipboardHandler).performOpenLink(mouseEvent.getLocationOnScreen());
                 } else {
                     ((LinkActionsHandler) clipboardHandler).performOpenLink();
                 }
