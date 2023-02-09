@@ -133,7 +133,8 @@ public class WindowUtils {
         final JDialog dialog = new JDialog(getWindow(parent), modalityType);
         Dimension size = component.getPreferredSize();
         dialog.add(component);
-        dialog.setSize(size.width + 8, size.height + 24);
+        dialog.getContentPane().setPreferredSize(new Dimension(size.width, size.height));
+        dialog.pack();
         dialog.setTitle(dialogTitle);
         if (component instanceof OkCancelService) {
             assignGlobalKeyListener(dialog, ((OkCancelService) component).getOkCancelListener());
@@ -191,7 +192,8 @@ public class WindowUtils {
         JDialog dialog = new JDialog();
         Dimension size = component.getPreferredSize();
         dialog.add(component);
-        dialog.setSize(size.width + 8, size.height + 24);
+        dialog.getContentPane().setPreferredSize(new Dimension(size.width, size.height));
+        dialog.pack();
         if (component instanceof OkCancelService) {
             assignGlobalKeyListener(dialog, ((OkCancelService) component).getOkCancelListener());
         }
