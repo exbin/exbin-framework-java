@@ -22,6 +22,7 @@ import org.exbin.framework.operation.undo.handler.UndoManagerControlHandler;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.OkCancelListener;
 import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Undo management control panel.
@@ -130,11 +131,11 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
     public void performClick(UndoManagerControlHandler.ControlActionType actionType) {
         switch (actionType) {
             case REVERT_TO: {
-                WindowUtils.doButtonClick(revertButton);
+                UiUtils.doButtonClick(revertButton);
                 break;
             }
             case CANCEL: {
-                WindowUtils.doButtonClick(closeButton);
+                UiUtils.doButtonClick(closeButton);
             }
         }
     }

@@ -229,10 +229,6 @@ public class XBBaseApplication implements XBApplication {
     @Override
     public void registerLafPlugin(String className, LookAndFeelApplier applier) {
         lafPlugins.put(className, applier);
-        if (className.equals(targetLaf)) {
-            applyLookAndFeel(targetLaf);
-            targetLaf = null;
-        }
     }
 
     @Nonnull

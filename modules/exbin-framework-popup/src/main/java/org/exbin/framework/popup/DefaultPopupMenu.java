@@ -96,7 +96,7 @@ public class DefaultPopupMenu {
     protected DefaultPopupClipboardAction openLinkAction;
     protected DefaultPopupClipboardAction copyImageAction;
 
-    private final List<ComponentPopupEventDispatcher> clipboardEventDispatchers = new ArrayList<>();
+    protected final List<ComponentPopupEventDispatcher> clipboardEventDispatchers = new ArrayList<>();
 
     private static DefaultPopupMenu instance = null;
 

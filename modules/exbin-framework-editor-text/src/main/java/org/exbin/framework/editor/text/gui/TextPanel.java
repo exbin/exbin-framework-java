@@ -49,6 +49,7 @@ import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.operation.undo.api.UndoActionsHandler;
 import org.exbin.framework.operation.undo.api.UndoUpdateListener;
 import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.utils.ClipboardUtils;
@@ -165,7 +166,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
                 Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(WindowUtils.getFrame(this), "String was not found", "Find text", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(UiUtils.getFrame(this), "String was not found", "Find text", JOptionPane.INFORMATION_MESSAGE);
             highlight = null;
         }
     }

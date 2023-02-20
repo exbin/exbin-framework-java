@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.plugin.LookAndFeelApplier;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
@@ -46,6 +47,7 @@ import org.exbin.xbup.plugin.XBModuleRecord;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TestApplication implements XBApplication {
 
     private final Map<String, XBApplicationModule> modules = new HashMap<>();
@@ -247,6 +249,12 @@ public class TestApplication implements XBApplication {
             public void addModulesFromPath(URL url) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
+
+            @Nonnull
+            @Override
+            public ClassLoader getContextClassLoader() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }    
         };
     }
 

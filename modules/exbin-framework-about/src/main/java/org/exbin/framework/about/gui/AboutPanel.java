@@ -42,6 +42,7 @@ import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Basic about panel.
@@ -64,7 +65,7 @@ public class AboutPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        darkMode = WindowUtils.isDarkUI();
+        darkMode = UiUtils.isDarkUI();
         if (darkMode) {
             aboutHeaderPanel.setBackground(Color.BLACK);
             appTitleLabel.setForeground(Color.WHITE);
