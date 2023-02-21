@@ -114,7 +114,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
      *
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         TestApplication testApplication = UtilsModule.getDefaultAppEditor();
         OperationUndoModule operationUndoModule = new OperationUndoModule();
         testApplication.addModule(OperationUndoModule.MODULE_ID, operationUndoModule);

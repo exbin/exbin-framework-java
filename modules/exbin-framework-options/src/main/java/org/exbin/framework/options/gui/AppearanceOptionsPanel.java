@@ -146,7 +146,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
      *
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         WindowUtils.invokeDialog(new AppearanceOptionsPanel());
     }
 

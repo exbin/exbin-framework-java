@@ -65,7 +65,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
      *
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         TestApplication testApplication = UtilsModule.getDefaultAppEditor();
         OperationUndoModule guiUndoModule = new OperationUndoModule();
         testApplication.addModule(OperationUndoModule.MODULE_ID, guiUndoModule);

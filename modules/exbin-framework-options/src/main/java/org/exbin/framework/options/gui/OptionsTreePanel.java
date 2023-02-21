@@ -186,7 +186,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
      *
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         WindowUtils.invokeDialog(new OptionsTreePanel(null));
     }
 

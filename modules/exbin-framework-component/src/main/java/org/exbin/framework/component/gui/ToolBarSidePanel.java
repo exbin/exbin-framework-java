@@ -67,7 +67,7 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
      *
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         TestApplication testApplication = UtilsModule.getDefaultAppEditor();
         ComponentModule guiComponentModule = new ComponentModule();
         testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
