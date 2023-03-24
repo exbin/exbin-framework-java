@@ -113,11 +113,11 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
         encodingsListScrollPane = new javax.swing.JScrollPane();
         encodingsList = new javax.swing.JList();
         encodingsControlPanel = new javax.swing.JPanel();
+        addButton = new javax.swing.JButton();
         upButton = new javax.swing.JButton();
         downButton = new javax.swing.JButton();
-        addButton = new javax.swing.JButton();
-        removeButton = new javax.swing.JButton();
         selectAllButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
 
         setName("Form"); // NOI18N
 
@@ -128,6 +128,14 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
         encodingsListScrollPane.setViewportView(encodingsList);
 
         encodingsControlPanel.setName("encodingsControlPanel"); // NOI18N
+
+        addButton.setText(resourceBundle.getString("addButton.text")); // NOI18N
+        addButton.setName("addButton"); // NOI18N
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
 
         upButton.setText(resourceBundle.getString("upButton.text")); // NOI18N
         upButton.setEnabled(false);
@@ -147,11 +155,12 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
             }
         });
 
-        addButton.setText(resourceBundle.getString("addButton.text")); // NOI18N
-        addButton.setName("addButton"); // NOI18N
-        addButton.addActionListener(new java.awt.event.ActionListener() {
+        selectAllButton.setText(resourceBundle.getString("selectAllButton.text")); // NOI18N
+        selectAllButton.setEnabled(false);
+        selectAllButton.setName("selectAllButton"); // NOI18N
+        selectAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addButtonActionPerformed(evt);
+                selectAllButtonActionPerformed(evt);
             }
         });
 
@@ -164,15 +173,6 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
             }
         });
 
-        selectAllButton.setText(resourceBundle.getString("selectAllButton.text")); // NOI18N
-        selectAllButton.setEnabled(false);
-        selectAllButton.setName("selectAllButton"); // NOI18N
-        selectAllButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectAllButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout encodingsControlPanelLayout = new javax.swing.GroupLayout(encodingsControlPanel);
         encodingsControlPanel.setLayout(encodingsControlPanelLayout);
         encodingsControlPanelLayout.setHorizontalGroup(
@@ -180,11 +180,11 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsCapa
             .addGroup(encodingsControlPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(encodingsControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(removeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(selectAllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(downButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(upButton, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE))
+                    .addComponent(addButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                    .addComponent(removeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                    .addComponent(selectAllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                    .addComponent(downButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                    .addComponent(upButton, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
                 .addContainerGap())
         );
         encodingsControlPanelLayout.setVerticalGroup(

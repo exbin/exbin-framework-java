@@ -81,6 +81,13 @@ public class XBBaseApplication implements XBApplication {
             applyLookAndFeel(targetLaf);
         }
     }
+    
+    public void run(Runnable runnable) {
+        ClassLoader classLoader = moduleRepository.getContextClassLoader();
+        Thread runThread = new Thread(runnable);
+        runThread.setContextClassLoader(classLoader);
+        runThread.run();
+    }
 
     @Nonnull
     @Override
