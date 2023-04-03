@@ -152,6 +152,24 @@ public class EncodingsHandler {
         textEncodingService.setTextEncodingStatus(textEncodingStatus);
     }
 
+    public void setEncodingChangeListener(TextEncodingService.EncodingChangeListener listener) {
+        textEncodingService.setEncodingChangeListener(listener);
+    }
+
+    @Nonnull
+    public String getSelectedEncoding() {
+        return textEncodingService.getSelectedEncoding();
+    }
+
+    public void setSelectedEncoding(String encoding) {
+        textEncodingService.setSelectedEncoding(encoding);
+    }
+
+    @Nonnull
+    public TextEncodingService getTextEncodingService() {
+        return textEncodingService;
+    }
+
     @Nonnull
     public JMenu getToolsEncodingMenu() {
         return toolsEncodingMenu;

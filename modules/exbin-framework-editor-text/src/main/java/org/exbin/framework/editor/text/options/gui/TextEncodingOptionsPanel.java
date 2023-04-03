@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -36,6 +38,7 @@ import org.exbin.xbup.core.util.StringUtils;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TextEncodingOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextEncodingOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
@@ -238,6 +241,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         encodingPanel.setAddEncodingsOperation(addEncodingsOperation);
     }
 
+    @ParametersAreNonnullByDefault
     public class DefaultEncodingComboBoxModel implements ComboBoxModel<String> {
 
         private List<String> availableEncodings = new ArrayList<>();
@@ -252,6 +256,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
             selectedEncoding = (String) anItem;
         }
 
+        @Nullable
         @Override
         public Object getSelectedItem() {
             return selectedEncoding;
@@ -262,6 +267,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
             return availableEncodings.size();
         }
 
+        @Nonnull
         @Override
         public String getElementAt(int index) {
             return availableEncodings.get(index);
@@ -277,6 +283,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
             dataListeners.remove(listener);
         }
 
+        @Nonnull
         public List<String> getAvailableEncodings() {
             return availableEncodings;
         }
@@ -297,6 +304,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
             }
         }
 
+        @Nonnull
         public String getSelectedEncoding() {
             return selectedEncoding;
         }

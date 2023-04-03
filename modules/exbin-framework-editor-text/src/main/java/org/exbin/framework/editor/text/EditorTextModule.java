@@ -344,19 +344,6 @@ public class EditorTextModule implements XBApplicationModule {
             }
         });
 
-        TextEncodingService textEncodingService = new TextEncodingServiceImpl();
-        textEncodingService.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
-            @Override
-            public void encodingListChanged() {
-                getEncodingsHandler().rebuildEncodings();
-            }
-
-            @Override
-            public void selectedEncodingChanged() {
-                ((TextPanel) getEditorProvider().getEditorComponent()).setCharset(Charset.forName(textEncodingService.getSelectedEncoding()));
-            }
-        });
-
         TextAppearanceService textAppearanceService;
         textAppearanceService = new TextAppearanceService() {
             @Override
@@ -377,6 +364,7 @@ public class EditorTextModule implements XBApplicationModule {
             public TextEncodingOptionsPanel createPanel() {
                 if (panel == null) {
                     panel = new TextEncodingOptionsPanel();
+                    panel.setTextEncodingService(encodingsHandler.getTextEncodingService());
                     panel.setAddEncodingsOperation((List<String> usedEncodings) -> {
                         final List<String> result = new ArrayList<>();
                         FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
@@ -424,8 +412,9 @@ public class EditorTextModule implements XBApplicationModule {
 
             @Override
             public void applyPreferencesChanges(TextEncodingOptionsImpl options) {
-                textEncodingService.setSelectedEncoding(options.getSelectedEncoding());
-                textEncodingService.setEncodings(options.getEncodings());
+                getEncodingsHandler();
+                encodingsHandler.setSelectedEncoding(options.getSelectedEncoding());
+                encodingsHandler.setEncodings(options.getEncodings());
             }
         });
 
@@ -520,6 +509,17 @@ public class EditorTextModule implements XBApplicationModule {
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
             encodingsHandler = new EncodingsHandler();
+            encodingsHandler.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
+                @Override
+                public void encodingListChanged() {
+                    encodingsHandler.rebuildEncodings();
+                }
+
+                @Override
+                public void selectedEncodingChanged() {
+                    ((TextPanel) getEditorProvider().getEditorComponent()).setCharset(Charset.forName(encodingsHandler.getSelectedEncoding()));
+                }
+            });
             encodingsHandler.setParentComponent(getEditorProvider().getEditorComponent());
             if (textStatusPanel != null) {
                 encodingsHandler.setTextEncodingStatus(textStatusPanel);
