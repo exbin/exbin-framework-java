@@ -73,7 +73,6 @@ import org.exbin.framework.editor.text.service.TextAppearanceService;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.editor.text.service.TextFontService;
-import org.exbin.framework.editor.text.service.impl.TextEncodingServiceImpl;
 import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.utils.LanguageUtils;
@@ -198,6 +197,7 @@ public class EditorTextModule implements XBApplicationModule {
         optionsModule.addOptionsPage(new DefaultOptionsPage<TextColorOptionsImpl>() {
             private TextColorOptionsPanel panel;
 
+            @Nonnull
             @Override
             public OptionsCapable<TextColorOptionsImpl> createPanel() {
                 if (panel == null) {
@@ -213,6 +213,7 @@ public class EditorTextModule implements XBApplicationModule {
                 return LanguageUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public TextColorOptionsImpl createOptions() {
                 return new TextColorOptionsImpl();
@@ -364,7 +365,7 @@ public class EditorTextModule implements XBApplicationModule {
             public TextEncodingOptionsPanel createPanel() {
                 if (panel == null) {
                     panel = new TextEncodingOptionsPanel();
-                    panel.setTextEncodingService(encodingsHandler.getTextEncodingService());
+                    panel.setTextEncodingService(getEncodingsHandler().getTextEncodingService());
                     panel.setAddEncodingsOperation((List<String> usedEncodings) -> {
                         final List<String> result = new ArrayList<>();
                         FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
