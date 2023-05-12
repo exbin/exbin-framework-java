@@ -184,6 +184,10 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
                     break;
                 }
             }
+
+            if (fileHandlers.isEmpty()) {
+                controller.discardAll(fileHandlers);
+            }
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -201,6 +205,10 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
                 } else {
                     break;
                 }
+            }
+
+            if (fileHandlers.isEmpty()) {
+                controller.discardAll(fileHandlers);
             }
         }
     }//GEN-LAST:event_saveAllButtonActionPerformed
