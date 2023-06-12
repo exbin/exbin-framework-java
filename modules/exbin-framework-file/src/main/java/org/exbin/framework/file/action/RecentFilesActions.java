@@ -164,7 +164,7 @@ public class RecentFilesActions {
 
             fileOpenRecentMenu.add(menuItem);
         }
-        fileOpenRecentMenu.setEnabled(recentFiles.size() > 0);
+        fileOpenRecentMenu.setEnabled(!recentFiles.isEmpty());
     }
 
     @Nullable
