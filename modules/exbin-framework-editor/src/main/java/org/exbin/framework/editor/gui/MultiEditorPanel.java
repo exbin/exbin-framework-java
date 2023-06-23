@@ -18,8 +18,8 @@ package org.exbin.framework.editor.gui;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.utils.WindowUtils;
@@ -140,12 +140,12 @@ public class MultiEditorPanel extends javax.swing.JPanel {
         return activeIndex;
     }
 
-    @Nullable
-    public FileHandler getActiveFile() {
+    @Nonnull
+    public Optional<FileHandler> getActiveFile() {
         if (activeIndex == -1 || fileHandlers.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
-        return fileHandlers.get(getActiveIndex());
+        return Optional.of(fileHandlers.get(getActiveIndex()));
     }
 
     /**
