@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.options;
 
+import java.awt.Desktop;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -49,6 +50,7 @@ import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.options.action.OptionsAction;
 import org.exbin.framework.options.options.AppearanceOptions;
+import org.exbin.framework.utils.DesktopUtils;
 
 /**
  * Implementation of framework options module.
@@ -272,9 +274,17 @@ public class OptionsModule implements OptionsModuleApi {
     @Override
     public void registerMenuAction() {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
-        actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.AROUND));
         getOptionsAction();
-        actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+            actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.NONE));
+            Desktop desktop = Desktop.getDesktop();
+            desktop.setPreferencesHandler((e) -> {
+                optionsAction.actionPerformed(null);
+            });
+        } else {
+            actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.AROUND));
+            actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
+        }
     }
 
     @ParametersAreNonnullByDefault

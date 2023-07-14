@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.about;
 
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -29,6 +31,7 @@ import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.about.api.AboutModuleApi;
+import org.exbin.framework.utils.DesktopUtils;
 
 /**
  * Implementation of framework about module.
@@ -69,8 +72,17 @@ public class AboutModule implements AboutModuleApi {
     @Override
     public void registerDefaultMenuItem() {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
-        actionModule.registerMenuGroup(FrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.ABOVE));
-        actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));
+        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+            actionModule.registerMenuGroup(FrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.NONE));
+            Desktop desktop = Desktop.getDesktop();
+            desktop.setAboutHandler((e) -> {
+                getAboutAction().actionPerformed(new ActionEvent(frameModule.getFrame(), 0, ""));
+            });
+        } else {
+            actionModule.registerMenuGroup(FrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.ABOVE));
+            actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));        
+        }
     }
 
     @Override

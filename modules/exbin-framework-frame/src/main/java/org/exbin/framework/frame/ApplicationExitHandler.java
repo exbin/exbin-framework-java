@@ -52,4 +52,15 @@ public class ApplicationExitHandler {
 
         System.exit(0);
     }
+    
+    public boolean canExit(ApplicationFrameHandler frameHandler) {
+        for (ApplicationExitListener listener : listeners) {
+            boolean canContinue = listener.processExit(frameHandler);
+            if (!canContinue) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

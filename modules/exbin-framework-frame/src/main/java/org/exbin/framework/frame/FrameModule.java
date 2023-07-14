@@ -16,9 +16,11 @@
 package org.exbin.framework.frame;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.desktop.QuitStrategy;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -48,6 +50,7 @@ import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.frame.action.FrameActions;
+import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.handler.OkCancelService;
 
 /**
@@ -71,6 +74,9 @@ public class FrameModule implements FrameModuleApi {
     private FrameActions frameActions;
 
     public FrameModule() {
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+        }
     }
 
     @Override
@@ -179,8 +185,26 @@ public class FrameModule implements FrameModuleApi {
     public void registerExitAction() {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         String appClosingActionsGroup = "ApplicationClosingActionsGroup";
-        actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.ABOVE));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getExitAction(), new MenuPosition(appClosingActionsGroup));
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+            actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.NONE));
+            Desktop desktop = Desktop.getDesktop();
+            desktop.setQuitHandler((e, response) -> {
+                if (exitHandler != null) {
+                    boolean canExit = exitHandler.canExit(getFrameHandler());
+                    if (canExit) {
+                        response.performQuit();
+                    } else {
+                        response.cancelQuit();
+                    }
+                } else {
+                    response.performQuit();
+                }
+            });
+            desktop.setQuitStrategy(QuitStrategy.NORMAL_EXIT);
+        } else {
+            actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.ABOVE));
+            actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getExitAction(), new MenuPosition(appClosingActionsGroup));
+        }
     }
 
     @Nonnull
