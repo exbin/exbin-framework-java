@@ -275,14 +275,19 @@ public class OptionsModule implements OptionsModuleApi {
     public void registerMenuAction() {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         getOptionsAction();
+
+        boolean optionsActionRegistered = false;
+        // Requires Java 9+
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
-            actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.NONE));
             Desktop desktop = Desktop.getDesktop();
             desktop.setPreferencesHandler((e) -> {
                 optionsAction.actionPerformed(null);
             });
-        } else {
-            actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.AROUND));
+            optionsActionRegistered = true;
+        }
+
+        actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
+        if (!optionsActionRegistered) {
             actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
         }
     }

@@ -73,14 +73,18 @@ public class AboutModule implements AboutModuleApi {
     public void registerDefaultMenuItem() {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        boolean aboutActionRegistered = false;
+        // Requires Java 9+
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
-            actionModule.registerMenuGroup(FrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.NONE));
             Desktop desktop = Desktop.getDesktop();
             desktop.setAboutHandler((e) -> {
                 getAboutAction().actionPerformed(new ActionEvent(frameModule.getFrame(), 0, ""));
             });
-        } else {
-            actionModule.registerMenuGroup(FrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.ABOVE));
+            aboutActionRegistered = true;
+        }
+
+        actionModule.registerMenuGroup(FrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
+        if (!aboutActionRegistered) {
             actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));        
         }
     }

@@ -185,8 +185,9 @@ public class FrameModule implements FrameModuleApi {
     public void registerExitAction() {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         String appClosingActionsGroup = "ApplicationClosingActionsGroup";
+        boolean exitActionRegistered = false;
+        // Requires Java 9+
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
-            actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.NONE));
             Desktop desktop = Desktop.getDesktop();
             desktop.setQuitHandler((e, response) -> {
                 if (exitHandler != null) {
@@ -201,8 +202,11 @@ public class FrameModule implements FrameModuleApi {
                 }
             });
             desktop.setQuitStrategy(QuitStrategy.NORMAL_EXIT);
-        } else {
-            actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), SeparationMode.ABOVE));
+            exitActionRegistered = true;
+        }
+        
+        actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), exitActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
+        if (!exitActionRegistered) {
             actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getExitAction(), new MenuPosition(appClosingActionsGroup));
         }
     }
