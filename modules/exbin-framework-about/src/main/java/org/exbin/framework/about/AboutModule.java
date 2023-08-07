@@ -75,14 +75,14 @@ public class AboutModule implements AboutModuleApi {
         FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         boolean aboutActionRegistered = false;
         // Requires Java 9+
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+/*        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
             Desktop desktop = Desktop.getDesktop();
             desktop.setAboutHandler((e) -> {
                 getAboutAction().actionPerformed(new ActionEvent(frameModule.getFrame(), 0, ""));
             });
             aboutActionRegistered = true;
         }
-
+*/
         actionModule.registerMenuGroup(FrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
             actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));        

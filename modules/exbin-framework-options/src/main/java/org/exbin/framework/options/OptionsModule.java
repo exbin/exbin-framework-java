@@ -277,7 +277,7 @@ public class OptionsModule implements OptionsModuleApi {
         getOptionsAction();
 
         boolean optionsActionRegistered = false;
-        // Requires Java 9+
+/*        // Requires Java 9+
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
             Desktop desktop = Desktop.getDesktop();
             desktop.setPreferencesHandler((e) -> {
@@ -285,7 +285,7 @@ public class OptionsModule implements OptionsModuleApi {
             });
             optionsActionRegistered = true;
         }
-
+*/
         actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
         if (!optionsActionRegistered) {
             actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));

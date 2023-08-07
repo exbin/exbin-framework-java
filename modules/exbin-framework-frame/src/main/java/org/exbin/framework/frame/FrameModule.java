@@ -16,11 +16,9 @@
 package org.exbin.framework.frame;
 
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Image;
-import java.awt.desktop.QuitStrategy;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -186,7 +184,7 @@ public class FrameModule implements FrameModuleApi {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         String appClosingActionsGroup = "ApplicationClosingActionsGroup";
         boolean exitActionRegistered = false;
-        // Requires Java 9+
+/*        // Requires Java 9+
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
             Desktop desktop = Desktop.getDesktop();
             desktop.setQuitHandler((e, response) -> {
@@ -204,7 +202,7 @@ public class FrameModule implements FrameModuleApi {
             desktop.setQuitStrategy(QuitStrategy.NORMAL_EXIT);
             exitActionRegistered = true;
         }
-        
+*/        
         actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), exitActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!exitActionRegistered) {
             actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getExitAction(), new MenuPosition(appClosingActionsGroup));
