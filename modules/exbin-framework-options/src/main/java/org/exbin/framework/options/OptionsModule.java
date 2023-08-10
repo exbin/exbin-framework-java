@@ -79,7 +79,9 @@ public class OptionsModule implements OptionsModuleApi {
             @Nonnull
             @Override
             public OptionsCapable<FrameworkOptionsImpl> createPanel() {
-                return new MainOptionsPanel();
+                MainOptionsPanel optionsPanel = new MainOptionsPanel();
+                optionsPanel.setLanguageLocales(application.getLanguageLocales());
+                return optionsPanel;
             }
 
             @Nonnull

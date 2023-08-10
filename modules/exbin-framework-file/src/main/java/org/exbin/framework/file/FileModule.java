@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 import javax.swing.JMenu;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.file.api.FileType;
@@ -157,7 +158,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         getRecentFilesActions();
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, "Open" + ActionUtils.DIALOG_MENUITEM_EXT));
+        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, (String) getOpenFileAction().getValue(Action.NAME) + ActionUtils.DIALOG_MENUITEM_EXT));
     }
 
     @Nonnull

@@ -72,8 +72,13 @@ public class XBBaseApplication implements XBApplication {
 
     public void init() {
         // Setup language utility
-        Locale locale = Locale.getDefault();
-        ClassLoader languageClassLoader = languagePlugins.get(locale);
+        List<Locale.LanguageRange> priorityList = new ArrayList<>();
+        Locale defaultLocale = Locale.getDefault();
+        priorityList.add(new Locale.LanguageRange(defaultLocale.toLanguageTag()));
+        priorityList.add(new Locale.LanguageRange(defaultLocale.getLanguage()));
+
+        Locale localeMatch = Locale.lookup(priorityList, languagePlugins.keySet());
+        ClassLoader languageClassLoader = languagePlugins.get(localeMatch);
         if (languageClassLoader != null) {
             LanguageUtils.setLanguageClassLoader(languageClassLoader);
         }
