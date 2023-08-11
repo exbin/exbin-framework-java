@@ -32,6 +32,7 @@ public class FrameworkPreferences {
     public static final String PREFERENCES_LOCALE_LANGUAGE = "locale.language";
     public static final String PREFERENCES_LOCALE_COUNTRY = "locale.country";
     public static final String PREFERENCES_LOCALE_VARIANT = "locale.variant";
+    public static final String PREFERENCES_LOCALE_TAG = "locale.tag";
 
     private final Preferences preferences;
 
@@ -55,7 +56,21 @@ public class FrameworkPreferences {
     }
 
     @Nonnull
+    public String getLocaleTag() {
+        return preferences.get(PREFERENCES_LOCALE_TAG, "");
+    }
+
+    @Nonnull
     public Locale getLocale() {
+        String localeTag = getLocaleTag();
+        if (!localeTag.trim().isEmpty()) {
+            try {
+                return Locale.forLanguageTag(localeTag);
+            } catch (SecurityException ex) {
+                // Ignore it in java webstart
+            }
+        }
+
         String localeLanguage = getLocaleLanguage();
         String localeCountry = getLocaleCountry();
         String localeVariant = getLocaleVariant();
@@ -80,7 +95,12 @@ public class FrameworkPreferences {
         preferences.put(PREFERENCES_LOCALE_VARIANT, variant);
     }
 
+    public void setLocaleTag(String variant) {
+        preferences.put(PREFERENCES_LOCALE_TAG, variant);
+    }
+
     public void setLocale(Locale locale) {
+        setLocaleTag(locale.toLanguageTag());
         setLocaleLanguage(locale.getLanguage());
         setLocaleCountry(locale.getCountry());
         setLocaleVariant(locale.getVariant());

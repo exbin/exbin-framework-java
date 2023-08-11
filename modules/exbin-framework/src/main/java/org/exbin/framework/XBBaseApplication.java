@@ -78,15 +78,18 @@ public class XBBaseApplication implements XBApplication {
         priorityList.add(new Locale.LanguageRange(defaultLocale.toLanguageTag()));
         priorityList.add(new Locale.LanguageRange(defaultLocale.getLanguage()));
 
-        Locale localeMatch = Locale.lookup(priorityList, languagePlugins.keySet());
-        ClassLoader languageClassLoader = languagePlugins.get(localeMatch);
-        if (languageClassLoader != null) {
-            LanguageUtils.setLanguageClassLoader(languageClassLoader);
-            try {
-                // TODO use better method than string to class conversion
-                appBundle = LanguageUtils.getResourceBundleByClass(Class.forName(appBundleName.replaceFirst("/resources/", "/").replaceAll("/", ".")));
-            } catch (ClassNotFoundException ex) {
-                // Unable to load
+        List<Locale> matchingLocales = Locale.filter(priorityList, languagePlugins.keySet());
+        if (!matchingLocales.isEmpty()) {
+            Locale localeMatch = matchingLocales.get(0);
+            ClassLoader languageClassLoader = languagePlugins.get(localeMatch);
+            if (languageClassLoader != null) {
+                LanguageUtils.setLanguageClassLoader(languageClassLoader);
+                try {
+                    // TODO use better method than string to class conversion
+                    appBundle = LanguageUtils.getResourceBundleByClass(Class.forName(appBundleName.replaceFirst("/resources/", "/").replaceAll("/", ".")));
+                } catch (ClassNotFoundException ex) {
+                    // Unable to load
+                }
             }
         }
         if (targetLaf != null) {
