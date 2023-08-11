@@ -57,6 +57,7 @@ import org.exbin.framework.preferences.FrameworkPreferences;
 public class XBBaseApplication implements XBApplication {
 
     private ResourceBundle appBundle;
+    private String appBundleName;
     private Preferences appPreferences;
 
     private final XBDefaultApplicationModuleRepository moduleRepository;
@@ -81,6 +82,12 @@ public class XBBaseApplication implements XBApplication {
         ClassLoader languageClassLoader = languagePlugins.get(localeMatch);
         if (languageClassLoader != null) {
             LanguageUtils.setLanguageClassLoader(languageClassLoader);
+            try {
+                // TODO use better method than string to class conversion
+                appBundle = LanguageUtils.getResourceBundleByClass(Class.forName(appBundleName.replaceFirst("/resources/", "/").replaceAll("/", ".")));
+            } catch (ClassNotFoundException ex) {
+                // Unable to load
+            }
         }
         if (targetLaf != null) {
             applyLookAndFeel(targetLaf);
@@ -108,10 +115,7 @@ public class XBBaseApplication implements XBApplication {
      * available only in Java 1.8
      */
     public void setAppBundle(ResourceBundle appBundle, String bundleName) {
-        if (!Locale.getDefault().equals(appBundle.getLocale())) {
-            appBundle = ResourceBundle.getBundle(bundleName);
-        }
-
+        this.appBundleName = bundleName;
         this.appBundle = appBundle;
     }
 

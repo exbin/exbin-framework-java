@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.options;
 
-import java.awt.Desktop;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -50,7 +49,6 @@ import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.options.action.OptionsAction;
 import org.exbin.framework.options.options.AppearanceOptions;
-import org.exbin.framework.utils.DesktopUtils;
 
 /**
  * Implementation of framework options module.
@@ -74,94 +72,6 @@ public class OptionsModule implements OptionsModuleApi {
     @Override
     public void init(XBModuleHandler moduleHandler) {
         this.application = (XBApplication) moduleHandler;
-
-        OptionsPage<FrameworkOptionsImpl> mainOptionsPage = new DefaultOptionsPage<FrameworkOptionsImpl>() {
-            @Nonnull
-            @Override
-            public OptionsCapable<FrameworkOptionsImpl> createPanel() {
-                MainOptionsPanel optionsPanel = new MainOptionsPanel();
-                optionsPanel.setLanguageLocales(application.getLanguageLocales());
-                return optionsPanel;
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public FrameworkOptionsImpl createOptions() {
-                return new FrameworkOptionsImpl();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, FrameworkOptionsImpl options) {
-                FrameworkPreferences prefs = new FrameworkPreferences(preferences);
-                options.loadFromPreferences(prefs);
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, FrameworkOptionsImpl options) {
-                FrameworkPreferences prefs = new FrameworkPreferences(preferences);
-                options.saveToParameters(prefs);
-            }
-
-            @Override
-            public void applyPreferencesChanges(FrameworkOptionsImpl options) {
-                String selectedTheme = options.getLookAndFeel();
-                application.applyLookAndFeel(selectedTheme);
-            }
-        };
-        optionsPages.add(new OptionsPageRecord(null, mainOptionsPage));
-
-        OptionsPage<AppearanceOptionsImpl> appearanceOptionsPage;
-        appearanceOptionsPage = new DefaultOptionsPage<AppearanceOptionsImpl>() {
-            @Nonnull
-            @Override
-            public OptionsCapable<AppearanceOptionsImpl> createPanel() {
-                return new AppearanceOptionsPanel();
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public AppearanceOptionsImpl createOptions() {
-                return new AppearanceOptionsImpl();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, AppearanceOptionsImpl options) {
-                AppearancePreferences prefs = new AppearancePreferences(preferences);
-                options.loadFromPreferences(prefs);
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, AppearanceOptionsImpl options) {
-                AppearancePreferences prefs = new AppearancePreferences(preferences);
-                options.saveToParameters(prefs);
-            }
-
-            @Override
-            public void applyPreferencesChanges(AppearanceOptionsImpl options) {
-                FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
-                ApplicationFrameHandler frame = frameModule.getFrameHandler();
-                frame.setToolBarVisible(options.isShowToolBar());
-                frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
-                frame.setStatusBarVisible(options.isShowStatusBar());
-                frameModule.notifyFrameUpdated();
-            }
-        };
-        ResourceBundle optionsResourceBundle = LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
-        List<OptionsPathItem> optionsPath = new ArrayList<>();
-        optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
-        addOptionsPage(appearanceOptionsPage, optionsPath);
     }
 
     @Override
@@ -172,6 +82,94 @@ public class OptionsModule implements OptionsModuleApi {
     private ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
             resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsModule.class);
+
+            OptionsPage<FrameworkOptionsImpl> mainOptionsPage = new DefaultOptionsPage<FrameworkOptionsImpl>() {
+                @Nonnull
+                @Override
+                public OptionsCapable<FrameworkOptionsImpl> createPanel() {
+                    MainOptionsPanel optionsPanel = new MainOptionsPanel();
+                    optionsPanel.setLanguageLocales(application.getLanguageLocales());
+                    return optionsPanel;
+                }
+
+                @Nonnull
+                @Override
+                public ResourceBundle getResourceBundle() {
+                    return LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
+                }
+
+                @Nonnull
+                @Override
+                public FrameworkOptionsImpl createOptions() {
+                    return new FrameworkOptionsImpl();
+                }
+
+                @Override
+                public void loadFromPreferences(Preferences preferences, FrameworkOptionsImpl options) {
+                    FrameworkPreferences prefs = new FrameworkPreferences(preferences);
+                    options.loadFromPreferences(prefs);
+                }
+
+                @Override
+                public void saveToPreferences(Preferences preferences, FrameworkOptionsImpl options) {
+                    FrameworkPreferences prefs = new FrameworkPreferences(preferences);
+                    options.saveToParameters(prefs);
+                }
+
+                @Override
+                public void applyPreferencesChanges(FrameworkOptionsImpl options) {
+                    String selectedTheme = options.getLookAndFeel();
+                    application.applyLookAndFeel(selectedTheme);
+                }
+            };
+            optionsPages.add(new OptionsPageRecord(null, mainOptionsPage));
+
+            OptionsPage<AppearanceOptionsImpl> appearanceOptionsPage;
+            appearanceOptionsPage = new DefaultOptionsPage<AppearanceOptionsImpl>() {
+                @Nonnull
+                @Override
+                public OptionsCapable<AppearanceOptionsImpl> createPanel() {
+                    return new AppearanceOptionsPanel();
+                }
+
+                @Nonnull
+                @Override
+                public ResourceBundle getResourceBundle() {
+                    return LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
+                }
+
+                @Nonnull
+                @Override
+                public AppearanceOptionsImpl createOptions() {
+                    return new AppearanceOptionsImpl();
+                }
+
+                @Override
+                public void loadFromPreferences(Preferences preferences, AppearanceOptionsImpl options) {
+                    AppearancePreferences prefs = new AppearancePreferences(preferences);
+                    options.loadFromPreferences(prefs);
+                }
+
+                @Override
+                public void saveToPreferences(Preferences preferences, AppearanceOptionsImpl options) {
+                    AppearancePreferences prefs = new AppearancePreferences(preferences);
+                    options.saveToParameters(prefs);
+                }
+
+                @Override
+                public void applyPreferencesChanges(AppearanceOptionsImpl options) {
+                    FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+                    ApplicationFrameHandler frame = frameModule.getFrameHandler();
+                    frame.setToolBarVisible(options.isShowToolBar());
+                    frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
+                    frame.setStatusBarVisible(options.isShowStatusBar());
+                    frameModule.notifyFrameUpdated();
+                }
+            };
+            ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) appearanceOptionsPage).getResourceBundle();
+            List<OptionsPathItem> optionsPath = new ArrayList<>();
+            optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
+            addOptionsPage(appearanceOptionsPage, optionsPath);
         }
 
         return resourceBundle;
@@ -279,7 +277,7 @@ public class OptionsModule implements OptionsModuleApi {
         getOptionsAction();
 
         boolean optionsActionRegistered = false;
-/*        // Requires Java 9+
+        /*        // Requires Java 9+
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
             Desktop desktop = Desktop.getDesktop();
             desktop.setPreferencesHandler((e) -> {
@@ -287,7 +285,7 @@ public class OptionsModule implements OptionsModuleApi {
             });
             optionsActionRegistered = true;
         }
-*/
+         */
         actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
         if (!optionsActionRegistered) {
             actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));

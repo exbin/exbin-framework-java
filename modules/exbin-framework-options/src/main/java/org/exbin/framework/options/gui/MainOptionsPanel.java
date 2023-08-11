@@ -63,7 +63,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
                     if (value.equals(Locale.ROOT)) {
                         retValue.setText("<" + resourceBundle.getString("defaultLanguage") + ">");
                     } else {
-                        retValue.setText(((Locale) value).getDisplayName((Locale) value) + " (" + ((Locale) value).toLanguageTag() + ")");
+                        retValue.setText(((Locale) value).getDisplayName((Locale) value));
                     }
                 }
                 return retValue;
