@@ -23,6 +23,9 @@ import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
 
@@ -31,6 +34,7 @@ import org.exbin.framework.utils.WindowUtils;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TextFontPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextFontPanel.class);
@@ -70,6 +74,7 @@ public class TextFontPanel extends javax.swing.JPanel {
         superscriptCheckBox.setEnabled(!subscriptCheckBox.isSelected());
     }
 
+    @Nullable
     public Font getStoredFont() {
         String fontName = fontFamilyInputList.getSelectedValue();
         String fontSize = fontSizeInputList.getSelectedValue();
@@ -329,6 +334,7 @@ public class TextFontPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox underlineCheckBox;
     // End of variables declaration//GEN-END:variables
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }

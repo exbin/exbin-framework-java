@@ -510,6 +510,7 @@ public class EditorTextModule implements XBApplicationModule {
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
             encodingsHandler = new EncodingsHandler();
+            encodingsHandler.setApplication(application);
             encodingsHandler.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
                 @Override
                 public void encodingListChanged() {
