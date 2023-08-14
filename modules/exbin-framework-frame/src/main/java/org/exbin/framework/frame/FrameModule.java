@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.frame;
 
+import com.formdev.flatlaf.extras.FlatDesktop;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -184,8 +185,21 @@ public class FrameModule implements FrameModuleApi {
         ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
         String appClosingActionsGroup = "ApplicationClosingActionsGroup";
         boolean exitActionRegistered = false;
-/*        // Requires Java 9+
+
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+            FlatDesktop.setQuitHandler(response -> {
+                if (exitHandler != null) {
+                    boolean canExit = exitHandler.canExit(getFrameHandler());
+                    if (canExit) {
+                        response.performQuit();
+                    } else {
+                        response.cancelQuit();
+                    }
+                } else {
+                    response.performQuit();
+                }
+            });
+            /* // TODO: Replace after migration to Java 9+
             Desktop desktop = Desktop.getDesktop();
             desktop.setQuitHandler((e, response) -> {
                 if (exitHandler != null) {
@@ -199,10 +213,10 @@ public class FrameModule implements FrameModuleApi {
                     response.performQuit();
                 }
             });
-            desktop.setQuitStrategy(QuitStrategy.NORMAL_EXIT);
+            desktop.setQuitStrategy(QuitStrategy.NORMAL_EXIT); */
             exitActionRegistered = true;
         }
-*/        
+
         actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), exitActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!exitActionRegistered) {
             actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getExitAction(), new MenuPosition(appClosingActionsGroup));

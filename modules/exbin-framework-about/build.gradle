@@ -29,6 +29,10 @@ dependencies {
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-frame-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-popup')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-utils')
+    implementation('com.formdev:flatlaf-extras:3.2') {
+        exclude group: 'com.formdev', module: 'flatlaf'
+        exclude group: 'com.github.weisj', module: 'jsvg'
+    }
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 
     testImplementation group : 'junit', name: 'junit', version: '4.10'

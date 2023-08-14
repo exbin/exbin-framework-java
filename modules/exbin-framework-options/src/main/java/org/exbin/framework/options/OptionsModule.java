@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.options;
 
+import com.formdev.flatlaf.extras.FlatDesktop;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -49,6 +50,7 @@ import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.options.action.OptionsAction;
 import org.exbin.framework.options.options.AppearanceOptions;
+import org.exbin.framework.utils.DesktopUtils;
 
 /**
  * Implementation of framework options module.
@@ -277,15 +279,17 @@ public class OptionsModule implements OptionsModuleApi {
         getOptionsAction();
 
         boolean optionsActionRegistered = false;
-        /*        // Requires Java 9+
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+            FlatDesktop.setPreferencesHandler(() -> {
+                optionsAction.actionPerformed(null);
+            });
+            /* // TODO: Replace after migration to Java 9+
             Desktop desktop = Desktop.getDesktop();
             desktop.setPreferencesHandler((e) -> {
                 optionsAction.actionPerformed(null);
-            });
+            }); */
             optionsActionRegistered = true;
         }
-         */
         actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
         if (!optionsActionRegistered) {
             actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
