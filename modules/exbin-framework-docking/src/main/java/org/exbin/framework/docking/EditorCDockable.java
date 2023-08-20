@@ -19,6 +19,7 @@ import bibliothek.gui.dock.common.DefaultMultipleCDockable;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.Optional;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.FileHandler;
 
@@ -27,6 +28,7 @@ import org.exbin.framework.file.api.FileHandler;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class EditorCDockable extends DefaultMultipleCDockable {
 
     public static final String UNDEFINED_NAME = "Untitled";
@@ -67,8 +69,8 @@ public class EditorCDockable extends DefaultMultipleCDockable {
             }
 
             FileHandler fileHandler = activeFile.get();
-            Optional<String> fileName = fileHandler.getFileName();
-            String name = fileName.orElse(UNDEFINED_NAME);
+            String fileName = fileHandler.getFileName();
+            String name = fileName.isEmpty() ? UNDEFINED_NAME : fileName;
             if (fileHandler.isModified()) {
                 name += " *";
             }

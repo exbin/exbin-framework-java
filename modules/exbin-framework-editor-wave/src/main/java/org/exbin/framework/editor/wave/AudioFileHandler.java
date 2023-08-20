@@ -73,7 +73,7 @@ public class AudioFileHandler implements FileHandler {
     }
 
     @Override
-    public void loadFromFile(URI fileUri, FileType fileType) {
+    public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
         File file = new File(fileUri);
         if (EditorWaveModule.XBS_FILE_TYPE.equals(fileType.getFileTypeId())) {
             try {
@@ -100,7 +100,12 @@ public class AudioFileHandler implements FileHandler {
     }
 
     @Override
-    public void saveToFile(URI fileUri, FileType fileType) {
+    public void saveFile() {
+        saveToFile(fileUri, fileType);
+    }
+
+    @Override
+    public void saveToFile(URI fileUri, @Nullable FileType fileType) {
         File file = new File(fileUri);
         if (EditorWaveModule.XBS_FILE_TYPE.equals(fileType.getFileTypeId())) {
             try {
@@ -139,14 +144,15 @@ public class AudioFileHandler implements FileHandler {
 
     @Nonnull
     @Override
-    public Optional<String> getFileName() {
+    public String getFileName() {
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastSegment = path.lastIndexOf("/");
-            return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
+            String fileName = lastSegment < 0 ? path : path.substring(lastSegment + 1);
+            return fileName == null ? "" : fileName;
         }
 
-        return Optional.empty();
+        return "";
     }
 
     @Nonnull

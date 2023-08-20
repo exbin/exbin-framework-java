@@ -16,13 +16,11 @@
 package org.exbin.framework.editor.gui;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
-import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
@@ -63,13 +61,11 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
         this.controller = controller;
     }
 
-    public void setUnsavedFiles(List<FileHandler> fileHandlers, MultiEditorProvider editorProvider) {
+    public void setUnsavedFiles(List<FileHandler> fileHandlers) {
         this.fileHandlers = fileHandlers;
         DefaultListModel<String> listModel = new DefaultListModel<>();
         for (FileHandler fileHandler : fileHandlers) {
-            Optional<String> fileName = fileHandler.getFileName();
-            String handlerName = fileName.isPresent() ? fileName.get() : editorProvider.getName(fileHandler);
-            listModel.addElement(handlerName);
+            listModel.addElement(fileHandler.getFileName());
         }
         filesList.setModel(listModel);
         filesList.invalidate();

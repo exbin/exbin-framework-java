@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
@@ -77,7 +78,7 @@ public class ImageFileHandler implements FileHandler {
     }
 
     @Override
-    public void loadFromFile(URI fileUri, FileType fileType) {
+    public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
         File file = new File(fileUri);
         if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
             try {
@@ -109,7 +110,12 @@ public class ImageFileHandler implements FileHandler {
     }
 
     @Override
-    public void saveToFile(URI fileUri, FileType fileType) {
+    public void saveFile() {
+        saveToFile(fileUri, fileType);
+    }
+
+    @Override
+    public void saveToFile(URI fileUri, @Nullable FileType fileType) {
         File file = new File(fileUri);
         if (EditorPictureModule.XBPFILETYPE.equals(fileType.getFileTypeId())) {
             try {
@@ -148,14 +154,15 @@ public class ImageFileHandler implements FileHandler {
 
     @Nonnull
     @Override
-    public Optional<String> getFileName() {
+    public String getFileName() {
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastSegment = path.lastIndexOf("/");
-            return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
+            String fileName = lastSegment < 0 ? path : path.substring(lastSegment + 1);
+            return fileName == null ? "" : fileName;
         }
 
-        return Optional.empty();
+        return "";
     }
 
     @Nonnull

@@ -56,12 +56,10 @@ public interface FileHandler extends FileLoading, FileSaving {
     /**
      * Returns current filename.
      *
-     * Typically file name with extension is returned.
-     *
-     * @return filename
+     * @return filename file name with extension
      */
     @Nonnull
-    Optional<String> getFileName();
+    String getFileName();
 
     /**
      * Returns currently used filetype.

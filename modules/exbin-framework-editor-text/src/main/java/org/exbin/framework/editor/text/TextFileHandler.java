@@ -120,6 +120,11 @@ public class TextFileHandler implements FileHandler, TextFontApi {
     }
 
     @Override
+    public void saveFile() {
+        saveToFile(fileUri, fileType);
+    }
+
+    @Override
     public void saveToFile(URI fileUri, FileType fileType) {
         File file = new File(fileUri);
         switch (fileType.getFileTypeId()) {
@@ -180,14 +185,15 @@ public class TextFileHandler implements FileHandler, TextFontApi {
 
     @Nonnull
     @Override
-    public Optional<String> getFileName() {
+    public String getFileName() {
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastSegment = path.lastIndexOf("/");
-            return Optional.of(lastSegment < 0 ? path : path.substring(lastSegment + 1));
+            String fileName = lastSegment < 0 ? path : path.substring(lastSegment + 1);
+            return fileName == null ? "" : fileName;
         }
 
-        return Optional.empty();
+        return "";
     }
 
     @Nonnull

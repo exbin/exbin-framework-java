@@ -28,6 +28,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface FileSaving {
 
     /**
+     * Save document back to source file.
+     */
+    void saveFile();
+
+    /**
      * Saves file to given filename.
      *
      * @param fileUri file Uri
