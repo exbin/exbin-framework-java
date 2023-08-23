@@ -155,7 +155,7 @@ public class FileActions implements FileActionsApi {
         if (fileHandler != null) {
             Optional<URI> fileUri = fileHandler.getFileUri();
             if (fileUri.isPresent()) {
-                fileHandler.saveToFile(fileUri.get(), fileHandler.getFileType().get());
+                fileHandler.saveToFile(fileUri.get(), fileHandler.getFileType().orElse(null));
             } else {
                 saveAsFile(fileHandler, fileTypes, usedDirectory);
             }
