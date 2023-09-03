@@ -24,9 +24,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.options.impl.TextFontOptionsImpl;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextFontService;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Text font options panel.
@@ -34,7 +34,7 @@ import org.exbin.framework.editor.text.service.TextFontService;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextFontOptionsImpl> {
+public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextFontOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private FontChangeAction fontChangeAction;

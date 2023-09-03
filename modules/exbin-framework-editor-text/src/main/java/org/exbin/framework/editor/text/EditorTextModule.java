@@ -73,10 +73,10 @@ import org.exbin.framework.editor.text.service.TextAppearanceService;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.editor.text.service.TextFontService;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Text editor module.
@@ -199,7 +199,7 @@ public class EditorTextModule implements XBApplicationModule {
 
             @Nonnull
             @Override
-            public OptionsCapable<TextColorOptionsImpl> createPanel() {
+            public OptionsComponent<TextColorOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new TextColorOptionsPanel();
                     panel.setTextColorService(textColorService);
@@ -272,7 +272,7 @@ public class EditorTextModule implements XBApplicationModule {
             private TextFontOptionsPanel panel;
 
             @Override
-            public OptionsCapable<TextFontOptionsImpl> createPanel() {
+            public OptionsComponent<TextFontOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new TextFontOptionsPanel();
                     panel.setTextFontService(textFontService);
@@ -423,7 +423,7 @@ public class EditorTextModule implements XBApplicationModule {
             private TextAppearanceOptionsPanel panel;
 
             @Override
-            public OptionsCapable<TextAppearanceOptionsImpl> createPanel() {
+            public OptionsComponent<TextAppearanceOptionsImpl> createPanel() {
                 if (panel == null) {
                     panel = new TextAppearanceOptionsPanel();
                 }

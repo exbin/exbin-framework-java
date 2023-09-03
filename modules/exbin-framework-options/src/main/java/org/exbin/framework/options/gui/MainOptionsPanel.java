@@ -17,44 +17,37 @@ package org.exbin.framework.options.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import javax.swing.UIManager;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Main options panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapable<FrameworkOptionsImpl> {
+@ParametersAreNonnullByDefault
+public class MainOptionsPanel extends javax.swing.JPanel implements OptionsComponent<FrameworkOptionsImpl> {
 
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
-    private OptionsCapable extendedOptionsPanel = null;
+    private OptionsComponent extendedOptionsPanel = null;
 
-    private DefaultComboBoxModel<String> themesComboBoxModel;
-    private DefaultComboBoxModel<Locale> languageComboBoxModel;
     private final DefaultListCellRenderer languageComboBoxCellRenderer;
 
-    private List<String> themes;
-    private List<String> themeNames;
-    private List<Locale> languageLocales = null;
-
     public MainOptionsPanel() {
-        themesComboBoxModel = new DefaultComboBoxModel<>();
-        languageComboBoxModel = new DefaultComboBoxModel<>();
         languageComboBoxCellRenderer = new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -71,43 +64,6 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
         };
 
         initComponents();
-        init();
-    }
-
-    private void init() {
-        themes = new ArrayList<>();
-        themes.add("");
-        boolean extraCrossPlatformLAF = !"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName());
-        if (extraCrossPlatformLAF) {
-            themes.add(UIManager.getCrossPlatformLookAndFeelClassName());
-        }
-        themes.add("javax.swing.plaf.metal.MetalLookAndFeel");
-        themes.add("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-        themeNames = new ArrayList<>();
-        themeNames.add(resourceBundle.getString("defaultTheme"));
-        if (extraCrossPlatformLAF) {
-            themeNames.add(resourceBundle.getString("crossPlatformTheme"));
-        }
-        themeNames.add("Metal");
-        themeNames.add("Motif");
-        UIManager.LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
-        for (UIManager.LookAndFeelInfo lookAndFeelInfo : infos) {
-            if (!themes.contains(lookAndFeelInfo.getClassName())) {
-                themes.add(lookAndFeelInfo.getClassName());
-                themeNames.add(lookAndFeelInfo.getName());
-            }
-        }
-
-        themeNames.forEach((themeName) -> {
-            themesComboBoxModel.addElement(themeName);
-        });
-
-        languageLocales = new ArrayList<>();
-        languageLocales.add(Locale.ROOT);
-        languageLocales.add(new Locale("en", "US"));
-        languageLocales.forEach((language) -> {
-            languageComboBoxModel.addElement(language);
-        });
     }
 
     @Nonnull
@@ -122,14 +78,36 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
         languageComboBox.setSelectedItem(languageLocale);
 
         String laf = options.getLookAndFeel();
-        themeComboBox.setSelectedIndex(themes.indexOf(laf));
+        ComboBoxModel<String> model = visualThemeComboBox.getModel();
+        for (int i = 0; i < model.getSize(); i++) {
+            if (laf.equals(model.getElementAt(i))) {
+                visualThemeComboBox.setSelectedIndex(i);
+                break;
+            }
+        }
     }
 
     @Override
     public void saveToOptions(FrameworkOptionsImpl options) {
-        options.setLookAndFeel(themes.get(themeComboBox.getSelectedIndex()));
+        options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         Locale languageLocale = (Locale) languageComboBox.getSelectedItem();
         options.setLanguageLocale(languageLocale);
+    }
+
+    public void setLanguageLocales(List<Locale> languageLocales) {
+        DefaultComboBoxModel<Locale> languageComboBoxModel = new DefaultComboBoxModel<>();
+        languageLocales.forEach((language) -> {
+            languageComboBoxModel.addElement(language);
+        });
+        languageComboBox.setModel(languageComboBoxModel);
+    }
+
+    public void setThemeNames(List<String> themeNames) {
+        DefaultComboBoxModel<String> themesComboBoxModel = new DefaultComboBoxModel<>();
+        themeNames.forEach((themeName) -> {
+            themesComboBoxModel.addElement(themeName);
+        });
+        visualThemeComboBox.setModel(themesComboBoxModel);
     }
 
     /**
@@ -142,33 +120,70 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
     private void initComponents() {
 
         mainOptionsBasicPanel = new javax.swing.JPanel();
-        visualThemeLabel = new javax.swing.JLabel();
-        themeComboBox = new javax.swing.JComboBox<>();
-        languageComboBox = new javax.swing.JComboBox<>();
         languageLabel = new javax.swing.JLabel();
+        languageComboBox = new javax.swing.JComboBox<>();
+        visualThemeLabel = new javax.swing.JLabel();
+        visualThemeComboBox = new javax.swing.JComboBox<>();
+        renderingModeLabel = new javax.swing.JLabel();
+        renderingModeComboBox = new javax.swing.JComboBox<>();
+        fontAntialiasingLabel = new javax.swing.JLabel();
+        fontAntialiasingComboBox = new javax.swing.JComboBox<>();
+        guiScalingLabel = new javax.swing.JLabel();
+        guiScalingComboBox = new javax.swing.JComboBox<>();
+        guiScalingSpinner = new javax.swing.JSpinner();
         mainOptionsNotePanel = new javax.swing.JPanel();
         requireRestartLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
-        visualThemeLabel.setText(resourceBundle.getString("visualThemeLabel.text")); // NOI18N
+        languageLabel.setText(resourceBundle.getString("languageLabel.text") + " *"); // NOI18N
 
-        themeComboBox.setModel(themesComboBoxModel);
-        themeComboBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                themeComboBoxjComboBoxItemStateChanged(evt);
-            }
-        });
-
-        languageComboBox.setModel(languageComboBoxModel);
         languageComboBox.setRenderer(languageComboBoxCellRenderer);
         languageComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                languageComboBoxjComboBoxItemStateChanged(evt);
+                languageComboBoxItemStateChanged(evt);
             }
         });
 
-        languageLabel.setText(resourceBundle.getString("languageLabel.text")); // NOI18N
+        visualThemeLabel.setText(resourceBundle.getString("visualThemeLabel.text")); // NOI18N
+
+        visualThemeComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                visualThemeComboBoxjComboBoxItemStateChanged(evt);
+            }
+        });
+
+        renderingModeLabel.setText(resourceBundle.getString("renderingModeLabel.text") + " *"); // NOI18N
+
+        renderingModeComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                renderingModeComboBoxjComboBoxItemStateChanged(evt);
+            }
+        });
+
+        fontAntialiasingLabel.setText(resourceBundle.getString("fontAntialiasingLabel.text") + " *"); // NOI18N
+
+        fontAntialiasingComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                fontAntialiasingComboBoxjComboBoxItemStateChanged(evt);
+            }
+        });
+
+        guiScalingLabel.setText(resourceBundle.getString("guiScalingLabel.text") + " *"); // NOI18N
+
+        guiScalingComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                guiScalingComboBoxjComboBoxItemStateChanged(evt);
+            }
+        });
+        guiScalingComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guiScalingComboBoxActionPerformed(evt);
+            }
+        });
+
+        guiScalingSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0f, null, null, 1.0f));
+        guiScalingSpinner.setEnabled(false);
 
         javax.swing.GroupLayout mainOptionsBasicPanelLayout = new javax.swing.GroupLayout(mainOptionsBasicPanel);
         mainOptionsBasicPanel.setLayout(mainOptionsBasicPanelLayout);
@@ -177,23 +192,49 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
             .addGroup(mainOptionsBasicPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(mainOptionsBasicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(themeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 376, Short.MAX_VALUE)
-                    .addComponent(visualThemeLabel)
-                    .addComponent(languageLabel)
-                    .addComponent(languageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 376, Short.MAX_VALUE))
+                    .addComponent(visualThemeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 388, Short.MAX_VALUE)
+                    .addComponent(languageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 388, Short.MAX_VALUE)
+                    .addComponent(renderingModeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 388, Short.MAX_VALUE)
+                    .addComponent(fontAntialiasingComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 388, Short.MAX_VALUE)
+                    .addGroup(mainOptionsBasicPanelLayout.createSequentialGroup()
+                        .addGroup(mainOptionsBasicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(visualThemeLabel)
+                            .addComponent(languageLabel)
+                            .addComponent(renderingModeLabel)
+                            .addComponent(fontAntialiasingLabel)
+                            .addComponent(guiScalingLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(mainOptionsBasicPanelLayout.createSequentialGroup()
+                        .addComponent(guiScalingComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(guiScalingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         mainOptionsBasicPanelLayout.setVerticalGroup(
             mainOptionsBasicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainOptionsBasicPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(visualThemeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(themeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(languageLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(languageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(visualThemeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(visualThemeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(renderingModeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(renderingModeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fontAntialiasingLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fontAntialiasingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(guiScalingLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainOptionsBasicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(guiScalingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(guiScalingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -221,13 +262,29 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
         add(mainOptionsNotePanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void themeComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_themeComboBoxjComboBoxItemStateChanged
+    private void visualThemeComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_visualThemeComboBoxjComboBoxItemStateChanged
         setModified(true);
-    }//GEN-LAST:event_themeComboBoxjComboBoxItemStateChanged
+    }//GEN-LAST:event_visualThemeComboBoxjComboBoxItemStateChanged
 
-    private void languageComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_languageComboBoxjComboBoxItemStateChanged
+    private void renderingModeComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_renderingModeComboBoxjComboBoxItemStateChanged
         setModified(true);
-    }//GEN-LAST:event_languageComboBoxjComboBoxItemStateChanged
+    }//GEN-LAST:event_renderingModeComboBoxjComboBoxItemStateChanged
+
+    private void fontAntialiasingComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fontAntialiasingComboBoxjComboBoxItemStateChanged
+        setModified(true);
+    }//GEN-LAST:event_fontAntialiasingComboBoxjComboBoxItemStateChanged
+
+    private void guiScalingComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_guiScalingComboBoxjComboBoxItemStateChanged
+        setModified(true);
+    }//GEN-LAST:event_guiScalingComboBoxjComboBoxItemStateChanged
+
+    private void guiScalingComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guiScalingComboBoxActionPerformed
+        setModified(true);
+    }//GEN-LAST:event_guiScalingComboBoxActionPerformed
+
+    private void languageComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_languageComboBoxItemStateChanged
+        setModified(true);
+    }//GEN-LAST:event_languageComboBoxItemStateChanged
 
     /**
      * Test method for this panel.
@@ -239,12 +296,19 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> fontAntialiasingComboBox;
+    private javax.swing.JLabel fontAntialiasingLabel;
+    private javax.swing.JComboBox<String> guiScalingComboBox;
+    private javax.swing.JLabel guiScalingLabel;
+    private javax.swing.JSpinner guiScalingSpinner;
     private javax.swing.JComboBox<Locale> languageComboBox;
     private javax.swing.JLabel languageLabel;
     private javax.swing.JPanel mainOptionsBasicPanel;
     private javax.swing.JPanel mainOptionsNotePanel;
+    private javax.swing.JComboBox<String> renderingModeComboBox;
+    private javax.swing.JLabel renderingModeLabel;
     private javax.swing.JLabel requireRestartLabel;
-    private javax.swing.JComboBox<String> themeComboBox;
+    private javax.swing.JComboBox<String> visualThemeComboBox;
     private javax.swing.JLabel visualThemeLabel;
     // End of variables declaration//GEN-END:variables
 
@@ -259,7 +323,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
         optionsModifiedListener = listener;
     }
 
-    public void addExtendedPanel(OptionsCapable<?> optionsPanel) {
+    public void addExtendedPanel(OptionsComponent<?> optionsPanel) {
         if (extendedOptionsPanel != null) {
             remove((Component) extendedOptionsPanel);
         }
@@ -269,14 +333,12 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCapab
     }
 
     public void setLanguageLocales(Collection<Locale> locales) {
-        languageLocales.clear();
-        languageLocales.add(Locale.ROOT);
-        languageLocales.add(new Locale("en", "US"));
-        languageLocales.addAll(locales);
-        languageComboBoxModel.removeAllElements();
-        languageLocales.forEach((language) -> {
-            languageComboBoxModel.addElement(language);
-        });
-        languageComboBox.revalidate();
+        DefaultComboBoxModel<Locale> languageComboBoxModel = new DefaultComboBoxModel<>();
+        languageComboBoxModel.addElement(Locale.ROOT);
+        languageComboBoxModel.addElement(new Locale("en", "US"));
+        for (Locale locale : locales) {
+            languageComboBoxModel.addElement(locale);
+        }
+        languageComboBox.setModel(languageComboBoxModel);
     }
 }

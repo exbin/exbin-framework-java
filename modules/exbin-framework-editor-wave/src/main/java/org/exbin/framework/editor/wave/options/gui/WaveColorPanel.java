@@ -25,9 +25,9 @@ import javax.swing.JDialog;
 import org.exbin.framework.editor.wave.options.impl.WaveColorOptionsImpl;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.wave.service.WaveColorService;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Wave editor color selection panel.
@@ -35,7 +35,7 @@ import org.exbin.framework.editor.wave.service.WaveColorService;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable<WaveColorOptionsImpl> {
+public class WaveColorPanel extends javax.swing.JPanel implements OptionsComponent<WaveColorOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private WaveColorService waveColorService;
@@ -49,6 +49,12 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
         this.waveColorService = waveColorService;
         fillCurrentButton.setEnabled(true);
         fillDefaultButton.setEnabled(true);
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     @Override
@@ -92,12 +98,6 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCapable
         options.setWaveSelectionColor(getWaveSelectionColor().getRGB());
         options.setWaveCursorColor(getWaveCursorColor().getRGB());
         options.setWaveCursorWaveColor(getWaveCursorWaveColor().getRGB());
-    }
-
-    @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
     }
 
     @Nonnull

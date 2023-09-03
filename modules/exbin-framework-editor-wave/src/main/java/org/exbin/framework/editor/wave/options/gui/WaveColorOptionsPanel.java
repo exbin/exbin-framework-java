@@ -22,10 +22,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.wave.options.impl.WaveColorOptionsImpl;
 import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.editor.wave.service.WaveColorService;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Wave editor color selection panel.
@@ -33,7 +33,7 @@ import org.exbin.framework.editor.wave.service.WaveColorService;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class WaveColorOptionsPanel extends javax.swing.JPanel implements OptionsCapable<WaveColorOptionsImpl> {
+public class WaveColorOptionsPanel extends javax.swing.JPanel implements OptionsComponent<WaveColorOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(WaveColorOptionsPanel.class);

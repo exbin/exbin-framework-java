@@ -18,7 +18,7 @@ package org.exbin.framework.options;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.api.Preferences;
-import org.exbin.framework.options.api.OptionsCapable;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Interface for application options panels management.
@@ -33,21 +33,21 @@ public interface OptionsManagement {
      *
      * @param optionsPanel options panel
      */
-    void addOptionsPanel(OptionsCapable optionsPanel);
+    void addOptionsPanel(OptionsComponent optionsPanel);
 
     /**
      * Extends main options panel.
      *
      * @param optionsPanel options panel
      */
-    void extendMainOptionsPanel(OptionsCapable optionsPanel);
+    void extendMainOptionsPanel(OptionsComponent optionsPanel);
 
     /**
      * Extends appearance options panel.
      *
      * @param optionsPanel options panel
      */
-    void extendAppearanceOptionsPanel(OptionsCapable optionsPanel);
+    void extendAppearanceOptionsPanel(OptionsComponent optionsPanel);
 
     /**
      * Gets preferences.

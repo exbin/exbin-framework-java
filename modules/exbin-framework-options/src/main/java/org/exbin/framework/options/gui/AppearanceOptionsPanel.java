@@ -22,10 +22,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.options.impl.AppearanceOptionsImpl;
 import org.exbin.framework.utils.ComponentResourceProvider;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Toolbar appearance options panel.
@@ -33,11 +33,11 @@ import org.exbin.framework.utils.ComponentResourceProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable<AppearanceOptionsImpl>, ComponentResourceProvider {
+public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsComponent<AppearanceOptionsImpl>, ComponentResourceProvider {
 
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
-    private OptionsCapable extendedPanel = null;
+    private OptionsComponent extendedPanel = null;
 
     public AppearanceOptionsPanel() {
         initComponents();
@@ -168,7 +168,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
         optionsModifiedListener = listener;
     }
 
-    public void addExtendedPanel(OptionsCapable<?> optionsPanel) {
+    public void addExtendedPanel(OptionsComponent<?> optionsPanel) {
         if (extendedPanel != null) {
             remove((Component) extendedPanel);
         }

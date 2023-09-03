@@ -19,10 +19,10 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.update.options.CheckForUpdateOptions;
 import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Application update options panel.
@@ -30,7 +30,7 @@ import org.exbin.framework.utils.WindowUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements OptionsCapable<CheckForUpdateOptions> {
+public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements OptionsComponent<CheckForUpdateOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ApplicationUpdateOptionsPanel.class);

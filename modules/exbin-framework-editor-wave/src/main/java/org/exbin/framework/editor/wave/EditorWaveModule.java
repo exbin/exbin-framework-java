@@ -59,11 +59,11 @@ import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.editor.wave.service.WaveColorService;
 import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * XBUP audio editor module.
@@ -253,7 +253,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
         optionsModule.addOptionsPage(new DefaultOptionsPage<WaveColorOptionsImpl>() {
             @Override
-            public OptionsCapable<WaveColorOptionsImpl> createPanel() {
+            public OptionsComponent<WaveColorOptionsImpl> createPanel() {
                 WaveColorOptionsPanel panel = new WaveColorOptionsPanel();
                 panel.setWaveColorService(waveColorService);
                 return panel;
@@ -302,7 +302,7 @@ public class EditorWaveModule implements XBApplicationModule {
         });
         optionsModule.addOptionsPage(new DefaultOptionsPage<AudioDevicesOptionsImpl>() {
             @Override
-            public OptionsCapable<AudioDevicesOptionsImpl> createPanel() {
+            public OptionsComponent<AudioDevicesOptionsImpl> createPanel() {
                 return new AudioDevicesOptionsPanel();
             }
 

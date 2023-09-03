@@ -33,7 +33,6 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.gui.OptionsTreePanel;
 import org.exbin.framework.utils.LanguageUtils;
@@ -42,15 +41,14 @@ import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.options.options.impl.AppearanceOptionsImpl;
 import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
 import org.exbin.framework.options.gui.AppearanceOptionsPanel;
-import org.exbin.framework.options.gui.MainOptionsPanel;
 import org.exbin.framework.options.preferences.AppearancePreferences;
 import org.exbin.framework.utils.ComponentResourceProvider;
-import org.exbin.framework.preferences.FrameworkPreferences;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.options.action.OptionsAction;
 import org.exbin.framework.options.options.AppearanceOptions;
 import org.exbin.framework.utils.DesktopUtils;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Implementation of framework options module.
@@ -65,6 +63,7 @@ public class OptionsModule implements OptionsModuleApi {
 
     private OptionsAction optionsAction;
     private final List<OptionsPageRecord> optionsPages = new ArrayList<>();
+    private MainOptionsManager mainOptionsManager;
     private OptionsPage<?> mainOptionsExtPage = null;
     private OptionsPage<?> appearanceOptionsExtPage = null;
 
@@ -85,52 +84,14 @@ public class OptionsModule implements OptionsModuleApi {
         if (resourceBundle == null) {
             resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsModule.class);
 
-            OptionsPage<FrameworkOptionsImpl> mainOptionsPage = new DefaultOptionsPage<FrameworkOptionsImpl>() {
-                @Nonnull
-                @Override
-                public OptionsCapable<FrameworkOptionsImpl> createPanel() {
-                    MainOptionsPanel optionsPanel = new MainOptionsPanel();
-                    optionsPanel.setLanguageLocales(application.getLanguageLocales());
-                    return optionsPanel;
-                }
-
-                @Nonnull
-                @Override
-                public ResourceBundle getResourceBundle() {
-                    return LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
-                }
-
-                @Nonnull
-                @Override
-                public FrameworkOptionsImpl createOptions() {
-                    return new FrameworkOptionsImpl();
-                }
-
-                @Override
-                public void loadFromPreferences(Preferences preferences, FrameworkOptionsImpl options) {
-                    FrameworkPreferences prefs = new FrameworkPreferences(preferences);
-                    options.loadFromPreferences(prefs);
-                }
-
-                @Override
-                public void saveToPreferences(Preferences preferences, FrameworkOptionsImpl options) {
-                    FrameworkPreferences prefs = new FrameworkPreferences(preferences);
-                    options.saveToParameters(prefs);
-                }
-
-                @Override
-                public void applyPreferencesChanges(FrameworkOptionsImpl options) {
-                    String selectedTheme = options.getLookAndFeel();
-                    application.applyLookAndFeel(selectedTheme);
-                }
-            };
+            OptionsPage<FrameworkOptionsImpl> mainOptionsPage = getMainOptionsManager().getMainOptionsPage();
             optionsPages.add(new OptionsPageRecord(null, mainOptionsPage));
 
             OptionsPage<AppearanceOptionsImpl> appearanceOptionsPage;
             appearanceOptionsPage = new DefaultOptionsPage<AppearanceOptionsImpl>() {
                 @Nonnull
                 @Override
-                public OptionsCapable<AppearanceOptionsImpl> createPanel() {
+                public OptionsComponent<AppearanceOptionsImpl> createPanel() {
                     return new AppearanceOptionsPanel();
                 }
 
@@ -203,6 +164,15 @@ public class OptionsModule implements OptionsModuleApi {
         }
 
         return optionsAction;
+    }
+    
+    @Nonnull
+    public MainOptionsManager getMainOptionsManager() {
+        if (mainOptionsManager == null) {
+            mainOptionsManager = new MainOptionsManager();
+            mainOptionsManager.setApplication(application);
+        }
+        return mainOptionsManager;
     }
 
     @Override
@@ -308,3 +278,4 @@ public class OptionsModule implements OptionsModuleApi {
         }
     }
 }
+

@@ -25,7 +25,7 @@ import org.exbin.framework.utils.ComponentResourceProvider;
  * @param <T> options data class
  */
 @ParametersAreNonnullByDefault
-public interface OptionsCapable<T extends OptionsData> extends ComponentResourceProvider {
+public interface OptionsComponent<T extends OptionsData> extends ComponentResourceProvider {
 
     /**
      * Loads configuration from given options data.

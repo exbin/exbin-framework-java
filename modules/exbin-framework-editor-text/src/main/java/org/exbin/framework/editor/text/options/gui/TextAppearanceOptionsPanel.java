@@ -20,15 +20,15 @@ import javax.annotation.Nonnull;
 import org.exbin.framework.editor.text.options.impl.TextAppearanceOptionsImpl;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsModifiedListener;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Text encoding options panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsCapable<TextAppearanceOptionsImpl> {
+public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextAppearanceOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);

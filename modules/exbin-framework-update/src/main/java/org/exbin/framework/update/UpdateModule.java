@@ -29,7 +29,6 @@ import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.update.api.UpdateModuleApi;
 import org.exbin.framework.update.options.CheckForUpdateOptions;
 import org.exbin.framework.update.options.gui.ApplicationUpdateOptionsPanel;
@@ -46,6 +45,7 @@ import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.update.action.CheckForUpdateAction;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.api.XBApplicationBundle;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Implementation of framework check update module.
@@ -102,7 +102,7 @@ public class UpdateModule implements UpdateModuleApi {
         OptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(OptionsModuleApi.class);
         optionsModule.addOptionsPage(new DefaultOptionsPage<CheckForUpdateOptions>() {
             @Override
-            public OptionsCapable<CheckForUpdateOptions> createPanel() {
+            public OptionsComponent<CheckForUpdateOptions> createPanel() {
                 return new ApplicationUpdateOptionsPanel();
             }
 

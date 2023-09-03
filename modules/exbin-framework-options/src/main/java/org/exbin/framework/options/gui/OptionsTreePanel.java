@@ -36,7 +36,6 @@ import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsPathItem;
@@ -45,6 +44,7 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Panel for application options and preferences setting.
@@ -374,7 +374,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
     private static class PageRecord<T extends OptionsData> {
 
         private final OptionsPage<T> page;
-        private final OptionsCapable<T> panel;
+        private final OptionsComponent<T> panel;
 
         PageRecord(OptionsPage<T> page) {
             this.page = page;

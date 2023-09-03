@@ -25,9 +25,9 @@ import javax.swing.JDialog;
 import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.options.api.OptionsCapable;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextColorService;
+import org.exbin.framework.options.api.OptionsComponent;
 
 /**
  * Text color selection panel.
@@ -35,7 +35,7 @@ import org.exbin.framework.editor.text.service.TextColorService;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorPanel extends javax.swing.JPanel implements OptionsCapable<TextColorOptionsImpl> {
+public class TextColorPanel extends javax.swing.JPanel implements OptionsComponent<TextColorOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorPanel.class);
