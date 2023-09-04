@@ -17,12 +17,15 @@ package org.exbin.framework.options.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.util.Collection;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -44,6 +47,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
     private OptionsComponent extendedOptionsPanel = null;
+    private String defaultLocaleName = "";
 
     private final DefaultListCellRenderer languageComboBoxCellRenderer;
 
@@ -54,7 +58,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
                 DefaultListCellRenderer retValue = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Locale) {
                     if (value.equals(Locale.ROOT)) {
-                        retValue.setText("<" + resourceBundle.getString("defaultLanguage") + ">");
+                        retValue.setText(defaultLocaleName);
                     } else {
                         retValue.setText(((Locale) value).getDisplayName((Locale) value));
                     }
@@ -102,12 +106,87 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         languageComboBox.setModel(languageComboBoxModel);
     }
 
-    public void setThemeNames(List<String> themeNames) {
-        DefaultComboBoxModel<String> themesComboBoxModel = new DefaultComboBoxModel<>();
-        themeNames.forEach((themeName) -> {
-            themesComboBoxModel.addElement(themeName);
+    public void setDefaultLocaleName(String defaultLocaleName) {
+        this.defaultLocaleName = defaultLocaleName;
+    }
+
+    public void setThemes(List<String> themeKeys, List<String> themeNames) {
+        DefaultComboBoxModel<String> themeComboBoxModel = new DefaultComboBoxModel<>();
+        themeKeys.forEach((themeKey) -> {
+            themeComboBoxModel.addElement(themeKey);
         });
-        visualThemeComboBox.setModel(themesComboBoxModel);
+        visualThemeComboBox.setModel(themeComboBoxModel);
+        visualThemeComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Nonnull
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, @Nullable Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (index >= 0) {
+                    return super.getListCellRendererComponent(list, themeNames.get(index), index, isSelected, cellHasFocus);                
+                }
+                int selectedIndex = visualThemeComboBox.getSelectedIndex();
+                return super.getListCellRendererComponent(list, selectedIndex >= 0 ? themeNames.get(selectedIndex) : value, index, isSelected, cellHasFocus);
+            }
+        });
+    }
+
+    public void setRenderingModes(List<String> renderingModeKeys, List<String> renderingModeNames) {
+        DefaultComboBoxModel<String> renderingModeComboBoxModel = new DefaultComboBoxModel<>();
+        renderingModeKeys.forEach((renderingModeKey) -> {
+            renderingModeComboBoxModel.addElement(renderingModeKey);
+        });
+        renderingModeComboBox.setModel(renderingModeComboBoxModel);
+        renderingModeComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Nonnull
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, @Nullable Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (index >= 0) {
+                    return super.getListCellRendererComponent(list, renderingModeNames.get(index), index, isSelected, cellHasFocus);                
+                }
+                int selectedIndex = renderingModeComboBox.getSelectedIndex();
+                return super.getListCellRendererComponent(list, selectedIndex >= 0 ? renderingModeNames.get(selectedIndex) : value, index, isSelected, cellHasFocus);
+            }
+        });
+    }
+
+    public void setFontAntialiasings(List<String> fontAntialiasingKeys, List<String> fontAntialiasingNames) {
+        DefaultComboBoxModel<String> fontAntialiasingComboBoxModel = new DefaultComboBoxModel<>();
+        fontAntialiasingKeys.forEach((fontAntialiasingKey) -> {
+            fontAntialiasingComboBoxModel.addElement(fontAntialiasingKey);
+        });
+        fontAntialiasingComboBox.setModel(fontAntialiasingComboBoxModel);
+        fontAntialiasingComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Nonnull
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, @Nullable Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (index >= 0) {
+                    return super.getListCellRendererComponent(list, fontAntialiasingNames.get(index), index, isSelected, cellHasFocus);                
+                }
+                int selectedIndex = fontAntialiasingComboBox.getSelectedIndex();
+                return super.getListCellRendererComponent(list, selectedIndex >= 0 ? fontAntialiasingNames.get(selectedIndex) : value, index, isSelected, cellHasFocus);
+            }
+        });
+    }
+
+    public void setGuiScalings(List<String> guiScalingKeys, List<String> guiScalingNames) {
+        DefaultComboBoxModel<String> guiScalingComboBoxModel = new DefaultComboBoxModel<>();
+        guiScalingKeys.forEach((guiScalingKey) -> {
+            guiScalingComboBoxModel.addElement(guiScalingKey);
+        });
+        guiScalingComboBox.setModel(guiScalingComboBoxModel);
+        guiScalingComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Nonnull
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, @Nullable Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (index >= 0) {
+                    return super.getListCellRendererComponent(list, guiScalingNames.get(index), index, isSelected, cellHasFocus);                
+                }
+                int selectedIndex = guiScalingComboBox.getSelectedIndex();
+                return super.getListCellRendererComponent(list, selectedIndex >= 0 ? guiScalingNames.get(selectedIndex) : value, index, isSelected, cellHasFocus);
+            }
+        });
+        guiScalingComboBox.addItemListener((ItemEvent e) -> {
+            guiScalingSpinner.setEnabled(guiScalingComboBox.getSelectedIndex() == guiScalingKeys.size() - 1);
+        });
     }
 
     /**
@@ -263,27 +342,27 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     }// </editor-fold>//GEN-END:initComponents
 
     private void visualThemeComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_visualThemeComboBoxjComboBoxItemStateChanged
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_visualThemeComboBoxjComboBoxItemStateChanged
 
     private void renderingModeComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_renderingModeComboBoxjComboBoxItemStateChanged
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_renderingModeComboBoxjComboBoxItemStateChanged
 
     private void fontAntialiasingComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_fontAntialiasingComboBoxjComboBoxItemStateChanged
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_fontAntialiasingComboBoxjComboBoxItemStateChanged
 
     private void guiScalingComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_guiScalingComboBoxjComboBoxItemStateChanged
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_guiScalingComboBoxjComboBoxItemStateChanged
 
     private void guiScalingComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guiScalingComboBoxActionPerformed
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_guiScalingComboBoxActionPerformed
 
     private void languageComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_languageComboBoxItemStateChanged
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_languageComboBoxItemStateChanged
 
     /**
@@ -312,7 +391,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     private javax.swing.JLabel visualThemeLabel;
     // End of variables declaration//GEN-END:variables
 
-    private void setModified(boolean modified) {
+    private void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }
@@ -332,13 +411,15 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         extendedOptionsPanel.setOptionsModifiedListener(optionsModifiedListener);
     }
 
-    public void setLanguageLocales(Collection<Locale> locales) {
-        DefaultComboBoxModel<Locale> languageComboBoxModel = new DefaultComboBoxModel<>();
-        languageComboBoxModel.addElement(Locale.ROOT);
-        languageComboBoxModel.addElement(new Locale("en", "US"));
-        for (Locale locale : locales) {
-            languageComboBoxModel.addElement(locale);
+    @Immutable
+    public static class KeyText {
+
+        private final String key;
+        private final String text;
+
+        public KeyText(String key, String text) {
+            this.key = key;
+            this.text = text;
         }
-        languageComboBox.setModel(languageComboBoxModel);
     }
 }

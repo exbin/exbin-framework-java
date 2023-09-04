@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.UIManager;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
@@ -31,6 +30,7 @@ import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.options.gui.MainOptionsPanel;
 import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
 import org.exbin.framework.preferences.FrameworkPreferences;
+import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.LanguageUtils;
 
 /**
@@ -50,6 +50,12 @@ public class MainOptionsManager {
     private List<String> themes;
     private List<String> themeNames;
     private List<Locale> languageLocales = null;
+    private List<GuiRenderingMethod> renderingMethods;
+    private List<String> renderingMethodNames;
+    private List<GuiFontAntialiasing> fontAntialiasings;
+    private List<String> fontAntialiasingNames;
+    private List<GuiScaling> guiScalings;
+    private List<String> guiScalingNames;
 
     public MainOptionsManager() {
     }
@@ -58,7 +64,6 @@ public class MainOptionsManager {
     public MainOptionsPanel getMainOptionsPanel() {
         if (mainOptionsPanel == null) {
             mainOptionsPanel = new MainOptionsPanel();
-            mainOptionsPanel.setLanguageLocales(application.getLanguageLocales());
 
             themes = new ArrayList<>();
             themes.add("");
@@ -69,9 +74,9 @@ public class MainOptionsManager {
             themes.add("javax.swing.plaf.metal.MetalLookAndFeel");
             themes.add("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             themeNames = new ArrayList<>();
-            themeNames.add(resourceBundle.getString("defaultTheme"));
+            themeNames.add(resourceBundle.getString("theme.defaultTheme"));
             if (extraCrossPlatformLAF) {
-                themeNames.add(resourceBundle.getString("crossPlatformTheme"));
+                themeNames.add(resourceBundle.getString("theme.crossPlatformTheme"));
             }
             themeNames.add("Metal");
             themeNames.add("Motif");
@@ -83,12 +88,61 @@ public class MainOptionsManager {
                 }
             }
 
-            mainOptionsPanel.setThemeNames(themeNames);
+            mainOptionsPanel.setThemes(themes, themeNames);
 
             languageLocales = new ArrayList<>();
             languageLocales.add(Locale.ROOT);
             languageLocales.add(new Locale("en", "US"));
+            languageLocales.addAll(application.getLanguageLocales());
+            mainOptionsPanel.setDefaultLocaleName("<" + resourceBundle.getString("locale.defaultLanguage") + ">");
             mainOptionsPanel.setLanguageLocales(languageLocales);
+
+            renderingMethods = GuiRenderingMethod.getAvailableMethods();
+            List<String> renderingMethodKeys = new ArrayList<>();
+            renderingMethodNames = new ArrayList<>();
+            DesktopUtils.DesktopOs desktopOs = DesktopUtils.detectBasicOs();
+            for (GuiRenderingMethod renderingMethod : renderingMethods) {
+                renderingMethodKeys.add(renderingMethod.getPropertyValue());
+                if (renderingMethod == GuiRenderingMethod.DEFAULT) {
+                    renderingMethodNames.add(resourceBundle.getString("renderingMethod.default"));
+                } else {
+                    if (renderingMethod == GuiRenderingMethod.SOFTWARE && desktopOs == DesktopUtils.DesktopOs.WINDOWS) {
+                        renderingMethodNames.add(resourceBundle.getString("renderingMethod.software.windows"));
+                    } else {
+                        String propertyValue = renderingMethod.getPropertyValue();
+                        renderingMethodNames.add(resourceBundle.getString("renderingMethod." + propertyValue));
+                    }
+                }
+            }
+            mainOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
+
+            fontAntialiasings = GuiFontAntialiasing.getAvailable();
+            List<String> fontAntialiasingKeys = new ArrayList<>();
+            fontAntialiasingNames = new ArrayList<>();
+            for (GuiFontAntialiasing fontAntialiasing : fontAntialiasings) {
+                fontAntialiasingKeys.add(fontAntialiasing.getPropertyValue());
+                if (fontAntialiasing == GuiFontAntialiasing.DEFAULT) {
+                    fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing.default"));
+                } else {
+                    String propertyValue = fontAntialiasing.getPropertyValue();
+                    fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing." + propertyValue));
+                }
+            }
+            mainOptionsPanel.setFontAntialiasings(fontAntialiasingKeys, fontAntialiasingNames);
+
+            guiScalings = GuiScaling.getAvailable();
+            List<String> guiScalingKeys = new ArrayList<>();
+            guiScalingNames = new ArrayList<>();
+            for (GuiScaling guiScaling : guiScalings) {
+                guiScalingKeys.add(guiScaling.getPropertyValue());
+                if (guiScaling == GuiScaling.DEFAULT) {
+                    guiScalingNames.add(resourceBundle.getString("guiScaling.default"));
+                } else {
+                    String propertyValue = guiScaling.getPropertyValue();
+                    guiScalingNames.add(resourceBundle.getString("guiScaling." + propertyValue));
+                }
+            }
+            mainOptionsPanel.setGuiScalings(guiScalingKeys, guiScalingNames);
         }
         return mainOptionsPanel;
     }
