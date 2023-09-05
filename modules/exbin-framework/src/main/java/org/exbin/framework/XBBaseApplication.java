@@ -96,7 +96,7 @@ public class XBBaseApplication implements XBApplication {
             applyLookAndFeel(targetLaf);
         }
     }
-    
+
     public void run(Runnable runnable) {
         ClassLoader classLoader = moduleRepository.getContextClassLoader();
         Thread runThread = new Thread(runnable);
@@ -149,6 +149,42 @@ public class XBBaseApplication implements XBApplication {
 
     private void initByPreferences() {
         FrameworkPreferences frameworkParameters = new FrameworkPreferences(appPreferences);
+
+        // Setup rendering first
+        String renderingMode = frameworkParameters.getRenderingMode();
+        if ("software".equals(renderingMode)) {
+            System.setProperty("sun.java2d.noddraw", "true");
+        } else if ("directdraw".equals(renderingMode)) {
+            System.setProperty("sun.java2d.d3d", "false");
+        } else if ("hw_scale".equals(renderingMode)) {
+            System.setProperty("sun.java2d.d3d", "true");
+            System.setProperty("sun.java2d.ddforcevram", "true");
+            System.setProperty("sun.java2d.translaccel", "true");
+            System.setProperty("sun.java2d.ddscale", "true");
+        } else if ("opengl".equals(renderingMode)) {
+            System.setProperty("sun.java2d.opengl", "true");
+        } else if ("xrender".equals(renderingMode)) {
+            System.setProperty("sun.java2d.xrender", "true");
+        } else if ("metal".equals(renderingMode)) {
+            System.setProperty("sun.java2d.metal", "true");
+        }
+
+        String guiScaling = frameworkParameters.getGuiScaling();
+        if (!guiScaling.isEmpty()) {
+            if ("custom".equals(guiScaling)) {
+                float guiScalingRate = frameworkParameters.getGuiScalingRate();
+                String scalingRateText = guiScalingRate == Math.floor(guiScalingRate) ? String.format("%.0f", guiScalingRate) : String.valueOf(guiScalingRate);
+                System.setProperty("sun.java2d.uiScale.enabled", "true");
+                System.setProperty("sun.java2d.uiScale", scalingRateText);
+            } else {
+                System.setProperty("sun.java2d.uiScale.enabled", guiScaling);
+            }
+        }
+
+        String fontAntialiasing = frameworkParameters.getFontAntialiasing();
+        if (!fontAntialiasing.isEmpty()) {
+            System.setProperty("awt.useSystemAAFontSettings", fontAntialiasing);
+        }
 
         // Switching language
         Locale locale = frameworkParameters.getLocale();

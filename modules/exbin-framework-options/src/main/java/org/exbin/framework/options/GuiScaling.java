@@ -35,8 +35,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public enum GuiScaling {
 
     DEFAULT(""),
-    DISABLED("disabled"),
-    ENABLED("enabled"),
+    DISABLED("false"),
+    ENABLED("true"),
     CUSTOM("custom");
 
     private final String propertyValue;

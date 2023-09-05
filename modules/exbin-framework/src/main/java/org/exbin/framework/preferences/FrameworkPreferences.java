@@ -33,6 +33,10 @@ public class FrameworkPreferences {
     public static final String PREFERENCES_LOCALE_COUNTRY = "locale.country";
     public static final String PREFERENCES_LOCALE_VARIANT = "locale.variant";
     public static final String PREFERENCES_LOCALE_TAG = "locale.tag";
+    public static final String PREFERENCES_RENDERING_MODE = "rendering.renderingMode";
+    public static final String PREFERENCES_RENDERING_SCALING = "rendering.guiScaling";
+    public static final String PREFERENCES_RENDERING_SCALING_RATE = "rendering.guiScalingRate";
+    public static final String PREFERENCES_RENDERING_FONT_ANTIALIASING = "rendering.fontAntialising";
 
     private final Preferences preferences;
 
@@ -113,5 +117,40 @@ public class FrameworkPreferences {
 
     public void setLookAndFeel(String lookAndFeel) {
         preferences.put(PREFERENCES_LOOK_AND_FEEL, lookAndFeel);
+    }
+
+    @Nonnull
+    public String getRenderingMode() {
+        return preferences.get(PREFERENCES_RENDERING_MODE, "");
+    }
+
+    public void setRenderingMode(String renderingMode) {
+        preferences.put(PREFERENCES_RENDERING_MODE, renderingMode);
+    }
+
+    @Nonnull
+    public String getGuiScaling() {
+        return preferences.get(PREFERENCES_RENDERING_SCALING, "");
+    }
+
+    public void setGuiScaling(String guiScaling) {
+        preferences.put(PREFERENCES_RENDERING_SCALING, guiScaling);
+    }
+
+    public float getGuiScalingRate() {
+        return preferences.getFloat(PREFERENCES_RENDERING_SCALING_RATE, 0f);
+    }
+
+    public void setGuiScalingRate(float guiScalingRate) {
+        preferences.putFloat(PREFERENCES_RENDERING_SCALING_RATE, guiScalingRate);
+    }
+
+    @Nonnull
+    public String getFontAntialiasing() {
+        return preferences.get(PREFERENCES_RENDERING_FONT_ANTIALIASING, "");
+    }
+
+    public void setFontAntialiasing(String fontAntialiasing) {
+        preferences.put(PREFERENCES_RENDERING_FONT_ANTIALIASING, fontAntialiasing);
     }
 }

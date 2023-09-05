@@ -18,14 +18,12 @@ package org.exbin.framework.options.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.concurrent.Immutable;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -81,14 +79,19 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         Locale languageLocale = options.getLanguageLocale();
         languageComboBox.setSelectedItem(languageLocale);
 
-        String laf = options.getLookAndFeel();
-        ComboBoxModel<String> model = visualThemeComboBox.getModel();
+        visualThemeComboBox.setSelectedIndex(findMatchingElement(visualThemeComboBox.getModel(), options.getLookAndFeel()));
+        renderingModeComboBox.setSelectedIndex(findMatchingElement(renderingModeComboBox.getModel(), options.getRenderingMode()));
+        guiScalingComboBox.setSelectedIndex(findMatchingElement(guiScalingComboBox.getModel(), options.getGuiScaling()));
+        guiScalingSpinner.setValue(options.getGuiScalingRate());
+    }
+    
+    private static int findMatchingElement(ComboBoxModel<String> model, String value) {
         for (int i = 0; i < model.getSize(); i++) {
-            if (laf.equals(model.getElementAt(i))) {
-                visualThemeComboBox.setSelectedIndex(i);
-                break;
+            if (value.equals(model.getElementAt(i))) {
+                return i;
             }
         }
+        return -1;
     }
 
     @Override
@@ -96,6 +99,10 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         Locale languageLocale = (Locale) languageComboBox.getSelectedItem();
         options.setLanguageLocale(languageLocale);
+        options.setRenderingMode((String) renderingModeComboBox.getSelectedItem());
+        options.setGuiScaling((String) guiScalingComboBox.getSelectedItem());
+        options.setGuiScalingRate((Float) guiScalingSpinner.getValue());
+        options.setFontAntialiasing((String) fontAntialiasingComboBox.getSelectedItem());
     }
 
     public void setLanguageLocales(List<Locale> languageLocales) {
@@ -409,17 +416,5 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         extendedOptionsPanel = optionsPanel;
         add((Component) extendedOptionsPanel, BorderLayout.CENTER);
         extendedOptionsPanel.setOptionsModifiedListener(optionsModifiedListener);
-    }
-
-    @Immutable
-    public static class KeyText {
-
-        private final String key;
-        private final String text;
-
-        public KeyText(String key, String text) {
-            this.key = key;
-            this.text = text;
-        }
     }
 }

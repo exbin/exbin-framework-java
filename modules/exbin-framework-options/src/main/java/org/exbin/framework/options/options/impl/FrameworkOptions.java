@@ -30,10 +30,29 @@ public interface FrameworkOptions {
     @Nonnull
     Locale getLanguageLocale();
 
+    void setLanguageLocale(Locale languageLocale);
+
     @Nonnull
     String getLookAndFeel();
 
-    void setLanguageLocale(Locale languageLocale);
-
     void setLookAndFeel(String lookAndFeel);
+
+    @Nonnull
+    String getRenderingMode();
+
+    void setRenderingMode(String renderingMode);
+
+    @Nonnull
+    String getGuiScaling();
+
+    void setGuiScaling(String guiScaling);
+
+    float getGuiScalingRate();
+
+    void setGuiScalingRate(float guiScalingRate);
+
+    @Nonnull
+    String getFontAntialiasing();
+
+    void setFontAntialiasing(String fontAntialiasing);
 }
