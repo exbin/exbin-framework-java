@@ -17,6 +17,7 @@ package org.exbin.framework.api;
 
 import org.exbin.xbup.plugin.LookAndFeelApplier;
 import java.awt.Image;
+import java.io.File;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -48,6 +49,31 @@ public interface XBApplication extends XBModuleHandler {
      */
     @Nonnull
     Preferences getAppPreferences();
+
+    /**
+     * Directory used for application execution.
+     *
+     * By default directory where app was started or directory provided by other
+     * means.
+     *
+     * @return directory file
+     */
+    @Nonnull
+    File getAppDirectory();
+
+    /**
+     * Sets directory used for application execution.
+     *
+     * @param appDirectory directory file
+     */
+    void setAppDirectory(File appDirectory);
+
+    /**
+     * Sets directory used for application execution by class instance.
+     *
+     * @param classInstance directory file
+     */
+    void setAppDirectory(Class classInstance);
 
     /**
      * Gets modules repository.

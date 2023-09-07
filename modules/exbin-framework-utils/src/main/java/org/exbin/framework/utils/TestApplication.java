@@ -16,6 +16,7 @@
 package org.exbin.framework.utils;
 
 import java.awt.Image;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URL;
@@ -286,4 +287,20 @@ public class TestApplication implements XBApplication {
             return Collections.emptyEnumeration();
         }
     };
+
+    @Nonnull
+    @Override
+    public File getAppDirectory() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setAppDirectory(File appDirectory) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setAppDirectory(Class classInstance) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -18,9 +18,11 @@ package org.exbin.framework;
 import org.exbin.framework.preferences.PreferencesWrapper;
 import org.exbin.framework.preferences.FilePreferencesFactory;
 import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,9 +39,9 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
-import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import jdk.nashorn.internal.objects.NativeString;
 import org.exbin.xbup.plugin.LookAndFeelApplier;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
@@ -64,8 +66,8 @@ public class XBBaseApplication implements XBApplication {
     private final List<URI> plugins = new ArrayList<>();
     private final Map<Locale, ClassLoader> languagePlugins = new HashMap<>();
     private final Map<String, LookAndFeelApplier> lafPlugins = new HashMap<>();
-    private LookAndFeel defaultLaf = null;
     private String targetLaf = null;
+    private File appDirectory = new File("");
 
     public XBBaseApplication() {
         moduleRepository = new XBDefaultApplicationModuleRepository(this);
@@ -147,6 +149,42 @@ public class XBBaseApplication implements XBApplication {
         initByPreferences();
     }
 
+    @Nonnull
+    @Override
+    public File getAppDirectory() {
+        return appDirectory;
+    }
+
+    @Override
+    public void setAppDirectory(File appDirectory) {
+        this.appDirectory = appDirectory;
+    }
+
+    @Override
+    public void setAppDirectory(Class classInstance) {
+        URL classResourceUrl = classInstance.getResource(classInstance.getSimpleName() + ".class");
+        if (!"jar".equals(classResourceUrl.getProtocol())) {
+            return;
+        }
+
+        try {
+            URL appDirectoryUrl = classInstance.getProtectionDomain().getCodeSource().getLocation();
+            appDirectory = new File(appDirectoryUrl.toURI()).getParentFile();
+            return;
+        } catch (final SecurityException e) {
+            // ignore: Cannot access protection domain.
+        } catch (final NullPointerException e) {
+            // ignore: Protection domain or code source is null.
+        } catch (URISyntaxException ex) {
+            // ignore: Invalid URL
+        }
+
+        String appDirectoryPath = classResourceUrl.toString();
+        appDirectoryPath = appDirectoryPath.substring(4, appDirectoryPath.indexOf("!"));
+
+        appDirectory = new File(appDirectoryPath).getParentFile();
+    }
+
     private void initByPreferences() {
         FrameworkPreferences frameworkParameters = new FrameworkPreferences(appPreferences);
 
@@ -192,7 +230,6 @@ public class XBBaseApplication implements XBApplication {
             Locale.setDefault(locale);
         }
 
-        defaultLaf = UIManager.getLookAndFeel();
         targetLaf = frameworkParameters.getLookAndFeel();
     }
 
