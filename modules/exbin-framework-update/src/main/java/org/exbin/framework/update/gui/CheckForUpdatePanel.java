@@ -245,7 +245,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
     private javax.swing.JLabel statusTextLabel;
     // End of variables declaration//GEN-END:variables
 
-    private void setCheckUpdatesResult(CheckForUpdateService.CheckForUpdateResult result) {
+    public void setCheckUpdatesResult(CheckForUpdateService.CheckForUpdateResult result) {
         if (result == null) {
             return;
         }

@@ -37,17 +37,17 @@ public class VersionNumbers {
 
     public void versionFromString(String version) {
         int minorPos = version.indexOf(".");
-        major = Integer.valueOf(version.substring(0, minorPos));
+        major = Integer.parseInt(version.substring(0, minorPos));
         int releasePos = version.indexOf(".", minorPos + 1);
-        minor = Integer.valueOf(version.substring(minorPos + 1, releasePos));
+        minor = Integer.parseInt(version.substring(minorPos + 1, releasePos));
         int patchPos = version.indexOf(".", releasePos + 1);
         if (patchPos > 0) {
             format = VersionNumbersFormat.MAJOR_MINOR_RELEASE_PATCH;
-            release = Integer.valueOf(version.substring(releasePos + 1, patchPos));
-            patch = Integer.valueOf(version.substring(patchPos + 1));
+            release = Integer.parseInt(version.substring(releasePos + 1, patchPos));
+            patch = Integer.parseInt(version.substring(patchPos + 1));
         } else {
             format = VersionNumbersFormat.MAJOR_MINOR_PATCH;
-            patch = Integer.valueOf(version.substring(releasePos + 1));
+            patch = Integer.parseInt(version.substring(releasePos + 1));
         }
     }
 

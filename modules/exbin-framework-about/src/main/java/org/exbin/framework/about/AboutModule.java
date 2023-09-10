@@ -16,7 +16,6 @@
 package org.exbin.framework.about;
 
 import com.formdev.flatlaf.extras.FlatDesktop;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;

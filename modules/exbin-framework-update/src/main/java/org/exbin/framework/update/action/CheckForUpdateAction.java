@@ -138,8 +138,8 @@ public class CheckForUpdateAction extends AbstractAction {
         }
 
         getCheckForUpdateService();
-        final CheckForUpdateService.CheckForUpdateResult checkForUpdates = checkForUpdateService.checkForUpdate();
-        if (checkForUpdates == CheckForUpdateService.CheckForUpdateResult.UPDATE_FOUND) {
+        final CheckForUpdateService.CheckForUpdateResult checkForUpdateResult = checkForUpdateService.checkForUpdate();
+        if (checkForUpdateResult == CheckForUpdateService.CheckForUpdateResult.UPDATE_FOUND) {
             FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
             CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
             CloseControlPanel controlPanel = new CloseControlPanel();
@@ -148,6 +148,7 @@ public class CheckForUpdateAction extends AbstractAction {
             frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
             controlPanel.setHandler(dialog::close);
             checkForUpdatePanel.setCheckForUpdateService(checkForUpdateService);
+            checkForUpdatePanel.setCheckUpdatesResult(checkForUpdateResult);
             dialog.showCentered(frame);
             dialog.dispose();
         }

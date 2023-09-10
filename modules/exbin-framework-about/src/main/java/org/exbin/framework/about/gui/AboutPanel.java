@@ -20,9 +20,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
-import java.awt.font.TextAttribute;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -30,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
@@ -58,6 +55,7 @@ public class AboutPanel extends javax.swing.JPanel {
     private boolean darkMode = false;
     private final AboutModulesPanel aboutModulesPanel = new AboutModulesPanel();
     private final AboutAuthorsPanel aboutAuthorsPanel = new AboutAuthorsPanel();
+    private String appHomepageLink;
 
     public AboutPanel() {
         initComponents();
@@ -71,9 +69,6 @@ public class AboutPanel extends javax.swing.JPanel {
             appTitleLabel.setForeground(Color.WHITE);
             appDescLabel.setForeground(Color.WHITE);
         }
-
-        HashMap<TextAttribute, Object> attribs = new HashMap<>();
-        attribs.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);
 
         // Fill system properties tab
         environmentTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -193,11 +188,7 @@ public class AboutPanel extends javax.swing.JPanel {
         homepageLabel.setFont(homepageLabel.getFont().deriveFont(homepageLabel.getFont().getStyle() | java.awt.Font.BOLD));
         homepageLabel.setText(resourceBundle.getString("homepageLabel.text")); // NOI18N
 
-        appHomepageLabel.setForeground(java.awt.Color.blue);
         appHomepageLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        HashMap<TextAttribute, Object> attribs = new HashMap<TextAttribute, Object>();
-        attribs.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);
-        appHomepageLabel.setFont(appHomepageLabel.getFont().deriveFont(attribs));
         appHomepageLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 appHomepageLabelMouseClicked(evt);
@@ -332,8 +323,7 @@ public class AboutPanel extends javax.swing.JPanel {
 
     private void appHomepageLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_appHomepageLabelMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON1 && !evt.isPopupTrigger()) {
-            String targetURL = ((JLabel) evt.getSource()).getText();
-            DesktopUtils.openDesktopURL(targetURL);
+            DesktopUtils.openDesktopURL(appHomepageLink);
         }
     }//GEN-LAST:event_appHomepageLabelMouseClicked
 
@@ -405,7 +395,8 @@ public class AboutPanel extends javax.swing.JPanel {
         versionTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_VERSION));
         vendorTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_VENDOR));
         licenseTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_LICENSE));
-        appHomepageLabel.setText(appBundle.getString(XBApplicationBundle.APPLICATION_HOMEPAGE));
+        appHomepageLink = appBundle.getString(XBApplicationBundle.APPLICATION_HOMEPAGE);
+        appHomepageLabel.setText("<html><a href=\"\">" + appHomepageLink + "</a></html>");
         if (appBundle.containsKey(XBApplicationBundle.APPLICATION_ABOUT_IMAGE)) {
             String aboutImagePath = appBundle.getString(XBApplicationBundle.APPLICATION_ABOUT_IMAGE);
             imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(aboutImagePath)));
@@ -423,14 +414,14 @@ public class AboutPanel extends javax.swing.JPanel {
                     DefaultPopupMenu.getInstance().appendLinkMenu(this, new LinkActionsHandler() {
                         @Override
                         public void performCopyLink() {
-                            String targetURL = appHomepageLabel.getText();
+                            String targetURL = appHomepageLink;
                             StringSelection stringSelection = new StringSelection(targetURL);
                             ClipboardUtils.getClipboard().setContents(stringSelection, stringSelection);
                         }
 
                         @Override
                         public void performOpenLink() {
-                            String targetURL = appHomepageLabel.getText();
+                            String targetURL = appHomepageLink;
                             DesktopUtils.openDesktopURL(targetURL);
                         }
 
