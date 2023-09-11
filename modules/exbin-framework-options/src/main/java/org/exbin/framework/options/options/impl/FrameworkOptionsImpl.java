@@ -35,6 +35,8 @@ public class FrameworkOptionsImpl implements OptionsData, FrameworkOptions {
     private String guiScaling;
     private float guiScalingRate;
     private String fontAntialiasing;
+    private boolean useScreenMenuBar;
+    private String macOsAppearance;
 
     @Nonnull
     @Override
@@ -101,6 +103,27 @@ public class FrameworkOptionsImpl implements OptionsData, FrameworkOptions {
         this.fontAntialiasing = fontAntialiasing;
     }
 
+    @Override
+    public boolean isUseScreenMenuBar() {
+        return useScreenMenuBar;
+    }
+
+    @Override
+    public void setUseScreenMenuBar(boolean useScreenMenuBar) {
+        this.useScreenMenuBar = useScreenMenuBar;
+    }
+
+    @Nonnull
+    @Override
+    public String getMacOsAppearance() {
+        return macOsAppearance;
+    }
+
+    @Override
+    public void setMacOsAppearance(String macOsAppearance) {
+        this.macOsAppearance = macOsAppearance;
+    }
+
     public void loadFromPreferences(FrameworkPreferences preferences) {
         lookAndFeel = preferences.getLookAndFeel();
         languageLocale = preferences.getLocale();
@@ -108,6 +131,8 @@ public class FrameworkOptionsImpl implements OptionsData, FrameworkOptions {
         guiScaling = preferences.getGuiScaling();
         guiScalingRate = preferences.getGuiScalingRate();
         fontAntialiasing = preferences.getFontAntialiasing();
+        useScreenMenuBar = preferences.isUseScreenMenuBar();
+        macOsAppearance = preferences.getMacOsAppearance();
     }
 
     public void saveToParameters(FrameworkPreferences preferences) {
@@ -117,5 +142,7 @@ public class FrameworkOptionsImpl implements OptionsData, FrameworkOptions {
         preferences.setGuiScaling(guiScaling);
         preferences.setGuiScalingRate(guiScalingRate);
         preferences.setFontAntialiasing(fontAntialiasing);
+        preferences.setUseScreenMenuBar(useScreenMenuBar);
+        preferences.setMacOsAppearance(macOsAppearance);
     }
 }

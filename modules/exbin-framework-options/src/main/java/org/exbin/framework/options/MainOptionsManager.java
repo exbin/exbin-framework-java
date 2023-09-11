@@ -56,6 +56,8 @@ public class MainOptionsManager {
     private List<String> fontAntialiasingNames;
     private List<GuiScaling> guiScalings;
     private List<String> guiScalingNames;
+    private List<GuiMacOsAppearance> guiMacOsAppearances;
+    private List<String> guiMacOsAppearanceNames;
 
     public MainOptionsManager() {
     }
@@ -117,10 +119,10 @@ public class MainOptionsManager {
             mainOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
 
             fontAntialiasings = GuiFontAntialiasing.getAvailable();
-            List<String> fontAntialiasingKeys = new ArrayList<>();
+            List<String> macOsAppearancesKeys = new ArrayList<>();
             fontAntialiasingNames = new ArrayList<>();
             for (GuiFontAntialiasing fontAntialiasing : fontAntialiasings) {
-                fontAntialiasingKeys.add(fontAntialiasing.getPropertyValue());
+                macOsAppearancesKeys.add(fontAntialiasing.getPropertyValue());
                 if (fontAntialiasing == GuiFontAntialiasing.DEFAULT) {
                     fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing.default"));
                 } else {
@@ -128,7 +130,7 @@ public class MainOptionsManager {
                     fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing." + propertyValue));
                 }
             }
-            mainOptionsPanel.setFontAntialiasings(fontAntialiasingKeys, fontAntialiasingNames);
+            mainOptionsPanel.setFontAntialiasings(macOsAppearancesKeys, fontAntialiasingNames);
 
             guiScalings = GuiScaling.getAvailable();
             List<String> guiScalingKeys = new ArrayList<>();
@@ -143,6 +145,22 @@ public class MainOptionsManager {
                 }
             }
             mainOptionsPanel.setGuiScalings(guiScalingKeys, guiScalingNames);
+
+            if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+                guiMacOsAppearances = GuiMacOsAppearance.getAvailable();
+                List<String> guiMacOsAppearancesKeys = new ArrayList<>();
+                guiMacOsAppearanceNames = new ArrayList<>();
+                for (GuiFontAntialiasing fontAntialiasing : fontAntialiasings) {
+                    macOsAppearancesKeys.add(fontAntialiasing.getPropertyValue());
+                    if (fontAntialiasing == GuiFontAntialiasing.DEFAULT) {
+                        guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances.default"));
+                    } else {
+                        String propertyValue = fontAntialiasing.getPropertyValue();
+                        guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances." + propertyValue));
+                    }
+                }
+                mainOptionsPanel.setMacOsAppearances(guiMacOsAppearancesKeys, guiMacOsAppearanceNames);
+            }
         }
         return mainOptionsPanel;
     }

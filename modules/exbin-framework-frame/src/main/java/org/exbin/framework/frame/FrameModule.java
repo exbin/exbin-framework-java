@@ -73,9 +73,6 @@ public class FrameModule implements FrameModuleApi {
     private FrameActions frameActions;
 
     public FrameModule() {
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
-        }
     }
 
     @Override

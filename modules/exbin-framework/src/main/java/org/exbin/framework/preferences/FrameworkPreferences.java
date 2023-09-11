@@ -37,6 +37,8 @@ public class FrameworkPreferences {
     public static final String PREFERENCES_RENDERING_SCALING = "rendering.guiScaling";
     public static final String PREFERENCES_RENDERING_SCALING_RATE = "rendering.guiScalingRate";
     public static final String PREFERENCES_RENDERING_FONT_ANTIALIASING = "rendering.fontAntialising";
+    public static final String PREFERENCES_RENDERING_USE_SCREEN_MENU_BAR = "rendering.useScreenMenuBar";
+    public static final String PREFERENCES_RENDERING_MACOS_APPEARANCE = "rendering.macOsAppearance";
 
     private final Preferences preferences;
 
@@ -138,7 +140,7 @@ public class FrameworkPreferences {
     }
 
     public float getGuiScalingRate() {
-        return preferences.getFloat(PREFERENCES_RENDERING_SCALING_RATE, 0f);
+        return preferences.getFloat(PREFERENCES_RENDERING_SCALING_RATE, 1f);
     }
 
     public void setGuiScalingRate(float guiScalingRate) {
@@ -152,5 +154,22 @@ public class FrameworkPreferences {
 
     public void setFontAntialiasing(String fontAntialiasing) {
         preferences.put(PREFERENCES_RENDERING_FONT_ANTIALIASING, fontAntialiasing);
+    }
+
+    public boolean isUseScreenMenuBar() {
+        return preferences.getBoolean(PREFERENCES_RENDERING_USE_SCREEN_MENU_BAR, true);
+    }
+
+    public void setUseScreenMenuBar(boolean use) {
+        preferences.putBoolean(PREFERENCES_RENDERING_USE_SCREEN_MENU_BAR, use);
+    }
+
+    @Nonnull
+    public String getMacOsAppearance() {
+        return preferences.get(PREFERENCES_RENDERING_MACOS_APPEARANCE, "");
+    }
+
+    public void setMacOsAppearance(String appearance) {
+        preferences.put(PREFERENCES_RENDERING_MACOS_APPEARANCE, appearance);
     }
 }

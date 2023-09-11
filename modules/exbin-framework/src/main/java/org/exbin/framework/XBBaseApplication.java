@@ -41,7 +41,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import jdk.nashorn.internal.objects.NativeString;
 import org.exbin.xbup.plugin.LookAndFeelApplier;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
@@ -49,6 +48,7 @@ import org.exbin.framework.api.XBApplicationBundle;
 import org.exbin.framework.api.XBApplicationModuleRepository;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.preferences.FrameworkPreferences;
+import org.exbin.framework.utils.DesktopUtils;
 
 /**
  * Base application class.
@@ -222,6 +222,22 @@ public class XBBaseApplication implements XBApplication {
         String fontAntialiasing = frameworkParameters.getFontAntialiasing();
         if (!fontAntialiasing.isEmpty()) {
             System.setProperty("awt.useSystemAAFontSettings", fontAntialiasing);
+        }
+
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+            boolean useScreenMenuBar = frameworkParameters.isUseScreenMenuBar();
+            if (useScreenMenuBar) {
+                System.setProperty("apple.laf.useScreenMenuBar", "true");
+            }
+
+            String macOsAppearance = frameworkParameters.getMacOsAppearance();
+            if ("light".equals(macOsAppearance)) {
+                System.setProperty("apple.awt.application.appearance", "NSAppearanceNameAqua");
+            } else if ("dark".equals(macOsAppearance)) {
+                System.setProperty("apple.awt.application.appearance", "NSAppearanceNameDarkAqua");
+            } else if ("system".equals(macOsAppearance)) {
+                System.setProperty("apple.awt.application.appearance", "system");
+            }
         }
 
         // Switching language

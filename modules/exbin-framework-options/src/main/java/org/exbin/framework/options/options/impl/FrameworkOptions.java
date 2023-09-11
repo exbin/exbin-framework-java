@@ -55,4 +55,13 @@ public interface FrameworkOptions {
     String getFontAntialiasing();
 
     void setFontAntialiasing(String fontAntialiasing);
+
+    boolean isUseScreenMenuBar();
+
+    void setUseScreenMenuBar(boolean useScreenMenuBar);
+
+    @Nonnull
+    String getMacOsAppearance();
+
+    void setMacOsAppearance(String macOsAppearance);
 }
