@@ -113,7 +113,11 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
                 }
                 if (caption != null) {
                     currentOptionsPanel = optionPages.get(caption);
-                    optionsAreaScrollPane.setViewportView((Component) currentOptionsPanel.panel);
+                    if (currentOptionsPanel != null) {
+                        optionsAreaScrollPane.setViewportView((Component) currentOptionsPanel.panel);
+                    } else {
+                        optionsAreaScrollPane.setViewportView(null);
+                    }
                 } else {
                     currentOptionsPanel = null;
                     optionsAreaScrollPane.setViewportView(null);
