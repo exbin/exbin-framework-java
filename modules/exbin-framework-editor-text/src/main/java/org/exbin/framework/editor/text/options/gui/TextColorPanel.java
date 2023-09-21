@@ -220,7 +220,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        selectTextColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectTextColorButton.setText(resourceBundle.getString("selectButton.text")); // NOI18N
         selectTextColorButton.setName("selectTextColorButton"); // NOI18N
         selectTextColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -242,7 +242,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        selectTextBackgroundColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectTextBackgroundColorButton.setText(resourceBundle.getString("selectButton.text")); // NOI18N
         selectTextBackgroundColorButton.setName("selectTextBackgroundColorButton"); // NOI18N
         selectTextBackgroundColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -264,7 +264,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        selectSelectionTextColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectSelectionTextColorButton.setText(resourceBundle.getString("selectButton.text")); // NOI18N
         selectSelectionTextColorButton.setName("selectSelectionTextColorButton"); // NOI18N
         selectSelectionTextColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -286,7 +286,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        selectSelectionBackgroundColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectSelectionBackgroundColorButton.setText(resourceBundle.getString("selectButton.text")); // NOI18N
         selectSelectionBackgroundColorButton.setName("selectSelectionBackgroundColorButton"); // NOI18N
         selectSelectionBackgroundColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -308,7 +308,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        selectFoundBackgroundColorButton.setText(resourceBundle.getString("TextColorPanel.selectButton.text")); // NOI18N
+        selectFoundBackgroundColorButton.setText(resourceBundle.getString("selectButton.text")); // NOI18N
         selectFoundBackgroundColorButton.setName("selectFoundBackgroundColorButton"); // NOI18N
         selectFoundBackgroundColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -316,19 +316,19 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
             }
         });
 
-        textColorLabel.setText(resourceBundle.getString("TextColorPanel.textColorLabel.text")); // NOI18N
+        textColorLabel.setText(resourceBundle.getString("textColorLabel.text")); // NOI18N
         textColorLabel.setName("textColorLabel"); // NOI18N
 
-        textBackgroundColorLabel.setText(resourceBundle.getString("TextColorPanel.textBackgroundColorLabel.text")); // NOI18N
+        textBackgroundColorLabel.setText(resourceBundle.getString("textBackgroundColorLabel.text")); // NOI18N
         textBackgroundColorLabel.setName("textBackgroundColorLabel"); // NOI18N
 
-        selectionTextColorLabel.setText(resourceBundle.getString("TextColorPanel.selectionTextColorLabel.text")); // NOI18N
+        selectionTextColorLabel.setText(resourceBundle.getString("selectionTextColorLabel.text")); // NOI18N
         selectionTextColorLabel.setName("selectionTextColorLabel"); // NOI18N
 
-        selectionBackgroundColorLabel.setText(resourceBundle.getString("TextColorPanel.selectionBackgroundColorLabel.text")); // NOI18N
+        selectionBackgroundColorLabel.setText(resourceBundle.getString("selectionBackgroundColorLabel.text")); // NOI18N
         selectionBackgroundColorLabel.setName("selectionBackgroundColorLabel"); // NOI18N
 
-        foundBackgroundColorLabel.setText(resourceBundle.getString("TextColorPanel.foundBackgroundColorLabel.text")); // NOI18N
+        foundBackgroundColorLabel.setText(resourceBundle.getString("foundBackgroundColorLabel.text")); // NOI18N
         foundBackgroundColorLabel.setName("foundBackgroundColorLabel"); // NOI18N
 
         textColorsPreviewPanel.setName("textColorsPreviewPanel"); // NOI18N
@@ -336,7 +336,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
 
         normalTextLabel.setBackground(new java.awt.Color(255, 255, 255));
         normalTextLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        normalTextLabel.setText(resourceBundle.getString("TextColorPanel.normalTextLabel.text")); // NOI18N
+        normalTextLabel.setText(resourceBundle.getString("normalTextLabel.text")); // NOI18N
         normalTextLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         normalTextLabel.setName("normalTextLabel"); // NOI18N
         normalTextLabel.setOpaque(true);
@@ -344,7 +344,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
 
         selectedTextLabel.setBackground(new java.awt.Color(255, 255, 255));
         selectedTextLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        selectedTextLabel.setText(resourceBundle.getString("TextColorPanel.selectedTextLabel.text")); // NOI18N
+        selectedTextLabel.setText(resourceBundle.getString("selectedTextLabel.text")); // NOI18N
         selectedTextLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         selectedTextLabel.setName("selectedTextLabel"); // NOI18N
         selectedTextLabel.setOpaque(true);
@@ -352,7 +352,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
 
         foundTextLabel.setBackground(new java.awt.Color(255, 255, 255));
         foundTextLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        foundTextLabel.setText(resourceBundle.getString("TextColorPanel.foundTextLabel.text")); // NOI18N
+        foundTextLabel.setText(resourceBundle.getString("foundTextLabel.text")); // NOI18N
         foundTextLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         foundTextLabel.setName("foundTextLabel"); // NOI18N
         foundTextLabel.setOpaque(true);
@@ -360,7 +360,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
 
         controlButtonsPanel.setName("controlButtonsPanel"); // NOI18N
 
-        fillCurrentButton.setText(resourceBundle.getString("TextColorPanel.fillCurrentButton.text")); // NOI18N
+        fillCurrentButton.setText(resourceBundle.getString("fillCurrentButton.text")); // NOI18N
         fillCurrentButton.setEnabled(false);
         fillCurrentButton.setName("fillCurrentButton"); // NOI18N
         fillCurrentButton.addActionListener(new java.awt.event.ActionListener() {
@@ -369,7 +369,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
             }
         });
 
-        fillDefaultButton.setText(resourceBundle.getString("TextColorPanel.fillDefaultButton.text")); // NOI18N
+        fillDefaultButton.setText(resourceBundle.getString("fillDefaultButton.text")); // NOI18N
         fillDefaultButton.setEnabled(false);
         fillDefaultButton.setName("fillDefaultButton"); // NOI18N
         fillDefaultButton.addActionListener(new java.awt.event.ActionListener() {

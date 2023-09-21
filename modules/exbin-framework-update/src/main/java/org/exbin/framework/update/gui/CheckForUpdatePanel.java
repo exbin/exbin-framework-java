@@ -57,6 +57,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
 
         URL downloadUrl = checkForUpdateService.getDownloadUrl();
         downloadButton.setEnabled(downloadUrl != null);
+        recheckButton.setEnabled(true);
 
         setVersionNumbers(checkForUpdateService.getCurrentVersion());
         VersionNumbers updateVersion = checkForUpdateService.getUpdateVersion();

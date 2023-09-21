@@ -51,16 +51,16 @@ public class TextStatusPanel extends javax.swing.JPanel implements TextPositionS
         documentCursorPositionTextField.setEditable(false);
         documentCursorPositionTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         documentCursorPositionTextField.setText("1:1"); // NOI18N
-        documentCursorPositionTextField.setToolTipText(resourceBundle.getString("TextStatusPanel.documentCursorPositionTextField.toolTipText")); // NOI18N
+        documentCursorPositionTextField.setToolTipText(resourceBundle.getString("documentCursorPositionTextField.toolTipText")); // NOI18N
         documentCursorPositionTextField.setName("documentCursorPositionTextField"); // NOI18N
 
-        encodingLabel.setText(resourceBundle.getString("TextStatusPanel.encodingLabel.text")); // NOI18N
+        encodingLabel.setText(resourceBundle.getString("encodingLabel.text")); // NOI18N
         encodingLabel.setName("encodingLabel"); // NOI18N
 
         documentEncodingTextField.setEditable(false);
         documentEncodingTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         documentEncodingTextField.setText("UTF-8"); // NOI18N
-        documentEncodingTextField.setToolTipText(resourceBundle.getString("TextStatusPanel.documentEncodingTextField.toolTipText")); // NOI18N
+        documentEncodingTextField.setToolTipText(resourceBundle.getString("documentEncodingTextField.toolTipText")); // NOI18N
         documentEncodingTextField.setName("documentEncodingTextField"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

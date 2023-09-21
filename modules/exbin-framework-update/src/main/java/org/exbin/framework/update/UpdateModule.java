@@ -32,14 +32,10 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.update.api.UpdateModuleApi;
 import org.exbin.framework.update.options.CheckForUpdateOptions;
 import org.exbin.framework.update.options.gui.ApplicationUpdateOptionsPanel;
-import org.exbin.framework.update.gui.CheckForUpdatePanel;
 import org.exbin.framework.update.preferences.CheckForUpdatePreferences;
 import org.exbin.framework.update.service.CheckForUpdateService;
 import org.exbin.framework.update.service.impl.CheckForUpdateServiceImpl;
 import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.gui.CloseControlPanel;
 import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.update.action.CheckForUpdateAction;
@@ -198,26 +194,6 @@ public class UpdateModule implements UpdateModuleApi {
 
     @Override
     public void checkOnStart(Frame frame) {
-        CheckForUpdatePreferences checkForUpdateParameters = new CheckForUpdatePreferences(application.getAppPreferences());
-        boolean checkOnStart = checkForUpdateParameters.isShouldCheckForUpdate();
-
-        if (!checkOnStart) {
-            return;
-        }
-
-        getCheckForUpdateService();
-        final CheckForUpdateService.CheckForUpdateResult checkForUpdates = checkForUpdateService.checkForUpdate();
-        if (checkForUpdates == CheckForUpdateService.CheckForUpdateResult.UPDATE_FOUND) {
-            FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
-            CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
-            CloseControlPanel controlPanel = new CloseControlPanel();
-            final DialogWrapper dialog = frameModule.createDialog(checkForUpdatePanel, controlPanel);
-            WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
-            frameModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
-            controlPanel.setHandler(dialog::close);
-            checkForUpdatePanel.setCheckForUpdateService(checkForUpdateService);
-            dialog.showCentered(frame);
-            dialog.dispose();
-        }
+        checkUpdateAction.checkOnStart(frame);
     }
 }
