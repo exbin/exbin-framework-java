@@ -29,12 +29,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.plugin.LookAndFeelApplier;
+import org.exbin.framework.api.LanguageProvider;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.api.XBApplicationModule;
@@ -171,7 +171,12 @@ public class TestApplication implements XBApplication {
     }
 
     @Override
-    public Set<Locale> getLanguageLocales() {
+    public void registerLanguagePlugin(LanguageProvider languageProvider) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<LanguageProvider> getLanguagePlugins() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -255,7 +260,7 @@ public class TestApplication implements XBApplication {
             @Override
             public ClassLoader getContextClassLoader() {
                 throw new UnsupportedOperationException("Not supported yet.");
-            }    
+            }
         };
     }
 

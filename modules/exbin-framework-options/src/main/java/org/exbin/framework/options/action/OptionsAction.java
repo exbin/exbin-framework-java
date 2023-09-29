@@ -58,7 +58,6 @@ public class OptionsAction extends AbstractAction {
         FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
         OptionsTreePanel optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
         optionsPagesProvider.registerOptionsPages(optionsTreePanel);
-        optionsTreePanel.setLanguageLocales(application.getLanguageLocales());
         Dimension preferredSize = optionsTreePanel.getPreferredSize();
         optionsTreePanel.setPreferredSize(new Dimension(preferredSize.width + 200, preferredSize.height + 200));
         optionsTreePanel.setApplication(application);

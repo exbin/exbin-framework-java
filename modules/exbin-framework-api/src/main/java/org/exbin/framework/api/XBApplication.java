@@ -18,11 +18,12 @@ package org.exbin.framework.api;
 import org.exbin.xbup.plugin.LookAndFeelApplier;
 import java.awt.Image;
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.plugin.XBModuleHandler;
 
@@ -102,12 +103,20 @@ public interface XBApplication extends XBModuleHandler {
     void registerLanguagePlugin(Locale locale, ClassLoader classLoader);
 
     /**
+     * Registers locale and class loader which should be used to load resources
+     * for it.
+     *
+     * @param languageProvider language provider
+     */
+    void registerLanguagePlugin(LanguageProvider languageProvider);
+
+    /**
      * Returns set of registered locales.
      *
      * @return set of locales
      */
     @Nonnull
-    Set<Locale> getLanguageLocales();
+    List<LanguageProvider> getLanguagePlugins();
 
     /**
      * Registers look & feel from plugin.

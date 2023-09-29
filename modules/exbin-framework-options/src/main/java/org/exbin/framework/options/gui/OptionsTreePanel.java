@@ -18,10 +18,8 @@ package org.exbin.framework.options.gui;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -340,10 +338,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
     public void setApplication(XBApplication application) {
         this.application = application;
-    }
-
-    public void setLanguageLocales(Collection<Locale> locales) {
-        // TODO (mainOptionsPage.createOptions()).setLanguageLocales(locales);
     }
 
     @Override

@@ -19,15 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
+import org.exbin.framework.api.LanguageProvider;
 import org.exbin.framework.api.Preferences;
 import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.options.gui.MainOptionsPanel;
+import org.exbin.framework.options.model.LanguageRecord;
 import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
 import org.exbin.framework.preferences.FrameworkPreferences;
 import org.exbin.framework.utils.DesktopUtils;
@@ -49,7 +54,7 @@ public class MainOptionsManager {
 
     private List<String> themes;
     private List<String> themeNames;
-    private List<Locale> languageLocales = null;
+    private List<LanguageRecord> languageLocales = null;
     private List<GuiRenderingMethod> renderingMethods;
     private List<String> renderingMethodNames;
     private List<GuiFontAntialiasing> fontAntialiasings;
@@ -93,9 +98,17 @@ public class MainOptionsManager {
             mainOptionsPanel.setThemes(themes, themeNames);
 
             languageLocales = new ArrayList<>();
-            languageLocales.add(Locale.ROOT);
-            languageLocales.add(new Locale("en", "US"));
-            languageLocales.addAll(application.getLanguageLocales());
+            languageLocales.add(new LanguageRecord(Locale.ROOT, null));
+            languageLocales.add(new LanguageRecord(new Locale("en", "US"), new ImageIcon(getClass().getResource(resourceBundle.getString("locale.englishFlag")))));
+            for (LanguageProvider languageProvider : application.getLanguagePlugins()) {
+                ImageIcon flag = null;
+                try {
+                    flag = languageProvider.getFlag().orElse(null);
+                } catch (Throwable ex) {
+                    Logger.getLogger(MainOptionsManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                languageLocales.add(new LanguageRecord(languageProvider.getLocale(), flag, null));
+            }
             mainOptionsPanel.setDefaultLocaleName("<" + resourceBundle.getString("locale.defaultLanguage") + ">");
             mainOptionsPanel.setLanguageLocales(languageLocales);
 

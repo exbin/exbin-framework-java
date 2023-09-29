@@ -15,6 +15,7 @@
  */
 package org.exbin.framework;
 
+import org.exbin.framework.api.LanguageProvider;
 import org.exbin.framework.preferences.PreferencesWrapper;
 import org.exbin.framework.preferences.FilePreferencesFactory;
 import java.awt.Image;
@@ -31,7 +32,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -64,7 +64,7 @@ public class XBBaseApplication implements XBApplication {
 
     private final XBDefaultApplicationModuleRepository moduleRepository;
     private final List<URI> plugins = new ArrayList<>();
-    private final Map<Locale, ClassLoader> languagePlugins = new HashMap<>();
+    private final List<LanguageProvider> languagePlugins = new ArrayList<>();
     private final Map<String, LookAndFeelApplier> lafPlugins = new HashMap<>();
     private String targetLaf = null;
     private File appDirectory = new File("");
@@ -80,10 +80,15 @@ public class XBBaseApplication implements XBApplication {
         priorityList.add(new Locale.LanguageRange(defaultLocale.toLanguageTag()));
         priorityList.add(new Locale.LanguageRange(defaultLocale.getLanguage()));
 
-        List<Locale> matchingLocales = Locale.filter(priorityList, languagePlugins.keySet());
+        List<Locale> availableLocales = new ArrayList<>();
+        for (LanguageProvider languagePlugin : languagePlugins) {
+            availableLocales.add(languagePlugin.getLocale());
+        }
+        List<Locale> matchingLocales = Locale.filter(priorityList, availableLocales);
         if (!matchingLocales.isEmpty()) {
             Locale localeMatch = matchingLocales.get(0);
-            ClassLoader languageClassLoader = languagePlugins.get(localeMatch);
+            LanguageProvider languagePlugin = languagePlugins.get(0);
+            ClassLoader languageClassLoader = languagePlugin.getClassLoader().orElse(null);
             if (languageClassLoader != null) {
                 LanguageUtils.setLanguageClassLoader(languageClassLoader);
                 try {
@@ -331,7 +336,30 @@ public class XBBaseApplication implements XBApplication {
 
     @Override
     public void registerLanguagePlugin(Locale locale, ClassLoader classLoader) {
-        languagePlugins.put(locale, classLoader);
+        languagePlugins.add(new LanguageProvider() {
+            @Nonnull
+            @Override
+            public Locale getLocale() {
+                return locale;
+            }
+
+            @Nonnull
+            @Override
+            public Optional<ClassLoader> getClassLoader() {
+                return Optional.of(classLoader);
+            }
+
+            @Nonnull
+            @Override
+            public Optional<ImageIcon> getFlag() {
+                return Optional.empty();
+            }
+        });
+    }
+
+    @Override
+    public void registerLanguagePlugin(LanguageProvider languageProvider) {
+        languagePlugins.add(languageProvider);
     }
 
     @Override
@@ -341,7 +369,7 @@ public class XBBaseApplication implements XBApplication {
 
     @Nonnull
     @Override
-    public Set<Locale> getLanguageLocales() {
-        return languagePlugins.keySet();
+    public List<LanguageProvider> getLanguagePlugins() {
+        return languagePlugins;
     }
 }

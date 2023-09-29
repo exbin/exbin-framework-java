@@ -27,12 +27,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
 import javax.swing.JList;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.options.model.LanguageRecord;
 import org.exbin.framework.utils.DesktopUtils;
 
 /**
@@ -48,25 +50,13 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     private OptionsComponent extendedOptionsPanel = null;
     private String defaultLocaleName = "";
 
-    private final DefaultListCellRenderer languageComboBoxCellRenderer;
-
     public MainOptionsPanel() {
-        languageComboBoxCellRenderer = new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                DefaultListCellRenderer retValue = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Locale) {
-                    if (value.equals(Locale.ROOT)) {
-                        retValue.setText(defaultLocaleName);
-                    } else {
-                        retValue.setText(((Locale) value).getDisplayName((Locale) value));
-                    }
-                }
-                return retValue;
-            }
-        };
+        init();
+    }
 
+    private void init() {
         initComponents();
+
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
             mainOptionsBasicPanel.add(macOsOptionsPanel, BorderLayout.SOUTH);
         }
@@ -115,12 +105,29 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         }
     }
 
-    public void setLanguageLocales(List<Locale> languageLocales) {
-        DefaultComboBoxModel<Locale> languageComboBoxModel = new DefaultComboBoxModel<>();
+    public void setLanguageLocales(List<LanguageRecord> languageLocales) {
+        DefaultComboBoxModel<LanguageRecord> languageComboBoxModel = new DefaultComboBoxModel<>();
         languageLocales.forEach((language) -> {
             languageComboBoxModel.addElement(language);
         });
         languageComboBox.setModel(languageComboBoxModel);
+        languageComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                DefaultListCellRenderer renderer = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                LanguageRecord record = (LanguageRecord) value;
+                String languageText = record.getText();
+                if ("".equals(languageText)) {
+                    languageText = defaultLocaleName;
+                }
+                renderer.setText(languageText);
+                ImageIcon flag = record.getFlag();
+                if (flag != null) {
+                    renderer.setIcon(flag);
+                }
+                return renderer;
+            }
+        });
     }
 
     public void setDefaultLocaleName(String defaultLocaleName) {
@@ -290,7 +297,6 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
 
         languageLabel.setText(resourceBundle.getString("languageLabel.text") + " *"); // NOI18N
 
-        languageComboBox.setRenderer(languageComboBoxCellRenderer);
         languageComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 languageComboBoxItemStateChanged(evt);
@@ -464,7 +470,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     private javax.swing.JComboBox<String> guiScalingComboBox;
     private javax.swing.JLabel guiScalingLabel;
     private javax.swing.JSpinner guiScalingSpinner;
-    private javax.swing.JComboBox<Locale> languageComboBox;
+    private javax.swing.JComboBox<LanguageRecord> languageComboBox;
     private javax.swing.JLabel languageLabel;
     private javax.swing.JComboBox<String> macOsAppearanceComboBox;
     private javax.swing.JLabel macOsAppearanceLabel;

@@ -288,7 +288,7 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
             String rectangleString = application.getAppPreferences().get(FrameModuleApi.PREFERENCES_FRAME_RECTANGLE, "");
             if (!rectangleString.isEmpty()) {
                 String[] split = rectangleString.split("[,]");
-                Rectangle rect = new Rectangle(Integer.valueOf(split[0]), Integer.valueOf(split[1]), Integer.valueOf(split[2]), Integer.valueOf(split[3]));
+                Rectangle rect = new Rectangle(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
                 setBounds(rect);
                 return;
             }
