@@ -70,7 +70,15 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
 
     @Override
     public void loadFromOptions(FrameworkOptionsImpl options) {
-        languageComboBox.setSelectedItem(options.getLanguageLocale());
+        Locale languageLocale = options.getLanguageLocale();
+        ComboBoxModel<LanguageRecord> languageComboBoxModel = languageComboBox.getModel();
+        for (int i = 0; i < languageComboBoxModel.getSize(); i++) {
+            LanguageRecord languageRecord = languageComboBoxModel.getElementAt(i);
+            if (languageLocale.equals(languageRecord.getLocale())) {
+                languageComboBox.setSelectedIndex(i);
+                break;
+            }
+        }
         visualThemeComboBox.setSelectedIndex(findMatchingElement(visualThemeComboBox.getModel(), options.getLookAndFeel()));
         renderingModeComboBox.setSelectedIndex(findMatchingElement(renderingModeComboBox.getModel(), options.getRenderingMode()));
         fontAntialiasingComboBox.setSelectedIndex(findMatchingElement(fontAntialiasingComboBox.getModel(), options.getFontAntialiasing()));
@@ -93,7 +101,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
 
     @Override
     public void saveToOptions(FrameworkOptionsImpl options) {
-        options.setLanguageLocale((Locale) languageComboBox.getSelectedItem());
+        options.setLanguageLocale(((LanguageRecord) languageComboBox.getSelectedItem()).getLocale());
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         options.setRenderingMode((String) renderingModeComboBox.getSelectedItem());
         options.setFontAntialiasing((String) fontAntialiasingComboBox.getSelectedItem());
