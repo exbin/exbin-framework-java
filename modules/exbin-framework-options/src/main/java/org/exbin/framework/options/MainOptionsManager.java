@@ -50,136 +50,118 @@ public class MainOptionsManager {
 
     private XBApplication application;
 
-    private MainOptionsPanel mainOptionsPanel;
-
+    private boolean valuesInitialized = false;
     private List<String> themes;
     private List<String> themeNames;
     private List<LanguageRecord> languageLocales = null;
-    private List<GuiRenderingMethod> renderingMethods;
+    private List<String> renderingMethodKeys;
     private List<String> renderingMethodNames;
-    private List<GuiFontAntialiasing> fontAntialiasings;
     private List<String> fontAntialiasingNames;
-    private List<GuiScaling> guiScalings;
+    private List<String> guiScalingKeys;
     private List<String> guiScalingNames;
-    private List<GuiMacOsAppearance> guiMacOsAppearances;
     private List<String> guiMacOsAppearanceNames;
+    private List<String> guiMacOsAppearancesKeys;
+    private List<String> macOsAppearancesKeys;
 
     public MainOptionsManager() {
     }
 
-    @Nonnull
-    public MainOptionsPanel getMainOptionsPanel() {
-        if (mainOptionsPanel == null) {
-            mainOptionsPanel = new MainOptionsPanel();
-
-            themes = new ArrayList<>();
-            themes.add("");
-            boolean extraCrossPlatformLAF = !"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName());
-            if (extraCrossPlatformLAF) {
-                themes.add(UIManager.getCrossPlatformLookAndFeelClassName());
-            }
-            themes.add("javax.swing.plaf.metal.MetalLookAndFeel");
-            themes.add("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-            themeNames = new ArrayList<>();
-            themeNames.add(resourceBundle.getString("theme.defaultTheme"));
-            if (extraCrossPlatformLAF) {
-                themeNames.add(resourceBundle.getString("theme.crossPlatformTheme"));
-            }
-            themeNames.add("Metal");
-            themeNames.add("Motif");
-            UIManager.LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
-            for (UIManager.LookAndFeelInfo lookAndFeelInfo : infos) {
-                if (!themes.contains(lookAndFeelInfo.getClassName())) {
-                    themes.add(lookAndFeelInfo.getClassName());
-                    themeNames.add(lookAndFeelInfo.getName());
-                }
-            }
-
-            mainOptionsPanel.setThemes(themes, themeNames);
-
-            languageLocales = new ArrayList<>();
-            languageLocales.add(new LanguageRecord(Locale.ROOT, null));
-            languageLocales.add(new LanguageRecord(new Locale("en", "US"), new ImageIcon(getClass().getResource(resourceBundle.getString("locale.englishFlag")))));
-            for (LanguageProvider languageProvider : application.getLanguagePlugins()) {
-                ImageIcon flag = null;
-                try {
-                    flag = languageProvider.getFlag().orElse(null);
-                } catch (Throwable ex) {
-                    Logger.getLogger(MainOptionsManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                languageLocales.add(new LanguageRecord(languageProvider.getLocale(), flag, null));
-            }
-            mainOptionsPanel.setDefaultLocaleName("<" + resourceBundle.getString("locale.defaultLanguage") + ">");
-            mainOptionsPanel.setLanguageLocales(languageLocales);
-
-            renderingMethods = GuiRenderingMethod.getAvailableMethods();
-            List<String> renderingMethodKeys = new ArrayList<>();
-            renderingMethodNames = new ArrayList<>();
-            DesktopUtils.DesktopOs desktopOs = DesktopUtils.detectBasicOs();
-            for (GuiRenderingMethod renderingMethod : renderingMethods) {
-                renderingMethodKeys.add(renderingMethod.getPropertyValue());
-                if (renderingMethod == GuiRenderingMethod.DEFAULT) {
-                    renderingMethodNames.add(resourceBundle.getString("renderingMethod.default"));
-                } else {
-                    if (renderingMethod == GuiRenderingMethod.SOFTWARE && desktopOs == DesktopUtils.DesktopOs.WINDOWS) {
-                        renderingMethodNames.add(resourceBundle.getString("renderingMethod.software.windows"));
-                    } else {
-                        String propertyValue = renderingMethod.getPropertyValue();
-                        renderingMethodNames.add(resourceBundle.getString("renderingMethod." + propertyValue));
-                    }
-                }
-            }
-            mainOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
-
-            fontAntialiasings = GuiFontAntialiasing.getAvailable();
-            List<String> macOsAppearancesKeys = new ArrayList<>();
-            fontAntialiasingNames = new ArrayList<>();
-            for (GuiFontAntialiasing fontAntialiasing : fontAntialiasings) {
-                macOsAppearancesKeys.add(fontAntialiasing.getPropertyValue());
-                if (fontAntialiasing == GuiFontAntialiasing.DEFAULT) {
-                    fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing.default"));
-                } else {
-                    String propertyValue = fontAntialiasing.getPropertyValue();
-                    fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing." + propertyValue));
-                }
-            }
-            mainOptionsPanel.setFontAntialiasings(macOsAppearancesKeys, fontAntialiasingNames);
-
-            guiScalings = GuiScaling.getAvailable();
-            List<String> guiScalingKeys = new ArrayList<>();
-            guiScalingNames = new ArrayList<>();
-            for (GuiScaling guiScaling : guiScalings) {
-                guiScalingKeys.add(guiScaling.getPropertyValue());
-                if (guiScaling == GuiScaling.DEFAULT) {
-                    guiScalingNames.add(resourceBundle.getString("guiScaling.default"));
-                } else {
-                    String propertyValue = guiScaling.getPropertyValue();
-                    guiScalingNames.add(resourceBundle.getString("guiScaling." + propertyValue));
-                }
-            }
-            mainOptionsPanel.setGuiScalings(guiScalingKeys, guiScalingNames);
-
-            if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
-                guiMacOsAppearances = GuiMacOsAppearance.getAvailable();
-                List<String> guiMacOsAppearancesKeys = new ArrayList<>();
-                guiMacOsAppearanceNames = new ArrayList<>();
-                for (GuiFontAntialiasing fontAntialiasing : fontAntialiasings) {
-                    macOsAppearancesKeys.add(fontAntialiasing.getPropertyValue());
-                    if (fontAntialiasing == GuiFontAntialiasing.DEFAULT) {
-                        guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances.default"));
-                    } else {
-                        String propertyValue = fontAntialiasing.getPropertyValue();
-                        guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances." + propertyValue));
-                    }
-                }
-                mainOptionsPanel.setMacOsAppearances(guiMacOsAppearancesKeys, guiMacOsAppearanceNames);
-            }
-        }
-        return mainOptionsPanel;
-    }
-
     public void setApplication(XBApplication application) {
         this.application = application;
+    }
+
+    public void initValues() {
+        themes = new ArrayList<>();
+        themes.add("");
+        boolean extraCrossPlatformLAF = !"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName());
+        if (extraCrossPlatformLAF) {
+            themes.add(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+        themes.add("javax.swing.plaf.metal.MetalLookAndFeel");
+        themes.add("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        themeNames = new ArrayList<>();
+        themeNames.add(resourceBundle.getString("theme.defaultTheme"));
+        if (extraCrossPlatformLAF) {
+            themeNames.add(resourceBundle.getString("theme.crossPlatformTheme"));
+        }
+        themeNames.add("Metal");
+        themeNames.add("Motif");
+        UIManager.LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
+        for (UIManager.LookAndFeelInfo lookAndFeelInfo : infos) {
+            if (!themes.contains(lookAndFeelInfo.getClassName())) {
+                themes.add(lookAndFeelInfo.getClassName());
+                themeNames.add(lookAndFeelInfo.getName());
+            }
+        }
+
+        languageLocales = new ArrayList<>();
+        languageLocales.add(new LanguageRecord(Locale.ROOT, null));
+        languageLocales.add(new LanguageRecord(new Locale("en", "US"), new ImageIcon(getClass().getResource(resourceBundle.getString("locale.englishFlag")))));
+        for (LanguageProvider languageProvider : application.getLanguagePlugins()) {
+            ImageIcon flag = null;
+            try {
+                flag = languageProvider.getFlag().orElse(null);
+            } catch (Throwable ex) {
+                Logger.getLogger(MainOptionsManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            languageLocales.add(new LanguageRecord(languageProvider.getLocale(), flag, null));
+        }
+
+        renderingMethodKeys = new ArrayList<>();
+        renderingMethodNames = new ArrayList<>();
+        DesktopUtils.DesktopOs desktopOs = DesktopUtils.detectBasicOs();
+        for (GuiRenderingMethod renderingMethod : GuiRenderingMethod.getAvailableMethods()) {
+            renderingMethodKeys.add(renderingMethod.getPropertyValue());
+            if (renderingMethod == GuiRenderingMethod.DEFAULT) {
+                renderingMethodNames.add(resourceBundle.getString("renderingMethod.default"));
+            } else {
+                if (renderingMethod == GuiRenderingMethod.SOFTWARE && desktopOs == DesktopUtils.DesktopOs.WINDOWS) {
+                    renderingMethodNames.add(resourceBundle.getString("renderingMethod.software.windows"));
+                } else {
+                    String propertyValue = renderingMethod.getPropertyValue();
+                    renderingMethodNames.add(resourceBundle.getString("renderingMethod." + propertyValue));
+                }
+            }
+        }
+
+        macOsAppearancesKeys = new ArrayList<>();
+        fontAntialiasingNames = new ArrayList<>();
+        for (GuiFontAntialiasing fontAntialiasing : GuiFontAntialiasing.getAvailable()) {
+            macOsAppearancesKeys.add(fontAntialiasing.getPropertyValue());
+            if (fontAntialiasing == GuiFontAntialiasing.DEFAULT) {
+                fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing.default"));
+            } else {
+                String propertyValue = fontAntialiasing.getPropertyValue();
+                fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing." + propertyValue));
+            }
+        }
+
+        guiScalingKeys = new ArrayList<>();
+        guiScalingNames = new ArrayList<>();
+        for (GuiScaling guiScaling : GuiScaling.getAvailable()) {
+            guiScalingKeys.add(guiScaling.getPropertyValue());
+            if (guiScaling == GuiScaling.DEFAULT) {
+                guiScalingNames.add(resourceBundle.getString("guiScaling.default"));
+            } else {
+                String propertyValue = guiScaling.getPropertyValue();
+                guiScalingNames.add(resourceBundle.getString("guiScaling." + propertyValue));
+            }
+        }
+
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+            List<GuiMacOsAppearance> guiMacOsAppearances = GuiMacOsAppearance.getAvailable();
+            guiMacOsAppearancesKeys = new ArrayList<>();
+            guiMacOsAppearanceNames = new ArrayList<>();
+            for (GuiMacOsAppearance macOsAppearance : guiMacOsAppearances) {
+                macOsAppearancesKeys.add(macOsAppearance.getPropertyValue());
+                if (macOsAppearance == GuiMacOsAppearance.DEFAULT) {
+                    guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances.default"));
+                } else {
+                    String propertyValue = macOsAppearance.getPropertyValue();
+                    guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances." + propertyValue));
+                }
+            }
+        }
     }
 
     @Nonnull
@@ -188,7 +170,22 @@ public class MainOptionsManager {
             @Nonnull
             @Override
             public OptionsComponent<FrameworkOptionsImpl> createPanel() {
-                return getMainOptionsPanel();
+                if (!valuesInitialized) {
+                    valuesInitialized = true;
+                    initValues();
+                }
+
+                MainOptionsPanel mainOptionsPanel = new MainOptionsPanel();
+                mainOptionsPanel.setThemes(themes, themeNames);
+                mainOptionsPanel.setDefaultLocaleName("<" + resourceBundle.getString("locale.defaultLanguage") + ">");
+                mainOptionsPanel.setLanguageLocales(languageLocales);
+                mainOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
+                mainOptionsPanel.setFontAntialiasings(macOsAppearancesKeys, fontAntialiasingNames);
+                mainOptionsPanel.setGuiScalings(guiScalingKeys, guiScalingNames);
+                if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+                    mainOptionsPanel.setMacOsAppearances(guiMacOsAppearancesKeys, guiMacOsAppearanceNames);
+                }
+                return mainOptionsPanel;
             }
 
             @Nonnull
