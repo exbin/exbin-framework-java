@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -243,7 +245,11 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
     public void loadAllFromPreferences() {
         optionPages.values().forEach((pageRecord) -> {
-            pageRecord.loadFromPreferences(preferences);
+            try {
+                pageRecord.loadFromPreferences(preferences);
+            } catch (Exception ex) {
+                Logger.getLogger(OptionsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
 
         if (mainOptionsExtPage != null) {
@@ -257,7 +263,11 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
     public void saveAndApplyAll() {
         optionPages.values().forEach((pageRecord) -> {
-            pageRecord.saveAndApply(preferences);
+            try {
+                pageRecord.saveAndApply(preferences);
+            } catch (Exception ex) {
+                Logger.getLogger(OptionsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
 
         if (mainOptionsExtPage != null) {
@@ -274,7 +284,11 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
     public void applyPreferencesChanges() {
         optionPages.values().forEach((pageRecord) -> {
-            pageRecord.applyPreferencesChanges(preferences);
+            try {
+                pageRecord.applyPreferencesChanges(preferences);
+            } catch (Exception ex) {
+                Logger.getLogger(OptionsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
 
         if (mainOptionsExtPage != null) {
