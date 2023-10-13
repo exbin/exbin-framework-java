@@ -16,9 +16,10 @@
 package org.exbin.framework.action.gui;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.utils.WindowUtils;
 
 /**
- * Keymap options.
+ * Keymap options panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -43,13 +44,13 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel {
 
         keyMapTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3"
             }
         ));
         scrollPane.setViewportView(keyMapTable);
@@ -71,6 +72,15 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        WindowUtils.invokeDialog(new KeyMapSettingsPanel());
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

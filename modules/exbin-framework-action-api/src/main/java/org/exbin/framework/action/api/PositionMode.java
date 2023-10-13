@@ -45,5 +45,9 @@ public enum PositionMode {
     /**
      * End of the bottom position.
      */
-    BOTTOM_LAST
+    BOTTOM_LAST,
+    /**
+     * Hidden position, should be included manually.
+     */
+    CUSTOM
 }
