@@ -33,6 +33,7 @@ import org.exbin.framework.action.api.DirectMenuContribution;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
+import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.SubMenuContribution;
@@ -69,6 +70,10 @@ public class MenuHandler {
     public MenuHandler() {
     }
 
+    public void buildMenu(JMenu targetMenu, String menuId) {
+        MenuHandler.this.buildMenu(new MenuWrapper(targetMenu), menuId);
+    }
+
     public void buildMenu(JPopupMenu targetMenu, String menuId) {
         MenuHandler.this.buildMenu(new PopupMenuWrapper(targetMenu), menuId);
     }
@@ -100,8 +105,9 @@ public class MenuHandler {
                 String groupId = group.getGroupId();
                 SeparationMode separationMode = group.getSeparationMode();
                 MenuPosition position = group.getPosition();
-                if (position.getBasicMode() != null) {
-                    MenuGroupRecord groupRecord = groupsMap.get(position.getBasicMode().name());
+                PositionMode basicMode = position.getBasicMode();
+                if (basicMode != null) {
+                    MenuGroupRecord groupRecord = groupsMap.get(basicMode.name());
                     MenuGroupRecord menuGroupRecord = new MenuGroupRecord(groupId);
                     menuGroupRecord.separationMode = separationMode;
                     groupRecord.subGroups.add(menuGroupRecord);
@@ -119,11 +125,13 @@ public class MenuHandler {
         // Go thru all contributions and link them to its target group
         for (MenuContribution contribution : menuDef.getContributions()) {
             MenuPosition menuPosition = contribution.getMenuPosition();
-            if (menuPosition.getBasicMode() != null) {
-                MenuGroupRecord menuGroupRecord = groupsMap.get(menuPosition.getBasicMode().name());
+            PositionMode basicMode = menuPosition.getBasicMode();
+            NextToMode nextToMode = menuPosition.getNextToMode();
+            if (basicMode != null) {
+                MenuGroupRecord menuGroupRecord = groupsMap.get(basicMode.name());
                 menuGroupRecord.contributions.add(contribution);
-            } else if (menuPosition.getNextToMode() != null) {
-                switch (menuPosition.getNextToMode()) {
+            } else if (nextToMode != null) {
+                switch (nextToMode) {
                     case BEFORE: {
                         List<MenuContribution> contributions = beforeItem.get(menuPosition.getGroupId());
                         if (contributions == null) {
@@ -152,10 +160,10 @@ public class MenuHandler {
         }
 
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        processMenuGroup(groupRecords, beforeItem, afterItem, targetMenu, buttonGroups);
+        processMenuGroup(groupRecords, beforeItem, afterItem, targetMenu, buttonGroups, menuId);
     }
 
-    private void processMenuGroup(List<MenuGroupRecord> groups, Map<String, List<MenuContribution>> beforeItem, Map<String, List<MenuContribution>> afterItem, final MenuTarget targetMenu, final Map<String, ButtonGroup> buttonGroups) {
+    private void processMenuGroup(List<MenuGroupRecord> groups, Map<String, List<MenuContribution>> beforeItem, Map<String, List<MenuContribution>> afterItem, final MenuTarget targetMenu, final Map<String, ButtonGroup> buttonGroups, String menuId) {
         List<MenuGroupRecordPathNode> processingPath = new LinkedList<>();
         processingPath.add(new MenuGroupRecordPathNode(groups));
 
@@ -207,6 +215,19 @@ public class MenuHandler {
 
                             @Override
                             public void finish() {
+                                if (targetMenu.isPopup()) {
+                                    Action action = ((ActionMenuContribution) next.contribution).getAction();
+                                    ActionUtils.MenuCreation menuCreation = (ActionUtils.MenuCreation) action.getValue(ActionUtils.ACTION_MENU_CREATION);
+                                    if (menuCreation != null) {
+                                        boolean shouldCreate = menuCreation.shouldCreate(menuId);
+                                        if (shouldCreate) {
+                                            menuCreation.onCreate(menuItem, menuId);
+                                        } else {
+                                            return;
+                                        }
+                                    }
+                                }
+
                                 targetMenu.add(menuItem);
                             }
                         };
@@ -218,7 +239,7 @@ public class MenuHandler {
                             public void process() {
                                 SubMenuContribution subMenuContribution = (SubMenuContribution) next.contribution;
                                 subMenu = new JMenu();
-                                MenuHandler.this.buildMenu(subMenu.getPopupMenu(), subMenuContribution.getMenuId());
+                                MenuHandler.this.buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId());
                                 subMenu.setText(subMenuContribution.getName());
                             }
 
@@ -262,8 +283,9 @@ public class MenuHandler {
                         rootProcessed = processed;
                     }
                     String name = processed.getName();
-                    if (next.contribution.getMenuPosition().getNextToMode() != null) {
-                        switch (next.contribution.getMenuPosition().getNextToMode()) {
+                    NextToMode nextToMode = next.contribution.getMenuPosition().getNextToMode();
+                    if (nextToMode != null) {
+                        switch (nextToMode) {
                             case BEFORE: {
                                 next.parent.before.add(processed);
                                 break;
@@ -511,6 +533,8 @@ public class MenuHandler {
         void add(JMenuItem menuItem);
 
         void addSeparator();
+
+        boolean isPopup();
     }
 
     @ParametersAreNonnullByDefault
@@ -534,6 +558,11 @@ public class MenuHandler {
 
         @Override
         public void addSeparator() {
+        }
+
+        @Override
+        public boolean isPopup() {
+            return false;
         }
     }
 
@@ -559,6 +588,48 @@ public class MenuHandler {
         @Override
         public void addSeparator() {
             menu.addSeparator();
+        }
+
+        @Override
+        public boolean isPopup() {
+            return true;
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private static class MenuWrapper implements MenuTarget {
+
+        private final JMenu menu;
+        private final boolean popup;
+
+        public MenuWrapper(JMenu menu, boolean popup) {
+            this.menu = menu;
+            this.popup = popup;
+        }
+
+        public MenuWrapper(JMenu menu) {
+            this.menu = menu;
+            this.popup = false;
+        }
+
+        @Override
+        public void add(JMenu menuItem) {
+            menu.add(menuItem);
+        }
+
+        @Override
+        public void add(JMenuItem menuItem) {
+            menu.add(menuItem);
+        }
+
+        @Override
+        public void addSeparator() {
+            menu.addSeparator();
+        }
+
+        @Override
+        public boolean isPopup() {
+            return popup;
         }
     }
 }
