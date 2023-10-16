@@ -132,7 +132,7 @@ public class AudioFileHandler implements FileHandler {
     }
 
     @Override
-    public void newFile() {
+    public void clearFile() {
         audioPanel.newWave();
     }
 

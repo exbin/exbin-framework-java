@@ -172,7 +172,7 @@ public class ImageFileHandler implements FileHandler {
     }
 
     @Override
-    public void newFile() {
+    public void clearFile() {
         imagePanel.newImage();
         imagePanel.setModified(false);
     }

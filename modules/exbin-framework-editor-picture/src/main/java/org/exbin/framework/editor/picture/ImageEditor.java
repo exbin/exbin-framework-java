@@ -114,7 +114,7 @@ public class ImageEditor implements EditorProvider {
     @Override
     public void newFile() {
         if (releaseAllFiles()) {
-            activeFile.newFile();
+            activeFile.clearFile();
         }
     }
 

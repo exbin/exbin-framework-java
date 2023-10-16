@@ -203,7 +203,7 @@ public class TextFileHandler implements FileHandler, TextFontApi {
     }
 
     @Override
-    public void newFile() {
+    public void clearFile() {
         textPanel.setText("");
         textPanel.setModified(false);
     }
