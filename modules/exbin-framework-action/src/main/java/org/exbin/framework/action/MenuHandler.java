@@ -168,7 +168,7 @@ public class MenuHandler {
         processingPath.add(new MenuGroupRecordPathNode(groups));
 
         boolean separatorQueued = false;
-        boolean menuContinues = false;
+        boolean itemsAdded = false;
 
         while (!processingPath.isEmpty()) {
             MenuGroupRecordPathNode pathNode = processingPath.get(processingPath.size() - 1);
@@ -180,17 +180,12 @@ public class MenuHandler {
             MenuGroupRecord groupRecord = pathNode.records.get(pathNode.childIndex);
             pathNode.childIndex++;
 
-            if ((groupRecord.separationMode == SeparationMode.ABOVE || groupRecord.separationMode == SeparationMode.AROUND) && menuContinues) {
-                targetMenu.addSeparator();
-                separatorQueued = false;
+            if (itemsAdded && (groupRecord.separationMode == SeparationMode.ABOVE || groupRecord.separationMode == SeparationMode.AROUND)) {
+                itemsAdded = false;
+                separatorQueued = true;
             }
 
             for (MenuContribution contribution : groupRecord.contributions) {
-                if (separatorQueued) {
-                    targetMenu.addSeparator();
-                    separatorQueued = false;
-                }
-
                 // Process all contributions, but don't insert them yet
                 List<QueuedContribution> queue = new LinkedList<>();
                 queue.add(new QueuedContribution(null, contribution));
@@ -214,17 +209,25 @@ public class MenuHandler {
                             }
 
                             @Override
+                            public boolean shouldCreate() {
+                                if (targetMenu.isPopup()) {
+                                    Action action = ((ActionMenuContribution) next.contribution).getAction();
+                                    ActionUtils.MenuCreation menuCreation = (ActionUtils.MenuCreation) action.getValue(ActionUtils.ACTION_MENU_CREATION);
+                                    if (menuCreation != null) {
+                                        return menuCreation.shouldCreate(menuId);
+                                    }
+                                }
+
+                                return true;
+                            }
+
+                            @Override
                             public void finish() {
                                 if (targetMenu.isPopup()) {
                                     Action action = ((ActionMenuContribution) next.contribution).getAction();
                                     ActionUtils.MenuCreation menuCreation = (ActionUtils.MenuCreation) action.getValue(ActionUtils.ACTION_MENU_CREATION);
                                     if (menuCreation != null) {
-                                        boolean shouldCreate = menuCreation.shouldCreate(menuId);
-                                        if (shouldCreate) {
-                                            menuCreation.onCreate(menuItem, menuId);
-                                        } else {
-                                            return;
-                                        }
+                                        menuCreation.onCreate(menuItem, menuId);
                                     }
                                 }
 
@@ -249,10 +252,33 @@ public class MenuHandler {
                             }
 
                             @Override
-                            public void finish() {
-                                if (subMenu.getMenuComponentCount() > 0) {
-                                    targetMenu.add(subMenu);
+                            public boolean shouldCreate() {
+                                if (targetMenu.isPopup()) {
+                                    Action action = subMenu.getAction();
+                                    if (action != null) {
+                                        ActionUtils.MenuCreation menuCreation = (ActionUtils.MenuCreation) action.getValue(ActionUtils.ACTION_MENU_CREATION);
+                                        if (menuCreation != null) {
+                                            return menuCreation.shouldCreate(menuId);
+                                        }
+                                    }
                                 }
+
+                                return subMenu.getMenuComponentCount() > 0;
+                            }
+
+                            @Override
+                            public void finish() {
+                                if (targetMenu.isPopup()) {
+                                    Action action = subMenu.getAction();
+                                    if (action != null) {
+                                        ActionUtils.MenuCreation menuCreation = (ActionUtils.MenuCreation) action.getValue(ActionUtils.ACTION_MENU_CREATION);
+                                        if (menuCreation != null) {
+                                            menuCreation.onCreate(subMenu, menuId);
+                                        }
+                                    }
+                                }
+
+                                targetMenu.add(subMenu);
                             }
                         };
                     } else if (next.contribution instanceof DirectMenuContribution) {
@@ -270,8 +296,34 @@ public class MenuHandler {
                             }
 
                             @Override
+                            public boolean shouldCreate() {
+                                if (targetMenu.isPopup()) {
+                                    Action action = directMenuContribution.getMenu().getAction();
+                                    if (action != null) {
+                                        ActionUtils.MenuCreation menuCreation = (ActionUtils.MenuCreation) action.getValue(ActionUtils.ACTION_MENU_CREATION);
+                                        if (menuCreation != null) {
+                                            return menuCreation.shouldCreate(menuId);
+                                        }
+                                    }
+                                }
+
+                                return true;
+                            }
+
+                            @Override
                             public void finish() {
-                                targetMenu.add(directMenuContribution.getMenu());
+                                JMenu menuItem = directMenuContribution.getMenu();
+                                if (targetMenu.isPopup()) {
+                                    Action action = directMenuContribution.getMenu().getAction();
+                                    if (action != null) {
+                                        ActionUtils.MenuCreation menuCreation = (ActionUtils.MenuCreation) action.getValue(ActionUtils.ACTION_MENU_CREATION);
+                                        if (menuCreation != null) {
+                                            menuCreation.onCreate(menuItem, menuId);
+                                        }
+                                    }
+                                }
+
+                                targetMenu.add(menuItem);
                             }
                         };
                     } else {
@@ -329,7 +381,16 @@ public class MenuHandler {
                             break;
                         }
                         case ITEM: {
-                            orderingContribution.processed.finish();
+                            boolean itemAdded = orderingContribution.processed.shouldCreate();
+                            if (itemAdded) {
+                                if (separatorQueued) {
+                                    targetMenu.addSeparator();
+                                    separatorQueued = false;
+                                }
+                                orderingContribution.processed.finish();
+                            }
+
+                            itemsAdded |= itemAdded;
                             orderingContribution.mode = OrderingMode.AFTER;
                             break;
                         }
@@ -345,11 +406,10 @@ public class MenuHandler {
                             throw new IllegalStateException();
                     }
                 }
-
-                menuContinues = true;
             }
 
-            if (groupRecord.separationMode == SeparationMode.AROUND || groupRecord.separationMode == SeparationMode.BELOW) {
+            if (itemsAdded && groupRecord.separationMode == SeparationMode.AROUND || groupRecord.separationMode == SeparationMode.BELOW) {
+                itemsAdded = false;
                 separatorQueued = true;
             }
 
@@ -406,6 +466,8 @@ public class MenuHandler {
         abstract void process();
 
         abstract String getName();
+
+        abstract boolean shouldCreate();
 
         abstract void finish();
     }
