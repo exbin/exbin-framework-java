@@ -17,6 +17,7 @@ package org.exbin.framework.action.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 
 /**
  * Record of sub/child menu contribution.
@@ -27,12 +28,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class SubMenuContribution implements MenuContribution {
 
     private final String menuId;
-    private final String name;
+    private final Action action;
     private final MenuPosition position;
 
-    public SubMenuContribution(String menuId, String name, MenuPosition position) {
+    public SubMenuContribution(String menuId, Action action, MenuPosition position) {
         this.menuId = menuId;
-        this.name = name;
+        this.action = action;
         this.position = position;
     }
 
@@ -42,8 +43,8 @@ public class SubMenuContribution implements MenuContribution {
     }
 
     @Nonnull
-    public String getName() {
-        return name;
+    public Action getAction() {
+        return action;
     }
 
     @Nonnull

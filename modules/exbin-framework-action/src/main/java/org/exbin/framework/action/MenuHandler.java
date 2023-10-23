@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.action;
 
+import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
@@ -241,9 +243,8 @@ public class MenuHandler {
                             @Override
                             public void process() {
                                 SubMenuContribution subMenuContribution = (SubMenuContribution) next.contribution;
-                                subMenu = new JMenu();
+                                subMenu = new JMenu(subMenuContribution.getAction());
                                 MenuHandler.this.buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId());
-                                subMenu.setText(subMenuContribution.getName());
                             }
 
                             @Override
@@ -539,12 +540,21 @@ public class MenuHandler {
     }
 
     public void registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName, MenuPosition position) {
+        Action subMenuAction = new AbstractAction(subMenuName) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        };
+        registerMenuItem(menuId, pluginId, subMenuId, subMenuAction, position);
+    }
+
+    public void registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction, MenuPosition position) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
             throw new IllegalStateException("Menu with Id " + menuId + " doesn't exist");
         }
 
-        SubMenuContribution menuContribution = new SubMenuContribution(subMenuId, subMenuName, position);
+        SubMenuContribution menuContribution = new SubMenuContribution(subMenuId, subMenuAction, position);
         menuDef.getContributions().add(menuContribution);
     }
 

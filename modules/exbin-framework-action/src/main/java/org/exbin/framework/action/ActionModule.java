@@ -183,6 +183,11 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
+    public void registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction, MenuPosition position) {
+        getMenuHandler().registerMenuItem(menuId, pluginId, subMenuId, subMenuAction, position);
+    }
+
+    @Override
     public void registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName, MenuPosition position) {
         getMenuHandler().registerMenuItem(menuId, pluginId, subMenuId, subMenuName, position);
     }

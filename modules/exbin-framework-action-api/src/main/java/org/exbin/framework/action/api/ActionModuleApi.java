@@ -110,6 +110,17 @@ public interface ActionModuleApi extends XBApplicationModule {
      * @param menuId menu Id
      * @param pluginId plugin Id
      * @param subMenuId sub-menu id
+     * @param subMenuAction sub-menu action
+     * @param position menu position
+     */
+    void registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction, MenuPosition position);
+
+    /**
+     * Registers menu item as a child item for given menu.
+     *
+     * @param menuId menu Id
+     * @param pluginId plugin Id
+     * @param subMenuId sub-menu id
      * @param subMenuName sub-menu name
      * @param position menu position
      */
