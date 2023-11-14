@@ -57,6 +57,7 @@ public class AudioFileHandler implements FileHandler {
 
     private URI fileUri = null;
     private FileType fileType = null;
+    private String title;
     private javax.sound.sampled.AudioFileFormat.Type audioFormatType = null;
 
     private String ext;
@@ -144,7 +145,7 @@ public class AudioFileHandler implements FileHandler {
 
     @Nonnull
     @Override
-    public String getFileName() {
+    public String getTitle() {
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastSegment = path.lastIndexOf("/");
@@ -152,7 +153,11 @@ public class AudioFileHandler implements FileHandler {
             return fileName == null ? "" : fileName;
         }
 
-        return "";
+        return title == null ? "" : title;
+    }
+
+    public void setTitle(@Nullable String title) {
+        this.title = title;
     }
 
     @Nonnull

@@ -31,7 +31,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
-import static org.exbin.framework.editor.picture.gui.ImagePanel.toBufferedImage;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
@@ -64,6 +63,7 @@ public class ImageFileHandler implements FileHandler {
 
     private URI fileUri = null;
     private String ext = null;
+    private String title;
     private FileType fileType = null;
 
     @Override
@@ -89,7 +89,7 @@ public class ImageFileHandler implements FileHandler {
                 XBPCatalog catalog = new XBPCatalog();
                 catalog.addFormatDecl(getContextFormatDecl());
                 XBLFormatDecl formatDecl = new XBLFormatDecl(XBBufferedImage.XBUP_FORMATREV_CATALOGPATH);
-                XBBufferedImage bufferedImage = new XBBufferedImage(toBufferedImage(imagePanel.getImage()));
+                XBBufferedImage bufferedImage = new XBBufferedImage(ImagePanel.toBufferedImage(imagePanel.getImage()));
                 XBDeclaration declaration = new XBDeclaration(formatDecl, bufferedImage);
                 XBTPullTypeDeclaringFilter typeProcessing = new XBTPullTypeDeclaringFilter(catalog);
                 typeProcessing.attachXBTPullProvider(new XBToXBTPullConvertor(new XBPullReader(new FileInputStream(file))));
@@ -102,7 +102,7 @@ public class ImageFileHandler implements FileHandler {
             }
         } else {
             try {
-                imagePanel.setImage(toBufferedImage(Toolkit.getDefaultToolkit().getImage(fileUri.toURL())));
+                imagePanel.setImage(ImagePanel.toBufferedImage(Toolkit.getDefaultToolkit().getImage(fileUri.toURL())));
             } catch (MalformedURLException ex) {
                 Logger.getLogger(ImageFileHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -124,7 +124,7 @@ public class ImageFileHandler implements FileHandler {
                 XBPCatalog catalog = new XBPCatalog();
                 catalog.addFormatDecl(getContextFormatDecl());
                 XBLFormatDecl formatDecl = new XBLFormatDecl(XBBufferedImage.XBUP_FORMATREV_CATALOGPATH);
-                XBDeclaration declaration = new XBDeclaration(formatDecl, new XBBufferedImage(toBufferedImage(imagePanel.getImage())));
+                XBDeclaration declaration = new XBDeclaration(formatDecl, new XBBufferedImage(ImagePanel.toBufferedImage(imagePanel.getImage())));
                 declaration.realignReservation(catalog);
                 XBTTypeUndeclaringFilter typeProcessing = new XBTTypeUndeclaringFilter(catalog);
                 typeProcessing.attachXBTListener(new XBTEventListenerToListener(new XBTToXBEventConvertor(new XBEventWriter(output))));
@@ -154,7 +154,7 @@ public class ImageFileHandler implements FileHandler {
 
     @Nonnull
     @Override
-    public String getFileName() {
+    public String getTitle() {
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastSegment = path.lastIndexOf("/");
@@ -162,7 +162,11 @@ public class ImageFileHandler implements FileHandler {
             return fileName == null ? "" : fileName;
         }
 
-        return "";
+        return title == null ? "" : title;
+    }
+
+    public void setTitle(@Nullable String title) {
+        this.title = title;
     }
 
     @Nonnull

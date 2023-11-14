@@ -69,8 +69,8 @@ public class EditorCDockable extends DefaultMultipleCDockable {
             }
 
             FileHandler fileHandler = activeFile.get();
-            String fileName = fileHandler.getFileName();
-            String name = fileName.isEmpty() ? UNDEFINED_NAME : fileName;
+            String title = fileHandler.getTitle();
+            String name = title.isEmpty() ? UNDEFINED_NAME : title;
             if (fileHandler.isModified()) {
                 name += " *";
             }

@@ -61,6 +61,7 @@ public class TextFileHandler implements FileHandler, TextFontApi {
     private final TextPanel textPanel = new TextPanel();
 
     private URI fileUri = null;
+    private String title;
     private FileType fileType = null;
 
     @Override
@@ -185,7 +186,7 @@ public class TextFileHandler implements FileHandler, TextFontApi {
 
     @Nonnull
     @Override
-    public String getFileName() {
+    public String getTitle() {
         if (fileUri != null) {
             String path = fileUri.getPath();
             int lastSegment = path.lastIndexOf("/");
@@ -193,7 +194,11 @@ public class TextFileHandler implements FileHandler, TextFontApi {
             return fileName == null ? "" : fileName;
         }
 
-        return "";
+        return title == null ? "" : title;
+    }
+
+    public void setTitle(@Nullable String title) {
+        this.title = title;
     }
 
     @Nonnull
