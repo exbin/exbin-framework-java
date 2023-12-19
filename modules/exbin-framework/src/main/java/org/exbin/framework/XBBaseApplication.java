@@ -74,31 +74,43 @@ public class XBBaseApplication implements XBApplication {
     }
 
     public void init() {
-        // Setup language utility
-        List<Locale.LanguageRange> priorityList = new ArrayList<>();
+        // Setup language
         Locale defaultLocale = Locale.getDefault();
-        priorityList.add(new Locale.LanguageRange(defaultLocale.toLanguageTag()));
-        priorityList.add(new Locale.LanguageRange(defaultLocale.getLanguage()));
+        ResourceBundle.Control control = new ResourceBundle.Control() {
+        };
+        List<Locale> candidateLocales = control.getCandidateLocales("", defaultLocale);
+        List<Locale.LanguageRange> priorityList = new ArrayList<>();
+        for (Locale locale : candidateLocales) {
+            priorityList.add(new Locale.LanguageRange(locale.toLanguageTag()));
+        }
 
         List<Locale> availableLocales = new ArrayList<>();
         for (LanguageProvider languagePlugin : languagePlugins) {
             availableLocales.add(languagePlugin.getLocale());
         }
+
         List<Locale> matchingLocales = Locale.filter(priorityList, availableLocales);
         if (!matchingLocales.isEmpty()) {
-            Locale localeMatch = matchingLocales.get(0);
-            LanguageProvider languagePlugin = languagePlugins.get(0);
-            ClassLoader languageClassLoader = languagePlugin.getClassLoader().orElse(null);
-            if (languageClassLoader != null) {
-                LanguageUtils.setLanguageClassLoader(languageClassLoader);
-                try {
-                    // TODO use better method than string to class conversion
-                    appBundle = LanguageUtils.getResourceBundleByClass(Class.forName(appBundleName.replaceFirst("/resources/", "/").replaceAll("/", ".")));
-                } catch (ClassNotFoundException ex) {
-                    // Unable to load
+            Locale bestMatch = matchingLocales.get(0);
+            for (LanguageProvider languagePlugin : languagePlugins) {
+                if (languagePlugin.getLocale().equals(bestMatch)) {
+                    ClassLoader languageClassLoader = languagePlugin.getClassLoader().orElse(null);
+                    if (languageClassLoader != null) {
+                        LanguageUtils.setLanguageClassLoader(languageClassLoader);
+                        try {
+                            // TODO use better method than string to class conversion
+                            appBundle = LanguageUtils.getResourceBundleByClass(Class.forName(appBundleName.replaceFirst("/resources/", "/").replaceAll("/", ".")));
+                        } catch (ClassNotFoundException ex) {
+                            // Unable to load
+                            Logger.getLogger(XBBaseApplication.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
                 }
             }
         }
+        
+        // Setup Look&Feel
         if (targetLaf != null) {
             applyLookAndFeel(targetLaf);
         }
