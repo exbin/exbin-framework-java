@@ -30,5 +30,5 @@ dependencies {
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-utils')
     implementation 'javax.help:javahelp:2.0.05'
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
-    testImplementation group : 'junit', name: 'junit', version: '4.10'
+    testImplementation group : 'junit', name: 'junit', version: '4.13.2'
 }
