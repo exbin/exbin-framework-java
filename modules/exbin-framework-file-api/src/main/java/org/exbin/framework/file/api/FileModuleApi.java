@@ -72,6 +72,13 @@ public interface FileModuleApi extends XBApplicationModule {
     /**
      * Attempts to load given filename to active panel.
      *
+     * @param fileUri file URI
+     */
+    void loadFromFile(URI fileUri);
+
+    /**
+     * Attempts to load given filename to active panel.
+     *
      * @param filename filename
      */
     void loadFromFile(String filename);

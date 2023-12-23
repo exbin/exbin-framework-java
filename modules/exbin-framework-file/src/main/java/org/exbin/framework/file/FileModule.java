@@ -258,6 +258,14 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     }
 
     @Override
+    public void loadFromFile(URI fileUri) {
+        if (fileOperations == null) {
+            return;
+        }
+        fileOperations.loadFromFile(fileUri, null);
+    }
+
+    @Override
     public void updateForFileOperations() {
         if (saveFileAction != null) {
             saveFileAction.updateForFileOperations();
