@@ -54,6 +54,8 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
 
     public XBApplicationFrame() {
+        // TODO support for undecorated mode
+        // setUndecorated(true);
         initComponents();
 
         // Actions on change of look&feel
