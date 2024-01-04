@@ -277,17 +277,22 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
             }
         });
 
+        useScreenMenuBarCheckBox.setSelected(true);
         useScreenMenuBarCheckBox.setText(resourceBundle.getString("useScreenMenuBarCheckBox.text") + " *"); // NOI18N
 
         javax.swing.GroupLayout macOsOptionsPanelLayout = new javax.swing.GroupLayout(macOsOptionsPanel);
         macOsOptionsPanel.setLayout(macOsOptionsPanelLayout);
         macOsOptionsPanelLayout.setHorizontalGroup(
             macOsOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(macOsAppearanceComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 657, Short.MAX_VALUE)
             .addGroup(macOsOptionsPanelLayout.createSequentialGroup()
-                .addComponent(macOsAppearanceLabel)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(useScreenMenuBarCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(macOsOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(macOsAppearanceComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 645, Short.MAX_VALUE)
+                    .addGroup(macOsOptionsPanelLayout.createSequentialGroup()
+                        .addComponent(macOsAppearanceLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(useScreenMenuBarCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         macOsOptionsPanelLayout.setVerticalGroup(
             macOsOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -296,7 +301,8 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(macOsAppearanceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(useScreenMenuBarCheckBox))
+                .addComponent(useScreenMenuBarCheckBox)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         setLayout(new java.awt.BorderLayout());

@@ -153,6 +153,7 @@ public class MainOptionsManager {
             guiMacOsAppearancesKeys = new ArrayList<>();
             guiMacOsAppearanceNames = new ArrayList<>();
             for (GuiMacOsAppearance macOsAppearance : guiMacOsAppearances) {
+                guiMacOsAppearancesKeys.add(macOsAppearance.getPropertyValue());
                 macOsAppearancesKeys.add(macOsAppearance.getPropertyValue());
                 if (macOsAppearance == GuiMacOsAppearance.DEFAULT) {
                     guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances.default"));
