@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.exbin.framework.api.XBApplicationModule;
 import org.exbin.framework.api.XBModuleRepositoryUtils;
@@ -82,32 +83,32 @@ public interface FrameModuleApi extends XBApplicationModule {
     /**
      * Creates basic dialog and sets it up.
      *
-     * @param panel panel
+     * @param component panel
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(@Nullable JPanel panel);
+    DialogWrapper createDialog(@Nullable JComponent component);
 
     /**
      * Creates basic dialog and sets it up.
      *
-     * @param panel panel
+     * @param component component
      * @param controlPanel control panel
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(@Nullable JPanel panel, @Nullable JPanel controlPanel);
+    DialogWrapper createDialog(@Nullable JComponent component, @Nullable JPanel controlPanel);
 
     /**
      * Creates basic dialog and sets it up.
      *
      * @param parentComponent parent component
      * @param modalityType modality type
-     * @param panel panel
+     * @param component panel
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JPanel panel);
+    DialogWrapper createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component);
 
     /**
      * Creates basic dialog and sets it up.
@@ -115,11 +116,11 @@ public interface FrameModuleApi extends XBApplicationModule {
      * @param parentComponent parent component
      * @param controlPanel control panel
      * @param modalityType modality type
-     * @param panel panel
+     * @param component panel
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JPanel panel, @Nullable JPanel controlPanel);
+    DialogWrapper createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component, @Nullable JPanel controlPanel);
 
     /**
      * Returns frame instance.

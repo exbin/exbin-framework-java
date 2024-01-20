@@ -394,21 +394,21 @@ public class WindowUtils {
     /**
      * Creates panel for given main and control panel.
      *
-     * @param mainPanel main panel
+     * @param mainComponent main panel
      * @param controlPanel control panel
      * @return panel
      */
     @Nonnull
-    public static JPanel createDialogPanel(JPanel mainPanel, JPanel controlPanel) {
+    public static JPanel createDialogPanel(JComponent mainComponent, JPanel controlPanel) {
         JPanel dialogPanel;
         if (controlPanel instanceof OkCancelService) {
             dialogPanel = new DialogPanel((OkCancelService) controlPanel);
         } else {
             dialogPanel = new JPanel(new BorderLayout());
         }
-        dialogPanel.add(mainPanel, BorderLayout.CENTER);
+        dialogPanel.add(mainComponent, BorderLayout.CENTER);
         dialogPanel.add(controlPanel, BorderLayout.SOUTH);
-        Dimension mainPreferredSize = mainPanel.getPreferredSize();
+        Dimension mainPreferredSize = mainComponent.getPreferredSize();
         Dimension controlPreferredSize = controlPanel.getPreferredSize();
         int height = mainPreferredSize.height + (controlPreferredSize != null ? controlPreferredSize.height : 0);
         dialogPanel.setPreferredSize(new Dimension(mainPreferredSize.width, height));

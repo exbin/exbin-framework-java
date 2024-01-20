@@ -29,6 +29,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
@@ -332,28 +333,28 @@ public class FrameModule implements FrameModuleApi {
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(@Nullable JPanel panel) {
-        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, panel, null);
+    public DialogWrapper createDialog(@Nullable JComponent component) {
+        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, component, null);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(@Nullable JPanel panel, @Nullable JPanel controlPanel) {
-        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, panel, controlPanel);
+    public DialogWrapper createDialog(@Nullable JComponent component, @Nullable JPanel controlPanel) {
+        return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, component, controlPanel);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JPanel panel) {
-        return createDialog(parentComponent, modalityType, panel, null);
+    public DialogWrapper createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component) {
+        return createDialog(parentComponent, modalityType, component, null);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JPanel panel, @Nullable JPanel controlPanel) {
-        JPanel dialogPanel = controlPanel != null ? WindowUtils.createDialogPanel(panel, controlPanel) : panel;
+    public DialogWrapper createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component, @Nullable JPanel controlPanel) {
+        JComponent dialogComponent = controlPanel != null ? WindowUtils.createDialogPanel(component, controlPanel) : component;
 
-        DialogWrapper dialog = WindowUtils.createDialog(dialogPanel, parentComponent, "", modalityType);
+        DialogWrapper dialog = WindowUtils.createDialog(dialogComponent, parentComponent, "", modalityType);
         Optional<Image> applicationIcon = application.getApplicationIcon();
         if (applicationIcon.isPresent()) {
             ((JDialog) dialog.getWindow()).setIconImage(applicationIcon.get());
