@@ -485,6 +485,10 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         return modified;
     }
 
+    public void setEditable(boolean editable) {
+        textArea.setEditable(editable);
+    }
+
     public interface CharsetChangeListener {
 
         public void charsetChanged();
