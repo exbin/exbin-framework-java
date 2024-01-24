@@ -17,7 +17,7 @@ package org.exbin.framework.options.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.preferences.api.Preferences;
 
 /**
  * Interface for basic options page.

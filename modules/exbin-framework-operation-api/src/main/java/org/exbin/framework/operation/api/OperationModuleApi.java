@@ -16,8 +16,8 @@
 package org.exbin.framework.operation.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * Interface for framework operation module.
@@ -25,8 +25,8 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface OperationModuleApi extends XBApplicationModule {
+public interface OperationModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(OperationModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(OperationModuleApi.class);
 
 }

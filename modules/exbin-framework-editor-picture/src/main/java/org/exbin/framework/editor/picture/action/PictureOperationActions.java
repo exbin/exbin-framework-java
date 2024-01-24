@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ImageResizePanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -48,7 +48,6 @@ public class PictureOperationActions {
     public static final String IMAGE_RESIZE_ACTION_ID = "imageResizeAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     private Action imageResizeAction;
@@ -56,8 +55,7 @@ public class PictureOperationActions {
     public PictureOperationActions() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
     }
@@ -78,7 +76,7 @@ public class PictureOperationActions {
                     final ImageResizePanel imageResizePanel = new ImageResizePanel();
                     imageResizePanel.setResolution(imagePanel.getImageSize());
                     DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
-                    FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+                    FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                     final DialogWrapper dialog = frameModule.createDialog(imageResizePanel, controlPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
                     frameModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());

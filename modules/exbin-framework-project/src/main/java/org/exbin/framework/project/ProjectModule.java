@@ -22,11 +22,11 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.project.action.NewProjectAction;
 import org.exbin.framework.project.action.OpenProjectAction;
 import org.exbin.framework.project.action.SaveProjectAction;
@@ -34,7 +34,6 @@ import org.exbin.framework.project.api.ProjectCategory;
 import org.exbin.framework.project.api.ProjectModuleApi;
 import org.exbin.framework.project.api.ProjectType;
 import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of framework project module.
@@ -45,7 +44,6 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 public class ProjectModule implements ProjectModuleApi {
 
     private java.util.ResourceBundle resourceBundle = null;
-    private XBApplication application;
 
     private static final List<ProjectCategory> projectCategories = new ArrayList<>();
     private static final List<ProjectType> projectTypes = new ArrayList<>();
@@ -55,15 +53,6 @@ public class ProjectModule implements ProjectModuleApi {
     private SaveProjectAction saveProjectAction;
 
     public ProjectModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 
     @Nonnull
@@ -115,7 +104,7 @@ public class ProjectModule implements ProjectModuleApi {
 
     @Override
     public void registerMenuFileHandlingActions() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuGroup(PROJECT_MENU_ID, new MenuGroup(PROJECT_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
         actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getNewProjectAction(), new MenuPosition(PROJECT_MENU_GROUP_ID));
         actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getOpenProjectAction(), new MenuPosition(PROJECT_MENU_GROUP_ID));
@@ -128,7 +117,7 @@ public class ProjectModule implements ProjectModuleApi {
         if (newProjectAction == null) {
             ensureSetup();
             newProjectAction = new NewProjectAction();
-            newProjectAction.setup(application, resourceBundle);
+            newProjectAction.setup(resourceBundle);
         }
         return newProjectAction;
     }
@@ -139,7 +128,7 @@ public class ProjectModule implements ProjectModuleApi {
         if (openProjectAction == null) {
             ensureSetup();
             openProjectAction = new OpenProjectAction();
-            openProjectAction.setup(application, resourceBundle);
+            openProjectAction.setup(resourceBundle);
         }
         return openProjectAction;
     }
@@ -150,7 +139,7 @@ public class ProjectModule implements ProjectModuleApi {
         if (saveProjectAction == null) {
             ensureSetup();
             saveProjectAction = new SaveProjectAction();
-            saveProjectAction.setup(application, resourceBundle);
+            saveProjectAction.setup(resourceBundle);
         }
         return saveProjectAction;
     }

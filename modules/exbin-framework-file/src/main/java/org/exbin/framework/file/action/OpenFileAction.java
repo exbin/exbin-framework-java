@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.file.api.FileOperationsProvider;
 import org.exbin.framework.utils.ActionUtils;
@@ -36,14 +35,12 @@ public class OpenFileAction extends AbstractAction {
     public static final String ACTION_ID = "openFileAction";
 
     private ResourceBundle resourceBundle;
-    private XBApplication application;
     private FileOperationsProvider fileOperationsProvider;
 
     public OpenFileAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle, FileOperationsProvider fileOperationsProvider) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle, FileOperationsProvider fileOperationsProvider) {
         this.fileOperationsProvider = fileOperationsProvider;
         this.resourceBundle = resourceBundle;
 

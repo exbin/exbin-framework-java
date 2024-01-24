@@ -17,8 +17,8 @@ package org.exbin.framework.client.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
@@ -28,9 +28,9 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ClientModuleApi extends XBApplicationModule {
+public interface ClientModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(ClientModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ClientModuleApi.class);
 
     /**
      * Attempts to connect to running service.

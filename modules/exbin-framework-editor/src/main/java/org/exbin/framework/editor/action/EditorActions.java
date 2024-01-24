@@ -18,7 +18,7 @@ package org.exbin.framework.editor.action;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.editor.api.EditorActionsApi;
 import org.exbin.framework.editor.gui.UnsavedFilesPanel;
@@ -35,21 +35,19 @@ import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 public class EditorActions implements EditorActionsApi {
 
     private ResourceBundle resourceBundle;
-    private XBApplication application;
     private MultiEditorProvider editorProvider;
 
     public EditorActions() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
         this.resourceBundle = resourceBundle;
         this.editorProvider = editorProvider;
     }
 
     @Override
     public boolean showAskForSaveDialog(List<FileHandler> fileHandlers) {
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         UnsavedFilesPanel unsavedFilesPanel = new UnsavedFilesPanel();
         unsavedFilesPanel.setUnsavedFiles(fileHandlers);
         final boolean[] result = new boolean[1];

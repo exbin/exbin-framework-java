@@ -18,8 +18,8 @@ package org.exbin.framework.help.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * Interface for XBUP framework help module.
@@ -27,9 +27,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface HelpModuleApi extends XBApplicationModule {
+public interface HelpModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(HelpModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(HelpModuleApi.class);
 
     /**
      * Registers help action to main frame menu.

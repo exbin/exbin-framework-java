@@ -16,7 +16,7 @@ plugins {
     id 'maven-publish'
 }
 
-version = '0.2.2'
+version = '0.3.0-SNAPSHOT'
 
 task cleanDeps {
     if (gradle.startParameter.taskNames.contains("clean") && !project.gradle.startParameter.projectProperties.containsKey("moduleDep")) {
@@ -40,6 +40,7 @@ clean.dependsOn cleanDeps
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
 publish.dependsOn {
+    project(':core').subprojects.publish
     project(':modules').subprojects.publish
 }
 
@@ -86,12 +87,22 @@ if (!project.gradle.startParameter.projectProperties.containsKey("moduleDep")) {
                 duplicatesStrategy = 'exclude'
 
                 from project.rootDir
-                include 'LICENSE-2.0.txt'
+                include 'LICENSE.txt'
                 from 'src/dist'
                 include 'readme.txt'
 
                 into('lib') {
                     from 'lib'
+                }
+                project(':core').subprojects.each { p ->
+                    p.plugins.withType(JavaPlugin) {
+                        into('lib') {
+                            from p.jar.archivePath
+                            include '*'
+                            from p.configurations.runtimeClasspath
+                            include '*'
+                        }
+                    }
                 }
                 project(':modules').subprojects.each { p ->
                     p.plugins.withType(JavaPlugin) {

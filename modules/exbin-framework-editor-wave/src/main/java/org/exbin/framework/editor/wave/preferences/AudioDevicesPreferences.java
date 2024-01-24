@@ -16,7 +16,7 @@
 package org.exbin.framework.editor.wave.preferences;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.editor.wave.options.AudioDevicesOptions;
 
 /**

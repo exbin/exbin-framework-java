@@ -16,7 +16,7 @@
 package org.exbin.framework.action.api;
 
 import javax.annotation.Nonnull;
-import org.exbin.framework.utils.ComponentPopupEventDispatcher;
+import org.exbin.framework.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,8 +26,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.utils.ClipboardActionsUpdater;
 
 /**
@@ -36,9 +36,9 @@ import org.exbin.framework.utils.ClipboardActionsUpdater;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionModuleApi extends XBApplicationModule {
+public interface ActionModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(ActionModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ActionModuleApi.class);
     public static final String CLIPBOARD_ACTIONS_MENU_GROUP_ID = MODULE_ID + ".clipboardActionsMenuGroup";
     public static final String CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID = MODULE_ID + ".clipboardActionsToolBarGroup";
 

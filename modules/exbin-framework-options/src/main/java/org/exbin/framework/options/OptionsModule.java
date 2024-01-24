@@ -23,8 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
@@ -36,7 +36,6 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.gui.OptionsTreePanel;
 import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.options.options.impl.AppearanceOptionsImpl;
 import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
@@ -47,6 +46,7 @@ import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.options.action.OptionsAction;
 import org.exbin.framework.options.options.AppearanceOptions;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.api.OptionsComponent;
 
@@ -58,7 +58,6 @@ import org.exbin.framework.options.api.OptionsComponent;
 @ParametersAreNonnullByDefault
 public class OptionsModule implements OptionsModuleApi {
 
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     private OptionsAction optionsAction;
@@ -68,15 +67,6 @@ public class OptionsModule implements OptionsModuleApi {
     private OptionsPage<?> appearanceOptionsExtPage = null;
 
     public OptionsModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 
     @Nonnull
@@ -121,7 +111,7 @@ public class OptionsModule implements OptionsModuleApi {
 
                 @Override
                 public void applyPreferencesChanges(AppearanceOptionsImpl options) {
-                    FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+                    FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                     ApplicationFrameHandler frame = frameModule.getFrameHandler();
                     frame.setToolBarVisible(options.isShowToolBar());
                     frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
@@ -150,7 +140,7 @@ public class OptionsModule implements OptionsModuleApi {
         if (optionsAction == null) {
             ensureSetup();
             optionsAction = new OptionsAction();
-            optionsAction.setup(application, resourceBundle, (OptionsTreePanel optionsTreePanel) -> {
+            optionsAction.setup(resourceBundle, (OptionsTreePanel optionsTreePanel) -> {
                 optionsPages.forEach((record) -> {
                     optionsTreePanel.addOptionsPage(record.optionsPage, record.path);
                 });
@@ -170,14 +160,13 @@ public class OptionsModule implements OptionsModuleApi {
     public MainOptionsManager getMainOptionsManager() {
         if (mainOptionsManager == null) {
             mainOptionsManager = new MainOptionsManager();
-            mainOptionsManager.setApplication(application);
         }
         return mainOptionsManager;
     }
 
     @Override
     public void notifyOptionsChanged() {
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         frameModule.notifyFrameUpdated();
     }
 
@@ -230,7 +219,8 @@ public class OptionsModule implements OptionsModuleApi {
     @Override
     public void initialLoadFromPreferences() {
         // TODO use preferences instead of options for initial apply
-        Preferences preferences = application.getAppPreferences();
+        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+        Preferences preferences = preferencesModule.getAppPreferences();
         for (OptionsPageRecord optionsPage : optionsPages) {
             OptionsPage page = optionsPage.optionsPage;
             OptionsData options = page.createOptions();
@@ -245,7 +235,7 @@ public class OptionsModule implements OptionsModuleApi {
 
     @Override
     public void registerMenuAction() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         getOptionsAction();
 
         boolean optionsActionRegistered = false;

@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.DefaultFileTypes;
@@ -41,7 +41,6 @@ import org.exbin.framework.file.api.FileTypes;
 @ParametersAreNonnullByDefault
 public class ImageEditor implements EditorProvider {
 
-    private final XBApplication application;
     private ImageFileHandler activeFile;
     private FileTypes fileTypes;
 
@@ -51,14 +50,13 @@ public class ImageEditor implements EditorProvider {
     @Nullable
     private File lastUsedDirectory;
 
-    public ImageEditor(XBApplication application) {
-        this.application = application;
+    public ImageEditor() {
         init();
     }
 
     private void init() {
         activeFile = new ImageFileHandler();
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
     }
 
@@ -121,7 +119,7 @@ public class ImageEditor implements EditorProvider {
     @Override
     public void openFile() {
         if (releaseAllFiles()) {
-            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
             fileModule.getFileActions().openFile(activeFile, fileTypes, this);
         }
     }
@@ -143,7 +141,7 @@ public class ImageEditor implements EditorProvider {
 
     @Override
     public void saveAsFile() {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.getFileActions().saveAsFile(activeFile, fileTypes, this);
     }
 
@@ -155,7 +153,7 @@ public class ImageEditor implements EditorProvider {
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
-            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
             return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
         }
 
@@ -175,7 +173,7 @@ public class ImageEditor implements EditorProvider {
 
     @Override
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.updateRecentFilesList(fileUri, fileType);
     }
 

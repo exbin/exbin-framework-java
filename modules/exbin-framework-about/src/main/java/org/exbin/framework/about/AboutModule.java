@@ -21,14 +21,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.about.action.AboutAction;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.about.api.AboutModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
@@ -41,19 +40,12 @@ import org.exbin.framework.utils.DesktopUtils;
 @ParametersAreNonnullByDefault
 public class AboutModule implements AboutModuleApi {
 
-    private XBApplication application;
     private AboutAction aboutAction;
     private JComponent sideComponent = null;
 
     public AboutModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
     public void unregisterModule(String moduleId) {
     }
 
@@ -62,7 +54,6 @@ public class AboutModule implements AboutModuleApi {
     public Action getAboutAction() {
         if (aboutAction == null) {
             aboutAction = new AboutAction();
-            aboutAction.setApplication(application);
             aboutAction.setAboutDialogSideComponent(sideComponent);
         }
 
@@ -71,8 +62,8 @@ public class AboutModule implements AboutModuleApi {
 
     @Override
     public void registerDefaultMenuItem() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         boolean aboutActionRegistered = false;
 
         if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {

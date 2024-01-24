@@ -24,7 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.utils.ActionUtils;
@@ -42,7 +41,6 @@ public class AudioControlActions {
     public static final String AUDIO_STOP_ACTION_ID = "audioStopAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     private Action audioPlayAction;
@@ -51,8 +49,7 @@ public class AudioControlActions {
     public AudioControlActions() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
     }

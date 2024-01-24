@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JMenu;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
@@ -40,7 +40,6 @@ import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.file.action.FileActions;
 import org.exbin.framework.file.action.NewFileAction;
@@ -50,6 +49,7 @@ import org.exbin.framework.file.action.SaveAsFileAction;
 import org.exbin.framework.file.action.SaveFileAction;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.file.api.FileOperationsProvider;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.LanguageUtils;
 
@@ -62,7 +62,6 @@ import org.exbin.framework.utils.LanguageUtils;
 public class FileModule implements FileModuleApi, FileOperationsProvider {
 
     private java.util.ResourceBundle resourceBundle = null;
-    private XBApplication application;
     private FileOperations fileOperations;
 
     private NewFileAction newFileAction;
@@ -74,15 +73,6 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     private final List<FileType> registeredFileTypes = new ArrayList<>();
 
     public FileModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 
     @Nonnull
@@ -124,7 +114,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
 
     @Override
     public void registerMenuFileHandlingActions() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
         actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getNewFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
         actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getOpenFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
@@ -134,7 +124,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
 
     @Override
     public void registerToolBarFileHandlingActions() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerToolBarGroup(FrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(FILE_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP)));
         actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getNewFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
         actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getOpenFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
@@ -143,7 +133,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
 
     @Override
     public void registerCloseListener() {
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
             if (fileOperations != null) {
                 return fileOperations.releaseAllFiles();
@@ -156,7 +146,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerRecenFilesMenuActions() {
         getRecentFilesActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
         actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, (String) getOpenFileAction().getValue(Action.NAME) + ActionUtils.DIALOG_MENUITEM_EXT));
     }
@@ -167,7 +157,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         if (newFileAction == null) {
             ensureSetup();
             newFileAction = new NewFileAction();
-            newFileAction.setup(application, resourceBundle, this);
+            newFileAction.setup(resourceBundle, this);
         }
         return newFileAction;
     }
@@ -178,7 +168,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         if (openFileAction == null) {
             ensureSetup();
             openFileAction = new OpenFileAction();
-            openFileAction.setup(application, resourceBundle, this);
+            openFileAction.setup(resourceBundle, this);
         }
         return openFileAction;
     }
@@ -189,7 +179,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         if (saveFileAction == null) {
             ensureSetup();
             saveFileAction = new SaveFileAction();
-            saveFileAction.setup(application, resourceBundle, this);
+            saveFileAction.setup(resourceBundle, this);
         }
         return saveFileAction;
     }
@@ -200,7 +190,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         if (saveAsFileAction == null) {
             ensureSetup();
             saveAsFileAction = new SaveAsFileAction();
-            saveAsFileAction.setup(application, resourceBundle, this);
+            saveAsFileAction.setup(resourceBundle, this);
         }
         return saveAsFileAction;
     }
@@ -209,7 +199,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public RecentFilesActions getRecentFilesActions() {
         if (recentFilesActions == null) {
             recentFilesActions = new RecentFilesActions();
-            recentFilesActions.setup(application, resourceBundle, new RecentFilesActions.FilesControl() {
+            recentFilesActions.setup(resourceBundle, new RecentFilesActions.FilesControl() {
                 @Override
                 public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
                     fileOperations.loadFromFile(fileUri, fileType);
@@ -221,7 +211,8 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
                     return registeredFileTypes;
                 }
             });
-            recentFilesActions.setPreferences(application.getAppPreferences());
+            PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+            recentFilesActions.setPreferences(preferencesModule.getAppPreferences());
         }
         return recentFilesActions;
     }
@@ -239,7 +230,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         if (fileActions == null) {
             ensureSetup();
             fileActions = new FileActions();
-            fileActions.setup(application, resourceBundle);
+            fileActions.setup(resourceBundle);
         }
 
         return fileActions;

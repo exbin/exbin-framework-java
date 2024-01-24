@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.file.api.FileHandler;
@@ -37,14 +36,12 @@ public class CloseAllFileAction extends AbstractAction implements FileDependentA
     public static final String ACTION_ID = "fileCloseAllAction";
 
     private ResourceBundle resourceBundle;
-    private XBApplication application;
     private MultiEditorProvider editorProvider;
 
     public CloseAllFileAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
         this.resourceBundle = resourceBundle;
         this.editorProvider = editorProvider;
 

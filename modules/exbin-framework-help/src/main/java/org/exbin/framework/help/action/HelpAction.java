@@ -31,7 +31,6 @@ import javax.help.HelpSet;
 import javax.help.HelpSetException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.LanguageUtils;
 
@@ -51,20 +50,18 @@ public class HelpAction extends AbstractAction {
     private HelpSet mainHelpSet;
     private HelpBroker mainHelpBroker;
     private ActionListener helpActionLisneter;
-    private XBApplication application;
 
     public HelpAction() {
     }
 
-    public void setApplication(XBApplication application) {
-        this.application = application;
+    public void setApplication() {
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
 
         String path;
         try {
-            path = application.getAppDirectory().getCanonicalPath();
+            path = getAppDirectory().getCanonicalPath();
             mainHelpSet = getHelpSet(path + "/" + HELP_SET_FILE);
             if (mainHelpSet != null) {
                 // Temporary for Java webstart, include help in jar later
@@ -92,9 +89,10 @@ public class HelpAction extends AbstractAction {
         ClassLoader cl = getClass().getClassLoader();
         try {
             URL helpSetURL = HelpSet.findHelpSet(cl, helpSetFile);
-            File file = new File(application.getAppDirectory().getAbsolutePath() + "/" + HELP_SET_FILE);
+            File appDirectory = getAppDirectory();
+            File file = new File(appDirectory.getAbsolutePath() + "/" + HELP_SET_FILE);
             if (!file.exists()) {
-                file = new File(application.getAppDirectory().getAbsolutePath() + "/../" + HELP_SET_FILE);
+                file = new File(appDirectory.getAbsolutePath() + "/../" + HELP_SET_FILE);
             }
             if (helpSetURL == null) {
                 helpSetURL = (file.toURI()).toURL();
@@ -104,5 +102,10 @@ public class HelpAction extends AbstractAction {
             Logger.getLogger(HelpAction.class.getName()).log(Level.INFO, "HelpSet: " + helpSetFile + " not found", ex);
         }
         return helpSet;
+    }
+    
+    File getAppDirectory() {
+        // TODO
+        return new File("");
     }
 }

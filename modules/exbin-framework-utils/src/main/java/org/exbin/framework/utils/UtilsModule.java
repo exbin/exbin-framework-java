@@ -17,9 +17,7 @@ package org.exbin.framework.utils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.xbup.plugin.XBModuleHandler;
+import org.exbin.framework.Module;
 
 /**
  * Implementation of framework utilities module.
@@ -27,19 +25,11 @@ import org.exbin.xbup.plugin.XBModuleHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class UtilsModule implements XBApplicationModule {
-
-    private XBApplication application;
+public class UtilsModule implements Module {
 
     public UtilsModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
-    }
-
-    @Override
     public void unregisterModule(String moduleId) {
     }
 

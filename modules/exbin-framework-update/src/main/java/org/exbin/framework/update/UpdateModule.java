@@ -23,8 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
@@ -36,11 +36,9 @@ import org.exbin.framework.update.preferences.CheckForUpdatePreferences;
 import org.exbin.framework.update.service.CheckForUpdateService;
 import org.exbin.framework.update.service.impl.CheckForUpdateServiceImpl;
 import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.update.action.CheckForUpdateAction;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.api.XBApplicationBundle;
 import org.exbin.framework.options.api.OptionsComponent;
 
 /**
@@ -51,7 +49,6 @@ import org.exbin.framework.options.api.OptionsComponent;
 @ParametersAreNonnullByDefault
 public class UpdateModule implements UpdateModuleApi {
 
-    private XBApplication application;
     private CheckForUpdateAction checkUpdateAction;
 
     private URL checkUpdateUrl;
@@ -63,22 +60,12 @@ public class UpdateModule implements UpdateModuleApi {
     public UpdateModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
-    }
-
     @Nonnull
     @Override
     public Action getCheckUpdateAction() {
         if (checkUpdateAction == null) {
             checkUpdateAction = new CheckForUpdateAction();
             checkUpdateAction.setCheckForUpdateService(getCheckForUpdateService());
-            checkUpdateAction.setApplication(application);
             checkUpdateAction.setUpdateUrl(checkUpdateUrl);
             checkUpdateAction.setUpdateVersion(updateVersion);
             checkUpdateAction.setUpdateDownloadUrl(downloadUrl);
@@ -89,13 +76,13 @@ public class UpdateModule implements UpdateModuleApi {
 
     @Override
     public void registerDefaultMenuItem() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
     }
 
     @Override
     public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(OptionsModuleApi.class);
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         optionsModule.addOptionsPage(new DefaultOptionsPage<CheckForUpdateOptions>() {
             @Override
             public OptionsComponent<CheckForUpdateOptions> createPanel() {
@@ -132,8 +119,7 @@ public class UpdateModule implements UpdateModuleApi {
 
     @Nonnull
     public VersionNumbers getCurrentVersion() {
-        ResourceBundle appBundle = application.getAppBundle();
-        String releaseString = appBundle.getString(XBApplicationBundle.APPLICATION_RELEASE);
+        String releaseString = ""; // TODO appBundle.getString(XBApplicationBundle.APPLICATION_RELEASE);
         VersionNumbers versionNumbers = new VersionNumbers();
         versionNumbers.versionFromString(releaseString);
         return versionNumbers;

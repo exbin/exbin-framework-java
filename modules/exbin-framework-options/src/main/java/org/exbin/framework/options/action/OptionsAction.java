@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.gui.OptionsTreePanel;
 import org.exbin.framework.utils.ActionUtils;
@@ -38,14 +38,12 @@ public class OptionsAction extends AbstractAction {
     public static final String ACTION_ID = "optionsAction";
 
     private ResourceBundle resourceBundle;
-    private XBApplication application;
     private OptionsPagesProvider optionsPagesProvider;
 
     public OptionsAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle, OptionsPagesProvider optionsPagesProvider) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle, OptionsPagesProvider optionsPagesProvider) {
         this.resourceBundle = resourceBundle;
         this.optionsPagesProvider = optionsPagesProvider;
 
@@ -55,13 +53,12 @@ public class OptionsAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         OptionsTreePanel optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
         optionsPagesProvider.registerOptionsPages(optionsTreePanel);
         Dimension preferredSize = optionsTreePanel.getPreferredSize();
         optionsTreePanel.setPreferredSize(new Dimension(preferredSize.width + 200, preferredSize.height + 200));
-        optionsTreePanel.setApplication(application);
-        optionsTreePanel.setPreferences(application.getAppPreferences());
+        // TODO optionsTreePanel.setPreferences(application.getAppPreferences());
         optionsTreePanel.pagesFinished();
         optionsTreePanel.loadAllFromPreferences();
 

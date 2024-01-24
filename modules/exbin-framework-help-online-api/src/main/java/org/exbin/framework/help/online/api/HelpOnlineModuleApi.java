@@ -19,8 +19,8 @@ import java.net.URL;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * Interface for framework online help support module.
@@ -28,9 +28,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface HelpOnlineModuleApi extends XBApplicationModule {
+public interface HelpOnlineModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(HelpOnlineModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(HelpOnlineModuleApi.class);
 
     /**
      * Registers online help action to main frame menu.

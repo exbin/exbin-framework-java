@@ -18,9 +18,8 @@ package org.exbin.framework.popup.api;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
-import org.exbin.framework.utils.ComponentPopupEventDispatcher;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * Interface for framework popup module.
@@ -28,9 +27,9 @@ import org.exbin.framework.utils.ComponentPopupEventDispatcher;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface PopupModuleApi extends XBApplicationModule {
+public interface PopupModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(PopupModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(PopupModuleApi.class);
 
     /**
      * Registers popup menu show for various supported components accross all

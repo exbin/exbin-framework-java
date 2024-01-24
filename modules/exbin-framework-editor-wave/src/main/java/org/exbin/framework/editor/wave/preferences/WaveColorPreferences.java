@@ -17,7 +17,7 @@ package org.exbin.framework.editor.wave.preferences;
 
 import java.util.Optional;
 import javax.annotation.Nullable;
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.preferences.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.wave.options.WaveColorOptions;
 

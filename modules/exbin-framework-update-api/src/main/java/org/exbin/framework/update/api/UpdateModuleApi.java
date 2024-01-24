@@ -21,8 +21,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * Interface of the framework update checking module.
@@ -30,9 +30,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UpdateModuleApi extends XBApplicationModule {
+public interface UpdateModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(UpdateModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(UpdateModuleApi.class);
 
     /**
      * Returns check for available updates action.

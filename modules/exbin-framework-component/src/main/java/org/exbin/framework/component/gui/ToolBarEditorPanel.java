@@ -68,9 +68,9 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
     public static void main(String[] args) {
         TestApplication testApplication = UtilsModule.getDefaultAppEditor();
         OperationUndoModule guiUndoModule = new OperationUndoModule();
-        testApplication.addModule(OperationUndoModule.MODULE_ID, guiUndoModule);
+//        testApplication.addModule(OperationUndoModule.MODULE_ID, guiUndoModule);
         ActionModule guiActionModule = new ActionModule();
-        testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
+//        testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
 
         ToolBarEditorPanel toolBarEditorPanel = new ToolBarEditorPanel();
         UndoActionsHandler undoActionsHandler = new UndoActionsHandlerEmpty();

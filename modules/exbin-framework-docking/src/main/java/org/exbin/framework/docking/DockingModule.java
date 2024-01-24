@@ -34,12 +34,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.docking.api.EditorViewHandling;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.docking.api.DockingModuleApi;
 
@@ -54,7 +52,6 @@ public class DockingModule implements DockingModuleApi {
     public static final String VIEW_BARS_GROUP_ID = MODULE_ID + ".view";
     public static final String EDITOR_FACTORY_ID = "editor";
 
-    private XBApplication application;
     private ResourceBundle resourceBundle;
     private CControl control = null;
     private CGrid grid = null;
@@ -65,17 +62,7 @@ public class DockingModule implements DockingModuleApi {
     private final Map<EditorProvider, EditorCDockable> editorMap = new HashMap<>();
 
     public DockingModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
-
         resourceBundle = LanguageUtils.getResourceBundleByClass(this.getClass());
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 
     @Override

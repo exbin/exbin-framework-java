@@ -17,8 +17,8 @@ package org.exbin.framework.operation.undo.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
@@ -27,9 +27,9 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface OperationUndoModuleApi extends XBApplicationModule {
+public interface OperationUndoModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(OperationUndoModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(OperationUndoModuleApi.class);
 
     /**
      * Returns undo handler.

@@ -25,8 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.api.XBApplicationBundle;
+import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.update.gui.CheckForUpdatePanel;
 import org.exbin.framework.update.preferences.CheckForUpdatePreferences;
@@ -47,7 +46,6 @@ public class CheckForUpdateAction extends AbstractAction {
 
     public static final String ACTION_ID = "checkUpdateAction";
 
-    private XBApplication application;
     private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdateAction.class);
 
     private URL checkUpdateUrl;
@@ -65,13 +63,9 @@ public class CheckForUpdateAction extends AbstractAction {
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
-    public void setApplication(XBApplication application) {
-        this.application = application;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
         CloseControlPanel controlPanel = new CloseControlPanel();
         final DialogWrapper dialog = frameModule.createDialog(checkForUpdatePanel, controlPanel);
@@ -86,8 +80,7 @@ public class CheckForUpdateAction extends AbstractAction {
 
     @Nonnull
     public VersionNumbers getCurrentVersion() {
-        ResourceBundle appBundle = application.getAppBundle();
-        String releaseString = appBundle.getString(XBApplicationBundle.APPLICATION_RELEASE);
+        String releaseString = ""; // TODO appBundle.getString(XBApplicationBundle.APPLICATION_RELEASE);
         VersionNumbers versionNumbers = new VersionNumbers();
         versionNumbers.versionFromString(releaseString);
         return versionNumbers;
@@ -130,7 +123,7 @@ public class CheckForUpdateAction extends AbstractAction {
     }
 
     public void checkOnStart(Frame frame) {
-        CheckForUpdatePreferences checkForUpdateParameters = new CheckForUpdatePreferences(application.getAppPreferences());
+        CheckForUpdatePreferences checkForUpdateParameters = new CheckForUpdatePreferences(null); // TODO application.getAppPreferences());
         boolean checkOnStart = checkForUpdateParameters.isShouldCheckForUpdate();
 
         if (!checkOnStart) {
@@ -140,7 +133,7 @@ public class CheckForUpdateAction extends AbstractAction {
         getCheckForUpdateService();
         final CheckForUpdateService.CheckForUpdateResult checkForUpdateResult = checkForUpdateService.checkForUpdate();
         if (checkForUpdateResult == CheckForUpdateService.CheckForUpdateResult.UPDATE_FOUND) {
-            FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
             CloseControlPanel controlPanel = new CloseControlPanel();
             final DialogWrapper dialog = frameModule.createDialog(checkForUpdatePanel, controlPanel);

@@ -21,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.about.gui.AboutPanel;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.ActionUtils;
@@ -39,7 +39,6 @@ public class AboutAction extends AbstractAction {
 
     public static final String ACTION_ID = "aboutAction";
 
-    private XBApplication application;
     private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutAction.class);
     private JComponent sideComponent = null;
 
@@ -52,15 +51,10 @@ public class AboutAction extends AbstractAction {
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
     }
 
-    public void setApplication(XBApplication application) {
-        this.application = application;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         AboutPanel aboutPanel = new AboutPanel();
-        aboutPanel.setApplication(application);
         aboutPanel.setSideComponent(sideComponent);
         CloseControlPanel controlPanel = new CloseControlPanel();
         final DialogWrapper aboutDialog = frameModule.createDialog(aboutPanel, controlPanel);

@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.picture.ImageEditor;
 import org.exbin.framework.editor.picture.gui.PropertiesPanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -41,14 +41,12 @@ public class PropertiesAction extends AbstractAction {
     public static final String ACTION_ID = "propertiesAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public PropertiesAction() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
 
@@ -59,7 +57,7 @@ public class PropertiesAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (editorProvider instanceof ImageEditor) {
-            FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
 
             PropertiesPanel propertiesPanel = new PropertiesPanel();
             propertiesPanel.setDocument((ImageEditor) editorProvider);

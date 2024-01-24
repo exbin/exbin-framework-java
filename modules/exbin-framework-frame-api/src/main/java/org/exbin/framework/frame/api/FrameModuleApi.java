@@ -25,8 +25,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 
 /**
@@ -35,9 +35,9 @@ import org.exbin.framework.utils.WindowUtils.DialogWrapper;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface FrameModuleApi extends XBApplicationModule {
+public interface FrameModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(FrameModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(FrameModuleApi.class);
     public static String MAIN_MENU_ID = MODULE_ID + ".mainMenu";
     public static String MAIN_TOOL_BAR_ID = MODULE_ID + ".mainToolBar";
     public static String FILE_MENU_ID = MAIN_MENU_ID + "/File";

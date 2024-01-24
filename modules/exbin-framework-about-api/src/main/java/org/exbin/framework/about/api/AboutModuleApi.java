@@ -19,8 +19,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * Interface of the XBUP framework about module.
@@ -28,9 +28,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface AboutModuleApi extends XBApplicationModule {
+public interface AboutModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(AboutModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(AboutModuleApi.class);
     public static final String HELP_ABOUT_MENU_GROUP_ID = MODULE_ID + ".helpAboutMenuGroup";
 
     /**

@@ -18,10 +18,8 @@ package org.exbin.framework.data;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.data.api.DataModuleApi;
 import org.exbin.framework.data.gui.TableEditPanel;
-import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework data module.
@@ -31,18 +29,7 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 @ParametersAreNonnullByDefault
 public class DataModule implements DataModuleApi {
 
-    private XBApplication application;
-
     public DataModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 
     @Nonnull

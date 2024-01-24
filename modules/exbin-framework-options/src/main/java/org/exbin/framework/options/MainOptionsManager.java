@@ -25,9 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
-import org.exbin.framework.api.LanguageProvider;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsPage;
@@ -48,8 +46,6 @@ public class MainOptionsManager {
 
     private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsManager.class);
 
-    private XBApplication application;
-
     private boolean valuesInitialized = false;
     private List<String> themes;
     private List<String> themeNames;
@@ -64,10 +60,6 @@ public class MainOptionsManager {
     private List<String> macOsAppearancesKeys;
 
     public MainOptionsManager() {
-    }
-
-    public void setApplication(XBApplication application) {
-        this.application = application;
     }
 
     public void initValues() {
@@ -97,6 +89,8 @@ public class MainOptionsManager {
         languageLocales = new ArrayList<>();
         languageLocales.add(new LanguageRecord(Locale.ROOT, null));
         languageLocales.add(new LanguageRecord(new Locale("en", "US"), new ImageIcon(getClass().getResource(resourceBundle.getString("locale.englishFlag")))));
+        // TODO
+        /*
         for (LanguageProvider languageProvider : application.getLanguagePlugins()) {
             ImageIcon flag = null;
             try {
@@ -105,7 +99,7 @@ public class MainOptionsManager {
                 Logger.getLogger(MainOptionsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             languageLocales.add(new LanguageRecord(languageProvider.getLocale(), flag, null));
-        }
+        } */
 
         renderingMethodKeys = new ArrayList<>();
         renderingMethodNames = new ArrayList<>();
@@ -216,7 +210,7 @@ public class MainOptionsManager {
             @Override
             public void applyPreferencesChanges(FrameworkOptionsImpl options) {
                 String selectedTheme = options.getLookAndFeel();
-                application.applyLookAndFeel(selectedTheme);
+                // TODO application.applyLookAndFeel(selectedTheme);
             }
         };
     }

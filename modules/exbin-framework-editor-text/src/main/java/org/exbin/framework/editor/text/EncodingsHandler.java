@@ -35,7 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.gui.AddEncodingPanel;
 import org.exbin.framework.editor.text.options.gui.TextEncodingPanel;
 import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
@@ -75,14 +75,9 @@ public class EncodingsHandler {
     private TextEncodingPreferences preferences;
 
     private final TextEncodingService textEncodingService = new TextEncodingServiceImpl();
-    private XBApplication application;
 
     public EncodingsHandler() {
         resourceBundle = LanguageUtils.getResourceBundleByClass(EncodingsHandler.class);
-    }
-
-    public void setApplication(XBApplication application) {
-        this.application = application;
     }
 
     public void init() {
@@ -103,7 +98,7 @@ public class EncodingsHandler {
         manageEncodingsAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 final TextEncodingPanel textEncodingPanel = new TextEncodingPanel();
                 textEncodingPanel.setPreferredSize(new Dimension(536, 358));
                 textEncodingPanel.setEncodingList(textEncodingService.getEncodings());

@@ -22,8 +22,8 @@ import org.exbin.framework.component.api.toolbar.EditItemActions;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * Interface for framework component module.
@@ -31,9 +31,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ComponentModuleApi extends XBApplicationModule {
+public interface ComponentModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(ComponentModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ComponentModuleApi.class);
 
     @Nonnull
     JPanel getTableEditPanel();

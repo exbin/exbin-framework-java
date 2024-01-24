@@ -18,8 +18,8 @@ package org.exbin.framework.data.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * Interface for XBUP framework data module.
@@ -27,9 +27,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DataModuleApi extends XBApplicationModule {
+public interface DataModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(DataModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DataModuleApi.class);
 
     @Nonnull
     JPanel getTableEditPanel();

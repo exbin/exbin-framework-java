@@ -34,7 +34,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.frame.api.ApplicationExitListener;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -42,12 +42,13 @@ import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowPosition;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.frame.action.FrameActions;
 import org.exbin.framework.utils.DesktopUtils;
@@ -66,7 +67,15 @@ public class FrameModule implements FrameModuleApi {
     public static final String PREFERENCES_FRAME_PREFIX = "mainFrame.";
     public static final String RESOURCES_DIALOG_TITLE = "dialog.title";
 
-    private XBApplication application;
+    public static final String PREFERENCES_SCREEN_INDEX = "screenIndex";
+    public static final String PREFERENCES_SCREEN_WIDTH = "screenWidth";
+    public static final String PREFERENCES_SCREEN_HEIGHT = "screenHeight";
+    public static final String PREFERENCES_POSITION_X = "positionX";
+    public static final String PREFERENCES_POSITION_Y = "positionY";
+    public static final String PREFERENCES_WIDTH = "width";
+    public static final String PREFERENCES_HEIGHT = "height";
+    public static final String PREFERENCES_MAXIMIZED = "maximized";
+
     private ResourceBundle resourceBundle;
     private XBApplicationFrame frame;
     private ApplicationExitHandler exitHandler = null;
@@ -74,11 +83,6 @@ public class FrameModule implements FrameModuleApi {
     private FrameActions frameActions;
 
     public FrameModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
     }
 
     @Nonnull
@@ -104,7 +108,7 @@ public class FrameModule implements FrameModuleApi {
     }
 
     private void initMainMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenu(MAIN_MENU_ID, MODULE_ID);
         actionModule.registerMenu(FILE_MENU_ID, MODULE_ID);
         actionModule.registerMenu(EDIT_MENU_ID, MODULE_ID);
@@ -122,12 +126,8 @@ public class FrameModule implements FrameModuleApi {
     }
 
     private void initMainToolBar() {
-        ActionModuleApi menuModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi menuModule = App.getModule(ActionModuleApi.class);
         menuModule.registerToolBar(MAIN_TOOL_BAR_ID, MODULE_ID);
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 
     @Nonnull
@@ -147,8 +147,9 @@ public class FrameModule implements FrameModuleApi {
     public void loadFramePosition() {
         getFrameHandler();
         WindowPosition framePosition = new WindowPosition();
-        if (framePosition.preferencesExists(application.getAppPreferences(), PREFERENCES_FRAME_PREFIX)) {
-            framePosition.loadFromPreferences(application.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
+        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+        if (preferencesFramePositionExists(preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX)) {
+            loadFramePositionFromPreferences(framePosition, preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
             WindowUtils.setWindowPosition(frame, framePosition);
         }
     }
@@ -156,7 +157,34 @@ public class FrameModule implements FrameModuleApi {
     @Override
     public void saveFramePosition() {
         WindowPosition windowPosition = WindowUtils.getWindowPosition(frame);
-        windowPosition.saveToPreferences(application.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
+        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+        saveFramePositionToPreferences(windowPosition, preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
+    }
+
+    static private void saveFramePositionToPreferences(WindowPosition windowPosition, Preferences pref, String prefix) {
+        pref.putInt(prefix + PREFERENCES_SCREEN_INDEX, windowPosition.getScreenIndex());
+        pref.putInt(prefix + PREFERENCES_SCREEN_WIDTH, windowPosition.getScreenWidth());
+        pref.putInt(prefix + PREFERENCES_SCREEN_HEIGHT, windowPosition.getScreenHeight());
+        pref.putInt(prefix + PREFERENCES_POSITION_X, windowPosition.getRelativeX());
+        pref.putInt(prefix + PREFERENCES_POSITION_Y, windowPosition.getRelativeY());
+        pref.putInt(prefix + PREFERENCES_WIDTH, windowPosition.getWidth());
+        pref.putInt(prefix + PREFERENCES_HEIGHT, windowPosition.getHeight());
+        pref.putBoolean(prefix + PREFERENCES_MAXIMIZED, windowPosition.isMaximized());
+    }
+
+    static private void loadFramePositionFromPreferences(WindowPosition windowPosition, Preferences pref, String prefix) {
+        windowPosition.setScreenIndex(pref.getInt(prefix + PREFERENCES_SCREEN_INDEX, 0));
+        windowPosition.setScreenWidth(pref.getInt(prefix + PREFERENCES_SCREEN_WIDTH, 0));
+        windowPosition.setScreenHeight(pref.getInt(prefix + PREFERENCES_SCREEN_HEIGHT, 0));
+        windowPosition.setRelativeX(pref.getInt(prefix + PREFERENCES_POSITION_X, 0));
+        windowPosition.setRelativeY(pref.getInt(prefix + PREFERENCES_POSITION_Y, 0));
+        windowPosition.setWidth(pref.getInt(prefix + PREFERENCES_WIDTH, 0));
+        windowPosition.setHeight(pref.getInt(prefix + PREFERENCES_HEIGHT, 0));
+        windowPosition.setMaximized(pref.getBoolean(prefix + PREFERENCES_MAXIMIZED, false));
+    }
+
+    static private boolean preferencesFramePositionExists(Preferences pref, String prefix) {
+        return pref.exists(prefix + PREFERENCES_SCREEN_INDEX);
     }
 
     @Nonnull
@@ -180,7 +208,7 @@ public class FrameModule implements FrameModuleApi {
 
     @Override
     public void registerExitAction() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         String appClosingActionsGroup = "ApplicationClosingActionsGroup";
         boolean exitActionRegistered = false;
 
@@ -226,9 +254,9 @@ public class FrameModule implements FrameModuleApi {
     public ApplicationFrameHandler getFrameHandler() {
         if (frame == null) {
             frame = new XBApplicationFrame();
-            frame.setApplication(application);
-            frame.loadMainMenu(application);
-            frame.loadMainToolBar(application);
+            frame.initApplication();
+            frame.loadMainMenu();
+            frame.loadMainToolBar();
             frame.setApplicationExitHandler(exitHandler);
 
             if (frameActions != null) {
@@ -286,7 +314,7 @@ public class FrameModule implements FrameModuleApi {
         if (frameActions == null) {
             frameActions = new FrameActions();
             ensureSetup();
-            frameActions.setup(application, resourceBundle);
+            frameActions.setup(resourceBundle);
             if (frame != null) {
                 frameActions.setApplicationFrame(frame);
             }
@@ -303,7 +331,7 @@ public class FrameModule implements FrameModuleApi {
 
     @Override
     public void registerToolBarVisibilityActions() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
         actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, frameActions.getViewToolBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
@@ -312,14 +340,14 @@ public class FrameModule implements FrameModuleApi {
 
     @Override
     public void registerStatusBarVisibilityActions() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
         actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, frameActions.getViewStatusBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
     }
 
     private void createViewBarsMenuGroup() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         if (!actionModule.menuGroupExists(FrameModuleApi.VIEW_MENU_ID, VIEW_BARS_GROUP_ID)) {
             actionModule.registerMenuGroup(FrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_BARS_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.BELOW));
         }
@@ -355,7 +383,7 @@ public class FrameModule implements FrameModuleApi {
         JComponent dialogComponent = controlPanel != null ? WindowUtils.createDialogPanel(component, controlPanel) : component;
 
         DialogWrapper dialog = WindowUtils.createDialog(dialogComponent, parentComponent, "", modalityType);
-        Optional<Image> applicationIcon = application.getApplicationIcon();
+        Optional<Image> applicationIcon = Optional.empty(); // TODO application.getApplicationIcon();
         if (applicationIcon.isPresent()) {
             ((JDialog) dialog.getWindow()).setIconImage(applicationIcon.get());
         }

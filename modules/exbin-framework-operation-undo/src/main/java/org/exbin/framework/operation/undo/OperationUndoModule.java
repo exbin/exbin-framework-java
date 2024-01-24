@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
@@ -43,7 +43,6 @@ import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 
 /**
@@ -57,7 +56,6 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     private static final String UNDO_MENU_GROUP_ID = MODULE_ID + ".undoMenuGroup";
     private static final String UNDO_TOOL_BAR_GROUP_ID = MODULE_ID + ".undoToolBarGroup";
 
-    private XBApplication application;
     private final UndoManagerModel undoModel = new UndoManagerModel();
     private XBUndoHandler undoHandler;
 
@@ -66,10 +64,7 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     public OperationUndoModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
-
+    public void init() {
         undoModel.addListDataListener(new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -86,7 +81,6 @@ public class OperationUndoModule implements OperationUndoModuleApi {
         });
     }
 
-    @Override
     public void unregisterModule(String moduleId) {
     }
 
@@ -161,7 +155,7 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     @Override
     public void registerMainMenu() {
         getDefaultUndoActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuGroup(FrameModuleApi.EDIT_MENU_ID, new MenuGroup(UNDO_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.BELOW));
         actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, OperationUndoModuleApi.MODULE_ID, defaultUndoActions.getUndoAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
         actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, OperationUndoModuleApi.MODULE_ID, defaultUndoActions.getRedoAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
@@ -170,14 +164,14 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     @Override
     public void registerUndoManagerInMainMenu() {
         getDefaultUndoActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, OperationUndoModuleApi.MODULE_ID, defaultUndoActions.getUndoManagerAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
     }
 
     @Override
     public void registerMainToolBar() {
         getDefaultUndoActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerToolBarGroup(FrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(UNDO_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP), SeparationMode.AROUND));
         actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, defaultUndoActions.getUndoAction(), new ToolBarPosition(UNDO_TOOL_BAR_GROUP_ID));
         actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, defaultUndoActions.getRedoAction(), new ToolBarPosition(UNDO_TOOL_BAR_GROUP_ID));
@@ -190,7 +184,7 @@ public class OperationUndoModule implements OperationUndoModuleApi {
 
     @Override
     public void openUndoManager() {
-        FrameModuleApi frameModule = OperationUndoModule.this.application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         UndoManagerPanel undoManagerPanel = new UndoManagerPanel(undoModel);
         UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
         final DialogWrapper dialog = frameModule.createDialog(undoManagerPanel, undoManagerControlPanel);

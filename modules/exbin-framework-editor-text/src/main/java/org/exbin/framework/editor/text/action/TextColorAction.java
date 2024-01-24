@@ -21,13 +21,14 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
 import org.exbin.framework.editor.text.options.gui.TextColorPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.preferences.TextColorPreferences;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
@@ -47,14 +48,12 @@ public class TextColorAction extends AbstractAction {
     public static final String ACTION_ID = "toolsSetColorAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public TextColorAction() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
 
@@ -64,7 +63,7 @@ public class TextColorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
@@ -113,9 +112,10 @@ public class TextColorAction extends AbstractAction {
                 (OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                         if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                            PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
                             TextColorOptionsImpl options = new TextColorOptionsImpl();
                             colorPanel.saveToOptions(options);
-                            TextColorPreferences textColorParameters = new TextColorPreferences(application.getAppPreferences());
+                            TextColorPreferences textColorParameters = new TextColorPreferences(preferencesModule.getAppPreferences());
                             options.saveToPreferences(textColorParameters);
                         }
                         textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());

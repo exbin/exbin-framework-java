@@ -17,8 +17,7 @@ package org.exbin.framework.about.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.api.XBApplicationBundle;
+import org.exbin.framework.about.XBApplicationBundle;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
 
@@ -39,7 +38,7 @@ public class AboutAuthorsPanel extends javax.swing.JPanel {
 
     private void init() {
     }
-
+/*
     public void setApplication(XBApplication application) {
         ResourceBundle appBundle;
         if (application != null) {
@@ -50,7 +49,7 @@ public class AboutAuthorsPanel extends javax.swing.JPanel {
 
         authorsTextArea.setText(appBundle.getString(XBApplicationBundle.APPLICATION_AUTHORS));
     }
-
+*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

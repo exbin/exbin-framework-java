@@ -32,12 +32,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.gui.WindowHeaderPanel;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.api.XBApplicationBundle;
+import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.language.api.ApplicationInfoKeys;
 
 /**
  * Basic appplication frame.
@@ -47,7 +49,6 @@ import org.exbin.framework.api.XBApplicationBundle;
 @ParametersAreNonnullByDefault
 public class XBApplicationFrame extends javax.swing.JFrame implements ApplicationFrameHandler, WindowHeaderPanel.WindowHeaderDecorationProvider {
 
-    private XBApplication application;
     private ApplicationExitHandler exitHandler;
     private JPanel currentStatusBarPanel = null;
     private boolean captionsVisible = true;
@@ -240,12 +241,12 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     }
 
     @Override
-    public void setApplication(XBApplication application) {
-        this.application = application;
-        ResourceBundle appBundle = application.getAppBundle();
-        setTitle(appBundle.getString(XBApplicationBundle.APPLICATION_NAME));
-        if (appBundle.containsKey(XBApplicationBundle.APPLICATION_ICON)) {
-            setIconImage(new ImageIcon(getClass().getResource(application.getAppBundle().getString(XBApplicationBundle.APPLICATION_ICON))).getImage());
+    public void initApplication() {
+        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+        ResourceBundle appBundle = languageModule.getAppBundle();
+        setTitle(appBundle.getString(ApplicationInfoKeys.APPLICATION_NAME));
+        if (appBundle.containsKey(ApplicationInfoKeys.APPLICATION_ICON)) {
+            setIconImage(new ImageIcon(getClass().getResource(appBundle.getString(ApplicationInfoKeys.APPLICATION_ICON))).getImage());
         }
     }
 
@@ -255,14 +256,14 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
     }
 
     @Override
-    public void loadMainMenu(XBApplication application) {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+    public void loadMainMenu() {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.buildMenu(menuBar, FrameModule.MAIN_MENU_ID);
     }
 
     @Override
-    public void loadMainToolBar(XBApplication application) {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+    public void loadMainToolBar() {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.buildToolBar(toolBar, FrameModule.MAIN_TOOL_BAR_ID);
     }
 
@@ -286,14 +287,13 @@ public class XBApplicationFrame extends javax.swing.JFrame implements Applicatio
 
     @Override
     public void setDefaultSize(Dimension windowSize) {
-        if (application != null) {
-            String rectangleString = application.getAppPreferences().get(FrameModuleApi.PREFERENCES_FRAME_RECTANGLE, "");
-            if (!rectangleString.isEmpty()) {
-                String[] split = rectangleString.split("[,]");
-                Rectangle rect = new Rectangle(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
-                setBounds(rect);
-                return;
-            }
+        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+        String rectangleString = preferencesModule.getAppPreferences().get(FrameModuleApi.PREFERENCES_FRAME_RECTANGLE, "");
+        if (!rectangleString.isEmpty()) {
+            String[] split = rectangleString.split("[,]");
+            Rectangle rect = new Rectangle(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
+            setBounds(rect);
+            return;
         }
         setSize(windowSize);
         setLocationRelativeTo(null);

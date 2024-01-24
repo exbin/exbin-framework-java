@@ -16,7 +16,7 @@
 package org.exbin.framework.editor.text.preferences;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.editor.text.options.TextAppearanceOptions;
 
 /**

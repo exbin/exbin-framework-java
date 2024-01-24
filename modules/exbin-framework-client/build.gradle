@@ -20,14 +20,15 @@ repositories {
 }
 
 dependencies {
-    api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-client-api')
-    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
-    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-catalog')
-    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-client')
-    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-plugin')
-    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework')
-    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-api')
-    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'exbin-framework-utils')
+    api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-client-api')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'modules', 'xbup-core')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'modules', 'xbup-catalog')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'modules', 'xbup-client')
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'modules', 'xbup-plugin')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'core', 'exbin-framework')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-preferences')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-preferences-api')
+    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-utils')
     compileOnly 'org.eclipse.persistence:javax.persistence:2.1.0'
     runtimeOnly 'org.apache.derby:derby:10.12.1.1'
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'

@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -44,7 +43,6 @@ public class DrawingControlActions {
     public static final String DRAWING_RADIO_GROUP_ID = "drawingRadioGroup";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     private Action dotsModeAction;
@@ -56,8 +54,7 @@ public class DrawingControlActions {
     public DrawingControlActions() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
     }

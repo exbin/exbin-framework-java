@@ -54,7 +54,7 @@ import org.exbin.framework.popup.handler.TablePopupHandler;
 import org.exbin.framework.popup.handler.TextComponentPopupHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsHandler;
-import org.exbin.framework.utils.ComponentPopupEventDispatcher;
+import org.exbin.framework.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.utils.LanguageUtils;
 
 /**

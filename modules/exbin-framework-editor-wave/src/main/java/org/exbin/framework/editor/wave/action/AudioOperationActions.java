@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.utils.ActionUtils;
@@ -39,7 +38,6 @@ public class AudioOperationActions {
     public static final String AUDIO_REVERSE_ACTION_ID = "audioReverseAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     private Action audioReverseAction;
@@ -47,8 +45,7 @@ public class AudioOperationActions {
     public AudioOperationActions() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
     }

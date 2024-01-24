@@ -19,11 +19,9 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.popup.api.PopupModuleApi;
-import org.exbin.framework.utils.ComponentPopupEventDispatcher;
+import org.exbin.framework.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of framework popup module.
@@ -34,17 +32,10 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 public class PopupModule implements PopupModuleApi {
 
     private java.util.ResourceBundle resourceBundle = null;
-    private XBApplication application;
 
     public PopupModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
     public void unregisterModule(String moduleId) {
     }
 

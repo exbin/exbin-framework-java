@@ -32,9 +32,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
-import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ImageStatusPanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -46,7 +46,6 @@ import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.file.api.FileHandler;
@@ -57,9 +56,9 @@ import org.exbin.framework.file.api.FileHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorPictureModule implements XBApplicationModule {
+public class EditorPictureModule implements Module {
 
-    public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(EditorPictureModule.class);
+    public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(EditorPictureModule.class);
     public static final String XBPFILETYPE = "XBPictureEditor.XBPFileType";
     public static final String ZOOM_MODE_SUBMENU_ID = MODULE_ID + ".zoomSubMenu";
     public static final String PICTURE_MENU_ID = MODULE_ID + ".pictureMenu";
@@ -68,7 +67,6 @@ public class EditorPictureModule implements XBApplicationModule {
 
     public static final String IMAGE_STATUS_BAR_ID = "imageStatusBar";
 
-    private XBApplication application;
     private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
     private ImageStatusPanel imageStatusPanel;
@@ -80,15 +78,6 @@ public class EditorPictureModule implements XBApplicationModule {
     private PictureOperationActions pictureOperationActions;
 
     public EditorPictureModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 
     private void ensureSetup() {
@@ -104,9 +93,9 @@ public class EditorPictureModule implements XBApplicationModule {
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            ImageEditor imageEditor = new ImageEditor(application);
+            ImageEditor imageEditor = new ImageEditor();
 
-            OperationUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(OperationUndoModuleApi.class);
+            OperationUndoModuleApi undoModule = App.getModule(OperationUndoModuleApi.class);
             // imagePanel.setUndoHandler(undoModule.getUndoHandler());
 
             editorProvider = imageEditor;
@@ -142,7 +131,7 @@ public class EditorPictureModule implements XBApplicationModule {
     }
 
     public void registerFileTypes() {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         String[] formats = ImageIO.getReaderFormatNames();
         for (String ext : formats) {
             if (ext.toLowerCase().equals(ext)) {
@@ -177,7 +166,7 @@ public class EditorPictureModule implements XBApplicationModule {
             }
         });
 
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, IMAGE_STATUS_BAR_ID, imageStatusPanel);
         frameModule.switchStatusBar(IMAGE_STATUS_BAR_ID);
 
@@ -192,12 +181,12 @@ public class EditorPictureModule implements XBApplicationModule {
     }
 
     public void registerPropertiesMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
@@ -206,7 +195,7 @@ public class EditorPictureModule implements XBApplicationModule {
         if (pictureOperationActions == null) {
             ensureSetup();
             pictureOperationActions = new PictureOperationActions();
-            pictureOperationActions.setup(application, editorProvider, resourceBundle);
+            pictureOperationActions.setup(editorProvider, resourceBundle);
         }
 
         return pictureOperationActions;
@@ -217,12 +206,12 @@ public class EditorPictureModule implements XBApplicationModule {
 //        JMenu toolsEncodingMenu = encodingsHandler.getToolsEncodingMenu();
 //        encodingsHandler.encodingsRebuild();
 
-//        GuiMenuModuleApi menuModule = application.getModuleRepository().getModuleByInterface(GuiMenuModuleApi.class);
+//        GuiMenuModuleApi menuModule = App.getModule(GuiMenuModuleApi.class);
 //        menuModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, encodingsHandler.getToolsEncodingMenu(), new MenuPosition(PositionMode.TOP_LAST));
     }
 
     public void registerOptionsPanels() {
-//        GuiOptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(GuiOptionsModuleApi.class);
+//        GuiOptionsModuleApi optionsModule = App.getModule(GuiOptionsModuleApi.class);
 //        WaveColorPanelApi textColorPanelFrame = new WaveColorPanelApi() {
 //            @Override
 //            public Color[] getCurrentWaveColors() {
@@ -243,7 +232,7 @@ public class EditorPictureModule implements XBApplicationModule {
 
     @Nonnull
     private JPopupMenu createPopupMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenu(PICTURE_POPUP_MENU_ID, MODULE_ID);
         actionModule.registerClipboardMenuItems(PICTURE_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
         JPopupMenu popupMenu = new JPopupMenu();
@@ -252,13 +241,13 @@ public class EditorPictureModule implements XBApplicationModule {
     }
 
     public void registerToolsOptionsMenuActions() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getToolColorAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerZoomModeMenu() {
         getZoomControlActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, ZOOM_MODE_SUBMENU_ID, "Zoom", new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenu(ZOOM_MODE_SUBMENU_ID, MODULE_ID);
         actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
@@ -271,7 +260,7 @@ public class EditorPictureModule implements XBApplicationModule {
         if (propertiesAction == null) {
             ensureSetup();
             propertiesAction = new PropertiesAction();
-            propertiesAction.setup(application, editorProvider, resourceBundle);
+            propertiesAction.setup(editorProvider, resourceBundle);
         }
 
         return propertiesAction;
@@ -282,7 +271,7 @@ public class EditorPictureModule implements XBApplicationModule {
         if (toolColorAction == null) {
             ensureSetup();
             toolColorAction = new ToolColorAction();
-            toolColorAction.setup(application, editorProvider, resourceBundle);
+            toolColorAction.setup(editorProvider, resourceBundle);
         }
 
         return toolColorAction;
@@ -293,7 +282,7 @@ public class EditorPictureModule implements XBApplicationModule {
         if (printAction == null) {
             ensureSetup();
             printAction = new PrintAction();
-            printAction.setup(application, editorProvider, resourceBundle);
+            printAction.setup(editorProvider, resourceBundle);
         }
 
         return printAction;
@@ -304,21 +293,21 @@ public class EditorPictureModule implements XBApplicationModule {
         if (zoomControlActions == null) {
             ensureSetup();
             zoomControlActions = new ZoomControlActions();
-            zoomControlActions.setup(application, editorProvider, resourceBundle);
+            zoomControlActions.setup(editorProvider, resourceBundle);
         }
 
         return zoomControlActions;
     }
 
     public void registerPictureMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenu(PICTURE_MENU_ID, MODULE_ID);
         actionModule.registerMenuItem(FrameModuleApi.MAIN_MENU_ID, MODULE_ID, PICTURE_MENU_ID, "Picture", new MenuPosition(NextToMode.AFTER, "View"));
     }
 
     public void registerPictureOperationMenu() {
         getPictureOperationActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(PICTURE_MENU_ID, MODULE_ID, pictureOperationActions.getRevertAction(), new MenuPosition(PositionMode.TOP));
     }
 

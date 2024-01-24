@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.utils.ActionUtils;
 
 /**
@@ -35,13 +34,11 @@ public class SaveProjectAction extends AbstractAction {
     public static final String ACTION_ID = "saveProjectAction";
 
     private ResourceBundle resourceBundle;
-    private XBApplication application;
 
     public SaveProjectAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);

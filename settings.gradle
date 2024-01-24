@@ -2,10 +2,10 @@ rootProject.name = 'exbin-framework-java'
 
 include ":deps"
 
+include ":core:exbin-framework"
+include ":core:exbin-framework-basic"
 include ":modules:exbin-framework-client"
 include ":modules:exbin-framework-client-api"
-include ":modules:exbin-framework"
-include ":modules:exbin-framework-api"
 include ":modules:exbin-framework-action"
 include ":modules:exbin-framework-action-api"
 include ":modules:exbin-framework-frame"
@@ -31,6 +31,8 @@ include ":modules:exbin-framework-about"
 include ":modules:exbin-framework-about-api"
 include ":modules:exbin-framework-editor"
 include ":modules:exbin-framework-editor-api"
+include ":modules:exbin-framework-language"
+include ":modules:exbin-framework-language-api"
 include ":modules:exbin-framework-update"
 include ":modules:exbin-framework-update-api"
 include ":modules:exbin-framework-docking"
@@ -43,6 +45,7 @@ include ":modules:exbin-framework-editor-text"
 include ":modules:exbin-framework-editor-wave"
 include ":modules:exbin-framework-editor-picture"
 include ":modules:exbin-framework-preferences"
+include ":modules:exbin-framework-preferences-api"
 
 File placeholder = file("deps/.downloaded")
 if (placeholder.exists()) {

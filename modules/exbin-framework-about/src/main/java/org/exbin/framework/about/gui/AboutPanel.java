@@ -31,8 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
-import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.api.XBApplicationBundle;
+import org.exbin.framework.about.XBApplicationBundle;
 import org.exbin.framework.popup.DefaultPopupMenu;
 import org.exbin.framework.popup.LinkActionsHandler;
 import org.exbin.framework.utils.ClipboardUtils;
@@ -369,7 +368,7 @@ public class AboutPanel extends javax.swing.JPanel {
             this.sideComponent = sideComponent;
         }
     }
-
+/*
     public void setApplication(XBApplication application) {
         appBundle = application != null ? application.getAppBundle() : resourceBundle;
 
@@ -436,5 +435,5 @@ public class AboutPanel extends javax.swing.JPanel {
                 super.show(invoker, x, y);
             }
         });
-    }
+    } */
 }

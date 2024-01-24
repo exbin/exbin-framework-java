@@ -32,8 +32,8 @@ import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsData;
@@ -63,7 +63,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
     private boolean modified;
     private OptionsMutableTreeNode top;
-    private XBApplication application;
     private final ApplicationFrameHandler frame;
     private MainOptionsPanel mainOptionsPanel;
     private AppearanceOptionsPanel appearanceOptionsPanel;
@@ -278,7 +277,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
             appearanceOptionsExtPage.saveAndApply(preferences);
         }
 
-        OptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(OptionsModuleApi.class);
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         optionsModule.notifyOptionsChanged();
     }
 
@@ -299,7 +298,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
             appearanceOptionsExtPage.applyPreferencesChanges(preferences);
         }
 
-        OptionsModuleApi frameModule = application.getModuleRepository().getModuleByInterface(OptionsModuleApi.class);
+        OptionsModuleApi frameModule = App.getModule(OptionsModuleApi.class);
         frameModule.notifyOptionsChanged();
     }
 
@@ -344,14 +343,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
     public void setPreferences(Preferences preferences) {
         this.preferences = preferences;
-    }
-
-    public XBApplication getApplication() {
-        return application;
-    }
-
-    public void setApplication(XBApplication application) {
-        this.application = application;
     }
 
     @Override

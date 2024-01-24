@@ -16,7 +16,6 @@
 package org.exbin.framework.utils;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
 
 /**
  * Structure for window position.
@@ -25,15 +24,6 @@ import org.exbin.framework.api.Preferences;
  */
 @ParametersAreNonnullByDefault
 public class WindowPosition {
-
-    public static final String PREFERENCES_SCREEN_INDEX = "screenIndex";
-    public static final String PREFERENCES_SCREEN_WIDTH = "screenWidth";
-    public static final String PREFERENCES_SCREEN_HEIGHT = "screenHeight";
-    public static final String PREFERENCES_POSITION_X = "positionX";
-    public static final String PREFERENCES_POSITION_Y = "positionY";
-    public static final String PREFERENCES_WIDTH = "width";
-    public static final String PREFERENCES_HEIGHT = "height";
-    public static final String PREFERENCES_MAXIMIZED = "maximized";
 
     private int screenIndex;
     private int screenWidth;
@@ -106,31 +96,5 @@ public class WindowPosition {
 
     public void setMaximized(boolean maximized) {
         this.maximized = maximized;
-    }
-
-    public void saveToPreferences(Preferences pref, String prefix) {
-        pref.putInt(prefix + PREFERENCES_SCREEN_INDEX, screenIndex);
-        pref.putInt(prefix + PREFERENCES_SCREEN_WIDTH, screenWidth);
-        pref.putInt(prefix + PREFERENCES_SCREEN_HEIGHT, screenHeight);
-        pref.putInt(prefix + PREFERENCES_POSITION_X, relativeX);
-        pref.putInt(prefix + PREFERENCES_POSITION_Y, relativeY);
-        pref.putInt(prefix + PREFERENCES_WIDTH, width);
-        pref.putInt(prefix + PREFERENCES_HEIGHT, height);
-        pref.putBoolean(prefix + PREFERENCES_MAXIMIZED, maximized);
-    }
-
-    public void loadFromPreferences(Preferences pref, String prefix) {
-        screenIndex = pref.getInt(prefix + PREFERENCES_SCREEN_INDEX, 0);
-        screenWidth = pref.getInt(prefix + PREFERENCES_SCREEN_WIDTH, 0);
-        screenHeight = pref.getInt(prefix + PREFERENCES_SCREEN_HEIGHT, 0);
-        relativeX = pref.getInt(prefix + PREFERENCES_POSITION_X, 0);
-        relativeY = pref.getInt(prefix + PREFERENCES_POSITION_Y, 0);
-        width = pref.getInt(prefix + PREFERENCES_WIDTH, 0);
-        height = pref.getInt(prefix + PREFERENCES_HEIGHT, 0);
-        maximized = pref.getBoolean(prefix + PREFERENCES_MAXIMIZED, false);
-    }
-
-    public boolean preferencesExists(Preferences pref, String prefix) {
-        return pref.exists(prefix + PREFERENCES_SCREEN_INDEX);
     }
 }

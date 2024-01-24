@@ -1,0 +1,6 @@
+rootProject.name = 'exbin-framework'
+
+if (rootProject.path == ':') {
+}
+
+apply from: '../exbin-framework-java-core-settings.gradle'

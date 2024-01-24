@@ -15,9 +15,7 @@
  */
 package org.exbin.framework.operation;
 
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.operation.api.OperationModuleApi;
-import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of XBUP framework operation module.
@@ -26,17 +24,6 @@ import org.exbin.xbup.plugin.XBModuleHandler;
  */
 public class OperationModule implements OperationModuleApi {
 
-    private XBApplication application;
-
     public OperationModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 }

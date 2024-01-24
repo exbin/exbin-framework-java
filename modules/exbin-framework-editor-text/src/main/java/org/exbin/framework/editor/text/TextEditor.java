@@ -24,7 +24,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.DefaultFileTypes;
@@ -41,7 +41,6 @@ import org.exbin.framework.file.api.FileTypes;
 @ParametersAreNonnullByDefault
 public class TextEditor implements EditorProvider {
 
-    private final XBApplication application;
     private TextFileHandler activeFile;
     private FileTypes fileTypes;
 
@@ -50,14 +49,13 @@ public class TextEditor implements EditorProvider {
     @Nullable
     private File lastUsedDirectory;
 
-    public TextEditor(XBApplication application) {
-        this.application = application;
+    public TextEditor() {
         init();
     }
 
     private void init() {
         activeFile = new TextFileHandler();
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
 
         activeFile.getComponent().addPropertyChangeListener((PropertyChangeEvent evt) -> {
@@ -120,7 +118,7 @@ public class TextEditor implements EditorProvider {
     @Override
     public void openFile() {
         if (releaseAllFiles()) {
-            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
             fileModule.getFileActions().openFile(activeFile, fileTypes, this);
         }
     }
@@ -153,14 +151,14 @@ public class TextEditor implements EditorProvider {
 
     @Override
     public void saveAsFile() {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.getFileActions().saveAsFile(activeFile, fileTypes, this);
     }
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
-            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
             return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
         }
 
@@ -185,7 +183,7 @@ public class TextEditor implements EditorProvider {
 
     @Override
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.updateRecentFilesList(fileUri, fileType);
     }
 }

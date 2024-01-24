@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.DefaultFileTypes;
@@ -42,7 +42,6 @@ import org.exbin.framework.file.api.FileTypes;
 @ParametersAreNonnullByDefault
 public class AudioEditor implements EditorProvider {
 
-    private final XBApplication application;
     private AudioFileHandler activeFile;
     private FileTypes fileTypes;
 
@@ -55,13 +54,12 @@ public class AudioEditor implements EditorProvider {
     @Nullable
     private File lastUsedDirectory;
 
-    public AudioEditor(XBApplication application) {
-        this.application = application;
+    public AudioEditor() {
         init();
     }
 
     private void init() {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
 
         activeFile = new AudioFileHandler();
@@ -116,7 +114,7 @@ public class AudioEditor implements EditorProvider {
     @Override
     public void openFile() {
         if (releaseAllFiles()) {
-            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
             fileModule.getFileActions().openFile(activeFile, fileTypes, this);
         }
     }
@@ -149,14 +147,14 @@ public class AudioEditor implements EditorProvider {
 
     @Override
     public void saveAsFile() {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.getFileActions().saveAsFile(activeFile, fileTypes, this);
     }
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
         if (fileHandler.isModified()) {
-            FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
             return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
         }
 
@@ -181,7 +179,7 @@ public class AudioEditor implements EditorProvider {
 
     @Override
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.updateRecentFilesList(fileUri, fileType);
     }
 

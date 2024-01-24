@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.project.api.ProjectModuleApi;
 import org.exbin.framework.project.gui.NewProjectPanel;
@@ -44,13 +44,11 @@ public class NewProjectAction extends AbstractAction {
     public static final String ACTION_ID = "newProjectAction";
 
     private ResourceBundle resourceBundle;
-    private XBApplication application;
 
     public NewProjectAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
@@ -59,11 +57,11 @@ public class NewProjectAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ProjectModuleApi projectModule = application.getModuleRepository().getModuleByInterface(ProjectModuleApi.class);
+        ProjectModuleApi projectModule = App.getModule(ProjectModuleApi.class);
 
         NewProjectPanel newProjectPanel = new NewProjectPanel();
         DefaultControlPanel controlPanel = new DefaultControlPanel(newProjectPanel.getResourceBundle());
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         Frame parentFrame = frameModule.getFrame();
         final WindowUtils.DialogWrapper dialog = frameModule.createDialog(parentFrame, Dialog.ModalityType.APPLICATION_MODAL, newProjectPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), newProjectPanel.getClass(), newProjectPanel.getResourceBundle());

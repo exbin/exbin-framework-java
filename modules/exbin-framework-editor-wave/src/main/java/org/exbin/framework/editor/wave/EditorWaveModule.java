@@ -33,10 +33,10 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.editor.wave.options.impl.AudioDevicesOptionsImpl;
 import org.exbin.framework.editor.wave.options.impl.WaveColorOptionsImpl;
 import org.exbin.framework.editor.wave.options.gui.AudioDevicesOptionsPanel;
@@ -56,7 +56,6 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.editor.wave.service.WaveColorService;
 import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
 import org.exbin.framework.options.api.DefaultOptionsPage;
@@ -71,9 +70,9 @@ import org.exbin.framework.options.api.OptionsComponent;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorWaveModule implements XBApplicationModule {
+public class EditorWaveModule implements Module {
 
-    public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(EditorWaveModule.class);
+    public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(EditorWaveModule.class);
     public static final String AUDIO_MENU_ID = MODULE_ID + ".audioMenu";
     public static final String AUDIO_OPERATION_MENU_ID = MODULE_ID + ".audioOperationMenu";
     public static final String AUDIO_POPUP_MENU_ID = MODULE_ID + ".audioPopupMenu";
@@ -85,7 +84,6 @@ public class EditorWaveModule implements XBApplicationModule {
 
     public static final String WAVE_STATUS_BAR_ID = "waveStatusBar";
 
-    private XBApplication application;
     private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
     private AudioStatusPanel audioStatusPanel;
@@ -102,15 +100,6 @@ public class EditorWaveModule implements XBApplicationModule {
     public EditorWaveModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
-    }
-
     private void ensureSetup() {
         if (editorProvider == null) {
             getEditorProvider();
@@ -124,9 +113,9 @@ public class EditorWaveModule implements XBApplicationModule {
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            AudioEditor audioEditor = new AudioEditor(application);
+            AudioEditor audioEditor = new AudioEditor();
 
-            OperationUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(OperationUndoModuleApi.class);
+            OperationUndoModuleApi undoModule = App.getModule(OperationUndoModuleApi.class);
             audioEditor.setUndoHandler(undoModule.getUndoHandler());
 
             editorProvider = audioEditor;
@@ -166,7 +155,7 @@ public class EditorWaveModule implements XBApplicationModule {
     }
 
     public void registerFileTypes() {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
 
         String[] formats = new String[]{"wav", "aiff", "au"};
         for (String ext : formats) {
@@ -242,13 +231,13 @@ public class EditorWaveModule implements XBApplicationModule {
             }
         });
 
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, WAVE_STATUS_BAR_ID, audioStatusPanel);
         frameModule.switchStatusBar(WAVE_STATUS_BAR_ID);
     }
 
     public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(OptionsModuleApi.class);
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         WaveColorService waveColorService = new WaveColorServiceImpl(getEditorProvider());
 
         optionsModule.addOptionsPage(new DefaultOptionsPage<WaveColorOptionsImpl>() {
@@ -334,13 +323,13 @@ public class EditorWaveModule implements XBApplicationModule {
     }
 
     public void registerToolsOptionsMenuActions() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getWaveColorAction(), new MenuPosition(PositionMode.MIDDLE));
     }
 
     public void registerToolsMenuActions() {
         EditToolActions actions = getEditToolActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_SELECTION_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.AROUND));
         actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, actions.getSelectionToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
         actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, actions.getPencilToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
@@ -354,7 +343,7 @@ public class EditorWaveModule implements XBApplicationModule {
         if (propertiesAction == null) {
             ensureSetup();
             propertiesAction = new PropertiesAction();
-            propertiesAction.setup(application, editorProvider, resourceBundle);
+            propertiesAction.setup(editorProvider, resourceBundle);
         }
 
         return propertiesAction;
@@ -364,7 +353,7 @@ public class EditorWaveModule implements XBApplicationModule {
         if (audioControlActions == null) {
             ensureSetup();
             audioControlActions = new AudioControlActions();
-            audioControlActions.setup(application, editorProvider, resourceBundle);
+            audioControlActions.setup(editorProvider, resourceBundle);
         }
 
         return audioControlActions;
@@ -374,7 +363,7 @@ public class EditorWaveModule implements XBApplicationModule {
         if (audioOperationActions == null) {
             ensureSetup();
             audioOperationActions = new AudioOperationActions();
-            audioOperationActions.setup(application, editorProvider, resourceBundle);
+            audioOperationActions.setup(editorProvider, resourceBundle);
         }
 
         return audioOperationActions;
@@ -384,7 +373,7 @@ public class EditorWaveModule implements XBApplicationModule {
         if (drawingControlActions == null) {
             ensureSetup();
             drawingControlActions = new DrawingControlActions();
-            drawingControlActions.setup(application, editorProvider, resourceBundle);
+            drawingControlActions.setup(editorProvider, resourceBundle);
         }
 
         return drawingControlActions;
@@ -394,7 +383,7 @@ public class EditorWaveModule implements XBApplicationModule {
         if (editToolActions == null) {
             ensureSetup();
             editToolActions = new EditToolActions();
-            editToolActions.setup(application, editorProvider, resourceBundle);
+            editToolActions.setup(editorProvider, resourceBundle);
         }
 
         return editToolActions;
@@ -404,7 +393,7 @@ public class EditorWaveModule implements XBApplicationModule {
         if (zoomControlActions == null) {
             ensureSetup();
             zoomControlActions = new ZoomControlActions();
-            zoomControlActions.setup(application, editorProvider, resourceBundle);
+            zoomControlActions.setup(editorProvider, resourceBundle);
         }
 
         return zoomControlActions;
@@ -414,20 +403,20 @@ public class EditorWaveModule implements XBApplicationModule {
         if (waveColorAction == null) {
             ensureSetup();
             waveColorAction = new WaveColorAction();
-            waveColorAction.setup(application, editorProvider, resourceBundle);
+            waveColorAction.setup(editorProvider, resourceBundle);
         }
 
         return waveColorAction;
     }
 
     public void registerPropertiesMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerAudioMenu() {
         getAudioControlActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenu(AUDIO_MENU_ID, MODULE_ID);
         actionModule.registerMenuItem(FrameModuleApi.MAIN_MENU_ID, MODULE_ID, AUDIO_MENU_ID, "Audio", new MenuPosition(NextToMode.AFTER, "View"));
         actionModule.registerMenuItem(AUDIO_MENU_ID, MODULE_ID, audioControlActions.getPlayAction(), new MenuPosition(PositionMode.TOP));
@@ -436,7 +425,7 @@ public class EditorWaveModule implements XBApplicationModule {
 
     public void registerAudioOperationMenu() {
         getAudioOperationActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenu(AUDIO_OPERATION_MENU_ID, MODULE_ID);
         actionModule.registerMenuItem(AUDIO_MENU_ID, MODULE_ID, AUDIO_OPERATION_MENU_ID, "Operation", new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenuItem(AUDIO_OPERATION_MENU_ID, MODULE_ID, audioOperationActions.getRevertAction(), new MenuPosition(PositionMode.TOP));
@@ -444,13 +433,13 @@ public class EditorWaveModule implements XBApplicationModule {
 
     public void registerDrawingModeMenu() {
         getDrawingControlActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, DRAW_MODE_SUBMENU_ID, "Draw Mode", new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerZoomModeMenu() {
         getZoomControlActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, ZOOM_MODE_SUBMENU_ID, "Zoom", new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenu(ZOOM_MODE_SUBMENU_ID, MODULE_ID);
         actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
@@ -465,7 +454,7 @@ public class EditorWaveModule implements XBApplicationModule {
     private JPopupMenu createPopupMenu() {
         getAudioControlActions();
         getDrawingControlActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenu(AUDIO_POPUP_MENU_ID, MODULE_ID);
         actionModule.registerMenuItem(AUDIO_POPUP_MENU_ID, MODULE_ID, audioControlActions.getPlayAction(), new MenuPosition(PositionMode.TOP));
         actionModule.registerMenuItem(AUDIO_POPUP_MENU_ID, MODULE_ID, audioControlActions.getStopAction(), new MenuPosition(PositionMode.TOP));

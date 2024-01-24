@@ -19,10 +19,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.DefaultTableModel;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.xbup.plugin.XBModuleRecord;
 
 /**
  * List of modules panel.
@@ -64,20 +62,20 @@ public class AboutModulesPanel extends javax.swing.JPanel {
         });
     }
 
-    public void setApplication(XBApplication application) {
-        DefaultTableModel modulesTableModel = (DefaultTableModel) modulesTable.getModel();
-        List<XBModuleRecord> modulesList = application.getModuleRepository().getModulesList();
-        for (XBModuleRecord moduleRecord : modulesList) {
-            String moduleName;
-            if (moduleRecord.getName().isEmpty()) {
-                moduleName = moduleRecord.getModuleId();
-            } else {
-                moduleName = moduleRecord.getName();
-            }
-            String[] newRow = {moduleName, moduleRecord.getDescription()};
-            modulesTableModel.addRow(newRow);
-        }
-    }
+//    public void setApplication(XBApplication application) {
+//        DefaultTableModel modulesTableModel = (DefaultTableModel) modulesTable.getModel();
+//        List<XBModuleRecord> modulesList = application.getModuleRepository().getModulesList();
+//        for (XBModuleRecord moduleRecord : modulesList) {
+//            String moduleName;
+//            if (moduleRecord.getName().isEmpty()) {
+//                moduleName = moduleRecord.getModuleId();
+//            } else {
+//                moduleName = moduleRecord.getName();
+//            }
+//            String[] newRow = {moduleName, moduleRecord.getDescription()};
+//            modulesTableModel.addRow(newRow);
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -18,13 +18,12 @@ package org.exbin.framework.help.online;
 import java.net.URL;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.help.online.action.OnlineHelpAction;
 import org.exbin.framework.help.online.api.HelpOnlineModuleApi;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 
 /**
@@ -35,21 +34,11 @@ import org.exbin.framework.action.api.ActionModuleApi;
 @ParametersAreNonnullByDefault
 public class HelpOnlineModule implements HelpOnlineModuleApi {
 
-    private XBApplication application;
     private URL helpUrl;
 
     private OnlineHelpAction onlineHelpAction;
 
     public HelpOnlineModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 
     @Nonnull
@@ -65,7 +54,7 @@ public class HelpOnlineModule implements HelpOnlineModuleApi {
 
     @Override
     public void registerOnlineHelpMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getOnlineHelpAction(), new MenuPosition(PositionMode.TOP));
     }
 

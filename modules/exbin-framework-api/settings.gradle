@@ -1,6 +1,0 @@
-rootProject.name = 'exbin-framework-api'
-
-if (rootProject.path == ':') {
-}
-
-apply from: '../exbin-framework-java-modules-settings.gradle'

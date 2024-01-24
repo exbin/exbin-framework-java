@@ -20,7 +20,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.utils.gui.WindowHeaderPanel;
 
 /**
@@ -83,10 +82,8 @@ public interface ApplicationFrameHandler {
 
     /**
      * Sets base appplication handler to be used as source of configuration.
-     *
-     * @param app base application handler
      */
-    void setApplication(XBApplication app);
+    void initApplication();
 
     /**
      * Sets content of central area of the frame.
@@ -97,17 +94,13 @@ public interface ApplicationFrameHandler {
 
     /**
      * Loads main menu for the frame.
-     *
-     * @param application application
      */
-    void loadMainMenu(XBApplication application);
+    void loadMainMenu();
 
     /**
      * Loads main tool bar for the frame.
-     *
-     * @param application application
      */
-    void loadMainToolBar(XBApplication application);
+    void loadMainToolBar();
 
     /**
      * Shows this frame.

@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.update.preferences;
 
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.preferences.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**

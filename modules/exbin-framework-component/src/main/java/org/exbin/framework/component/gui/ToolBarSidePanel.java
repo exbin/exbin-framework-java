@@ -70,7 +70,7 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
     public static void main(String[] args) {
         TestApplication testApplication = UtilsModule.getDefaultAppEditor();
         ComponentModule guiComponentModule = new ComponentModule();
-        testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
+//        testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
 
         ToolBarSidePanel toolBarSidePanel = new ToolBarSidePanel();
         MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();

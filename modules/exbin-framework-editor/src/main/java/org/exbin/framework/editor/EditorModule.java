@@ -23,8 +23,8 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.editor.api.MultiEditorProvider;
@@ -33,7 +33,6 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.framework.operation.undo.api.UndoActionsHandler;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
@@ -55,7 +54,6 @@ import org.exbin.framework.utils.LanguageUtils;
 @ParametersAreNonnullByDefault
 public class EditorModule implements EditorModuleApi {
 
-    private XBApplication application;
     private final List<EditorProvider> editors = new ArrayList<>();
     private final Map<String, List<EditorProvider>> pluginEditorsMap = new HashMap<>();
     private EditorProvider editorProvider = null;
@@ -68,11 +66,6 @@ public class EditorModule implements EditorModuleApi {
     private EditorActions editorActions;
 
     public EditorModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
     }
 
     @Nonnull
@@ -92,7 +85,7 @@ public class EditorModule implements EditorModuleApi {
 
     private void setEditorProvider(EditorProvider editorProvider) {
         if (this.editorProvider == null) {
-            ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.registerClipboardHandler(new ClipboardActionsHandler() {
                 @Override
                 public void performCut() {
@@ -194,7 +187,6 @@ public class EditorModule implements EditorModuleApi {
         this.editorProvider = editorProvider;
     }
 
-    @Override
     public void unregisterModule(String moduleId) {
         List<EditorProvider> pluginEditors = pluginEditorsMap.get(moduleId);
         if (pluginEditors != null) {
@@ -209,7 +201,7 @@ public class EditorModule implements EditorModuleApi {
     public void registerEditor(String pluginId, final EditorProvider editorProvider) {
         if (editorProvider instanceof UndoActionsHandler) {
             ((UndoActionsHandler) editorProvider).setUndoUpdateListener(() -> {
-                OperationUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(OperationUndoModuleApi.class);
+                OperationUndoModuleApi undoModule = App.getModule(OperationUndoModuleApi.class);
                 undoModule.updateUndoStatus();
             });
         }
@@ -236,14 +228,14 @@ public class EditorModule implements EditorModuleApi {
     @Nonnull
     @Override
     public JComponent getEditorComponent() {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.setFileOperations(editorProvider);
         return editorProvider.getEditorComponent();
     }
 
     @Override
     public void registerUndoHandler() {
-        OperationUndoModuleApi undoModule = application.getModuleRepository().getModuleByInterface(OperationUndoModuleApi.class);
+        OperationUndoModuleApi undoModule = App.getModule(OperationUndoModuleApi.class);
         if (editorProvider instanceof UndoFileHandler) {
             undoModule.setUndoHandler(((UndoFileHandler) editorProvider).getUndoHandler());
         }
@@ -251,7 +243,7 @@ public class EditorModule implements EditorModuleApi {
 
     @Override
     public void registerMenuFileCloseActions() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(FileModuleApi.FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
         actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getCloseFileAction(), new MenuPosition(FileModuleApi.FILE_MENU_GROUP_ID));
     }
@@ -262,7 +254,7 @@ public class EditorModule implements EditorModuleApi {
         if (closeFileAction == null) {
             closeFileAction = new CloseFileAction();
             ensureSetup();
-            closeFileAction.setup(application, resourceBundle, (MultiEditorProvider) editorProvider);
+            closeFileAction.setup(resourceBundle, (MultiEditorProvider) editorProvider);
         }
         return closeFileAction;
     }
@@ -273,7 +265,7 @@ public class EditorModule implements EditorModuleApi {
         if (closeAllFileAction == null) {
             closeAllFileAction = new CloseAllFileAction();
             ensureSetup();
-            closeAllFileAction.setup(application, resourceBundle, (MultiEditorProvider) editorProvider);
+            closeAllFileAction.setup(resourceBundle, (MultiEditorProvider) editorProvider);
         }
         return closeAllFileAction;
     }
@@ -284,7 +276,7 @@ public class EditorModule implements EditorModuleApi {
         if (closeOtherFileAction == null) {
             closeOtherFileAction = new CloseOtherFileAction();
             ensureSetup();
-            closeOtherFileAction.setup(application, resourceBundle, (MultiEditorProvider) editorProvider);
+            closeOtherFileAction.setup(resourceBundle, (MultiEditorProvider) editorProvider);
         }
         return closeOtherFileAction;
     }
@@ -295,7 +287,7 @@ public class EditorModule implements EditorModuleApi {
         if (editorActions == null) {
             editorActions = new EditorActions();
             ensureSetup();
-            editorActions.setup(application, resourceBundle, (MultiEditorProvider) editorProvider);
+            editorActions.setup(resourceBundle, (MultiEditorProvider) editorProvider);
         }
         return editorActions;
     }

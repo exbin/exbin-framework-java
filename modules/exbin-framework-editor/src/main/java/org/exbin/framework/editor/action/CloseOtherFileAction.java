@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.editor.api.MultiEditorPopupMenu;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileDependentAction;
@@ -39,14 +38,12 @@ public class CloseOtherFileAction extends AbstractAction implements FileDependen
     public static final String ACTION_ID = "fileCloseOtherAction";
 
     private ResourceBundle resourceBundle;
-    private XBApplication application;
     private MultiEditorProvider editorProvider;
 
     public CloseOtherFileAction() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
         this.resourceBundle = resourceBundle;
         this.editorProvider = editorProvider;
 

@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.FindTextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -46,7 +46,6 @@ public class FindReplaceActions {
     public static final String EDIT_REPLACE_ACTION_ID = "editReplaceAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     private Action editFindAction;
@@ -56,14 +55,13 @@ public class FindReplaceActions {
     public FindReplaceActions() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
     }
 
     public void showFindDialog(boolean shallReplace) {
-        final FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        final FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final FindTextPanel findPanel = new FindTextPanel();
         findPanel.setShallReplace(shallReplace);
         findPanel.setSelected();

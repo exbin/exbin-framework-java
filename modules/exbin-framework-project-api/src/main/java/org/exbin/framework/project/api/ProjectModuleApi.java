@@ -19,8 +19,8 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
@@ -29,9 +29,9 @@ import org.exbin.framework.frame.api.FrameModuleApi;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ProjectModuleApi extends XBApplicationModule {
+public interface ProjectModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(ProjectModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ProjectModuleApi.class);
     public static String PROJECT_MENU_ID = FrameModuleApi.MAIN_MENU_ID + "/File";
     public static final String PROJECT_MENU_GROUP_ID = MODULE_ID + ".projectMenuGroup";
 

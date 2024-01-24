@@ -24,20 +24,18 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import org.exbin.framework.utils.ClipboardActionsHandler;
-import org.exbin.framework.utils.ComponentPopupEventDispatcher;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.api.XBApplicationModuleRepository;
+import org.exbin.framework.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.popup.api.PopupModuleApi;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.ClipboardActionsUpdater;
@@ -50,7 +48,6 @@ import org.exbin.framework.utils.ClipboardActionsUpdater;
 @ParametersAreNonnullByDefault
 public class ActionModule implements ActionModuleApi {
 
-    private XBApplication application;
     private ClipboardActions clipboardActions = null;
     private ClipboardTextActions clipboardTextActions = null;
     private MenuHandler menuHandler = null;
@@ -60,12 +57,6 @@ public class ActionModule implements ActionModuleApi {
     public ActionModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
-    }
-
-    @Override
     public void unregisterModule(String moduleId) {
     }
 
@@ -110,22 +101,19 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        XBApplicationModuleRepository moduleRepository = application.getModuleRepository();
-        PopupModuleApi popupModule = moduleRepository.getModuleByInterface(PopupModuleApi.class);
+        PopupModuleApi popupModule = App.getModule(PopupModuleApi.class);
         popupModule.addComponentPopupEventDispatcher(dispatcher);
     }
 
     @Override
     public void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        XBApplicationModuleRepository moduleRepository = application.getModuleRepository();
-        PopupModuleApi popupModule = moduleRepository.getModuleByInterface(PopupModuleApi.class);
+        PopupModuleApi popupModule = App.getModule(PopupModuleApi.class);
         popupModule.removeComponentPopupEventDispatcher(dispatcher);
     }
 
     @Override
     public void fillPopupMenu(JPopupMenu popupMenu, int position) {
-        XBApplicationModuleRepository moduleRepository = application.getModuleRepository();
-        PopupModuleApi popupModule = moduleRepository.getModuleByInterface(PopupModuleApi.class);
+        PopupModuleApi popupModule = App.getModule(PopupModuleApi.class);
         popupModule.fillDefaultEditPopupMenu(popupMenu, position);
     }
 
@@ -210,8 +198,7 @@ public class ActionModule implements ActionModuleApi {
     @Override
     public void registerClipboardTextActions() {
         getClipboardTextActions();
-        XBApplicationModuleRepository moduleRepository = application.getModuleRepository();
-        PopupModuleApi popupModule = moduleRepository.getModuleByInterface(PopupModuleApi.class);
+        PopupModuleApi popupModule = App.getModule(PopupModuleApi.class);
         popupModule.registerDefaultClipboardPopupMenu(resourceBundle, ActionModule.class);
     }
 

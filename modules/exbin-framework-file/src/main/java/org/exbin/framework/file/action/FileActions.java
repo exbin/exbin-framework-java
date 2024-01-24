@@ -28,7 +28,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.file.api.FileActionsApi;
 import org.exbin.framework.file.api.FileActionsApi.OpenFileResult;
 import org.exbin.framework.file.api.FileType;
@@ -49,13 +49,11 @@ public class FileActions implements FileActionsApi {
     public static final String ALL_FILES_FILTER = "AllFilesFilter";
 
     private ResourceBundle resourceBundle;
-    private XBApplication application;
 
     public FileActions() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
 
@@ -95,7 +93,7 @@ public class FileActions implements FileActionsApi {
     @Nonnull
     @Override
     public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         JFileChooser openFileChooser = new JFileChooser();
         setupFileFilters(openFileChooser, fileTypes);
         if (usedDirectory != null) {
@@ -128,7 +126,7 @@ public class FileActions implements FileActionsApi {
 
     @Nonnull
     private OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         setupFileFilters(saveFileChooser, fileTypes);
@@ -165,7 +163,7 @@ public class FileActions implements FileActionsApi {
     @Override
     public void saveAsFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
         if (fileHandler != null) {
-            FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             Optional<URI> currentFileUri = fileHandler.getFileUri();
             OpenFileResult saveFileResult = showSaveFileDialog(fileTypes, currentFileUri.isPresent() ? new File(currentFileUri.get()) : null, usedDirectory, resourceBundle.getString("SaveAsDialog.title"));
             if (saveFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
@@ -207,7 +205,7 @@ public class FileActions implements FileActionsApi {
                 resourceBundle.getString("Question.modified_discard"),
                 resourceBundle.getString("Question.modified_cancel")
             };
-            FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             int result = JOptionPane.showOptionDialog(frameModule.getFrame(),
                     resourceBundle.getString("Question.modified"),
                     resourceBundle.getString("Question.modified_title"),
@@ -239,7 +237,7 @@ public class FileActions implements FileActionsApi {
             resourceBundle.getString("Question.modified_cancel")
         };
 
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         int result = JOptionPane.showOptionDialog(
                 frameModule.getFrame(),
                 resourceBundle.getString("Question.overwrite"),

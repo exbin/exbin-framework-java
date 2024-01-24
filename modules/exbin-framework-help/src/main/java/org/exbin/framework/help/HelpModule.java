@@ -17,36 +17,25 @@ package org.exbin.framework.help;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.help.action.HelpAction;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.help.api.HelpModuleApi;
 
 /**
- * Implementation of XBUP framework help module.
+ * Framework help module.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class HelpModule implements HelpModuleApi {
 
-    private XBApplication application;
     private HelpAction helpAction;
 
     public HelpModule() {
-    }
-
-    @Override
-    public void init(XBModuleHandler moduleHandler) {
-        this.application = (XBApplication) moduleHandler;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
     }
 
     @Nonnull
@@ -54,7 +43,6 @@ public class HelpModule implements HelpModuleApi {
     public HelpAction getHelpAction() {
         if (helpAction == null) {
             helpAction = new HelpAction();
-            helpAction.setApplication(application);
         }
 
         return helpAction;
@@ -62,7 +50,7 @@ public class HelpModule implements HelpModuleApi {
 
     @Override
     public void registerMainMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getHelpAction(), new MenuPosition(PositionMode.TOP));
     }
 }

@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.wave.gui.PropertiesPanel;
@@ -44,14 +44,12 @@ public class PropertiesAction extends AbstractAction {
     public static final String ACTION_ID = "propertiesAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public PropertiesAction() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
 
@@ -67,7 +65,7 @@ public class PropertiesAction extends AbstractAction {
         }
 
         AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
 
         PropertiesPanel propertiesPanel = new PropertiesPanel();
         propertiesPanel.setDocument((AudioEditor) editorProvider);

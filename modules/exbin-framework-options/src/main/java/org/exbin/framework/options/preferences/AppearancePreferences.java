@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.options.preferences;
 
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.preferences.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.options.AppearanceOptions;
 

@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.wave.options.gui.WaveColorPanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -47,14 +47,12 @@ public class WaveColorAction extends AbstractAction {
     public static final String ACTION_ID = "toolsSetColorAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public WaveColorAction() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
 
@@ -70,7 +68,7 @@ public class WaveColorAction extends AbstractAction {
         }
 
         AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
 
         WaveColorService waveColorService = new WaveColorServiceImpl(editorProvider);
 

@@ -20,7 +20,6 @@ import org.exbin.framework.component.action.DefaultMoveItemActions;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.component.api.DialogControlPanelHandler;
 import org.exbin.framework.component.api.toolbar.EditItemActions;
 import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
@@ -28,7 +27,6 @@ import org.exbin.framework.component.api.ComponentModuleApi;
 import org.exbin.framework.component.api.toolbar.MoveItemActions;
 import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
 import org.exbin.framework.component.gui.DialogControlPanel;
-import org.exbin.xbup.plugin.XBModuleHandler;
 
 /**
  * Implementation of framework component module.
@@ -38,17 +36,9 @@ import org.exbin.xbup.plugin.XBModuleHandler;
 @ParametersAreNonnullByDefault
 public class ComponentModule implements ComponentModuleApi {
 
-    private XBApplication application;
-
     public ComponentModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
     public void unregisterModule(String moduleId) {
     }
 

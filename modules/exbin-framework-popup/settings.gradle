@@ -1,9 +1,8 @@
 rootProject.name = 'exbin-framework-popup'
 
 if (rootProject.path == ':') {
-    include ':modules:exbin-framework'
+    include ':core:exbin-framework'
     include ':modules:exbin-framework-action-api'
-    include ':modules:exbin-framework-api'
     include ':modules:exbin-framework-frame-api'
     include ':modules:exbin-framework-popup-api'
     include ':modules:exbin-framework-utils'

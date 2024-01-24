@@ -18,7 +18,7 @@ package org.exbin.framework.editor.text.preferences;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.Preferences;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.editor.text.options.TextColorOptions;
 
 /**

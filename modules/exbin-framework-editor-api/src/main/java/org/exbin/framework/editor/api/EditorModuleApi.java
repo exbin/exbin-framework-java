@@ -19,8 +19,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * XBUP framework editor module api interface.
@@ -28,9 +28,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditorModuleApi extends XBApplicationModule {
+public interface EditorModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(EditorModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(EditorModuleApi.class);
 
     /**
      * Registers new editor.

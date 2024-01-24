@@ -22,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
-import org.exbin.framework.api.XBApplication;
 import org.exbin.framework.frame.XBApplicationFrame;
 import org.exbin.framework.utils.ActionUtils;
 
@@ -38,7 +37,6 @@ public class FrameActions {
     public static final String VIEW_TOOL_BAR_CAPTIONS_ACTION_ID = "viewToolBarCaptionsAction";
     public static final String VIEW_STATUS_BAR_ACTION_ID = "viewStatusBarAction";
 
-    private XBApplication application;
     private ResourceBundle resourceBundle;
     private XBApplicationFrame frame;
 
@@ -49,8 +47,7 @@ public class FrameActions {
     public FrameActions() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
 

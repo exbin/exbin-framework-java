@@ -32,10 +32,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.filechooser.FileFilter;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.api.XBApplication;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.editor.text.action.TextFontAction;
 import org.exbin.framework.editor.text.options.impl.TextAppearanceOptionsImpl;
 import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
@@ -64,11 +64,11 @@ import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.utils.handler.DefaultControlHandler;
 import org.exbin.framework.utils.gui.DefaultControlPanel;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.framework.editor.text.service.TextAppearanceService;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextColorService;
@@ -84,9 +84,9 @@ import org.exbin.framework.options.api.OptionsComponent;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorTextModule implements XBApplicationModule {
+public class EditorTextModule implements Module {
 
-    public static final String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(EditorTextModule.class);
+    public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(EditorTextModule.class);
 
     private static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
@@ -96,7 +96,6 @@ public class EditorTextModule implements XBApplicationModule {
 
     public static final String TEXT_STATUS_BAR_ID = "textStatusBar";
 
-    private XBApplication application;
     private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
     private TextStatusPanel textStatusPanel;
@@ -113,15 +112,6 @@ public class EditorTextModule implements XBApplicationModule {
     public EditorTextModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
-    public void unregisterModule(String moduleId) {
-    }
-
     private void ensureSetup() {
         if (editorProvider == null) {
             getEditorProvider();
@@ -135,7 +125,7 @@ public class EditorTextModule implements XBApplicationModule {
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            editorProvider = new TextEditor(application);
+            editorProvider = new TextEditor();
         }
 
         return editorProvider;
@@ -151,14 +141,14 @@ public class EditorTextModule implements XBApplicationModule {
     }
 
     public void registerFileTypes() {
-        FileModuleApi fileModule = application.getModuleRepository().getModuleByInterface(FileModuleApi.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.addFileType(new TXTFileType());
         fileModule.addFileType(new XBTFileType());
     }
 
     public void registerStatusBar() {
         textStatusPanel = new TextStatusPanel();
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, TEXT_STATUS_BAR_ID, textStatusPanel);
         frameModule.switchStatusBar(TEXT_STATUS_BAR_ID);
         ((TextPanel) getEditorProvider().getEditorComponent()).registerTextStatus(textStatusPanel);
@@ -171,12 +161,12 @@ public class EditorTextModule implements XBApplicationModule {
         getEncodingsHandler();
         encodingsHandler.rebuildEncodings();
 
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, encodingsHandler.getToolsEncodingMenu(), new MenuPosition(PositionMode.TOP_LAST));
     }
 
     public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = application.getModuleRepository().getModuleByInterface(OptionsModuleApi.class);
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
@@ -280,7 +270,7 @@ public class EditorTextModule implements XBApplicationModule {
                         @Override
                         public Font changeFont(Font currentFont) {
                             final Result result = new Result();
-                            FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+                            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                             final TextFontPanel fontPanel = new TextFontPanel();
                             fontPanel.setStoredFont(currentFont);
                             DefaultControlPanel controlPanel = new DefaultControlPanel();
@@ -290,7 +280,8 @@ public class EditorTextModule implements XBApplicationModule {
                             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                                 if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                                     if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                                        TextFontPreferences textFontParameters = new TextFontPreferences(application.getAppPreferences());
+                                        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+                                        TextFontPreferences textFontParameters = new TextFontPreferences(preferencesModule.getAppPreferences());
                                         textFontParameters.setUseDefaultFont(true);
                                         textFontParameters.setFont(fontPanel.getStoredFont());
                                     }
@@ -368,7 +359,7 @@ public class EditorTextModule implements XBApplicationModule {
                     panel.setTextEncodingService(getEncodingsHandler().getTextEncodingService());
                     panel.setAddEncodingsOperation((List<String> usedEncodings) -> {
                         final List<String> result = new ArrayList<>();
-                        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+                        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                         final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
                         addEncodingPanel.setUsedEncodings(usedEncodings);
                         DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
@@ -460,12 +451,12 @@ public class EditorTextModule implements XBApplicationModule {
 
     public void registerWordWrapping() {
         getWordWrappingAction();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, getWordWrappingAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
@@ -478,7 +469,7 @@ public class EditorTextModule implements XBApplicationModule {
         if (findReplaceActions == null) {
             ensureSetup();
             findReplaceActions = new FindReplaceActions();
-            findReplaceActions.setup(application, editorProvider, resourceBundle);
+            findReplaceActions.setup(editorProvider, resourceBundle);
         }
 
         return findReplaceActions;
@@ -489,7 +480,7 @@ public class EditorTextModule implements XBApplicationModule {
         if (textFontAction == null) {
             ensureSetup();
             textFontAction = new TextFontAction();
-            textFontAction.setup(application, editorProvider, resourceBundle);
+            textFontAction.setup(editorProvider, resourceBundle);
         }
 
         return textFontAction;
@@ -500,7 +491,7 @@ public class EditorTextModule implements XBApplicationModule {
         if (textColorAction == null) {
             ensureSetup();
             textColorAction = new TextColorAction();
-            textColorAction.setup(application, editorProvider, resourceBundle);
+            textColorAction.setup(editorProvider, resourceBundle);
         }
 
         return textColorAction;
@@ -510,7 +501,6 @@ public class EditorTextModule implements XBApplicationModule {
     private EncodingsHandler getEncodingsHandler() {
         if (encodingsHandler == null) {
             encodingsHandler = new EncodingsHandler();
-            encodingsHandler.setApplication(application);
             encodingsHandler.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
                 @Override
                 public void encodingListChanged() {
@@ -537,7 +527,7 @@ public class EditorTextModule implements XBApplicationModule {
         if (wordWrappingAction == null) {
             ensureSetup();
             wordWrappingAction = new WordWrappingAction();
-            wordWrappingAction.setup(application, editorProvider, resourceBundle);
+            wordWrappingAction.setup(editorProvider, resourceBundle);
         }
 
         return wordWrappingAction;
@@ -548,7 +538,7 @@ public class EditorTextModule implements XBApplicationModule {
         if (goToLineAction == null) {
             ensureSetup();
             goToLineAction = new GoToLineAction();
-            goToLineAction.setup(application, editorProvider, resourceBundle);
+            goToLineAction.setup(editorProvider, resourceBundle);
         }
 
         return goToLineAction;
@@ -559,7 +549,7 @@ public class EditorTextModule implements XBApplicationModule {
         if (propertiesAction == null) {
             ensureSetup();
             propertiesAction = new PropertiesAction();
-            propertiesAction.setup(application, editorProvider, resourceBundle);
+            propertiesAction.setup(editorProvider, resourceBundle);
         }
 
         return propertiesAction;
@@ -570,7 +560,7 @@ public class EditorTextModule implements XBApplicationModule {
         if (printAction == null) {
             ensureSetup();
             printAction = new PrintAction();
-            printAction.setup(application, editorProvider, resourceBundle);
+            printAction.setup(editorProvider, resourceBundle);
         }
 
         return printAction;
@@ -578,7 +568,7 @@ public class EditorTextModule implements XBApplicationModule {
 
     public void registerEditFindMenuActions() {
         getFindReplaceActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuGroup(FrameModuleApi.EDIT_MENU_ID, new MenuGroup(EDIT_FIND_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
         actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
         actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
@@ -587,24 +577,24 @@ public class EditorTextModule implements XBApplicationModule {
 
     public void registerEditFindToolBarActions() {
         getFindReplaceActions();
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerToolBarGroup(FrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
         actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getTextFontAction(), new MenuPosition(PositionMode.TOP));
         actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getTextColorAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerPropertiesMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
-        ActionModuleApi actionModule = application.getModuleRepository().getModuleByInterface(ActionModuleApi.class);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 

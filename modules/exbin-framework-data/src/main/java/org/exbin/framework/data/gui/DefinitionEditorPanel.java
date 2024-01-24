@@ -117,11 +117,11 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
     public static void main(String[] args) {
         TestApplication testApplication = UtilsModule.getDefaultAppEditor();
         OperationUndoModule operationUndoModule = new OperationUndoModule();
-        testApplication.addModule(OperationUndoModule.MODULE_ID, operationUndoModule);
+//        testApplication.addModule(OperationUndoModule.MODULE_ID, operationUndoModule);
         ActionModule guiActionModule = new ActionModule();
-        testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
+//        testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
         ComponentModule guiComponentModule = new ComponentModule();
-        testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
+//        testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
 
         DefinitionEditorPanel definitionEditorPanel = new DefinitionEditorPanel();
         UndoActionsHandler undoActionsHandler = new UndoActionsHandlerEmpty();

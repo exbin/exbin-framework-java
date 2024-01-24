@@ -20,13 +20,14 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
 import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
@@ -45,14 +46,12 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
     public static final String ACTION_ID = "toolsSetFontAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public TextFontAction() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
 
@@ -75,7 +74,7 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
 
         TextFontApi textFontApi = (TextFontApi) activeFile.get();
 
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();
         fontPanel.setStoredFont(textFontApi.getCurrentFont());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
@@ -85,7 +84,8 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
         controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
             if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                 if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                    TextFontPreferences parameters = new TextFontPreferences(application.getAppPreferences());
+                    PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+                    TextFontPreferences parameters = new TextFontPreferences(preferencesModule.getAppPreferences());
                     parameters.setUseDefaultFont(false);
                     parameters.setFont(fontPanel.getStoredFont());
                 }

@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ToolColorPanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -45,14 +45,12 @@ public class ToolColorAction extends AbstractAction {
     public static final String ACTION_ID = "toolsSetColorAction";
 
     private EditorProvider editorProvider;
-    private XBApplication application;
     private ResourceBundle resourceBundle;
 
     public ToolColorAction() {
     }
 
-    public void setup(XBApplication application, EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.application = application;
+    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
 
@@ -68,7 +66,7 @@ public class ToolColorAction extends AbstractAction {
         }
 
         ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
 
         final ToolColorPanel toolColorPanel = new ToolColorPanel();
         toolColorPanel.setToolColor(imagePanel.getToolColor());

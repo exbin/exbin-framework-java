@@ -30,8 +30,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import org.exbin.framework.preferences.PreferencesWrapper;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.client.api.ClientConnectionEvent;
 import org.exbin.framework.client.api.ClientConnectionListener;
 import org.exbin.framework.client.api.ClientModuleApi;
@@ -87,7 +86,7 @@ import org.exbin.xbup.plugin.XBPluginRepository;
 @ParametersAreNonnullByDefault
 public class ClientModule implements ClientModuleApi {
 
-    private XBApplication application;
+    private Preferences preferences = null;
 
     private boolean devMode = false;
     private XBACatalog catalog;
@@ -98,12 +97,6 @@ public class ClientModule implements ClientModuleApi {
     public ClientModule() {
     }
 
-    @Override
-    public void init(XBModuleHandler application) {
-        this.application = (XBApplication) application;
-    }
-
-    @Override
     public void unregisterModule(String moduleId) {
     }
 
@@ -166,7 +159,6 @@ public class ClientModule implements ClientModuleApi {
     @Override
     public boolean runLocalCatalog() {
         connectionStatusChanged(ConnectionStatus.CONNECTING);
-        Preferences preferences = application.getAppPreferences();
         try {
             // Database Initialization
             String derbyHome = System.getProperty("user.home") + "/.java/.userPrefs/" + ((PreferencesWrapper) preferences).getInnerPreferences().absolutePath();
@@ -278,7 +270,6 @@ public class ClientModule implements ClientModuleApi {
 
     @Override
     public void useBuildInCatalog() {
-        Preferences preferences = application.getAppPreferences();
         // Database Initialization
         String derbyHome = System.getProperty("user.home") + "/.java/.userPrefs/" + ((PreferencesWrapper) preferences).getInnerPreferences().absolutePath();
         if (devMode) {

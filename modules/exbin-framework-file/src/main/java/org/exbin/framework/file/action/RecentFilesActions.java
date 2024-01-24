@@ -30,8 +30,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileSystemView;
-import org.exbin.framework.api.Preferences;
-import org.exbin.framework.api.XBApplication;
+import org.exbin.framework.App;
+import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.preferences.RecentFilesPreferences;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
@@ -46,7 +46,6 @@ import org.exbin.framework.frame.api.FrameModuleApi;
 public class RecentFilesActions {
 
     private ResourceBundle resourceBundle;
-    private XBApplication application;
     private FilesControl filesControl;
     private Preferences preferences;
 
@@ -56,12 +55,11 @@ public class RecentFilesActions {
     public RecentFilesActions() {
     }
 
-    public void setup(XBApplication application, ResourceBundle resourceBundle, FilesControl filesControl) {
-        this.application = application;
+    public void setup(ResourceBundle resourceBundle, FilesControl filesControl) {
         this.filesControl = filesControl;
         this.resourceBundle = resourceBundle;
 
-        FrameModuleApi frameModule = application.getModuleRepository().getModuleByInterface(FrameModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
             saveState();
             return true;

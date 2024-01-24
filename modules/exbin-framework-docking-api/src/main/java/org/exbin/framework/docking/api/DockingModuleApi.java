@@ -18,8 +18,8 @@ package org.exbin.framework.docking.api;
 import java.awt.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.api.XBApplicationModule;
-import org.exbin.framework.api.XBModuleRepositoryUtils;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
  * Interface for XBUP framework docking module.
@@ -27,9 +27,9 @@ import org.exbin.framework.api.XBModuleRepositoryUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DockingModuleApi extends XBApplicationModule {
+public interface DockingModuleApi extends Module {
 
-    public static String MODULE_ID = XBModuleRepositoryUtils.getModuleIdByApi(DockingModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DockingModuleApi.class);
 
     /**
      * Returns docking viewport panel.
