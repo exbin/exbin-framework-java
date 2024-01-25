@@ -23,7 +23,7 @@ import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.editor.api.EditorActionsApi;
 import org.exbin.framework.editor.gui.UnsavedFilesPanel;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 
 /**
@@ -47,11 +47,11 @@ public class EditorActions implements EditorActionsApi {
 
     @Override
     public boolean showAskForSaveDialog(List<FileHandler> fileHandlers) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         UnsavedFilesPanel unsavedFilesPanel = new UnsavedFilesPanel();
         unsavedFilesPanel.setUnsavedFiles(fileHandlers);
         final boolean[] result = new boolean[1];
-        final DialogWrapper dialog = frameModule.createDialog(unsavedFilesPanel);
+        final DialogWrapper dialog = windowModule.createDialog(unsavedFilesPanel);
         unsavedFilesPanel.setController(new UnsavedFilesPanel.Controller() {
             @Override
             public boolean saveFile(FileHandler fileHandler) {
@@ -72,7 +72,7 @@ public class EditorActions implements EditorActionsApi {
             }
         });
 
-        frameModule.setDialogTitle(dialog, unsavedFilesPanel.getResourceBundle());
+        windowModule.setDialogTitle(dialog, unsavedFilesPanel.getResourceBundle());
         unsavedFilesPanel.assignGlobalKeys();
         dialog.showCentered(editorProvider.getEditorComponent());
 

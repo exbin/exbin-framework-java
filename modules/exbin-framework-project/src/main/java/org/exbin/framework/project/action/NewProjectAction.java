@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.project.api.ProjectModuleApi;
 import org.exbin.framework.project.gui.NewProjectPanel;
 import org.exbin.framework.project.model.ProjectTreeModel;
@@ -61,11 +61,11 @@ public class NewProjectAction extends AbstractAction {
 
         NewProjectPanel newProjectPanel = new NewProjectPanel();
         DefaultControlPanel controlPanel = new DefaultControlPanel(newProjectPanel.getResourceBundle());
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        Frame parentFrame = frameModule.getFrame();
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(parentFrame, Dialog.ModalityType.APPLICATION_MODAL, newProjectPanel, controlPanel);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        Frame parentFrame = windowModule.getFrame();
+        final WindowUtils.DialogWrapper dialog = windowModule.createDialog(parentFrame, Dialog.ModalityType.APPLICATION_MODAL, newProjectPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), newProjectPanel.getClass(), newProjectPanel.getResourceBundle());
-        frameModule.setDialogTitle(dialog, newProjectPanel.getResourceBundle());
+        windowModule.setDialogTitle(dialog, newProjectPanel.getResourceBundle());
 
         ProjectTreeModel projectTreeModel = new ProjectTreeModel(projectModule.getProjectCategories());
         newProjectPanel.setCategoryModel(projectTreeModel);

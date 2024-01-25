@@ -25,7 +25,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.FindTextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
@@ -61,12 +61,12 @@ public class FindReplaceActions {
     }
 
     public void showFindDialog(boolean shallReplace) {
-        final FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        final WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final FindTextPanel findPanel = new FindTextPanel();
         findPanel.setShallReplace(shallReplace);
         findPanel.setSelected();
         DefaultControlPanel controlPanel = new DefaultControlPanel(findPanel.getResourceBundle());
-        final DialogWrapper dialog = frameModule.createDialog(findPanel, controlPanel);
+        final DialogWrapper dialog = windowModule.createDialog(findPanel, controlPanel);
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                 if (editorProvider instanceof TextEditor) {
@@ -84,8 +84,8 @@ public class FindReplaceActions {
             dialog.dispose();
         });
         WindowUtils.addHeaderPanel(dialog.getWindow(), findPanel.getClass(), findPanel.getResourceBundle());
-        frameModule.setDialogTitle(dialog, findPanel.getResourceBundle());
-        dialog.showCentered(frameModule.getFrame());
+        windowModule.setDialogTitle(dialog, findPanel.getResourceBundle());
+        dialog.showCentered(windowModule.getFrame());
     }
 
     @Nonnull

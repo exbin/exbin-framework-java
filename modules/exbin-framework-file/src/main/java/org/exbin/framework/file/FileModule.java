@@ -32,8 +32,8 @@ import javax.swing.JMenu;
 import org.exbin.framework.App;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.ApplicationFrameHandler;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.NextToMode;
@@ -115,26 +115,26 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerMenuFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getNewFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getOpenFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getSaveFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getSaveAsFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuGroup(WindowModuleApi.FILE_MENU_ID, new MenuGroup(FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, getNewFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, getOpenFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, getSaveFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, getSaveAsFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
     }
 
     @Override
     public void registerToolBarFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerToolBarGroup(FrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(FILE_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP)));
-        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getNewFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getOpenFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getSaveFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarGroup(WindowModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(FILE_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP)));
+        actionModule.registerToolBarItem(WindowModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getNewFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(WindowModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getOpenFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(WindowModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getSaveFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
     }
 
     @Override
     public void registerCloseListener() {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        windowModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
             if (fileOperations != null) {
                 return fileOperations.releaseAllFiles();
             }
@@ -148,7 +148,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         getRecentFilesActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, (String) getOpenFileAction().getValue(Action.NAME) + ActionUtils.DIALOG_MENUITEM_EXT));
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, (String) getOpenFileAction().getValue(Action.NAME) + ActionUtils.DIALOG_MENUITEM_EXT));
     }
 
     @Nonnull

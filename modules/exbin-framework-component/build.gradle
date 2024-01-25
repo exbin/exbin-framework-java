@@ -25,7 +25,6 @@ repositories {
 dependencies {
     api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-component-api')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'core', 'exbin-framework')
-    implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'core', 'exbin-framework')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-utils')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-action')
     implementation moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-operation-undo')

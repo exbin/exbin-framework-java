@@ -56,7 +56,7 @@ import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
@@ -148,9 +148,9 @@ public class EditorTextModule implements Module {
 
     public void registerStatusBar() {
         textStatusPanel = new TextStatusPanel();
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.registerStatusBar(MODULE_ID, TEXT_STATUS_BAR_ID, textStatusPanel);
-        frameModule.switchStatusBar(TEXT_STATUS_BAR_ID);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        windowModule.registerStatusBar(MODULE_ID, TEXT_STATUS_BAR_ID, textStatusPanel);
+        windowModule.switchStatusBar(TEXT_STATUS_BAR_ID);
         ((TextPanel) getEditorProvider().getEditorComponent()).registerTextStatus(textStatusPanel);
         if (encodingsHandler != null) {
             encodingsHandler.setTextEncodingStatus(textStatusPanel);
@@ -162,7 +162,7 @@ public class EditorTextModule implements Module {
         encodingsHandler.rebuildEncodings();
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, encodingsHandler.getToolsEncodingMenu(), new MenuPosition(PositionMode.TOP_LAST));
+        actionModule.registerMenuItem(WindowModuleApi.TOOLS_MENU_ID, MODULE_ID, encodingsHandler.getToolsEncodingMenu(), new MenuPosition(PositionMode.TOP_LAST));
     }
 
     public void registerOptionsPanels() {
@@ -270,13 +270,13 @@ public class EditorTextModule implements Module {
                         @Override
                         public Font changeFont(Font currentFont) {
                             final Result result = new Result();
-                            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
                             final TextFontPanel fontPanel = new TextFontPanel();
                             fontPanel.setStoredFont(currentFont);
                             DefaultControlPanel controlPanel = new DefaultControlPanel();
-                            final DialogWrapper dialog = frameModule.createDialog(fontPanel, controlPanel);
+                            final DialogWrapper dialog = windowModule.createDialog(fontPanel, controlPanel);
                             WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
-                            frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
+                            windowModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
                             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                                 if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                                     if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -291,7 +291,7 @@ public class EditorTextModule implements Module {
                                 dialog.close();
                                 dialog.dispose();
                             });
-                            dialog.showCentered(frameModule.getFrame());
+                            dialog.showCentered(windowModule.getFrame());
 
                             return result.font;
                         }
@@ -359,11 +359,11 @@ public class EditorTextModule implements Module {
                     panel.setTextEncodingService(getEncodingsHandler().getTextEncodingService());
                     panel.setAddEncodingsOperation((List<String> usedEncodings) -> {
                         final List<String> result = new ArrayList<>();
-                        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
                         final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
                         addEncodingPanel.setUsedEncodings(usedEncodings);
                         DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
-                        final DialogWrapper dialog = frameModule.createDialog(addEncodingPanel, controlPanel);
+                        final DialogWrapper dialog = windowModule.createDialog(addEncodingPanel, controlPanel);
                         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                                 result.addAll(addEncodingPanel.getEncodings());
@@ -372,8 +372,8 @@ public class EditorTextModule implements Module {
                             dialog.close();
                             dialog.dispose();
                         });
-                        frameModule.setDialogTitle(dialog, addEncodingPanel.getResourceBundle());
-                        dialog.showCentered(frameModule.getFrame());
+                        windowModule.setDialogTitle(dialog, addEncodingPanel.getResourceBundle());
+                        dialog.showCentered(windowModule.getFrame());
                         return result;
                     });
                 }
@@ -452,12 +452,12 @@ public class EditorTextModule implements Module {
     public void registerWordWrapping() {
         getWordWrappingAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, getWordWrappingAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(WindowModuleApi.VIEW_MENU_ID, MODULE_ID, getWordWrappingAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(WindowModuleApi.EDIT_MENU_ID, MODULE_ID, getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public TextStatusPanel getTextStatusPanel() {
@@ -569,33 +569,33 @@ public class EditorTextModule implements Module {
     public void registerEditFindMenuActions() {
         getFindReplaceActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(FrameModuleApi.EDIT_MENU_ID, new MenuGroup(EDIT_FIND_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditReplaceAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuGroup(WindowModuleApi.EDIT_MENU_ID, new MenuGroup(EDIT_FIND_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
+        actionModule.registerMenuItem(WindowModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(WindowModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(WindowModuleApi.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditReplaceAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
     }
 
     public void registerEditFindToolBarActions() {
         getFindReplaceActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerToolBarGroup(FrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarGroup(WindowModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
+        actionModule.registerToolBarItem(WindowModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getTextFontAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getTextColorAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(WindowModuleApi.TOOLS_MENU_ID, MODULE_ID, getTextFontAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(WindowModuleApi.TOOLS_MENU_ID, MODULE_ID, getTextColorAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerPropertiesMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void loadFromPreferences(Preferences preferences) {

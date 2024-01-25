@@ -23,7 +23,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import org.exbin.framework.App;
 import org.exbin.framework.about.gui.AboutPanel;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.LanguageUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
@@ -53,11 +53,11 @@ public class AboutAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AboutPanel aboutPanel = new AboutPanel();
         aboutPanel.setSideComponent(sideComponent);
         CloseControlPanel controlPanel = new CloseControlPanel();
-        final DialogWrapper aboutDialog = frameModule.createDialog(aboutPanel, controlPanel);
+        final DialogWrapper aboutDialog = windowModule.createDialog(aboutPanel, controlPanel);
         ((JDialog) aboutDialog.getWindow()).setTitle(resourceBundle.getString("aboutAction.dialogTitle"));
         controlPanel.setHandler(aboutDialog::close);
         aboutDialog.showCentered((Component) e.getSource());

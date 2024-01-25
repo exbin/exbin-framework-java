@@ -28,7 +28,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ImageResizePanel;
 import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
@@ -76,10 +76,10 @@ public class PictureOperationActions {
                     final ImageResizePanel imageResizePanel = new ImageResizePanel();
                     imageResizePanel.setResolution(imagePanel.getImageSize());
                     DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
-                    FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                    final DialogWrapper dialog = frameModule.createDialog(imageResizePanel, controlPanel);
+                    WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+                    final DialogWrapper dialog = windowModule.createDialog(imageResizePanel, controlPanel);
                     WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
-                    frameModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());
+                    windowModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType == ControlActionType.OK) {
                             Point point = imageResizePanel.getResolution();

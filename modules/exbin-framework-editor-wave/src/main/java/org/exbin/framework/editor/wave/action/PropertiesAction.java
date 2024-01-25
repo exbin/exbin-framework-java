@@ -26,7 +26,7 @@ import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.wave.gui.PropertiesPanel;
 import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
@@ -65,14 +65,14 @@ public class PropertiesAction extends AbstractAction {
         }
 
         AudioPanel audioPanel = (AudioPanel) activeFile.get().getComponent();
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
 
         PropertiesPanel propertiesPanel = new PropertiesPanel();
         propertiesPanel.setDocument((AudioEditor) editorProvider);
         CloseControlPanel controlPanel = new CloseControlPanel();
-        final DialogWrapper dialog = frameModule.createDialog(propertiesPanel, controlPanel);
+        final DialogWrapper dialog = windowModule.createDialog(propertiesPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
-        frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
+        windowModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
         controlPanel.setHandler(dialog::close);
         dialog.showCentered((Component) e.getSource());
         dialog.dispose();

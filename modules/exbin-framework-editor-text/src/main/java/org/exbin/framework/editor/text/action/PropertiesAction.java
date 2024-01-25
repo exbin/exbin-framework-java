@@ -24,7 +24,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.TextPropertiesPanel;
 import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
@@ -57,13 +57,13 @@ public class PropertiesAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (editorProvider instanceof TextEditor) {
-            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             TextPropertiesPanel propertiesPanel = new TextPropertiesPanel();
             propertiesPanel.setDocument((TextEditor) editorProvider);
             CloseControlPanel controlPanel = new CloseControlPanel();
-            final DialogWrapper dialog = frameModule.createDialog(propertiesPanel, controlPanel);
+            final DialogWrapper dialog = windowModule.createDialog(propertiesPanel, controlPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
-            frameModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
+            windowModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
             controlPanel.setHandler(() -> {
                 dialog.close();
                 dialog.dispose();

@@ -26,7 +26,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.editor.text.gui.TextGoToPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.WindowUtils.DialogWrapper;
@@ -74,10 +74,10 @@ public class GoToLineAction extends AbstractAction {
             goToPanel.setMaxLine(activePanel.getLineCount());
             goToPanel.setCharPos(1);
             DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
-            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-            final DialogWrapper dialog = frameModule.createDialog(goToPanel, controlPanel);
+            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+            final DialogWrapper dialog = windowModule.createDialog(goToPanel, controlPanel);
             WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
-            frameModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
+            windowModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {
                     activePanel.gotoLine(goToPanel.getLine());
@@ -87,7 +87,7 @@ public class GoToLineAction extends AbstractAction {
                 dialog.close();
                 dialog.dispose();
             });
-            dialog.showCentered(frameModule.getFrame());
+            dialog.showCentered(windowModule.getFrame());
         }
     }
 }

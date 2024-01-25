@@ -25,8 +25,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.Preferences;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.ApplicationFrameHandler;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
@@ -111,12 +111,12 @@ public class OptionsModule implements OptionsModuleApi {
 
                 @Override
                 public void applyPreferencesChanges(AppearanceOptionsImpl options) {
-                    FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                    ApplicationFrameHandler frame = frameModule.getFrameHandler();
+                    WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+                    ApplicationFrameHandler frame = windowModule.getFrameHandler();
                     frame.setToolBarVisible(options.isShowToolBar());
                     frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
                     frame.setStatusBarVisible(options.isShowStatusBar());
-                    frameModule.notifyFrameUpdated();
+                    windowModule.notifyFrameUpdated();
                 }
             };
             ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) appearanceOptionsPage).getResourceBundle();
@@ -166,8 +166,8 @@ public class OptionsModule implements OptionsModuleApi {
 
     @Override
     public void notifyOptionsChanged() {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.notifyFrameUpdated();
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        windowModule.notifyFrameUpdated();
     }
 
     @Override
@@ -250,9 +250,9 @@ public class OptionsModule implements OptionsModuleApi {
             }); */
             optionsActionRegistered = true;
         }
-        actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
+        actionModule.registerMenuGroup(WindowModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
         if (!optionsActionRegistered) {
-            actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
+            actionModule.registerMenuItem(WindowModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
         }
     }
 

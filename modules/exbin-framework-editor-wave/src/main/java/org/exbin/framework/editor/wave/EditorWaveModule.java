@@ -48,7 +48,7 @@ import org.exbin.framework.editor.wave.preferences.WaveColorPreferences;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.NextToMode;
@@ -231,9 +231,9 @@ public class EditorWaveModule implements Module {
             }
         });
 
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.registerStatusBar(MODULE_ID, WAVE_STATUS_BAR_ID, audioStatusPanel);
-        frameModule.switchStatusBar(WAVE_STATUS_BAR_ID);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        windowModule.registerStatusBar(MODULE_ID, WAVE_STATUS_BAR_ID, audioStatusPanel);
+        windowModule.switchStatusBar(WAVE_STATUS_BAR_ID);
     }
 
     public void registerOptionsPanels() {
@@ -324,15 +324,15 @@ public class EditorWaveModule implements Module {
 
     public void registerToolsOptionsMenuActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, getWaveColorAction(), new MenuPosition(PositionMode.MIDDLE));
+        actionModule.registerMenuItem(WindowModuleApi.TOOLS_MENU_ID, MODULE_ID, getWaveColorAction(), new MenuPosition(PositionMode.MIDDLE));
     }
 
     public void registerToolsMenuActions() {
         EditToolActions actions = getEditToolActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_SELECTION_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.AROUND));
-        actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, actions.getSelectionToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, actions.getPencilToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
+        actionModule.registerMenuGroup(WindowModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_SELECTION_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.AROUND));
+        actionModule.registerMenuItem(WindowModuleApi.TOOLS_MENU_ID, MODULE_ID, actions.getSelectionToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
+        actionModule.registerMenuItem(WindowModuleApi.TOOLS_MENU_ID, MODULE_ID, actions.getPencilToolAction(), new MenuPosition(TOOLS_SELECTION_MENU_GROUP_ID));
     }
 
     public AudioStatusPanel getAudioStatusPanel() {
@@ -411,14 +411,14 @@ public class EditorWaveModule implements Module {
 
     public void registerPropertiesMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerAudioMenu() {
         getAudioControlActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenu(AUDIO_MENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(FrameModuleApi.MAIN_MENU_ID, MODULE_ID, AUDIO_MENU_ID, "Audio", new MenuPosition(NextToMode.AFTER, "View"));
+        actionModule.registerMenuItem(WindowModuleApi.MAIN_MENU_ID, MODULE_ID, AUDIO_MENU_ID, "Audio", new MenuPosition(NextToMode.AFTER, "View"));
         actionModule.registerMenuItem(AUDIO_MENU_ID, MODULE_ID, audioControlActions.getPlayAction(), new MenuPosition(PositionMode.TOP));
         actionModule.registerMenuItem(AUDIO_MENU_ID, MODULE_ID, audioControlActions.getStopAction(), new MenuPosition(PositionMode.TOP));
     }
@@ -434,13 +434,13 @@ public class EditorWaveModule implements Module {
     public void registerDrawingModeMenu() {
         getDrawingControlActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, DRAW_MODE_SUBMENU_ID, "Draw Mode", new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(WindowModuleApi.VIEW_MENU_ID, MODULE_ID, DRAW_MODE_SUBMENU_ID, "Draw Mode", new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerZoomModeMenu() {
         getZoomControlActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, ZOOM_MODE_SUBMENU_ID, "Zoom", new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(WindowModuleApi.VIEW_MENU_ID, MODULE_ID, ZOOM_MODE_SUBMENU_ID, "Zoom", new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenu(ZOOM_MODE_SUBMENU_ID, MODULE_ID);
         actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
         actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getNormalZoomAction(), new MenuPosition(PositionMode.TOP));

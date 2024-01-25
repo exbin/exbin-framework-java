@@ -34,7 +34,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.Preferences;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
+import org.exbin.framework.window.api.ApplicationFrameHandler;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.api.OptionsModifiedListener;
@@ -298,8 +298,8 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
             appearanceOptionsExtPage.applyPreferencesChanges(preferences);
         }
 
-        OptionsModuleApi frameModule = App.getModule(OptionsModuleApi.class);
-        frameModule.notifyOptionsChanged();
+        OptionsModuleApi windowModule = App.getModule(OptionsModuleApi.class);
+        windowModule.notifyOptionsChanged();
     }
 
     private void establishPath(List<OptionsPathItem> path) {

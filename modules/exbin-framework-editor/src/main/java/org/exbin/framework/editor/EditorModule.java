@@ -42,7 +42,7 @@ import org.exbin.framework.editor.action.CloseOtherFileAction;
 import org.exbin.framework.editor.action.EditorActions;
 import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.operation.undo.api.UndoFileHandler;
 import org.exbin.framework.utils.LanguageUtils;
 
@@ -244,8 +244,8 @@ public class EditorModule implements EditorModuleApi {
     @Override
     public void registerMenuFileCloseActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(FileModuleApi.FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getCloseFileAction(), new MenuPosition(FileModuleApi.FILE_MENU_GROUP_ID));
+        actionModule.registerMenuGroup(WindowModuleApi.FILE_MENU_ID, new MenuGroup(FileModuleApi.FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, getCloseFileAction(), new MenuPosition(FileModuleApi.FILE_MENU_GROUP_ID));
     }
 
     @Nonnull

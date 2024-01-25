@@ -26,7 +26,7 @@ import org.exbin.framework.editor.text.gui.TextFontPanel;
 import org.exbin.framework.editor.text.preferences.TextFontPreferences;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.FileDependentAction;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
@@ -74,13 +74,13 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
 
         TextFontApi textFontApi = (TextFontApi) activeFile.get();
 
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();
         fontPanel.setStoredFont(textFontApi.getCurrentFont());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        final DialogWrapper dialog = frameModule.createDialog(fontPanel, controlPanel);
+        final DialogWrapper dialog = windowModule.createDialog(fontPanel, controlPanel);
         WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
-        frameModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
+        windowModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
         controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
             if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                 if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
@@ -95,6 +95,6 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
             dialog.close();
             dialog.dispose();
         });
-        dialog.showCentered(frameModule.getFrame());
+        dialog.showCentered(windowModule.getFrame());
     }
 }

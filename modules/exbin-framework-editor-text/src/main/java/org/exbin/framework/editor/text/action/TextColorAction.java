@@ -27,7 +27,7 @@ import org.exbin.framework.editor.text.options.gui.TextColorPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.preferences.TextColorPreferences;
 import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
@@ -63,7 +63,7 @@ public class TextColorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
@@ -104,10 +104,10 @@ public class TextColorAction extends AbstractAction {
 
         colorPanel.setColorsFromArray(textColorService.getCurrentTextColors());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        final DialogWrapper dialog = frameModule.createDialog(colorPanel, controlPanel);
+        final DialogWrapper dialog = windowModule.createDialog(colorPanel, controlPanel);
 
         WindowUtils.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
-        frameModule.setDialogTitle(dialog, colorPanel.getResourceBundle());
+        windowModule.setDialogTitle(dialog, colorPanel.getResourceBundle());
         controlPanel.setHandler(
                 (OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
@@ -125,6 +125,6 @@ public class TextColorAction extends AbstractAction {
                     dialog.dispose();
                 }
         );
-        dialog.showCentered(frameModule.getFrame());
+        dialog.showCentered(windowModule.getFrame());
     }
 }

@@ -16,7 +16,7 @@
 package org.exbin.framework.action.api;
 
 import javax.annotation.Nonnull;
-import org.exbin.framework.popup.api.ComponentPopupEventDispatcher;
+import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;

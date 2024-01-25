@@ -33,7 +33,7 @@ import org.exbin.framework.file.api.FileActionsApi;
 import org.exbin.framework.file.api.FileActionsApi.OpenFileResult;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileTypes;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.file.api.FileLoading;
 import org.exbin.framework.file.api.UsedDirectoryApi;
@@ -93,7 +93,7 @@ public class FileActions implements FileActionsApi {
     @Nonnull
     @Override
     public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         JFileChooser openFileChooser = new JFileChooser();
         setupFileFilters(openFileChooser, fileTypes);
         if (usedDirectory != null) {
@@ -102,7 +102,7 @@ public class FileActions implements FileActionsApi {
         if (selectedFile != null) {
             openFileChooser.setSelectedFile(selectedFile);
         }
-        int dialogResult = openFileChooser.showOpenDialog(frameModule.getFrame());
+        int dialogResult = openFileChooser.showOpenDialog(windowModule.getFrame());
         OpenFileResult result = new OpenFileResult();
         result.dialogResult = dialogResult;
         result.selectedFile = openFileChooser.getSelectedFile();
@@ -126,7 +126,7 @@ public class FileActions implements FileActionsApi {
 
     @Nonnull
     private OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         setupFileFilters(saveFileChooser, fileTypes);
@@ -139,7 +139,7 @@ public class FileActions implements FileActionsApi {
         if (dialogName != null) {
             saveFileChooser.setDialogTitle(dialogName);
         }
-        int dialogResult = saveFileChooser.showSaveDialog(frameModule.getFrame());
+        int dialogResult = saveFileChooser.showSaveDialog(windowModule.getFrame());
         OpenFileResult result = new OpenFileResult();
         result.dialogResult = dialogResult;
         result.selectedFile = saveFileChooser.getSelectedFile();
@@ -163,7 +163,7 @@ public class FileActions implements FileActionsApi {
     @Override
     public void saveAsFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
         if (fileHandler != null) {
-            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             Optional<URI> currentFileUri = fileHandler.getFileUri();
             OpenFileResult saveFileResult = showSaveFileDialog(fileTypes, currentFileUri.isPresent() ? new File(currentFileUri.get()) : null, usedDirectory, resourceBundle.getString("SaveAsDialog.title"));
             if (saveFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
@@ -184,7 +184,7 @@ public class FileActions implements FileActionsApi {
                 } catch (Exception ex) {
                     Logger.getLogger(FileActions.class.getName()).log(Level.SEVERE, null, ex);
                     String errorMessage = ex.getLocalizedMessage();
-                    JOptionPane.showMessageDialog(frameModule.getFrame(),
+                    JOptionPane.showMessageDialog(windowModule.getFrame(),
                             resourceBundle.getString("Question.unable_to_save") + ": " + ex.getClass().getCanonicalName() + (errorMessage == null || errorMessage.isEmpty() ? "" : errorMessage),
                             resourceBundle.getString("Question.unable_to_save"), JOptionPane.ERROR_MESSAGE
                     );
@@ -205,8 +205,8 @@ public class FileActions implements FileActionsApi {
                 resourceBundle.getString("Question.modified_discard"),
                 resourceBundle.getString("Question.modified_cancel")
             };
-            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-            int result = JOptionPane.showOptionDialog(frameModule.getFrame(),
+            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+            int result = JOptionPane.showOptionDialog(windowModule.getFrame(),
                     resourceBundle.getString("Question.modified"),
                     resourceBundle.getString("Question.modified_title"),
                     JOptionPane.YES_NO_CANCEL_OPTION,
@@ -237,9 +237,9 @@ public class FileActions implements FileActionsApi {
             resourceBundle.getString("Question.modified_cancel")
         };
 
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         int result = JOptionPane.showOptionDialog(
-                frameModule.getFrame(),
+                windowModule.getFrame(),
                 resourceBundle.getString("Question.overwrite"),
                 resourceBundle.getString("Question.overwrite_title"),
                 JOptionPane.YES_NO_OPTION,

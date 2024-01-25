@@ -19,7 +19,7 @@ import java.net.URL;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.help.online.action.OnlineHelpAction;
 import org.exbin.framework.help.online.api.HelpOnlineModuleApi;
 import org.exbin.framework.action.api.MenuPosition;
@@ -55,7 +55,7 @@ public class HelpOnlineModule implements HelpOnlineModuleApi {
     @Override
     public void registerOnlineHelpMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getOnlineHelpAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(WindowModuleApi.HELP_MENU_ID, MODULE_ID, getOnlineHelpAction(), new MenuPosition(PositionMode.TOP));
     }
 
     @Override

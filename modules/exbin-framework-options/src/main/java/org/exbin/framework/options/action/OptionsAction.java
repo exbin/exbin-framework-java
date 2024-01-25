@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.options.gui.OptionsTreePanel;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
@@ -53,8 +53,8 @@ public class OptionsAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        OptionsTreePanel optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        OptionsTreePanel optionsTreePanel = new OptionsTreePanel(windowModule.getFrameHandler());
         optionsPagesProvider.registerOptionsPages(optionsTreePanel);
         Dimension preferredSize = optionsTreePanel.getPreferredSize();
         optionsTreePanel.setPreferredSize(new Dimension(preferredSize.width + 200, preferredSize.height + 200));
@@ -63,8 +63,8 @@ public class OptionsAction extends AbstractAction {
         optionsTreePanel.loadAllFromPreferences();
 
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        final WindowUtils.DialogWrapper dialog = frameModule.createDialog(optionsTreePanel, controlPanel);
-        frameModule.setDialogTitle(dialog, optionsTreePanel.getResourceBundle());
+        final WindowUtils.DialogWrapper dialog = windowModule.createDialog(optionsTreePanel, controlPanel);
+        windowModule.setDialogTitle(dialog, optionsTreePanel.getResourceBundle());
         controlPanel.setHandler((actionType) -> {
             switch (actionType) {
                 case SAVE: {
@@ -81,7 +81,7 @@ public class OptionsAction extends AbstractAction {
             }
             dialog.close();
         });
-        dialog.showCentered(frameModule.getFrame());
+        dialog.showCentered(windowModule.getFrame());
     }
 
     @ParametersAreNonnullByDefault

@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import org.exbin.framework.App;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
@@ -156,25 +156,25 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     public void registerMainMenu() {
         getDefaultUndoActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(FrameModuleApi.EDIT_MENU_ID, new MenuGroup(UNDO_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.BELOW));
-        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, OperationUndoModuleApi.MODULE_ID, defaultUndoActions.getUndoAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, OperationUndoModuleApi.MODULE_ID, defaultUndoActions.getRedoAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
+        actionModule.registerMenuGroup(WindowModuleApi.EDIT_MENU_ID, new MenuGroup(UNDO_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.BELOW));
+        actionModule.registerMenuItem(WindowModuleApi.EDIT_MENU_ID, OperationUndoModuleApi.MODULE_ID, defaultUndoActions.getUndoAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
+        actionModule.registerMenuItem(WindowModuleApi.EDIT_MENU_ID, OperationUndoModuleApi.MODULE_ID, defaultUndoActions.getRedoAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
     }
 
     @Override
     public void registerUndoManagerInMainMenu() {
         getDefaultUndoActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.EDIT_MENU_ID, OperationUndoModuleApi.MODULE_ID, defaultUndoActions.getUndoManagerAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
+        actionModule.registerMenuItem(WindowModuleApi.EDIT_MENU_ID, OperationUndoModuleApi.MODULE_ID, defaultUndoActions.getUndoManagerAction(), new MenuPosition(UNDO_MENU_GROUP_ID));
     }
 
     @Override
     public void registerMainToolBar() {
         getDefaultUndoActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerToolBarGroup(FrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(UNDO_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP), SeparationMode.AROUND));
-        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, defaultUndoActions.getUndoAction(), new ToolBarPosition(UNDO_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, defaultUndoActions.getRedoAction(), new ToolBarPosition(UNDO_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarGroup(WindowModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(UNDO_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP), SeparationMode.AROUND));
+        actionModule.registerToolBarItem(WindowModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, defaultUndoActions.getUndoAction(), new ToolBarPosition(UNDO_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(WindowModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, defaultUndoActions.getRedoAction(), new ToolBarPosition(UNDO_TOOL_BAR_GROUP_ID));
     }
 
     @Override
@@ -184,17 +184,17 @@ public class OperationUndoModule implements OperationUndoModuleApi {
 
     @Override
     public void openUndoManager() {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         UndoManagerPanel undoManagerPanel = new UndoManagerPanel(undoModel);
         UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
-        final DialogWrapper dialog = frameModule.createDialog(undoManagerPanel, undoManagerControlPanel);
-        frameModule.setDialogTitle(dialog, undoManagerPanel.getResourceBundle());
+        final DialogWrapper dialog = windowModule.createDialog(undoManagerPanel, undoManagerControlPanel);
+        windowModule.setDialogTitle(dialog, undoManagerPanel.getResourceBundle());
         undoManagerControlPanel.setHandler((UndoManagerControlHandler.ControlActionType actionType) -> {
             dialog.close();
             dialog.dispose();
         });
         WindowUtils.addHeaderPanel(dialog.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
-        dialog.showCentered(frameModule.getFrame());
+        dialog.showCentered(windowModule.getFrame());
     }
 
     @Nonnull

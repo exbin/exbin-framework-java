@@ -18,7 +18,7 @@ package org.exbin.framework.help;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.help.action.HelpAction;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
@@ -51,6 +51,6 @@ public class HelpModule implements HelpModuleApi {
     @Override
     public void registerMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getHelpAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(WindowModuleApi.HELP_MENU_ID, MODULE_ID, getHelpAction(), new MenuPosition(PositionMode.TOP));
     }
 }
