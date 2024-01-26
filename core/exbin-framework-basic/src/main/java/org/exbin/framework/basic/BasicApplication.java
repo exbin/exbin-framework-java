@@ -15,8 +15,18 @@
  */
 package org.exbin.framework.basic;
 
-import org.exbin.framework.*;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.prefs.Preferences;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 
 /**
  * Basic framework application.
@@ -26,10 +36,95 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class BasicApplication {
 
+    private Preferences appPreferences;
+
+    private BasicModuleProvider moduleProvider;
+    private final List<URI> plugins = new ArrayList<>();
+    private final List<LanguageProvider> languagePlugins = new ArrayList<>();
+    private final Map<String, LookAndFeelApplier> lafPlugins = new HashMap<>();
+    private String targetLaf = null;
+    private File appDirectory = new File("");
+
     public BasicApplication() {
     }
 
     public void init() {
-        App.setModuleProvider(new BasicModuleProvider());
+        moduleProvider = new BasicModuleProvider();
+        App.setModuleProvider(moduleProvider);
+    }
+
+    @Nonnull
+    public Preferences getAppPreferences() {
+        return appPreferences;
+    }
+
+    public void setAppPreferences(Preferences appPreferences) {
+        this.appPreferences = appPreferences;
+        initByPreferences();
+    }
+
+    @Nonnull
+    public File getAppDirectory() {
+        return appDirectory;
+    }
+
+    public void setAppDirectory(File appDirectory) {
+        this.appDirectory = appDirectory;
+    }
+
+    public void setAppDirectory(Class classInstance) {
+        URL classResourceUrl = classInstance.getResource(classInstance.getSimpleName() + ".class");
+        if (!"jar".equals(classResourceUrl.getProtocol())) {
+            return;
+        }
+
+        try {
+            URL appDirectoryUrl = classInstance.getProtectionDomain().getCodeSource().getLocation();
+            appDirectory = new File(appDirectoryUrl.toURI()).getParentFile();
+            return;
+        } catch (final SecurityException e) {
+            // ignore: Cannot access protection domain.
+        } catch (final NullPointerException e) {
+            // ignore: Protection domain or code source is null.
+        } catch (URISyntaxException ex) {
+            // ignore: Invalid URL
+        }
+
+        String appDirectoryPath = classResourceUrl.toString();
+        appDirectoryPath = appDirectoryPath.substring(4, appDirectoryPath.indexOf("!"));
+
+        appDirectory = new File(appDirectoryPath).getParentFile();
+    }
+
+    private void initByPreferences() {
+        // TODO
+    }
+
+    public void addModulesFrom(URI moduleClassUri) {
+        moduleProvider.addModulesFrom(moduleClassUri);
+    }
+
+    public void addModulesFrom(URL moduleClassUrl) {
+        moduleProvider.addModulesFrom(moduleClassUrl);
+    }
+
+    public void loadModulesFromPath(URI pathUri) {
+        moduleProvider.loadModulesFromPath(pathUri);
+    }
+
+    public void addModulesFromPath(URL pathUrl) {
+        moduleProvider.addModulesFromPath(pathUrl);
+    }
+
+    public void addClassPathModules() {
+        moduleProvider.addClassPathModules();
+    }
+
+    public void addModulesFromManifest(Class manifestClass) {
+        moduleProvider.addModulesFromManifest(manifestClass);
+    }
+    
+    public void initModules() {
+        moduleProvider.initModules();
     }
 }

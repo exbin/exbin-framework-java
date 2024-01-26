@@ -33,9 +33,9 @@ public final class App {
         // No instance
     }
     
-    public void launch(Runnable runnable) {
-        if (moduleProvider != null) {
-            throw new IllegalStateException("Module provider already initialized");
+    public static void launch(Runnable runnable) {
+        if (moduleProvider == null) {
+            throw new IllegalStateException("Module provider not initialized");
         }
 
         moduleProvider.launch(runnable);
@@ -67,7 +67,7 @@ public final class App {
     }
     
     public static void setModuleProvider(ModuleProvider moduleProvider) {
-        if (moduleProvider != null) {
+        if (App.moduleProvider != null) {
             throw new IllegalStateException("Module provider already initialized");
         }
         

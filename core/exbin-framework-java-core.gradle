@@ -99,8 +99,8 @@ publishing {
             pom.withXml {
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
-                    name libraryName
-                    description libraryDescription
+                    name 'ExBin Framework'
+                    description 'Library for ExBin Framework'
                     url libraryUrl
                     scm {
                         url "https://github.com/${githubProfile}/${repositoryName}"

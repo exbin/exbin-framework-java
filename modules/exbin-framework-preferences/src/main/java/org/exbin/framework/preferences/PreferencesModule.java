@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.preferences;
 
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.preferences.api.Preferences;
@@ -31,12 +30,26 @@ public class PreferencesModule implements PreferencesModuleApi {
 
     private java.util.ResourceBundle resourceBundle = null;
 
+    private Preferences appPreferences;
+
     public PreferencesModule() {
     }
 
+    @Override
+    public void setupAppPreferences(Class clazz) {
+        java.util.prefs.Preferences prefsPreferences;
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.startsWith("win")) {
+            prefsPreferences = new FilePreferencesFactory().userNodeForPackage(clazz);
+        } else {
+            prefsPreferences = java.util.prefs.Preferences.userNodeForPackage(clazz);
+        }
+        appPreferences = new PreferencesWrapper(prefsPreferences);
+    }
+
     @Nonnull
+    @Override
     public Preferences getAppPreferences() {
-        // TODO
-        return null;
+        return appPreferences;
     }
 }

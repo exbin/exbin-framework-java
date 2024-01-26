@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.preferences.api;
+package org.exbin.framework.basic;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for framework preferences module.
+ * Interface for application module management.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface PreferencesModuleApi extends Module {
+public interface LookAndFeelApplier {
 
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(PreferencesModuleApi.class);
-
-    @Nonnull
-    void setupAppPreferences(Class clazz);
-    
-    @Nonnull
-    Preferences getAppPreferences();
+    /**
+     * Apply look and feel.
+     *
+     * @param className LaF class name
+     */
+    void applyLookAndFeel(String className);
 }
