@@ -23,8 +23,8 @@ import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.editor.api.EditorActionsApi;
 import org.exbin.framework.editor.gui.UnsavedFilesPanel;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 
 /**
  * Editor actions.
@@ -51,7 +51,7 @@ public class EditorActions implements EditorActionsApi {
         UnsavedFilesPanel unsavedFilesPanel = new UnsavedFilesPanel();
         unsavedFilesPanel.setUnsavedFiles(fileHandlers);
         final boolean[] result = new boolean[1];
-        final DialogWrapper dialog = windowModule.createDialog(unsavedFilesPanel);
+        final WindowHandler dialog = windowModule.createDialog(unsavedFilesPanel);
         unsavedFilesPanel.setController(new UnsavedFilesPanel.Controller() {
             @Override
             public boolean saveFile(FileHandler fileHandler) {
@@ -72,7 +72,7 @@ public class EditorActions implements EditorActionsApi {
             }
         });
 
-        windowModule.setDialogTitle(dialog, unsavedFilesPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, unsavedFilesPanel.getResourceBundle());
         unsavedFilesPanel.assignGlobalKeys();
         dialog.showCentered(editorProvider.getEditorComponent());
 

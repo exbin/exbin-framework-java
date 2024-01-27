@@ -19,9 +19,10 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
+import org.exbin.framework.App;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Implementation of framework popup module.
@@ -42,7 +43,7 @@ public class ActionPopupModule implements ActionPopupModuleApi {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(ActionPopupModule.class);
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ActionPopupModule.class);
         }
 
         return resourceBundle;

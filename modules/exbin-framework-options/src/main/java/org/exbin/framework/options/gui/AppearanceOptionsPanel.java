@@ -20,7 +20,8 @@ import java.awt.Component;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.options.impl.AppearanceOptionsImpl;
@@ -35,7 +36,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 @ParametersAreNonnullByDefault
 public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsComponent<AppearanceOptionsImpl>, ComponentResourceProvider {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AppearanceOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
     private OptionsComponent extendedPanel = null;
 
@@ -147,7 +148,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new AppearanceOptionsPanel());
+        WindowUtils.invokeWindow(new AppearanceOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
+import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -34,7 +35,7 @@ import org.exbin.framework.options.model.LanguageRecord;
 import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
 import org.exbin.framework.preferences.FrameworkPreferences;
 import org.exbin.framework.utils.DesktopUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Interface for application options panels management.
@@ -44,7 +45,7 @@ import org.exbin.framework.utils.LanguageUtils;
 @ParametersAreNonnullByDefault
 public class MainOptionsManager {
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsManager.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(MainOptionsManager.class);
 
     private boolean valuesInitialized = false;
     private List<String> themes;
@@ -186,7 +187,7 @@ public class MainOptionsManager {
             @Nonnull
             @Override
             public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
+                return App.getModule(LanguageModuleApi.class).getBundle(MainOptionsPanel.class);
             }
 
             @Nonnull

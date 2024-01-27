@@ -128,7 +128,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         definitionEditorPanel.setUndoHandler(undoActionsHandler, operationUndoModule.createUndoActions(undoActionsHandler));
         ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
         definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.createClipboardActions(clipboardActionsHandler));
-        WindowUtils.invokeDialog(definitionEditorPanel);
+        WindowUtils.invokeWindow(definitionEditorPanel);
 
         MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
         MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);

@@ -26,7 +26,8 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -37,7 +38,7 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class TextFontPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextFontPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextFontPanel.class);
 
     private static String[] fontNames;
     private static String[] fontSizes;
@@ -312,7 +313,7 @@ public class TextFontPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextFontPanel());
+        WindowUtils.invokeWindow(new TextFontPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

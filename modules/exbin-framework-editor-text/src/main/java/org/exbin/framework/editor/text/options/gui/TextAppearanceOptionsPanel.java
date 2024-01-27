@@ -17,8 +17,9 @@ package org.exbin.framework.editor.text.options.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.options.impl.TextAppearanceOptionsImpl;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -31,7 +32,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextAppearanceOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
-    private ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
+    private ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceOptionsPanel.class);
 
     public TextAppearanceOptionsPanel() {
         initComponents();
@@ -102,7 +103,7 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextAppearanceOptionsPanel());
+        WindowUtils.invokeWindow(new TextAppearanceOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

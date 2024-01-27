@@ -47,7 +47,7 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.file.api.FileHandler;
 
 /**
@@ -124,7 +124,7 @@ public class EditorPictureModule implements Module {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(EditorPictureModule.class);
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(EditorPictureModule.class);
         }
 
         return resourceBundle;

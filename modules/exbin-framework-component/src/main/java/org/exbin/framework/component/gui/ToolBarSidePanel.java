@@ -81,7 +81,7 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
         EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
         EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
         toolBarSidePanel.addActions(editItemActions);
-        WindowUtils.invokeDialog(toolBarSidePanel);
+        WindowUtils.invokeWindow(toolBarSidePanel);
     }
 
     @Override

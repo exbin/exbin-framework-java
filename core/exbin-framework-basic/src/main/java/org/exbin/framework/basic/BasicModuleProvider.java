@@ -36,8 +36,16 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleProvider;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Basic module provider.
@@ -163,15 +171,31 @@ public class BasicModuleProvider implements ModuleProvider {
 
         final BasicModuleRecord moduleRecord = new BasicModuleRecord();
         moduleRecord.setClassLoader(contextClassLoader);
-/*        if (moduleRecordStream != null) {
+        if (moduleRecordStream != null) {
             try {
-                XBPullReader pullReader = new XBPullReader(moduleRecordStream);
-                XBPProviderSerialHandler serial = new XBPProviderSerialHandler(new XBToXBTPullConvertor(pullReader));
-                serial.process(moduleInfo);
-            } catch (IOException ex) {
-                // ignore
+                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                Document document = documentBuilder.parse(moduleRecordStream);
+                NodeList moduleNodeList = document.getElementsByTagName("module");
+                if (moduleNodeList.getLength() > 0) {
+                    Node moduleNode = moduleNodeList.item(0);
+                    NodeList childModuleNode = moduleNode.getChildNodes();
+                    for (int i = 0; i < childModuleNode.getLength(); i++) {
+                        Node node = childModuleNode.item(i);
+                        if ("id".equals(node.getNodeName())) {
+                            moduleRecord.setModuleId(node.getTextContent());
+                            System.out.println(node.getTextContent());
+                            break;
+                        }
+                    }
+                }
+//                XBPullReader pullReader = new XBPullReader(moduleRecordStream);
+//                XBPProviderSerialHandler serial = new XBPProviderSerialHandler(new XBToXBTPullConvertor(pullReader));
+//                serial.process(moduleInfo);
+            } catch (IOException | SAXException | ParserConfigurationException ex) {
+                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } */
+        }
 
         if (moduleRecord.getModuleId() != null) {
             Module module = null;
@@ -203,6 +227,7 @@ public class BasicModuleProvider implements ModuleProvider {
                 Constructor<?> ctor = clazz.getConstructor();
                 module = (Module) ctor.newInstance();
             } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | MalformedURLException ex) {
+                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
                 // ignore
             }
 

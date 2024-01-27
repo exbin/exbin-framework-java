@@ -18,7 +18,8 @@ package org.exbin.framework.editor.text.gui;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -29,7 +30,7 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class FindTextPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(FindTextPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FindTextPanel.class);
 
     public FindTextPanel() {
         initComponents();
@@ -156,7 +157,7 @@ public class FindTextPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new FindTextPanel());
+        WindowUtils.invokeWindow(new FindTextPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

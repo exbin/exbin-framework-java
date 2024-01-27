@@ -42,6 +42,10 @@ public class BasicModuleRecord implements ModuleRecord {
         return moduleId;
     }
 
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
+    }
+
     @Nonnull
     @Override
     public String getName() {

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.editor.picture.EditorPictureModule</id>
+  <name>XBUP Picture Editor Module</name>
+  <description>Module supporting editation of image bitmap files</description>
+  <dependency>
+  </dependency>
+</module>

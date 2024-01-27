@@ -22,7 +22,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -33,7 +34,7 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class AddEncodingPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AddEncodingPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddEncodingPanel.class);
     private final EncodingsTableModel tableModel = new EncodingsTableModel();
 
     public AddEncodingPanel() {
@@ -219,7 +220,7 @@ public class AddEncodingPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new AddEncodingPanel());
+        WindowUtils.invokeWindow(new AddEncodingPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

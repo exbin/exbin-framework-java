@@ -21,8 +21,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
+import org.exbin.framework.App;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -33,7 +34,7 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class UnsavedFilesPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(UnsavedFilesPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(UnsavedFilesPanel.class);
     private List<FileHandler> fileHandlers;
     private Controller controller;
 
@@ -227,7 +228,7 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new UnsavedFilesPanel());
+        WindowUtils.invokeWindow(new UnsavedFilesPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

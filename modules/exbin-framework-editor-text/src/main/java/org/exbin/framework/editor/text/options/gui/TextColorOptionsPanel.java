@@ -19,8 +19,9 @@ import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextColorService;
@@ -34,7 +35,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 public class TextColorOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextColorOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorOptionsPanel.class);
     private TextColorService textColorService;
     private final TextColorPanel colorPanel;
 
@@ -135,7 +136,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextColorOptionsPanel());
+        WindowUtils.invokeWindow(new TextColorOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

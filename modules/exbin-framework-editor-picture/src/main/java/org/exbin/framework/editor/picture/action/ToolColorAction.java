@@ -28,11 +28,11 @@ import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.handler.DefaultControlHandler;
-import org.exbin.framework.utils.handler.DefaultControlHandler.ControlActionType;
-import org.exbin.framework.utils.gui.DefaultControlPanel;
+import org.exbin.framework.window.api.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.handler.DefaultControlHandler.ControlActionType;
+import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Tools color action.
@@ -72,9 +72,9 @@ public class ToolColorAction extends AbstractAction {
         toolColorPanel.setToolColor(imagePanel.getToolColor());
         toolColorPanel.setSelectionColor(imagePanel.getSelectionColor());
         DefaultControlPanel controlPanel = new DefaultControlPanel(toolColorPanel.getResourceBundle());
-        final DialogWrapper dialog = windowModule.createDialog(toolColorPanel, controlPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), toolColorPanel.getClass(), toolColorPanel.getResourceBundle());
-        windowModule.setDialogTitle(dialog, toolColorPanel.getResourceBundle());
+        final WindowHandler dialog = windowModule.createDialog(toolColorPanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), toolColorPanel.getClass(), toolColorPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, toolColorPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == ControlActionType.OK) {
                 imagePanel.setToolColor(toolColorPanel.getToolColor());

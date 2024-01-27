@@ -31,11 +31,11 @@ import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.handler.OptionsControlHandler;
-import org.exbin.framework.utils.gui.OptionsControlPanel;
+import org.exbin.framework.window.api.handler.OptionsControlHandler;
+import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Text color action.
@@ -104,10 +104,10 @@ public class TextColorAction extends AbstractAction {
 
         colorPanel.setColorsFromArray(textColorService.getCurrentTextColors());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        final DialogWrapper dialog = windowModule.createDialog(colorPanel, controlPanel);
+        final WindowHandler dialog = windowModule.createDialog(colorPanel, controlPanel);
 
-        WindowUtils.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
-        windowModule.setDialogTitle(dialog, colorPanel.getResourceBundle());
+        windowModule.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, colorPanel.getResourceBundle());
         controlPanel.setHandler(
                 (OptionsControlHandler.ControlActionType actionType) -> {
                     if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {

@@ -22,8 +22,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextColorService;
@@ -38,7 +39,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 public class TextColorPanel extends javax.swing.JPanel implements OptionsComponent<TextColorOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextColorPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorPanel.class);
     private static final String RESOURCE_COLOR_CHOOSER_TITLE = "JColorChooser.title";
     private TextColorService textColorService;
 
@@ -533,7 +534,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextColorPanel());
+        WindowUtils.invokeWindow(new TextColorPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -30,8 +30,9 @@ import org.exbin.framework.project.gui.NewProjectPanel;
 import org.exbin.framework.project.model.ProjectTreeModel;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.gui.DefaultControlPanel;
-import org.exbin.framework.utils.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.gui.DefaultControlPanel;
+import org.exbin.framework.window.api.handler.DefaultControlHandler;
 
 /**
  * New project action.
@@ -63,9 +64,9 @@ public class NewProjectAction extends AbstractAction {
         DefaultControlPanel controlPanel = new DefaultControlPanel(newProjectPanel.getResourceBundle());
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         Frame parentFrame = windowModule.getFrame();
-        final WindowUtils.DialogWrapper dialog = windowModule.createDialog(parentFrame, Dialog.ModalityType.APPLICATION_MODAL, newProjectPanel, controlPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), newProjectPanel.getClass(), newProjectPanel.getResourceBundle());
-        windowModule.setDialogTitle(dialog, newProjectPanel.getResourceBundle());
+        final WindowHandler dialog = windowModule.createDialog(parentFrame, Dialog.ModalityType.APPLICATION_MODAL, newProjectPanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), newProjectPanel.getClass(), newProjectPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, newProjectPanel.getResourceBundle());
 
         ProjectTreeModel projectTreeModel = new ProjectTreeModel(projectModule.getProjectCategories());
         newProjectPanel.setCategoryModel(projectTreeModel);

@@ -17,8 +17,9 @@ package org.exbin.framework.about.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.about.XBApplicationBundle;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -29,7 +30,7 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class AboutAuthorsPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutAuthorsPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AboutAuthorsPanel.class);
 
     public AboutAuthorsPanel() {
         initComponents();
@@ -76,7 +77,7 @@ public class AboutAuthorsPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new AboutAuthorsPanel());
+        WindowUtils.invokeWindow(new AboutAuthorsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

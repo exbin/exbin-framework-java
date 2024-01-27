@@ -66,17 +66,17 @@ import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.handler.DefaultControlHandler;
-import org.exbin.framework.utils.gui.DefaultControlPanel;
+import org.exbin.framework.window.api.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.editor.text.service.TextAppearanceService;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.editor.text.service.TextFontService;
 import org.exbin.framework.options.api.DefaultOptionsPage;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Text editor module.
@@ -134,7 +134,7 @@ public class EditorTextModule implements Module {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(EditorTextModule.class);
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(EditorTextModule.class);
         }
 
         return resourceBundle;
@@ -200,7 +200,7 @@ public class EditorTextModule implements Module {
             @Nonnull
             @Override
             public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(TextColorOptionsPanel.class);
+                return App.getModule(LanguageModuleApi.class).getBundle(TextColorOptionsPanel.class);
             }
 
             @Nonnull
@@ -274,9 +274,9 @@ public class EditorTextModule implements Module {
                             final TextFontPanel fontPanel = new TextFontPanel();
                             fontPanel.setStoredFont(currentFont);
                             DefaultControlPanel controlPanel = new DefaultControlPanel();
-                            final DialogWrapper dialog = windowModule.createDialog(fontPanel, controlPanel);
-                            WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
-                            windowModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
+                            final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
+                            windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
+                            windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
                             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                                 if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
                                     if (actionType == DefaultControlHandler.ControlActionType.OK) {
@@ -308,7 +308,7 @@ public class EditorTextModule implements Module {
             @Nonnull
             @Override
             public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(TextFontOptionsPanel.class);
+                return App.getModule(LanguageModuleApi.class).getBundle(TextFontOptionsPanel.class);
             }
 
             @Override
@@ -363,7 +363,7 @@ public class EditorTextModule implements Module {
                         final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
                         addEncodingPanel.setUsedEncodings(usedEncodings);
                         DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
-                        final DialogWrapper dialog = windowModule.createDialog(addEncodingPanel, controlPanel);
+                        final WindowHandler dialog = windowModule.createDialog(addEncodingPanel, controlPanel);
                         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                             if (actionType == DefaultControlHandler.ControlActionType.OK) {
                                 result.addAll(addEncodingPanel.getEncodings());
@@ -372,7 +372,7 @@ public class EditorTextModule implements Module {
                             dialog.close();
                             dialog.dispose();
                         });
-                        windowModule.setDialogTitle(dialog, addEncodingPanel.getResourceBundle());
+                        windowModule.setWindowTitle(dialog, addEncodingPanel.getResourceBundle());
                         dialog.showCentered(windowModule.getFrame());
                         return result;
                     });
@@ -384,7 +384,7 @@ public class EditorTextModule implements Module {
             @Nonnull
             @Override
             public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
+                return App.getModule(LanguageModuleApi.class).getBundle(TextEncodingOptionsPanel.class);
             }
 
             @Override
@@ -424,7 +424,7 @@ public class EditorTextModule implements Module {
             @Nonnull
             @Override
             public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(TextAppearanceOptionsPanel.class);
+                return App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceOptionsPanel.class);
             }
 
             @Override

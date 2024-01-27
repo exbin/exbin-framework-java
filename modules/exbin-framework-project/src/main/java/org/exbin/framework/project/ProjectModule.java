@@ -33,7 +33,7 @@ import org.exbin.framework.project.action.SaveProjectAction;
 import org.exbin.framework.project.api.ProjectCategory;
 import org.exbin.framework.project.api.ProjectModuleApi;
 import org.exbin.framework.project.api.ProjectType;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Implementation of framework project module.
@@ -58,7 +58,7 @@ public class ProjectModule implements ProjectModuleApi {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(ProjectModule.class);
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ProjectModule.class);
         }
 
         return resourceBundle;

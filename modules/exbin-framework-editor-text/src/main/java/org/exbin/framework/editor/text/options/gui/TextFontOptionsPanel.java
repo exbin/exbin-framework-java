@@ -21,8 +21,9 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.options.impl.TextFontOptionsImpl;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextFontService;
@@ -38,7 +39,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
 
     private OptionsModifiedListener optionsModifiedListener;
     private FontChangeAction fontChangeAction;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextFontOptionsPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextFontOptionsPanel.class);
     private TextFontService textFontService;
     private Font codeFont;
 
@@ -224,7 +225,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextFontOptionsPanel());
+        WindowUtils.invokeWindow(new TextFontOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -25,8 +25,9 @@ import javax.swing.AbstractListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.options.impl.TextEncodingOptionsImpl;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -40,7 +41,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComponent<TextEncodingOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingPanel.class);
     private AddEncodingsOperation addEncodingsOperation = null;
 
     public TextEncodingPanel() {
@@ -298,7 +299,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextEncodingPanel());
+        WindowUtils.invokeWindow(new TextEncodingPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

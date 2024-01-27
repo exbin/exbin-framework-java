@@ -16,8 +16,9 @@
 package org.exbin.framework.component.gui;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.component.api.DialogControlPanelHandler;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -28,7 +29,7 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class DialogControlPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DialogControlPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(DialogControlPanel.class);
     private DialogControlPanelHandler control;
 
     public DialogControlPanel() {
@@ -120,7 +121,7 @@ public class DialogControlPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new DialogControlPanel());
+        WindowUtils.invokeWindow(new DialogControlPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

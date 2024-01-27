@@ -48,6 +48,7 @@ import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
+import org.exbin.framework.App;
 import org.exbin.framework.action.popup.handler.EditorPanePopupHandler;
 import org.exbin.framework.action.popup.handler.ListPopupHandler;
 import org.exbin.framework.action.popup.handler.TablePopupHandler;
@@ -55,7 +56,7 @@ import org.exbin.framework.action.popup.handler.TextComponentPopupHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Utilities for default menu generation.
@@ -65,7 +66,7 @@ import org.exbin.framework.utils.LanguageUtils;
 @ParametersAreNonnullByDefault
 public class DefaultPopupMenu {
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(DefaultPopupMenu.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(DefaultPopupMenu.class);
 
     public static final String DELETE_ACTION = "delete";
     public static final String SELECT_ALL_ACTION = "selectAll";

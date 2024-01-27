@@ -19,8 +19,9 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.operation.undo.service.UndoManagerService;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.XBDocCommand;
@@ -36,7 +37,7 @@ import org.exbin.xbup.operation.XBTOpDocCommand;
 public class UndoManagerPanel extends javax.swing.JPanel {
 
     private final UndoManagerModel undoModel;
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(UndoManagerPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(UndoManagerPanel.class);
     private UndoManagerService undoManagerService;
 
     public UndoManagerPanel(UndoManagerModel undoModel) {
@@ -245,7 +246,7 @@ public class UndoManagerPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new UndoManagerPanel(new UndoManagerModel()));
+        WindowUtils.invokeWindow(new UndoManagerPanel(new UndoManagerModel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

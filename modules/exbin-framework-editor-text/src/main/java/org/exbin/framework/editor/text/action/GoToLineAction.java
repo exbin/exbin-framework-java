@@ -29,10 +29,10 @@ import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.handler.DefaultControlHandler;
-import org.exbin.framework.utils.gui.DefaultControlPanel;
+import org.exbin.framework.window.api.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Go to line action.
@@ -75,9 +75,9 @@ public class GoToLineAction extends AbstractAction {
             goToPanel.setCharPos(1);
             DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
             WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-            final DialogWrapper dialog = windowModule.createDialog(goToPanel, controlPanel);
-            WindowUtils.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
-            windowModule.setDialogTitle(dialog, goToPanel.getResourceBundle());
+            final WindowHandler dialog = windowModule.createDialog(goToPanel, controlPanel);
+            windowModule.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
+            windowModule.setWindowTitle(dialog, goToPanel.getResourceBundle());
             controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {
                     activePanel.gotoLine(goToPanel.getLine());

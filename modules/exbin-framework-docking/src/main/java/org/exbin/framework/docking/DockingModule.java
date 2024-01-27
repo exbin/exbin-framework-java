@@ -34,10 +34,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import org.exbin.framework.App;
 import org.exbin.framework.docking.api.EditorViewHandling;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.docking.api.DockingModuleApi;
 
@@ -62,7 +63,7 @@ public class DockingModule implements DockingModuleApi {
     private final Map<EditorProvider, EditorCDockable> editorMap = new HashMap<>();
 
     public DockingModule() {
-        resourceBundle = LanguageUtils.getResourceBundleByClass(this.getClass());
+        resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(this.getClass());
     }
 
     @Override

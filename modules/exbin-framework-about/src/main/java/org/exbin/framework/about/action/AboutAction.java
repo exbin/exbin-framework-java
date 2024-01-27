@@ -25,9 +25,9 @@ import org.exbin.framework.App;
 import org.exbin.framework.about.gui.AboutPanel;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.LanguageUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.gui.CloseControlPanel;
+import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.gui.CloseControlPanel;
 
 /**
  * About application action.
@@ -39,7 +39,7 @@ public class AboutAction extends AbstractAction {
 
     public static final String ACTION_ID = "aboutAction";
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutAction.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AboutAction.class);
     private JComponent sideComponent = null;
 
     public AboutAction() {
@@ -57,7 +57,7 @@ public class AboutAction extends AbstractAction {
         AboutPanel aboutPanel = new AboutPanel();
         aboutPanel.setSideComponent(sideComponent);
         CloseControlPanel controlPanel = new CloseControlPanel();
-        final DialogWrapper aboutDialog = windowModule.createDialog(aboutPanel, controlPanel);
+        final WindowHandler aboutDialog = windowModule.createDialog(aboutPanel, controlPanel);
         ((JDialog) aboutDialog.getWindow()).setTitle(resourceBundle.getString("aboutAction.dialogTitle"));
         controlPanel.setHandler(aboutDialog::close);
         aboutDialog.showCentered((Component) e.getSource());

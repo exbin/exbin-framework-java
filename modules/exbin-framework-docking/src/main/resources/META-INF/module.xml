@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.docking.DockingModule</id>
+  <name>Docking Module</name>
+  <description>Module to handle docking</description>
+  <dependency>
+  </dependency>
+</module>

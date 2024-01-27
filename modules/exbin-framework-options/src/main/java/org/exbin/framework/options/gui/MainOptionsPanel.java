@@ -29,7 +29,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
@@ -45,7 +46,7 @@ import org.exbin.framework.utils.DesktopUtils;
 @ParametersAreNonnullByDefault
 public class MainOptionsPanel extends javax.swing.JPanel implements OptionsComponent<FrameworkOptionsImpl> {
 
-    private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(MainOptionsPanel.class);
+    private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(MainOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
     private OptionsComponent extendedOptionsPanel = null;
     private String defaultLocaleName = "";
@@ -474,7 +475,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new MainOptionsPanel());
+        WindowUtils.invokeWindow(new MainOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

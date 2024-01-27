@@ -21,12 +21,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.App;
 import org.exbin.framework.component.ComponentModule;
 import org.exbin.framework.component.api.toolbar.EditItemActions;
 import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
 import org.exbin.framework.component.api.toolbar.SideToolBar;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Item edit default action set.
@@ -36,7 +37,7 @@ import org.exbin.framework.utils.LanguageUtils;
 @ParametersAreNonnullByDefault
 public class DefaultEditItemActions implements EditItemActions {
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ComponentModule.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ComponentModule.class);
     private EditItemActionsHandler actionsHandler = null;
 
     public static final String ADD_ITEM_ACTION_ID = "addItemAction";

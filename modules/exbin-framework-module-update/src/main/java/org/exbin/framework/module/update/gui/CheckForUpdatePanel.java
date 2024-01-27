@@ -21,10 +21,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import org.exbin.framework.App;
 import org.exbin.framework.update.api.VersionNumbers;
 import org.exbin.framework.module.update.service.CheckForUpdateService;
 import org.exbin.framework.utils.DesktopUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -35,7 +36,7 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class CheckForUpdatePanel extends javax.swing.JPanel implements HyperlinkListener {
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdatePanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(CheckForUpdatePanel.class);
     private CheckForUpdateService checkForUpdateService;
     private Controller controller;
 
@@ -231,7 +232,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new CheckForUpdatePanel());
+        WindowUtils.invokeWindow(new CheckForUpdatePanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

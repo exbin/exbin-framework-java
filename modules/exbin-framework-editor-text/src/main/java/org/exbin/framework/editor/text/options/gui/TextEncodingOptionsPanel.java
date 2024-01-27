@@ -25,8 +25,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.options.impl.TextEncodingOptionsImpl;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextEncodingService;
@@ -42,7 +43,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 public class TextEncodingOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextEncodingOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextEncodingOptionsPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingOptionsPanel.class);
     private TextEncodingService textEncodingService;
     private final TextEncodingPanel encodingPanel;
     private final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
@@ -209,7 +210,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextEncodingOptionsPanel());
+        WindowUtils.invokeWindow(new TextEncodingOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -59,7 +59,7 @@ import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.framework.editor.wave.service.WaveColorService;
 import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
 import org.exbin.framework.options.api.DefaultOptionsPage;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -148,7 +148,7 @@ public class EditorWaveModule implements Module {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(EditorWaveModule.class);
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(EditorWaveModule.class);
         }
 
         return resourceBundle;
@@ -250,7 +250,7 @@ public class EditorWaveModule implements Module {
 
             @Override
             public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(WaveColorOptionsPanel.class);
+                return App.getModule(LanguageModuleApi.class).getBundle(WaveColorOptionsPanel.class);
             }
 
             @Override
@@ -297,7 +297,7 @@ public class EditorWaveModule implements Module {
 
             @Override
             public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(AudioDevicesOptionsPanel.class);
+                return App.getModule(LanguageModuleApi.class).getBundle(AudioDevicesOptionsPanel.class);
             }
 
             @Override

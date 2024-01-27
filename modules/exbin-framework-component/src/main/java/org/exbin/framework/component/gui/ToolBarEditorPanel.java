@@ -77,7 +77,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
         toolBarEditorPanel.setUndoHandler(undoActionsHandler, guiUndoModule.createUndoActions(undoActionsHandler));
         ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
         toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.createClipboardActions(clipboardActionsHandler));
-        WindowUtils.invokeDialog(toolBarEditorPanel);
+        WindowUtils.invokeWindow(toolBarEditorPanel);
     }
 
     public void setUndoHandler(UndoActionsHandler undoHandler, UndoActions undoActions) {

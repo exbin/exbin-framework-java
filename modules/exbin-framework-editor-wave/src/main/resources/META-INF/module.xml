@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.editor.wave.EditorWaveModule</id>
+  <name>XBUP Wave Editor Module</name>
+  <description>Module supporting editation of audio wave files</description>
+  <dependency>
+  </dependency>
+</module>

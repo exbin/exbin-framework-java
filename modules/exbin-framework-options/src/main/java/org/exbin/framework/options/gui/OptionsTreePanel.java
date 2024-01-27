@@ -39,7 +39,7 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsPathItem;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.utils.LazyComponentListener;
@@ -55,7 +55,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponentsIssuable {
 
     private Preferences preferences = null;
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsTreePanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsTreePanel.class);
     private Map<String, PageRecord<?>> optionPages;
     private PageRecord<?> currentOptionsPanel = null;
     private OptionsModifiedListener optionsModifiedListener;
@@ -190,7 +190,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new OptionsTreePanel(null));
+        WindowUtils.invokeWindow(new OptionsTreePanel(null));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -44,7 +44,7 @@ import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.operation.undo.api.UndoFileHandler;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * XBUP framework editor module.
@@ -71,7 +71,7 @@ public class EditorModule implements EditorModuleApi {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(EditorModule.class);
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(EditorModule.class);
         }
 
         return resourceBundle;

@@ -39,11 +39,11 @@ import org.exbin.framework.operation.undo.gui.UndoManagerControlPanel;
 import org.exbin.framework.operation.undo.gui.UndoManagerPanel;
 import org.exbin.framework.operation.undo.gui.UndoManagerModel;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Implementation of XBUP framework undo/redo module.
@@ -187,14 +187,14 @@ public class OperationUndoModule implements OperationUndoModuleApi {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         UndoManagerPanel undoManagerPanel = new UndoManagerPanel(undoModel);
         UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
-        final DialogWrapper dialog = windowModule.createDialog(undoManagerPanel, undoManagerControlPanel);
-        windowModule.setDialogTitle(dialog, undoManagerPanel.getResourceBundle());
+        final WindowHandler windowHandler = windowModule.createDialog(undoManagerPanel, undoManagerControlPanel);
+        windowModule.setWindowTitle(windowHandler, undoManagerPanel.getResourceBundle());
         undoManagerControlPanel.setHandler((UndoManagerControlHandler.ControlActionType actionType) -> {
-            dialog.close();
-            dialog.dispose();
+            windowHandler.close();
+            windowHandler.dispose();
         });
-        WindowUtils.addHeaderPanel(dialog.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
-        dialog.showCentered(windowModule.getFrame());
+        windowModule.addHeaderPanel(windowHandler.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
+        windowHandler.showCentered(windowModule.getFrame());
     }
 
     @Nonnull

@@ -51,7 +51,7 @@ import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.file.api.FileOperationsProvider;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Implementation of framework file module.
@@ -78,7 +78,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(FileModule.class);
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FileModule.class);
         }
 
         return resourceBundle;

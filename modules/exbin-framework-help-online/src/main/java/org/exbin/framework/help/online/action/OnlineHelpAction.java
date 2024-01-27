@@ -20,9 +20,10 @@ import java.net.URL;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
+import org.exbin.framework.App;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.DesktopUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Online help action.
@@ -34,7 +35,7 @@ public class OnlineHelpAction extends AbstractAction {
 
     public static final String ACTION_ID = "onlineHelpAction";
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(OnlineHelpAction.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OnlineHelpAction.class);
     private URL helpUrl = null;
 
     public OnlineHelpAction() {

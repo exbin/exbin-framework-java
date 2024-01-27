@@ -35,7 +35,7 @@ import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.gui.OptionsTreePanel;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.options.options.impl.AppearanceOptionsImpl;
 import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
@@ -72,7 +72,7 @@ public class OptionsModule implements OptionsModuleApi {
     @Nonnull
     private ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(OptionsModule.class);
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsModule.class);
 
             OptionsPage<FrameworkOptionsImpl> mainOptionsPage = getMainOptionsManager().getMainOptionsPage();
             optionsPages.add(new OptionsPageRecord(null, mainOptionsPage));
@@ -88,7 +88,7 @@ public class OptionsModule implements OptionsModuleApi {
                 @Nonnull
                 @Override
                 public ResourceBundle getResourceBundle() {
-                    return LanguageUtils.getResourceBundleByClass(AppearanceOptionsPanel.class);
+                    return App.getModule(LanguageModuleApi.class).getBundle(AppearanceOptionsPanel.class);
                 }
 
                 @Nonnull

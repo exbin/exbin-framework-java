@@ -27,8 +27,8 @@ import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.gui.CloseControlPanel;
+import org.exbin.framework.window.api.gui.CloseControlPanel;
+import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Properties action.
@@ -62,9 +62,9 @@ public class PropertiesAction extends AbstractAction {
             PropertiesPanel propertiesPanel = new PropertiesPanel();
             propertiesPanel.setDocument((ImageEditor) editorProvider);
             CloseControlPanel controlPanel = new CloseControlPanel();
-            final DialogWrapper dialog = windowModule.createDialog(propertiesPanel, controlPanel);
-            WindowUtils.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
-            windowModule.setDialogTitle(dialog, propertiesPanel.getResourceBundle());
+            final WindowHandler dialog = windowModule.createDialog(propertiesPanel, controlPanel);
+            windowModule.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
+            windowModule.setWindowTitle(dialog, propertiesPanel.getResourceBundle());
             controlPanel.setHandler(dialog::close);
             dialog.showCentered((Component) e.getSource());
             dialog.dispose();

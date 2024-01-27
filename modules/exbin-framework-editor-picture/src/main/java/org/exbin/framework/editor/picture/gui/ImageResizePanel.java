@@ -17,7 +17,8 @@ package org.exbin.framework.editor.picture.gui;
 
 import java.awt.Point;
 import java.util.ResourceBundle;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -27,7 +28,7 @@ import org.exbin.framework.utils.WindowUtils;
  */
 public class ImageResizePanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ImageResizePanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ImageResizePanel.class);
 
     public ImageResizePanel() {
         initComponents();
@@ -110,7 +111,7 @@ public class ImageResizePanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new ImageResizePanel());
+        WindowUtils.invokeWindow(new ImageResizePanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

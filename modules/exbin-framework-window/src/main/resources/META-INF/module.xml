@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.window.WindowModule</id>
+  <name>Window handling</name>
+  <description>Module for window handling</description>
+  <dependency>
+  </dependency>
+</module>

@@ -161,7 +161,7 @@ public class InputListPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new InputListPanel());
+        WindowUtils.invokeWindow(new InputListPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

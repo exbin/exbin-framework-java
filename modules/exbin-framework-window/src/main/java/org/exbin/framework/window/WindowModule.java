@@ -16,11 +16,16 @@
 package org.exbin.framework.window;
 
 import com.formdev.flatlaf.extras.FlatDesktop;
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -28,6 +33,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -45,17 +52,20 @@ import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowPosition;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.action.FrameActions;
 import org.exbin.framework.utils.DesktopUtils;
-import org.exbin.framework.utils.handler.OkCancelService;
+import org.exbin.framework.utils.OkCancelListener;
+import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.gui.WindowHeaderPanel;
+import org.exbin.framework.window.api.handler.OkCancelService;
 
 /**
- * Implementation of XBUP framework frame module.
+ * Module window handling.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -77,7 +87,7 @@ public class WindowModule implements WindowModuleApi {
     public static final String PREFERENCES_MAXIMIZED = "maximized";
 
     private ResourceBundle resourceBundle;
-    private ApplicationFrame frame;
+    private ApplicationFrame applicationFrame;
     private ApplicationExitHandler exitHandler = null;
     private StatusBarHandler statusBarHandler = null;
     private FrameActions frameActions;
@@ -88,7 +98,7 @@ public class WindowModule implements WindowModuleApi {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
-            resourceBundle = LanguageUtils.getResourceBundleByClass(WindowModule.class);
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(WindowModule.class);
         }
 
         return resourceBundle;
@@ -132,6 +142,117 @@ public class WindowModule implements WindowModuleApi {
 
     @Nonnull
     @Override
+    public WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull Class<?> resourceClass, @Nonnull ResourceBundle resourceBundle) {
+        URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
+        Icon headerIcon = iconUrl != null ? new ImageIcon(iconUrl) : null;
+        return addHeaderPanel(window, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
+    }
+
+    @Nonnull
+    @Override
+    public WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull String headerTitle, @Nonnull String headerDescription, @Nullable Icon headerIcon) {
+        WindowHeaderPanel headerPanel = new WindowHeaderPanel();
+        headerPanel.setTitle(headerTitle);
+        headerPanel.setDescription(headerDescription);
+        if (headerIcon != null) {
+            headerPanel.setIcon(headerIcon);
+        }
+        if (window instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
+            ((WindowHeaderPanel.WindowHeaderDecorationProvider) window).setHeaderDecoration(headerPanel);
+        } else {
+            Frame frame = UiUtils.getFrame(window);
+            if (frame instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
+                ((WindowHeaderPanel.WindowHeaderDecorationProvider) frame).setHeaderDecoration(headerPanel);
+            }
+        }
+        int height = window.getHeight() + headerPanel.getPreferredSize().height;
+        ((JDialog) window).getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
+        window.setSize(window.getWidth(), height);
+        return headerPanel;
+    }
+
+    @Nonnull
+    @Override
+    public WindowHandler createWindow(final JComponent component, Component parent, String dialogTitle, Dialog.ModalityType modalityType) {
+        final JDialog dialog = new JDialog(WindowUtils.getWindow(parent), modalityType);
+        Dimension size = component.getPreferredSize();
+        dialog.add(component);
+        dialog.getContentPane().setPreferredSize(new Dimension(size.width, size.height));
+        dialog.pack();
+        dialog.setTitle(dialogTitle);
+        if (component instanceof OkCancelService) {
+            WindowUtils.assignGlobalKeyListener(dialog, ((OkCancelService) component).getOkCancelListener());
+        }
+        return new WindowHandler() {
+            @Override
+            public void show() {
+                dialog.setVisible(true);
+            }
+
+            @Override
+            public void showCentered(@Nullable Component component) {
+                center(component);
+                show();
+            }
+
+            @Override
+            public void close() {
+                WindowUtils.closeWindow(dialog);
+            }
+
+            @Override
+            public void dispose() {
+                dialog.dispose();
+            }
+
+            @Override
+            public Window getWindow() {
+                return dialog;
+            }
+
+            @Override
+            public Container getParent() {
+                return dialog.getParent();
+            }
+
+            @Override
+            public void center(@Nullable Component component) {
+                if (component == null) {
+                    center();
+                } else {
+                    dialog.setLocationRelativeTo(component);
+                }
+            }
+
+            @Override
+            public void center() {
+                dialog.setLocationByPlatform(true);
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public JDialog createWindow(final JComponent component) {
+        JDialog dialog = new JDialog();
+        Dimension size = component.getPreferredSize();
+        dialog.add(component);
+        dialog.getContentPane().setPreferredSize(new Dimension(size.width, size.height));
+        dialog.pack();
+        if (component instanceof OkCancelService) {
+            WindowUtils.assignGlobalKeyListener(dialog, ((OkCancelService) component).getOkCancelListener());
+        }
+        return dialog;
+    }
+
+    @Override
+    public void invokeWindow(final JComponent component) {
+        JDialog dialog = createWindow(component);
+        WindowUtils.invokeWindow(dialog);
+    }
+
+    @Nonnull
+    @Override
     public Frame getFrame() {
         return getFrameHandler().getFrame();
     }
@@ -150,13 +271,13 @@ public class WindowModule implements WindowModuleApi {
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
         if (preferencesFramePositionExists(preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX)) {
             loadFramePositionFromPreferences(framePosition, preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
-            WindowUtils.setWindowPosition(frame, framePosition);
+            WindowUtils.setWindowPosition(applicationFrame, framePosition);
         }
     }
 
     @Override
     public void saveFramePosition() {
-        WindowPosition windowPosition = WindowUtils.getWindowPosition(frame);
+        WindowPosition windowPosition = WindowUtils.getWindowPosition(applicationFrame);
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
         saveFramePositionToPreferences(windowPosition, preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
     }
@@ -252,19 +373,19 @@ public class WindowModule implements WindowModuleApi {
     @Nonnull
     @Override
     public ApplicationFrameHandler getFrameHandler() {
-        if (frame == null) {
-            frame = new ApplicationFrame();
-            frame.initApplication();
-            frame.loadMainMenu();
-            frame.loadMainToolBar();
-            frame.setApplicationExitHandler(exitHandler);
+        if (applicationFrame == null) {
+            applicationFrame = new ApplicationFrame();
+            applicationFrame.initApplication();
+            applicationFrame.loadMainMenu();
+            applicationFrame.loadMainToolBar();
+            applicationFrame.setApplicationExitHandler(exitHandler);
 
             if (frameActions != null) {
-                frameActions.setApplicationFrame(frame);
+                frameActions.setApplicationFrame(applicationFrame);
             }
         }
 
-        return frame;
+        return applicationFrame;
     }
 
     @Override
@@ -281,8 +402,8 @@ public class WindowModule implements WindowModuleApi {
     private ApplicationExitHandler getExitHandler() {
         if (exitHandler == null) {
             exitHandler = new ApplicationExitHandler();
-            if (frame != null) {
-                frame.setApplicationExitHandler(exitHandler);
+            if (applicationFrame != null) {
+                applicationFrame.setApplicationExitHandler(exitHandler);
             }
         }
 
@@ -293,7 +414,7 @@ public class WindowModule implements WindowModuleApi {
     private StatusBarHandler getStatusBarHandler() {
         getFrameHandler();
         if (statusBarHandler == null) {
-            statusBarHandler = new StatusBarHandler(frame);
+            statusBarHandler = new StatusBarHandler(applicationFrame);
         }
 
         return statusBarHandler;
@@ -315,8 +436,8 @@ public class WindowModule implements WindowModuleApi {
             frameActions = new FrameActions();
             ensureSetup();
             frameActions.setup(resourceBundle);
-            if (frame != null) {
-                frameActions.setApplicationFrame(frame);
+            if (applicationFrame != null) {
+                frameActions.setApplicationFrame(applicationFrame);
             }
         }
 
@@ -355,34 +476,34 @@ public class WindowModule implements WindowModuleApi {
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog() {
+    public WindowHandler createDialog() {
         return createDialog(null, null);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(@Nullable JComponent component) {
+    public WindowHandler createDialog(@Nullable JComponent component) {
         return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, component, null);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(@Nullable JComponent component, @Nullable JPanel controlPanel) {
+    public WindowHandler createDialog(@Nullable JComponent component, @Nullable JPanel controlPanel) {
         return createDialog(getFrame(), Dialog.ModalityType.APPLICATION_MODAL, component, controlPanel);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component) {
+    public WindowHandler createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component) {
         return createDialog(parentComponent, modalityType, component, null);
     }
 
     @Nonnull
     @Override
-    public DialogWrapper createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component, @Nullable JPanel controlPanel) {
-        JComponent dialogComponent = controlPanel != null ? WindowUtils.createDialogPanel(component, controlPanel) : component;
+    public WindowHandler createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component, @Nullable JPanel controlPanel) {
+        JComponent dialogComponent = controlPanel != null ? createDialogPanel(component, controlPanel) : component;
 
-        DialogWrapper dialog = WindowUtils.createDialog(dialogComponent, parentComponent, "", modalityType);
+        WindowHandler dialog = createWindow(dialogComponent, parentComponent, "", modalityType);
         Optional<Image> applicationIcon = Optional.empty(); // TODO application.getApplicationIcon();
         if (applicationIcon.isPresent()) {
             ((JDialog) dialog.getWindow()).setIconImage(applicationIcon.get());
@@ -400,7 +521,55 @@ public class WindowModule implements WindowModuleApi {
     }
 
     @Override
-    public void setDialogTitle(DialogWrapper dialog, ResourceBundle resourceBundle) {
-        ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString(RESOURCES_DIALOG_TITLE));
+    public void setWindowTitle(WindowHandler windowWrapper, ResourceBundle resourceBundle) {
+        ((JDialog) windowWrapper.getWindow()).setTitle(resourceBundle.getString(RESOURCES_DIALOG_TITLE));
+    }
+
+    /**
+     * Creates panel for given main and control panel.
+     *
+     * @param mainComponent main panel
+     * @param controlPanel control panel
+     * @return panel
+     */
+    @Nonnull
+    @Override
+    public JPanel createDialogPanel(JComponent mainComponent, JPanel controlPanel) {
+        JPanel dialogPanel;
+        if (controlPanel instanceof OkCancelService) {
+            dialogPanel = new DialogPanel((OkCancelService) controlPanel);
+        } else {
+            dialogPanel = new JPanel(new BorderLayout());
+        }
+        dialogPanel.add(mainComponent, BorderLayout.CENTER);
+        dialogPanel.add(controlPanel, BorderLayout.SOUTH);
+        Dimension mainPreferredSize = mainComponent.getPreferredSize();
+        Dimension controlPreferredSize = controlPanel.getPreferredSize();
+        int height = mainPreferredSize.height + (controlPreferredSize != null ? controlPreferredSize.height : 0);
+        dialogPanel.setPreferredSize(new Dimension(mainPreferredSize.width, height));
+        return dialogPanel;
+    }
+
+    @ParametersAreNonnullByDefault
+    private static final class DialogPanel extends JPanel implements OkCancelService {
+
+        private final OkCancelService okCancelService;
+
+        public DialogPanel(OkCancelService okCancelService) {
+            super(new BorderLayout());
+            this.okCancelService = okCancelService;
+        }
+
+        @Nullable
+        @Override
+        public JButton getDefaultButton() {
+            return null;
+        }
+
+        @Nonnull
+        @Override
+        public OkCancelListener getOkCancelListener() {
+            return okCancelService.getOkCancelListener();
+        }
     }
 }

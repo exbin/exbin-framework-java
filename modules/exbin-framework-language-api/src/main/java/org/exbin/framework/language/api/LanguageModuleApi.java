@@ -16,6 +16,7 @@
 package org.exbin.framework.language.api;
 
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
@@ -30,5 +31,18 @@ public interface LanguageModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(LanguageModuleApi.class);
 
+    @Nonnull
     ResourceBundle getAppBundle();
+    
+    /**
+     * Sets application resource bundle handler.
+     *
+     * @param appBundle application resource bundle
+     * @param bundleName this is workaround for getBaseBundleName method
+     * available only in Java 1.8
+     */
+    void setAppBundle(ResourceBundle appBundle, String bundleName);
+    
+    @Nonnull
+    ResourceBundle getBundle(Class<?> targetClass);
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.help.online.HelpOnlineModule</id>
+  <name>XBUP Online Help Module</name>
+  <description>Module for online help</description>
+  <dependency>
+  </dependency>
+</module>

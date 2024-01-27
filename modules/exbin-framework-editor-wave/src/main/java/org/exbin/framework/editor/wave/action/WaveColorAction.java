@@ -28,13 +28,13 @@ import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.handler.DefaultControlHandler;
-import org.exbin.framework.utils.handler.DefaultControlHandler.ControlActionType;
-import org.exbin.framework.utils.gui.DefaultControlPanel;
+import org.exbin.framework.window.api.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.handler.DefaultControlHandler.ControlActionType;
+import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.editor.wave.service.WaveColorService;
 import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Tools options action handler.
@@ -76,9 +76,9 @@ public class WaveColorAction extends AbstractAction {
         waveColorPanel.setWaveColorService(waveColorService);
         waveColorPanel.setWaveColorsFromArray(audioPanel.getAudioPanelColors());
         DefaultControlPanel controlPanel = new DefaultControlPanel(waveColorPanel.getResourceBundle());
-        final DialogWrapper dialog = windowModule.createDialog(waveColorPanel, controlPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), waveColorPanel.getClass(), waveColorPanel.getResourceBundle());
-        windowModule.setDialogTitle(dialog, waveColorPanel.getResourceBundle());
+        final WindowHandler dialog = windowModule.createDialog(waveColorPanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), waveColorPanel.getClass(), waveColorPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, waveColorPanel.getResourceBundle());
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == ControlActionType.OK) {
                 audioPanel.setAudioPanelColors(waveColorPanel.getWaveColorsAsArray());

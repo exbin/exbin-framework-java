@@ -35,7 +35,7 @@ import org.exbin.framework.module.update.options.gui.ApplicationUpdateOptionsPan
 import org.exbin.framework.module.update.preferences.CheckForUpdatePreferences;
 import org.exbin.framework.module.update.service.CheckForUpdateService;
 import org.exbin.framework.module.update.service.impl.CheckForUpdateServiceImpl;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.module.update.action.CheckForUpdateAction;
 import org.exbin.framework.action.api.ActionModuleApi;
@@ -92,7 +92,7 @@ public class ModuleUpdateModule implements UpdateModuleApi {
             @Nonnull
             @Override
             public ResourceBundle getResourceBundle() {
-                return LanguageUtils.getResourceBundleByClass(ApplicationUpdateOptionsPanel.class);
+                return App.getModule(LanguageModuleApi.class).getBundle(ApplicationUpdateOptionsPanel.class);
             }
 
             @Nonnull

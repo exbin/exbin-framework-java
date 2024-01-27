@@ -97,6 +97,6 @@ public class TableEditPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TableEditPanel());
+        WindowUtils.invokeWindow(new TableEditPanel());
     }
 }

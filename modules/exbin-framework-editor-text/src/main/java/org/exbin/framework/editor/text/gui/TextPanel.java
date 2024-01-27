@@ -333,7 +333,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextPanel());
+        WindowUtils.invokeWindow(new TextPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

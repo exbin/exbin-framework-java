@@ -31,12 +31,13 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
+import org.exbin.framework.App;
 import org.exbin.framework.about.XBApplicationBundle;
 import org.exbin.framework.action.popup.DefaultPopupMenu;
 import org.exbin.framework.action.popup.LinkActionsHandler;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.DesktopUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 
@@ -49,7 +50,7 @@ import org.exbin.framework.utils.UiUtils;
 public class AboutPanel extends javax.swing.JPanel {
 
     private ResourceBundle appBundle;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AboutPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AboutPanel.class);
     private JComponent sideComponent = null;
     private boolean darkMode = false;
     private final AboutModulesPanel aboutModulesPanel = new AboutModulesPanel();
@@ -332,7 +333,7 @@ public class AboutPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new AboutPanel());
+        WindowUtils.invokeWindow(new AboutPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -30,10 +30,10 @@ import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.handler.OptionsControlHandler;
-import org.exbin.framework.utils.gui.OptionsControlPanel;
+import org.exbin.framework.window.api.handler.OptionsControlHandler;
+import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Text font action handler.
@@ -78,9 +78,9 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
         final TextFontPanel fontPanel = new TextFontPanel();
         fontPanel.setStoredFont(textFontApi.getCurrentFont());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        final DialogWrapper dialog = windowModule.createDialog(fontPanel, controlPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
-        windowModule.setDialogTitle(dialog, fontPanel.getResourceBundle());
+        final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
         controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
             if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                 if (actionType == OptionsControlHandler.ControlActionType.SAVE) {

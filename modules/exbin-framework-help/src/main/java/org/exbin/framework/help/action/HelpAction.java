@@ -31,8 +31,9 @@ import javax.help.HelpSet;
 import javax.help.HelpSetException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.App;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Help action.
@@ -45,7 +46,7 @@ public class HelpAction extends AbstractAction {
     public static final String ACTION_ID = "helpAction";
     public static final String HELP_SET_FILE = "help/help.hs";
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(HelpAction.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(HelpAction.class);
 
     private HelpSet mainHelpSet;
     private HelpBroker mainHelpBroker;

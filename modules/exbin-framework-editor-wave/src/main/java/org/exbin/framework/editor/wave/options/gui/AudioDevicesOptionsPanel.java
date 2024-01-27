@@ -22,8 +22,9 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Control;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.Mixer;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.wave.options.impl.AudioDevicesOptionsImpl;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -36,7 +37,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 @ParametersAreNonnullByDefault
 public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements OptionsComponent<AudioDevicesOptionsImpl> {
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(AudioDevicesOptionsPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AudioDevicesOptionsPanel.class);
 
     @SuppressWarnings("unchecked")
     public AudioDevicesOptionsPanel() {
@@ -199,7 +200,7 @@ public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements Opti
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new AudioDevicesOptionsPanel());
+        WindowUtils.invokeWindow(new AudioDevicesOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

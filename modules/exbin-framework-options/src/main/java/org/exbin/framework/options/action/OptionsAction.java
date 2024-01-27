@@ -25,7 +25,8 @@ import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.options.gui.OptionsTreePanel;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.gui.OptionsControlPanel;
+import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.gui.OptionsControlPanel;
 
 /**
  * Options action.
@@ -63,8 +64,8 @@ public class OptionsAction extends AbstractAction {
         optionsTreePanel.loadAllFromPreferences();
 
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        final WindowUtils.DialogWrapper dialog = windowModule.createDialog(optionsTreePanel, controlPanel);
-        windowModule.setDialogTitle(dialog, optionsTreePanel.getResourceBundle());
+        final WindowHandler dialog = windowModule.createDialog(optionsTreePanel, controlPanel);
+        windowModule.setWindowTitle(dialog, optionsTreePanel.getResourceBundle());
         controlPanel.setHandler((actionType) -> {
             switch (actionType) {
                 case SAVE: {

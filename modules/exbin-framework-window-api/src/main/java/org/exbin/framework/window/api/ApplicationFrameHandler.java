@@ -20,7 +20,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.utils.gui.WindowHeaderPanel;
+import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 
 /**
  * Interface for application frame.

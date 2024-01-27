@@ -31,10 +31,10 @@ import org.exbin.framework.module.update.gui.CheckForUpdatePanel;
 import org.exbin.framework.module.update.preferences.CheckForUpdatePreferences;
 import org.exbin.framework.module.update.service.CheckForUpdateService;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.gui.CloseControlPanel;
+import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.gui.CloseControlPanel;
 
 /**
  * Implementation of framework check update module.
@@ -46,7 +46,7 @@ public class CheckForUpdateAction extends AbstractAction {
 
     public static final String ACTION_ID = "checkUpdateAction";
 
-    private java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(CheckForUpdateAction.class);
+    private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(CheckForUpdateAction.class);
 
     private URL checkUpdateUrl;
     private VersionNumbers updateVersion;
@@ -68,9 +68,9 @@ public class CheckForUpdateAction extends AbstractAction {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
         CloseControlPanel controlPanel = new CloseControlPanel();
-        final DialogWrapper dialog = windowModule.createDialog(checkForUpdatePanel, controlPanel);
-        WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
-        windowModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
+        final WindowHandler dialog = windowModule.createDialog(checkForUpdatePanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, checkForUpdatePanel.getResourceBundle());
         controlPanel.setHandler(dialog::close);
         checkForUpdatePanel.setCheckForUpdateService(getCheckForUpdateService());
         checkForUpdatePanel.performCheckForUpdate();
@@ -136,9 +136,9 @@ public class CheckForUpdateAction extends AbstractAction {
             WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             CheckForUpdatePanel checkForUpdatePanel = new CheckForUpdatePanel();
             CloseControlPanel controlPanel = new CloseControlPanel();
-            final DialogWrapper dialog = windowModule.createDialog(checkForUpdatePanel, controlPanel);
-            WindowUtils.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
-            windowModule.setDialogTitle(dialog, checkForUpdatePanel.getResourceBundle());
+            final WindowHandler dialog = windowModule.createDialog(checkForUpdatePanel, controlPanel);
+            windowModule.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
+            windowModule.setWindowTitle(dialog, checkForUpdatePanel.getResourceBundle());
             controlPanel.setHandler(dialog::close);
             checkForUpdatePanel.setCheckForUpdateService(checkForUpdateService);
             checkForUpdatePanel.setCheckUpdatesResult(checkForUpdateResult);

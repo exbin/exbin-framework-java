@@ -31,11 +31,11 @@ import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
-import org.exbin.framework.utils.handler.DefaultControlHandler;
-import org.exbin.framework.utils.handler.DefaultControlHandler.ControlActionType;
-import org.exbin.framework.utils.gui.DefaultControlPanel;
+import org.exbin.framework.window.api.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.handler.DefaultControlHandler.ControlActionType;
+import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Picture operation actions.
@@ -77,9 +77,9 @@ public class PictureOperationActions {
                     imageResizePanel.setResolution(imagePanel.getImageSize());
                     DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
                     WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                    final DialogWrapper dialog = windowModule.createDialog(imageResizePanel, controlPanel);
-                    WindowUtils.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
-                    windowModule.setDialogTitle(dialog, imageResizePanel.getResourceBundle());
+                    final WindowHandler dialog = windowModule.createDialog(imageResizePanel, controlPanel);
+                    windowModule.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
+                    windowModule.setWindowTitle(dialog, imageResizePanel.getResourceBundle());
                     controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                         if (actionType == ControlActionType.OK) {
                             Point point = imageResizePanel.getResolution();

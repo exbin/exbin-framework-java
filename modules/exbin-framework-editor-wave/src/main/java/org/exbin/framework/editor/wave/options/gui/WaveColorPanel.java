@@ -22,8 +22,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.wave.options.impl.WaveColorOptionsImpl;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.wave.service.WaveColorService;
@@ -39,7 +40,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCompone
 
     private OptionsModifiedListener optionsModifiedListener;
     private WaveColorService waveColorService;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(WaveColorPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(WaveColorPanel.class);
 
     public WaveColorPanel() {
         initComponents();
@@ -538,7 +539,7 @@ public class WaveColorPanel extends javax.swing.JPanel implements OptionsCompone
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new WaveColorPanel());
+        WindowUtils.invokeWindow(new WaveColorPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

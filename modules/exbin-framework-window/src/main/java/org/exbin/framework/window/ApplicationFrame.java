@@ -35,7 +35,7 @@ import javax.swing.UIManager;
 import org.exbin.framework.App;
 import org.exbin.framework.window.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.utils.gui.WindowHeaderPanel;
+import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;

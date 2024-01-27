@@ -19,11 +19,12 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.App;
 import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
 import org.exbin.framework.operation.undo.api.UndoActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Basic clipboard action set.
@@ -36,7 +37,7 @@ public class BasicUndoActions implements UndoActions {
     public static final String EDIT_REDO_ACTION_ID = "editRedoAction";
     public static final String EDIT_UNDO_MANAGER_ACTION_ID = "editUndoManagerAction";
 
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(OperationUndoModule.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OperationUndoModule.class);
 
     private UndoActionsHandler undoHandler = null;
     private Action undoAction = null;

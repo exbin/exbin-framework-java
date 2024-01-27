@@ -18,16 +18,19 @@ package org.exbin.framework.window.api;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.Window;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.utils.WindowUtils.DialogWrapper;
+import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 
 /**
  * Interface for framework frame module.
@@ -78,7 +81,7 @@ public interface WindowModuleApi extends Module {
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog();
+    WindowHandler createDialog();
 
     /**
      * Creates basic dialog and sets it up.
@@ -87,7 +90,7 @@ public interface WindowModuleApi extends Module {
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(@Nullable JComponent component);
+    WindowHandler createDialog(@Nullable JComponent component);
 
     /**
      * Creates basic dialog and sets it up.
@@ -97,7 +100,7 @@ public interface WindowModuleApi extends Module {
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(@Nullable JComponent component, @Nullable JPanel controlPanel);
+    WindowHandler createDialog(@Nullable JComponent component, @Nullable JPanel controlPanel);
 
     /**
      * Creates basic dialog and sets it up.
@@ -108,7 +111,7 @@ public interface WindowModuleApi extends Module {
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component);
+    WindowHandler createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component);
 
     /**
      * Creates basic dialog and sets it up.
@@ -120,7 +123,24 @@ public interface WindowModuleApi extends Module {
      * @return dialog
      */
     @Nonnull
-    DialogWrapper createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component, @Nullable JPanel controlPanel);
+    WindowHandler createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component, @Nullable JPanel controlPanel);
+
+    @Nonnull
+    WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull Class<?> resourceClass, @Nonnull ResourceBundle resourceBundle);
+
+    @Nonnull
+    WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull String headerTitle, @Nonnull String headerDescription, @Nullable Icon headerIcon);
+
+    @Nonnull
+    WindowHandler createWindow(final JComponent component, Component parent, String dialogTitle, Dialog.ModalityType modalityType);
+
+    @Nonnull
+    JDialog createWindow(final JComponent component);
+    
+    void invokeWindow(final JComponent component);
+    
+    @Nonnull
+    JPanel createDialogPanel(JComponent mainComponent, JPanel controlPanel);
 
     /**
      * Returns frame instance.
@@ -183,5 +203,5 @@ public interface WindowModuleApi extends Module {
 
     void saveFramePosition();
 
-    void setDialogTitle(DialogWrapper dialog, ResourceBundle resourceBundle);
+    void setWindowTitle(WindowHandler windowHandler, ResourceBundle resourceBundle);
 }

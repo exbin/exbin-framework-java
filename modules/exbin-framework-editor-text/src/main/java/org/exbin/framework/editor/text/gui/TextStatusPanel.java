@@ -15,9 +15,10 @@
  */
 package org.exbin.framework.editor.text.gui;
 
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextPositionStatusApi;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -27,7 +28,7 @@ import org.exbin.framework.utils.WindowUtils;
  */
 public class TextStatusPanel extends javax.swing.JPanel implements TextPositionStatusApi, TextEncodingStatusApi {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextStatusPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextStatusPanel.class);
 
     public TextStatusPanel() {
         initComponents();
@@ -89,7 +90,7 @@ public class TextStatusPanel extends javax.swing.JPanel implements TextPositionS
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextStatusPanel());
+        WindowUtils.invokeWindow(new TextStatusPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

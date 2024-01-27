@@ -18,7 +18,8 @@ package org.exbin.framework.module.update.options.gui;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.module.update.options.CheckForUpdateOptions;
 import org.exbin.framework.utils.WindowUtils;
@@ -33,7 +34,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements OptionsComponent<CheckForUpdateOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
-    private final ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(ApplicationUpdateOptionsPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ApplicationUpdateOptionsPanel.class);
 
     public ApplicationUpdateOptionsPanel() {
         initComponents();
@@ -104,7 +105,7 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new ApplicationUpdateOptionsPanel());
+        WindowUtils.invokeWindow(new ApplicationUpdateOptionsPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

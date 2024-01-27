@@ -22,7 +22,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
-import org.exbin.framework.utils.LanguageUtils;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -32,7 +33,7 @@ import org.exbin.framework.utils.WindowUtils;
  */
 public class TextGoToPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = LanguageUtils.getResourceBundleByClass(TextGoToPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextGoToPanel.class);
 
     public TextGoToPanel() {
         initComponents();
@@ -111,7 +112,7 @@ public class TextGoToPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeDialog(new TextGoToPanel());
+        WindowUtils.invokeWindow(new TextGoToPanel());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
