@@ -1,0 +1,16 @@
+rootProject.name = 'exbin-framework-addon-update'
+
+if (rootProject.path == ':') {
+    include ':core:exbin-framework'
+    include ':modules:exbin-framework-action-api'
+    include ':modules:exbin-framework-action-popup-api'
+    include ':modules:exbin-framework-addon-update-api'
+    include ':modules:exbin-framework-options-api'
+    include ':modules:exbin-framework-preferences'
+    include ':modules:exbin-framework-preferences-api'
+    include ':modules:exbin-framework-language-api'
+    include ':modules:exbin-framework-utils'
+    include ':modules:exbin-framework-window-api'
+}
+
+apply from: '../exbin-framework-java-modules-settings.gradle'

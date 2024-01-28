@@ -39,18 +39,11 @@ public class AboutAuthorsPanel extends javax.swing.JPanel {
 
     private void init() {
     }
-/*
-    public void setApplication(XBApplication application) {
-        ResourceBundle appBundle;
-        if (application != null) {
-            appBundle = application.getAppBundle();
-        } else {
-            appBundle = resourceBundle;
-        }
 
+    public void loadFromResources(ResourceBundle appBundle) {
         authorsTextArea.setText(appBundle.getString(XBApplicationBundle.APPLICATION_AUTHORS));
     }
-*/
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

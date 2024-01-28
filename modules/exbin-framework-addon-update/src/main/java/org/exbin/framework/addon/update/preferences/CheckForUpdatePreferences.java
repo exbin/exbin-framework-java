@@ -13,34 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.language.api;
+package org.exbin.framework.addon.update.preferences;
 
-import java.util.ResourceBundle;
-import javax.annotation.Nonnull;
+import org.exbin.framework.preferences.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for framework language module.
+ * Check for update on start preferences.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface LanguageModuleApi extends Module {
+public class CheckForUpdatePreferences {
 
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(LanguageModuleApi.class);
+    public static final String PREFERENCES_CHECK_FOR_UPDATE_ON_START = "start.checkForUpdate";
 
-    @Nonnull
-    ResourceBundle getAppBundle();
-    
-    /**
-     * Sets application resource bundle handler.
-     *
-     * @param appBundle application resource bundle
-     */
-    void setAppBundle(ResourceBundle appBundle);
-    
-    @Nonnull
-    ResourceBundle getBundle(Class<?> targetClass);
+    private final Preferences preferences;
+
+    public CheckForUpdatePreferences(Preferences preferences) {
+        this.preferences = preferences;
+    }
+
+    public boolean isShouldCheckForUpdate() {
+        return preferences.getBoolean(PREFERENCES_CHECK_FOR_UPDATE_ON_START, true);
+    }
+
+    public void setShouldCheckForUpdate(boolean shouldCheck) {
+        preferences.putBoolean(PREFERENCES_CHECK_FOR_UPDATE_ON_START, shouldCheck);
+    }
 }

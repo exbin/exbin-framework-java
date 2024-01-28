@@ -37,7 +37,6 @@ public class LanguageModule implements LanguageModuleApi {
     private java.util.ResourceBundle resourceBundle = null;
 
     private ResourceBundle appBundle;
-    private String appBundleName;
     private ClassLoader languageClassLoader = null;
 
     public LanguageModule() {
@@ -53,8 +52,7 @@ public class LanguageModule implements LanguageModuleApi {
     }
 
     @Override
-    public void setAppBundle(ResourceBundle appBundle, String bundleName) {
-        this.appBundleName = bundleName;
+    public void setAppBundle(ResourceBundle appBundle) {
         this.appBundle = appBundle;
     }
     

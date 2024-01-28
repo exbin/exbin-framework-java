@@ -29,6 +29,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
+import org.exbin.framework.App;
 import org.exbin.framework.preferences.PreferencesWrapper;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.client.api.ClientConnectionEvent;
@@ -36,6 +37,7 @@ import org.exbin.framework.client.api.ClientConnectionListener;
 import org.exbin.framework.client.api.ClientModuleApi;
 import org.exbin.framework.client.api.ConnectionStatus;
 import org.exbin.framework.client.api.PluginRepositoryListener;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.xbup.catalog.XBAECatalog;
 import org.exbin.xbup.catalog.entity.XBERoot;
 import org.exbin.xbup.catalog.entity.service.XBEXDescService;
@@ -85,8 +87,6 @@ import org.exbin.xbup.plugin.XBPluginRepository;
  */
 @ParametersAreNonnullByDefault
 public class ClientModule implements ClientModuleApi {
-
-    private Preferences preferences = null;
 
     private boolean devMode = false;
     private XBACatalog catalog;
@@ -161,6 +161,8 @@ public class ClientModule implements ClientModuleApi {
         connectionStatusChanged(ConnectionStatus.CONNECTING);
         try {
             // Database Initialization
+            PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+            Preferences preferences = preferencesModule.getAppPreferences();
             String derbyHome = System.getProperty("user.home") + "/.java/.userPrefs/" + ((PreferencesWrapper) preferences).getInnerPreferences().absolutePath();
             if (devMode) {
                 derbyHome += "-dev";
@@ -271,6 +273,8 @@ public class ClientModule implements ClientModuleApi {
     @Override
     public void useBuildInCatalog() {
         // Database Initialization
+        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+        Preferences preferences = preferencesModule.getAppPreferences();
         String derbyHome = System.getProperty("user.home") + "/.java/.userPrefs/" + ((PreferencesWrapper) preferences).getInnerPreferences().absolutePath();
         if (devMode) {
             derbyHome += "-dev";

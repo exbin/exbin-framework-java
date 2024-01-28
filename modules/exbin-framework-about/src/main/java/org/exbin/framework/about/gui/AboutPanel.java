@@ -32,9 +32,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.App;
-import org.exbin.framework.about.XBApplicationBundle;
 import org.exbin.framework.action.popup.DefaultPopupMenu;
 import org.exbin.framework.action.popup.LinkActionsHandler;
+import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -49,7 +49,6 @@ import org.exbin.framework.utils.UiUtils;
 @ParametersAreNonnullByDefault
 public class AboutPanel extends javax.swing.JPanel {
 
-    private ResourceBundle appBundle;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AboutPanel.class);
     private JComponent sideComponent = null;
     private boolean darkMode = false;
@@ -369,17 +368,18 @@ public class AboutPanel extends javax.swing.JPanel {
             this.sideComponent = sideComponent;
         }
     }
-/*
-    public void setApplication(XBApplication application) {
-        appBundle = application != null ? application.getAppBundle() : resourceBundle;
 
-        aboutModulesPanel.setApplication(application);
-        aboutAuthorsPanel.setApplication(application);
+    public void loadFromApplication() {
+        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+        ResourceBundle appBundle = languageModule.getAppBundle();
+
+//        aboutModulesPanel.setApplication(application);
+        aboutAuthorsPanel.loadFromResources(appBundle);
 
         // Load license
         try {
-            if (appBundle.containsKey(XBApplicationBundle.APPLICATION_LICENSE_FILE)) {
-                String licenseFilePath = appBundle.getString(XBApplicationBundle.APPLICATION_LICENSE_FILE);
+            if (appBundle.containsKey(ApplicationInfoKeys.APPLICATION_LICENSE_FILE)) {
+                String licenseFilePath = appBundle.getString(ApplicationInfoKeys.APPLICATION_LICENSE_FILE);
                 licenseEditorPane.setPage(getClass().getResource(licenseFilePath));
             }
             licenseEditorPane.addHyperlinkListener((HyperlinkEvent event) -> {
@@ -391,19 +391,19 @@ public class AboutPanel extends javax.swing.JPanel {
             Logger.getLogger(AboutPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        nameTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_NAME));
-        versionTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_VERSION));
-        vendorTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_VENDOR));
-        licenseTextField.setText(appBundle.getString(XBApplicationBundle.APPLICATION_LICENSE));
-        appHomepageLink = appBundle.getString(XBApplicationBundle.APPLICATION_HOMEPAGE);
+        nameTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_NAME));
+        versionTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_VERSION));
+        vendorTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_VENDOR));
+        licenseTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_LICENSE));
+        appHomepageLink = appBundle.getString(ApplicationInfoKeys.APPLICATION_HOMEPAGE);
         appHomepageLabel.setText("<html><a href=\"\">" + appHomepageLink + "</a></html>");
-        if (appBundle.containsKey(XBApplicationBundle.APPLICATION_ABOUT_IMAGE)) {
-            String aboutImagePath = appBundle.getString(XBApplicationBundle.APPLICATION_ABOUT_IMAGE);
+        if (appBundle.containsKey(ApplicationInfoKeys.APPLICATION_ABOUT_IMAGE)) {
+            String aboutImagePath = appBundle.getString(ApplicationInfoKeys.APPLICATION_ABOUT_IMAGE);
             imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(aboutImagePath)));
             aboutHeaderPanel.add(aboutHeaderImagePanel, BorderLayout.WEST);
         }
-        appTitleLabel.setText(appBundle.getString(XBApplicationBundle.APPLICATION_TITLE));
-        appDescLabel.setText(appBundle.getString(XBApplicationBundle.APPLICATION_DESCRIPTION));
+        appTitleLabel.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_TITLE));
+        appDescLabel.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_DESCRIPTION));
 
         appHomepageLabel.setComponentPopupMenu(new JPopupMenu() {
             private boolean initialized = false;
@@ -436,5 +436,5 @@ public class AboutPanel extends javax.swing.JPanel {
                 super.show(invoker, x, y);
             }
         });
-    } */
+    }
 }

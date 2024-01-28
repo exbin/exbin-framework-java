@@ -56,6 +56,7 @@ public class AboutAction extends AbstractAction {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AboutPanel aboutPanel = new AboutPanel();
         aboutPanel.setSideComponent(sideComponent);
+        aboutPanel.loadFromApplication();
         CloseControlPanel controlPanel = new CloseControlPanel();
         final WindowHandler aboutDialog = windowModule.createDialog(aboutPanel, controlPanel);
         ((JDialog) aboutDialog.getWindow()).setTitle(resourceBundle.getString("aboutAction.dialogTitle"));

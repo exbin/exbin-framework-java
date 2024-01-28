@@ -55,7 +55,7 @@ public class HelpAction extends AbstractAction {
     public HelpAction() {
     }
 
-    public void setApplication() {
+    public void setup() {
         ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
         putValue(ActionUtils.ACTION_DIALOG_MODE, true);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));

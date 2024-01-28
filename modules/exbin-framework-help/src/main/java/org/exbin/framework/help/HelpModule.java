@@ -43,6 +43,7 @@ public class HelpModule implements HelpModuleApi {
     public HelpAction getHelpAction() {
         if (helpAction == null) {
             helpAction = new HelpAction();
+            helpAction.setup();
         }
 
         return helpAction;

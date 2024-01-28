@@ -23,6 +23,7 @@ import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.options.gui.OptionsTreePanel;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.WindowHandler;
@@ -54,12 +55,13 @@ public class OptionsAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         OptionsTreePanel optionsTreePanel = new OptionsTreePanel(windowModule.getFrameHandler());
         optionsPagesProvider.registerOptionsPages(optionsTreePanel);
         Dimension preferredSize = optionsTreePanel.getPreferredSize();
         optionsTreePanel.setPreferredSize(new Dimension(preferredSize.width + 200, preferredSize.height + 200));
-        // TODO optionsTreePanel.setPreferences(application.getAppPreferences());
+        optionsTreePanel.setPreferences(preferencesModule.getAppPreferences());
         optionsTreePanel.pagesFinished();
         optionsTreePanel.loadAllFromPreferences();
 

@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<module>
-  <id>org.exbin.framework.module.update.ModuleUpdateModule</id>
-  <name>Check Updates Module</name>
-  <description>Module with check for updates</description>
-  <dependency>
-  </dependency>
-</module>
