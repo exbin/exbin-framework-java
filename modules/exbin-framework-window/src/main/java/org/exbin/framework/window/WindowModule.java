@@ -321,7 +321,8 @@ public class WindowModule implements WindowModuleApi {
                 }
             }
         };
-        ActionUtils.setupAction(exitAction, resourceBundle, "exitAction");
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.setupAction(exitAction, resourceBundle, "exitAction");
         exitAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.KeyEvent.ALT_DOWN_MASK));
 
         return exitAction;

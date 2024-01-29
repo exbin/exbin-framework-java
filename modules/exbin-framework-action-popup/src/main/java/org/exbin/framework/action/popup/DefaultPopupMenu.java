@@ -49,6 +49,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.popup.handler.EditorPanePopupHandler;
 import org.exbin.framework.action.popup.handler.ListPopupHandler;
 import org.exbin.framework.action.popup.handler.TablePopupHandler;
@@ -151,7 +152,8 @@ public class DefaultPopupMenu {
                 handler.performCopyText();
             }
         };
-        ActionUtils.setupAction(copyImageMenuAction, resourceBundle, resourceClass, POPUP_COPY_TEXT_ACTION_ID);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.setupAction(copyImageMenuAction, resourceBundle, resourceClass, POPUP_COPY_TEXT_ACTION_ID);
         copyImageMenuAction.setEnabled(handler.isTextSelected());
         return copyImageMenuAction;
     }
@@ -175,7 +177,8 @@ public class DefaultPopupMenu {
                 handler.performCopyLink();
             }
         };
-        ActionUtils.setupAction(copyLinkMenuAction, resourceBundle, resourceClass, POPUP_COPY_LINK_ACTION_ID);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.setupAction(copyLinkMenuAction, resourceBundle, resourceClass, POPUP_COPY_LINK_ACTION_ID);
         copyLinkMenuAction.setEnabled(handler.isLinkSelected());
         return copyLinkMenuAction;
     }
@@ -189,7 +192,8 @@ public class DefaultPopupMenu {
                 handler.performOpenLink();
             }
         };
-        ActionUtils.setupAction(openLinkMenuAction, resourceBundle, resourceClass, POPUP_OPEN_LINK_ACTION_ID);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.setupAction(openLinkMenuAction, resourceBundle, resourceClass, POPUP_OPEN_LINK_ACTION_ID);
         openLinkMenuAction.setEnabled(handler.isLinkSelected());
         return openLinkMenuAction;
     }
@@ -211,7 +215,8 @@ public class DefaultPopupMenu {
                 handler.performCopyImage();
             }
         };
-        ActionUtils.setupAction(copyImageMenuAction, resourceBundle, resourceClass, POPUP_COPY_IMAGE_ACTION_ID);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.setupAction(copyImageMenuAction, resourceBundle, resourceClass, POPUP_COPY_IMAGE_ACTION_ID);
         copyImageMenuAction.setEnabled(handler.isImageSelected());
         return copyImageMenuAction;
     }
@@ -238,7 +243,8 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.isEditable() && clipboardHandler.isSelection());
             }
         };
-        ActionUtils.setupAction(defaultCutAction, resourceBundle, resourceClass, POPUP_CUT_ACTION_ID);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.setupAction(defaultCutAction, resourceBundle, resourceClass, POPUP_CUT_ACTION_ID);
         defaultCutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
         defaultCutAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), defaultCutAction);
@@ -255,7 +261,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.isSelection());
             }
         };
-        ActionUtils.setupAction(defaultCopyAction, resourceBundle, resourceClass, POPUP_COPY_ACTION_ID);
+        actionModule.setupAction(defaultCopyAction, resourceBundle, resourceClass, POPUP_COPY_ACTION_ID);
         defaultCopyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
         defaultCopyAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getCopyAction().getValue(Action.NAME), defaultCopyAction);
@@ -272,7 +278,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.isEditable());
             }
         };
-        ActionUtils.setupAction(defaultPasteAction, resourceBundle, resourceClass, POPUP_PASTE_ACTION_ID);
+        actionModule.setupAction(defaultPasteAction, resourceBundle, resourceClass, POPUP_PASTE_ACTION_ID);
         defaultPasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
         defaultPasteAction.setEnabled(false);
         defaultTextActionMap.put(TransferHandler.getPasteAction().getValue(Action.NAME), defaultPasteAction);
@@ -289,7 +295,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.canDelete() && clipboardHandler.isSelection());
             }
         };
-        ActionUtils.setupAction(defaultDeleteAction, resourceBundle, resourceClass, POPUP_DELETE_ACTION_ID);
+        actionModule.setupAction(defaultDeleteAction, resourceBundle, resourceClass, POPUP_DELETE_ACTION_ID);
         defaultDeleteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         defaultDeleteAction.setEnabled(false);
         defaultTextActionMap.put(DELETE_ACTION, defaultDeleteAction);
@@ -306,7 +312,7 @@ public class DefaultPopupMenu {
                 setEnabled(clipboardHandler.canSelectAll());
             }
         };
-        ActionUtils.setupAction(defaultSelectAllAction, resourceBundle, resourceClass, POPUP_SELECT_ALL_ACTION_ID);
+        actionModule.setupAction(defaultSelectAllAction, resourceBundle, resourceClass, POPUP_SELECT_ALL_ACTION_ID);
         defaultSelectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         defaultTextActionMap.put(SELECT_ALL_ACTION, defaultSelectAllAction);
 
@@ -334,7 +340,7 @@ public class DefaultPopupMenu {
                 setEnabled(updateEnabled);
             }
         };
-        ActionUtils.setupAction(copyTextAction, resourceBundle, resourceClass, POPUP_COPY_TEXT_ACTION_ID);
+        actionModule.setupAction(copyTextAction, resourceBundle, resourceClass, POPUP_COPY_TEXT_ACTION_ID);
         copyLinkAction = new DefaultPopupClipboardAction(POPUP_COPY_LINK_ACTION_NAME) {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -357,7 +363,7 @@ public class DefaultPopupMenu {
                 setEnabled(updateEnabled);
             }
         };
-        ActionUtils.setupAction(copyLinkAction, resourceBundle, resourceClass, POPUP_COPY_LINK_ACTION_ID);
+        actionModule.setupAction(copyLinkAction, resourceBundle, resourceClass, POPUP_COPY_LINK_ACTION_ID);
         openLinkAction = new DefaultPopupClipboardAction(POPUP_OPEN_LINK_ACTION_NAME) {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -380,7 +386,7 @@ public class DefaultPopupMenu {
                 setEnabled(updateEnabled);
             }
         };
-        ActionUtils.setupAction(openLinkAction, resourceBundle, resourceClass, POPUP_OPEN_LINK_ACTION_ID);
+        actionModule.setupAction(openLinkAction, resourceBundle, resourceClass, POPUP_OPEN_LINK_ACTION_ID);
         copyImageAction = new DefaultPopupClipboardAction(POPUP_COPY_IMAGE_ACTION_NAME) {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -403,7 +409,7 @@ public class DefaultPopupMenu {
                 setEnabled(updateEnabled);
             }
         };
-        ActionUtils.setupAction(copyImageAction, resourceBundle, resourceClass, POPUP_COPY_IMAGE_ACTION_ID);
+        actionModule.setupAction(copyImageAction, resourceBundle, resourceClass, POPUP_COPY_IMAGE_ACTION_ID);
     }
 
     public void fillDefaultPopupMenu(JPopupMenu popupMenu, int position) {

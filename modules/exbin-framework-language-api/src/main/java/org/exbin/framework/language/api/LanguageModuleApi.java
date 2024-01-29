@@ -43,4 +43,10 @@ public interface LanguageModuleApi extends Module {
     
     @Nonnull
     ResourceBundle getBundle(Class<?> targetClass);
+    
+    @Nonnull
+    String getActionWithDialogText(String actionTitle);
+
+    @Nonnull
+    String getActionWithDialogText(ResourceBundle bundle, String key);
 }

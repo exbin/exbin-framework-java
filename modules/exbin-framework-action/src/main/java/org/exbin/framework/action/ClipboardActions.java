@@ -24,6 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsUpdater;
@@ -73,7 +75,8 @@ public class ClipboardActions implements ClipboardActionsUpdater {
                     }
                 }
             };
-            ActionUtils.setupAction(cutAction, resourceBundle, EDIT_CUT_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(cutAction, resourceBundle, EDIT_CUT_ACTION_ID);
             cutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
             cutAction.setEnabled(false);
         }
@@ -92,7 +95,8 @@ public class ClipboardActions implements ClipboardActionsUpdater {
                     }
                 }
             };
-            ActionUtils.setupAction(copyAction, resourceBundle, EDIT_COPY_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(copyAction, resourceBundle, EDIT_COPY_ACTION_ID);
             copyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
             copyAction.setEnabled(false);
         }
@@ -111,7 +115,8 @@ public class ClipboardActions implements ClipboardActionsUpdater {
                     }
                 }
             };
-            ActionUtils.setupAction(pasteAction, resourceBundle, EDIT_PASTE_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(pasteAction, resourceBundle, EDIT_PASTE_ACTION_ID);
             pasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
             pasteAction.setEnabled(false);
         }
@@ -130,7 +135,8 @@ public class ClipboardActions implements ClipboardActionsUpdater {
                     }
                 }
             };
-            ActionUtils.setupAction(deleteAction, resourceBundle, EDIT_DELETE_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(deleteAction, resourceBundle, EDIT_DELETE_ACTION_ID);
             deleteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
             deleteAction.setEnabled(false);
         }
@@ -149,7 +155,8 @@ public class ClipboardActions implements ClipboardActionsUpdater {
                     }
                 }
             };
-            ActionUtils.setupAction(selectAllAction, resourceBundle, EDIT_SELECT_ALL_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(selectAllAction, resourceBundle, EDIT_SELECT_ALL_ACTION_ID);
             selectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         }
         return selectAllAction;

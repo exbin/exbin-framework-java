@@ -26,13 +26,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public final class App {
 
-    private static final String MODULE_ID = "MODULE_ID";
     private static ModuleProvider moduleProvider = null;
 
     private App() {
         // No instance
     }
-    
+
     public static void launch(Runnable runnable) {
         if (moduleProvider == null) {
             throw new IllegalStateException("Module provider not initialized");
@@ -46,31 +45,15 @@ public final class App {
         if (moduleProvider != null) {
             return moduleProvider.getModule(interfaceClass);
         }
-        
+
         throw new IllegalStateException("Module provider not initialized");
-//        try {
-//            Field declaredField = interfaceClass.getDeclaredField(MODULE_ID);
-//            if (declaredField != null) {
-//                Object moduleId = declaredField.get(null);
-//                if (moduleId instanceof String) {
-//                    @SuppressWarnings("unchecked")
-//                    T module = (T) getModuleById((String) moduleId);
-//                    return module;
-//                }
-//            }
-//        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-//            Logger.getLogger(XBDefaultModuleRepository.class
-//                    .getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//        throw new IllegalArgumentException("Module for class " + interfaceClass.getCanonicalName() + " was not found.");
     }
-    
+
     public static void setModuleProvider(ModuleProvider moduleProvider) {
         if (App.moduleProvider != null) {
             throw new IllegalStateException("Module provider already initialized");
         }
-        
+
         App.moduleProvider = moduleProvider;
     }
 }

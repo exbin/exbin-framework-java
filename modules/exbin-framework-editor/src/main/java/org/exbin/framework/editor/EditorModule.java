@@ -298,8 +298,7 @@ public class EditorModule implements EditorModuleApi {
             closeFileAction, closeAllFileAction, closeOtherFileAction
         };
 
-        for (int i = 0; i < fileDepActions.length; i++) {
-            FileDependentAction fileDepAction = fileDepActions[i];
+        for (FileDependentAction fileDepAction : fileDepActions) {
             if (fileDepAction != null) {
                 fileDepAction.updateForActiveFile();
             }

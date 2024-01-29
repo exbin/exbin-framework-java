@@ -22,6 +22,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -80,9 +84,10 @@ public class DrawingControlActions {
                     }
                 }
             };
-            ActionUtils.setupAction(dotsModeAction, resourceBundle, DOTS_MODE_ACTION_ID);
-            dotsModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-            dotsModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, DRAWING_RADIO_GROUP_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(dotsModeAction, resourceBundle, DOTS_MODE_ACTION_ID);
+            dotsModeAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
+            dotsModeAction.putValue(ActionConsts.ACTION_RADIO_GROUP, DRAWING_RADIO_GROUP_ID);
             dotsModeAction.putValue(Action.SELECTED_KEY, drawMode == XBWavePanel.DrawMode.DOTS_MODE);
         }
         return dotsModeAction;
@@ -99,9 +104,10 @@ public class DrawingControlActions {
                     }
                 }
             };
-            ActionUtils.setupAction(lineModeAction, resourceBundle, LINE_MODE_ACTION_ID);
-            lineModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-            lineModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, DRAWING_RADIO_GROUP_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(lineModeAction, resourceBundle, LINE_MODE_ACTION_ID);
+            lineModeAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
+            lineModeAction.putValue(ActionConsts.ACTION_RADIO_GROUP, DRAWING_RADIO_GROUP_ID);
             lineModeAction.putValue(Action.SELECTED_KEY, drawMode == XBWavePanel.DrawMode.LINE_MODE);
 
         }
@@ -119,9 +125,10 @@ public class DrawingControlActions {
                     }
                 }
             };
-            ActionUtils.setupAction(integralModeAction, resourceBundle, INTEGRAL_MODE_ACTION_ID);
-            integralModeAction.putValue(ActionUtils.ACTION_RADIO_GROUP, DRAWING_RADIO_GROUP_ID);
-            integralModeAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(integralModeAction, resourceBundle, INTEGRAL_MODE_ACTION_ID);
+            integralModeAction.putValue(ActionConsts.ACTION_RADIO_GROUP, DRAWING_RADIO_GROUP_ID);
+            integralModeAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
             integralModeAction.putValue(Action.SELECTED_KEY, drawMode == XBWavePanel.DrawMode.INTEGRAL_MODE);
 
         }

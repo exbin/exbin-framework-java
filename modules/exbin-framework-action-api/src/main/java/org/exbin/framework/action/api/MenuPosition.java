@@ -16,11 +16,12 @@
 package org.exbin.framework.action.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Menu position.
+ *
+ * TODO: Replace with rules-based system
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -33,23 +34,23 @@ public class MenuPosition {
 
     public MenuPosition(PositionMode basicMode) {
         this.basicMode = basicMode;
-        this.groupId = null;
-        this.nextToMode = null;
+        this.groupId = "";
+        this.nextToMode = NextToMode.UNSPECIFIED;
     }
 
     public MenuPosition(String groupId) {
-        this.basicMode = null;
+        this.basicMode = PositionMode.UNSPECIFIED;
         this.groupId = groupId;
-        this.nextToMode = null;
+        this.nextToMode = NextToMode.UNSPECIFIED;
     }
 
     public MenuPosition(NextToMode nextToMode, String menuItemId) {
-        this.basicMode = null;
+        this.basicMode = PositionMode.UNSPECIFIED;
         this.groupId = menuItemId;
         this.nextToMode = nextToMode;
     }
 
-    @Nullable
+    @Nonnull
     public PositionMode getBasicMode() {
         return basicMode;
     }
@@ -59,7 +60,7 @@ public class MenuPosition {
         return groupId;
     }
 
-    @Nullable
+    @Nonnull
     public NextToMode getNextToMode() {
         return nextToMode;
     }

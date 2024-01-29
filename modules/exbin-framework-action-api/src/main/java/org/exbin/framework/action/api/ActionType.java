@@ -15,40 +15,29 @@
  */
 package org.exbin.framework.action.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
- * Enumeration of menu position modes using build-in groups.
+ * Enumeration of action types.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public enum PositionMode {
-
-    UNSPECIFIED,
+@ParametersAreNonnullByDefault
+public enum ActionType {
     /**
-     * Top position.
+     * Single click / activation action.
      */
-    TOP,
+    PUSH,
     /**
-     * End of the top position.
+     * Checkbox type action.
      */
-    TOP_LAST,
+    CHECK,
     /**
-     * Default: Normal position in the middle section.
+     * Radion type checking, where only one item in radio group can be checked.
      */
-    MIDDLE,
+    RADIO,
     /**
-     * Normal position at the end of the middle section.
+     * Action to cycle thru list of options.
      */
-    MIDDLE_LAST,
-    /**
-     * Bottom position.
-     */
-    BOTTOM,
-    /**
-     * End of the bottom position.
-     */
-    BOTTOM_LAST,
-    /**
-     * Hidden position, should be included manually.
-     */
-    CUSTOM
+    CYCLE;
 }

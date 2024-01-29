@@ -247,7 +247,8 @@ public class ClientModule implements ClientModuleApi {
 //                if (status == true) {
 //                    toolBarVisbleTemp = getStatusBar().isVisible();
 //                    ((CardLayout) statusPanel.getLayout()).show(statusPanel, "updateCat");
-//                    activityProgressBar.setString(resourceBundle.getString("main_updatecat") + "...");
+//                    LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+//                    activityProgressBar.setString(languageModule.getActionWithDialogText(resourceBundle.getString("main_updatecat")));
 //                    getStatusBar().setVisible(true);
 //                } else {
 //                    ((CardLayout) statusPanel.getLayout()).first(statusPanel);
@@ -287,7 +288,8 @@ public class ClientModule implements ClientModuleApi {
         XBAECatalog catalogHandler = createInternalCatalog(em);
 
         if (catalogHandler.isShallInit()) {
-//            operationProgressBar.setString(resourceBundle.getString("main_defaultcat") + "...");
+//            LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+//            operationProgressBar.setString(languageModule.getActionWithDialogText(resourceBundle.getString("main_defaultcat")));
             catalogHandler.initCatalog();
         }
 

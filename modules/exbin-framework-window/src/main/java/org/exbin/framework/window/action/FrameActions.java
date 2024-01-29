@@ -22,6 +22,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
+import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.window.ApplicationFrame;
 import org.exbin.framework.utils.ActionUtils;
 
@@ -79,9 +83,10 @@ public class FrameActions {
                     }
                 }
             };
-            ActionUtils.setupAction(viewToolBarAction, resourceBundle, VIEW_TOOL_BAR_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(viewToolBarAction, resourceBundle, VIEW_TOOL_BAR_ACTION_ID);
             viewToolBarAction.putValue(Action.SELECTED_KEY, true);
-            viewToolBarAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
+            viewToolBarAction.putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
         }
         return viewToolBarAction;
     }
@@ -98,9 +103,10 @@ public class FrameActions {
                     }
                 }
             };
-            ActionUtils.setupAction(viewToolBarCaptionsAction, resourceBundle, VIEW_TOOL_BAR_CAPTIONS_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(viewToolBarCaptionsAction, resourceBundle, VIEW_TOOL_BAR_CAPTIONS_ACTION_ID);
             viewToolBarCaptionsAction.putValue(Action.SELECTED_KEY, true);
-            viewToolBarCaptionsAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
+            viewToolBarCaptionsAction.putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
         }
         return viewToolBarCaptionsAction;
     }
@@ -117,9 +123,10 @@ public class FrameActions {
                     }
                 }
             };
-            ActionUtils.setupAction(viewStatusBarAction, resourceBundle, VIEW_STATUS_BAR_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(viewStatusBarAction, resourceBundle, VIEW_STATUS_BAR_ACTION_ID);
             viewStatusBarAction.putValue(Action.SELECTED_KEY, true);
-            viewStatusBarAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.CHECK);
+            viewStatusBarAction.putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
         }
         return viewStatusBarAction;
     }

@@ -15,40 +15,30 @@
  */
 package org.exbin.framework.action.api;
 
+import java.util.Collection;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
- * Enumeration of menu position modes using build-in groups.
+ * Listener for action update when menu is activated for component.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public enum PositionMode {
+@ParametersAreNonnullByDefault
+public interface ActionMenuActivation {
 
-    UNSPECIFIED,
     /**
-     * Top position.
+     * Returns filter list of classes to call activation for.
+     *
+     * @return list of classes
      */
-    TOP,
+    @Nonnull
+    Collection<Class<?>> forClasses();
+
     /**
-     * End of the top position.
+     * Called when popup or main menu is activated.
+     *
+     * @param affectedClasses affected instances
      */
-    TOP_LAST,
-    /**
-     * Default: Normal position in the middle section.
-     */
-    MIDDLE,
-    /**
-     * Normal position at the end of the middle section.
-     */
-    MIDDLE_LAST,
-    /**
-     * Bottom position.
-     */
-    BOTTOM,
-    /**
-     * End of the bottom position.
-     */
-    BOTTOM_LAST,
-    /**
-     * Hidden position, should be included manually.
-     */
-    CUSTOM
+    void menuActivated(Collection<Object> affectedClasses);
 }

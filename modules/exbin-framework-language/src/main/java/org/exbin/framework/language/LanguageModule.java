@@ -102,6 +102,20 @@ public class LanguageModule implements LanguageModuleApi {
         return classNamePath.substring(0, classNamePos + 1) + "resources" + classNamePath.substring(classNamePos);
     }
 
+    @Nonnull
+    @Override
+    public String getActionWithDialogText(String actionTitle) {
+        // TODO support for language plugins
+        return actionTitle + "...";
+    }
+
+    @Nonnull
+    @Override
+    public String getActionWithDialogText(ResourceBundle bundle, String key) {
+        // TODO support for language plugins
+        return bundle.getString(key) + "...";
+    }
+
     /**
      * Resource bundle which looks for language resources first and main
      * resources as fallback.

@@ -15,12 +15,16 @@
  */
 package org.exbin.framework.action.api;
 
+import java.util.Map;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -41,6 +45,24 @@ public interface ActionModuleApi extends Module {
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ActionModuleApi.class);
     public static final String CLIPBOARD_ACTIONS_MENU_GROUP_ID = MODULE_ID + ".clipboardActionsMenuGroup";
     public static final String CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID = MODULE_ID + ".clipboardActionsToolBarGroup";
+
+    void setupAction(Action action, ResourceBundle bundle, String actionId);
+
+    /**
+     * Sets action values according to values specified by resource bundle.
+     *
+     * @param action modified action
+     * @param bundle source bundle
+     * @param resourceClass resourceClass
+     * @param actionId action identifier and bundle key prefix
+     */
+    void setupAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId);
+
+    @Nonnull
+    JMenuItem actionToMenuItem(Action action);
+
+    @Nonnull
+    JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups);
 
     /**
      * Returns menu using given identificator.
@@ -143,6 +165,7 @@ public interface ActionModuleApi extends Module {
      * @param clipboardHandler clipboard handler
      * @return clipboard actions set
      */
+    @Nonnull
     ClipboardActionsUpdater createClipboardActions(ClipboardActionsHandler clipboardHandler);
 
     /**

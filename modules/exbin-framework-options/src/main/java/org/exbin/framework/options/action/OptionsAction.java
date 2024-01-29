@@ -21,6 +21,8 @@ import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.options.gui.OptionsTreePanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
@@ -49,8 +51,9 @@ public class OptionsAction extends AbstractAction {
         this.resourceBundle = resourceBundle;
         this.optionsPagesProvider = optionsPagesProvider;
 
-        ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
-        putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.setupAction(this, resourceBundle, ACTION_ID);
+        putValue(ActionConsts.ACTION_DIALOG_MODE, true);
     }
 
     @Override

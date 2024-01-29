@@ -22,6 +22,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.component.ComponentModule;
 import org.exbin.framework.component.api.toolbar.EditItemActions;
 import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
@@ -72,9 +74,10 @@ public class DefaultEditItemActions implements EditItemActions {
                     actionsHandler.performAddItem();
                 }
             };
-            ActionUtils.setupAction(addItemAction, resourceBundle, ADD_ITEM_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(addItemAction, resourceBundle, ADD_ITEM_ACTION_ID);
             if (mode == Mode.DIALOG) {
-                addItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+                addItemAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             }
             addItemAction.setEnabled(false);
         }
@@ -91,9 +94,10 @@ public class DefaultEditItemActions implements EditItemActions {
                     actionsHandler.performEditItem();
                 }
             };
-            ActionUtils.setupAction(editItemAction, resourceBundle, EDIT_ITEM_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(editItemAction, resourceBundle, EDIT_ITEM_ACTION_ID);
             if (mode == Mode.DIALOG) {
-                editItemAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+                editItemAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             }
             editItemAction.setEnabled(false);
         }
@@ -110,7 +114,8 @@ public class DefaultEditItemActions implements EditItemActions {
                     actionsHandler.performDeleteItem();
                 }
             };
-            ActionUtils.setupAction(deleteItemAction, resourceBundle, DELETE_ITEM_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(deleteItemAction, resourceBundle, DELETE_ITEM_ACTION_ID);
             deleteItemAction.setEnabled(false);
         }
         return deleteItemAction;
@@ -137,7 +142,7 @@ public class DefaultEditItemActions implements EditItemActions {
         updateEditItemActions();
         actionsHandler.setUpdateListener(this::updateEditItemActions);
     }
-    
+
     public enum Mode {
         NORMAL, DIALOG
     }

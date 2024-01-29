@@ -22,6 +22,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.utils.ActionUtils;
@@ -71,7 +73,8 @@ public class ZoomControlActions {
                     imagePanel.setScale(1);
                 }
             };
-            ActionUtils.setupAction(normalZoomAction, resourceBundle, NORMAL_ZOOM_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(normalZoomAction, resourceBundle, NORMAL_ZOOM_ACTION_ID);
         }
         return normalZoomAction;
     }
@@ -91,7 +94,8 @@ public class ZoomControlActions {
                     imagePanel.setScale(imagePanel.getScale() / 2);
                 }
             };
-            ActionUtils.setupAction(zoomUpAction, resourceBundle, ZOOM_UP_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(zoomUpAction, resourceBundle, ZOOM_UP_ACTION_ID);
         }
         return zoomUpAction;
     }
@@ -111,7 +115,8 @@ public class ZoomControlActions {
                     imagePanel.setScale(imagePanel.getScale() * 2);
                 }
             };
-            ActionUtils.setupAction(zoomDownAction, resourceBundle, ZOOM_DOWN_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(zoomDownAction, resourceBundle, ZOOM_DOWN_ACTION_ID);
         }
         return zoomDownAction;
     }

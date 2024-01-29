@@ -30,6 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.window.api.ApplicationFrameHandler;
@@ -148,7 +149,8 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         getRecentFilesActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
-        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, (String) getOpenFileAction().getValue(Action.NAME) + ActionUtils.DIALOG_MENUITEM_EXT));
+        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+        actionModule.registerMenuItem(WindowModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, languageModule.getActionWithDialogText((String) getOpenFileAction().getValue(Action.NAME))));
     }
 
     @Nonnull

@@ -23,6 +23,8 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import org.exbin.framework.App;
 import org.exbin.framework.about.gui.AboutPanel;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -47,8 +49,9 @@ public class AboutAction extends AbstractAction {
     }
 
     private void init() {
-        ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
-        putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.setupAction(this, resourceBundle, ACTION_ID);
+        putValue(ActionConsts.ACTION_DIALOG_MODE, true);
     }
 
     @Override

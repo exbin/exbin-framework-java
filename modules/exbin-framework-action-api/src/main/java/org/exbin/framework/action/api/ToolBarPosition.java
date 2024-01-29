@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.action.api;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -31,20 +31,20 @@ public class ToolBarPosition {
 
     public ToolBarPosition(PositionMode basicMode) {
         this.basicMode = basicMode;
-        groupId = null;
+        groupId = "";
     }
 
     public ToolBarPosition(String groupId) {
-        basicMode = null;
+        basicMode = PositionMode.UNSPECIFIED;
         this.groupId = groupId;
     }
 
-    @Nullable
+    @Nonnull
     public PositionMode getBasicMode() {
         return basicMode;
     }
 
-    @Nullable
+    @Nonnull
     public String getGroupId() {
         return groupId;
     }

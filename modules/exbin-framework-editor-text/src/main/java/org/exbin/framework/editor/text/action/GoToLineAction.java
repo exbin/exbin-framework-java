@@ -23,6 +23,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.gui.TextGoToPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -54,9 +56,10 @@ public class GoToLineAction extends AbstractAction {
         this.editorProvider = editorProvider;
         this.resourceBundle = resourceBundle;
 
-        ActionUtils.setupAction(this, resourceBundle, ACTION_ID);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.setupAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, ActionUtils.getMetaMask()));
-        putValue(ActionUtils.ACTION_DIALOG_MODE, true);
+        putValue(ActionConsts.ACTION_DIALOG_MODE, true);
     }
 
     @Override

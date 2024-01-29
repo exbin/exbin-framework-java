@@ -32,7 +32,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionToolBarContribution;
+import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarContribution;
@@ -157,7 +159,7 @@ public class ToolBarHandler {
 
                 if (contribution instanceof ActionToolBarContribution) {
                     Action action = ((ActionToolBarContribution) contribution).getAction();
-                    ActionUtils.ActionType actionType = (ActionUtils.ActionType) action.getValue(ActionUtils.ACTION_TYPE);
+                    ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
                     JComponent toolBarItem;
                     if (actionType != null) {
                         switch (actionType) {
@@ -187,7 +189,7 @@ public class ToolBarHandler {
                                 break;
                             }
                             case CYCLE: {
-                                JPopupMenu popupMenu = (JPopupMenu) action.getValue(ActionUtils.CYCLE_POPUP_MENU);
+                                JPopupMenu popupMenu = (JPopupMenu) action.getValue(ActionConsts.CYCLE_POPUP_MENU);
                                 DropDownButton dropDown = new DropDownButton(action, popupMenu);
                                 dropDown.setActionTooltip((String) action.getValue(Action.SHORT_DESCRIPTION));
                                 action.addPropertyChangeListener((PropertyChangeEvent evt) -> {

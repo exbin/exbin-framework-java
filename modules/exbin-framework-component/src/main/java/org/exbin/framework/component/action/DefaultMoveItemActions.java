@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.component.ComponentModule;
 import org.exbin.framework.component.api.toolbar.MoveItemActions;
 import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
@@ -68,7 +69,8 @@ public class DefaultMoveItemActions implements MoveItemActions {
                     actionsHandler.performMoveUp();
                 }
             };
-            ActionUtils.setupAction(moveUpAction, resourceBundle, MOVE_ITEM_UP_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(moveUpAction, resourceBundle, MOVE_ITEM_UP_ACTION_ID);
             moveUpAction.setEnabled(false);
         }
         return moveUpAction;
@@ -84,7 +86,8 @@ public class DefaultMoveItemActions implements MoveItemActions {
                     actionsHandler.performMoveDown();
                 }
             };
-            ActionUtils.setupAction(moveDownAction, resourceBundle, MOVE_ITEM_DOWN_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(moveDownAction, resourceBundle, MOVE_ITEM_DOWN_ACTION_ID);
             moveDownAction.setEnabled(false);
         }
         return moveDownAction;
@@ -100,7 +103,8 @@ public class DefaultMoveItemActions implements MoveItemActions {
                     actionsHandler.performMoveTop();
                 }
             };
-            ActionUtils.setupAction(moveTopAction, resourceBundle, MOVE_ITEM_TOP_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(moveTopAction, resourceBundle, MOVE_ITEM_TOP_ACTION_ID);
             moveTopAction.setEnabled(false);
         }
         return moveTopAction;
@@ -116,7 +120,8 @@ public class DefaultMoveItemActions implements MoveItemActions {
                     actionsHandler.performMoveBottom();
                 }
             };
-            ActionUtils.setupAction(moveBottomAction, resourceBundle, MOVE_ITEM_BOTTOM_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(moveBottomAction, resourceBundle, MOVE_ITEM_BOTTOM_ACTION_ID);
             moveBottomAction.setEnabled(false);
         }
         return moveBottomAction;

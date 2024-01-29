@@ -22,6 +22,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -78,9 +82,10 @@ public class EditToolActions {
                     }
                 }
             };
-            ActionUtils.setupAction(selectionToolAction, resourceBundle, SELECTION_TOOL_ACTION_ID);
-            selectionToolAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-            selectionToolAction.putValue(ActionUtils.ACTION_RADIO_GROUP, TOOLS_SELECTION_RADIO_GROUP_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(selectionToolAction, resourceBundle, SELECTION_TOOL_ACTION_ID);
+            selectionToolAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
+            selectionToolAction.putValue(ActionConsts.ACTION_RADIO_GROUP, TOOLS_SELECTION_RADIO_GROUP_ID);
             selectionToolAction.putValue(Action.SELECTED_KEY, toolMode == XBWavePanel.ToolMode.SELECTION);
         }
         return selectionToolAction;
@@ -97,9 +102,10 @@ public class EditToolActions {
                     }
                 }
             };
-            ActionUtils.setupAction(pencilToolAction, resourceBundle, PENCIL_TOOL_ACTION_ID);
-            pencilToolAction.putValue(ActionUtils.ACTION_TYPE, ActionUtils.ActionType.RADIO);
-            pencilToolAction.putValue(ActionUtils.ACTION_RADIO_GROUP, TOOLS_SELECTION_RADIO_GROUP_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(pencilToolAction, resourceBundle, PENCIL_TOOL_ACTION_ID);
+            pencilToolAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
+            pencilToolAction.putValue(ActionConsts.ACTION_RADIO_GROUP, TOOLS_SELECTION_RADIO_GROUP_ID);
             pencilToolAction.putValue(Action.SELECTED_KEY, toolMode == XBWavePanel.ToolMode.PENCIL);
         }
         return pencilToolAction;

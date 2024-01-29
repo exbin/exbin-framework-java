@@ -15,10 +15,13 @@
  */
 package org.exbin.framework.action;
 
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -52,6 +55,7 @@ public class ActionModule implements ActionModuleApi {
     private ClipboardTextActions clipboardTextActions = null;
     private MenuHandler menuHandler = null;
     private ToolBarHandler toolBarHandler = null;
+    private ActionManager actionManager = new ActionManager();
     private ResourceBundle resourceBundle;
 
     public ActionModule() {
@@ -115,6 +119,36 @@ public class ActionModule implements ActionModuleApi {
     public void fillPopupMenu(JPopupMenu popupMenu, int position) {
         ActionPopupModuleApi popupModule = App.getModule(ActionPopupModuleApi.class);
         popupModule.fillDefaultEditPopupMenu(popupMenu, position);
+    }
+
+    @Override
+    public void setupAction(Action action, ResourceBundle bundle, String actionId) {
+        actionManager.setupAction(action, bundle, actionId);
+    }
+
+    /**
+     * Sets action values according to values specified by resource bundle.
+     *
+     * @param action modified action
+     * @param bundle source bundle
+     * @param resourceClass resourceClass
+     * @param actionId action identifier and bundle key prefix
+     */
+    @Override
+    public void setupAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId) {
+        actionManager.setupAction(action, bundle, resourceClass, actionId);
+    }
+
+    @Nonnull
+    @Override
+    public JMenuItem actionToMenuItem(Action action) {
+        return actionManager.actionToMenuItem(action);
+    }
+
+    @Nonnull
+    @Override
+    public JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups) {
+        return actionManager.actionToMenuItem(action, buttonGroups);
     }
 
     @Nonnull

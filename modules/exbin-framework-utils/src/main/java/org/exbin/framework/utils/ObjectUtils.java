@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Framework utilities.
+ * Object handling utilities.
  *
  * @author ExBin Project (https://exbin.org)
  */

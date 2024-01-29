@@ -20,6 +20,8 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
 import org.exbin.framework.operation.undo.api.UndoActionsHandler;
@@ -73,7 +75,8 @@ public class BasicUndoActions implements UndoActions {
                     undoHandler.performUndo();
                 }
             };
-            ActionUtils.setupAction(undoAction, resourceBundle, EDIT_UNDO_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(undoAction, resourceBundle, EDIT_UNDO_ACTION_ID);
             undoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, ActionUtils.getMetaMask()));
             undoAction.setEnabled(false);
         }
@@ -89,7 +92,8 @@ public class BasicUndoActions implements UndoActions {
                     undoHandler.performRedo();
                 }
             };
-            ActionUtils.setupAction(redoAction, resourceBundle, EDIT_REDO_ACTION_ID);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(redoAction, resourceBundle, EDIT_REDO_ACTION_ID);
             redoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_DOWN_MASK | ActionUtils.getMetaMask()));
             redoAction.setEnabled(false);
         }
@@ -105,8 +109,9 @@ public class BasicUndoActions implements UndoActions {
                     undoHandler.performUndoManager();
                 }
             };
-            undoManagerAction.putValue(ActionUtils.ACTION_DIALOG_MODE, true);
-            ActionUtils.setupAction(undoManagerAction, resourceBundle, EDIT_UNDO_MANAGER_ACTION_ID);
+            undoManagerAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.setupAction(undoManagerAction, resourceBundle, EDIT_UNDO_MANAGER_ACTION_ID);
         }
         return undoManagerAction;
     }

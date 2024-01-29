@@ -15,40 +15,30 @@
  */
 package org.exbin.framework.action.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JMenuItem;
+
 /**
- * Enumeration of menu position modes using build-in groups.
+ * Listener for action update when menu is created.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public enum PositionMode {
+@ParametersAreNonnullByDefault
+public interface ActionMenuCreation {
 
-    UNSPECIFIED,
     /**
-     * Top position.
+     * Checks whether menu item should be created.
+     *
+     * @param menuId menu ID
+     * @return true if menu item should be created
      */
-    TOP,
+    boolean shouldCreate(String menuId);
+
     /**
-     * End of the top position.
+     * Called when new menu item is created.
+     *
+     * @param menuItem new menu item instance
+     * @param menuId menu ID
      */
-    TOP_LAST,
-    /**
-     * Default: Normal position in the middle section.
-     */
-    MIDDLE,
-    /**
-     * Normal position at the end of the middle section.
-     */
-    MIDDLE_LAST,
-    /**
-     * Bottom position.
-     */
-    BOTTOM,
-    /**
-     * End of the bottom position.
-     */
-    BOTTOM_LAST,
-    /**
-     * Hidden position, should be included manually.
-     */
-    CUSTOM
+    void onCreate(JMenuItem menuItem, String menuId);
 }
