@@ -55,7 +55,7 @@ public class ActionModule implements ActionModuleApi {
     private ClipboardTextActions clipboardTextActions = null;
     private MenuHandler menuHandler = null;
     private ToolBarHandler toolBarHandler = null;
-    private ActionManager actionManager = new ActionManager();
+    private final ActionManager actionManager = new ActionManager();
     private ResourceBundle resourceBundle;
 
     public ActionModule() {
@@ -123,7 +123,7 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void setupAction(Action action, ResourceBundle bundle, String actionId) {
-        actionManager.setupAction(action, bundle, actionId);
+        actionManager.initAction(action, bundle, actionId);
     }
 
     /**
@@ -136,7 +136,12 @@ public class ActionModule implements ActionModuleApi {
      */
     @Override
     public void setupAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId) {
-        actionManager.setupAction(action, bundle, resourceClass, actionId);
+        actionManager.initAction(action, bundle, resourceClass, actionId);
+    }
+
+    @Override
+    public void updateActionsForComponent(Object componentClass) {
+        actionManager.updateActionsForComponent(componentClass);
     }
 
     @Nonnull

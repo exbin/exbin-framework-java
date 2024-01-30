@@ -41,7 +41,6 @@ import javax.swing.text.TextAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ClipboardActionsApi;
-import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardUtils;
 
@@ -70,8 +69,6 @@ public class ClipboardTextActions implements ClipboardActionsApi {
     private boolean isValidClipboardFlavor = false;
     private CaretListener textComponentCaretListener;
     private PropertyChangeListener textComponentPCL;
-
-    private ClipboardActionsHandler clipboardHandler;
 
     private Action cutTextAction;
     private Action copyTextAction;
@@ -205,10 +202,6 @@ public class ClipboardTextActions implements ClipboardActionsApi {
             selectAllTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         }
         return selectAllTextAction;
-    }
-
-    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler) {
-        this.clipboardHandler = clipboardHandler;
     }
 
     @ParametersAreNonnullByDefault

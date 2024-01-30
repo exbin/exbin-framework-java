@@ -15,8 +15,12 @@
  */
 package org.exbin.framework.action;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,6 +30,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -37,6 +42,8 @@ import org.exbin.framework.language.api.LanguageModuleApi;
  */
 @ParametersAreNonnullByDefault
 public class ActionManager {
+    
+    private final Map<Class<?>, List<ActionActiveComponent>> activeComponentListeners = new HashMap<>();
 
     public ActionManager() {
     }
@@ -48,8 +55,8 @@ public class ActionManager {
      * @param bundle source bundle
      * @param actionId action identifier and bundle key prefix
      */
-    public void setupAction(Action action, ResourceBundle bundle, String actionId) {
-        setupAction(action, bundle, action.getClass(), actionId);
+    public void initAction(Action action, ResourceBundle bundle, String actionId) {
+        ActionManager.this.initAction(action, bundle, action.getClass(), actionId);
     }
 
     /**
@@ -60,7 +67,7 @@ public class ActionManager {
      * @param resourceClass resourceClass
      * @param actionId action identifier and bundle key prefix
      */
-    public void setupAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId) {
+    public void initAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId) {
         action.putValue(Action.NAME, bundle.getString(actionId + ActionConsts.ACTION_NAME_POSTFIX));
         action.putValue(ActionConsts.ACTION_ID, actionId);
 
@@ -119,5 +126,15 @@ public class ActionManager {
         }
 
         return menuItem;
+    }
+
+    public void updateActionsForComponent(Object componentClass) {
+        List<ActionActiveComponent> componentListeners = activeComponentListeners.get(componentClass.getClass());
+        if (componentListeners != null) {
+            Set<Object> affectedObjects = Collections.singleton(componentClass);
+            for (ActionActiveComponent componentListener : componentListeners) {
+                componentListener.componentActive(affectedObjects);
+            }
+        }
     }
 }
