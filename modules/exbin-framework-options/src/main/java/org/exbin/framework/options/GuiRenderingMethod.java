@@ -44,7 +44,8 @@ public enum GuiRenderingMethod {
     SOFTWARE("software"),
     OPEN_GL("opengl"),
     XRENDER("xrender"),
-    METAL("metal");
+    METAL("metal"),
+    WAYLAND("wayland");
 
     private final String propertyValue;
 
@@ -72,7 +73,7 @@ public enum GuiRenderingMethod {
     public static List<GuiRenderingMethod> getAvailableMethods() {
         List<GuiRenderingMethod> methods = new ArrayList<>();
 
-        DesktopUtils.DesktopOs desktopOs = DesktopUtils.detectBasicOs();
+        DesktopUtils.OsType desktopOs = DesktopUtils.detectBasicOs();
         methods.add(DEFAULT);
         methods.add(SOFTWARE);
         switch (desktopOs) {
@@ -81,13 +82,14 @@ public enum GuiRenderingMethod {
                 methods.add(DDRAW_HWSCALE);
                 methods.add(OPEN_GL);
                 break;
-            case MAC_OS:
+            case MACOSX:
                 methods.add(OPEN_GL);
                 methods.add(METAL);
                 break;
             default:
                 methods.add(OPEN_GL);
                 methods.add(XRENDER);
+                methods.add(WAYLAND);
                 break;
         }
 

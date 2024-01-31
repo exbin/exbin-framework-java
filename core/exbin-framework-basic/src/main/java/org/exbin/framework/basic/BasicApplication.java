@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.basic;
 
+import org.exbin.framework.LookAndFeelApplier;
+import org.exbin.framework.LanguageProvider;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -60,7 +62,6 @@ public class BasicApplication {
 
     public void setAppPreferences(Preferences appPreferences) {
         this.appPreferences = appPreferences;
-        initByPreferences();
     }
 
     @Nonnull
@@ -94,10 +95,6 @@ public class BasicApplication {
         appDirectoryPath = appDirectoryPath.substring(4, appDirectoryPath.indexOf("!"));
 
         appDirectory = new File(appDirectoryPath).getParentFile();
-    }
-
-    private void initByPreferences() {
-        // TODO
     }
 
     public void addModulesFrom(URI moduleClassUri) {

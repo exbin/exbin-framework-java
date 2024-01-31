@@ -23,11 +23,10 @@ import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.options.gui.OptionsTreePanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 
@@ -60,7 +59,8 @@ public class OptionsAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        OptionsTreePanel optionsTreePanel = new OptionsTreePanel(windowModule.getFrameHandler());
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        OptionsTreePanel optionsTreePanel = new OptionsTreePanel(frameModule.getFrameHandler());
         optionsPagesProvider.registerOptionsPages(optionsTreePanel);
         Dimension preferredSize = optionsTreePanel.getPreferredSize();
         optionsTreePanel.setPreferredSize(new Dimension(preferredSize.width + 200, preferredSize.height + 200));
@@ -87,7 +87,7 @@ public class OptionsAction extends AbstractAction {
             }
             dialog.close();
         });
-        dialog.showCentered(windowModule.getFrame());
+        dialog.showCentered(frameModule.getFrame());
     }
 
     @ParametersAreNonnullByDefault

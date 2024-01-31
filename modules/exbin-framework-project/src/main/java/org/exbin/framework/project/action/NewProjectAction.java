@@ -25,6 +25,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.project.api.ProjectModuleApi;
 import org.exbin.framework.project.gui.NewProjectPanel;
@@ -65,7 +66,8 @@ public class NewProjectAction extends AbstractAction {
         NewProjectPanel newProjectPanel = new NewProjectPanel();
         DefaultControlPanel controlPanel = new DefaultControlPanel(newProjectPanel.getResourceBundle());
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        Frame parentFrame = windowModule.getFrame();
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        Frame parentFrame = frameModule.getFrame();
         final WindowHandler dialog = windowModule.createDialog(parentFrame, Dialog.ModalityType.APPLICATION_MODAL, newProjectPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), newProjectPanel.getClass(), newProjectPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, newProjectPanel.getResourceBundle());

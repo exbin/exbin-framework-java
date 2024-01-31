@@ -21,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.window.api.WindowModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
  * Interface for framework project module.
@@ -32,7 +32,7 @@ import org.exbin.framework.window.api.WindowModuleApi;
 public interface ProjectModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ProjectModuleApi.class);
-    public static String PROJECT_MENU_ID = WindowModuleApi.MAIN_MENU_ID + "/File";
+    public static String PROJECT_MENU_ID = FrameModuleApi.MAIN_MENU_ID + "/File";
     public static final String PROJECT_MENU_GROUP_ID = MODULE_ID + ".projectMenuGroup";
 
     void registerProjectCategory(ProjectCategory projectCategory);

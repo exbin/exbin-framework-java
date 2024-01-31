@@ -30,11 +30,10 @@ import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.handler.OptionsControlHandler;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 
 /**
@@ -78,6 +77,7 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
         TextFontApi textFontApi = (TextFontApi) activeFile.get();
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();
         fontPanel.setStoredFont(textFontApi.getCurrentFont());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
@@ -98,6 +98,6 @@ public class TextFontAction extends AbstractAction implements FileDependentActio
             dialog.close();
             dialog.dispose();
         });
-        dialog.showCentered(windowModule.getFrame());
+        dialog.showCentered(frameModule.getFrame());
     }
 }

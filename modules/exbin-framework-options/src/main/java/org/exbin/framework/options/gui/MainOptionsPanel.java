@@ -33,7 +33,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
-import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
+import org.exbin.framework.options.options.impl.UiOptionsImpl;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.model.LanguageRecord;
 import org.exbin.framework.utils.DesktopUtils;
@@ -44,7 +44,7 @@ import org.exbin.framework.utils.DesktopUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MainOptionsPanel extends javax.swing.JPanel implements OptionsComponent<FrameworkOptionsImpl> {
+public class MainOptionsPanel extends javax.swing.JPanel implements OptionsComponent<UiOptionsImpl> {
 
     private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(MainOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
@@ -58,7 +58,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     private void init() {
         initComponents();
 
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             mainOptionsBasicPanel.add(macOsOptionsPanel, BorderLayout.SOUTH);
         }
     }
@@ -70,7 +70,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     }
 
     @Override
-    public void loadFromOptions(FrameworkOptionsImpl options) {
+    public void loadFromOptions(UiOptionsImpl options) {
         Locale languageLocale = options.getLanguageLocale();
         ComboBoxModel<LanguageRecord> languageComboBoxModel = languageComboBox.getModel();
         for (int i = 0; i < languageComboBoxModel.getSize(); i++) {
@@ -85,7 +85,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         fontAntialiasingComboBox.setSelectedIndex(findMatchingElement(fontAntialiasingComboBox.getModel(), options.getFontAntialiasing()));
         guiScalingComboBox.setSelectedIndex(findMatchingElement(guiScalingComboBox.getModel(), options.getGuiScaling()));
         guiScalingSpinner.setValue(options.getGuiScalingRate());
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             macOsAppearanceComboBox.setSelectedIndex(findMatchingElement(macOsAppearanceComboBox.getModel(), options.getMacOsAppearance()));
             useScreenMenuBarCheckBox.setSelected(options.isUseScreenMenuBar());
         }
@@ -101,14 +101,14 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     }
 
     @Override
-    public void saveToOptions(FrameworkOptionsImpl options) {
+    public void saveToOptions(UiOptionsImpl options) {
         options.setLanguageLocale(((LanguageRecord) languageComboBox.getSelectedItem()).getLocale());
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         options.setRenderingMode((String) renderingModeComboBox.getSelectedItem());
         options.setFontAntialiasing((String) fontAntialiasingComboBox.getSelectedItem());
         options.setGuiScaling((String) guiScalingComboBox.getSelectedItem());
         options.setGuiScalingRate((Float) guiScalingSpinner.getValue());
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             options.setMacOsAppearance((String) macOsAppearanceComboBox.getSelectedItem());
             options.setUseScreenMenuBar(useScreenMenuBarCheckBox.isSelected());
         }

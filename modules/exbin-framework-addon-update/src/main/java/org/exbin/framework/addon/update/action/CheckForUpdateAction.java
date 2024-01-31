@@ -33,15 +33,13 @@ import org.exbin.framework.addon.update.gui.CheckForUpdatePanel;
 import org.exbin.framework.addon.update.preferences.CheckForUpdatePreferences;
 import org.exbin.framework.addon.update.service.CheckForUpdateService;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
-import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.CloseControlPanel;
 
 /**
- * Implementation of framework check update module.
+ * Check for update action.
  *
  * @author ExBin Project (https://exbin.org)
  */

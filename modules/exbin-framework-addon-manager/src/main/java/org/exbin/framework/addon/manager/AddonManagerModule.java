@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) ExBin Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.exbin.framework.addon.manager;
+
+import java.net.URL;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
+import org.exbin.framework.addon.manager.action.AddonManagerAction;
+import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
+
+/**
+ * Implementation of addon manager module.
+ *
+ * @author ExBin Project (https://exbin.org)
+ */
+@ParametersAreNonnullByDefault
+public class AddonManagerModule implements AddonManagerModuleApi {
+
+    private AddonManagerAction addonManagerAction;
+
+    private URL checkUpdateUrl;
+    private URL downloadUrl;
+
+//    private CheckForUpdateService checkForUpdateService;
+
+    public AddonManagerModule() {
+    }
+
+    @Nonnull
+    public Action getCheckUpdateAction() {
+        if (addonManagerAction == null) {
+            addonManagerAction = new AddonManagerAction();
+        }
+
+        return addonManagerAction;
+    }
+/*
+    @Override
+    public void registerDefaultMenuItem() {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.registerMenuItem(WindowModuleApi.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
+    }
+
+    @Override
+    public void registerOptionsPanels() {
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+        optionsModule.addOptionsPage(new DefaultOptionsPage<CheckForUpdateOptions>() {
+            @Override
+            public OptionsComponent<CheckForUpdateOptions> createPanel() {
+                return new ApplicationUpdateOptionsPanel();
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return App.getModule(LanguageModuleApi.class).getBundle(ApplicationUpdateOptionsPanel.class);
+            }
+
+            @Nonnull
+            @Override
+            public CheckForUpdateOptions createOptions() {
+                return new CheckForUpdateOptions();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, CheckForUpdateOptions options) {
+                options.loadFromPreferences(new CheckForUpdatePreferences(preferences));
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, CheckForUpdateOptions options) {
+                options.saveToPreferences(new CheckForUpdatePreferences(preferences));
+            }
+
+            @Override
+            public void applyPreferencesChanges(CheckForUpdateOptions options) {
+            }
+        });
+    }
+
+    @Override
+    public void setUpdateUrl(URL updateUrl) {
+        this.checkUpdateUrl = updateUrl;
+        if (checkUpdateAction != null) {
+            checkUpdateAction.setUpdateUrl(updateUrl);
+        }
+    }
+
+    @Nullable
+    @Override
+    public URL getUpdateUrl() {
+        return checkUpdateUrl;
+    }
+*/
+}

@@ -34,6 +34,7 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.handler.DefaultControlHandler;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 
 /**
@@ -77,6 +78,7 @@ public class GoToLineAction extends AbstractAction {
             goToPanel.setMaxLine(activePanel.getLineCount());
             goToPanel.setCharPos(1);
             DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
+            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             final WindowHandler dialog = windowModule.createDialog(goToPanel, controlPanel);
             windowModule.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
@@ -90,7 +92,7 @@ public class GoToLineAction extends AbstractAction {
                 dialog.close();
                 dialog.dispose();
             });
-            dialog.showCentered(windowModule.getFrame());
+            dialog.showCentered(frameModule.getFrame());
         }
     }
 }

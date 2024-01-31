@@ -30,6 +30,7 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.about.api.AboutModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 
 /**
@@ -63,13 +64,13 @@ public class AboutModule implements AboutModuleApi {
     @Override
     public void registerDefaultMenuItem() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         boolean aboutActionRegistered = false;
 
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             // From: https://www.formdev.com/flatlaf/macos/
             FlatDesktop.setAboutHandler(() -> {
-                getAboutAction().actionPerformed(new ActionEvent(windowModule.getFrame(), 0, ""));
+                getAboutAction().actionPerformed(new ActionEvent(frameModule.getFrame(), 0, ""));
             });
             /* // TODO: Replace after migration to Java 9+
             Desktop desktop = Desktop.getDesktop();
@@ -79,9 +80,9 @@ public class AboutModule implements AboutModuleApi {
             aboutActionRegistered = true;
         }
 
-        actionModule.registerMenuGroup(WindowModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
+        actionModule.registerMenuGroup(FrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
-            actionModule.registerMenuItem(WindowModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));
+            actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));
         }
     }
 

@@ -17,13 +17,11 @@ package org.exbin.framework.window.api;
 
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.Frame;
 import java.awt.Window;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -33,7 +31,7 @@ import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 
 /**
- * Interface for framework frame module.
+ * Interface for framework window module.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -41,39 +39,6 @@ import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 public interface WindowModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(WindowModuleApi.class);
-    public static String MAIN_MENU_ID = MODULE_ID + ".mainMenu";
-    public static String MAIN_TOOL_BAR_ID = MODULE_ID + ".mainToolBar";
-    public static String FILE_MENU_ID = MAIN_MENU_ID + "/File";
-    public static String EDIT_MENU_ID = MAIN_MENU_ID + "/Edit";
-    public static String VIEW_MENU_ID = MAIN_MENU_ID + "/View";
-    public static String TOOLS_MENU_ID = MAIN_MENU_ID + "/Tools";
-    public static String OPTIONS_MENU_ID = MAIN_MENU_ID + "/Options";
-    public static String HELP_MENU_ID = MAIN_MENU_ID + "/Help";
-
-    public static String DEFAULT_STATUS_BAR_ID = "default";
-    public static String MAIN_STATUS_BAR_ID = "main";
-    public static String PROGRESS_STATUS_BAR_ID = "progress";
-    public static String BUSY_STATUS_BAR_ID = "busy";
-
-    public static String PREFERENCES_FRAME_RECTANGLE = "frameRectangle";
-
-    /**
-     * Returns frame handler.
-     *
-     * @return frame handler
-     */
-    @Nonnull
-    ApplicationFrameHandler getFrameHandler();
-
-    /**
-     * Creates and initializes main menu and toolbar.
-     */
-    void createMainMenu();
-
-    /**
-     * Notifies frame was updated.
-     */
-    void notifyFrameUpdated();
 
     /**
      * Creates basic dialog and sets it up.
@@ -136,72 +101,11 @@ public interface WindowModuleApi extends Module {
 
     @Nonnull
     JDialog createWindow(final JComponent component);
-    
+
     void invokeWindow(final JComponent component);
-    
+
     @Nonnull
     JPanel createDialogPanel(JComponent mainComponent, JPanel controlPanel);
-
-    /**
-     * Returns frame instance.
-     *
-     * @return frame
-     */
-    @Nonnull
-    Frame getFrame();
-
-    /**
-     * Returns exit action.
-     *
-     * @return exit action
-     */
-    @Nonnull
-    Action getExitAction();
-
-    /**
-     * Registers exit action in default menu location.
-     */
-    void registerExitAction();
-
-    /**
-     * Adds exit listener.
-     *
-     * @param listener listener
-     */
-    void addExitListener(ApplicationExitListener listener);
-
-    /**
-     * Removes exit listener.
-     *
-     * @param listener listener
-     */
-    void removeExitListener(ApplicationExitListener listener);
-
-    void registerBarsVisibilityActions();
-
-    void registerToolBarVisibilityActions();
-
-    void registerStatusBarVisibilityActions();
-
-    /**
-     * Registers new status bar with unique ID.
-     *
-     * @param moduleId module id
-     * @param statusBarId statusbar id
-     * @param panel panel
-     */
-    void registerStatusBar(String moduleId, String statusBarId, JPanel panel);
-
-    /**
-     * Switches to status bar with specific ID.
-     *
-     * @param statusBarId statusbar id
-     */
-    void switchStatusBar(String statusBarId);
-
-    void loadFramePosition();
-
-    void saveFramePosition();
 
     void setWindowTitle(WindowHandler windowHandler, ResourceBundle resourceBundle);
 }

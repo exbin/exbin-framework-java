@@ -25,8 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.Preferences;
-import org.exbin.framework.window.api.ApplicationFrameHandler;
-import org.exbin.framework.window.api.WindowModuleApi;
+import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
@@ -38,12 +37,13 @@ import org.exbin.framework.options.gui.OptionsTreePanel;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.options.options.impl.AppearanceOptionsImpl;
-import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
+import org.exbin.framework.options.options.impl.UiOptionsImpl;
 import org.exbin.framework.options.gui.AppearanceOptionsPanel;
 import org.exbin.framework.options.preferences.AppearancePreferences;
 import org.exbin.framework.utils.ComponentResourceProvider;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.action.OptionsAction;
 import org.exbin.framework.options.options.AppearanceOptions;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
@@ -74,7 +74,7 @@ public class OptionsModule implements OptionsModuleApi {
         if (resourceBundle == null) {
             resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsModule.class);
 
-            OptionsPage<FrameworkOptionsImpl> mainOptionsPage = getMainOptionsManager().getMainOptionsPage();
+            OptionsPage<UiOptionsImpl> mainOptionsPage = getMainOptionsManager().getMainOptionsPage();
             optionsPages.add(new OptionsPageRecord(null, mainOptionsPage));
 
             OptionsPage<AppearanceOptionsImpl> appearanceOptionsPage;
@@ -111,12 +111,12 @@ public class OptionsModule implements OptionsModuleApi {
 
                 @Override
                 public void applyPreferencesChanges(AppearanceOptionsImpl options) {
-                    WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                    ApplicationFrameHandler frame = windowModule.getFrameHandler();
+                    FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                    ApplicationFrameHandler frame = frameModule.getFrameHandler();
                     frame.setToolBarVisible(options.isShowToolBar());
                     frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
                     frame.setStatusBarVisible(options.isShowStatusBar());
-                    windowModule.notifyFrameUpdated();
+                    frameModule.notifyFrameUpdated();
                 }
             };
             ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) appearanceOptionsPage).getResourceBundle();
@@ -166,8 +166,8 @@ public class OptionsModule implements OptionsModuleApi {
 
     @Override
     public void notifyOptionsChanged() {
-        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        windowModule.notifyFrameUpdated();
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        frameModule.notifyFrameUpdated();
     }
 
     @Override
@@ -239,7 +239,7 @@ public class OptionsModule implements OptionsModuleApi {
         getOptionsAction();
 
         boolean optionsActionRegistered = false;
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             FlatDesktop.setPreferencesHandler(() -> {
                 optionsAction.actionPerformed(null);
             });
@@ -250,9 +250,9 @@ public class OptionsModule implements OptionsModuleApi {
             }); */
             optionsActionRegistered = true;
         }
-        actionModule.registerMenuGroup(WindowModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
+        actionModule.registerMenuGroup(FrameModuleApi.TOOLS_MENU_ID, new MenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
         if (!optionsActionRegistered) {
-            actionModule.registerMenuItem(WindowModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
+            actionModule.registerMenuItem(FrameModuleApi.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
         }
     }
 

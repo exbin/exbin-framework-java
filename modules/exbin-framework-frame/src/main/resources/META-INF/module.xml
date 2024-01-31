@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.frame.FrameModule</id>
+  <name>Frame handling</name>
+  <description>Module for frame handling</description>
+  <dependency>
+  </dependency>
+</module>

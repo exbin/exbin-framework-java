@@ -29,10 +29,10 @@ import org.exbin.framework.editor.text.gui.FindTextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.handler.DefaultControlHandler;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 
 /**
@@ -64,6 +64,7 @@ public class FindReplaceActions {
 
     public void showFindDialog(boolean shallReplace) {
         final WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final FindTextPanel findPanel = new FindTextPanel();
         findPanel.setShallReplace(shallReplace);
         findPanel.setSelected();
@@ -87,7 +88,7 @@ public class FindReplaceActions {
         });
         windowModule.addHeaderPanel(dialog.getWindow(), findPanel.getClass(), findPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, findPanel.getResourceBundle());
-        dialog.showCentered(windowModule.getFrame());
+        dialog.showCentered(frameModule.getFrame());
     }
 
     @Nonnull

@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
@@ -32,10 +30,10 @@ import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.options.gui.MainOptionsPanel;
 import org.exbin.framework.options.model.LanguageRecord;
-import org.exbin.framework.options.options.impl.FrameworkOptionsImpl;
-import org.exbin.framework.preferences.FrameworkPreferences;
+import org.exbin.framework.options.options.impl.UiOptionsImpl;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.ui.api.preferences.UiPreferences;
 
 /**
  * Interface for application options panels management.
@@ -104,13 +102,13 @@ public class MainOptionsManager {
 
         renderingMethodKeys = new ArrayList<>();
         renderingMethodNames = new ArrayList<>();
-        DesktopUtils.DesktopOs desktopOs = DesktopUtils.detectBasicOs();
+        DesktopUtils.OsType desktopOs = DesktopUtils.detectBasicOs();
         for (GuiRenderingMethod renderingMethod : GuiRenderingMethod.getAvailableMethods()) {
             renderingMethodKeys.add(renderingMethod.getPropertyValue());
             if (renderingMethod == GuiRenderingMethod.DEFAULT) {
                 renderingMethodNames.add(resourceBundle.getString("renderingMethod.default"));
             } else {
-                if (renderingMethod == GuiRenderingMethod.SOFTWARE && desktopOs == DesktopUtils.DesktopOs.WINDOWS) {
+                if (renderingMethod == GuiRenderingMethod.SOFTWARE && desktopOs == DesktopUtils.OsType.WINDOWS) {
                     renderingMethodNames.add(resourceBundle.getString("renderingMethod.software.windows"));
                 } else {
                     String propertyValue = renderingMethod.getPropertyValue();
@@ -143,7 +141,7 @@ public class MainOptionsManager {
             }
         }
 
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             List<GuiMacOsAppearance> guiMacOsAppearances = GuiMacOsAppearance.getAvailable();
             guiMacOsAppearancesKeys = new ArrayList<>();
             guiMacOsAppearanceNames = new ArrayList<>();
@@ -161,11 +159,11 @@ public class MainOptionsManager {
     }
 
     @Nonnull
-    public OptionsPage<FrameworkOptionsImpl> getMainOptionsPage() {
-        return new DefaultOptionsPage<FrameworkOptionsImpl>() {
+    public OptionsPage<UiOptionsImpl> getMainOptionsPage() {
+        return new DefaultOptionsPage<UiOptionsImpl>() {
             @Nonnull
             @Override
-            public OptionsComponent<FrameworkOptionsImpl> createPanel() {
+            public OptionsComponent<UiOptionsImpl> createPanel() {
                 if (!valuesInitialized) {
                     valuesInitialized = true;
                     initValues();
@@ -178,7 +176,7 @@ public class MainOptionsManager {
                 mainOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
                 mainOptionsPanel.setFontAntialiasings(macOsAppearancesKeys, fontAntialiasingNames);
                 mainOptionsPanel.setGuiScalings(guiScalingKeys, guiScalingNames);
-                if (DesktopUtils.detectBasicOs() == DesktopUtils.DesktopOs.MAC_OS) {
+                if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
                     mainOptionsPanel.setMacOsAppearances(guiMacOsAppearancesKeys, guiMacOsAppearanceNames);
                 }
                 return mainOptionsPanel;
@@ -192,24 +190,24 @@ public class MainOptionsManager {
 
             @Nonnull
             @Override
-            public FrameworkOptionsImpl createOptions() {
-                return new FrameworkOptionsImpl();
+            public UiOptionsImpl createOptions() {
+                return new UiOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, FrameworkOptionsImpl options) {
-                FrameworkPreferences prefs = new FrameworkPreferences(preferences);
+            public void loadFromPreferences(Preferences preferences, UiOptionsImpl options) {
+                UiPreferences prefs = new UiPreferences(preferences);
                 options.loadFromPreferences(prefs);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, FrameworkOptionsImpl options) {
-                FrameworkPreferences prefs = new FrameworkPreferences(preferences);
+            public void saveToPreferences(Preferences preferences, UiOptionsImpl options) {
+                UiPreferences prefs = new UiPreferences(preferences);
                 options.saveToParameters(prefs);
             }
 
             @Override
-            public void applyPreferencesChanges(FrameworkOptionsImpl options) {
+            public void applyPreferencesChanges(UiOptionsImpl options) {
                 String selectedTheme = options.getLookAndFeel();
                 // TODO application.applyLookAndFeel(selectedTheme);
             }

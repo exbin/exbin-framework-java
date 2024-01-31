@@ -39,6 +39,7 @@ import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.addon.update.action.CheckForUpdateAction;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.addon.update.api.AddonUpdateModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.options.api.OptionsComponent;
 
@@ -78,7 +79,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     @Override
     public void registerDefaultMenuItem() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(WindowModuleApi.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
+        actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
     }
 
     @Override

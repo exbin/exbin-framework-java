@@ -34,8 +34,8 @@ import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.preferences.RecentFilesPreferences;
-import org.exbin.framework.window.api.ApplicationFrameHandler;
-import org.exbin.framework.window.api.WindowModuleApi;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.frame.api.ApplicationFrameHandler;
 
 /**
  * Recent files actions.
@@ -59,8 +59,8 @@ public class RecentFilesActions {
         this.filesControl = filesControl;
         this.resourceBundle = resourceBundle;
 
-        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        windowModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
             saveState();
             return true;
         });
