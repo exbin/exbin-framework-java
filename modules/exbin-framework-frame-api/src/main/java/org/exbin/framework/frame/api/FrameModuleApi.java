@@ -128,4 +128,8 @@ public interface FrameModuleApi extends Module {
     void loadFramePosition();
 
     void saveFramePosition();
+    
+    void switchFrameToFullscreen();
+
+    void switchFrameToUndecorated();
 }

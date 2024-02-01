@@ -17,6 +17,8 @@ package org.exbin.framework.frame;
 
 import com.formdev.flatlaf.extras.FlatDesktop;
 import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -339,5 +341,16 @@ public class FrameModule implements FrameModuleApi {
         if (!actionModule.menuGroupExists(FrameModuleApi.VIEW_MENU_ID, VIEW_BARS_GROUP_ID)) {
             actionModule.registerMenuGroup(FrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_BARS_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.BELOW));
         }
+    }
+    
+    @Override
+    public void switchFrameToFullscreen() {
+        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
+        device.setFullScreenWindow(getFrame());
+    }
+    
+    @Override
+    public void switchFrameToUndecorated() {
+        getFrame().setUndecorated(true);
     }
 }

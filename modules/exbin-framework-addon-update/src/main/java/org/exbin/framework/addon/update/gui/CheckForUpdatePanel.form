@@ -114,7 +114,7 @@
         <Component class="javax.swing.JLabel" name="statusTextLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/update/gui/resources/CheckForUpdatePanel.properties" key="statusTextLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="org/exbin/framework/addon/update/gui/resources/CheckForUpdatePanel.properties" key="statusTextLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -123,7 +123,7 @@
     <Component class="javax.swing.JLabel" name="currentVersionLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/update/gui/resources/CheckForUpdatePanel.properties" key="currentVersionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/addon/update/gui/resources/CheckForUpdatePanel.properties" key="currentVersionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -136,7 +136,7 @@
     <Component class="javax.swing.JLabel" name="availableVersionLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/update/gui/resources/CheckForUpdatePanel.properties" key="availableVersionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/addon/update/gui/resources/CheckForUpdatePanel.properties" key="availableVersionLabel.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -149,7 +149,7 @@
     <Component class="javax.swing.JButton" name="recheckButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/update/gui/resources/CheckForUpdatePanel.properties" key="recheckButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/addon/update/gui/resources/CheckForUpdatePanel.properties" key="recheckButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
@@ -160,7 +160,7 @@
     <Component class="javax.swing.JButton" name="downloadButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/exbin/framework/update/gui/resources/CheckForUpdatePanel.properties" key="downloadButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="org/exbin/framework/addon/update/gui/resources/CheckForUpdatePanel.properties" key="downloadButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
         </Property>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
