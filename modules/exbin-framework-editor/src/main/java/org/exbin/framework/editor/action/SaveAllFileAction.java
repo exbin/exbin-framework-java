@@ -48,7 +48,7 @@ public class SaveAllFileAction extends AbstractAction implements FileDependentAc
         this.editorProvider = editorProvider;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.setupAction(this, resourceBundle, ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
     }
 
     @Override

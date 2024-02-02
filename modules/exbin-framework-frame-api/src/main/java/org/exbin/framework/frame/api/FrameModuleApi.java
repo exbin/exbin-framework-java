@@ -16,6 +16,8 @@
 package org.exbin.framework.frame.api;
 
 import java.awt.Frame;
+import java.awt.Image;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -32,14 +34,6 @@ import org.exbin.framework.ModuleUtils;
 public interface FrameModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(FrameModuleApi.class);
-    public static String MAIN_MENU_ID = MODULE_ID + ".mainMenu";
-    public static String MAIN_TOOL_BAR_ID = MODULE_ID + ".mainToolBar";
-    public static String FILE_MENU_ID = MAIN_MENU_ID + "/File";
-    public static String EDIT_MENU_ID = MAIN_MENU_ID + "/Edit";
-    public static String VIEW_MENU_ID = MAIN_MENU_ID + "/View";
-    public static String TOOLS_MENU_ID = MAIN_MENU_ID + "/Tools";
-    public static String OPTIONS_MENU_ID = MAIN_MENU_ID + "/Options";
-    public static String HELP_MENU_ID = MAIN_MENU_ID + "/Help";
 
     public static String DEFAULT_STATUS_BAR_ID = "default";
     public static String MAIN_STATUS_BAR_ID = "main";
@@ -68,7 +62,7 @@ public interface FrameModuleApi extends Module {
 
     /**
      * Returns frame instance.
-     * 
+     *
      * TODO: Support for multiple frames
      *
      * @return frame
@@ -128,8 +122,11 @@ public interface FrameModuleApi extends Module {
     void loadFramePosition();
 
     void saveFramePosition();
-    
+
     void switchFrameToFullscreen();
 
     void switchFrameToUndecorated();
+
+    @Nonnull
+    Optional<Image> getApplicationIcon();
 }

@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileSystemView;
@@ -49,13 +51,12 @@ public class RecentFilesActions {
     private FilesControl filesControl;
     private Preferences preferences;
 
-    private JMenu fileOpenRecentMenu = null;
     private List<RecentItem> recentFiles = null;
 
     public RecentFilesActions() {
     }
 
-    public void setup(ResourceBundle resourceBundle, FilesControl filesControl) {
+    public void init(ResourceBundle resourceBundle, FilesControl filesControl) {
         this.filesControl = filesControl;
         this.resourceBundle = resourceBundle;
 
@@ -68,17 +69,21 @@ public class RecentFilesActions {
 
     @Nonnull
     public JMenu getOpenRecentMenu() {
-        if (fileOpenRecentMenu == null) {
-            fileOpenRecentMenu = new JMenu(resourceBundle.getString("openRecentMenu.text"));
-            recentFiles = new ArrayList<>();
-            if (preferences != null) {
-                loadState();
+        Action fileOpenRecentAction = new AbstractAction(resourceBundle.getString("openRecentMenu.text")) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
             }
+        };
+        fileOpenRecentAction.putValue(Action.SHORT_DESCRIPTION, resourceBundle.getString("openRecentMenu.shortDescription"));
+        JMenu fileOpenRecentMenu = new JMenu(fileOpenRecentAction);
+        recentFiles = new ArrayList<>();
+        if (preferences != null) {
+            loadState(fileOpenRecentMenu);
         }
         return fileOpenRecentMenu;
     }
 
-    private void loadState() {
+    private void loadState(JMenu fileOpenRecentMenu) {
         RecentFilesPreferences recentFilesParameters = new RecentFilesPreferences(preferences);
         recentFiles.clear();
         int recent = 1;
@@ -92,7 +97,7 @@ public class RecentFilesActions {
             recentFiles.add(new RecentItem(filePath, moduleName, fileMode));
             recent++;
         }
-        rebuildRecentFilesMenu();
+        rebuildRecentFilesMenu(fileOpenRecentMenu);
     }
 
     private void saveState() {
@@ -106,7 +111,7 @@ public class RecentFilesActions {
         preferences.flush();
     }
 
-    private void rebuildRecentFilesMenu() {
+    private void rebuildRecentFilesMenu(JMenu fileOpenRecentMenu) {
         fileOpenRecentMenu.removeAll();
         for (int recentFileIndex = 0; recentFileIndex < recentFiles.size(); recentFileIndex++) {
             String filename = recentFiles.get(recentFileIndex).getFileName();
@@ -150,7 +155,7 @@ public class RecentFilesActions {
                                     // Move recent item on top
                                     recentFiles.remove(itemIndex);
                                     recentFiles.add(0, recentItem);
-                                    rebuildRecentFilesMenu();
+                                    rebuildRecentFilesMenu(fileOpenRecentMenu);
                                 }
                             } catch (URISyntaxException ex) {
                                 Logger.getLogger(RecentFilesActions.class.getName()).log(Level.SEVERE, null, ex);
@@ -189,7 +194,7 @@ public class RecentFilesActions {
             if (recentFiles.size() > 15) {
                 recentFiles.remove(15);
             }
-            rebuildRecentFilesMenu();
+            // TODO rebuildRecentFilesMenu();
         }
     }
 

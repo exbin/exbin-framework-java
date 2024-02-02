@@ -89,21 +89,19 @@ public interface FileModuleApi extends Module {
     void registerRecenFilesMenuActions();
 
     @Nonnull
-    AbstractAction getNewFileAction();
+    AbstractAction createNewFileAction();
 
     @Nonnull
-    AbstractAction getOpenFileAction();
+    AbstractAction createOpenFileAction();
 
     @Nonnull
-    AbstractAction getSaveFileAction();
+    AbstractAction createSaveFileAction();
 
     @Nonnull
-    AbstractAction getSaveAsFileAction();
+    AbstractAction createSaveAsFileAction();
 
     @Nonnull
     FileActionsApi getFileActions();
 
     void updateRecentFilesList(URI fileUri, FileType fileType);
-
-    void updateForFileOperations();
 }

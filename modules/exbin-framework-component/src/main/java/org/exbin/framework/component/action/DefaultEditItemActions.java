@@ -75,7 +75,7 @@ public class DefaultEditItemActions implements EditItemActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(addItemAction, resourceBundle, ADD_ITEM_ACTION_ID);
+            actionModule.initAction(addItemAction, resourceBundle, ADD_ITEM_ACTION_ID);
             if (mode == Mode.DIALOG) {
                 addItemAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             }
@@ -95,7 +95,7 @@ public class DefaultEditItemActions implements EditItemActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(editItemAction, resourceBundle, EDIT_ITEM_ACTION_ID);
+            actionModule.initAction(editItemAction, resourceBundle, EDIT_ITEM_ACTION_ID);
             if (mode == Mode.DIALOG) {
                 editItemAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             }
@@ -115,7 +115,7 @@ public class DefaultEditItemActions implements EditItemActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(deleteItemAction, resourceBundle, DELETE_ITEM_ACTION_ID);
+            actionModule.initAction(deleteItemAction, resourceBundle, DELETE_ITEM_ACTION_ID);
             deleteItemAction.setEnabled(false);
         }
         return deleteItemAction;

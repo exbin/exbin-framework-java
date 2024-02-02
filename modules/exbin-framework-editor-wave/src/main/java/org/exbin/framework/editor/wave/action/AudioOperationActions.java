@@ -68,7 +68,7 @@ public class AudioOperationActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(audioReverseAction, resourceBundle, AUDIO_REVERSE_ACTION_ID);
+            actionModule.initAction(audioReverseAction, resourceBundle, AUDIO_REVERSE_ACTION_ID);
         }
 
         return audioReverseAction;

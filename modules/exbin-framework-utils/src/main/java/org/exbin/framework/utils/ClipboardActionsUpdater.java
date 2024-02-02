@@ -26,11 +26,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface ClipboardActionsUpdater extends ClipboardActionsApi {
 
     /**
-     * Updates state of these actions according to clipboard handler.
-     */
-    void updateClipboardActions();
-
-    /**
      * Sets clipboard handler.
      *
      * @param clipboardHandler clipboard handler

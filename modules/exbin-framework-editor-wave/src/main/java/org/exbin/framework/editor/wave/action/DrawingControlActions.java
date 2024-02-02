@@ -85,7 +85,7 @@ public class DrawingControlActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(dotsModeAction, resourceBundle, DOTS_MODE_ACTION_ID);
+            actionModule.initAction(dotsModeAction, resourceBundle, DOTS_MODE_ACTION_ID);
             dotsModeAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
             dotsModeAction.putValue(ActionConsts.ACTION_RADIO_GROUP, DRAWING_RADIO_GROUP_ID);
             dotsModeAction.putValue(Action.SELECTED_KEY, drawMode == XBWavePanel.DrawMode.DOTS_MODE);
@@ -105,7 +105,7 @@ public class DrawingControlActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(lineModeAction, resourceBundle, LINE_MODE_ACTION_ID);
+            actionModule.initAction(lineModeAction, resourceBundle, LINE_MODE_ACTION_ID);
             lineModeAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
             lineModeAction.putValue(ActionConsts.ACTION_RADIO_GROUP, DRAWING_RADIO_GROUP_ID);
             lineModeAction.putValue(Action.SELECTED_KEY, drawMode == XBWavePanel.DrawMode.LINE_MODE);
@@ -126,7 +126,7 @@ public class DrawingControlActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(integralModeAction, resourceBundle, INTEGRAL_MODE_ACTION_ID);
+            actionModule.initAction(integralModeAction, resourceBundle, INTEGRAL_MODE_ACTION_ID);
             integralModeAction.putValue(ActionConsts.ACTION_RADIO_GROUP, DRAWING_RADIO_GROUP_ID);
             integralModeAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
             integralModeAction.putValue(Action.SELECTED_KEY, drawMode == XBWavePanel.DrawMode.INTEGRAL_MODE);

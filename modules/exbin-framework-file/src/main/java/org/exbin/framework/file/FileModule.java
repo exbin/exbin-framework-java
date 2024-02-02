@@ -30,6 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
@@ -63,10 +64,6 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     private java.util.ResourceBundle resourceBundle = null;
     private FileOperations fileOperations;
 
-    private NewFileAction newFileAction;
-    private OpenFileAction openFileAction;
-    private SaveFileAction saveFileAction;
-    private SaveAsFileAction saveAsFileAction;
     private RecentFilesActions recentFilesActions;
     private FileActions fileActions;
     private final List<FileType> registeredFileTypes = new ArrayList<>();
@@ -114,20 +111,20 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerMenuFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getNewFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getOpenFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getSaveFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getSaveAsFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuGroup(ActionConsts.FILE_MENU_ID, new MenuGroup(FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createNewFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createOpenFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createSaveFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createSaveAsFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
     }
 
     @Override
     public void registerToolBarFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerToolBarGroup(FrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(FILE_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP)));
-        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getNewFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getOpenFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, getSaveFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, new ToolBarGroup(FILE_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP)));
+        actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createNewFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createOpenFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createSaveFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
     }
 
     @Override
@@ -148,50 +145,42 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-        actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, languageModule.getActionWithDialogText((String) getOpenFileAction().getValue(Action.NAME))));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, languageModule.getActionWithDialogText((String) createOpenFileAction().getValue(Action.NAME))));
     }
 
     @Nonnull
     @Override
-    public NewFileAction getNewFileAction() {
-        if (newFileAction == null) {
-            ensureSetup();
-            newFileAction = new NewFileAction();
-            newFileAction.setup(resourceBundle, this);
-        }
+    public NewFileAction createNewFileAction() {
+        ensureSetup();
+        NewFileAction newFileAction = new NewFileAction();
+        newFileAction.init(resourceBundle, this);
         return newFileAction;
     }
 
     @Nonnull
     @Override
-    public OpenFileAction getOpenFileAction() {
-        if (openFileAction == null) {
-            ensureSetup();
-            openFileAction = new OpenFileAction();
-            openFileAction.setup(resourceBundle, this);
-        }
+    public OpenFileAction createOpenFileAction() {
+        ensureSetup();
+        OpenFileAction openFileAction = new OpenFileAction();
+        openFileAction.init(resourceBundle, this);
         return openFileAction;
     }
 
     @Nonnull
     @Override
-    public SaveFileAction getSaveFileAction() {
-        if (saveFileAction == null) {
-            ensureSetup();
-            saveFileAction = new SaveFileAction();
-            saveFileAction.setup(resourceBundle, this);
-        }
+    public SaveFileAction createSaveFileAction() {
+        ensureSetup();
+        SaveFileAction saveFileAction = new SaveFileAction();
+        saveFileAction.init(resourceBundle);
         return saveFileAction;
     }
 
     @Nonnull
     @Override
-    public SaveAsFileAction getSaveAsFileAction() {
-        if (saveAsFileAction == null) {
-            ensureSetup();
-            saveAsFileAction = new SaveAsFileAction();
-            saveAsFileAction.setup(resourceBundle, this);
-        }
+    public SaveAsFileAction createSaveAsFileAction() {
+        ensureSetup();
+        SaveAsFileAction saveAsFileAction = new SaveAsFileAction();
+        saveAsFileAction.init(resourceBundle);
         return saveAsFileAction;
     }
 
@@ -199,7 +188,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public RecentFilesActions getRecentFilesActions() {
         if (recentFilesActions == null) {
             recentFilesActions = new RecentFilesActions();
-            recentFilesActions.setup(resourceBundle, new RecentFilesActions.FilesControl() {
+            recentFilesActions.init(resourceBundle, new RecentFilesActions.FilesControl() {
                 @Override
                 public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
                     fileOperations.loadFromFile(fileUri, fileType);
@@ -230,7 +219,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         if (fileActions == null) {
             ensureSetup();
             fileActions = new FileActions();
-            fileActions.setup(resourceBundle);
+            fileActions.init(resourceBundle);
         }
 
         return fileActions;
@@ -254,15 +243,5 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
             return;
         }
         fileOperations.loadFromFile(fileUri, null);
-    }
-
-    @Override
-    public void updateForFileOperations() {
-        if (saveFileAction != null) {
-            saveFileAction.updateForFileOperations();
-        }
-        if (saveAsFileAction != null) {
-            saveAsFileAction.updateForFileOperations();
-        }
     }
 }

@@ -53,7 +53,7 @@ public class FileActions implements FileActionsApi {
     public FileActions() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
 

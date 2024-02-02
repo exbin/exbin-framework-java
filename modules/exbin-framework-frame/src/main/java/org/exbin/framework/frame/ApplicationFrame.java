@@ -33,6 +33,7 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
@@ -257,13 +258,13 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.buildMenu(menuBar, FrameModule.MAIN_MENU_ID);
+        actionModule.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID);
     }
 
     @Override
     public void loadMainToolBar() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.buildToolBar(toolBar, FrameModule.MAIN_TOOL_BAR_ID);
+        actionModule.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID);
     }
 
     @Override

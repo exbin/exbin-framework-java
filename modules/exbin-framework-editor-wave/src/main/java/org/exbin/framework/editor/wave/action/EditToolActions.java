@@ -83,7 +83,7 @@ public class EditToolActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(selectionToolAction, resourceBundle, SELECTION_TOOL_ACTION_ID);
+            actionModule.initAction(selectionToolAction, resourceBundle, SELECTION_TOOL_ACTION_ID);
             selectionToolAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
             selectionToolAction.putValue(ActionConsts.ACTION_RADIO_GROUP, TOOLS_SELECTION_RADIO_GROUP_ID);
             selectionToolAction.putValue(Action.SELECTED_KEY, toolMode == XBWavePanel.ToolMode.SELECTION);
@@ -103,7 +103,7 @@ public class EditToolActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(pencilToolAction, resourceBundle, PENCIL_TOOL_ACTION_ID);
+            actionModule.initAction(pencilToolAction, resourceBundle, PENCIL_TOOL_ACTION_ID);
             pencilToolAction.putValue(ActionConsts.ACTION_TYPE, ActionType.RADIO);
             pencilToolAction.putValue(ActionConsts.ACTION_RADIO_GROUP, TOOLS_SELECTION_RADIO_GROUP_ID);
             pencilToolAction.putValue(Action.SELECTED_KEY, toolMode == XBWavePanel.ToolMode.PENCIL);

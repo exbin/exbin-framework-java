@@ -19,12 +19,16 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
@@ -50,12 +54,6 @@ public class ClipboardActions implements ClipboardActionsUpdater {
     private ClipboardActionsHandler clipboardActionsHandler = null;
     private FlavorListener clipboardFlavorListener;
 
-    private Action cutAction;
-    private Action copyAction;
-    private Action pasteAction;
-    private Action deleteAction;
-    private Action selectAllAction;
-
     public ClipboardActions() {
     }
 
@@ -65,132 +63,69 @@ public class ClipboardActions implements ClipboardActionsUpdater {
 
     @Nonnull
     @Override
-    public Action getCutAction() {
-        if (cutAction == null) {
-            cutAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (clipboardActionsHandler != null) {
-                        clipboardActionsHandler.performCut();
-                    }
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(cutAction, resourceBundle, EDIT_CUT_ACTION_ID);
-            cutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
-            cutAction.setEnabled(false);
-        }
+    public Action createCutAction() {
+        CutAction cutAction = new CutAction();
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(cutAction, resourceBundle, EDIT_CUT_ACTION_ID);
+        cutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
+        cutAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, cutAction);
         return cutAction;
     }
 
     @Nonnull
     @Override
-    public Action getCopyAction() {
-        if (copyAction == null) {
-            copyAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (clipboardActionsHandler != null) {
-                        clipboardActionsHandler.performCopy();
-                    }
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(copyAction, resourceBundle, EDIT_COPY_ACTION_ID);
-            copyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
-            copyAction.setEnabled(false);
-        }
+    public Action createCopyAction() {
+        CopyAction copyAction = new CopyAction();
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(copyAction, resourceBundle, EDIT_COPY_ACTION_ID);
+        copyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
+        copyAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, copyAction);
         return copyAction;
     }
 
     @Nonnull
     @Override
-    public Action getPasteAction() {
-        if (pasteAction == null) {
-            pasteAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (clipboardActionsHandler != null) {
-                        clipboardActionsHandler.performPaste();
-                    }
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(pasteAction, resourceBundle, EDIT_PASTE_ACTION_ID);
-            pasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
-            pasteAction.setEnabled(false);
-        }
+    public Action createPasteAction() {
+        PasteAction pasteAction = new PasteAction();
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(pasteAction, resourceBundle, EDIT_PASTE_ACTION_ID);
+        pasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
+        pasteAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, pasteAction);
         return pasteAction;
     }
 
     @Nonnull
     @Override
-    public Action getDeleteAction() {
-        if (deleteAction == null) {
-            deleteAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (clipboardActionsHandler != null) {
-                        clipboardActionsHandler.performDelete();
-                    }
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(deleteAction, resourceBundle, EDIT_DELETE_ACTION_ID);
-            deleteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
-            deleteAction.setEnabled(false);
-        }
+    public Action createDeleteAction() {
+        DeleteAction deleteAction = new DeleteAction();
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(deleteAction, resourceBundle, EDIT_DELETE_ACTION_ID);
+        deleteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
+        deleteAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, deleteAction);
         return deleteAction;
     }
 
     @Nonnull
     @Override
-    public Action getSelectAllAction() {
-        if (selectAllAction == null) {
-            selectAllAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (clipboardActionsHandler != null) {
-                        clipboardActionsHandler.performSelectAll();
-                    }
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(selectAllAction, resourceBundle, EDIT_SELECT_ALL_ACTION_ID);
-            selectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
-        }
+    public Action createSelectAllAction() {
+        SelectAllAction selectAllAction = new SelectAllAction();
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(selectAllAction, resourceBundle, EDIT_SELECT_ALL_ACTION_ID);
+        selectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
+        selectAllAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, selectAllAction);
         return selectAllAction;
     }
 
     @Override
     public void setClipboardActionsHandler(ClipboardActionsHandler clipboardActionsHandler) {
         this.clipboardActionsHandler = clipboardActionsHandler;
-        updateClipboardActions();
-    }
-
-    @Override
-    public void updateClipboardActions() {
-        if (cutAction != null) {
-            cutAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
-        }
-        if (copyAction != null) {
-            copyAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
-        }
-        if (pasteAction != null) {
-            pasteAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
-        }
-        if (deleteAction != null) {
-            deleteAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
-        }
-        if (selectAllAction != null) {
-            selectAllAction.setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
-        }
+        // TODO updateClipboardActions();
     }
 
     public void registerClipboardListener() {
         Clipboard clipboard = ClipboardUtils.getClipboard();
         clipboardFlavorListener = (FlavorEvent e) -> {
-            updateClipboardActions();
+            // TODO updateClipboardActions();
         };
         clipboard.addFlavorListener(clipboardFlavorListener);
     }
@@ -199,5 +134,110 @@ public class ClipboardActions implements ClipboardActionsUpdater {
         Clipboard clipboard = ClipboardUtils.getClipboard();
         clipboard.removeFlavorListener(clipboardFlavorListener);
         clipboardFlavorListener = null;
+    }
+    
+    @ParametersAreNonnullByDefault
+    private class CutAction extends AbstractAction implements ActionActiveComponent {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (clipboardActionsHandler != null) {
+                clipboardActionsHandler.performCut();
+            }
+        }
+
+        @Override
+        public Set<Class<?>> forClasses() {
+            return Collections.singleton(ClipboardActionsHandler.class);
+        }
+
+        @Override
+        public void componentActive(Set<Object> affectedClasses) {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private class CopyAction extends AbstractAction implements ActionActiveComponent {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (clipboardActionsHandler != null) {
+                clipboardActionsHandler.performCopy();
+            }
+        }
+
+        @Override
+        public Set<Class<?>> forClasses() {
+            return Collections.singleton(ClipboardActionsHandler.class);
+        }
+
+        @Override
+        public void componentActive(Set<Object> affectedClasses) {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private class PasteAction extends AbstractAction implements ActionActiveComponent {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (clipboardActionsHandler != null) {
+                clipboardActionsHandler.performPaste();
+            }
+        }
+
+        @Override
+        public Set<Class<?>> forClasses() {
+            return Collections.singleton(ClipboardActionsHandler.class);
+        }
+
+        @Override
+        public void componentActive(Set<Object> affectedClasses) {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private class DeleteAction extends AbstractAction implements ActionActiveComponent {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (clipboardActionsHandler != null) {
+                clipboardActionsHandler.performDelete();
+            }
+        }
+
+        @Override
+        public Set<Class<?>> forClasses() {
+            return Collections.singleton(ClipboardActionsHandler.class);
+        }
+
+        @Override
+        public void componentActive(Set<Object> affectedClasses) {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private class SelectAllAction extends AbstractAction implements ActionActiveComponent {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (clipboardActionsHandler != null) {
+                clipboardActionsHandler.performSelectAll();
+            }
+        }
+
+        @Override
+        public Set<Class<?>> forClasses() {
+            return Collections.singleton(ClipboardActionsHandler.class);
+        }
+
+        @Override
+        public void componentActive(Set<Object> affectedClasses) {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
+        }
     }
 }

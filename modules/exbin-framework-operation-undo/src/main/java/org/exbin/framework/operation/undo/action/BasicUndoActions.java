@@ -16,10 +16,14 @@
 package org.exbin.framework.operation.undo.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.ResourceBundle;
+import java.util.Set;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.operation.undo.OperationUndoModule;
@@ -29,10 +33,11 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
- * Basic clipboard action set.
+ * Undo handling action set.
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class BasicUndoActions implements UndoActions {
 
     public static final String EDIT_UNDO_ACTION_ID = "editUndoAction";
@@ -42,23 +47,8 @@ public class BasicUndoActions implements UndoActions {
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OperationUndoModule.class);
 
     private UndoActionsHandler undoHandler = null;
-    private Action undoAction = null;
-    private Action redoAction = null;
-    private Action undoManagerAction = null;
 
     public BasicUndoActions() {
-    }
-
-    @Override
-    public void updateUndoActions() {
-        boolean canUndo = undoHandler != null && undoHandler.canUndo();
-        boolean canRedo = undoHandler != null && undoHandler.canRedo();
-        if (undoAction != null) {
-            undoAction.setEnabled(canUndo);
-        }
-        if (redoAction != null) {
-            redoAction.setEnabled(canRedo);
-        }
     }
 
     @Override
@@ -67,52 +57,90 @@ public class BasicUndoActions implements UndoActions {
     }
 
     @Override
-    public Action getUndoAction() {
-        if (undoAction == null) {
-            undoAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    undoHandler.performUndo();
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(undoAction, resourceBundle, EDIT_UNDO_ACTION_ID);
-            undoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, ActionUtils.getMetaMask()));
-            undoAction.setEnabled(false);
-        }
+    public Action createUndoAction() {
+        UndoAction undoAction = new UndoAction();
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(undoAction, resourceBundle, EDIT_UNDO_ACTION_ID);
+        undoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, ActionUtils.getMetaMask()));
+        undoAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, undoAction);
         return undoAction;
     }
 
     @Override
-    public Action getRedoAction() {
-        if (redoAction == null) {
-            redoAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    undoHandler.performRedo();
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(redoAction, resourceBundle, EDIT_REDO_ACTION_ID);
-            redoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_DOWN_MASK | ActionUtils.getMetaMask()));
-            redoAction.setEnabled(false);
-        }
+    public Action createRedoAction() {
+        RedoAction redoAction = new RedoAction();
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(redoAction, resourceBundle, EDIT_REDO_ACTION_ID);
+        redoAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_DOWN_MASK | ActionUtils.getMetaMask()));
+        redoAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, redoAction);
         return redoAction;
     }
 
     @Override
-    public Action getUndoManagerAction() {
-        if (undoManagerAction == null) {
-            undoManagerAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    undoHandler.performUndoManager();
-                }
-            };
-            undoManagerAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(undoManagerAction, resourceBundle, EDIT_UNDO_MANAGER_ACTION_ID);
-        }
+    public Action createUndoManagerAction() {
+        UndoManagerAction undoManagerAction = new UndoManagerAction();
+        undoManagerAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(undoManagerAction, resourceBundle, EDIT_UNDO_MANAGER_ACTION_ID);
         return undoManagerAction;
+    }
+
+    @ParametersAreNonnullByDefault
+    private class UndoAction extends AbstractAction implements ActionActiveComponent {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            undoHandler.performUndo();
+        }
+
+        @Override
+        public Set<Class<?>> forClasses() {
+            return Collections.singleton(UndoActionsHandler.class);
+        }
+
+        @Override
+        public void componentActive(Set<Object> affectedClasses) {
+            boolean canUndo = undoHandler != null && undoHandler.canUndo();
+            setEnabled(canUndo);
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private class RedoAction extends AbstractAction implements ActionActiveComponent {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            undoHandler.performUndo();
+        }
+
+        @Override
+        public Set<Class<?>> forClasses() {
+            return Collections.singleton(UndoActionsHandler.class);
+        }
+
+        @Override
+        public void componentActive(Set<Object> affectedClasses) {
+            boolean canRedo = undoHandler != null && undoHandler.canRedo();
+            setEnabled(canRedo);
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private class UndoManagerAction extends AbstractAction implements ActionActiveComponent {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            undoHandler.performUndoManager();
+        }
+
+        @Override
+        public Set<Class<?>> forClasses() {
+            return Collections.singleton(UndoActionsHandler.class);
+        }
+
+        @Override
+        public void componentActive(Set<Object> affectedClasses) {
+            setEnabled(true);
+        }
     }
 }

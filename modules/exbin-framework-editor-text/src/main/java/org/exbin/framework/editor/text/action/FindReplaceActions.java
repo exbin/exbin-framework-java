@@ -101,7 +101,7 @@ public class FindReplaceActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(editFindAction, resourceBundle, EDIT_FIND_ACTION_ID);
+            actionModule.initAction(editFindAction, resourceBundle, EDIT_FIND_ACTION_ID);
             editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
             editFindAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         }
@@ -118,7 +118,7 @@ public class FindReplaceActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(editFindAgainAction, resourceBundle, EDIT_FIND_AGAIN_ACTION_ID);
+            actionModule.initAction(editFindAgainAction, resourceBundle, EDIT_FIND_AGAIN_ACTION_ID);
             editFindAgainAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
         }
         return editFindAgainAction;
@@ -134,7 +134,7 @@ public class FindReplaceActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(editReplaceAction, resourceBundle, EDIT_REPLACE_ACTION_ID);
+            actionModule.initAction(editReplaceAction, resourceBundle, EDIT_REPLACE_ACTION_ID);
             editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
             editReplaceAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         }

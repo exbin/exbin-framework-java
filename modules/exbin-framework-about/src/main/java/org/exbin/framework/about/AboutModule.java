@@ -23,13 +23,13 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.about.action.AboutAction;
-import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.about.api.AboutModuleApi;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 
@@ -41,7 +41,6 @@ import org.exbin.framework.utils.DesktopUtils;
 @ParametersAreNonnullByDefault
 public class AboutModule implements AboutModuleApi {
 
-    private AboutAction aboutAction;
     private JComponent sideComponent = null;
 
     public AboutModule() {
@@ -52,12 +51,11 @@ public class AboutModule implements AboutModuleApi {
 
     @Nonnull
     @Override
-    public Action getAboutAction() {
-        if (aboutAction == null) {
-            aboutAction = new AboutAction();
+    public Action createAboutAction() {
+        AboutAction aboutAction = new AboutAction();
+        if (sideComponent != null) {
             aboutAction.setAboutDialogSideComponent(sideComponent);
         }
-
         return aboutAction;
     }
 
@@ -70,7 +68,7 @@ public class AboutModule implements AboutModuleApi {
         if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             // From: https://www.formdev.com/flatlaf/macos/
             FlatDesktop.setAboutHandler(() -> {
-                getAboutAction().actionPerformed(new ActionEvent(frameModule.getFrame(), 0, ""));
+                createAboutAction().actionPerformed(new ActionEvent(frameModule.getFrame(), 0, ""));
             });
             /* // TODO: Replace after migration to Java 9+
             Desktop desktop = Desktop.getDesktop();
@@ -80,17 +78,14 @@ public class AboutModule implements AboutModuleApi {
             aboutActionRegistered = true;
         }
 
-        actionModule.registerMenuGroup(FrameModuleApi.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
+        actionModule.registerMenuGroup(ActionConsts.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
-            actionModule.registerMenuItem(FrameModuleApi.HELP_MENU_ID, MODULE_ID, getAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));
+            actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));
         }
     }
 
     @Override
     public void setAboutDialogSideComponent(JComponent sideComponent) {
         this.sideComponent = sideComponent;
-        if (aboutAction != null) {
-            aboutAction.setAboutDialogSideComponent(sideComponent);
-        }
     }
 }

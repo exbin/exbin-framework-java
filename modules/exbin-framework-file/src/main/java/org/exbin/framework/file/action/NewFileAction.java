@@ -42,12 +42,12 @@ public class NewFileAction extends AbstractAction {
     public NewFileAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle, FileOperationsProvider fileOperationsProvider) {
+    public void init(ResourceBundle resourceBundle, FileOperationsProvider fileOperationsProvider) {
         this.fileOperationsProvider = fileOperationsProvider;
         this.resourceBundle = resourceBundle;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.setupAction(this, resourceBundle, ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, ActionUtils.getMetaMask()));
     }
 

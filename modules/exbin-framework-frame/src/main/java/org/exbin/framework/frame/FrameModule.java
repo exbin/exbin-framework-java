@@ -19,7 +19,9 @@ import com.formdev.flatlaf.extras.FlatDesktop;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,6 +36,7 @@ import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -70,6 +73,7 @@ public class FrameModule implements FrameModuleApi {
     private ApplicationExitHandler exitHandler = null;
     private StatusBarHandler statusBarHandler = null;
     private FrameActions frameActions;
+    private Image appIcon = null;
 
     public FrameModule() {
     }
@@ -98,25 +102,25 @@ public class FrameModule implements FrameModuleApi {
 
     private void initMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenu(MAIN_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(FILE_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(EDIT_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(VIEW_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(TOOLS_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(OPTIONS_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(HELP_MENU_ID, MODULE_ID);
+        actionModule.registerMenu(ActionConsts.MAIN_MENU_ID, MODULE_ID);
+        actionModule.registerMenu(ActionConsts.FILE_MENU_ID, MODULE_ID);
+        actionModule.registerMenu(ActionConsts.EDIT_MENU_ID, MODULE_ID);
+        actionModule.registerMenu(ActionConsts.VIEW_MENU_ID, MODULE_ID);
+        actionModule.registerMenu(ActionConsts.TOOLS_MENU_ID, MODULE_ID);
+        actionModule.registerMenu(ActionConsts.OPTIONS_MENU_ID, MODULE_ID);
+        actionModule.registerMenu(ActionConsts.HELP_MENU_ID, MODULE_ID);
 
-        actionModule.registerMenuItem(MAIN_MENU_ID, MODULE_ID, FILE_MENU_ID, resourceBundle.getString("fileMenu.text"), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(MAIN_MENU_ID, MODULE_ID, EDIT_MENU_ID, resourceBundle.getString("editMenu.text"), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(MAIN_MENU_ID, MODULE_ID, VIEW_MENU_ID, resourceBundle.getString("viewMenu.text"), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(MAIN_MENU_ID, MODULE_ID, TOOLS_MENU_ID, resourceBundle.getString("toolsMenu.text"), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(MAIN_MENU_ID, MODULE_ID, OPTIONS_MENU_ID, resourceBundle.getString("optionsMenu.text"), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(MAIN_MENU_ID, MODULE_ID, HELP_MENU_ID, resourceBundle.getString("helpMenu.text"), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.FILE_MENU_ID, resourceBundle.getString("fileMenu.text"), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.EDIT_MENU_ID, resourceBundle.getString("editMenu.text"), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.VIEW_MENU_ID, resourceBundle.getString("viewMenu.text"), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.TOOLS_MENU_ID, resourceBundle.getString("toolsMenu.text"), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.OPTIONS_MENU_ID, resourceBundle.getString("optionsMenu.text"), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.HELP_MENU_ID, resourceBundle.getString("helpMenu.text"), new MenuPosition(PositionMode.TOP));
     }
 
     private void initMainToolBar() {
         ActionModuleApi menuModule = App.getModule(ActionModuleApi.class);
-        menuModule.registerToolBar(MAIN_TOOL_BAR_ID, MODULE_ID);
+        menuModule.registerToolBar(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID);
     }
 
     @Nonnull
@@ -190,7 +194,7 @@ public class FrameModule implements FrameModuleApi {
             }
         };
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.setupAction(exitAction, resourceBundle, "exitAction");
+        actionModule.initAction(exitAction, resourceBundle, "exitAction");
         exitAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.KeyEvent.ALT_DOWN_MASK));
 
         return exitAction;
@@ -233,9 +237,9 @@ public class FrameModule implements FrameModuleApi {
             exitActionRegistered = true;
         }
 
-        actionModule.registerMenuGroup(FrameModuleApi.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), exitActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
+        actionModule.registerMenuGroup(ActionConsts.FILE_MENU_ID, new MenuGroup(appClosingActionsGroup, new MenuPosition(PositionMode.BOTTOM_LAST), exitActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!exitActionRegistered) {
-            actionModule.registerMenuItem(FrameModuleApi.FILE_MENU_ID, MODULE_ID, getExitAction(), new MenuPosition(appClosingActionsGroup));
+            actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, getExitAction(), new MenuPosition(appClosingActionsGroup));
         }
     }
 
@@ -248,6 +252,7 @@ public class FrameModule implements FrameModuleApi {
             applicationFrame.loadMainMenu();
             applicationFrame.loadMainToolBar();
             applicationFrame.setApplicationExitHandler(exitHandler);
+            appIcon = applicationFrame.getIconImage();
 
             if (frameActions != null) {
                 frameActions.setApplicationFrame(applicationFrame);
@@ -324,8 +329,8 @@ public class FrameModule implements FrameModuleApi {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
-        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, frameActions.getViewToolBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
-        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, frameActions.getViewToolBarCaptionsAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, frameActions.getViewToolBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, frameActions.getViewToolBarCaptionsAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
     }
 
     @Override
@@ -333,13 +338,13 @@ public class FrameModule implements FrameModuleApi {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
-        actionModule.registerMenuItem(FrameModuleApi.VIEW_MENU_ID, MODULE_ID, frameActions.getViewStatusBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, frameActions.getViewStatusBarAction(), new MenuPosition(VIEW_BARS_GROUP_ID));
     }
 
     private void createViewBarsMenuGroup() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        if (!actionModule.menuGroupExists(FrameModuleApi.VIEW_MENU_ID, VIEW_BARS_GROUP_ID)) {
-            actionModule.registerMenuGroup(FrameModuleApi.VIEW_MENU_ID, new MenuGroup(VIEW_BARS_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.BELOW));
+        if (!actionModule.menuGroupExists(ActionConsts.VIEW_MENU_ID, VIEW_BARS_GROUP_ID)) {
+            actionModule.registerMenuGroup(ActionConsts.VIEW_MENU_ID, new MenuGroup(VIEW_BARS_GROUP_ID, new MenuPosition(PositionMode.TOP), SeparationMode.BELOW));
         }
     }
     
@@ -352,5 +357,10 @@ public class FrameModule implements FrameModuleApi {
     @Override
     public void switchFrameToUndecorated() {
         getFrame().setUndecorated(true);
+    }
+
+    @Nonnull
+    public Optional<Image> getApplicationIcon() {
+        return Optional.ofNullable(appIcon);
     }
 }

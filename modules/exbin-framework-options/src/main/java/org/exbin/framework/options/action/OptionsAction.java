@@ -51,7 +51,7 @@ public class OptionsAction extends AbstractAction {
         this.optionsPagesProvider = optionsPagesProvider;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.setupAction(this, resourceBundle, ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
     }
 

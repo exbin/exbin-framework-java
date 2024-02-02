@@ -28,6 +28,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.action.api.MenuGroup;
@@ -39,7 +40,6 @@ import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardActionsUpdater;
 
@@ -122,7 +122,7 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
-    public void setupAction(Action action, ResourceBundle bundle, String actionId) {
+    public void initAction(Action action, ResourceBundle bundle, String actionId) {
         actionManager.initAction(action, bundle, actionId);
     }
 
@@ -135,7 +135,7 @@ public class ActionModule implements ActionModuleApi {
      * @param actionId action identifier and bundle key prefix
      */
     @Override
-    public void setupAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId) {
+    public void initAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId) {
         actionManager.initAction(action, bundle, resourceClass, actionId);
     }
 
@@ -227,11 +227,11 @@ public class ActionModule implements ActionModuleApi {
     @Override
     public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMode separationMode) {
         registerMenuGroup(menuId, new MenuGroup(CLIPBOARD_ACTIONS_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP), separationMode));
-        registerMenuItem(menuId, moduleId, actions.getCutAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        registerMenuItem(menuId, moduleId, actions.getCopyAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        registerMenuItem(menuId, moduleId, actions.getPasteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        registerMenuItem(menuId, moduleId, actions.getDeleteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        registerMenuItem(menuId, moduleId, actions.getSelectAllAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.createCutAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.createCopyAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.createPasteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.createDeleteAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        registerMenuItem(menuId, moduleId, actions.createSelectAllAction(), new MenuPosition(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
 
     @Override
@@ -263,17 +263,17 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void registerMenuClipboardActions() {
-        registerClipboardMenuItems(FrameModuleApi.EDIT_MENU_ID, MODULE_ID, SeparationMode.NONE);
+        registerClipboardMenuItems(ActionConsts.EDIT_MENU_ID, MODULE_ID, SeparationMode.NONE);
     }
 
     @Override
     public void registerToolBarClipboardActions() {
         getClipboardActions();
-        registerToolBarGroup(FrameModuleApi.MAIN_TOOL_BAR_ID, new ToolBarGroup(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP)));
-        registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.getCutAction(), new ToolBarPosition(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.getCopyAction(), new ToolBarPosition(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.getPasteAction(), new ToolBarPosition(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        registerToolBarItem(FrameModuleApi.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.getDeleteAction(), new ToolBarPosition(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, new ToolBarGroup(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP)));
+        registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.createCutAction(), new ToolBarPosition(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.createCopyAction(), new ToolBarPosition(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.createPasteAction(), new ToolBarPosition(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.createDeleteAction(), new ToolBarPosition(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
     }
 
     @Override

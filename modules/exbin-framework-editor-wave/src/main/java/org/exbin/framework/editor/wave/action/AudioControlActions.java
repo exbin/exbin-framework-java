@@ -72,7 +72,7 @@ public class AudioControlActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(audioPlayAction, resourceBundle, AUDIO_PLAY_ACTION_ID);
+            actionModule.initAction(audioPlayAction, resourceBundle, AUDIO_PLAY_ACTION_ID);
             audioPlayAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
         }
         return audioPlayAction;
@@ -94,7 +94,7 @@ public class AudioControlActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(audioStopAction, resourceBundle, AUDIO_STOP_ACTION_ID);
+            actionModule.initAction(audioStopAction, resourceBundle, AUDIO_STOP_ACTION_ID);
         }
         return audioStopAction;
     }

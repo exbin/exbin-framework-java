@@ -46,7 +46,7 @@ public interface ActionModuleApi extends Module {
     public static final String CLIPBOARD_ACTIONS_MENU_GROUP_ID = MODULE_ID + ".clipboardActionsMenuGroup";
     public static final String CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID = MODULE_ID + ".clipboardActionsToolBarGroup";
 
-    void setupAction(Action action, ResourceBundle bundle, String actionId);
+    void initAction(Action action, ResourceBundle bundle, String actionId);
 
     /**
      * Sets action values according to values specified by resource bundle.
@@ -56,7 +56,7 @@ public interface ActionModuleApi extends Module {
      * @param resourceClass resourceClass
      * @param actionId action identifier and bundle key prefix
      */
-    void setupAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId);
+    void initAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId);
 
     /**
      * Requests update of actions with specific instance.

@@ -17,15 +17,17 @@ package org.exbin.framework.file.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Collections;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.file.api.FileOperations;
-import org.exbin.framework.file.api.FileOperationsProvider;
 import org.exbin.framework.utils.ActionUtils;
 
 /**
@@ -39,30 +41,41 @@ public class SaveAsFileAction extends AbstractAction {
     public static final String ACTION_ID = "saveAsFileAction";
 
     private ResourceBundle resourceBundle;
-    private FileOperationsProvider fileOperationsProvider;
+    private FileOperations fileOperations;
 
     public SaveAsFileAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle, FileOperationsProvider fileOperationsProvider) {
-        this.fileOperationsProvider = fileOperationsProvider;
+    public void init(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.setupAction(this, resourceBundle, ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask() | KeyEvent.SHIFT_DOWN_MASK));
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        updateForFileOperations();
-    }
+        putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, new ActionActiveComponent() {
+            @Override
+            public Set<Class<?>> forClasses() {
+                return Collections.singleton(FileOperations.class);
+            }
 
-    public void updateForFileOperations() {
-        FileOperations fileOperations = fileOperationsProvider.getFileOperations();
-        setEnabled(fileOperations != null ? fileOperations.canSave() : false);
+            @Override
+            public void componentActive(Set<Object> affectedClasses) {
+                boolean enabled = false;
+                boolean hasInstance = !affectedClasses.isEmpty();
+                if (hasInstance) {
+                    fileOperations = (FileOperations) affectedClasses.iterator().next();
+                    enabled = fileOperations.canSave();
+                } else {
+                    fileOperations = null;
+                }
+                setEnabled(enabled);
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        FileOperations fileOperations = fileOperationsProvider.getFileOperations();
         if (fileOperations != null) {
             fileOperations.saveAsFile();
         }

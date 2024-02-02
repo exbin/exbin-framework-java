@@ -28,11 +28,6 @@ import javax.swing.Action;
 public interface UndoActions {
 
     /**
-     * Updates state of these actions according to undo handler.
-     */
-    void updateUndoActions();
-
-    /**
      * Sets undo handler.
      *
      * @param undoHandler undo handler
@@ -45,7 +40,7 @@ public interface UndoActions {
      * @return undo action
      */
     @Nonnull
-    Action getUndoAction();
+    Action createUndoAction();
 
     /**
      * Returns redo action.
@@ -53,7 +48,7 @@ public interface UndoActions {
      * @return redo action
      */
     @Nonnull
-    Action getRedoAction();
+    Action createRedoAction();
 
     /**
      * Returns undo manager action.
@@ -61,5 +56,5 @@ public interface UndoActions {
      * @return undo manager action
      */
     @Nonnull
-    Action getUndoManagerAction();
+    Action createUndoManagerAction();
 }

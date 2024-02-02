@@ -145,7 +145,7 @@ public class EncodingsHandler {
             }
         };
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.setupAction(manageEncodingsAction, resourceBundle, MANAGE_ENCODINGS_ACTION_ID);
+        actionModule.initAction(manageEncodingsAction, resourceBundle, MANAGE_ENCODINGS_ACTION_ID);
         manageEncodingsAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
 
         toolsEncodingMenu = new JMenu();

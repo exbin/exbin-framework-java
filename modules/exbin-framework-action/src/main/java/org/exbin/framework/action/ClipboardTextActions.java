@@ -112,11 +112,11 @@ public class ClipboardTextActions implements ClipboardActionsApi {
 
     @Nonnull
     @Override
-    public Action getCutAction() {
+    public Action createCutAction() {
         if (cutTextAction == null) {
             cutTextAction = new PassingTextAction(new DefaultEditorKit.CutAction());
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(cutTextAction, resourceBundle, EDIT_CUT_ACTION_ID);
+            actionModule.initAction(cutTextAction, resourceBundle, EDIT_CUT_ACTION_ID);
             cutTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
             cutTextAction.setEnabled(false);
             actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), cutTextAction);
@@ -126,11 +126,11 @@ public class ClipboardTextActions implements ClipboardActionsApi {
 
     @Nonnull
     @Override
-    public Action getCopyAction() {
+    public Action createCopyAction() {
         if (copyTextAction == null) {
             copyTextAction = new PassingTextAction(new DefaultEditorKit.CopyAction());
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(copyTextAction, resourceBundle, EDIT_COPY_ACTION_ID);
+            actionModule.initAction(copyTextAction, resourceBundle, EDIT_COPY_ACTION_ID);
             copyTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
             copyTextAction.setEnabled(false);
             actionMap.put(TransferHandler.getCopyAction().getValue(Action.NAME), copyTextAction);
@@ -140,11 +140,11 @@ public class ClipboardTextActions implements ClipboardActionsApi {
 
     @Nonnull
     @Override
-    public Action getPasteAction() {
+    public Action createPasteAction() {
         if (pasteTextAction == null) {
             pasteTextAction = new PassingTextAction(new DefaultEditorKit.PasteAction());
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(pasteTextAction, resourceBundle, EDIT_PASTE_ACTION_ID);
+            actionModule.initAction(pasteTextAction, resourceBundle, EDIT_PASTE_ACTION_ID);
             pasteTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
             pasteTextAction.setEnabled(false);
             actionMap.put(TransferHandler.getPasteAction().getValue(Action.NAME), pasteTextAction);
@@ -154,7 +154,7 @@ public class ClipboardTextActions implements ClipboardActionsApi {
 
     @Nonnull
     @Override
-    public Action getDeleteAction() {
+    public Action createDeleteAction() {
         if (deleteTextAction == null) {
             deleteTextAction = new PassingTextAction(new TextAction(DELETE_ACTION) {
                 @Override
@@ -167,7 +167,7 @@ public class ClipboardTextActions implements ClipboardActionsApi {
                 }
             });
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(deleteTextAction, resourceBundle, EDIT_DELETE_ACTION_ID);
+            actionModule.initAction(deleteTextAction, resourceBundle, EDIT_DELETE_ACTION_ID);
             deleteTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
             deleteTextAction.setEnabled(false);
             actionMap.put(DELETE_ACTION, deleteTextAction);
@@ -177,7 +177,7 @@ public class ClipboardTextActions implements ClipboardActionsApi {
 
     @Nonnull
     @Override
-    public Action getSelectAllAction() {
+    public Action createSelectAllAction() {
         if (selectAllTextAction == null) {
             selectAllTextAction = new PassingTextAction(new TextAction(SELECT_ALL_ACTION) {
                 @Override
@@ -198,7 +198,7 @@ public class ClipboardTextActions implements ClipboardActionsApi {
                 }
             });
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(selectAllTextAction, resourceBundle, EDIT_SELECT_ALL_ACTION_ID);
+            actionModule.initAction(selectAllTextAction, resourceBundle, EDIT_SELECT_ALL_ACTION_ID);
             selectAllTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         }
         return selectAllTextAction;

@@ -39,7 +39,7 @@ public interface AboutModuleApi extends Module {
      * @return action
      */
     @Nonnull
-    Action getAboutAction();
+    Action createAboutAction();
 
     /**
      * Registers About action in default menu.

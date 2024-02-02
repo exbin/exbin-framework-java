@@ -83,7 +83,7 @@ public class FrameActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(viewToolBarAction, resourceBundle, VIEW_TOOL_BAR_ACTION_ID);
+            actionModule.initAction(viewToolBarAction, resourceBundle, VIEW_TOOL_BAR_ACTION_ID);
             viewToolBarAction.putValue(Action.SELECTED_KEY, true);
             viewToolBarAction.putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
         }
@@ -103,7 +103,7 @@ public class FrameActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(viewToolBarCaptionsAction, resourceBundle, VIEW_TOOL_BAR_CAPTIONS_ACTION_ID);
+            actionModule.initAction(viewToolBarCaptionsAction, resourceBundle, VIEW_TOOL_BAR_CAPTIONS_ACTION_ID);
             viewToolBarCaptionsAction.putValue(Action.SELECTED_KEY, true);
             viewToolBarCaptionsAction.putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
         }
@@ -123,7 +123,7 @@ public class FrameActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(viewStatusBarAction, resourceBundle, VIEW_STATUS_BAR_ACTION_ID);
+            actionModule.initAction(viewStatusBarAction, resourceBundle, VIEW_STATUS_BAR_ACTION_ID);
             viewStatusBarAction.putValue(Action.SELECTED_KEY, true);
             viewStatusBarAction.putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
         }

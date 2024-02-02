@@ -235,8 +235,9 @@ public class WindowModule implements WindowModuleApi {
     public WindowHandler createDialog(Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component, @Nullable JPanel controlPanel) {
         JComponent dialogComponent = controlPanel != null ? createDialogPanel(component, controlPanel) : component;
 
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         WindowHandler dialog = createWindow(dialogComponent, parentComponent, "", modalityType);
-        Optional<Image> applicationIcon = Optional.empty(); // TODO application.getApplicationIcon();
+        Optional<Image> applicationIcon = frameModule.getApplicationIcon();
         if (applicationIcon.isPresent()) {
             ((JDialog) dialog.getWindow()).setIconImage(applicationIcon.get());
         }

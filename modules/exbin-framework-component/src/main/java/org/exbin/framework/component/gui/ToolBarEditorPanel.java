@@ -83,9 +83,9 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
     public void setUndoHandler(UndoActionsHandler undoHandler, UndoActions undoActions) {
         this.undoHandler = undoHandler;
         initToolBar();
-        toolBar.add(undoActions.getUndoAction());
-        toolBar.add(undoActions.getRedoAction());
-        undoActions.updateUndoActions();
+        toolBar.add(undoActions.createUndoAction());
+        toolBar.add(undoActions.createRedoAction());
+        // TODO undoActions.updateUndoActions();
     }
 
     public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActionsUpdater clipboardActions) {
@@ -94,10 +94,10 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
         if (undoHandler != null) {
             toolBar.addSeparator();
         }
-        toolBar.add(clipboardActions.getCutAction());
-        toolBar.add(clipboardActions.getCopyAction());
-        toolBar.add(clipboardActions.getPasteAction());
-        clipboardActions.updateClipboardActions();
+        toolBar.add(clipboardActions.createCutAction());
+        toolBar.add(clipboardActions.createCopyAction());
+        toolBar.add(clipboardActions.createPasteAction());
+        // TODO clipboardActions.updateClipboardActions();
     }
 
     private void initToolBar() {

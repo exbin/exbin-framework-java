@@ -27,7 +27,6 @@ import org.exbin.framework.component.ComponentModule;
 import org.exbin.framework.component.api.toolbar.MoveItemActions;
 import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
 import org.exbin.framework.component.api.toolbar.SideToolBar;
-import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
@@ -70,7 +69,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(moveUpAction, resourceBundle, MOVE_ITEM_UP_ACTION_ID);
+            actionModule.initAction(moveUpAction, resourceBundle, MOVE_ITEM_UP_ACTION_ID);
             moveUpAction.setEnabled(false);
         }
         return moveUpAction;
@@ -87,7 +86,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(moveDownAction, resourceBundle, MOVE_ITEM_DOWN_ACTION_ID);
+            actionModule.initAction(moveDownAction, resourceBundle, MOVE_ITEM_DOWN_ACTION_ID);
             moveDownAction.setEnabled(false);
         }
         return moveDownAction;
@@ -104,7 +103,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(moveTopAction, resourceBundle, MOVE_ITEM_TOP_ACTION_ID);
+            actionModule.initAction(moveTopAction, resourceBundle, MOVE_ITEM_TOP_ACTION_ID);
             moveTopAction.setEnabled(false);
         }
         return moveTopAction;
@@ -121,7 +120,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(moveBottomAction, resourceBundle, MOVE_ITEM_BOTTOM_ACTION_ID);
+            actionModule.initAction(moveBottomAction, resourceBundle, MOVE_ITEM_BOTTOM_ACTION_ID);
             moveBottomAction.setEnabled(false);
         }
         return moveBottomAction;

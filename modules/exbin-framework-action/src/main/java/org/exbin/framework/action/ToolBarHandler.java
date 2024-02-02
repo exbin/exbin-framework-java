@@ -41,7 +41,6 @@ import org.exbin.framework.action.api.ToolBarContribution;
 import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.action.gui.DropDownButton;
-import org.exbin.framework.utils.ActionUtils;
 
 /**
  * Toolbar handler.
@@ -98,7 +97,7 @@ public class ToolBarHandler {
                 String groupId = group.getGroupId();
                 SeparationMode separationMode = group.getSeparationMode();
                 ToolBarPosition position = group.getPosition();
-                if (position.getBasicMode() != null) {
+                if (position.getBasicMode() != PositionMode.UNSPECIFIED) {
                     ToolBarGroupRecord groupRecord = groupsMap.get(position.getBasicMode().name());
                     ToolBarGroupRecord toolBarGroupRecord = new ToolBarGroupRecord(groupId);
                     toolBarGroupRecord.separationMode = separationMode;
@@ -117,7 +116,7 @@ public class ToolBarHandler {
         // Go thru all contributions and link them to its target group
         for (ToolBarContribution contribution : toolBarDef.getContributions()) {
             ToolBarPosition toolBarPosition = contribution.getToolBarPosition();
-            if (toolBarPosition.getBasicMode() != null) {
+            if (toolBarPosition.getBasicMode() != PositionMode.UNSPECIFIED) {
                 ToolBarGroupRecord toolBarGroupRecord = groupsMap.get(toolBarPosition.getBasicMode().name());
                 toolBarGroupRecord.contributions.add(contribution);
             } else {

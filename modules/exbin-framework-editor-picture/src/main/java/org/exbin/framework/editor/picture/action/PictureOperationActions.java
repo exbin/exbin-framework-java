@@ -98,7 +98,7 @@ public class PictureOperationActions {
             };
 
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(imageResizeAction, resourceBundle, IMAGE_RESIZE_ACTION_ID);
+            actionModule.initAction(imageResizeAction, resourceBundle, IMAGE_RESIZE_ACTION_ID);
             imageResizeAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         }
         return imageResizeAction;

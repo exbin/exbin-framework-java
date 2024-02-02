@@ -74,7 +74,7 @@ public class ZoomControlActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(normalZoomAction, resourceBundle, NORMAL_ZOOM_ACTION_ID);
+            actionModule.initAction(normalZoomAction, resourceBundle, NORMAL_ZOOM_ACTION_ID);
         }
         return normalZoomAction;
     }
@@ -95,7 +95,7 @@ public class ZoomControlActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(zoomUpAction, resourceBundle, ZOOM_UP_ACTION_ID);
+            actionModule.initAction(zoomUpAction, resourceBundle, ZOOM_UP_ACTION_ID);
         }
         return zoomUpAction;
     }
@@ -116,7 +116,7 @@ public class ZoomControlActions {
                 }
             };
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.setupAction(zoomDownAction, resourceBundle, ZOOM_DOWN_ACTION_ID);
+            actionModule.initAction(zoomDownAction, resourceBundle, ZOOM_DOWN_ACTION_ID);
         }
         return zoomDownAction;
     }
