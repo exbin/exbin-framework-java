@@ -16,9 +16,7 @@
 package org.exbin.framework.operation.undo.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -26,6 +24,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
 import org.exbin.framework.operation.undo.api.UndoActionsHandler;
@@ -94,14 +93,12 @@ public class BasicUndoActions implements UndoActions {
         }
 
         @Override
-        public Set<Class<?>> forClasses() {
-            return Collections.singleton(UndoActionsHandler.class);
-        }
-
-        @Override
-        public void componentActive(Set<Object> affectedClasses) {
-            boolean canUndo = undoHandler != null && undoHandler.canUndo();
-            setEnabled(canUndo);
+        public void register(ComponentActivationManager manager) {
+            manager.registerUpdateListener(UndoActionsHandler.class, (instance) -> {
+                undoHandler = instance;
+                boolean canUndo = undoHandler != null && undoHandler.canUndo();
+                setEnabled(canUndo);
+            });
         }
     }
 
@@ -114,14 +111,12 @@ public class BasicUndoActions implements UndoActions {
         }
 
         @Override
-        public Set<Class<?>> forClasses() {
-            return Collections.singleton(UndoActionsHandler.class);
-        }
-
-        @Override
-        public void componentActive(Set<Object> affectedClasses) {
-            boolean canRedo = undoHandler != null && undoHandler.canRedo();
-            setEnabled(canRedo);
+        public void register(ComponentActivationManager manager) {
+            manager.registerUpdateListener(UndoActionsHandler.class, (instance) -> {
+                undoHandler = instance;
+                boolean canRedo = undoHandler != null && undoHandler.canRedo();
+                setEnabled(canRedo);
+            });
         }
     }
 
@@ -134,13 +129,11 @@ public class BasicUndoActions implements UndoActions {
         }
 
         @Override
-        public Set<Class<?>> forClasses() {
-            return Collections.singleton(UndoActionsHandler.class);
-        }
-
-        @Override
-        public void componentActive(Set<Object> affectedClasses) {
-            setEnabled(true);
+        public void register(ComponentActivationManager manager) {
+            manager.registerUpdateListener(UndoActionsHandler.class, (instance) -> {
+                undoHandler = instance;
+                setEnabled(instance != null);
+            });
         }
     }
 }

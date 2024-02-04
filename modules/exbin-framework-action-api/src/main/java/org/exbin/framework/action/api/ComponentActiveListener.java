@@ -15,20 +15,20 @@
  */
 package org.exbin.framework.action.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nullable;
 
 /**
  * Listener for action update when menu is activated for component.
  *
  * @author ExBin Project (https://exbin.org)
+ * @param <T> instance type
  */
-@ParametersAreNonnullByDefault
-public interface ActionActiveComponent {
+public interface ComponentActiveListener<T> {
 
     /**
-     * Registers component activation listeners via provided manager.
+     * Notifies active instance changed.
      *
-     * @param manager activation manager
+     * @param instance class instance
      */
-    void register(ComponentActivationManager manager);
+    void update(@Nullable T instance);
 }

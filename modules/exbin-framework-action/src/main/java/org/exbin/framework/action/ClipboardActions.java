@@ -19,9 +19,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -30,6 +28,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsUpdater;
@@ -135,7 +134,7 @@ public class ClipboardActions implements ClipboardActionsUpdater {
         clipboard.removeFlavorListener(clipboardFlavorListener);
         clipboardFlavorListener = null;
     }
-    
+
     @ParametersAreNonnullByDefault
     private class CutAction extends AbstractAction implements ActionActiveComponent {
 
@@ -147,13 +146,11 @@ public class ClipboardActions implements ClipboardActionsUpdater {
         }
 
         @Override
-        public Set<Class<?>> forClasses() {
-            return Collections.singleton(ClipboardActionsHandler.class);
-        }
-
-        @Override
-        public void componentActive(Set<Object> affectedClasses) {
-            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
+        public void register(ComponentActivationManager manager) {
+            manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
+                clipboardActionsHandler = instance;
+                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
+            });
         }
     }
 
@@ -168,13 +165,11 @@ public class ClipboardActions implements ClipboardActionsUpdater {
         }
 
         @Override
-        public Set<Class<?>> forClasses() {
-            return Collections.singleton(ClipboardActionsHandler.class);
-        }
-
-        @Override
-        public void componentActive(Set<Object> affectedClasses) {
-            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
+        public void register(ComponentActivationManager manager) {
+            manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
+                clipboardActionsHandler = instance;
+                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
+            });
         }
     }
 
@@ -189,13 +184,11 @@ public class ClipboardActions implements ClipboardActionsUpdater {
         }
 
         @Override
-        public Set<Class<?>> forClasses() {
-            return Collections.singleton(ClipboardActionsHandler.class);
-        }
-
-        @Override
-        public void componentActive(Set<Object> affectedClasses) {
-            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
+        public void register(ComponentActivationManager manager) {
+            manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
+                clipboardActionsHandler = instance;
+                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
+            });
         }
     }
 
@@ -210,13 +203,11 @@ public class ClipboardActions implements ClipboardActionsUpdater {
         }
 
         @Override
-        public Set<Class<?>> forClasses() {
-            return Collections.singleton(ClipboardActionsHandler.class);
-        }
-
-        @Override
-        public void componentActive(Set<Object> affectedClasses) {
-            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
+        public void register(ComponentActivationManager manager) {
+            manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
+                clipboardActionsHandler = instance;
+                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
+            });
         }
     }
 
@@ -231,13 +222,11 @@ public class ClipboardActions implements ClipboardActionsUpdater {
         }
 
         @Override
-        public Set<Class<?>> forClasses() {
-            return Collections.singleton(ClipboardActionsHandler.class);
-        }
-
-        @Override
-        public void componentActive(Set<Object> affectedClasses) {
-            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
+        public void register(ComponentActivationManager manager) {
+            manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
+                clipboardActionsHandler = instance;
+                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
+            });
         }
     }
 }

@@ -139,11 +139,6 @@ public class ActionModule implements ActionModuleApi {
         actionManager.initAction(action, bundle, resourceClass, actionId);
     }
 
-    @Override
-    public void updateActionsForComponent(Object componentClass) {
-        actionManager.updateActionsForComponent(componentClass);
-    }
-
     @Nonnull
     @Override
     public JMenuItem actionToMenuItem(Action action) {

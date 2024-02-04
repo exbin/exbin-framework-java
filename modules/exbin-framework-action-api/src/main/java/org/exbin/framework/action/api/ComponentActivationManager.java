@@ -15,30 +15,33 @@
  */
 package org.exbin.framework.action.api;
 
-import java.util.Collection;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Listener for action update when menu is activated for component.
+ * Interface for component activation registration.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionMenuActivation {
+public interface ComponentActivationManager {
 
     /**
-     * Returns filter list of classes to call activation for.
+     * Registers listener to call once when menu is created for component or
+     * empty when no such component is active.
      *
-     * @return list of classes
+     * @param <T> monitored class type
+     * @param instanceClass instance class
+     * @param listener listener
      */
-    @Nonnull
-    Collection<Class<?>> forClasses();
+    <T> void registerListener(Class<T> instanceClass, ComponentActiveListener<T> listener);
 
     /**
-     * Called when popup or main menu is activated.
+     * Registers listener to call each time when component is activated or empty
+     * when deactivated.
      *
-     * @param affectedClasses affected instances
+     * @param <U> monitored class type
+     * @param instanceClass instance class
+     * @param listener listener
      */
-    void menuActivated(Collection<Object> affectedClasses);
+    <U> void registerUpdateListener(Class<U> instanceClass, ComponentActiveListener<U> listener);
 }

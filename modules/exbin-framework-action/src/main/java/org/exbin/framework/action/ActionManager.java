@@ -15,12 +15,10 @@
  */
 package org.exbin.framework.action;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -30,9 +28,9 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionType;
+import org.exbin.framework.action.api.ComponentActiveListener;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
@@ -42,8 +40,8 @@ import org.exbin.framework.language.api.LanguageModuleApi;
  */
 @ParametersAreNonnullByDefault
 public class ActionManager {
-    
-    private final Map<Class<?>, List<ActionActiveComponent>> activeComponentListeners = new HashMap<>();
+
+    private final Map<Class<?>, List<ComponentActiveListener<?>>> activeComponentListeners = new HashMap<>();
 
     public ActionManager() {
     }
@@ -128,12 +126,12 @@ public class ActionManager {
         return menuItem;
     }
 
-    public void updateActionsForComponent(Object componentClass) {
-        List<ActionActiveComponent> componentListeners = activeComponentListeners.get(componentClass.getClass());
+    @SuppressWarnings("unchecked")
+    public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
+        List<ComponentActiveListener<?>> componentListeners = activeComponentListeners.get(componentClass);
         if (componentListeners != null) {
-            Set<Object> affectedObjects = Collections.singleton(componentClass);
-            for (ActionActiveComponent componentListener : componentListeners) {
-                componentListener.componentActive(affectedObjects);
+            for (ComponentActiveListener componentListener : componentListeners) {
+                componentListener.update(componentInstance);
             }
         }
     }

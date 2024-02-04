@@ -16,9 +16,7 @@
 package org.exbin.framework.file.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -26,6 +24,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.utils.ActionUtils;
 
@@ -53,21 +52,11 @@ public class SaveFileAction extends AbstractAction {
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, new ActionActiveComponent() {
             @Override
-            public Set<Class<?>> forClasses() {
-                return Collections.singleton(FileOperations.class);
-            }
-
-            @Override
-            public void componentActive(Set<Object> affectedClasses) {
-                boolean enabled = false;
-                boolean hasInstance = !affectedClasses.isEmpty();
-                if (hasInstance) {
-                    fileOperations = (FileOperations) affectedClasses.iterator().next();
-                    enabled = fileOperations.canSave();
-                } else {
-                    fileOperations = null;
-                }
-                setEnabled(enabled);
+            public void register(ComponentActivationManager manager) {
+                manager.registerUpdateListener(FileOperations.class, (instance) -> {
+                    fileOperations = instance;
+                    setEnabled(instance != null && instance.canSave());
+                });
             }
         });
     }

@@ -58,13 +58,6 @@ public interface ActionModuleApi extends Module {
      */
     void initAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId);
 
-    /**
-     * Requests update of actions with specific instance.
-     *
-     * @param component component instance
-     */
-    void updateActionsForComponent(Object component);
-
     @Nonnull
     JMenuItem actionToMenuItem(Action action);
 
