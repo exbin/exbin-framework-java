@@ -54,7 +54,7 @@ public class ActionModule implements ActionModuleApi {
     private ClipboardActions clipboardActions = null;
     private ClipboardTextActions clipboardTextActions = null;
     private MenuHandler menuHandler = null;
-    private ToolBarHandler toolBarHandler = null;
+    private ToolBarManager toolBarManager = null;
     private final ActionManager actionManager = new ActionManager();
     private ResourceBundle resourceBundle;
 
@@ -122,6 +122,12 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
+    public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
+        actionManager.updateActionsForComponent(componentClass, componentInstance);
+        toolBarManager.updateActionsForComponent(componentClass, componentInstance);
+    }
+
+    @Override
     public void initAction(Action action, ResourceBundle bundle, String actionId) {
         actionManager.initAction(action, bundle, actionId);
     }
@@ -161,12 +167,12 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Nonnull
-    private ToolBarHandler getToolBarHandler() {
-        if (toolBarHandler == null) {
-            toolBarHandler = new ToolBarHandler();
+    private ToolBarManager getToolBarManager() {
+        if (toolBarManager == null) {
+            toolBarManager = new ToolBarManager();
         }
 
-        return toolBarHandler;
+        return toolBarManager;
     }
 
     @Override
@@ -238,22 +244,22 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void buildToolBar(JToolBar targetToolBar, String toolBarId) {
-        getToolBarHandler().buildToolBar(targetToolBar, toolBarId);
+        getToolBarManager().buildToolBar(targetToolBar, toolBarId);
     }
 
     @Override
     public void registerToolBar(String toolBarId, String pluginId) {
-        getToolBarHandler().registerToolBar(toolBarId, pluginId);
+        getToolBarManager().registerToolBar(toolBarId, pluginId);
     }
 
     @Override
     public void registerToolBarGroup(String toolBarId, ToolBarGroup toolBarGroup) {
-        getToolBarHandler().registerToolBarGroup(toolBarId, toolBarGroup);
+        getToolBarManager().registerToolBarGroup(toolBarId, toolBarGroup);
     }
 
     @Override
     public void registerToolBarItem(String toolBarId, String pluginId, Action action, ToolBarPosition position) {
-        getToolBarHandler().registerToolBarItem(toolBarId, pluginId, action, position);
+        getToolBarManager().registerToolBarItem(toolBarId, pluginId, action, position);
     }
 
     @Override

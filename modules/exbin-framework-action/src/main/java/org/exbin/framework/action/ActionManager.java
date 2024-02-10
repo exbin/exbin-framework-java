@@ -42,6 +42,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 public class ActionManager {
 
     private final Map<Class<?>, List<ComponentActiveListener<?>>> activeComponentListeners = new HashMap<>();
+    private final Map<Class<?>, Object> activeComponentState = new HashMap<>();
 
     public ActionManager() {
     }
@@ -56,7 +57,7 @@ public class ActionManager {
     public void initAction(Action action, ResourceBundle bundle, String actionId) {
         ActionManager.this.initAction(action, bundle, action.getClass(), actionId);
     }
-
+    
     /**
      * Sets action values according to values specified by resource bundle.
      *
@@ -128,6 +129,7 @@ public class ActionManager {
 
     @SuppressWarnings("unchecked")
     public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
+        activeComponentState.put(componentClass, componentInstance);
         List<ComponentActiveListener<?>> componentListeners = activeComponentListeners.get(componentClass);
         if (componentListeners != null) {
             for (ComponentActiveListener componentListener : componentListeners) {
