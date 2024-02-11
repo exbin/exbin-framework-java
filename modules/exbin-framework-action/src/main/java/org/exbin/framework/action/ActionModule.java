@@ -44,7 +44,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardActionsUpdater;
 
 /**
- * Implementation of framework menu module.
+ * Implementation of action module.
  *
  * @author ExBin Project (https://exbin.org)
  */
