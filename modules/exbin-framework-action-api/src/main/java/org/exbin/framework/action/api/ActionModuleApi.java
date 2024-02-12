@@ -178,8 +178,9 @@ public interface ActionModuleApi extends Module {
      *
      * @param targetToolBar target toolbar
      * @param toolBarId toolbar id
+     * @param activationUpdateService activation update service
      */
-    void buildToolBar(JToolBar targetToolBar, String toolBarId);
+    void buildToolBar(JToolBar targetToolBar, String toolBarId, ComponentActivationService activationUpdateService);
 
     /**
      * Fills given popup menu with default clipboard actions.

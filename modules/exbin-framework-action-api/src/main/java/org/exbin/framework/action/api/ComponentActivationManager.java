@@ -33,7 +33,7 @@ public interface ComponentActivationManager {
      * @param instanceClass instance class
      * @param listener listener
      */
-    <T> void registerListener(Class<T> instanceClass, ComponentActiveListener<T> listener);
+    <T> void registerListener(Class<T> instanceClass, ComponentActivationInstanceListener<T> listener);
 
     /**
      * Registers listener to call each time when component is activated or empty
@@ -43,5 +43,5 @@ public interface ComponentActivationManager {
      * @param instanceClass instance class
      * @param listener listener
      */
-    <U> void registerUpdateListener(Class<U> instanceClass, ComponentActiveListener<U> listener);
+    <U> void registerUpdateListener(Class<U> instanceClass, ComponentActivationInstanceListener<U> listener);
 }

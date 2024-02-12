@@ -38,6 +38,7 @@ import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -243,8 +244,8 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId) {
-        getToolBarManager().buildToolBar(targetToolBar, toolBarId);
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ComponentActivationService activationUpdateService) {
+        getToolBarManager().buildToolBar(targetToolBar, toolBarId, activationUpdateService);
     }
 
     @Override

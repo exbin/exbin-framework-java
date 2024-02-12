@@ -39,28 +39,30 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionToolBarContribution;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.action.api.ComponentActivationManager;
-import org.exbin.framework.action.api.ComponentActiveListener;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarContribution;
 import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.action.gui.DropDownButton;
+import org.exbin.framework.action.api.ComponentActivationService;
+import org.exbin.framework.action.api.ComponentActivationInstanceListener;
+import org.exbin.framework.action.api.ComponentActivationListener;
 
 /**
- * Toolbar handler.
+ * Toolbar manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ToolBarManager {
 
-    private final Map<Class<?>, List<ComponentActiveListener<?>>> activeComponentListeners = new HashMap<>();
+    private final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
     private final Map<Class<?>, Object> activeComponentState = new HashMap<>();
     private final ComponentActivationManager componentActivationManager = new ComponentActivationManager() {
         @Override
-        public <T> void registerListener(Class<T> instanceClass, ComponentActiveListener<T> listener) {
-            List<ComponentActiveListener<?>> listeners = activeComponentListeners.get(instanceClass);
+        public <T> void registerListener(Class<T> instanceClass, ComponentActivationInstanceListener<T> listener) {
+            List<ComponentActivationInstanceListener<?>> listeners = activeComponentListeners.get(instanceClass);
             if (listeners == null) {
                 listeners = new ArrayList<>();
                 activeComponentListeners.put(instanceClass, listeners);
@@ -69,7 +71,7 @@ public class ToolBarManager {
         }
 
         @Override
-        public <U> void registerUpdateListener(Class<U> instanceClass, ComponentActiveListener<U> listener) {
+        public <U> void registerUpdateListener(Class<U> instanceClass, ComponentActivationInstanceListener<U> listener) {
             registerListener(instanceClass, listener);
         }
     };
@@ -97,7 +99,8 @@ public class ToolBarManager {
     public ToolBarManager() {
     }
 
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId) {
+    // TODO support for multiple frames / toolbars
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ComponentActivationService activationUpdateService) {
         ToolBarDefinition toolBarDef = toolBars.get(toolBarId);
 
         if (toolBarDef == null) {
@@ -150,6 +153,19 @@ public class ToolBarManager {
         }
 
         processToolBarGroup(groupRecords, targetToolBar);
+        activationUpdateService.registerListener(new ComponentActivationListener() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> void updated(Class<T> instanceClass, T instance) {
+                activeComponentState.put(instanceClass, instance);
+                List<ComponentActivationInstanceListener<?>> instanceListeners = activeComponentListeners.get(instanceClass);
+                if (instanceListeners != null) {
+                    for (ComponentActivationInstanceListener instanceListener : instanceListeners) {
+                        instanceListener.update(instance);
+                    }
+                }
+            }
+        });
     }
 
     private void processToolBarGroup(List<ToolBarGroupRecord> groups, JToolBar targetToolBar) {
@@ -257,12 +273,12 @@ public class ToolBarManager {
 
     @SuppressWarnings("unchecked")
     private void initActiveComponent() {
-        for (Map.Entry<Class<?>, List<ComponentActiveListener<?>>> entry : activeComponentListeners.entrySet()) {
+        for (Map.Entry<Class<?>, List<ComponentActivationInstanceListener<?>>> entry : activeComponentListeners.entrySet()) {
             Class<?> key = entry.getKey();
-            List<ComponentActiveListener<?>> listeners = entry.getValue();
+            List<ComponentActivationInstanceListener<?>> listeners = entry.getValue();
             if (listeners != null) {
                 Object instance = activeComponentState.get(key);
-                for (ComponentActiveListener listener : listeners) {
+                for (ComponentActivationInstanceListener listener : listeners) {
                     listener.update(instance);
                 }
             }
@@ -317,9 +333,9 @@ public class ToolBarManager {
     @SuppressWarnings("unchecked")
     public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
         activeComponentState.put(componentClass, componentInstance);
-        List<ComponentActiveListener<?>> componentListeners = activeComponentListeners.get(componentClass);
+        List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
         if (componentListeners != null) {
-            for (ComponentActiveListener componentListener : componentListeners) {
+            for (ComponentActivationInstanceListener componentListener : componentListeners) {
                 componentListener.update(componentInstance);
             }
         }

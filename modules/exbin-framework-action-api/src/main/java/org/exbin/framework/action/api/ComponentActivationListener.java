@@ -21,14 +21,15 @@ import javax.annotation.Nullable;
  * Listener for action update when menu is activated for component.
  *
  * @author ExBin Project (https://exbin.org)
- * @param <T> instance type
  */
-public interface ComponentActiveListener<T> {
+public interface ComponentActivationListener {
 
     /**
-     * Notifies active instance changed.
+     * Notifies active instance updated.
      *
+     * @param <T> updated instance class
+     * @param instanceClass instance class
      * @param instance class instance
      */
-    void update(@Nullable T instance);
+    <T> void updated(Class<T> instanceClass, @Nullable T instance);
 }

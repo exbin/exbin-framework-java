@@ -30,8 +30,8 @@ import javax.swing.JRadioButtonMenuItem;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionType;
-import org.exbin.framework.action.api.ComponentActiveListener;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.action.api.ComponentActivationInstanceListener;
 
 /**
  * Action manager.
@@ -41,7 +41,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 @ParametersAreNonnullByDefault
 public class ActionManager {
 
-    private final Map<Class<?>, List<ComponentActiveListener<?>>> activeComponentListeners = new HashMap<>();
+    private final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
     private final Map<Class<?>, Object> activeComponentState = new HashMap<>();
 
     public ActionManager() {
@@ -130,9 +130,9 @@ public class ActionManager {
     @SuppressWarnings("unchecked")
     public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
         activeComponentState.put(componentClass, componentInstance);
-        List<ComponentActiveListener<?>> componentListeners = activeComponentListeners.get(componentClass);
+        List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
         if (componentListeners != null) {
-            for (ComponentActiveListener componentListener : componentListeners) {
+            for (ComponentActivationInstanceListener componentListener : componentListeners) {
                 componentListener.update(componentInstance);
             }
         }
