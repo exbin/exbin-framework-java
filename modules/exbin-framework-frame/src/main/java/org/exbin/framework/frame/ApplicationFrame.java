@@ -20,8 +20,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,8 +38,6 @@ import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.ComponentActivationListener;
-import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
@@ -58,14 +54,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     private JPanel currentStatusBarPanel = null;
     private boolean captionsVisible = true;
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
-    private ComponentActivationService componentActivationService = new ComponentActivationService() {
-        private List<ComponentActivationListener> listeners = new ArrayList<>();
-
-        @Override
-        public void registerListener(ComponentActivationListener listener) {
-            listeners.add(listener);
-        }
-    };
+    private FrameComponentActivationService frameComponentActivationService = new FrameComponentActivationService();
 
     public ApplicationFrame() {
         // TODO support for undecorated mode
@@ -276,7 +265,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainToolBar() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID, componentActivationService);
+        actionModule.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID, frameComponentActivationService);
     }
 
     @Override
