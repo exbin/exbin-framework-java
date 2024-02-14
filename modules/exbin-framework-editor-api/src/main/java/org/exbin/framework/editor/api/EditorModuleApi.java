@@ -66,6 +66,4 @@ public interface EditorModuleApi extends Module {
     EditorActionsApi getEditorActions();
 
     void registerMenuFileCloseActions();
-
-    void updateActionStatus();
 }

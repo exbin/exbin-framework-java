@@ -16,11 +16,7 @@
 package org.exbin.framework.editor.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Collections;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
@@ -28,9 +24,8 @@ import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationManager;
+import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.file.api.FileDependentAction;
-import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Close all files action.
@@ -38,41 +33,36 @@ import org.exbin.framework.file.api.FileHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseAllFileAction extends AbstractAction implements FileDependentAction {
+public class CloseAllFileAction extends AbstractAction {
 
     public static final String ACTION_ID = "fileCloseAllAction";
 
     private ResourceBundle resourceBundle;
-    private MultiEditorProvider editorProvider;
+    private EditorProvider editorProvider;
 
     public CloseAllFileAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        this.editorProvider = editorProvider;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, new ActionActiveComponent() {
             @Override
             public void register(ComponentActivationManager manager) {
-                manager.registerUpdateListener(FileHandler.class, (instance) -> {
-                    setEnabled(instance != null);
+                manager.registerUpdateListener(EditorProvider.class, (instance) -> {
+                    editorProvider = instance;
+                    setEnabled(editorProvider instanceof MultiEditorProvider);
                 });
             }
         });
-        updateForActiveFile();
-    }
-
-    @Override
-    public void updateForActiveFile() {
-        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        setEnabled(activeFile.isPresent());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        editorProvider.closeAllFiles();
+        if (editorProvider instanceof MultiEditorProvider) {
+            ((MultiEditorProvider) editorProvider).closeAllFiles();
+        }
     }
 }

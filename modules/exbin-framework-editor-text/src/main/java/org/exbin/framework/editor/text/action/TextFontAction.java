@@ -16,18 +16,17 @@
 package org.exbin.framework.editor.text.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
 import org.exbin.framework.editor.text.preferences.TextFontPreferences;
-import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.handler.OptionsControlHandler;
@@ -42,40 +41,40 @@ import org.exbin.framework.window.api.WindowHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontAction extends AbstractAction implements FileDependentAction {
+public class TextFontAction extends AbstractAction {
 
     public static final String ACTION_ID = "toolsSetFontAction";
 
-    private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
+    private FileHandler fileHandler;
 
     public TextFontAction() {
     }
 
-    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.editorProvider = editorProvider;
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-    }
-
-    @Override
-    public void updateForActiveFile() {
-        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        setEnabled(activeFile.isPresent());
+        putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, new ActionActiveComponent() {
+            @Override
+            public void register(ComponentActivationManager manager) {
+                manager.registerUpdateListener(FileHandler.class, (instance) -> {
+                    fileHandler = instance;
+                    setEnabled(fileHandler instanceof TextFontApi);
+                });
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (!activeFile.isPresent()) {
-            throw new IllegalStateException();
+        if (!(fileHandler instanceof TextFontApi)) {
+            return;
         }
 
-        TextFontApi textFontApi = (TextFontApi) activeFile.get();
-
+        TextFontApi textFontApi = (TextFontApi) fileHandler;
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();

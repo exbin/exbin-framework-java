@@ -17,18 +17,18 @@ package org.exbin.framework.editor.text.action;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
 import org.exbin.framework.editor.text.options.gui.TextColorPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.preferences.TextColorPreferences;
-import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.handler.OptionsControlHandler;
@@ -48,56 +48,52 @@ public class TextColorAction extends AbstractAction {
 
     public static final String ACTION_ID = "toolsSetColorAction";
 
-    private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
+    private FileHandler fileHandler;
 
     public TextColorAction() {
     }
 
-    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.editorProvider = editorProvider;
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, new ActionActiveComponent() {
+            @Override
+            public void register(ComponentActivationManager manager) {
+                manager.registerUpdateListener(FileHandler.class, (instance) -> {
+                    fileHandler = instance;
+                    setEnabled(fileHandler != null && (fileHandler.getComponent() instanceof TextPanel));
+                });
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (!(fileHandler != null && (fileHandler.getComponent() instanceof TextPanel))) {
+            return;
+        }
+
+        TextPanel textPanel = (TextPanel) fileHandler.getComponent();
+
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (!activeFile.isPresent()) {
-                    throw new IllegalStateException();
-                }
-
-                TextPanel textPanel = (TextPanel) activeFile.get().getComponent();
                 return textPanel.getCurrentColors();
             }
 
             @Override
             public Color[] getDefaultTextColors() {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (!activeFile.isPresent()) {
-                    throw new IllegalStateException();
-                }
-
-                TextPanel textPanel = (TextPanel) activeFile.get().getComponent();
                 return textPanel.getDefaultColors();
             }
 
             @Override
             public void setCurrentTextColors(Color[] colors) {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                if (!activeFile.isPresent()) {
-                    throw new IllegalStateException();
-                }
-
-                TextPanel textPanel = (TextPanel) activeFile.get().getComponent();
                 textPanel.setCurrentColors(colors);
             }
         };

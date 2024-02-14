@@ -38,6 +38,7 @@ import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
@@ -302,6 +303,12 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
 
     public void setApplicationExitHandler(ApplicationExitHandler exitHandler) {
         this.exitHandler = exitHandler;
+    }
+    
+    @Nonnull
+    @Override
+    public ComponentActivationListener getComponentActivationListener() {
+        return frameComponentActivationService;
     }
 
 //    @Override

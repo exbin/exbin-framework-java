@@ -249,8 +249,6 @@ public class FrameModule implements FrameModuleApi {
         if (applicationFrame == null) {
             applicationFrame = new ApplicationFrame();
             applicationFrame.initApplication();
-            applicationFrame.loadMainMenu();
-            applicationFrame.loadMainToolBar();
             applicationFrame.setApplicationExitHandler(exitHandler);
             appIcon = applicationFrame.getIconImage();
 

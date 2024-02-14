@@ -16,16 +16,17 @@
 package org.exbin.framework.editor.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationManager;
+import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.utils.ActionUtils;
 
 /**
  * Save all file action.
@@ -33,32 +34,41 @@ import org.exbin.framework.utils.ActionUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SaveAllFileAction extends AbstractAction implements FileDependentAction {
+public class SaveAllFileAction extends AbstractAction {
 
     public static final String ACTION_ID = "fileSaveAllAction";
 
     private ResourceBundle resourceBundle;
-    private MultiEditorProvider editorProvider;
+    private EditorProvider editorProvider;
+    private FileHandler fileHandler;
 
     public SaveAllFileAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        this.editorProvider = editorProvider;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
-    }
-
-    @Override
-    public void updateForActiveFile() {
-        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        setEnabled(activeFile.isPresent());
+        putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, new ActionActiveComponent() {
+            @Override
+            public void register(ComponentActivationManager manager) {
+                manager.registerUpdateListener(FileHandler.class, (instance) -> {
+                    fileHandler = instance;
+                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                });
+                manager.registerUpdateListener(EditorProvider.class, (instance) -> {
+                    editorProvider = instance;
+                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                });
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        editorProvider.saveAllFiles();
+        if (fileHandler != null && (editorProvider instanceof MultiEditorProvider)) {
+            ((MultiEditorProvider) editorProvider).saveAllFiles();
+        }
     }
 }

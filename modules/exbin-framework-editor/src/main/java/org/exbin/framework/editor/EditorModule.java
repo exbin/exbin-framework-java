@@ -41,7 +41,6 @@ import org.exbin.framework.editor.action.CloseAllFileAction;
 import org.exbin.framework.editor.action.CloseFileAction;
 import org.exbin.framework.editor.action.CloseOtherFileAction;
 import org.exbin.framework.editor.action.EditorActions;
-import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.operation.undo.api.UndoFileHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -254,7 +253,7 @@ public class EditorModule implements EditorModuleApi {
         if (closeFileAction == null) {
             closeFileAction = new CloseFileAction();
             ensureSetup();
-            closeFileAction.setup(resourceBundle, (MultiEditorProvider) editorProvider);
+            closeFileAction.setup(resourceBundle);
         }
         return closeFileAction;
     }
@@ -265,7 +264,7 @@ public class EditorModule implements EditorModuleApi {
         if (closeAllFileAction == null) {
             closeAllFileAction = new CloseAllFileAction();
             ensureSetup();
-            closeAllFileAction.setup(resourceBundle, (MultiEditorProvider) editorProvider);
+            closeAllFileAction.setup(resourceBundle);
         }
         return closeAllFileAction;
     }
@@ -276,7 +275,7 @@ public class EditorModule implements EditorModuleApi {
         if (closeOtherFileAction == null) {
             closeOtherFileAction = new CloseOtherFileAction();
             ensureSetup();
-            closeOtherFileAction.setup(resourceBundle, (MultiEditorProvider) editorProvider);
+            closeOtherFileAction.setup(resourceBundle);
         }
         return closeOtherFileAction;
     }
@@ -290,18 +289,5 @@ public class EditorModule implements EditorModuleApi {
             editorActions.setup(resourceBundle, (MultiEditorProvider) editorProvider);
         }
         return editorActions;
-    }
-
-    @Override
-    public void updateActionStatus() {
-        FileDependentAction[] fileDepActions = new FileDependentAction[]{
-            closeFileAction, closeAllFileAction, closeOtherFileAction
-        };
-
-        for (FileDependentAction fileDepAction : fileDepActions) {
-            if (fileDepAction != null) {
-                fileDepAction.updateForActiveFile();
-            }
-        }
     }
 }

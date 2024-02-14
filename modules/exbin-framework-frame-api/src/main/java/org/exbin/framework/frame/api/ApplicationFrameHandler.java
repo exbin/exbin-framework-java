@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.action.api.ComponentActivationListener;
 
 /**
  * Interface for application frame.
@@ -112,4 +113,7 @@ public interface ApplicationFrameHandler {
      * @param windowSize window size
      */
     void setDefaultSize(Dimension windowSize);
+
+    @Nonnull
+    ComponentActivationListener getComponentActivationListener();
 }

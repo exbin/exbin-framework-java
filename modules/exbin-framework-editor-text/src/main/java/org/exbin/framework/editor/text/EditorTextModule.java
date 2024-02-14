@@ -483,7 +483,7 @@ public class EditorTextModule implements Module {
         if (textFontAction == null) {
             ensureSetup();
             textFontAction = new TextFontAction();
-            textFontAction.setup(editorProvider, resourceBundle);
+            textFontAction.setup(resourceBundle);
         }
 
         return textFontAction;
@@ -494,7 +494,7 @@ public class EditorTextModule implements Module {
         if (textColorAction == null) {
             ensureSetup();
             textColorAction = new TextColorAction();
-            textColorAction.setup(editorProvider, resourceBundle);
+            textColorAction.setup(resourceBundle);
         }
 
         return textColorAction;

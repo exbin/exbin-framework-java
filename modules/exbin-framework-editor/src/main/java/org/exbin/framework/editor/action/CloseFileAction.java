@@ -16,17 +16,17 @@
 package org.exbin.framework.editor.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JMenuItem;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.api.MultiEditorPopupMenu;
+import org.exbin.framework.action.api.ComponentActivationManager;
+import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.file.api.FileDependentAction;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.utils.ActionUtils;
 
@@ -36,43 +36,42 @@ import org.exbin.framework.utils.ActionUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseFileAction extends AbstractAction implements FileDependentAction {
+public class CloseFileAction extends AbstractAction {
 
     public static final String ACTION_ID = "fileCloseAction";
 
     private ResourceBundle resourceBundle;
-    private MultiEditorProvider editorProvider;
+    private EditorProvider editorProvider;
+    private FileHandler fileHandler;
 
     public CloseFileAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle, MultiEditorProvider editorProvider) {
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        this.editorProvider = editorProvider;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
-        updateForActiveFile();
-    }
-
-    @Override
-    public void updateForActiveFile() {
-        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        setEnabled(activeFile.isPresent());
+        putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, new ActionActiveComponent() {
+            @Override
+            public void register(ComponentActivationManager manager) {
+                manager.registerUpdateListener(FileHandler.class, (instance) -> {
+                    fileHandler = instance;
+                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                });
+                manager.registerUpdateListener(EditorProvider.class, (instance) -> {
+                    editorProvider = instance;
+                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                });
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
-        MultiEditorPopupMenu popupMenu = source instanceof JMenuItem && ((JMenuItem) source).getParent() instanceof MultiEditorPopupMenu ? (MultiEditorPopupMenu) ((JMenuItem) source).getParent() : null;
-        if (popupMenu != null) {
-            Optional<FileHandler> selectedFile = popupMenu.getSelectedFile();
-            if (selectedFile.isPresent()) {
-                editorProvider.closeFile(selectedFile.get());
-            }
-        } else {
-            editorProvider.closeFile();
+        if (fileHandler != null && (editorProvider instanceof MultiEditorProvider)) {
+            ((MultiEditorProvider) editorProvider).closeFile(fileHandler);
         }
     }
 }
