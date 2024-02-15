@@ -260,7 +260,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID);
+        actionModule.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID, frameComponentActivationService);
     }
 
     @Override

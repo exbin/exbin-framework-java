@@ -15,11 +15,14 @@
  */
 package org.exbin.framework.action.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Service for action update.
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface ComponentActivationService {
 
     /**
@@ -28,4 +31,9 @@ public interface ComponentActivationService {
      * @param listener listener
      */
     void registerListener(ComponentActivationListener listener);
+
+    /**
+     * Requests update of registered listeners.
+     */
+    void requestUpdate();
 }

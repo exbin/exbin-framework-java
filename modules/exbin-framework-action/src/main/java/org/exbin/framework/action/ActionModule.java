@@ -54,7 +54,7 @@ public class ActionModule implements ActionModuleApi {
 
     private ClipboardActions clipboardActions = null;
     private ClipboardTextActions clipboardTextActions = null;
-    private MenuHandler menuHandler = null;
+    private MenuManager menuManager = null;
     private ToolBarManager toolBarManager = null;
     private final ActionManager actionManager = new ActionManager();
     private ResourceBundle resourceBundle;
@@ -159,12 +159,12 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Nonnull
-    private MenuHandler getMenuHandler() {
-        if (menuHandler == null) {
-            menuHandler = new MenuHandler();
+    private MenuManager getMenuManager() {
+        if (menuManager == null) {
+            menuManager = new MenuManager();
         }
 
-        return menuHandler;
+        return menuManager;
     }
 
     @Nonnull
@@ -177,28 +177,28 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
-    public void buildMenu(JPopupMenu targetMenu, String menuId) {
-        getMenuHandler().buildMenu(targetMenu, menuId);
+    public void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
+        getMenuManager().buildMenu(targetMenu, menuId, activationUpdateService);
     }
 
     @Override
-    public void buildMenu(JMenuBar targetMenuBar, String menuId) {
-        getMenuHandler().buildMenu(targetMenuBar, menuId);
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService) {
+        getMenuManager().buildMenu(targetMenuBar, menuId, activationUpdateService);
     }
 
     @Override
     public void registerMenu(String menuId, String pluginId) {
-        getMenuHandler().registerMenu(menuId, pluginId);
+        getMenuManager().registerMenu(menuId, pluginId);
     }
 
     @Override
     public void registerMenuGroup(String menuId, MenuGroup menuGroup) {
-        getMenuHandler().registerMenuGroup(menuId, menuGroup);
+        getMenuManager().registerMenuGroup(menuId, menuGroup);
     }
 
     @Override
     public void registerMenuItem(String menuId, String pluginId, JMenu menu, MenuPosition position) {
-        getMenuHandler().registerMenuItem(menuId, pluginId, menu, position);
+        getMenuManager().registerMenuItem(menuId, pluginId, menu, position);
     }
 
     @Override
@@ -208,17 +208,17 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void registerMenuItem(String menuId, String pluginId, Action action, MenuPosition position) {
-        getMenuHandler().registerMenuItem(menuId, pluginId, action, position);
+        getMenuManager().registerMenuItem(menuId, pluginId, action, position);
     }
 
     @Override
     public void registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction, MenuPosition position) {
-        getMenuHandler().registerMenuItem(menuId, pluginId, subMenuId, subMenuAction, position);
+        getMenuManager().registerMenuItem(menuId, pluginId, subMenuId, subMenuAction, position);
     }
 
     @Override
     public void registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName, MenuPosition position) {
-        getMenuHandler().registerMenuItem(menuId, pluginId, subMenuId, subMenuName, position);
+        getMenuManager().registerMenuItem(menuId, pluginId, subMenuId, subMenuName, position);
     }
 
     @Override
@@ -285,7 +285,7 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public boolean menuGroupExists(String menuId, String groupId) {
-        return menuHandler.menuGroupExists(menuId, groupId);
+        return menuManager.menuGroupExists(menuId, groupId);
     }
 
     @Nonnull
@@ -299,7 +299,7 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void unregisterMenu(String menuId) {
-        getMenuHandler().unregisterMenu(menuId);
+        getMenuManager().unregisterMenu(menuId);
     }
 
     public void updateClipboardActionsState() {

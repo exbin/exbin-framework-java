@@ -35,6 +35,7 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionMenuContribution;
 import org.exbin.framework.action.api.ActionMenuCreation;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.DirectMenuContribution;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuGroup;
@@ -45,12 +46,12 @@ import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.SubMenuContribution;
 
 /**
- * Menu handler.
+ * Menu manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MenuHandler {
+public class MenuManager {
 
     /**
      * Menu records: menu id -> menu definition.
@@ -72,18 +73,18 @@ public class MenuHandler {
      */
     private Map<String, String> pluginsUsage = new HashMap<>();
 
-    public MenuHandler() {
+    public MenuManager() {
     }
 
-    public void buildMenu(JMenu targetMenu, String menuId) {
-        MenuHandler.this.buildMenu(new MenuWrapper(targetMenu), menuId);
+    public void buildMenu(JMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
+        MenuManager.this.buildMenu(new MenuWrapper(targetMenu), menuId, activationUpdateService);
     }
 
-    public void buildMenu(JPopupMenu targetMenu, String menuId) {
-        MenuHandler.this.buildMenu(new PopupMenuWrapper(targetMenu), menuId);
+    public void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
+        MenuManager.this.buildMenu(new PopupMenuWrapper(targetMenu), menuId, activationUpdateService);
     }
 
-    private void buildMenu(MenuTarget targetMenu, String menuId) {
+    private void buildMenu(MenuTarget targetMenu, String menuId, ComponentActivationService activationUpdateService) {
         MenuDefinition menuDef = menus.get(menuId);
 
         if (menuDef == null) {
@@ -250,7 +251,7 @@ public class MenuHandler {
                             public void process() {
                                 SubMenuContribution subMenuContribution = (SubMenuContribution) next.contribution;
                                 subMenu = new JMenu(subMenuContribution.getAction());
-                                MenuHandler.this.buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId());
+                                MenuManager.this.buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId(), null);
                             }
 
                             @Override
@@ -506,8 +507,8 @@ public class MenuHandler {
         BEFORE, ITEM, AFTER
     };
 
-    public void buildMenu(JMenuBar targetMenuBar, String menuId) {
-        buildMenu(new MenuBarWrapper(targetMenuBar), menuId);
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService) {
+        buildMenu(new MenuBarWrapper(targetMenuBar), menuId, activationUpdateService);
     }
 
     public void registerMenu(String menuId, String pluginId) {

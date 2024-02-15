@@ -15,8 +15,11 @@
  */
 package org.exbin.framework.frame;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.ComponentActivationListener;
@@ -31,6 +34,7 @@ import org.exbin.framework.action.api.ComponentActivationService;
 public class FrameComponentActivationService implements ComponentActivationService, ComponentActivationListener {
 
     private final List<ComponentActivationListener> listeners = new ArrayList<>();
+    private final Map<Class<?>, Object> activeComponentState = new HashMap<>();
 
     @Override
     public void registerListener(ComponentActivationListener listener) {
@@ -39,8 +43,21 @@ public class FrameComponentActivationService implements ComponentActivationServi
 
     @Override
     public <T> void updated(Class<T> instanceClass, @Nullable T instance) {
+        activeComponentState.put(instanceClass, instance);
         for (ComponentActivationListener listener : listeners) {
             listener.updated(instanceClass, instance);
+        }
+    }
+
+    @Override
+    public void requestUpdate() {
+        for (Map.Entry<Class<?>, Object> entry : activeComponentState.entrySet()) {
+            Class<?> key = entry.getKey();
+            Object instance = entry.getValue();
+            for (ComponentActivationListener listener : listeners) {
+                // TODO cast instance somehow
+                listener.updated(key, null);
+            }
         }
     }
 }

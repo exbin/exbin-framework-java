@@ -69,16 +69,18 @@ public interface ActionModuleApi extends Module {
      *
      * @param targetMenu target menu
      * @param menuId menu identificator
+     * @param activationUpdateService activation update service
      */
-    void buildMenu(JPopupMenu targetMenu, String menuId);
+    void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService);
 
     /**
      * Returns menu using given identificator.
      *
      * @param targetMenuBar target menu bar
      * @param menuId menu identificator
+     * @param activationUpdateService activation update service
      */
-    void buildMenu(JMenuBar targetMenuBar, String menuId);
+    void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService);
 
     /**
      * Registers menu associating it with given identificator.

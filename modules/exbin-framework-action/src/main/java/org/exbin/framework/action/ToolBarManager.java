@@ -58,7 +58,6 @@ import org.exbin.framework.action.api.ComponentActivationListener;
 public class ToolBarManager {
 
     private final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
-    private final Map<Class<?>, Object> activeComponentState = new HashMap<>();
     private final ComponentActivationManager componentActivationManager = new ComponentActivationManager() {
         @Override
         public <T> void registerListener(Class<T> instanceClass, ComponentActivationInstanceListener<T> listener) {
@@ -157,7 +156,6 @@ public class ToolBarManager {
             @Override
             @SuppressWarnings("unchecked")
             public <T> void updated(Class<T> instanceClass, T instance) {
-                activeComponentState.put(instanceClass, instance);
                 List<ComponentActivationInstanceListener<?>> instanceListeners = activeComponentListeners.get(instanceClass);
                 if (instanceListeners != null) {
                     for (ComponentActivationInstanceListener instanceListener : instanceListeners) {
@@ -261,27 +259,12 @@ public class ToolBarManager {
                 processingPath.add(new ToolBarGroupRecordPathNode(groupRecord.subGroups));
             }
         }
-        initActiveComponent();
     }
 
     public void initToolbarAction(Action action) {
         Object value = action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
         if (value instanceof ActionActiveComponent) {
             ((ActionActiveComponent) value).register(componentActivationManager);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void initActiveComponent() {
-        for (Map.Entry<Class<?>, List<ComponentActivationInstanceListener<?>>> entry : activeComponentListeners.entrySet()) {
-            Class<?> key = entry.getKey();
-            List<ComponentActivationInstanceListener<?>> listeners = entry.getValue();
-            if (listeners != null) {
-                Object instance = activeComponentState.get(key);
-                for (ComponentActivationInstanceListener listener : listeners) {
-                    listener.update(instance);
-                }
-            }
         }
     }
 
@@ -332,7 +315,6 @@ public class ToolBarManager {
 
     @SuppressWarnings("unchecked")
     public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
-        activeComponentState.put(componentClass, componentInstance);
         List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
         if (componentListeners != null) {
             for (ComponentActivationInstanceListener componentListener : componentListeners) {
