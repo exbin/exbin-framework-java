@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.action.api;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -30,18 +31,27 @@ public interface ComponentActivationManager {
      * empty when no such component is active.
      *
      * @param <T> monitored class type
-     * @param instanceClass instance class
+     * @param componentClass component class
      * @param listener listener
      */
-    <T> void registerListener(Class<T> instanceClass, ComponentActivationInstanceListener<T> listener);
+    <T> void registerListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener);
 
     /**
      * Registers listener to call each time when component is activated or empty
      * when deactivated.
      *
-     * @param <U> monitored class type
-     * @param instanceClass instance class
+     * @param <T> monitored class type
+     * @param componentClass component class
      * @param listener listener
      */
-    <U> void registerUpdateListener(Class<U> instanceClass, ComponentActivationInstanceListener<U> listener);
+    <T> void registerUpdateListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener);
+
+    /**
+     * Requests update for component class.
+     *
+     * @param <T> monitored class type
+     * @param componentClass component class
+     * @param componentInstance component instance
+     */
+    <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance);
 }

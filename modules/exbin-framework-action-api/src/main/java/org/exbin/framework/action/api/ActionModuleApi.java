@@ -192,8 +192,6 @@ public interface ActionModuleApi extends Module {
      */
     void fillPopupMenu(JPopupMenu popupMenu, int position);
 
-    <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance);
-
     /**
      * Registers tool bar associating it with given identificator.
      *

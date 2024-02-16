@@ -37,16 +37,16 @@ import org.exbin.framework.operation.undo.api.UndoActionsHandler;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
-import org.exbin.framework.editor.action.CloseAllFileAction;
+import org.exbin.framework.editor.action.CloseAllFilesAction;
 import org.exbin.framework.editor.action.CloseFileAction;
-import org.exbin.framework.editor.action.CloseOtherFileAction;
+import org.exbin.framework.editor.action.CloseOtherFilesAction;
 import org.exbin.framework.editor.action.EditorActions;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.operation.undo.api.UndoFileHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
- * XBUP framework editor module.
+ * Framework editor module.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -59,9 +59,6 @@ public class EditorModule implements EditorModuleApi {
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener = null;
     private ResourceBundle resourceBundle;
 
-    private CloseFileAction closeFileAction;
-    private CloseAllFileAction closeAllFileAction;
-    private CloseOtherFileAction closeOtherFileAction;
     private EditorActions editorActions;
 
     public EditorModule() {
@@ -244,40 +241,34 @@ public class EditorModule implements EditorModuleApi {
     public void registerMenuFileCloseActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuGroup(ActionConsts.FILE_MENU_ID, new MenuGroup(FileModuleApi.FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, getCloseFileAction(), new MenuPosition(FileModuleApi.FILE_MENU_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createCloseFileAction(), new MenuPosition(FileModuleApi.FILE_MENU_GROUP_ID));
     }
 
     @Nonnull
     @Override
-    public CloseFileAction getCloseFileAction() {
-        if (closeFileAction == null) {
-            closeFileAction = new CloseFileAction();
-            ensureSetup();
-            closeFileAction.setup(resourceBundle);
-        }
+    public CloseFileAction createCloseFileAction() {
+        CloseFileAction closeFileAction = new CloseFileAction();
+        ensureSetup();
+        closeFileAction.setup(resourceBundle);
         return closeFileAction;
     }
 
     @Nonnull
     @Override
-    public CloseAllFileAction getCloseAllFileAction() {
-        if (closeAllFileAction == null) {
-            closeAllFileAction = new CloseAllFileAction();
-            ensureSetup();
-            closeAllFileAction.setup(resourceBundle);
-        }
-        return closeAllFileAction;
+    public CloseAllFilesAction createCloseAllFilesAction() {
+        CloseAllFilesAction closeAllFilesAction = new CloseAllFilesAction();
+        ensureSetup();
+        closeAllFilesAction.setup(resourceBundle);
+        return closeAllFilesAction;
     }
 
     @Nonnull
     @Override
-    public CloseOtherFileAction getCloseOtherFileAction() {
-        if (closeOtherFileAction == null) {
-            closeOtherFileAction = new CloseOtherFileAction();
-            ensureSetup();
-            closeOtherFileAction.setup(resourceBundle);
-        }
-        return closeOtherFileAction;
+    public CloseOtherFilesAction createCloseOtherFilesAction() {
+        CloseOtherFilesAction closeOtherFilesAction = new CloseOtherFilesAction();
+        ensureSetup();
+        closeOtherFilesAction.setup(resourceBundle);
+        return closeOtherFilesAction;
     }
 
     @Nonnull

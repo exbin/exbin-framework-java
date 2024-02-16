@@ -123,12 +123,6 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
-    public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
-        actionManager.updateActionsForComponent(componentClass, componentInstance);
-        toolBarManager.updateActionsForComponent(componentClass, componentInstance);
-    }
-
-    @Override
     public void initAction(Action action, ResourceBundle bundle, String actionId) {
         actionManager.initAction(action, bundle, actionId);
     }

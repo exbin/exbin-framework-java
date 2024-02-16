@@ -26,23 +26,21 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.file.api.FileHandler;
 
 /**
- * Close file action.
+ * Close all files action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseOtherFileAction extends AbstractAction {
+public class CloseAllFilesAction extends AbstractAction {
 
-    public static final String ACTION_ID = "fileCloseOtherAction";
+    public static final String ACTION_ID = "fileCloseAllAction";
 
     private ResourceBundle resourceBundle;
     private EditorProvider editorProvider;
-    private FileHandler fileHandler;
 
-    public CloseOtherFileAction() {
+    public CloseAllFilesAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
@@ -53,13 +51,9 @@ public class CloseOtherFileAction extends AbstractAction {
         putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, new ActionActiveComponent() {
             @Override
             public void register(ComponentActivationManager manager) {
-                manager.registerUpdateListener(FileHandler.class, (instance) -> {
-                    fileHandler = instance;
-                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
-                });
                 manager.registerUpdateListener(EditorProvider.class, (instance) -> {
                     editorProvider = instance;
-                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                    setEnabled(editorProvider instanceof MultiEditorProvider);
                 });
             }
         });
@@ -67,8 +61,8 @@ public class CloseOtherFileAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (fileHandler != null && (editorProvider instanceof MultiEditorProvider)) {
-            ((MultiEditorProvider) editorProvider).closeOtherFiles(fileHandler);
+        if (editorProvider instanceof MultiEditorProvider) {
+            ((MultiEditorProvider) editorProvider).closeAllFiles();
         }
     }
 }

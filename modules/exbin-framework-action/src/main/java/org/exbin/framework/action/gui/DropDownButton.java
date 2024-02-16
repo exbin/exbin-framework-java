@@ -50,6 +50,7 @@ public class DropDownButton extends JButton {
         addActionListener(action);
         action.addPropertyChangeListener((PropertyChangeEvent evt) -> {
             setEnabled(action.isEnabled());
+            buttonPanel.setEnabled(action.isEnabled());
         });
         String toolTipText = (String) action.getValue(Action.SHORT_DESCRIPTION);
         setToolTipText(toolTipText);

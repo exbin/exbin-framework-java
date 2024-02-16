@@ -73,6 +73,11 @@ public class ToolBarManager {
         public <U> void registerUpdateListener(Class<U> instanceClass, ComponentActivationInstanceListener<U> listener) {
             registerListener(instanceClass, listener);
         }
+
+        @Override
+        public <T> void updateActionsForComponent(Class<T> componentClass, T componentInstance) {
+            // TODO
+        }
     };
 
     /**
@@ -164,6 +169,7 @@ public class ToolBarManager {
                 }
             }
         });
+        activationUpdateService.requestUpdate();
     }
 
     private void processToolBarGroup(List<ToolBarGroupRecord> groups, JToolBar targetToolBar) {

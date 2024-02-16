@@ -54,13 +54,13 @@ public interface EditorModuleApi extends Module {
     void registerUndoHandler();
 
     @Nonnull
-    AbstractAction getCloseFileAction();
+    AbstractAction createCloseFileAction();
 
     @Nonnull
-    AbstractAction getCloseAllFileAction();
+    AbstractAction createCloseAllFilesAction();
 
     @Nonnull
-    AbstractAction getCloseOtherFileAction();
+    AbstractAction createCloseOtherFilesAction();
 
     @Nonnull
     EditorActionsApi getEditorActions();

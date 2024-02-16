@@ -16,12 +16,14 @@
 package org.exbin.framework.action;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -31,10 +33,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionMenuContribution;
 import org.exbin.framework.action.api.ActionMenuCreation;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationInstanceListener;
+import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.DirectMenuContribution;
 import org.exbin.framework.action.api.MenuContribution;
@@ -52,6 +58,29 @@ import org.exbin.framework.action.api.SubMenuContribution;
  */
 @ParametersAreNonnullByDefault
 public class MenuManager {
+
+    private final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
+    private final ComponentActivationManager componentActivationManager = new ComponentActivationManager() {
+        @Override
+        public <T> void registerListener(Class<T> instanceClass, ComponentActivationInstanceListener<T> listener) {
+            List<ComponentActivationInstanceListener<?>> listeners = activeComponentListeners.get(instanceClass);
+            if (listeners == null) {
+                listeners = new ArrayList<>();
+                activeComponentListeners.put(instanceClass, listeners);
+            }
+            listeners.add(listener);
+        }
+
+        @Override
+        public <U> void registerUpdateListener(Class<U> instanceClass, ComponentActivationInstanceListener<U> listener) {
+            registerListener(instanceClass, listener);
+        }
+
+        @Override
+        public <T> void updateActionsForComponent(Class<T> componentClass, T componentInstance) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    };
 
     /**
      * Menu records: menu id -> menu definition.
@@ -168,10 +197,23 @@ public class MenuManager {
         }
 
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        processMenuGroup(groupRecords, beforeItem, afterItem, targetMenu, buttonGroups, menuId);
+        processMenuGroup(groupRecords, beforeItem, afterItem, targetMenu, buttonGroups, menuId, activationUpdateService);
+        activationUpdateService.registerListener(new ComponentActivationListener() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> void updated(Class<T> instanceClass, T instance) {
+                List<ComponentActivationInstanceListener<?>> instanceListeners = activeComponentListeners.get(instanceClass);
+                if (instanceListeners != null) {
+                    for (ComponentActivationInstanceListener instanceListener : instanceListeners) {
+                        instanceListener.update(instance);
+                    }
+                }
+            }
+        });
+        activationUpdateService.requestUpdate();
     }
 
-    private void processMenuGroup(List<MenuGroupRecord> groups, Map<String, List<MenuContribution>> beforeItem, Map<String, List<MenuContribution>> afterItem, final MenuTarget targetMenu, final Map<String, ButtonGroup> buttonGroups, String menuId) {
+    private void processMenuGroup(List<MenuGroupRecord> groups, Map<String, List<MenuContribution>> beforeItem, Map<String, List<MenuContribution>> afterItem, final MenuTarget targetMenu, final Map<String, ButtonGroup> buttonGroups, String menuId, ComponentActivationService activationUpdateService) {
         List<MenuGroupRecordPathNode> processingPath = new LinkedList<>();
         processingPath.add(new MenuGroupRecordPathNode(groups));
 
@@ -232,8 +274,9 @@ public class MenuManager {
 
                             @Override
                             public void finish() {
+                                Action action = null;
                                 if (targetMenu.isPopup()) {
-                                    Action action = ((ActionMenuContribution) next.contribution).getAction();
+                                    action = ((ActionMenuContribution) next.contribution).getAction();
                                     ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                                     if (menuCreation != null) {
                                         menuCreation.onCreate(menuItem, menuId);
@@ -241,6 +284,7 @@ public class MenuManager {
                                 }
 
                                 targetMenu.add(menuItem);
+                                initMenuAction(action);
                             }
                         };
                     } else if (next.contribution instanceof SubMenuContribution) {
@@ -251,7 +295,7 @@ public class MenuManager {
                             public void process() {
                                 SubMenuContribution subMenuContribution = (SubMenuContribution) next.contribution;
                                 subMenu = new JMenu(subMenuContribution.getAction());
-                                MenuManager.this.buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId(), null);
+                                MenuManager.this.buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId(), activationUpdateService);
                             }
 
                             @Override
@@ -276,8 +320,9 @@ public class MenuManager {
 
                             @Override
                             public void finish() {
+                                Action action = null;
                                 if (targetMenu.isPopup()) {
-                                    Action action = subMenu.getAction();
+                                    action = subMenu.getAction();
                                     if (action != null) {
                                         ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                                         if (menuCreation != null) {
@@ -287,6 +332,7 @@ public class MenuManager {
                                 }
 
                                 targetMenu.add(subMenu);
+                                initMenuAction(action);
                             }
                         };
                     } else if (next.contribution instanceof DirectMenuContribution) {
@@ -321,8 +367,9 @@ public class MenuManager {
                             @Override
                             public void finish() {
                                 JMenu menuItem = directMenuContribution.getMenu();
+                                Action action = null;
                                 if (targetMenu.isPopup()) {
-                                    Action action = directMenuContribution.getMenu().getAction();
+                                    action = directMenuContribution.getMenu().getAction();
                                     if (action != null) {
                                         ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                                         if (menuCreation != null) {
@@ -332,6 +379,7 @@ public class MenuManager {
                                 }
 
                                 targetMenu.add(menuItem);
+                                initMenuAction(action);
                             }
                         };
                     } else {
@@ -425,6 +473,18 @@ public class MenuManager {
             if (!groupRecord.subGroups.isEmpty()) {
                 processingPath.add(new MenuGroupRecordPathNode(groupRecord.subGroups));
             }
+        }
+        activationUpdateService.requestUpdate();
+    }
+
+    private void initMenuAction(@Nullable Action action) {
+        if (action == null) {
+            return;
+        }
+
+        Object value = action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
+        if (value instanceof ActionActiveComponent) {
+            ((ActionActiveComponent) value).register(componentActivationManager);
         }
     }
 
