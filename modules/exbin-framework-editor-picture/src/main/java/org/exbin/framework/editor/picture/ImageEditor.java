@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.DefaultFileTypes;
@@ -32,6 +33,7 @@ import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.FileTypes;
+import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
  * Image editor.
@@ -49,15 +51,24 @@ public class ImageEditor implements EditorProvider {
     private MouseMotionListener mouseMotionListener;
     @Nullable
     private File lastUsedDirectory;
+    private ComponentActivationListener componentActivationListener;
 
     public ImageEditor() {
         init();
     }
 
     private void init() {
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
         activeFile = new ImageFileHandler();
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
+        componentActivationListener.updated(EditorProvider.class, this);
+        activeFileChanged();
+    }
+
+    private void activeFileChanged() {
+        componentActivationListener.updated(FileHandler.class, activeFile);
     }
 
     @Nonnull

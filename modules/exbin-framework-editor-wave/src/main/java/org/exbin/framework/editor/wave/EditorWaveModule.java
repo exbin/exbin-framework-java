@@ -61,6 +61,7 @@ import org.exbin.framework.editor.wave.service.impl.WaveColorServiceImpl;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -468,7 +469,9 @@ public class EditorWaveModule implements Module {
 
         actionModule.registerMenuItem(AUDIO_POPUP_MENU_ID, MODULE_ID, DRAW_MODE_SUBMENU_ID, "Draw Mode", new MenuPosition(PositionMode.BOTTOM));
         JPopupMenu popupMenu = new JPopupMenu();
-        actionModule.buildMenu(popupMenu, AUDIO_POPUP_MENU_ID);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ComponentActivationService componentActivationService = frameModule.getFrameHandler().getComponentActivationService();
+        actionModule.buildMenu(popupMenu, AUDIO_POPUP_MENU_ID, componentActivationService);
         return popupMenu;
     }
 

@@ -39,6 +39,7 @@ import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
@@ -311,6 +312,13 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
         return frameComponentActivationService;
     }
 
+    @Nonnull
+    @Override
+    public ComponentActivationService getComponentActivationService() {
+        return frameComponentActivationService;
+    }
+
+    
 //    @Override
 //    public void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider) {
 //        this.windowHeaderDecorationProvider = windowHeaderDecorationProvider;

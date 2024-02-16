@@ -47,6 +47,7 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -237,7 +238,9 @@ public class EditorPictureModule implements Module {
         actionModule.registerMenu(PICTURE_POPUP_MENU_ID, MODULE_ID);
         actionModule.registerClipboardMenuItems(PICTURE_POPUP_MENU_ID, MODULE_ID, SeparationMode.AROUND);
         JPopupMenu popupMenu = new JPopupMenu();
-        actionModule.buildMenu(popupMenu, PICTURE_POPUP_MENU_ID);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ComponentActivationService componentActivationService = frameModule.getFrameHandler().getComponentActivationService();
+        actionModule.buildMenu(popupMenu, PICTURE_POPUP_MENU_ID, componentActivationService);
         return popupMenu;
     }
 

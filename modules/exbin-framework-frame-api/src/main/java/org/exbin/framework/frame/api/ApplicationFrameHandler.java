@@ -21,6 +21,7 @@ import java.awt.Frame;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.action.api.ComponentActivationService;
 
 /**
  * Interface for application frame.
@@ -116,4 +117,7 @@ public interface ApplicationFrameHandler {
 
     @Nonnull
     ComponentActivationListener getComponentActivationListener();
+    
+    @Nonnull
+    ComponentActivationService getComponentActivationService();
 }

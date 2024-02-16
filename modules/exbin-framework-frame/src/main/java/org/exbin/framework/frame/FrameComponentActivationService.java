@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.frame;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,13 +49,13 @@ public class FrameComponentActivationService implements ComponentActivationServi
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void requestUpdate() {
         for (Map.Entry<Class<?>, Object> entry : activeComponentState.entrySet()) {
-            Class<?> key = entry.getKey();
+            Class key = entry.getKey();
             Object instance = entry.getValue();
             for (ComponentActivationListener listener : listeners) {
-                // TODO cast instance somehow
-                listener.updated(key, null);
+                listener.updated(key, instance);
             }
         }
     }
