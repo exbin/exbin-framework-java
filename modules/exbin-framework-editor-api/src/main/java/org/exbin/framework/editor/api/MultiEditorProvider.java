@@ -16,7 +16,6 @@
 package org.exbin.framework.editor.api;
 
 import java.util.List;
-import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.file.api.FileHandler;
@@ -28,20 +27,6 @@ import org.exbin.framework.file.api.FileHandler;
  */
 @ParametersAreNonnullByDefault
 public interface MultiEditorProvider extends EditorProvider {
-
-    /**
-     * Adds active file change listener.
-     *
-     * @param listener listener
-     */
-    void addActiveFileChangeListener(ActiveFileChangeListener listener);
-
-    /**
-     * Removes active file change listener.
-     *
-     * @param listener listener
-     */
-    void removeActiveFileChangeListener(ActiveFileChangeListener listener);
 
     /**
      * Returns all file handlers.
@@ -102,12 +87,4 @@ public interface MultiEditorProvider extends EditorProvider {
      * Saves all opened files.
      */
     void saveAllFiles();
-
-    /**
-     * Interface for changes of active file in editor listener.
-     */
-    public static interface ActiveFileChangeListener {
-
-        void activeFileChanged(@Nullable FileHandler fileHandler);
-    }
 }

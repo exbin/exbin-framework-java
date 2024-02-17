@@ -50,10 +50,6 @@ public class FindReplaceActions {
     private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
 
-    private Action editFindAction;
-    private Action editFindAgainAction;
-    private Action editReplaceAction;
-
     public FindReplaceActions() {
     }
 
@@ -92,52 +88,46 @@ public class FindReplaceActions {
     }
 
     @Nonnull
-    public Action getEditFindAction() {
-        if (editFindAction == null) {
-            editFindAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showFindDialog(false);
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(editFindAction, resourceBundle, EDIT_FIND_ACTION_ID);
-            editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
-            editFindAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        }
+    public Action createEditFindAction() {
+        AbstractAction editFindAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showFindDialog(false);
+            }
+        };
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(editFindAction, resourceBundle, EDIT_FIND_ACTION_ID);
+        editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
+        editFindAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         return editFindAction;
     }
 
     @Nonnull
-    public Action getEditFindAgainAction() {
-        if (editFindAgainAction == null) {
-            editFindAgainAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showFindDialog(false);
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(editFindAgainAction, resourceBundle, EDIT_FIND_AGAIN_ACTION_ID);
-            editFindAgainAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
-        }
+    public Action createEditFindAgainAction() {
+        AbstractAction editFindAgainAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showFindDialog(false);
+            }
+        };
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(editFindAgainAction, resourceBundle, EDIT_FIND_AGAIN_ACTION_ID);
+        editFindAgainAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
         return editFindAgainAction;
     }
 
     @Nonnull
-    public Action getEditReplaceAction() {
-        if (editReplaceAction == null) {
-            editReplaceAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showFindDialog(true);
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(editReplaceAction, resourceBundle, EDIT_REPLACE_ACTION_ID);
-            editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
-            editReplaceAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        }
+    public Action createEditReplaceAction() {
+        AbstractAction editReplaceAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showFindDialog(true);
+            }
+        };
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(editReplaceAction, resourceBundle, EDIT_REPLACE_ACTION_ID);
+        editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
+        editReplaceAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         return editReplaceAction;
     }
 }

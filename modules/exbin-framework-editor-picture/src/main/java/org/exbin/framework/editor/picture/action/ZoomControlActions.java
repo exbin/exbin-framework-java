@@ -26,7 +26,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.file.api.FileHandler;
 
 /**
@@ -45,10 +44,6 @@ public class ZoomControlActions {
     private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
 
-    private Action normalZoomAction;
-    private Action zoomUpAction;
-    private Action zoomDownAction;
-
     public ZoomControlActions() {
     }
 
@@ -59,65 +54,59 @@ public class ZoomControlActions {
     }
 
     @Nonnull
-    public Action getNormalZoomAction() {
-        if (normalZoomAction == null) {
-            normalZoomAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (!activeFile.isPresent()) {
-                        throw new IllegalStateException();
-                    }
-
-                    ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
-                    imagePanel.setScale(1);
+    public Action createNormalZoomAction() {
+        AbstractAction normalZoomAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                if (!activeFile.isPresent()) {
+                    throw new IllegalStateException();
                 }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(normalZoomAction, resourceBundle, NORMAL_ZOOM_ACTION_ID);
-        }
+
+                ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
+                imagePanel.setScale(1);
+            }
+        };
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(normalZoomAction, resourceBundle, NORMAL_ZOOM_ACTION_ID);
         return normalZoomAction;
     }
 
     @Nonnull
-    public Action getZoomUpAction() {
-        if (zoomUpAction == null) {
-            zoomUpAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (!activeFile.isPresent()) {
-                        throw new IllegalStateException();
-                    }
-
-                    ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
-                    imagePanel.setScale(imagePanel.getScale() / 2);
+    public Action createZoomUpAction() {
+        AbstractAction zoomUpAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                if (!activeFile.isPresent()) {
+                    throw new IllegalStateException();
                 }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(zoomUpAction, resourceBundle, ZOOM_UP_ACTION_ID);
-        }
+
+                ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
+                imagePanel.setScale(imagePanel.getScale() / 2);
+            }
+        };
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(zoomUpAction, resourceBundle, ZOOM_UP_ACTION_ID);
         return zoomUpAction;
     }
 
     @Nonnull
-    public Action getZoomDownAction() {
-        if (zoomDownAction == null) {
-            zoomDownAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (!activeFile.isPresent()) {
-                        throw new IllegalStateException();
-                    }
-
-                    ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
-                    imagePanel.setScale(imagePanel.getScale() * 2);
+    public Action createZoomDownAction() {
+        AbstractAction zoomDownAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                if (!activeFile.isPresent()) {
+                    throw new IllegalStateException();
                 }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(zoomDownAction, resourceBundle, ZOOM_DOWN_ACTION_ID);
-        }
+
+                ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
+                imagePanel.setScale(imagePanel.getScale() * 2);
+            }
+        };
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(zoomDownAction, resourceBundle, ZOOM_DOWN_ACTION_ID);
         return zoomDownAction;
     }
 }

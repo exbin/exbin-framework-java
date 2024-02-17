@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.docking.api.EditorViewHandling;
 import org.exbin.framework.editor.api.EditorProvider;
@@ -47,6 +49,7 @@ import org.exbin.framework.docking.api.DockingModuleApi;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class DockingModule implements DockingModuleApi {
 
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";
@@ -63,7 +66,21 @@ public class DockingModule implements DockingModuleApi {
     private final Map<EditorProvider, EditorCDockable> editorMap = new HashMap<>();
 
     public DockingModule() {
-        resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(this.getClass());
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(this.getClass());
+        }
+
+        return resourceBundle;
+    }
+
+    private void ensureSetup() {
+        if (resourceBundle == null) {
+            getResourceBundle();
+        }
     }
 
     @Override
@@ -103,6 +120,7 @@ public class DockingModule implements DockingModuleApi {
         area.deploy(grid);
     }
 
+    @Nonnull
     @Override
     public EditorViewHandling getEditorViewHandling() {
         return new EditorViewHandling() {

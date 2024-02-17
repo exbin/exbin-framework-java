@@ -102,13 +102,7 @@ public class EditorTextModule implements Module {
     private TextStatusPanel textStatusPanel;
 
     private FindReplaceActions findReplaceActions;
-    private TextFontAction textFontAction;
-    private TextColorAction textColorAction;
     private EncodingsHandler encodingsHandler;
-    private WordWrappingAction wordWrappingAction;
-    private GoToLineAction goToLineAction;
-    private PropertiesAction propertiesAction;
-    private PrintAction printAction;
 
     public EditorTextModule() {
     }
@@ -453,14 +447,14 @@ public class EditorTextModule implements Module {
     }
 
     public void registerWordWrapping() {
-        getWordWrappingAction();
+        createWordWrappingAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, getWordWrappingAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, createWordWrappingAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, getGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, createGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public TextStatusPanel getTextStatusPanel() {
@@ -479,24 +473,18 @@ public class EditorTextModule implements Module {
     }
 
     @Nonnull
-    private TextFontAction getTextFontAction() {
-        if (textFontAction == null) {
-            ensureSetup();
-            textFontAction = new TextFontAction();
-            textFontAction.setup(resourceBundle);
-        }
-
+    private TextFontAction createTextFontAction() {
+        ensureSetup();
+        TextFontAction textFontAction = new TextFontAction();
+        textFontAction.setup(resourceBundle);
         return textFontAction;
     }
 
     @Nonnull
-    private TextColorAction getTextColorAction() {
-        if (textColorAction == null) {
-            ensureSetup();
-            textColorAction = new TextColorAction();
-            textColorAction.setup(resourceBundle);
-        }
-
+    private TextColorAction createTextColorAction() {
+        ensureSetup();
+        TextColorAction textColorAction = new TextColorAction();
+        textColorAction.setup(resourceBundle);
         return textColorAction;
     }
 
@@ -526,46 +514,34 @@ public class EditorTextModule implements Module {
     }
 
     @Nonnull
-    private WordWrappingAction getWordWrappingAction() {
-        if (wordWrappingAction == null) {
-            ensureSetup();
-            wordWrappingAction = new WordWrappingAction();
-            wordWrappingAction.setup(editorProvider, resourceBundle);
-        }
-
+    private WordWrappingAction createWordWrappingAction() {
+        ensureSetup();
+        WordWrappingAction wordWrappingAction = new WordWrappingAction();
+        wordWrappingAction.setup(editorProvider, resourceBundle);
         return wordWrappingAction;
     }
 
     @Nonnull
-    private GoToLineAction getGoToLineAction() {
-        if (goToLineAction == null) {
-            ensureSetup();
-            goToLineAction = new GoToLineAction();
-            goToLineAction.setup(editorProvider, resourceBundle);
-        }
-
+    private GoToLineAction createGoToLineAction() {
+        ensureSetup();
+        GoToLineAction goToLineAction = new GoToLineAction();
+        goToLineAction.setup(editorProvider, resourceBundle);
         return goToLineAction;
     }
 
     @Nonnull
-    private PropertiesAction getPropertiesAction() {
-        if (propertiesAction == null) {
-            ensureSetup();
-            propertiesAction = new PropertiesAction();
-            propertiesAction.setup(editorProvider, resourceBundle);
-        }
-
+    private PropertiesAction createPropertiesAction() {
+        ensureSetup();
+        PropertiesAction propertiesAction = new PropertiesAction();
+        propertiesAction.setup(editorProvider, resourceBundle);
         return propertiesAction;
     }
 
     @Nonnull
-    private PrintAction getPrintAction() {
-        if (printAction == null) {
-            ensureSetup();
-            printAction = new PrintAction();
-            printAction.setup(editorProvider, resourceBundle);
-        }
-
+    private PrintAction createPrintAction() {
+        ensureSetup();
+        PrintAction printAction = new PrintAction();
+        printAction.setup(editorProvider, resourceBundle);
         return printAction;
     }
 
@@ -573,32 +549,32 @@ public class EditorTextModule implements Module {
         getFindReplaceActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuGroup(ActionConsts.EDIT_MENU_ID, new MenuGroup(EDIT_FIND_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.getEditReplaceAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.createEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.createEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.createEditReplaceAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
     }
 
     public void registerEditFindToolBarActions() {
         getFindReplaceActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, new ToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceActions.getEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
+        actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceActions.createEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, getTextFontAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, getTextColorAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createTextFontAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createTextColorAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerPropertiesMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createPrintAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void loadFromPreferences(Preferences preferences) {

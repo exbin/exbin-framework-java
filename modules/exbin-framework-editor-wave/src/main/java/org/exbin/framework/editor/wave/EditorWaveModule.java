@@ -67,7 +67,7 @@ import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
 
 /**
- * XBUP audio editor module.
+ * Audio editor module.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -91,8 +91,6 @@ public class EditorWaveModule implements Module {
     private AudioStatusPanel audioStatusPanel;
     private boolean playing = false;
 
-    private WaveColorAction waveColorAction;
-    private PropertiesAction propertiesAction;
     private AudioControlActions audioControlActions;
     private DrawingControlActions drawingControlActions;
     private EditToolActions editToolActions;
@@ -341,16 +339,15 @@ public class EditorWaveModule implements Module {
         return audioStatusPanel;
     }
 
-    private PropertiesAction getPropertiesAction() {
-        if (propertiesAction == null) {
-            ensureSetup();
-            propertiesAction = new PropertiesAction();
-            propertiesAction.setup(editorProvider, resourceBundle);
-        }
-
+    @Nonnull
+    private PropertiesAction createPropertiesAction() {
+        ensureSetup();
+        PropertiesAction propertiesAction = new PropertiesAction();
+        propertiesAction.setup(editorProvider, resourceBundle);
         return propertiesAction;
     }
 
+    @Nonnull
     private AudioControlActions getAudioControlActions() {
         if (audioControlActions == null) {
             ensureSetup();
@@ -361,6 +358,7 @@ public class EditorWaveModule implements Module {
         return audioControlActions;
     }
 
+    @Nonnull
     private AudioOperationActions getAudioOperationActions() {
         if (audioOperationActions == null) {
             ensureSetup();
@@ -371,6 +369,7 @@ public class EditorWaveModule implements Module {
         return audioOperationActions;
     }
 
+    @Nonnull
     private DrawingControlActions getDrawingControlActions() {
         if (drawingControlActions == null) {
             ensureSetup();
@@ -381,6 +380,7 @@ public class EditorWaveModule implements Module {
         return drawingControlActions;
     }
 
+    @Nonnull
     private EditToolActions getEditToolActions() {
         if (editToolActions == null) {
             ensureSetup();
@@ -391,6 +391,7 @@ public class EditorWaveModule implements Module {
         return editToolActions;
     }
 
+    @Nonnull
     private ZoomControlActions getZoomControlActions() {
         if (zoomControlActions == null) {
             ensureSetup();
@@ -401,19 +402,17 @@ public class EditorWaveModule implements Module {
         return zoomControlActions;
     }
 
+    @Nonnull
     private WaveColorAction getWaveColorAction() {
-        if (waveColorAction == null) {
-            ensureSetup();
-            waveColorAction = new WaveColorAction();
-            waveColorAction.setup(editorProvider, resourceBundle);
-        }
-
+        ensureSetup();
+        WaveColorAction waveColorAction = new WaveColorAction();
+        waveColorAction.setup(editorProvider, resourceBundle);
         return waveColorAction;
     }
 
     public void registerPropertiesMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerAudioMenu() {
@@ -475,14 +474,15 @@ public class EditorWaveModule implements Module {
         return popupMenu;
     }
 
+    @ParametersAreNonnullByDefault
     public class XBSFileType extends FileFilter implements FileType {
 
         @Override
-        public boolean accept(File f) {
-            if (f.isDirectory()) {
+        public boolean accept(File file) {
+            if (file.isDirectory()) {
                 return true;
             }
-            String extension = getExtension(f);
+            String extension = getExtension(file);
             if (extension != null) {
                 if (extension.length() < 3) {
                     return false;
@@ -492,11 +492,13 @@ public class EditorWaveModule implements Module {
             return false;
         }
 
+        @Nonnull
         @Override
         public String getDescription() {
             return "XBUP Sound Files (*.xbs*)";
         }
 
+        @Nonnull
         @Override
         public String getFileTypeId() {
             return XBS_FILE_TYPE;

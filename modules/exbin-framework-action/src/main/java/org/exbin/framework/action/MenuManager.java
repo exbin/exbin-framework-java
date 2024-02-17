@@ -274,9 +274,8 @@ public class MenuManager {
 
                             @Override
                             public void finish() {
-                                Action action = null;
+                                Action action = ((ActionMenuContribution) next.contribution).getAction();
                                 if (targetMenu.isPopup()) {
-                                    action = ((ActionMenuContribution) next.contribution).getAction();
                                     ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                                     if (menuCreation != null) {
                                         menuCreation.onCreate(menuItem, menuId);
@@ -320,14 +319,11 @@ public class MenuManager {
 
                             @Override
                             public void finish() {
-                                Action action = null;
-                                if (targetMenu.isPopup()) {
-                                    action = subMenu.getAction();
-                                    if (action != null) {
-                                        ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                                        if (menuCreation != null) {
-                                            menuCreation.onCreate(subMenu, menuId);
-                                        }
+                                Action action = subMenu.getAction();
+                                if (targetMenu.isPopup() && action != null) {
+                                    ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
+                                    if (menuCreation != null) {
+                                        menuCreation.onCreate(subMenu, menuId);
                                     }
                                 }
 
@@ -367,14 +363,11 @@ public class MenuManager {
                             @Override
                             public void finish() {
                                 JMenu menuItem = directMenuContribution.getMenu();
-                                Action action = null;
-                                if (targetMenu.isPopup()) {
-                                    action = directMenuContribution.getMenu().getAction();
-                                    if (action != null) {
-                                        ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                                        if (menuCreation != null) {
-                                            menuCreation.onCreate(menuItem, menuId);
-                                        }
+                                Action action = directMenuContribution.getMenu().getAction();
+                                if (targetMenu.isPopup() && action != null) {
+                                    ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
+                                    if (menuCreation != null) {
+                                        menuCreation.onCreate(menuItem, menuId);
                                     }
                                 }
 

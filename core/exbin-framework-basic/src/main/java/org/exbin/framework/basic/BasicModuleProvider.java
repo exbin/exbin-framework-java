@@ -185,7 +185,6 @@ public class BasicModuleProvider implements ModuleProvider {
                         Node node = childModuleNode.item(i);
                         if ("id".equals(node.getNodeName())) {
                             moduleRecord.setModuleId(node.getTextContent());
-                            System.out.println(node.getTextContent());
                             break;
                         }
                     }

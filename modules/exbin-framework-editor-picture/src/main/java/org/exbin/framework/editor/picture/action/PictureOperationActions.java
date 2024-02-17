@@ -31,8 +31,6 @@ import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.editor.picture.gui.ImageResizePanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.handler.DefaultControlHandler;
 import org.exbin.framework.window.api.handler.DefaultControlHandler.ControlActionType;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
@@ -52,8 +50,6 @@ public class PictureOperationActions {
     private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
 
-    private Action imageResizeAction;
-
     public PictureOperationActions() {
     }
 
@@ -63,44 +59,42 @@ public class PictureOperationActions {
     }
 
     @Nonnull
-    public Action getRevertAction() {
-        if (imageResizeAction == null) {
-            imageResizeAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                    if (!activeFile.isPresent()) {
-                        throw new IllegalStateException();
+    public Action createRevertAction() {
+        AbstractAction imageResizeAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                if (!activeFile.isPresent()) {
+                    throw new IllegalStateException();
+                }
+
+                ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
+
+                final ImageResizePanel imageResizePanel = new ImageResizePanel();
+                imageResizePanel.setResolution(imagePanel.getImageSize());
+                DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
+                WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+                final WindowHandler dialog = windowModule.createDialog(imageResizePanel, controlPanel);
+                windowModule.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
+                windowModule.setWindowTitle(dialog, imageResizePanel.getResourceBundle());
+                controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                    if (actionType == ControlActionType.OK) {
+                        Point point = imageResizePanel.getResolution();
+                        int width = (int) (point.getX());
+                        int height = (int) (point.getY());
+                        imagePanel.performResize(width, height);
                     }
 
-                    ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
+                    dialog.close();
+                });
+                dialog.showCentered((Component) e.getSource());
+                dialog.dispose();
+            }
+        };
 
-                    final ImageResizePanel imageResizePanel = new ImageResizePanel();
-                    imageResizePanel.setResolution(imagePanel.getImageSize());
-                    DefaultControlPanel controlPanel = new DefaultControlPanel(imageResizePanel.getResourceBundle());
-                    WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                    final WindowHandler dialog = windowModule.createDialog(imageResizePanel, controlPanel);
-                    windowModule.addHeaderPanel(dialog.getWindow(), imageResizePanel.getClass(), imageResizePanel.getResourceBundle());
-                    windowModule.setWindowTitle(dialog, imageResizePanel.getResourceBundle());
-                    controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                        if (actionType == ControlActionType.OK) {
-                            Point point = imageResizePanel.getResolution();
-                            int width = (int) (point.getX());
-                            int height = (int) (point.getY());
-                            imagePanel.performResize(width, height);
-                        }
-
-                        dialog.close();
-                    });
-                    dialog.showCentered((Component) e.getSource());
-                    dialog.dispose();
-                }
-            };
-
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(imageResizeAction, resourceBundle, IMAGE_RESIZE_ACTION_ID);
-            imageResizeAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        }
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.initAction(imageResizeAction, resourceBundle, IMAGE_RESIZE_ACTION_ID);
+        imageResizeAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         return imageResizeAction;
     }
 }

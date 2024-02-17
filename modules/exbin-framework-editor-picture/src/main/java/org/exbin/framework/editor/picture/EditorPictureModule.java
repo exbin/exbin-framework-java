@@ -53,7 +53,7 @@ import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
- * XBUP picture editor module.
+ * Picture editor module.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -73,9 +73,6 @@ public class EditorPictureModule implements Module {
     private ResourceBundle resourceBundle;
     private ImageStatusPanel imageStatusPanel;
 
-    private ToolColorAction toolColorAction;
-    private PropertiesAction propertiesAction;
-    private PrintAction printAction;
     private ZoomControlActions zoomControlActions;
     private PictureOperationActions pictureOperationActions;
 
@@ -184,12 +181,12 @@ public class EditorPictureModule implements Module {
 
     public void registerPropertiesMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, getPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, getPrintAction(), new MenuPosition(PositionMode.BOTTOM));
+        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createPrintAction(), new MenuPosition(PositionMode.BOTTOM));
     }
 
     @Nonnull
@@ -246,7 +243,7 @@ public class EditorPictureModule implements Module {
 
     public void registerToolsOptionsMenuActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, getToolColorAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createToolColorAction(), new MenuPosition(PositionMode.TOP));
     }
 
     public void registerZoomModeMenu() {
@@ -254,41 +251,32 @@ public class EditorPictureModule implements Module {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, ZOOM_MODE_SUBMENU_ID, "Zoom", new MenuPosition(PositionMode.BOTTOM));
         actionModule.registerMenu(ZOOM_MODE_SUBMENU_ID, MODULE_ID);
-        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomUpAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getNormalZoomAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.getZoomDownAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.createZoomUpAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.createNormalZoomAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ZOOM_MODE_SUBMENU_ID, MODULE_ID, zoomControlActions.createZoomDownAction(), new MenuPosition(PositionMode.TOP));
     }
 
     @Nonnull
-    private PropertiesAction getPropertiesAction() {
-        if (propertiesAction == null) {
-            ensureSetup();
-            propertiesAction = new PropertiesAction();
-            propertiesAction.setup(editorProvider, resourceBundle);
-        }
-
+    private PropertiesAction createPropertiesAction() {
+        ensureSetup();
+        PropertiesAction propertiesAction = new PropertiesAction();
+        propertiesAction.setup(editorProvider, resourceBundle);
         return propertiesAction;
     }
 
     @Nonnull
-    private ToolColorAction getToolColorAction() {
-        if (toolColorAction == null) {
-            ensureSetup();
-            toolColorAction = new ToolColorAction();
-            toolColorAction.setup(editorProvider, resourceBundle);
-        }
-
+    private ToolColorAction createToolColorAction() {
+        ensureSetup();
+        ToolColorAction toolColorAction = new ToolColorAction();
+        toolColorAction.setup(editorProvider, resourceBundle);
         return toolColorAction;
     }
 
     @Nonnull
-    private PrintAction getPrintAction() {
-        if (printAction == null) {
-            ensureSetup();
-            printAction = new PrintAction();
-            printAction.setup(editorProvider, resourceBundle);
-        }
-
+    private PrintAction createPrintAction() {
+        ensureSetup();
+        PrintAction printAction = new PrintAction();
+        printAction.setup(editorProvider, resourceBundle);
         return printAction;
     }
 
@@ -312,7 +300,7 @@ public class EditorPictureModule implements Module {
     public void registerPictureOperationMenu() {
         getPictureOperationActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(PICTURE_MENU_ID, MODULE_ID, pictureOperationActions.getRevertAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(PICTURE_MENU_ID, MODULE_ID, pictureOperationActions.createRevertAction(), new MenuPosition(PositionMode.TOP));
     }
 
     /**
