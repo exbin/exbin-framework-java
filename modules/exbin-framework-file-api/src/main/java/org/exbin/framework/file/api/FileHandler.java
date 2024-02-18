@@ -28,7 +28,7 @@ import javax.swing.JComponent;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface FileHandler extends FileLoading, FileSaving {
+public interface FileHandler extends LoadableFileHandler {
 
     /**
      * Returns unique identifier of the file.
@@ -75,16 +75,4 @@ public interface FileHandler extends FileLoading, FileSaving {
      * @param fileType file type
      */
     void setFileType(@Nullable FileType fileType);
-
-    /**
-     * Clears content of the file.
-     */
-    void clearFile();
-
-    /**
-     * Returns flag if file in this panel was modified since last saving.
-     *
-     * @return true if file was modified
-     */
-    boolean isModified();
 }

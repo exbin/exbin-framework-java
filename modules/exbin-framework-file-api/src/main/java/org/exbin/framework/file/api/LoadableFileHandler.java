@@ -20,23 +20,18 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for file saving.
+ * Interface for loadable file handler.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface FileSaving {
+public interface LoadableFileHandler {
 
     /**
-     * Save document back to source file.
-     */
-    void saveFile();
-
-    /**
-     * Saves file to given filename.
+     * Loads file from given filename.
      *
      * @param fileUri file Uri
      * @param fileType file type
      */
-    void saveToFile(URI fileUri, @Nullable FileType fileType);
+    void loadFromFile(URI fileUri, @Nullable FileType fileType);
 }

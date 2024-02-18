@@ -21,6 +21,7 @@ import java.awt.GridLayout;
 import java.util.Optional;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileHandler;
 
 /**
@@ -71,7 +72,7 @@ public class EditorCDockable extends DefaultMultipleCDockable {
             FileHandler fileHandler = activeFile.get();
             String title = fileHandler.getTitle();
             String name = title.isEmpty() ? UNDEFINED_NAME : title;
-            if (fileHandler.isModified()) {
+            if (fileHandler instanceof EditableFileHandler && ((EditableFileHandler) fileHandler).isModified()) {
                 name += " *";
             }
             setTitleText(name);

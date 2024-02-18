@@ -28,7 +28,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface FileActionsApi {
 
-    void openFile(@Nullable FileLoading fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory);
+    void openFile(@Nullable LoadableFileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory);
 
     void saveFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory);
 

@@ -25,13 +25,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.DefaultFileTypes;
+import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.FileTypes;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.operation.undo.api.UndoActionsHandler;
 
 /**
  * Text editor.
@@ -45,6 +49,8 @@ public class TextEditor implements EditorProvider {
     private FileTypes fileTypes;
 
     private EditorModificationListener editorModificationListener;
+    private ComponentActivationListener componentActivationListener;
+
     private PropertyChangeListener propertyChangeListener;
     @Nullable
     private File lastUsedDirectory;
@@ -58,11 +64,22 @@ public class TextEditor implements EditorProvider {
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
 
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
+
         activeFile.getComponent().addPropertyChangeListener((PropertyChangeEvent evt) -> {
             if (propertyChangeListener != null) {
                 propertyChangeListener.propertyChange(evt);
             }
         });
+
+        activeFileChanged();
+    }
+
+    private void activeFileChanged() {
+        componentActivationListener.updated(FileHandler.class, activeFile);
+        TextPanel textPanel = activeFile.getComponent();
+        componentActivationListener.updated(UndoActionsHandler.class, textPanel);
     }
 
     @Nonnull
@@ -157,7 +174,7 @@ public class TextEditor implements EditorProvider {
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
-        if (fileHandler.isModified()) {
+        if (fileHandler instanceof EditableFileHandler && ((EditableFileHandler) fileHandler).isModified()) {
             FileModuleApi fileModule = App.getModule(FileModuleApi.class);
             return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
         }

@@ -42,7 +42,6 @@ import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.ClipboardActionsUpdater;
 
 /**
  * Implementation of action module.
@@ -274,7 +273,7 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void registerClipboardHandler(ClipboardActionsHandler clipboardHandler) {
-        getClipboardActions().setClipboardActionsHandler(clipboardHandler);
+//        getClipboardActions().setClipboardActionsHandler(clipboardHandler);
     }
 
     @Override
@@ -282,14 +281,14 @@ public class ActionModule implements ActionModuleApi {
         return menuManager.menuGroupExists(menuId, groupId);
     }
 
-    @Nonnull
-    @Override
-    public ClipboardActionsUpdater createClipboardActions(ClipboardActionsHandler clipboardActionsHandler) {
-        ClipboardActions customClipboardActions = new ClipboardActions();
-        customClipboardActions.setup(resourceBundle);
-        customClipboardActions.setClipboardActionsHandler(clipboardActionsHandler);
-        return customClipboardActions;
-    }
+//    @Nonnull
+//    @Override
+//    public ClipboardActionsApi createClipboardActions(ClipboardActionsHandler clipboardActionsHandler) {
+//        ClipboardActions customClipboardActions = new ClipboardActions();
+//        customClipboardActions.setup(resourceBundle);
+//        customClipboardActions.setClipboardActionsHandler(clipboardActionsHandler);
+//        return customClipboardActions;
+//    }
 
     @Override
     public void unregisterMenu(String menuId) {

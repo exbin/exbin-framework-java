@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
+import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.xbup.audio.wave.XBWave;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
@@ -43,7 +44,6 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBTPullTypeDeclaringFilter;
 import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
-import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Audio file handler.
@@ -51,7 +51,7 @@ import org.exbin.framework.file.api.FileHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AudioFileHandler implements FileHandler {
+public class AudioFileHandler implements EditableFileHandler {
 
     private AudioPanel audioPanel = new AudioPanel();
 
@@ -98,6 +98,11 @@ public class AudioFileHandler implements FileHandler {
             audioPanel.setWave(wave);
             this.fileUri = fileUri;
         }
+    }
+
+    @Override
+    public boolean canSave() {
+        return fileUri != null;
     }
 
     @Override

@@ -31,7 +31,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.ClipboardActionsUpdater;
+import org.exbin.framework.utils.ClipboardActionsApi;
 import org.exbin.framework.utils.ClipboardUtils;
 
 /**
@@ -40,7 +40,7 @@ import org.exbin.framework.utils.ClipboardUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ClipboardActions implements ClipboardActionsUpdater {
+public class ClipboardActions implements ClipboardActionsApi {
 
     public static final String EDIT_SELECT_ALL_ACTION_ID = "popupSelectAllAction";
     public static final String EDIT_DELETE_ACTION_ID = "popupDeleteAction";
@@ -50,7 +50,6 @@ public class ClipboardActions implements ClipboardActionsUpdater {
 
     private ResourceBundle resourceBundle;
 
-    private ClipboardActionsHandler clipboardActionsHandler = null;
     private FlavorListener clipboardFlavorListener;
 
     public ClipboardActions() {
@@ -115,12 +114,6 @@ public class ClipboardActions implements ClipboardActionsUpdater {
         return selectAllAction;
     }
 
-    @Override
-    public void setClipboardActionsHandler(ClipboardActionsHandler clipboardActionsHandler) {
-        this.clipboardActionsHandler = clipboardActionsHandler;
-        // TODO updateClipboardActions();
-    }
-
     public void registerClipboardListener() {
         Clipboard clipboard = ClipboardUtils.getClipboard();
         clipboardFlavorListener = (FlavorEvent e) -> {
@@ -136,7 +129,9 @@ public class ClipboardActions implements ClipboardActionsUpdater {
     }
 
     @ParametersAreNonnullByDefault
-    private class CutAction extends AbstractAction implements ActionActiveComponent {
+    private static class CutAction extends AbstractAction implements ActionActiveComponent {
+
+        private ClipboardActionsHandler clipboardActionsHandler;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -155,7 +150,9 @@ public class ClipboardActions implements ClipboardActionsUpdater {
     }
 
     @ParametersAreNonnullByDefault
-    private class CopyAction extends AbstractAction implements ActionActiveComponent {
+    private static class CopyAction extends AbstractAction implements ActionActiveComponent {
+
+        private ClipboardActionsHandler clipboardActionsHandler;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -174,7 +171,9 @@ public class ClipboardActions implements ClipboardActionsUpdater {
     }
 
     @ParametersAreNonnullByDefault
-    private class PasteAction extends AbstractAction implements ActionActiveComponent {
+    private static class PasteAction extends AbstractAction implements ActionActiveComponent {
+
+        private ClipboardActionsHandler clipboardActionsHandler;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -193,7 +192,9 @@ public class ClipboardActions implements ClipboardActionsUpdater {
     }
 
     @ParametersAreNonnullByDefault
-    private class DeleteAction extends AbstractAction implements ActionActiveComponent {
+    private static class DeleteAction extends AbstractAction implements ActionActiveComponent {
+
+        private ClipboardActionsHandler clipboardActionsHandler;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -212,7 +213,9 @@ public class ClipboardActions implements ClipboardActionsUpdater {
     }
 
     @ParametersAreNonnullByDefault
-    private class SelectAllAction extends AbstractAction implements ActionActiveComponent {
+    private static class SelectAllAction extends AbstractAction implements ActionActiveComponent {
+
+        private ClipboardActionsHandler clipboardActionsHandler;
 
         @Override
         public void actionPerformed(ActionEvent e) {

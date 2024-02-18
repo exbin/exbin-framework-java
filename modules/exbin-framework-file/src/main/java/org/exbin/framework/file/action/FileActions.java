@@ -34,9 +34,10 @@ import org.exbin.framework.file.api.FileActionsApi.OpenFileResult;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.file.api.FileLoading;
 import org.exbin.framework.file.api.UsedDirectoryApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.file.api.EditableFileHandler;
+import org.exbin.framework.file.api.LoadableFileHandler;
 
 /**
  * File actions.
@@ -69,7 +70,7 @@ public class FileActions implements FileActionsApi {
     }
 
     @Override
-    public void openFile(@Nullable FileLoading fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
+    public void openFile(@Nullable LoadableFileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
         if (fileHandler != null) {
             OpenFileResult openFileResult = FileActions.this.showOpenFileDialog(fileTypes, usedDirectory);
             if (openFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
@@ -150,56 +151,60 @@ public class FileActions implements FileActionsApi {
 
     @Override
     public void saveFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
-        if (fileHandler != null) {
-            Optional<URI> fileUri = fileHandler.getFileUri();
-            if (fileUri.isPresent()) {
-                fileHandler.saveToFile(fileUri.get(), fileHandler.getFileType().orElse(null));
-            } else {
-                saveAsFile(fileHandler, fileTypes, usedDirectory);
-            }
+        if (!(fileHandler instanceof EditableFileHandler)) {
+            throw new IllegalStateException("Unable to save file" + fileHandler == null ? "" : " " + fileHandler.getTitle());
+        }
+
+        Optional<URI> fileUri = fileHandler.getFileUri();
+        if (fileUri.isPresent()) {
+            ((EditableFileHandler) fileHandler).saveToFile(fileUri.get(), fileHandler.getFileType().orElse(null));
+        } else {
+            saveAsFile(fileHandler, fileTypes, usedDirectory);
         }
     }
 
     @Override
     public void saveAsFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
-        if (fileHandler != null) {
-            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-            Optional<URI> currentFileUri = fileHandler.getFileUri();
-            OpenFileResult saveFileResult = showSaveFileDialog(fileTypes, currentFileUri.isPresent() ? new File(currentFileUri.get()) : null, usedDirectory, resourceBundle.getString("SaveAsDialog.title"));
-            if (saveFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = Objects.requireNonNull(saveFileResult.selectedFile);
-                if (selectedFile.exists()) {
-                    if (!showAskToOverwrite()) {
-                        return;
-                    }
-                }
+        if (!(fileHandler instanceof EditableFileHandler)) {
+            throw new IllegalStateException("Unable to save file" + fileHandler == null ? "" : " " + fileHandler.getTitle());
+        }
 
-                try {
-                    URI fileUri = selectedFile.toURI();
-                    fileHandler.saveToFile(fileUri, (FileType) saveFileResult.fileType);
-                    if (usedDirectory != null) {
-                        usedDirectory.setLastUsedDirectory(selectedFile.getParentFile());
-                        usedDirectory.updateRecentFilesList(fileUri, saveFileResult.fileType);
-                    }
-                } catch (Exception ex) {
-                    Logger.getLogger(FileActions.class.getName()).log(Level.SEVERE, null, ex);
-                    String errorMessage = ex.getLocalizedMessage();
-                    JOptionPane.showMessageDialog(frameModule.getFrame(),
-                            resourceBundle.getString("Question.unable_to_save") + ": " + ex.getClass().getCanonicalName() + (errorMessage == null || errorMessage.isEmpty() ? "" : errorMessage),
-                            resourceBundle.getString("Question.unable_to_save"), JOptionPane.ERROR_MESSAGE
-                    );
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        Optional<URI> currentFileUri = fileHandler.getFileUri();
+        OpenFileResult saveFileResult = showSaveFileDialog(fileTypes, currentFileUri.isPresent() ? new File(currentFileUri.get()) : null, usedDirectory, resourceBundle.getString("SaveAsDialog.title"));
+        if (saveFileResult.dialogResult == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = Objects.requireNonNull(saveFileResult.selectedFile);
+            if (selectedFile.exists()) {
+                if (!showAskToOverwrite()) {
+                    return;
                 }
+            }
+
+            try {
+                URI fileUri = selectedFile.toURI();
+                ((EditableFileHandler) fileHandler).saveToFile(fileUri, (FileType) saveFileResult.fileType);
+                if (usedDirectory != null) {
+                    usedDirectory.setLastUsedDirectory(selectedFile.getParentFile());
+                    usedDirectory.updateRecentFilesList(fileUri, saveFileResult.fileType);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(FileActions.class.getName()).log(Level.SEVERE, null, ex);
+                String errorMessage = ex.getLocalizedMessage();
+                JOptionPane.showMessageDialog(frameModule.getFrame(),
+                        resourceBundle.getString("Question.unable_to_save") + ": " + ex.getClass().getCanonicalName() + (errorMessage == null || errorMessage.isEmpty() ? "" : errorMessage),
+                        resourceBundle.getString("Question.unable_to_save"), JOptionPane.ERROR_MESSAGE
+                );
             }
         }
     }
 
     @Override
     public boolean showAskForSaveDialog(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
-        if (fileHandler == null) {
+        if (!(fileHandler instanceof EditableFileHandler)) {
             return true;
         }
 
-        while (fileHandler.isModified()) {
+        while (((EditableFileHandler) fileHandler).isModified()) {
             Object[] options = {
                 resourceBundle.getString("Question.modified_save"),
                 resourceBundle.getString("Question.modified_discard"),

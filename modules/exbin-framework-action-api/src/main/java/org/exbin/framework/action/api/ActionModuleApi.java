@@ -32,7 +32,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.utils.ClipboardActionsUpdater;
 
 /**
  * Interface for XBUP framework action module.
@@ -160,15 +159,6 @@ public interface ActionModuleApi extends Module {
 
     @Nonnull
     ClipboardActionsApi getClipboardTextActions();
-
-    /**
-     * Creates new instance of the clipboard actions set.
-     *
-     * @param clipboardHandler clipboard handler
-     * @return clipboard actions set
-     */
-    @Nonnull
-    ClipboardActionsUpdater createClipboardActions(ClipboardActionsHandler clipboardHandler);
 
     /**
      * Registers menu clipboard actions.

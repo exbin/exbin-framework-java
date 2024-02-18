@@ -22,6 +22,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.editor.api.EditorActionsApi;
 import org.exbin.framework.editor.gui.UnsavedFilesPanel;
+import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
@@ -56,7 +57,7 @@ public class EditorActions implements EditorActionsApi {
             @Override
             public boolean saveFile(FileHandler fileHandler) {
                 editorProvider.saveFile(fileHandler);
-                return !fileHandler.isModified();
+                return !((EditableFileHandler) fileHandler).isModified();
             }
 
             @Override

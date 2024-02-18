@@ -35,12 +35,12 @@ import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
 import org.exbin.framework.operation.undo.api.UndoActionsHandler;
 import org.exbin.framework.operation.undo.api.UndoActionsHandlerEmpty;
+import org.exbin.framework.utils.ClipboardActionsApi;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.xbup.core.catalog.XBACatalog;
 import org.exbin.xbup.core.catalog.base.XBCItem;
-import org.exbin.framework.utils.ClipboardActionsUpdater;
 
 /**
  * Data type definition editor panel.
@@ -127,7 +127,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         UndoActionsHandler undoActionsHandler = new UndoActionsHandlerEmpty();
         definitionEditorPanel.setUndoHandler(undoActionsHandler, operationUndoModule.createUndoActions(undoActionsHandler));
         ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
-        definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.createClipboardActions(clipboardActionsHandler));
+        definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.getClipboardActions());
         WindowUtils.invokeWindow(definitionEditorPanel);
 
         MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
@@ -238,7 +238,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         // toolBarEditorPanel.setUndoHandler(undoHandler, undoActions);
     }
 
-    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActionsUpdater clipboardActions) {
+    public void setClipboardHandler(ClipboardActionsHandler clipboardHandler, ClipboardActionsApi clipboardActions) {
         // toolBarEditorPanel.setClipboardHandler(clipboardHandler, clipboardActions);
     }
 

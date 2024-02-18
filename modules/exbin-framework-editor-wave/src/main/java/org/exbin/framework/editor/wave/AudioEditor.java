@@ -29,6 +29,7 @@ import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.DefaultFileTypes;
+import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 import org.exbin.framework.file.api.FileHandler;
@@ -164,7 +165,7 @@ public class AudioEditor implements EditorProvider {
 
     @Override
     public boolean releaseFile(FileHandler fileHandler) {
-        if (fileHandler.isModified()) {
+        if (fileHandler instanceof EditableFileHandler && ((EditableFileHandler) fileHandler).isModified()) {
             FileModuleApi fileModule = App.getModule(FileModuleApi.class);
             return fileModule.getFileActions().showAskForSaveDialog(fileHandler, fileTypes, this);
         }

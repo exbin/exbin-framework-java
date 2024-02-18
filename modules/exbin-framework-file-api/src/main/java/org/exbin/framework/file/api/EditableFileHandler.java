@@ -20,18 +20,42 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for file loading.
+ * Interface for editable file handling.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface FileLoading {
+public interface EditableFileHandler extends FileHandler {
 
     /**
-     * Loads file from given filename.
+     * Clears content of the file.
+     */
+    void clearFile();
+
+    /**
+     * Returns flag if file in this panel was modified since last saving.
+     *
+     * @return true if file was modified
+     */
+    boolean isModified();
+
+    /**
+     * Returns true if save operation is possible.
+     *
+     * @return id
+     */
+    boolean canSave();
+
+    /**
+     * Performs saving of the file.
+     */
+    void saveFile();
+
+    /**
+     * Saves file to given filename.
      *
      * @param fileUri file Uri
      * @param fileType file type
      */
-    void loadFromFile(URI fileUri, @Nullable FileType fileType);
+    void saveToFile(URI fileUri, @Nullable FileType fileType);
 }

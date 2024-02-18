@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.gui.TextPanel;
-import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
@@ -56,7 +56,7 @@ import org.exbin.xbup.core.type.XBEncodingText;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFileHandler implements FileHandler, TextFontApi {
+public class TextFileHandler implements EditableFileHandler, TextFontApi {
 
     private final TextPanel textPanel = new TextPanel();
 
@@ -118,6 +118,11 @@ public class TextFileHandler implements FileHandler, TextFontApi {
         }
 
         textPanel.setModified(false);
+    }
+
+    @Override
+    public boolean canSave() {
+        return fileUri != null;
     }
 
     @Override

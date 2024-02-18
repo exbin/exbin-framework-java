@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
+import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
@@ -55,7 +56,7 @@ import org.exbin.framework.file.api.FileHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ImageFileHandler implements FileHandler {
+public class ImageFileHandler implements EditableFileHandler {
 
     private static final String DEFAULT_PICTURE_FILE_EXT = "PNG";
 
@@ -107,6 +108,11 @@ public class ImageFileHandler implements FileHandler {
                 Logger.getLogger(ImageFileHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @Override
+    public boolean canSave() {
+        return fileUri != null;
     }
 
     @Override
