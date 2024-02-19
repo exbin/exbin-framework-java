@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
+import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
@@ -48,7 +49,7 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.visual.picture.XBBufferedImage;
-import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.action.api.ComponentActivationProvider;
 
 /**
  * Image file handler.
@@ -56,7 +57,7 @@ import org.exbin.framework.file.api.FileHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ImageFileHandler implements EditableFileHandler {
+public class ImageFileHandler implements EditableFileHandler, ComponentActivationProvider {
 
     private static final String DEFAULT_PICTURE_FILE_EXT = "PNG";
 
@@ -195,6 +196,12 @@ public class ImageFileHandler implements EditableFileHandler {
     @Override
     public boolean isModified() {
         return imagePanel.isModified();
+    }
+
+    @Nonnull
+    @Override
+    public ComponentActivationService getComponentActivationService() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**

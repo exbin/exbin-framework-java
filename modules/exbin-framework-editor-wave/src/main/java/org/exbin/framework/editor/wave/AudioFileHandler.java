@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.editor.wave.gui.AudioPanel;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
@@ -44,6 +45,7 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBTPullTypeDeclaringFilter;
 import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
+import org.exbin.framework.action.api.ComponentActivationProvider;
 
 /**
  * Audio file handler.
@@ -51,7 +53,7 @@ import org.exbin.xbup.core.serial.XBPSerialWriter;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AudioFileHandler implements EditableFileHandler {
+public class AudioFileHandler implements EditableFileHandler, ComponentActivationProvider {
 
     private AudioPanel audioPanel = new AudioPanel();
 
@@ -188,6 +190,12 @@ public class AudioFileHandler implements EditableFileHandler {
     @Override
     public boolean isModified() {
         return audioPanel.isModified();
+    }
+
+    @Nonnull
+    @Override
+    public ComponentActivationService getComponentActivationService() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**

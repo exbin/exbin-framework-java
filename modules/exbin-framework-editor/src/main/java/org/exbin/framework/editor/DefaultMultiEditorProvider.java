@@ -34,7 +34,9 @@ import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.ComponentActivationService;
+import org.exbin.framework.action.api.DefaultComponentActivationService;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.editor.action.EditorActions;
@@ -73,7 +75,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     protected FileHandler activeFile = null;
     @Nullable
     protected File lastUsedDirectory;
-    protected ComponentActivationListener componentActivationListener;
+    protected MultiEditorComponentActivationService componentActivationService = new MultiEditorComponentActivationService();
 
     public DefaultMultiEditorProvider() {
         init();
@@ -81,7 +83,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     private void init() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
+        componentActivationService.registerListener(frameModule.getFrameHandler().getComponentActivationListener());
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
@@ -112,14 +114,16 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
             }
         });
 
-        componentActivationListener.updated(EditorProvider.class, this);
+        componentActivationService.updated(EditorProvider.class, this);
         activeFileChanged();
     }
 
     public void activeFileChanged() {
         int activeIndex = multiEditorPanel.getActiveIndex();
         activeFile = activeIndex >= 0 ? fileHandlers.get(activeIndex) : null;
-        componentActivationListener.updated(FileHandler.class, activeFile);
+        componentActivationService.updated(FileHandler.class, activeFile);
+        ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getComponentActivationService() : null;
+        componentActivationService.passRequestUpdate(fileComponentActivationService);
     }
 
     @Nonnull
@@ -137,6 +141,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         return fileHandlers;
     }
 
+    @Nonnull
     @Override
     public String getName(FileHandler fileHandler) {
         String name = fileHandler.getTitle();
@@ -152,6 +157,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         int fileIndex = ++lastIndex;
         newFilesMap.put(fileIndex, ++lastNewFileIndex);
         EditableFileHandler newFile = createFileHandler(fileIndex);
+        initFileHandler(newFile);
         newFile.clearFile();
         fileHandlers.add(newFile);
 
@@ -171,10 +177,25 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     @Override
     public void openFile(URI fileUri, FileType fileType) {
-        FileHandler file = createFileHandler(++lastIndex);
-        file.loadFromFile(fileUri, fileType);
-        fileHandlers.add(file);
-        multiEditorPanel.addFileHandler(file, file.getTitle());
+        FileHandler fileHandler = createFileHandler(++lastIndex);
+        initFileHandler(fileHandler);
+        fileHandler.loadFromFile(fileUri, fileType);
+        fileHandlers.add(fileHandler);
+        multiEditorPanel.addFileHandler(fileHandler, fileHandler.getTitle());
+    }
+
+    public void initFileHandler(FileHandler fileHandler) {
+        if (fileHandler instanceof ComponentActivationProvider) {
+            ComponentActivationService fileComponentActivationService = ((ComponentActivationProvider) fileHandler).getComponentActivationService();
+            fileComponentActivationService.registerListener(new ComponentActivationListener() {
+                @Override
+                public <T> void updated(Class<T> instanceClass, T instance) {
+                    if (fileHandler == activeFile) {
+                        componentActivationService.passUpdate(instanceClass, instance);
+                    }
+                }
+            });
+        }
     }
 
     @Override

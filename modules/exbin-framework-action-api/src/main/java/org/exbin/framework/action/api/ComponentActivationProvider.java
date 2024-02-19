@@ -15,23 +15,23 @@
  */
 package org.exbin.framework.action.api;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.action.api.ComponentActivationService;
 
 /**
- * Listener for action update when menu is activated for component.
+ * Component activation provider interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ComponentActivationListener {
+public interface ComponentActivationProvider {
 
     /**
-     * Notifies active instance updated.
+     * Returns component activation service.
      *
-     * @param <T> updated instance class
-     * @param instanceClass instance class
-     * @param instance class instance
+     * @return component activation service
      */
-    <T> void updated(Class<T> instanceClass, @Nullable T instance);
+    @Nonnull
+    ComponentActivationService getComponentActivationService();
 }

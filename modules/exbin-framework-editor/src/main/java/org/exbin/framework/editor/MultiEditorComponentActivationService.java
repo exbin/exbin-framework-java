@@ -13,50 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.frame;
+package org.exbin.framework.editor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationService;
+import org.exbin.framework.action.api.DefaultComponentActivationService;
 
 /**
- * Component activation service. Currently used for direct passing.
+ * Default multi editor component activation service.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FrameComponentActivationService implements ComponentActivationService, ComponentActivationListener {
+public class MultiEditorComponentActivationService extends DefaultComponentActivationService {
 
-    private final List<ComponentActivationListener> listeners = new ArrayList<>();
-    private final Map<Class<?>, Object> activeComponentState = new HashMap<>();
+    protected final Set<Class<?>> passActiveComponentState = new HashSet<>();
 
-    @Override
-    public void registerListener(ComponentActivationListener listener) {
-        listeners.add(listener);
-    }
-
-    @Override
-    public <T> void updated(Class<T> instanceClass, @Nullable T instance) {
-        activeComponentState.put(instanceClass, instance);
+    public <T> void passUpdate(Class<T> instanceClass, @Nullable T instance) {
+        passActiveComponentState.add(instanceClass);
         for (ComponentActivationListener listener : listeners) {
             listener.updated(instanceClass, instance);
         }
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void requestUpdate() {
-        for (Map.Entry<Class<?>, Object> entry : activeComponentState.entrySet()) {
-            Class key = entry.getKey();
-            Object instance = entry.getValue();
+    public void passRequestUpdate(@Nullable ComponentActivationService componentActivationService) {
+        // TODO optimize later
+        for (Class<?> instanceClass : passActiveComponentState) {
             for (ComponentActivationListener listener : listeners) {
-                listener.updated(key, instance);
+                listener.updated(instanceClass, null);
             }
+        }
+        if (componentActivationService != null) {
+            componentActivationService.requestUpdate();
         }
     }
 }
