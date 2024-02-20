@@ -23,17 +23,17 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UndoActionsHandler {
+public interface UndoRedoHandler {
 
     /**
-     * Returns if undo operation is available.
+     * Returns whether undo operation is available.
      *
      * @return true if undo possible
      */
     boolean canUndo();
 
     /**
-     * Returns if redo operation is available.
+     * Returns whether redo operation is available.
      *
      * @return true if redo possible
      */
@@ -48,16 +48,4 @@ public interface UndoActionsHandler {
      * Performs redo.
      */
     void performRedo();
-
-    /**
-     * Performs opening of undo manager dialog.
-     */
-    void performUndoManager();
-
-    /**
-     * Sets listener for undo updates.
-     *
-     * @param undoUpdateListener undo update listener
-     */
-    void setUndoUpdateListener(UndoUpdateListener undoUpdateListener);
 }

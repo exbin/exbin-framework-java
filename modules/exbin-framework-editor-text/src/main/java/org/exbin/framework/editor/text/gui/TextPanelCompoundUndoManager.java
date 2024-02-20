@@ -119,7 +119,7 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
 
     @Override
     public boolean canRedo() {
-        return edits.size() > 0 && pointer < edits.size() - 1;
+        return !edits.isEmpty() && pointer < edits.size() - 1;
     }
 
     class MyCompoundEdit extends CompoundEdit {
@@ -144,12 +144,12 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
 
         @Override
         public boolean canUndo() {
-            return edits.size() > 0 && !isUnDone;
+            return !edits.isEmpty() && !isUnDone;
         }
 
         @Override
         public boolean canRedo() {
-            return edits.size() > 0 && isUnDone;
+            return !edits.isEmpty() && isUnDone;
         }
     }
 }

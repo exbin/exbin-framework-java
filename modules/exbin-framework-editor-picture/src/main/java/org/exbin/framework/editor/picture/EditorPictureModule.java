@@ -51,6 +51,9 @@ import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.xbup.operation.Command;
+import org.exbin.xbup.operation.undo.XBTLinearUndo;
+import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 
 /**
  * Picture editor module.
@@ -93,9 +96,6 @@ public class EditorPictureModule implements Module {
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
             ImageEditor imageEditor = new ImageEditor();
-
-            OperationUndoModuleApi undoModule = App.getModule(OperationUndoModuleApi.class);
-            // imagePanel.setUndoHandler(undoModule.getUndoHandler());
 
             editorProvider = imageEditor;
 
@@ -177,6 +177,23 @@ public class EditorPictureModule implements Module {
         // TODO support for multi editor
         ImagePanel imagePanel = (ImagePanel) activeFile.get().getComponent();
         imagePanel.registerImageStatus(imageStatusPanel);
+    }
+    
+    public void registerUndoHandler() {
+        /* TODO
+        XBTLinearUndo linearUndo = new XBTLinearUndo(null);
+        linearUndo.addUndoUpdateListener(new XBUndoUpdateListener() {
+            @Override
+            public void undoCommandPositionChanged() {
+                ((ImagePanel) getEditorProvider()).repaint();
+            }
+
+            @Override
+            public void undoCommandAdded(Command command) {
+                ((ImagePanel) getEditorProvider()).repaint();
+            }
+        });
+        ((ImagePanel) getEditorProvider()).setUndoHandler(linearUndo); */
     }
 
     public void registerPropertiesMenu() {

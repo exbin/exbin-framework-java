@@ -33,8 +33,8 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsHandlerEmpty;
 import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
-import org.exbin.framework.operation.undo.api.UndoActionsHandler;
-import org.exbin.framework.operation.undo.api.UndoActionsHandlerEmpty;
+import org.exbin.framework.operation.undo.api.UndoRedoHandler;
+import org.exbin.framework.operation.undo.api.EmptyUndoRedoHandler;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.TestApplication;
@@ -124,8 +124,8 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
 //        testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
 
         DefinitionEditorPanel definitionEditorPanel = new DefinitionEditorPanel();
-        UndoActionsHandler undoActionsHandler = new UndoActionsHandlerEmpty();
-        definitionEditorPanel.setUndoHandler(undoActionsHandler, operationUndoModule.createUndoActions(undoActionsHandler));
+        UndoRedoHandler undoRedoHandler = new EmptyUndoRedoHandler();
+        definitionEditorPanel.setUndoHandler(undoRedoHandler, operationUndoModule.createUndoActions());
         ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
         definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.getClipboardActions());
         WindowUtils.invokeWindow(definitionEditorPanel);
@@ -234,7 +234,7 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
         return defsModel;
     }
 
-    public void setUndoHandler(UndoActionsHandler undoHandler, UndoActions undoActions) {
+    public void setUndoHandler(UndoRedoHandler undoHandler, UndoActions undoActions) {
         // toolBarEditorPanel.setUndoHandler(undoHandler, undoActions);
     }
 

@@ -50,6 +50,7 @@ import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.visual.picture.XBBufferedImage;
 import org.exbin.framework.action.api.ComponentActivationProvider;
+import org.exbin.framework.action.api.DefaultComponentActivationService;
 
 /**
  * Image file handler.
@@ -67,6 +68,15 @@ public class ImageFileHandler implements EditableFileHandler, ComponentActivatio
     private String ext = null;
     private String title;
     private FileType fileType = null;
+    private DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
+
+    public ImageFileHandler() {
+        init();
+    }
+
+    private void init() {
+        
+    }
 
     @Override
     public int getId() {
@@ -201,7 +211,7 @@ public class ImageFileHandler implements EditableFileHandler, ComponentActivatio
     @Nonnull
     @Override
     public ComponentActivationService getComponentActivationService() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return componentActivationService;
     }
 
     /**

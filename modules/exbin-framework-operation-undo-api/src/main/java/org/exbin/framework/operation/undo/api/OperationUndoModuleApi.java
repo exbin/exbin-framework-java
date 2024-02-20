@@ -19,7 +19,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Interface for framework undo/redo module.
@@ -30,21 +29,6 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 public interface OperationUndoModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(OperationUndoModuleApi.class);
-
-    /**
-     * Returns undo handler.
-     *
-     * @return undo handler
-     */
-    @Nonnull
-    XBUndoHandler getUndoHandler();
-
-    /**
-     * Sets current undo handler.
-     *
-     * @param undoHandler undo handler
-     */
-    void setUndoHandler(XBUndoHandler undoHandler);
 
     /**
      * Registers undo/redo operations to main frame menu.
@@ -62,11 +46,6 @@ public interface OperationUndoModuleApi extends Module {
     void registerMainToolBar();
 
     /**
-     * Updates enablement of undo and redo operations.
-     */
-    void updateUndoStatus();
-
-    /**
      * Opens undo manager dialog.
      */
     void openUndoManager();
@@ -74,9 +53,8 @@ public interface OperationUndoModuleApi extends Module {
     /**
      * Creates new instance of the undo actions set.
      *
-     * @param undoActionsHandler clipboard handler
      * @return undo actions set
      */
     @Nonnull
-    UndoActions createUndoActions(UndoActionsHandler undoActionsHandler);
+    UndoActions createUndoActions();
 }

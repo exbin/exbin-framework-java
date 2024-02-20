@@ -48,11 +48,6 @@ public interface EditorModuleApi extends Module {
     @Nonnull
     JComponent getEditorComponent();
 
-    /**
-     * Registers undo handler for undo management to editor.
-     */
-    void registerUndoHandler();
-
     @Nonnull
     AbstractAction createCloseFileAction();
 

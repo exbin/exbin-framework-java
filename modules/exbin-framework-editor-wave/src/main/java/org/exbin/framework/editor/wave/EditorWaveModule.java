@@ -115,8 +115,7 @@ public class EditorWaveModule implements Module {
         if (editorProvider == null) {
             AudioEditor audioEditor = new AudioEditor();
 
-            OperationUndoModuleApi undoModule = App.getModule(OperationUndoModuleApi.class);
-            audioEditor.setUndoHandler(undoModule.getUndoHandler());
+            // TODO audioEditor.setUndoHandler(undoModule.getUndoHandler());
 
             editorProvider = audioEditor;
 

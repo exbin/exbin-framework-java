@@ -46,6 +46,9 @@ import org.exbin.xbup.core.parser.token.pull.convert.XBToXBTPullConvertor;
 import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.framework.action.api.ComponentActivationProvider;
+import org.exbin.framework.action.api.DefaultComponentActivationService;
+import org.exbin.framework.operation.undo.api.UndoRedoHandler;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Audio file handler.
@@ -61,8 +64,47 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
     private FileType fileType = null;
     private String title;
     private javax.sound.sampled.AudioFileFormat.Type audioFormatType = null;
+    private DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
 
     private String ext;
+
+    public AudioFileHandler() {
+        init();
+    }
+
+    private void init() {
+        XBUndoHandler undoHandler = audioPanel.getUndoHandler();
+        UndoRedoHandler undoActionsHandler = new UndoRedoHandler() {
+            @Override
+            public boolean canUndo() {
+                return undoHandler.canUndo();
+            }
+
+            @Override
+            public boolean canRedo() {
+                return undoHandler.canRedo();
+            }
+
+            @Override
+            public void performUndo() {
+                try {
+                    undoHandler.performUndo();
+                } catch (Exception ex) {
+                    Logger.getLogger(AudioFileHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            @Override
+            public void performRedo() {
+                try {
+                    undoHandler.performRedo();
+                } catch (Exception ex) {
+                    Logger.getLogger(AudioFileHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        componentActivationService.updated(UndoRedoHandler.class, undoActionsHandler);
+    }
 
     @Override
     public int getId() {
@@ -195,7 +237,7 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
     @Nonnull
     @Override
     public ComponentActivationService getComponentActivationService() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return componentActivationService;
     }
 
     /**

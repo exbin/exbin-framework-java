@@ -46,12 +46,12 @@ import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.operation.undo.api.UndoActionsHandler;
-import org.exbin.framework.operation.undo.api.UndoUpdateListener;
+import org.exbin.framework.operation.undo.api.UndoRedoHandler;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.operation.undo.api.UndoUpdateListener;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.xbup.core.util.StringUtils;
 
@@ -61,10 +61,9 @@ import org.exbin.xbup.core.util.StringUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHandler, UndoActionsHandler, TextCharsetApi, TextFontApi {
+public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHandler, UndoRedoHandler, TextCharsetApi, TextFontApi {
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
-    private UndoUpdateListener undoUpdateListener = null;
     private boolean modified = false;
     private Object highlight;
     private Color foundTextBackgroundColor;
@@ -111,15 +110,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
             }
         });
 
-        // Listener for undoManagement and redo events
-        textArea.getDocument().addUndoableEditListener((UndoableEditEvent evt) -> {
-            undoManagement.undoableEditHappened(evt);
-
-            if (undoUpdateListener != null) {
-                undoUpdateListener.undoChanged();
-            }
-        });
-
+        textArea.getDocument().addUndoableEditListener(undoManagement::undoableEditHappened);
         textArea.addCaretListener((e) -> {
             // TODO detect selection changes only
             if (clipboardActionsUpdateListener != null) {
@@ -258,11 +249,6 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
     }
 
     @Override
-    public void performUndoManager() {
-        // TODO
-    }
-
-    @Override
     public boolean isSelection() {
         return textArea.getSelectionEnd() > textArea.getSelectionStart();
     }
@@ -360,11 +346,6 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
 
     public void setPopupMenu(JPopupMenu menu) {
         textArea.setComponentPopupMenu(menu);
-    }
-
-    @Override
-    public void setUndoUpdateListener(UndoUpdateListener undoUpdateListener) {
-        this.undoUpdateListener = undoUpdateListener;
     }
 
     @Nonnull
@@ -487,6 +468,12 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
 
     public void setEditable(boolean editable) {
         textArea.setEditable(editable);
+    }
+
+    public void addUndoUpdateListener(UndoUpdateListener listener) {
+        textArea.getDocument().addUndoableEditListener((UndoableEditEvent evt) -> {
+            listener.undoChanged();
+        });
     }
 
     public interface CharsetChangeListener {

@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.undo.UndoableEdit;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.file.api.EditableFileHandler;
@@ -51,6 +52,8 @@ import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
 import org.exbin.framework.action.api.ComponentActivationProvider;
+import org.exbin.framework.action.api.DefaultComponentActivationService;
+import org.exbin.framework.operation.undo.api.UndoRedoHandler;
 
 /**
  * Text file handler.
@@ -65,6 +68,37 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     private URI fileUri = null;
     private String title;
     private FileType fileType = null;
+    private DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
+
+    public TextFileHandler() {
+        init();
+    }
+
+    private void init() {
+        UndoableEdit undoHandler = textPanel.getUndo();
+        UndoRedoHandler undoActionsHandler = new UndoRedoHandler() {
+            @Override
+            public boolean canUndo() {
+                return undoHandler.canUndo();
+            }
+
+            @Override
+            public boolean canRedo() {
+                return undoHandler.canRedo();
+            }
+
+            @Override
+            public void performUndo() {
+                undoHandler.undo();
+            }
+
+            @Override
+            public void performRedo() {
+                undoHandler.redo();
+            }
+        };
+        componentActivationService.updated(UndoRedoHandler.class, undoActionsHandler);
+    }
 
     @Override
     public int getId() {
@@ -250,7 +284,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     @Nonnull
     @Override
     public ComponentActivationService getComponentActivationService() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return componentActivationService;
     }
 
     /**

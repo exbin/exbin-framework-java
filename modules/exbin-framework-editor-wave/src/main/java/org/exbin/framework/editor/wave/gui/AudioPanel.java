@@ -33,6 +33,7 @@ import java.util.EventListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sound.sampled.AudioFormat;
@@ -176,6 +177,11 @@ public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHa
     @Nullable
     public XBWave getWave() {
         return wavePanel.getWave();
+    }
+
+    @Nonnull
+    public XBUndoHandler getUndoHandler() {
+        return undoHandler;
     }
 
     public void newWave() {

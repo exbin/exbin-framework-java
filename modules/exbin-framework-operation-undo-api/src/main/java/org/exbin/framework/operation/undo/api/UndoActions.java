@@ -28,13 +28,6 @@ import javax.swing.Action;
 public interface UndoActions {
 
     /**
-     * Sets undo handler.
-     *
-     * @param undoHandler undo handler
-     */
-    void setUndoActionsHandler(UndoActionsHandler undoHandler);
-
-    /**
      * Returns undo action.
      *
      * @return undo action

@@ -27,7 +27,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
-import org.exbin.framework.operation.undo.api.UndoActionsHandler;
+import org.exbin.framework.operation.undo.api.UndoRedoHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
@@ -45,14 +45,7 @@ public class BasicUndoActions implements UndoActions {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OperationUndoModule.class);
 
-    private UndoActionsHandler undoHandler = null;
-
     public BasicUndoActions() {
-    }
-
-    @Override
-    public void setUndoActionsHandler(UndoActionsHandler undoHandler) {
-        this.undoHandler = undoHandler;
     }
 
     @Override
@@ -87,6 +80,8 @@ public class BasicUndoActions implements UndoActions {
     @ParametersAreNonnullByDefault
     private class UndoAction extends AbstractAction implements ActionActiveComponent {
 
+        private UndoRedoHandler undoHandler = null;
+
         @Override
         public void actionPerformed(ActionEvent e) {
             undoHandler.performUndo();
@@ -94,7 +89,7 @@ public class BasicUndoActions implements UndoActions {
 
         @Override
         public void register(ComponentActivationManager manager) {
-            manager.registerUpdateListener(UndoActionsHandler.class, (instance) -> {
+            manager.registerUpdateListener(UndoRedoHandler.class, (instance) -> {
                 undoHandler = instance;
                 boolean canUndo = undoHandler != null && undoHandler.canUndo();
                 setEnabled(canUndo);
@@ -105,6 +100,8 @@ public class BasicUndoActions implements UndoActions {
     @ParametersAreNonnullByDefault
     private class RedoAction extends AbstractAction implements ActionActiveComponent {
 
+        private UndoRedoHandler undoHandler = null;
+
         @Override
         public void actionPerformed(ActionEvent e) {
             undoHandler.performUndo();
@@ -112,7 +109,7 @@ public class BasicUndoActions implements UndoActions {
 
         @Override
         public void register(ComponentActivationManager manager) {
-            manager.registerUpdateListener(UndoActionsHandler.class, (instance) -> {
+            manager.registerUpdateListener(UndoRedoHandler.class, (instance) -> {
                 undoHandler = instance;
                 boolean canRedo = undoHandler != null && undoHandler.canRedo();
                 setEnabled(canRedo);
@@ -123,14 +120,16 @@ public class BasicUndoActions implements UndoActions {
     @ParametersAreNonnullByDefault
     private class UndoManagerAction extends AbstractAction implements ActionActiveComponent {
 
+        private UndoRedoHandler undoHandler = null;
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            undoHandler.performUndoManager();
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
         public void register(ComponentActivationManager manager) {
-            manager.registerUpdateListener(UndoActionsHandler.class, (instance) -> {
+            manager.registerUpdateListener(UndoRedoHandler.class, (instance) -> {
                 undoHandler = instance;
                 setEnabled(instance != null);
             });

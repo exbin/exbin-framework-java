@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class UndoActionsHandlerEmpty implements UndoActionsHandler {
+public class EmptyUndoRedoHandler implements UndoRedoHandler {
 
     @Override
     public boolean canUndo() {
@@ -41,13 +41,5 @@ public class UndoActionsHandlerEmpty implements UndoActionsHandler {
 
     @Override
     public void performRedo() {
-    }
-
-    @Override
-    public void performUndoManager() {
-    }
-
-    @Override
-    public void setUndoUpdateListener(UndoUpdateListener undoUpdateListener) {
     }
 }

@@ -35,7 +35,7 @@ import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.operation.undo.api.UndoActionsHandler;
+import org.exbin.framework.operation.undo.api.UndoRedoHandler;
 
 /**
  * Text editor.
@@ -79,7 +79,10 @@ public class TextEditor implements EditorProvider {
     private void activeFileChanged() {
         componentActivationListener.updated(FileHandler.class, activeFile);
         TextPanel textPanel = activeFile.getComponent();
-        componentActivationListener.updated(UndoActionsHandler.class, textPanel);
+        componentActivationListener.updated(UndoRedoHandler.class, textPanel);
+        textPanel.addUndoUpdateListener(() -> {
+            componentActivationListener.updated(UndoRedoHandler.class, textPanel);
+        });
     }
 
     @Nonnull

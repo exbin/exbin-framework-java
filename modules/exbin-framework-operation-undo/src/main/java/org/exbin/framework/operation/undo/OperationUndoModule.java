@@ -16,12 +16,8 @@
 package org.exbin.framework.operation.undo;
 
 import org.exbin.framework.operation.undo.action.BasicUndoActions;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.window.api.WindowModuleApi;
@@ -33,15 +29,9 @@ import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.framework.operation.undo.api.UndoActions;
-import org.exbin.framework.operation.undo.api.UndoActionsHandler;
-import org.exbin.framework.operation.undo.api.UndoUpdateListener;
 import org.exbin.framework.operation.undo.handler.UndoManagerControlHandler;
 import org.exbin.framework.operation.undo.gui.UndoManagerControlPanel;
 import org.exbin.framework.operation.undo.gui.UndoManagerPanel;
-import org.exbin.framework.operation.undo.gui.UndoManagerModel;
-import org.exbin.xbup.operation.Command;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
-import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
@@ -57,100 +47,15 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     private static final String UNDO_MENU_GROUP_ID = MODULE_ID + ".undoMenuGroup";
     private static final String UNDO_TOOL_BAR_GROUP_ID = MODULE_ID + ".undoToolBarGroup";
 
-    private final UndoManagerModel undoModel = new UndoManagerModel();
-    private XBUndoHandler undoHandler;
-
     private BasicUndoActions defaultUndoActions = null;
 
     public OperationUndoModule() {
     }
 
     public void init() {
-        undoModel.addListDataListener(new ListDataListener() {
-            @Override
-            public void intervalAdded(ListDataEvent e) {
-                updateUndoStatus();
-            }
-
-            @Override
-            public void intervalRemoved(ListDataEvent e) {
-            }
-
-            @Override
-            public void contentsChanged(ListDataEvent e) {
-            }
-        });
     }
 
     public void unregisterModule(String moduleId) {
-    }
-
-    public void actionEditUndo() {
-        try {
-            undoHandler.performUndo();
-        } catch (Exception ex) {
-            Logger.getLogger(OperationUndoModule.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void actionEditRedo() {
-        try {
-            undoHandler.performRedo();
-        } catch (Exception ex) {
-            Logger.getLogger(OperationUndoModule.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
-    public void setUndoHandler(final XBUndoHandler undoHandler) {
-        this.undoHandler = undoHandler;
-        getDefaultUndoActions().setUndoActionsHandler(new UndoActionsHandler() {
-            @Override
-            public boolean canUndo() {
-                return undoHandler.canUndo();
-            }
-
-            @Override
-            public boolean canRedo() {
-                return undoHandler.canRedo();
-            }
-
-            @Override
-            public void performUndo() {
-                actionEditUndo();
-            }
-
-            @Override
-            public void performRedo() {
-                actionEditRedo();
-            }
-
-            @Override
-            public void performUndoManager() {
-                openUndoManager();
-            }
-
-            @Override
-            public void setUndoUpdateListener(UndoUpdateListener undoUpdateListener) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-        undoModel.setUndoHandler(undoHandler);
-        undoHandler.addUndoUpdateListener(new XBUndoUpdateListener() {
-            @Override
-            public void undoCommandPositionChanged() {
-                updateUndoStatus();
-            }
-
-            @Override
-            public void undoCommandAdded(Command cmnd) {
-            }
-        });
-    }
-
-    @Override
-    public void updateUndoStatus() {
-        // TODO
     }
 
     @Override
@@ -179,15 +84,10 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     }
 
     @Override
-    public XBUndoHandler getUndoHandler() {
-        return undoHandler;
-    }
-
-    @Override
     public void openUndoManager() {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        UndoManagerPanel undoManagerPanel = new UndoManagerPanel(undoModel);
+        UndoManagerPanel undoManagerPanel = new UndoManagerPanel();
         UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
         final WindowHandler windowHandler = windowModule.createDialog(undoManagerPanel, undoManagerControlPanel);
         windowModule.setWindowTitle(windowHandler, undoManagerPanel.getResourceBundle());
@@ -201,9 +101,8 @@ public class OperationUndoModule implements OperationUndoModuleApi {
 
     @Nonnull
     @Override
-    public UndoActions createUndoActions(UndoActionsHandler undoActionsHandler) {
+    public UndoActions createUndoActions() {
         BasicUndoActions undoActions = new BasicUndoActions();
-        undoActions.setUndoActionsHandler(undoActionsHandler);
         return undoActions;
     }
 
