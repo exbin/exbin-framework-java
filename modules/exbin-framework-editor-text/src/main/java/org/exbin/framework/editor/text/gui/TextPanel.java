@@ -46,7 +46,6 @@ import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.operation.undo.api.UndoRedoHandler;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
@@ -61,7 +60,7 @@ import org.exbin.xbup.core.util.StringUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHandler, UndoRedoHandler, TextCharsetApi, TextFontApi {
+public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHandler, TextCharsetApi, TextFontApi {
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
     private boolean modified = false;
@@ -383,26 +382,6 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
 
     public void setText(String text) {
         textArea.setText(text);
-    }
-
-    @Override
-    public boolean canUndo() {
-        return getUndo().canUndo();
-    }
-
-    @Override
-    public boolean canRedo() {
-        return getUndo().canRedo();
-    }
-
-    @Override
-    public void performUndo() {
-        getUndo().undo();
-    }
-
-    @Override
-    public void performRedo() {
-        getUndo().redo();
     }
 
     public void setCharsetChangeListener(CharsetChangeListener charsetChangeListener) {

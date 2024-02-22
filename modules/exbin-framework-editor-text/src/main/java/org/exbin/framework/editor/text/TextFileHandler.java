@@ -69,14 +69,18 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     private String title;
     private FileType fileType = null;
     private DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
+    private UndoRedoHandler undoActionsHandler = null;
 
     public TextFileHandler() {
         init();
     }
 
     private void init() {
+    }
+
+    public void registerUndoHandler() {
         UndoableEdit undoHandler = textPanel.getUndo();
-        UndoRedoHandler undoActionsHandler = new UndoRedoHandler() {
+        undoActionsHandler = new UndoRedoHandler() {
             @Override
             public boolean canUndo() {
                 return undoHandler.canUndo();
@@ -90,14 +94,19 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
             @Override
             public void performUndo() {
                 undoHandler.undo();
+                notifyUndoChanged();
             }
 
             @Override
             public void performRedo() {
                 undoHandler.redo();
+                notifyUndoChanged();
             }
         };
-        componentActivationService.updated(UndoRedoHandler.class, undoActionsHandler);
+        textPanel.addUndoUpdateListener(() -> {
+            notifyUndoChanged();
+        });
+        notifyUndoChanged();
     }
 
     @Override
@@ -154,6 +163,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
         }
 
         textPanel.setModified(false);
+        notifyUndoChanged();
     }
 
     @Override
@@ -217,6 +227,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
         }
 
         textPanel.setModified(false);
+        notifyUndoChanged();
     }
 
     @Nonnull
@@ -252,6 +263,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     public void clearFile() {
         textPanel.setText("");
         textPanel.setModified(false);
+        notifyUndoChanged();
     }
 
     @Override
@@ -285,6 +297,12 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     @Override
     public ComponentActivationService getComponentActivationService() {
         return componentActivationService;
+    }
+
+    private void notifyUndoChanged() {
+        if (undoActionsHandler != null) {
+            componentActivationService.updated(UndoRedoHandler.class, undoActionsHandler);
+        }
     }
 
     /**

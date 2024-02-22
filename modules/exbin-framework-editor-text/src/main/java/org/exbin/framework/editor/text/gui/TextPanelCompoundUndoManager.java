@@ -16,6 +16,7 @@
 package org.exbin.framework.editor.text.gui;
 
 import java.util.ArrayList;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -30,6 +31,7 @@ import javax.swing.undo.UndoableEdit;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implements UndoableEditListener {
 
     private DocumentEvent.EventType lastEditType = null;

@@ -97,7 +97,7 @@ public class EditorTextModule implements Module {
 
     public static final String TEXT_STATUS_BAR_ID = "textStatusBar";
 
-    private EditorProvider editorProvider;
+    private TextEditor editorProvider;
     private ResourceBundle resourceBundle;
     private TextStatusPanel textStatusPanel;
 
@@ -163,11 +163,13 @@ public class EditorTextModule implements Module {
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         TextColorService textColorService = new TextColorService() {
+            @Nonnull
             @Override
             public Color[] getCurrentTextColors() {
                 return ((TextPanel) getEditorProvider().getEditorComponent()).getCurrentColors();
             }
 
+            @Nonnull
             @Override
             public Color[] getDefaultTextColors() {
                 return ((TextPanel) getEditorProvider().getEditorComponent()).getDefaultColors();
@@ -236,11 +238,13 @@ public class EditorTextModule implements Module {
         });
 
         TextFontService textFontService = new TextFontService() {
+            @Nonnull
             @Override
             public Font getCurrentFont() {
                 return ((TextPanel) getEditorProvider().getEditorComponent()).getCurrentFont();
             }
 
+            @Nonnull
             @Override
             public Font getDefaultFont() {
                 return ((TextPanel) getEditorProvider().getEditorComponent()).getDefaultFont();
@@ -256,6 +260,7 @@ public class EditorTextModule implements Module {
 
             private TextFontOptionsPanel panel;
 
+            @Nonnull
             @Override
             public OptionsComponent<TextFontOptionsImpl> createPanel() {
                 if (panel == null) {
@@ -307,6 +312,7 @@ public class EditorTextModule implements Module {
                 return App.getModule(LanguageModuleApi.class).getBundle(TextFontOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public TextFontOptionsImpl createOptions() {
                 return new TextFontOptionsImpl();
@@ -384,6 +390,7 @@ public class EditorTextModule implements Module {
                 return App.getModule(LanguageModuleApi.class).getBundle(TextEncodingOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public TextEncodingOptionsImpl createOptions() {
                 return new TextEncodingOptionsImpl();
@@ -424,6 +431,7 @@ public class EditorTextModule implements Module {
                 return App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceOptionsPanel.class);
             }
 
+            @Nonnull
             @Override
             public TextAppearanceOptionsImpl createOptions() {
                 return new TextAppearanceOptionsImpl();
@@ -444,6 +452,10 @@ public class EditorTextModule implements Module {
                 textAppearanceService.setWordWrapMode(options.isWordWrapping());
             }
         });
+    }
+    
+    public void registerUndoHandler() {
+        editorProvider.registerUndoHandler();
     }
 
     public void registerWordWrapping() {

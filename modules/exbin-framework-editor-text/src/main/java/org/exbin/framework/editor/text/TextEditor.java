@@ -35,7 +35,6 @@ import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.operation.undo.api.UndoRedoHandler;
 
 /**
  * Text editor.
@@ -60,29 +59,29 @@ public class TextEditor implements EditorProvider {
     }
 
     private void init() {
-        activeFile = new TextFileHandler();
-        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
-        fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
-
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
 
-        activeFile.getComponent().addPropertyChangeListener((PropertyChangeEvent evt) -> {
+        activeFile = new TextFileHandler();
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+        fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
+        TextPanel textPanel = activeFile.getComponent();
+        textPanel.addPropertyChangeListener((PropertyChangeEvent evt) -> {
             if (propertyChangeListener != null) {
                 propertyChangeListener.propertyChange(evt);
             }
         });
+        activeFile.getComponentActivationService().registerListener(componentActivationListener);
 
         activeFileChanged();
     }
 
     private void activeFileChanged() {
         componentActivationListener.updated(FileHandler.class, activeFile);
-        TextPanel textPanel = activeFile.getComponent();
-        componentActivationListener.updated(UndoRedoHandler.class, textPanel);
-        textPanel.addUndoUpdateListener(() -> {
-            componentActivationListener.updated(UndoRedoHandler.class, textPanel);
-        });
+    }
+
+    public void registerUndoHandler() {
+        activeFile.registerUndoHandler();
     }
 
     @Nonnull
