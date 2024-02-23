@@ -86,7 +86,7 @@ public class EditorWaveModule implements Module {
 
     public static final String WAVE_STATUS_BAR_ID = "waveStatusBar";
 
-    private EditorProvider editorProvider;
+    private AudioEditor editorProvider;
     private ResourceBundle resourceBundle;
     private AudioStatusPanel audioStatusPanel;
     private boolean playing = false;
@@ -115,8 +115,6 @@ public class EditorWaveModule implements Module {
         if (editorProvider == null) {
             AudioEditor audioEditor = new AudioEditor();
 
-            // TODO audioEditor.setUndoHandler(undoModule.getUndoHandler());
-
             editorProvider = audioEditor;
 
             audioEditor.setStatusChangeListener(this::updateStatus);
@@ -142,6 +140,10 @@ public class EditorWaveModule implements Module {
         }
 
         return editorProvider;
+    }
+
+    public void registerUndoHandler() {
+        editorProvider.registerUndoHandler();
     }
 
     @Nonnull

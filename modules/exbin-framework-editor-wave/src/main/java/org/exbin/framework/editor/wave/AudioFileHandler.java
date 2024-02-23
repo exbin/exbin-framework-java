@@ -48,6 +48,7 @@ import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.DefaultComponentActivationService;
 import org.exbin.framework.operation.undo.api.UndoRedoHandler;
+import org.exbin.xbup.operation.undo.XBTLinearUndo;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
@@ -65,6 +66,7 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
     private String title;
     private javax.sound.sampled.AudioFileFormat.Type audioFormatType = null;
     private DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
+    private UndoRedoHandler undoRedoHandler = null;
 
     private String ext;
 
@@ -73,8 +75,11 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
     }
 
     private void init() {
-        XBUndoHandler undoHandler = audioPanel.getUndoHandler();
-        UndoRedoHandler undoActionsHandler = new UndoRedoHandler() {
+    }
+
+    public void registerUndoHandler() {
+        XBUndoHandler undoHandler = new XBTLinearUndo(null);
+        undoRedoHandler = new UndoRedoHandler() {
             @Override
             public boolean canUndo() {
                 return undoHandler.canUndo();
@@ -89,6 +94,7 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
             public void performUndo() {
                 try {
                     undoHandler.performUndo();
+                    notifyUndoChanged();
                 } catch (Exception ex) {
                     Logger.getLogger(AudioFileHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -98,12 +104,17 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
             public void performRedo() {
                 try {
                     undoHandler.performRedo();
+                    notifyUndoChanged();
                 } catch (Exception ex) {
                     Logger.getLogger(AudioFileHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };
-        componentActivationService.updated(UndoRedoHandler.class, undoActionsHandler);
+        audioPanel.setUndoHandler(undoHandler);
+        /* undoHandler.setUndoUpdateListener(() -> {
+            notifyUndoChanged();
+        }); */
+        notifyUndoChanged();
     }
 
     @Override
@@ -142,6 +153,7 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
             audioPanel.setWave(wave);
             this.fileUri = fileUri;
         }
+        notifyUndoChanged();
     }
 
     @Override
@@ -179,11 +191,13 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
             audioPanel.getWave().saveToFile(file, getBuildInFileType());
         }
         audioPanel.notifyFileSaved();
+        notifyUndoChanged();
     }
 
     @Override
     public void clearFile() {
         audioPanel.newWave();
+        notifyUndoChanged();
     }
 
     @Nonnull
@@ -238,6 +252,12 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
     @Override
     public ComponentActivationService getComponentActivationService() {
         return componentActivationService;
+    }
+
+    private void notifyUndoChanged() {
+        if (undoRedoHandler != null) {
+            componentActivationService.updated(UndoRedoHandler.class, undoRedoHandler);
+        }
     }
 
     /**

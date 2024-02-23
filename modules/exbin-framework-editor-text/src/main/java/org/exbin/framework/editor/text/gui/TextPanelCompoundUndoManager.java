@@ -25,6 +25,7 @@ import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
+import org.exbin.framework.operation.undo.api.UndoUpdateListener;
 
 /**
  * Undo Manager with compound operations.
@@ -39,6 +40,7 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
     private MyCompoundEdit current;
     private int pointer = -1;
     private int lastOffset = -1;
+    private UndoUpdateListener undoUpdateListener;
 
     TextPanelCompoundUndoManager() {
     }
@@ -76,6 +78,9 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
             lastEditType = editType;
             lastOffset = offset;
         }
+        if (undoUpdateListener != null) {
+            undoUpdateListener.undoChanged();
+        }
     }
 
     public void createCompoundEdit() {
@@ -99,6 +104,9 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
 
         lastOffset = -1;
         lastEditType = null;
+        if (undoUpdateListener != null) {
+            undoUpdateListener.undoChanged();
+        }
     }
 
     @Override
@@ -112,6 +120,9 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
 
         lastOffset = -1;
         lastEditType = null;
+        if (undoUpdateListener != null) {
+            undoUpdateListener.undoChanged();
+        }
     }
 
     @Override
@@ -122,6 +133,10 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
     @Override
     public boolean canRedo() {
         return !edits.isEmpty() && pointer < edits.size() - 1;
+    }
+    
+    public void setUndoUpdateListener(UndoUpdateListener undoUpdateListener) {
+        this.undoUpdateListener = undoUpdateListener;
     }
 
     class MyCompoundEdit extends CompoundEdit {

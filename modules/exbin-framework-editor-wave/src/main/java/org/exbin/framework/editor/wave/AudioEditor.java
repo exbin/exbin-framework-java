@@ -53,7 +53,6 @@ public class AudioEditor implements EditorProvider {
     private MouseMotionListener mouseMotionListener;
     private AudioPanel.StatusChangeListener statusChangeListener;
     private AudioPanel.WaveRepaintListener waveRepaintListener;
-    private XBUndoHandler undoHandler;
     @Nullable
     private File lastUsedDirectory;
     private ComponentActivationListener componentActivationListener;
@@ -75,6 +74,10 @@ public class AudioEditor implements EditorProvider {
 
     private void activeFileChanged() {
         componentActivationListener.updated(FileHandler.class, activeFile);
+    }
+
+    public void registerUndoHandler() {
+        activeFile.registerUndoHandler();
     }
 
     @Nonnull
@@ -220,7 +223,6 @@ public class AudioEditor implements EditorProvider {
     }
 
     public void setUndoHandler(XBUndoHandler undoHandler) {
-        this.undoHandler = undoHandler;
         AudioPanel audioPanel = (AudioPanel) activeFile.getComponent();
         audioPanel.setUndoHandler(undoHandler);
     }

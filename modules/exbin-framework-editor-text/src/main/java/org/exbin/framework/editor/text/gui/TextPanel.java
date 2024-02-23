@@ -35,7 +35,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
@@ -50,7 +49,6 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.operation.undo.api.UndoUpdateListener;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.xbup.core.util.StringUtils;
 
@@ -339,7 +337,8 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         firePropertyChange("modified", oldValue, this.modified);
     }
 
-    public UndoableEdit getUndo() {
+    @Nonnull
+    public TextPanelCompoundUndoManager getUndo() {
         return undoManagement;
     }
 
@@ -447,12 +446,6 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
 
     public void setEditable(boolean editable) {
         textArea.setEditable(editable);
-    }
-
-    public void addUndoUpdateListener(UndoUpdateListener listener) {
-        textArea.getDocument().addUndoableEditListener((UndoableEditEvent evt) -> {
-            listener.undoChanged();
-        });
     }
 
     public interface CharsetChangeListener {

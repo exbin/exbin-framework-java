@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.undo.UndoableEdit;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.file.api.EditableFileHandler;
@@ -53,6 +52,7 @@ import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.core.type.XBEncodingText;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.DefaultComponentActivationService;
+import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
 import org.exbin.framework.operation.undo.api.UndoRedoHandler;
 
 /**
@@ -69,7 +69,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     private String title;
     private FileType fileType = null;
     private DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
-    private UndoRedoHandler undoActionsHandler = null;
+    private UndoRedoHandler undoRedoHandler = null;
 
     public TextFileHandler() {
         init();
@@ -79,8 +79,8 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     }
 
     public void registerUndoHandler() {
-        UndoableEdit undoHandler = textPanel.getUndo();
-        undoActionsHandler = new UndoRedoHandler() {
+        TextPanelCompoundUndoManager undoHandler = textPanel.getUndo();
+        undoRedoHandler = new UndoRedoHandler() {
             @Override
             public boolean canUndo() {
                 return undoHandler.canUndo();
@@ -103,7 +103,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
                 notifyUndoChanged();
             }
         };
-        textPanel.addUndoUpdateListener(() -> {
+        undoHandler.setUndoUpdateListener(() -> {
             notifyUndoChanged();
         });
         notifyUndoChanged();
@@ -300,8 +300,8 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     }
 
     private void notifyUndoChanged() {
-        if (undoActionsHandler != null) {
-            componentActivationService.updated(UndoRedoHandler.class, undoActionsHandler);
+        if (undoRedoHandler != null) {
+            componentActivationService.updated(UndoRedoHandler.class, undoRedoHandler);
         }
     }
 

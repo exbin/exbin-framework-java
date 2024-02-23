@@ -72,6 +72,10 @@ public class ImageEditor implements EditorProvider {
         componentActivationListener.updated(FileHandler.class, activeFile);
     }
 
+    public void registerUndoHandler() {
+        activeFile.registerUndoHandler();
+    }
+
     @Nonnull
     @Override
     public ImagePanel getEditorComponent() {

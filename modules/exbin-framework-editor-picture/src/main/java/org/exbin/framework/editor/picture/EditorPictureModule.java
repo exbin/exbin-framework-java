@@ -45,15 +45,11 @@ import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
-import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.xbup.operation.Command;
-import org.exbin.xbup.operation.undo.XBTLinearUndo;
-import org.exbin.xbup.operation.undo.XBUndoUpdateListener;
 
 /**
  * Picture editor module.
@@ -180,20 +176,7 @@ public class EditorPictureModule implements Module {
     }
     
     public void registerUndoHandler() {
-        /* TODO
-        XBTLinearUndo linearUndo = new XBTLinearUndo(null);
-        linearUndo.addUndoUpdateListener(new XBUndoUpdateListener() {
-            @Override
-            public void undoCommandPositionChanged() {
-                ((ImagePanel) getEditorProvider()).repaint();
-            }
-
-            @Override
-            public void undoCommandAdded(Command command) {
-                ((ImagePanel) getEditorProvider()).repaint();
-            }
-        });
-        ((ImagePanel) getEditorProvider()).setUndoHandler(linearUndo); */
+        ((ImageEditor) editorProvider).registerUndoHandler();
     }
 
     public void registerPropertiesMenu() {

@@ -104,7 +104,7 @@ public class BasicUndoActions implements UndoActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            undoHandler.performUndo();
+            undoHandler.performRedo();
         }
 
         @Override

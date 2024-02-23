@@ -106,11 +106,18 @@ public class MenuManager {
     }
 
     public void buildMenu(JMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
-        MenuManager.this.buildMenu(new MenuWrapper(targetMenu), menuId, activationUpdateService);
+        buildMenu(new MenuWrapper(targetMenu), menuId, activationUpdateService);
+        activationUpdateService.requestUpdate();
     }
 
     public void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
-        MenuManager.this.buildMenu(new PopupMenuWrapper(targetMenu), menuId, activationUpdateService);
+        buildMenu(new PopupMenuWrapper(targetMenu), menuId, activationUpdateService);
+        activationUpdateService.requestUpdate();
+    }
+
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService) {
+        buildMenu(new MenuBarWrapper(targetMenuBar), menuId, activationUpdateService);
+        activationUpdateService.requestUpdate();
     }
 
     private void buildMenu(MenuTarget targetMenu, String menuId, ComponentActivationService activationUpdateService) {
@@ -210,7 +217,6 @@ public class MenuManager {
                 }
             }
         });
-        activationUpdateService.requestUpdate();
     }
 
     private void processMenuGroup(List<MenuGroupRecord> groups, Map<String, List<MenuContribution>> beforeItem, Map<String, List<MenuContribution>> afterItem, final MenuTarget targetMenu, final Map<String, ButtonGroup> buttonGroups, String menuId, ComponentActivationService activationUpdateService) {
@@ -294,7 +300,7 @@ public class MenuManager {
                             public void process() {
                                 SubMenuContribution subMenuContribution = (SubMenuContribution) next.contribution;
                                 subMenu = new JMenu(subMenuContribution.getAction());
-                                MenuManager.this.buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId(), activationUpdateService);
+                                buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId(), activationUpdateService);
                             }
 
                             @Override
@@ -467,7 +473,6 @@ public class MenuManager {
                 processingPath.add(new MenuGroupRecordPathNode(groupRecord.subGroups));
             }
         }
-        activationUpdateService.requestUpdate();
     }
 
     private void initMenuAction(@Nullable Action action) {
@@ -559,10 +564,6 @@ public class MenuManager {
     private enum OrderingMode {
         BEFORE, ITEM, AFTER
     };
-
-    public void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService) {
-        buildMenu(new MenuBarWrapper(targetMenuBar), menuId, activationUpdateService);
-    }
 
     public void registerMenu(String menuId, String pluginId) {
         if (menuId == null) {

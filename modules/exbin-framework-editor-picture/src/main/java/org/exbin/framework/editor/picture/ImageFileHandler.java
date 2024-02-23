@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
+import javax.swing.undo.UndoManager;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.editor.picture.gui.ImagePanel;
 import org.exbin.framework.file.api.EditableFileHandler;
@@ -51,6 +52,7 @@ import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.visual.picture.XBBufferedImage;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.DefaultComponentActivationService;
+import org.exbin.framework.operation.undo.api.UndoRedoHandler;
 
 /**
  * Image file handler.
@@ -69,6 +71,7 @@ public class ImageFileHandler implements EditableFileHandler, ComponentActivatio
     private String title;
     private FileType fileType = null;
     private DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
+    private UndoRedoHandler undoRedoHandler = null;
 
     public ImageFileHandler() {
         init();
@@ -76,6 +79,37 @@ public class ImageFileHandler implements EditableFileHandler, ComponentActivatio
 
     private void init() {
         
+    }
+
+    public void registerUndoHandler() {
+        UndoManager undoHandler = imagePanel.getUndo();
+        undoRedoHandler = new UndoRedoHandler() {
+            @Override
+            public boolean canUndo() {
+                return undoHandler.canUndo();
+            }
+
+            @Override
+            public boolean canRedo() {
+                return undoHandler.canRedo();
+            }
+
+            @Override
+            public void performUndo() {
+                undoHandler.undo();
+                notifyUndoChanged();
+            }
+
+            @Override
+            public void performRedo() {
+                undoHandler.redo();
+                notifyUndoChanged();
+            }
+        };
+        /* undoHandler.setUndoUpdateListener(() -> {
+            notifyUndoChanged();
+        }); */
+        notifyUndoChanged();
     }
 
     @Override
@@ -212,6 +246,12 @@ public class ImageFileHandler implements EditableFileHandler, ComponentActivatio
     @Override
     public ComponentActivationService getComponentActivationService() {
         return componentActivationService;
+    }
+
+    private void notifyUndoChanged() {
+        if (undoRedoHandler != null) {
+            componentActivationService.updated(UndoRedoHandler.class, undoRedoHandler);
+        }
     }
 
     /**
