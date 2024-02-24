@@ -36,10 +36,10 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.ComponentActivationService;
-import org.exbin.framework.action.api.DefaultComponentActivationService;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.editor.action.EditorActions;
+import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
@@ -124,6 +124,9 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         componentActivationService.updated(FileHandler.class, activeFile);
         ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getComponentActivationService() : null;
         componentActivationService.passRequestUpdate(fileComponentActivationService);
+        if (activeFile instanceof EditorFileHandler) {
+            ((EditorFileHandler) activeFile).componentActivated(componentActivationService.getFileActivationListener(activeFile));
+        }
     }
 
     @Nonnull

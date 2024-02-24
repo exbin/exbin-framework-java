@@ -15,13 +15,17 @@
  */
 package org.exbin.framework.editor;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.DefaultComponentActivationService;
+import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Default multi editor component activation service.
@@ -32,6 +36,9 @@ import org.exbin.framework.action.api.DefaultComponentActivationService;
 public class MultiEditorComponentActivationService extends DefaultComponentActivationService {
 
     protected final Set<Class<?>> passActiveComponentState = new HashSet<>();
+    protected final Map<FileHandler, ComponentActivationListener> fileActivationListeners = new HashMap<>();
+
+    private FileHandler activeFileHandler = null;
 
     public <T> void passUpdate(Class<T> instanceClass, @Nullable T instance) {
         passActiveComponentState.add(instanceClass);
@@ -50,5 +57,26 @@ public class MultiEditorComponentActivationService extends DefaultComponentActiv
         if (componentActivationService != null) {
             componentActivationService.requestUpdate();
         }
+    }
+
+    public void setActiveFileHandler(@Nullable FileHandler activeFileHandler) {
+        this.activeFileHandler = activeFileHandler;
+    }
+
+    @Nonnull
+    public ComponentActivationListener getFileActivationListener(FileHandler fileHandler) {
+        ComponentActivationListener listener = fileActivationListeners.get(fileHandler);
+        if (listener == null) {
+            listener = new ComponentActivationListener() {
+                @Override
+                public <T> void updated(Class<T> instanceClass, T instance) {
+                    if (fileHandler == activeFileHandler) {
+                        passUpdate(instanceClass, instance);
+                    }
+                }
+            };
+            fileActivationListeners.put(fileHandler, listener);
+        }
+        return listener;
     }
 }
