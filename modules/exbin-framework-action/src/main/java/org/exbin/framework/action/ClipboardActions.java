@@ -21,6 +21,7 @@ import java.awt.datatransfer.FlavorListener;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -42,11 +43,11 @@ import org.exbin.framework.utils.ClipboardUtils;
 @ParametersAreNonnullByDefault
 public class ClipboardActions implements ClipboardActionsApi {
 
-    public static final String EDIT_SELECT_ALL_ACTION_ID = "popupSelectAllAction";
-    public static final String EDIT_DELETE_ACTION_ID = "popupDeleteAction";
-    public static final String EDIT_PASTE_ACTION_ID = "popupPasteAction";
-    public static final String EDIT_COPY_ACTION_ID = "popupCopyAction";
-    public static final String EDIT_CUT_ACTION_ID = "popupCutAction";
+    public static final String SELECT_ALL_ACTION_ID = "popupSelectAllAction";
+    public static final String DELETE_ACTION_ID = "popupDeleteAction";
+    public static final String PASTE_ACTION_ID = "popupPasteAction";
+    public static final String COPY_ACTION_ID = "popupCopyAction";
+    public static final String CUT_ACTION_ID = "popupCutAction";
 
     private ResourceBundle resourceBundle;
 
@@ -64,7 +65,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     public Action createCutAction() {
         CutAction cutAction = new CutAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(cutAction, resourceBundle, EDIT_CUT_ACTION_ID);
+        actionModule.initAction(cutAction, resourceBundle, CUT_ACTION_ID);
         cutAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
         cutAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, cutAction);
         return cutAction;
@@ -75,7 +76,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     public Action createCopyAction() {
         CopyAction copyAction = new CopyAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(copyAction, resourceBundle, EDIT_COPY_ACTION_ID);
+        actionModule.initAction(copyAction, resourceBundle, COPY_ACTION_ID);
         copyAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
         copyAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, copyAction);
         return copyAction;
@@ -86,7 +87,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     public Action createPasteAction() {
         PasteAction pasteAction = new PasteAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(pasteAction, resourceBundle, EDIT_PASTE_ACTION_ID);
+        actionModule.initAction(pasteAction, resourceBundle, PASTE_ACTION_ID);
         pasteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
         pasteAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, pasteAction);
         return pasteAction;
@@ -97,7 +98,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     public Action createDeleteAction() {
         DeleteAction deleteAction = new DeleteAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(deleteAction, resourceBundle, EDIT_DELETE_ACTION_ID);
+        actionModule.initAction(deleteAction, resourceBundle, DELETE_ACTION_ID);
         deleteAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         deleteAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, deleteAction);
         return deleteAction;
@@ -108,7 +109,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     public Action createSelectAllAction() {
         SelectAllAction selectAllAction = new SelectAllAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(selectAllAction, resourceBundle, EDIT_SELECT_ALL_ACTION_ID);
+        actionModule.initAction(selectAllAction, resourceBundle, SELECT_ALL_ACTION_ID);
         selectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         selectAllAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, selectAllAction);
         return selectAllAction;
@@ -144,8 +145,17 @@ public class ClipboardActions implements ClipboardActionsApi {
         public void register(ComponentActivationManager manager) {
             manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
                 clipboardActionsHandler = instance;
-                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
+                update();
             });
+        }
+
+        public void setClipboardActionsHandler(@Nullable ClipboardActionsHandler clipboardActionsHandler) {
+            this.clipboardActionsHandler = clipboardActionsHandler;
+            update();
+        }
+
+        public void update() {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
         }
     }
 
@@ -165,8 +175,17 @@ public class ClipboardActions implements ClipboardActionsApi {
         public void register(ComponentActivationManager manager) {
             manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
                 clipboardActionsHandler = instance;
-                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
+                update();
             });
+        }
+
+        public void setClipboardActionsHandler(@Nullable ClipboardActionsHandler clipboardActionsHandler) {
+            this.clipboardActionsHandler = clipboardActionsHandler;
+            update();
+        }
+
+        public void update() {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
         }
     }
 
@@ -186,8 +205,17 @@ public class ClipboardActions implements ClipboardActionsApi {
         public void register(ComponentActivationManager manager) {
             manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
                 clipboardActionsHandler = instance;
-                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
+                update();
             });
+        }
+
+        public void setClipboardActionsHandler(@Nullable ClipboardActionsHandler clipboardActionsHandler) {
+            this.clipboardActionsHandler = clipboardActionsHandler;
+            update();
+        }
+
+        public void update() {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
         }
     }
 
@@ -207,8 +235,17 @@ public class ClipboardActions implements ClipboardActionsApi {
         public void register(ComponentActivationManager manager) {
             manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
                 clipboardActionsHandler = instance;
-                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
+                update();
             });
+        }
+
+        public void setClipboardActionsHandler(@Nullable ClipboardActionsHandler clipboardActionsHandler) {
+            this.clipboardActionsHandler = clipboardActionsHandler;
+            update();
+        }
+
+        public void update() {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
         }
     }
 
@@ -228,8 +265,17 @@ public class ClipboardActions implements ClipboardActionsApi {
         public void register(ComponentActivationManager manager) {
             manager.registerUpdateListener(ClipboardActionsHandler.class, (instance) -> {
                 clipboardActionsHandler = instance;
-                setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
+                update();
             });
+        }
+
+        public void setClipboardActionsHandler(@Nullable ClipboardActionsHandler clipboardActionsHandler) {
+            this.clipboardActionsHandler = clipboardActionsHandler;
+            update();
+        }
+
+        public void update() {
+            setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
         }
     }
 }
