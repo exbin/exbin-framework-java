@@ -207,6 +207,9 @@ public class ClipboardActions implements ClipboardActionsApi {
                 clipboardActionsHandler = instance;
                 update();
             });
+            manager.registerUpdateListener(ClipboardFlavorState.class, (instance) -> {
+                update();
+            });
         }
 
         public void setClipboardActionsHandler(@Nullable ClipboardActionsHandler clipboardActionsHandler) {

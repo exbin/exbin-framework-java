@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.search.SearchModule</id>
+  <name>Search support module</name>
+  <description>Module to support search oprations</description>
+  <dependency>
+  </dependency>
+</module>
