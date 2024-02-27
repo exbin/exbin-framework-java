@@ -55,14 +55,18 @@ public class CloseOtherFilesAction extends AbstractAction {
             public void register(ComponentActivationManager manager) {
                 manager.registerUpdateListener(FileHandler.class, (instance) -> {
                     fileHandler = instance;
-                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                    update();
                 });
                 manager.registerUpdateListener(EditorProvider.class, (instance) -> {
                     editorProvider = instance;
-                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                    update();
                 });
             }
         });
+    }
+    
+    private void update() {
+        setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider) && ((MultiEditorProvider) editorProvider).getFileHandlers().size() > 1);
     }
 
     @Override
