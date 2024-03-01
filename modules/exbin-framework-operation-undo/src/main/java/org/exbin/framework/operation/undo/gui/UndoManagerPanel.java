@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.operation.undo.service.UndoManagerService;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.XBDocCommand;
@@ -249,7 +250,7 @@ public class UndoManagerPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new UndoManagerPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new UndoManagerPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

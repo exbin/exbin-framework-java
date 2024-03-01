@@ -25,6 +25,7 @@ import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Addon manager panel.
@@ -90,7 +91,7 @@ public class AddonManagerPanel extends javax.swing.JPanel implements HyperlinkLi
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new AddonManagerPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new AddonManagerPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

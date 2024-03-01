@@ -16,6 +16,7 @@
 package org.exbin.framework.project.gui;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -77,7 +78,7 @@ public class ProjectTypesPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new ProjectTypesPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new ProjectTypesPanel()));
     }
 
 

@@ -25,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicArrowButton;
+import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -135,7 +136,7 @@ public class DropDownButtonPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new DropDownButtonPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new DropDownButtonPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -45,6 +45,7 @@ import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Panel for application options and preferences setting.
@@ -190,7 +191,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new OptionsTreePanel(null));
+        TestApplication.run(() -> WindowUtils.invokeWindow(new OptionsTreePanel(null)));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -20,6 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Multi editor panel.
@@ -134,7 +135,7 @@ public class MultiEditorPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new MultiEditorPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new MultiEditorPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

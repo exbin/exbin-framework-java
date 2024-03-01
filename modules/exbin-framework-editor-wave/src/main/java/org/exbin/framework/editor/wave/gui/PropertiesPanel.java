@@ -25,6 +25,7 @@ import org.exbin.framework.editor.wave.AudioEditor;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Wave file properties panel.
@@ -177,7 +178,7 @@ public class PropertiesPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new PropertiesPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new PropertiesPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

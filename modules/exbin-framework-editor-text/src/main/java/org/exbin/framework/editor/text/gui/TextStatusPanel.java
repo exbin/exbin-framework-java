@@ -19,6 +19,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextPositionStatusApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -90,7 +91,7 @@ public class TextStatusPanel extends javax.swing.JPanel implements TextPositionS
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new TextStatusPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new TextStatusPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

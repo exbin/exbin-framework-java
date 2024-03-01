@@ -50,6 +50,7 @@ import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.utils.ClipboardUtils;
+import org.exbin.framework.utils.TestApplication;
 import org.exbin.xbup.core.util.StringUtils;
 
 /**
@@ -316,7 +317,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new TextPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new TextPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

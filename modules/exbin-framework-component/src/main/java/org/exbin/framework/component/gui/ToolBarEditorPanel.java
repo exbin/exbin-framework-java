@@ -66,18 +66,20 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.getDefaultAppEditor();
-        OperationUndoModule guiUndoModule = new OperationUndoModule();
-//        testApplication.addModule(OperationUndoModule.MODULE_ID, guiUndoModule);
-        ActionModule guiActionModule = new ActionModule();
-//        testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            OperationUndoModule guiUndoModule = new OperationUndoModule();
+            testApplication.addModule(OperationUndoModule.MODULE_ID, guiUndoModule);
+            ActionModule guiActionModule = new ActionModule();
+            testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
 
-        ToolBarEditorPanel toolBarEditorPanel = new ToolBarEditorPanel();
-        UndoRedoHandler undoRedoHandler = new EmptyUndoRedoHandler();
-        toolBarEditorPanel.setUndoHandler(undoRedoHandler, guiUndoModule.createUndoActions());
-        ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
-        toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.getClipboardActions());
-        WindowUtils.invokeWindow(toolBarEditorPanel);
+            ToolBarEditorPanel toolBarEditorPanel = new ToolBarEditorPanel();
+            UndoRedoHandler undoRedoHandler = new EmptyUndoRedoHandler();
+            toolBarEditorPanel.setUndoHandler(undoRedoHandler, guiUndoModule.createUndoActions());
+            ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
+            toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.getClipboardActions());
+            WindowUtils.invokeWindow(toolBarEditorPanel);
+        });
     }
 
     public void setUndoHandler(UndoRedoHandler undoHandler, UndoActions undoActions) {

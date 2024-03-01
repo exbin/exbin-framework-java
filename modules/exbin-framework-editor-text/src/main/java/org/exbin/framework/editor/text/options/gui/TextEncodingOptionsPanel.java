@@ -33,6 +33,7 @@ import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.xbup.core.util.StringUtils;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Text encoding options panel.
@@ -210,7 +211,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new TextEncodingOptionsPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new TextEncodingOptionsPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

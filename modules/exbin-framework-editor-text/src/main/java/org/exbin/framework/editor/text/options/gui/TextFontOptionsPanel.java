@@ -28,6 +28,7 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextFontService;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Text font options panel.
@@ -225,7 +226,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new TextFontOptionsPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new TextFontOptionsPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

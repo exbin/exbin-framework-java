@@ -34,7 +34,7 @@ public class UtilsModule implements Module {
     }
 
     @Nonnull
-    public static TestApplication getDefaultAppEditor() {
+    public static TestApplication createTestApplication() {
         return new TestApplication();
     }
 }

@@ -115,27 +115,29 @@ public class DefinitionEditorPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.getDefaultAppEditor();
-        OperationUndoModule operationUndoModule = new OperationUndoModule();
-//        testApplication.addModule(OperationUndoModule.MODULE_ID, operationUndoModule);
-        ActionModule guiActionModule = new ActionModule();
-//        testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
-        ComponentModule guiComponentModule = new ComponentModule();
-//        testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            OperationUndoModule operationUndoModule = new OperationUndoModule();
+            testApplication.addModule(OperationUndoModule.MODULE_ID, operationUndoModule);
+            ActionModule guiActionModule = new ActionModule();
+            testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
+            ComponentModule guiComponentModule = new ComponentModule();
+            testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
 
-        DefinitionEditorPanel definitionEditorPanel = new DefinitionEditorPanel();
-        UndoRedoHandler undoRedoHandler = new EmptyUndoRedoHandler();
-        definitionEditorPanel.setUndoHandler(undoRedoHandler, operationUndoModule.createUndoActions());
-        ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
-        definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.getClipboardActions());
-        WindowUtils.invokeWindow(definitionEditorPanel);
+            DefinitionEditorPanel definitionEditorPanel = new DefinitionEditorPanel();
+            UndoRedoHandler undoRedoHandler = new EmptyUndoRedoHandler();
+            definitionEditorPanel.setUndoHandler(undoRedoHandler, operationUndoModule.createUndoActions());
+            ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
+            definitionEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.getClipboardActions());
+            WindowUtils.invokeWindow(definitionEditorPanel);
 
-        MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
-        MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
-        EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
-        EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
-        editItemActions.setEditItemActionsHandler(editItemActionsHandler);
-        definitionEditorPanel.registerToolBarActions(editItemActions, moveItemActions);
+            MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
+            MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
+            EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
+            EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
+            editItemActions.setEditItemActionsHandler(editItemActionsHandler);
+            definitionEditorPanel.registerToolBarActions(editItemActions, moveItemActions);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

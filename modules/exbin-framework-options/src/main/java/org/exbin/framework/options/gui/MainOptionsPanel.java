@@ -37,6 +37,7 @@ import org.exbin.framework.options.options.impl.UiOptionsImpl;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.model.LanguageRecord;
 import org.exbin.framework.utils.DesktopUtils;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Main options panel.
@@ -475,7 +476,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new MainOptionsPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new MainOptionsPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

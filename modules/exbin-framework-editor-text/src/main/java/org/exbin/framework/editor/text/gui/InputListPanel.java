@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
+import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -161,7 +162,7 @@ public class InputListPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new InputListPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new InputListPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

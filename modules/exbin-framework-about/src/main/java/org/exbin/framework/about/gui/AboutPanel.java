@@ -38,6 +38,7 @@ import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 
@@ -332,7 +333,7 @@ public class AboutPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new AboutPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new AboutPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

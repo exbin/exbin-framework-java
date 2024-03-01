@@ -24,6 +24,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -112,7 +113,7 @@ public class TextGoToPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new TextGoToPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new TextGoToPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

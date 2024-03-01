@@ -15,291 +15,134 @@
  */
 package org.exbin.framework.utils;
 
-import java.awt.Image;
-import java.io.File;
 import java.lang.reflect.Field;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.xbup.plugin.LookAndFeelApplier;
-import org.exbin.xbup.plugin.XBModule;
-import org.exbin.xbup.plugin.XBModuleRecord;
+import org.exbin.framework.App;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleProvider;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
- * Some simple static methods usable for windows and dialogs.
+ * Some simple static methods usable for testing windows and dialogs.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TestApplication {
-//
-//    private final Map<String, XBApplicationModule> modules = new HashMap<>();
-//
-//    public TestApplication() {
-//    }
-//
-//    public void addModule(String moduleId, XBApplicationModule module) {
-//        modules.put(moduleId, module);
-//    }
-//
-//    @Override
-//    public ResourceBundle getAppBundle() {
-//        return emptyBundle;
-//    }
-//
-//    @Override
-//    public Preferences getAppPreferences() {
-//        return new Preferences() {
-//            @Override
-//            public void flush() {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public boolean exists(String key) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public Optional<String> get(String key) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public String get(String key, String def) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public boolean getBoolean(String key, boolean def) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public byte[] getByteArray(String key, byte[] def) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public double getDouble(String key, double def) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public float getFloat(String key, float def) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public int getInt(String key, int def) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public long getLong(String key, long def) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void put(String key, String value) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void putBoolean(String key, boolean value) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void putByteArray(String key, byte[] value) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void putDouble(String key, double value) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void putFloat(String key, float value) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void putInt(String key, int value) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void putLong(String key, long value) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void remove(String key) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void sync() {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//        };
-//    }
-//
-//    @Override
-//    public void registerLanguagePlugin(Locale locale, ClassLoader classLoader) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-//
-//    @Override
-//    public void registerLanguagePlugin(LanguageProvider languageProvider) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-//
-//    @Override
-//    public List<LanguageProvider> getLanguagePlugins() {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-//
-//    @Override
-//    public XBApplicationModuleRepository getModuleRepository() {
-//        return new XBApplicationModuleRepository() {
-//            private static final String MODULE_ID = "MODULE_ID";
-//
-//            @Override
-//            public void addModulesFrom(URL moduleJarFileUrl) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void addClassPathModules() {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void addModulesFromManifest(Class manifestClass) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public XBApplicationModuleInfo getModuleRecordById(String moduleId) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public XBApplicationModule getModuleById(String moduleId) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            @SuppressWarnings("unchecked")
-//            public <T extends XBModule> T getModuleByInterface(Class<T> interfaceClass) {
-//                try {
-//                    Field declaredField = interfaceClass.getDeclaredField(MODULE_ID);
-//                    if (declaredField != null) {
-//                        Object interfaceModuleId = declaredField.get(null);
-//                        if (interfaceModuleId instanceof String) {
+
+    private static final String MODULE_ID = "MODULE_ID";
+    private static final String MODULE_FILE = "module.xml";
+
+    private final ResourceBundle emptyBundle = new ResourceBundle() {
+
+        @Override
+        protected Object handleGetObject(String key) {
+            return "";
+        }
+
+        @Override
+        public Enumeration<String> getKeys() {
+            return Collections.emptyEnumeration();
+        }
+    };
+
+    private final LanguageModuleApi languageModule = new LanguageModuleApi() {
+        @Override
+        public ResourceBundle getAppBundle() {
+            return emptyBundle;
+        }
+
+        @Override
+        public void setAppBundle(ResourceBundle appBundle) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public ResourceBundle getBundle(Class<?> targetClass) {
+            return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass));
+        }
+
+        @Override
+        public String getActionWithDialogText(String actionTitle) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public String getActionWithDialogText(ResourceBundle bundle, String key) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Nonnull
+        public String getResourceBaseNameBundleByClass(Class<?> targetClass) {
+            String classNamePath = getClassNamePath(targetClass);
+            int classNamePos = classNamePath.lastIndexOf("/");
+            return classNamePath.substring(0, classNamePos + 1) + "resources" + classNamePath.substring(classNamePos);
+        }
+
+        @Nonnull
+        public String getClassNamePath(Class<?> targetClass) {
+            return targetClass.getCanonicalName().replace(".", "/");
+        }
+    };
+
+    private final Map<String, Module> modules = new HashMap<>();
+
+    TestApplication() {
+    }
+
+    public void launch(@Nonnull Runnable runnable) {
+        App.setModuleProvider(new ModuleProvider() {
+            @Override
+            public void launch(Runnable runnable) {
+                runnable.run();
+            }
+
+            @Nonnull
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T extends Module> T getModule(Class<T> interfaceClass) {
+                try {
+                    Field declaredField = interfaceClass.getDeclaredField(MODULE_ID);
+                    if (declaredField != null) {
+                        Object interfaceModuleId = declaredField.get(null);
+                        if (interfaceModuleId instanceof String) {
+                            Module module = modules.get((String) interfaceModuleId);
+                            if (module != null) {
+                                return (T) module;
+                            }
+
+                            if ("org.exbin.framework.language.LanguageModule".equals(interfaceModuleId)) {
+                                return (T) languageModule;
+                            }
+                            throw new IllegalStateException("Module not included in test application: " + interfaceModuleId);
+//                            
 //                            XBApplicationModule module = modules.get((String) interfaceModuleId);
 //                            return (T) module;
-//                        }
-//                    }
-//
-//                    return null;
-//                } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-//                    Logger.getLogger(TestApplication.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//
-//                return null;
-//            }
-//
-//            @Override
-//            public List<XBModuleRecord> getModulesList() {
-//                return new ArrayList<>();
-//            }
-//
-//            @Override
-//            public void initModules() {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void addModulesFrom(URI moduleJarFileUri) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void loadModulesFromPath(URI uri) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void addModulesFromPath(URL url) {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Nonnull
-//            @Override
-//            public ClassLoader getContextClassLoader() {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//        };
-//    }
-//
-//    @Nonnull
-//    @Override
-//    public Optional<Image> getApplicationIcon() {
-//        return Optional.empty();
-//    }
-//
-//    @Override
-//    public void registerLafPlugin(String className, LookAndFeelApplier applier) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-//
-//    @Override
-//    public void applyLookAndFeel(String laf) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-//
-//    ResourceBundle emptyBundle = new ResourceBundle() {
-//
-//        @Override
-//        protected Object handleGetObject(String key) {
-//            return "";
-//        }
-//
-//        @Override
-//        public Enumeration<String> getKeys() {
-//            return Collections.emptyEnumeration();
-//        }
-//    };
-//
-//    @Nonnull
-//    @Override
-//    public File getAppDirectory() {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-//
-//    @Override
-//    public void setAppDirectory(File appDirectory) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-//
-//    @Override
-//    public void setAppDirectory(Class classInstance) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
+                        }
+                    }
+                } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+                    Logger.getLogger(TestApplication.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                throw new IllegalStateException("Module not included in test application");
+            }
+        });
+        App.launch(runnable);
+    }
+
+    public static void run(@Nonnull Runnable runnable) {
+        new TestApplication().launch(runnable);
+    }
+
+    public void addModule(String moduleId, Module module) {
+        modules.put(moduleId, module);
+    }
 }

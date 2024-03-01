@@ -19,6 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.component.api.DialogControlPanelHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -121,7 +122,7 @@ public class DialogControlPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new DialogControlPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new DialogControlPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

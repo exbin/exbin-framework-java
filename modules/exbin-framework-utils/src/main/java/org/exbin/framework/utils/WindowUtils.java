@@ -88,6 +88,12 @@ public class WindowUtils {
     public static void invokeWindow(final @Nonnull JComponent component) {
         JDialog dialog = new JDialog();
         Dimension size = component.getPreferredSize();
+        if (size.width < 10) {
+            size.width = 400;
+        }
+        if (size.height < 10) {
+            size.height = 200;
+        }
         dialog.add(component);
         dialog.getContentPane().setPreferredSize(new Dimension(size.width, size.height));
         dialog.pack();

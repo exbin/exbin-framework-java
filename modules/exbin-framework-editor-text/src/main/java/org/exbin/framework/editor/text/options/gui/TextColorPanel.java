@@ -29,6 +29,7 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Text color selection panel.
@@ -534,7 +535,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new TextColorPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new TextColorPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

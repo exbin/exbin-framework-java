@@ -68,20 +68,22 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.getDefaultAppEditor();
-        ComponentModule guiComponentModule = new ComponentModule();
-//        testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            ComponentModule guiComponentModule = new ComponentModule();
+            testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
 
-        ToolBarSidePanel toolBarSidePanel = new ToolBarSidePanel();
-        MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
-        MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
-        toolBarSidePanel.addActions(moveItemActions);
-        toolBarSidePanel.addSeparator();
+            ToolBarSidePanel toolBarSidePanel = new ToolBarSidePanel();
+            MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
+            MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
+            toolBarSidePanel.addActions(moveItemActions);
+            toolBarSidePanel.addSeparator();
 
-        EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
-        EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
-        toolBarSidePanel.addActions(editItemActions);
-        WindowUtils.invokeWindow(toolBarSidePanel);
+            EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
+            EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
+            toolBarSidePanel.addActions(editItemActions);
+            WindowUtils.invokeWindow(toolBarSidePanel);
+        });
     }
 
     @Override

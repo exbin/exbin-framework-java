@@ -28,6 +28,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Panel for choosing input and output audio devices.
@@ -200,7 +201,7 @@ public class AudioDevicesOptionsPanel extends javax.swing.JPanel implements Opti
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new AudioDevicesOptionsPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new AudioDevicesOptionsPanel()));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

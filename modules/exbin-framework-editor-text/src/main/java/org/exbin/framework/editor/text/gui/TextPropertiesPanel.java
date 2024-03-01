@@ -31,6 +31,7 @@ import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.utils.TestApplication;
 
 /**
  * Text file properties panel.
@@ -176,7 +177,7 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WindowUtils.invokeWindow(new TextPropertiesPanel());
+        TestApplication.run(() -> WindowUtils.invokeWindow(new TextPropertiesPanel()));
     }
 
     public void setDocument(TextEditor textEditor) {
