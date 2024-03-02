@@ -22,7 +22,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionActiveComponent;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationManager;
+import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.utils.ActionUtils;
 
 /**
@@ -36,6 +40,7 @@ public class SaveProjectAction extends AbstractAction {
     public static final String ACTION_ID = "saveProjectAction";
 
     private ResourceBundle resourceBundle;
+    private FileOperations fileOperations;
 
     public SaveProjectAction() {
     }
@@ -46,11 +51,15 @@ public class SaveProjectAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask() | InputEvent.SHIFT_DOWN_MASK));
-    }
-
-    public void updateForFileOperations() {
-//        FileOperations fileOperations = fileOperationsProvider.getFileOperations();
-//        setEnabled(fileOperations != null ? fileOperations.canSave() : false);
+        putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, new ActionActiveComponent() {
+            @Override
+            public void register(ComponentActivationManager manager) {
+                manager.registerUpdateListener(FileOperations.class, (instance) -> {
+                    fileOperations = instance;
+                    setEnabled(instance != null && instance.canSave());
+                });
+            }
+        });
     }
 
     @Override

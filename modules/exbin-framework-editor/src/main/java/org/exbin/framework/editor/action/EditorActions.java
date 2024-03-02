@@ -50,7 +50,7 @@ public class EditorActions implements EditorActionsApi {
     public boolean showAskForSaveDialog(List<FileHandler> fileHandlers) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         UnsavedFilesPanel unsavedFilesPanel = new UnsavedFilesPanel();
-        unsavedFilesPanel.setUnsavedFiles(fileHandlers);
+        unsavedFilesPanel.setUnsavedFiles(fileHandlers, editorProvider);
         final boolean[] result = new boolean[1];
         final WindowHandler dialog = windowModule.createDialog(unsavedFilesPanel);
         unsavedFilesPanel.setController(new UnsavedFilesPanel.Controller() {

@@ -39,6 +39,11 @@ public class UiUtils {
     private UiUtils() {
     }
 
+    /**
+     * Detects dar mode.
+     *
+     * @return true if dark mode assumed
+     */
     public static boolean isDarkUI() {
         Color backgroundColor = UIManager.getColor("TextArea.background");
         if (backgroundColor == null) {

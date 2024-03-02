@@ -26,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface LookAndFeelApplier {
 
     /**
-     * Apply look and feel.
+     * Applies look and feel.
      *
      * @param className LaF class name
      */
