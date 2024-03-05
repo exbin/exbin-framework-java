@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
-import org.exbin.framework.operation.undo.gui.UndoManagerPanel;
 import org.exbin.framework.operation.undo.service.UndoManagerService;
 import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.XBTDocOperation;
@@ -56,9 +55,9 @@ public class UndoManagerServiceImpl implements UndoManagerService {
                         fileStream.close();
                     }
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(UndoManagerPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UndoManagerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
-                    Logger.getLogger(UndoManagerPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UndoManagerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } else {

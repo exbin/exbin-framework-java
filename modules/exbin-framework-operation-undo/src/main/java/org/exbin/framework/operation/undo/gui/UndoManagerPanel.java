@@ -28,6 +28,7 @@ import org.exbin.xbup.operation.Command;
 import org.exbin.xbup.operation.XBDocCommand;
 import org.exbin.xbup.operation.XBTDocOperation;
 import org.exbin.xbup.operation.XBTOpDocCommand;
+import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Undo management panel.
@@ -37,7 +38,7 @@ import org.exbin.xbup.operation.XBTOpDocCommand;
 @ParametersAreNonnullByDefault
 public class UndoManagerPanel extends javax.swing.JPanel {
 
-    private UndoManagerModel undoModel;
+    private UndoManagerModel undoModel = new UndoManagerModel();
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(UndoManagerPanel.class);
     private UndoManagerService undoManagerService;
 
@@ -50,8 +51,8 @@ public class UndoManagerPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    public void setUndoModel(UndoManagerModel undoModel) {
-        this.undoModel = undoModel;
+    public void setUndoHandler(XBUndoHandler undoHandler) {
+        undoModel.setUndoHandler(undoHandler);
     }
 
     public void setUndoManagerService(UndoManagerService undoManagerService) {

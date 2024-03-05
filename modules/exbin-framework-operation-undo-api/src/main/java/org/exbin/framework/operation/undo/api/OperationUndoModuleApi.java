@@ -46,11 +46,6 @@ public interface OperationUndoModuleApi extends Module {
     void registerMainToolBar();
 
     /**
-     * Opens undo manager dialog.
-     */
-    void openUndoManager();
-
-    /**
      * Creates new instance of the undo actions set.
      *
      * @return undo actions set

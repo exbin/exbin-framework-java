@@ -20,7 +20,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.MenuGroup;
 import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
@@ -29,12 +28,7 @@ import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.framework.operation.undo.api.UndoActions;
-import org.exbin.framework.operation.undo.handler.UndoManagerControlHandler;
-import org.exbin.framework.operation.undo.gui.UndoManagerControlPanel;
-import org.exbin.framework.operation.undo.gui.UndoManagerPanel;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Implementation of XBUP framework undo/redo module.
@@ -81,22 +75,6 @@ public class OperationUndoModule implements OperationUndoModuleApi {
         actionModule.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, new ToolBarGroup(UNDO_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP), SeparationMode.AROUND));
         actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, defaultUndoActions.createUndoAction(), new ToolBarPosition(UNDO_TOOL_BAR_GROUP_ID));
         actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, defaultUndoActions.createRedoAction(), new ToolBarPosition(UNDO_TOOL_BAR_GROUP_ID));
-    }
-
-    @Override
-    public void openUndoManager() {
-        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        UndoManagerPanel undoManagerPanel = new UndoManagerPanel();
-        UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
-        final WindowHandler windowHandler = windowModule.createDialog(undoManagerPanel, undoManagerControlPanel);
-        windowModule.setWindowTitle(windowHandler, undoManagerPanel.getResourceBundle());
-        undoManagerControlPanel.setHandler((UndoManagerControlHandler.ControlActionType actionType) -> {
-            windowHandler.close();
-            windowHandler.dispose();
-        });
-        windowModule.addHeaderPanel(windowHandler.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
-        windowHandler.showCentered(frameModule.getFrame());
     }
 
     @Nonnull

@@ -25,11 +25,18 @@ import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationManager;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
 import org.exbin.framework.operation.undo.api.UndoRedoHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.operation.undo.api.UndoFileHandler;
+import org.exbin.framework.operation.undo.gui.UndoManagerControlPanel;
+import org.exbin.framework.operation.undo.gui.UndoManagerPanel;
+import org.exbin.framework.operation.undo.handler.UndoManagerControlHandler;
+import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.WindowModuleApi;
 
 /**
  * Undo handling action set.
@@ -74,6 +81,7 @@ public class BasicUndoActions implements UndoActions {
         undoManagerAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(undoManagerAction, resourceBundle, EDIT_UNDO_MANAGER_ACTION_ID);
+        undoManagerAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, undoManagerAction);
         return undoManagerAction;
     }
 
@@ -124,7 +132,21 @@ public class BasicUndoActions implements UndoActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+            UndoManagerPanel undoManagerPanel = new UndoManagerPanel();
+            if (undoHandler instanceof UndoFileHandler) {
+                undoManagerPanel.setUndoHandler(((UndoFileHandler) undoHandler).getUndoHandler());
+            }
+            UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
+            final WindowHandler windowHandler = windowModule.createDialog(undoManagerPanel, undoManagerControlPanel);
+            windowModule.setWindowTitle(windowHandler, undoManagerPanel.getResourceBundle());
+            undoManagerControlPanel.setHandler((UndoManagerControlHandler.ControlActionType actionType) -> {
+                windowHandler.close();
+                windowHandler.dispose();
+            });
+            windowModule.addHeaderPanel(windowHandler.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
+            windowHandler.showCentered(frameModule.getFrame());
         }
 
         @Override
