@@ -15,9 +15,11 @@
  */
 package org.exbin.framework.language;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -25,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.language.api.LanguageProvider;
 
 /**
  * Language module.
@@ -38,6 +41,7 @@ public class LanguageModule implements LanguageModuleApi {
 
     private ResourceBundle appBundle;
     private ClassLoader languageClassLoader = null;
+    private final List<LanguageProvider> languagePlugins = new ArrayList<>();
 
     public LanguageModule() {
     }
@@ -114,6 +118,17 @@ public class LanguageModule implements LanguageModuleApi {
     public String getActionWithDialogText(ResourceBundle bundle, String key) {
         // TODO support for language plugins
         return bundle.getString(key) + "...";
+    }
+
+    @Override
+    public void registerLanguagePlugin(LanguageProvider languageProvider) {
+        languagePlugins.add(languageProvider);
+    }
+
+    @Nonnull
+    @Override
+    public List<LanguageProvider> getLanguagePlugins() {
+        return languagePlugins;
     }
 
     /**

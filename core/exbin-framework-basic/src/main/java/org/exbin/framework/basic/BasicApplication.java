@@ -16,7 +16,6 @@
 package org.exbin.framework.basic;
 
 import org.exbin.framework.LookAndFeelApplier;
-import org.exbin.framework.LanguageProvider;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,7 +41,6 @@ public class BasicApplication {
 
     private BasicModuleProvider moduleProvider;
     private final List<URI> plugins = new ArrayList<>();
-    private final List<LanguageProvider> languagePlugins = new ArrayList<>();
     private final Map<String, LookAndFeelApplier> lafPlugins = new HashMap<>();
     private String targetLaf = null;
     private File appDirectory = new File("");

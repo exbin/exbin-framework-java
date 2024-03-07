@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.language.api;
 
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -33,20 +34,25 @@ public interface LanguageModuleApi extends Module {
 
     @Nonnull
     ResourceBundle getAppBundle();
-    
+
     /**
      * Sets application resource bundle handler.
      *
      * @param appBundle application resource bundle
      */
     void setAppBundle(ResourceBundle appBundle);
-    
+
     @Nonnull
     ResourceBundle getBundle(Class<?> targetClass);
-    
+
     @Nonnull
     String getActionWithDialogText(String actionTitle);
 
     @Nonnull
     String getActionWithDialogText(ResourceBundle bundle, String key);
+
+    void registerLanguagePlugin(LanguageProvider languageProvider);
+
+    @Nonnull
+    List<LanguageProvider> getLanguagePlugins();
 }

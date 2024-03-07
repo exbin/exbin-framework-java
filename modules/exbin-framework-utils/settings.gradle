@@ -2,7 +2,6 @@ rootProject.name = 'exbin-framework-utils'
 
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
-    include ':modules:exbin-framework-language-api'
 }
 
 apply from: '../exbin-framework-java-modules-settings.gradle'

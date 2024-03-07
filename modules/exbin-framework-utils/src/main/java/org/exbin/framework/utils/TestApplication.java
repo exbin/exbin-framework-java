@@ -28,7 +28,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleProvider;
-import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Some simple static methods usable for testing windows and dialogs.
@@ -53,7 +52,7 @@ public class TestApplication {
             return Collections.emptyEnumeration();
         }
     };
-
+/*
     private final LanguageModuleApi languageModule = new LanguageModuleApi() {
         @Override
         public ResourceBundle getAppBundle() {
@@ -92,7 +91,7 @@ public class TestApplication {
             return targetClass.getCanonicalName().replace(".", "/");
         }
     };
-
+*/
     private final Map<String, Module> modules = new HashMap<>();
 
     TestApplication() {
@@ -119,9 +118,9 @@ public class TestApplication {
                                 return (T) module;
                             }
 
-                            if ("org.exbin.framework.language.LanguageModule".equals(interfaceModuleId)) {
-                                return (T) languageModule;
-                            }
+//                            if ("org.exbin.framework.language.LanguageModule".equals(interfaceModuleId)) {
+//                                return (T) languageModule;
+//                            }
                             throw new IllegalStateException("Module not included in test application: " + interfaceModuleId);
 //                            
 //                            XBApplicationModule module = modules.get((String) interfaceModuleId);

@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
@@ -33,6 +35,7 @@ import org.exbin.framework.options.model.LanguageRecord;
 import org.exbin.framework.options.options.impl.UiOptionsImpl;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.language.api.LanguageProvider;
 import org.exbin.framework.ui.api.preferences.UiPreferences;
 
 /**
@@ -88,9 +91,9 @@ public class MainOptionsManager {
         languageLocales = new ArrayList<>();
         languageLocales.add(new LanguageRecord(Locale.ROOT, null));
         languageLocales.add(new LanguageRecord(new Locale("en", "US"), new ImageIcon(getClass().getResource(resourceBundle.getString("locale.englishFlag")))));
-        // TODO
-        /*
-        for (LanguageProvider languageProvider : application.getLanguagePlugins()) {
+
+        List<LanguageProvider> languagePlugins = App.getModule(LanguageModuleApi.class).getLanguagePlugins();
+        for (LanguageProvider languageProvider : languagePlugins) {
             ImageIcon flag = null;
             try {
                 flag = languageProvider.getFlag().orElse(null);
@@ -98,7 +101,7 @@ public class MainOptionsManager {
                 Logger.getLogger(MainOptionsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             languageLocales.add(new LanguageRecord(languageProvider.getLocale(), flag, null));
-        } */
+        }
 
         renderingMethodKeys = new ArrayList<>();
         renderingMethodNames = new ArrayList<>();

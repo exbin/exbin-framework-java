@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.api;
+package org.exbin.framework.language.api;
 
 import java.util.Locale;
 import java.util.Optional;
