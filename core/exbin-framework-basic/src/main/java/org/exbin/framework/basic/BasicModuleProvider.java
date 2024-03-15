@@ -90,8 +90,14 @@ public class BasicModuleProvider implements ModuleProvider {
         throw new IllegalArgumentException("Module for class " + interfaceClass.getCanonicalName() + " was not found.");
     }
 
-    public void addModulesFrom(URI moduleClassUri) {
-        addModulePlugin(moduleClassUri, false);
+    public void addModulesFrom(URI pathUri) {
+        File directory = new File(pathUri);
+        if (directory.exists() && directory.isDirectory()) {
+            File[] jarFiles = directory.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".jar"));
+            for (File jarFile : jarFiles) {
+                addModulePlugin(jarFile.toURI(), false);
+            }
+        }
     }
 
     public void addModulesFrom(URL moduleClassUrl) {

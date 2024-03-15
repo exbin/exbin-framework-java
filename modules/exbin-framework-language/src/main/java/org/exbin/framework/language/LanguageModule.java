@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -41,6 +42,7 @@ public class LanguageModule implements LanguageModuleApi {
 
     private ResourceBundle appBundle;
     private ClassLoader languageClassLoader = null;
+    private Locale languageLocale = null;
     private final List<LanguageProvider> languagePlugins = new ArrayList<>();
 
     public LanguageModule() {
@@ -64,24 +66,33 @@ public class LanguageModule implements LanguageModuleApi {
     @Override
     public ResourceBundle getBundle(Class<?> targetClass) {
         if (languageClassLoader == null) {
-            return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass));
+            return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass), getLanguageBundleLocale());
         } else {
             return new LanguageResourceBundle(getResourceBaseNameBundleByClass(targetClass));
         }
     }
 
-    @Nullable
-    public ClassLoader getLanguageClassLoader() {
-        return languageClassLoader;
+    @Nonnull
+    public Optional<ClassLoader> getLanguageClassLoader() {
+        return Optional.ofNullable(languageClassLoader);
     }
 
-    public void setLanguageClassLoader(ClassLoader languageClassLoader) {
+    public void setLanguageClassLoader(@Nullable ClassLoader languageClassLoader) {
         this.languageClassLoader = languageClassLoader;
+    }
+
+    @Nonnull
+    public Optional<Locale> getLanguageLocale() {
+        return Optional.ofNullable(languageLocale);
+    }
+
+    public void setLanguageLocale(@Nullable Locale languageLocale) {
+        this.languageLocale = languageLocale;
     }
 
     /**
      * Returns class name path.
-     *
+     * <br>
      * Result is canonical name with dots replaced with slashes.
      *
      * @param targetClass target class
@@ -130,6 +141,11 @@ public class LanguageModule implements LanguageModuleApi {
     public List<LanguageProvider> getLanguagePlugins() {
         return languagePlugins;
     }
+    
+    @Nonnull
+    public Locale getLanguageBundleLocale() {
+        return languageLocale == null ? Locale.getDefault() : languageLocale;
+    }
 
     /**
      * Resource bundle which looks for language resources first and main
@@ -142,8 +158,8 @@ public class LanguageModule implements LanguageModuleApi {
         private final ResourceBundle languageResourceBundle;
 
         public LanguageResourceBundle(String baseName) {
-            mainResourceBundle = ResourceBundle.getBundle(baseName);
-            languageResourceBundle = ResourceBundle.getBundle(baseName, Locale.getDefault(), languageClassLoader);
+            mainResourceBundle = ResourceBundle.getBundle(baseName, Locale.ROOT);
+            languageResourceBundle = ResourceBundle.getBundle(baseName, getLanguageBundleLocale(), languageClassLoader);
         }
 
         @Nullable

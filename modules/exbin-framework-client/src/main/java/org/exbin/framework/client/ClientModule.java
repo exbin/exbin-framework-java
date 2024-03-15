@@ -77,7 +77,6 @@ import org.exbin.xbup.core.catalog.base.service.XBCXUiService;
 import org.exbin.xbup.core.catalog.base.service.XBCXNameService;
 import org.exbin.xbup.core.catalog.base.service.XBCXPlugService;
 import org.exbin.xbup.core.catalog.base.service.XBCXStriService;
-import org.exbin.xbup.plugin.XBModuleHandler;
 import org.exbin.xbup.plugin.XBPluginRepository;
 
 /**
