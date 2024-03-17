@@ -227,6 +227,7 @@ public class BasicModuleProvider implements ModuleProvider {
 
                     moduleRecord.setClassLoader(loader);
                 } else {
+                    contextClassLoader.add(libraryUri.toURL());
                     clazz = contextClassLoader.loadClass(moduleRecord.getModuleId());
                     moduleRecord.setClassLoader(contextClassLoader);
                 }

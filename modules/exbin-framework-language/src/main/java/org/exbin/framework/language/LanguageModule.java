@@ -38,8 +38,6 @@ import org.exbin.framework.language.api.LanguageProvider;
 @ParametersAreNonnullByDefault
 public class LanguageModule implements LanguageModuleApi {
 
-    private java.util.ResourceBundle resourceBundle = null;
-
     private ResourceBundle appBundle;
     private ClassLoader languageClassLoader = null;
     private Locale languageLocale = null;
@@ -61,7 +59,7 @@ public class LanguageModule implements LanguageModuleApi {
     public void setAppBundle(ResourceBundle appBundle) {
         this.appBundle = appBundle;
     }
-    
+
     @Nonnull
     @Override
     public ResourceBundle getBundle(Class<?> targetClass) {
@@ -88,6 +86,22 @@ public class LanguageModule implements LanguageModuleApi {
 
     public void setLanguageLocale(@Nullable Locale languageLocale) {
         this.languageLocale = languageLocale;
+    }
+
+    @Override
+    public void switchToLanguage(@Nullable Locale locale) {
+        setLanguageLocale(locale);
+        if (locale == null || locale.equals(Locale.ROOT)) {
+            languageClassLoader = null;
+            return;
+        }
+
+        for (LanguageProvider languageProvider : languagePlugins) {
+            if (languageProvider.getLocale().equals(locale)) {
+                languageClassLoader = languageProvider.getClassLoader().orElse(getClass().getClassLoader());
+                break;
+            }
+        }
     }
 
     /**
@@ -141,7 +155,7 @@ public class LanguageModule implements LanguageModuleApi {
     public List<LanguageProvider> getLanguagePlugins() {
         return languagePlugins;
     }
-    
+
     @Nonnull
     public Locale getLanguageBundleLocale() {
         return languageLocale == null ? Locale.getDefault() : languageLocale;

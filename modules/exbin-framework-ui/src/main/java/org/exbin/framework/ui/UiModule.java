@@ -115,9 +115,8 @@ public class UiModule implements UiModuleApi {
 
         // Switching language
         Locale locale = uiPreferences.getLocale();
-        if (!locale.equals(Locale.ROOT)) {
-            Locale.setDefault(locale);
-        }
+        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+        languageModule.switchToLanguage(locale);
 
 //        targetLaf = frameworkParameters.getLookAndFeel();
     }

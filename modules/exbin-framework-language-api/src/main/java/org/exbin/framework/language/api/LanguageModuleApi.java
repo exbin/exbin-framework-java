@@ -16,6 +16,7 @@
 package org.exbin.framework.language.api;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -55,4 +56,11 @@ public interface LanguageModuleApi extends Module {
 
     @Nonnull
     List<LanguageProvider> getLanguagePlugins();
+
+    /**
+     * Switches application to given language if available.
+     *
+     * @param locale language locale
+     */
+    void switchToLanguage(Locale locale);
 }
