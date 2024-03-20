@@ -15,29 +15,27 @@
  */
 package org.exbin.framework.ui.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for framework UI module.
+ * Look&feel provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UiModuleApi extends Module {
-
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(UiModuleApi.class);
+public interface LafProvider {
 
     /**
-     * Register look and feel provider.
+     * Returns look and feel string identifier.
      *
-     * @param lafProvider look and feel provider
+     * @return string identifier
      */
-    void registerLafPlugin(LafProvider lafProvider);
+    @Nonnull
+    String getLafId();
 
     /**
-     * Initialize UI. Should be called before any GUI is created.
+     * Applies specific look and feel.
      */
-    void initSwingUi();
+    void applyLaf();
 }

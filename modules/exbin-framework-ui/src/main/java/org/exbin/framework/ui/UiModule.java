@@ -15,13 +15,20 @@
  */
 package org.exbin.framework.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.ui.api.LafProvider;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.api.preferences.UiPreferences;
 import org.exbin.framework.utils.DesktopUtils;
@@ -35,6 +42,7 @@ import org.exbin.framework.utils.DesktopUtils;
 public class UiModule implements UiModuleApi {
 
     private ResourceBundle resourceBundle;
+    private final List<LafProvider> lafProviders = new ArrayList<>();
 
     public UiModule() {
     }
@@ -52,6 +60,11 @@ public class UiModule implements UiModuleApi {
         if (resourceBundle == null) {
             getResourceBundle();
         }
+    }
+
+    @Override
+    public void registerLafPlugin(LafProvider lafProvider) {
+        lafProviders.add(lafProvider);
     }
 
     @Override
@@ -118,10 +131,17 @@ public class UiModule implements UiModuleApi {
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         languageModule.switchToLanguage(locale);
 
-//        targetLaf = frameworkParameters.getLookAndFeel();
+        switchToLookAndFeel(uiPreferences.getLookAndFeel());
     }
-    /*
-    public void applyLookAndFeel(String laf) {
+
+    public void switchToLookAndFeel(String laf) {
+        for (LafProvider provider : lafProviders) {
+            if (laf.equals(provider.getLafId())) {
+                provider.applyLaf();
+                return;
+            }
+        }
+
         try {
             if (laf.isEmpty()) {
                 String osName = System.getProperty("os.name").toLowerCase();
@@ -138,16 +158,15 @@ public class UiModule implements UiModuleApi {
             }
 
             if (laf != null && !laf.isEmpty()) {
-                LookAndFeelApplier applier = lafPlugins.get(laf);
-                if (applier != null) {
-                    applier.applyLookAndFeel(laf);
-                } else {
+//                LookAndFeelApplier applier = lafPlugins.get(laf);
+//                if (applier != null) {
+//                    applier.applyLookAndFeel(laf);
+//                } else {
                     UIManager.setLookAndFeel(laf);
-                }
+//                }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(UiModule.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     */
 }

@@ -24,6 +24,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -89,15 +91,54 @@ public class LanguageModule implements LanguageModuleApi {
     }
 
     @Override
-    public void switchToLanguage(@Nullable Locale locale) {
-        setLanguageLocale(locale);
-        if (locale == null || locale.equals(Locale.ROOT)) {
+    public void switchToLanguage(@Nullable Locale targetLocale) {
+        if (targetLocale == null) {
+            setLanguageLocale(null);
             languageClassLoader = null;
             return;
         }
 
+        if (targetLocale.equals(Locale.ROOT)) {
+            // Detect if there is any matching locale for current application locale
+            Locale defaultLocale = Locale.getDefault();
+            ResourceBundle.Control control = new ResourceBundle.Control() {
+            };
+            List<Locale> candidateLocales = control.getCandidateLocales("", defaultLocale);
+            List<Locale.LanguageRange> priorityList = new ArrayList<>();
+            for (Locale locale : candidateLocales) {
+                priorityList.add(new Locale.LanguageRange(locale.toLanguageTag()));
+            }
+
+            List<Locale> availableLocales = new ArrayList<>();
+            for (LanguageProvider languagePlugin : languagePlugins) {
+                availableLocales.add(languagePlugin.getLocale());
+            }
+
+            List<Locale> matchingLocales = Locale.filter(priorityList, availableLocales);
+            if (!matchingLocales.isEmpty()) {
+                Locale bestMatch = matchingLocales.get(0);
+                for (LanguageProvider languagePlugin : languagePlugins) {
+                    if (languagePlugin.getLocale().equals(bestMatch)) {
+                        ClassLoader languageClassLoader = languagePlugin.getClassLoader().orElse(null);
+                        if (languageClassLoader != null) {
+                            setLanguageClassLoader(languageClassLoader);
+                            try {
+                                // TODO use better method than string to class conversion
+                                appBundle = getBundle(Class.forName(appBundle.getBaseBundleName().replaceFirst("/resources/", "/").replaceAll("/", ".")));
+                            } catch (ClassNotFoundException ex) {
+                                // Unable to load
+                                Logger.getLogger(LanguageModule.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            return;
+        }
+
         for (LanguageProvider languageProvider : languagePlugins) {
-            if (languageProvider.getLocale().equals(locale)) {
+            if (languageProvider.getLocale().equals(targetLocale)) {
                 languageClassLoader = languageProvider.getClassLoader().orElse(getClass().getClassLoader());
                 break;
             }
