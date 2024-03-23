@@ -35,6 +35,19 @@ public interface LafProvider {
     String getLafId();
 
     /**
+     * Returns look and feel default name.
+     *
+     * @return name
+     */
+    @Nonnull
+    String getLafName();
+
+    /**
+     * Installs look and feel into UIManager.
+     */
+    void installLaf();
+
+    /**
      * Applies specific look and feel.
      */
     void applyLaf();

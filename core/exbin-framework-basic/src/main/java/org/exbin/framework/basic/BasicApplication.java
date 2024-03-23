@@ -15,15 +15,12 @@
  */
 package org.exbin.framework.basic;
 
-import org.exbin.framework.LookAndFeelApplier;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -41,7 +38,6 @@ public class BasicApplication {
 
     private BasicModuleProvider moduleProvider;
     private final List<URI> plugins = new ArrayList<>();
-    private final Map<String, LookAndFeelApplier> lafPlugins = new HashMap<>();
     private String targetLaf = null;
     private File appDirectory = new File("");
 
@@ -118,7 +114,7 @@ public class BasicApplication {
     public void addModulesFromManifest(Class manifestClass) {
         moduleProvider.addModulesFromManifest(manifestClass);
     }
-    
+
     public void initModules() {
         moduleProvider.initModules();
     }

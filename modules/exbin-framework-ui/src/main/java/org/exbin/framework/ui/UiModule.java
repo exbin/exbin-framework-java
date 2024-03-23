@@ -34,7 +34,7 @@ import org.exbin.framework.ui.api.preferences.UiPreferences;
 import org.exbin.framework.utils.DesktopUtils;
 
 /**
- * Module window handling.
+ * Module user interface handling.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -65,6 +65,13 @@ public class UiModule implements UiModuleApi {
     @Override
     public void registerLafPlugin(LafProvider lafProvider) {
         lafProviders.add(lafProvider);
+        lafProvider.installLaf();
+    }
+
+    @Nonnull
+    @Override
+    public List<LafProvider> getLafProviders() {
+        return lafProviders;
     }
 
     @Override

@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.basic;
 
-import org.exbin.framework.LookAndFeelApplier;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -219,11 +218,11 @@ public class BasicModuleProvider implements ModuleProvider {
                     loader.add(libraryUri.toURL());
                     clazz = Class.forName(moduleRecord.getModuleId(), true, loader);
 
-                    if (LookAndFeelApplier.class.isAssignableFrom(clazz)) {
-                        loader = contextClassLoader;
-                        loader.add(libraryUri.toURL());
-                        clazz = Class.forName(moduleRecord.getModuleId(), true, loader);
-                    }
+//                    if (LookAndFeelApplier.class.isAssignableFrom(clazz)) {
+//                        loader = contextClassLoader;
+//                        loader.add(libraryUri.toURL());
+//                        clazz = Class.forName(moduleRecord.getModuleId(), true, loader);
+//                    }
 
                     moduleRecord.setClassLoader(loader);
                 } else {
@@ -278,12 +277,12 @@ public class BasicModuleProvider implements ModuleProvider {
             while (moduleIndex < unprocessedModules.size()) {
                 ModuleRecord moduleRecord = unprocessedModules.get(moduleIndex);
                 Module module = moduleRecord.getModule();
-                if (module instanceof LookAndFeelApplier) {
-//                    module.init(moduleHandler);
-                    unprocessedModules.remove(moduleIndex);
-                } else {
+//                if (module instanceof LookAndFeelApplier) {
+////                    module.init(moduleHandler);
+//                    unprocessedModules.remove(moduleIndex);
+//                } else {
                     moduleIndex++;
-                }
+//                }
             }
         }
 

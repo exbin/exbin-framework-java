@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.ui.api;
 
+import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
@@ -35,6 +37,14 @@ public interface UiModuleApi extends Module {
      * @param lafProvider look and feel provider
      */
     void registerLafPlugin(LafProvider lafProvider);
+
+    /**
+     * Returns list of available look and feel providers.
+     *
+     * @return list of look and feel providers
+     */
+    @Nonnull
+    List<LafProvider> getLafProviders();
 
     /**
      * Initialize UI. Should be called before any GUI is created.
