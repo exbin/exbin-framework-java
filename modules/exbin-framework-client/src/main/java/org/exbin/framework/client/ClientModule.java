@@ -157,6 +157,16 @@ public class ClientModule implements ClientModuleApi {
 
     @Override
     public boolean runLocalCatalog() {
+        boolean started = startLocalCatalog();
+        if (!started) {
+            return false;
+        }
+
+        return updateLocalCatalog();
+    }
+    
+    @Override
+    public boolean startLocalCatalog() {
         connectionStatusChanged(ConnectionStatus.CONNECTING);
         try {
             // Database Initialization
@@ -171,8 +181,20 @@ public class ClientModule implements ClientModuleApi {
             EntityManager em = emf.createEntityManager();
             em.setFlushMode(FlushModeType.AUTO);
 
-            XBAECatalog intCatalog = createInternalCatalog(em);
+            catalog = createInternalCatalog(em);
+            initializePlugins(catalog);
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(ClientModule.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
+        return false;
+    }
+
+    @Override
+    public boolean updateLocalCatalog() {
+        XBAECatalog intCatalog = (XBAECatalog) catalog;
+        try {
             if (intCatalog.isShallInit()) {
                 connectionStatusChanged(ConnectionStatus.INITIALIZING);
                 intCatalog.initCatalog();
@@ -200,7 +222,7 @@ public class ClientModule implements ClientModuleApi {
 
                         connectionStatusChanged(ConnectionStatus.UPDATING);
                         // TODO: As there is currently no diff update available - wipe out entire database instead
-                        em.close();
+                        intCatalog.getEntityManager().close();
                         EntityManagerFactory emfDrop = Persistence.createEntityManagerFactory("XBEditorPU-drop");
                         EntityManager emDrop = emfDrop.createEntityManager();
                         emDrop.setFlushMode(FlushModeType.AUTO);
@@ -225,9 +247,6 @@ public class ClientModule implements ClientModuleApi {
                 Logger.getLogger(ClientModule.class.getName()).log(Level.SEVERE, null, ex);
                 return false;
             }
-
-            this.catalog = intCatalog;
-            initializePlugins(catalog);
             return true;
         } catch (Exception ex) {
             Logger.getLogger(ClientModule.class.getName()).log(Level.SEVERE, null, ex);

@@ -46,6 +46,10 @@ public interface ClientModuleApi extends Module {
      */
     boolean runLocalCatalog();
 
+    boolean startLocalCatalog();
+
+    boolean updateLocalCatalog();
+
     /**
      * Run internal service.
      */
