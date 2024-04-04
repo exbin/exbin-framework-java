@@ -119,14 +119,21 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     }
 
     public void activeFileChanged() {
-        int activeIndex = multiEditorPanel.getActiveIndex();
-        activeFile = activeIndex >= 0 ? fileHandlers.get(activeIndex) : null;
+        updateActiveFile();
         componentActivationService.updated(FileHandler.class, activeFile);
         ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getComponentActivationService() : null;
         componentActivationService.passRequestUpdate(fileComponentActivationService);
         if (activeFile instanceof EditorFileHandler) {
             ((EditorFileHandler) activeFile).componentActivated(componentActivationService.getFileActivationListener(activeFile));
         }
+    }
+
+    /**
+     * TODO: Temporary method, rework provider later
+     */
+    public void updateActiveFile() {
+        int activeIndex = multiEditorPanel.getActiveIndex();
+        activeFile = activeIndex >= 0 ? fileHandlers.get(activeIndex) : null;
     }
 
     @Nonnull
