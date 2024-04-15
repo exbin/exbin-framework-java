@@ -43,8 +43,25 @@ public interface LanguageModuleApi extends Module {
      */
     void setAppBundle(ResourceBundle appBundle);
 
+    /**
+     * Returns resource bundle for properties file with path derived from class
+     * name.
+     *
+     * @param targetClass target class
+     * @return resource bundle
+     */
     @Nonnull
     ResourceBundle getBundle(Class<?> targetClass);
+
+    /**
+     * Returns resource bundle for properties file with path derived from bundle
+     * name.
+     *
+     * @param bundleName bundle name
+     * @return resource bundle
+     */
+    @Nonnull
+    ResourceBundle getResourceBundleByBundleName(String bundleName);
 
     @Nonnull
     String getActionWithDialogText(String actionTitle);

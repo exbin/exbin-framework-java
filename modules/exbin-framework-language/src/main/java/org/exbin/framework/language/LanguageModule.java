@@ -73,6 +73,16 @@ public class LanguageModule implements LanguageModuleApi {
     }
 
     @Nonnull
+    @Override
+    public ResourceBundle getResourceBundleByBundleName(String bundleName) {
+        if (languageClassLoader == null) {
+            return ResourceBundle.getBundle(bundleName, getLanguageBundleLocale());
+        } else {
+            return new LanguageResourceBundle(bundleName);
+        }
+    }
+
+    @Nonnull
     public Optional<ClassLoader> getLanguageClassLoader() {
         return Optional.ofNullable(languageClassLoader);
     }
