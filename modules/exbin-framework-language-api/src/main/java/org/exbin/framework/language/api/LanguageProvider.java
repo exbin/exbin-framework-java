@@ -27,12 +27,27 @@ import javax.swing.ImageIcon;
  */
 public interface LanguageProvider {
 
+    /**
+     * Returns primary language locale.
+     *
+     * @return language locale
+     */
     @Nonnull
     Locale getLocale();
 
+    /**
+     * Returns class loader for this language.
+     *
+     * @return class loader
+     */
     @Nonnull
     Optional<ClassLoader> getClassLoader();
 
+    /**
+     * Returns visual flag for language.
+     *
+     * @return language icon
+     */
     @Nonnull
     Optional<ImageIcon> getFlag();
 }

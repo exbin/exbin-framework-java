@@ -33,6 +33,11 @@ public interface LanguageModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(LanguageModuleApi.class);
 
+    /**
+     * Returns applications's language resource bundle.
+     *
+     * @return resource bundle
+     */
     @Nonnull
     ResourceBundle getAppBundle();
 
@@ -63,14 +68,37 @@ public interface LanguageModuleApi extends Module {
     @Nonnull
     ResourceBundle getResourceBundleByBundleName(String bundleName);
 
+    /**
+     * Enhances action title to indicate action which is opening dialog.
+     *
+     * @param actionTitle action title
+     * @return enhanced action title
+     */
     @Nonnull
     String getActionWithDialogText(String actionTitle);
 
+    /**
+     * Enhances action title to indicate action which is opening dialog.
+     *
+     * @param bundle resource bundle
+     * @param key resource key
+     * @return enhanced action title
+     */
     @Nonnull
     String getActionWithDialogText(ResourceBundle bundle, String key);
 
+    /**
+     * Registers language provider plugin.
+     *
+     * @param languageProvider language provider
+     */
     void registerLanguagePlugin(LanguageProvider languageProvider);
 
+    /**
+     * Returns registered language plugins.
+     *
+     * @return language providers
+     */
     @Nonnull
     List<LanguageProvider> getLanguagePlugins();
 

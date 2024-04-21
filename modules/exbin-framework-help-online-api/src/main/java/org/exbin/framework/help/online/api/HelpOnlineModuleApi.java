@@ -43,7 +43,7 @@ public interface HelpOnlineModuleApi extends Module {
      * @return online help action
      */
     @Nonnull
-    Action getOnlineHelpAction();
+    Action createOnlineHelpAction();
 
     /**
      * Sets online help URL.

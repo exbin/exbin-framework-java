@@ -55,6 +55,8 @@ import org.exbin.framework.utils.TestApplication;
 @ParametersAreNonnullByDefault
 public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponentsIssuable {
 
+    public static final String OPTIONS_PANEL_KEY = "options";
+
     private Preferences preferences = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsTreePanel.class);
     private Map<String, PageRecord<?>> optionPages;
@@ -65,10 +67,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
     private boolean modified;
     private OptionsMutableTreeNode top;
     private final ApplicationFrameHandler frame;
-    private MainOptionsPanel mainOptionsPanel;
-    private AppearanceOptionsPanel appearanceOptionsPanel;
-    private PageRecord<?> mainOptionsExtPage = null;
-    private PageRecord<?> appearanceOptionsExtPage = null;
 
     public OptionsTreePanel(ApplicationFrameHandler frame) {
         this.frame = frame;
@@ -95,7 +93,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
         });
 
         // Create menu tree
-        top = new OptionsMutableTreeNode(resourceBundle.getString("options.root.caption"), "options");
+        top = new OptionsMutableTreeNode(resourceBundle.getString("options.root.caption"), OPTIONS_PANEL_KEY);
         optionsTree.setModel(new DefaultTreeModel(top, true));
         optionsTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
             if (e.getPath() != null) {
@@ -216,31 +214,16 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
     public void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path) {
         String panelKey;
         if (path == null) {
-            panelKey = "options";
+            panelKey = OPTIONS_PANEL_KEY;
         } else {
             panelKey = path.get(path.size() - 1).getName();
             establishPath(path);
         }
 
         PageRecord<?> pageRecord = new PageRecord<>(optionPage);
-        if (pageRecord.panel instanceof MainOptionsPanel) {
-            mainOptionsPanel = (MainOptionsPanel) pageRecord.panel;
-        } else if (pageRecord.panel instanceof AppearanceOptionsPanel) {
-            appearanceOptionsPanel = (AppearanceOptionsPanel) pageRecord.panel;
-        }
         optionPages.put(panelKey, pageRecord);
         pageRecord.panel.setOptionsModifiedListener(optionsModifiedListener);
         optionsTree.setSelectionRow(0);
-    }
-
-    public void extendMainOptionsPage(OptionsPage<?> optionsPage) {
-        mainOptionsExtPage = new PageRecord<>(optionsPage);
-        mainOptionsPanel.addExtendedPanel(mainOptionsExtPage.panel);
-    }
-
-    public void extendAppearanceOptionsPage(OptionsPage<?> optionsPage) {
-        appearanceOptionsExtPage = new PageRecord<>(optionsPage);
-        appearanceOptionsPanel.addExtendedPanel(appearanceOptionsExtPage.panel);
     }
 
     public void loadAllFromPreferences() {
@@ -251,14 +234,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
                 Logger.getLogger(OptionsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-
-        if (mainOptionsExtPage != null) {
-            mainOptionsExtPage.loadFromPreferences(preferences);
-        }
-
-        if (appearanceOptionsExtPage != null) {
-            appearanceOptionsExtPage.loadFromPreferences(preferences);
-        }
     }
 
     public void saveAndApplyAll() {
@@ -269,14 +244,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
                 Logger.getLogger(OptionsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-
-        if (mainOptionsExtPage != null) {
-            mainOptionsExtPage.saveAndApply(preferences);
-        }
-
-        if (appearanceOptionsExtPage != null) {
-            appearanceOptionsExtPage.saveAndApply(preferences);
-        }
 
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         optionsModule.notifyOptionsChanged();
@@ -290,14 +257,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
                 Logger.getLogger(OptionsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-
-        if (mainOptionsExtPage != null) {
-            mainOptionsExtPage.applyPreferencesChanges(preferences);
-        }
-
-        if (appearanceOptionsExtPage != null) {
-            appearanceOptionsExtPage.applyPreferencesChanges(preferences);
-        }
 
         OptionsModuleApi windowModule = App.getModule(OptionsModuleApi.class);
         windowModule.notifyOptionsChanged();

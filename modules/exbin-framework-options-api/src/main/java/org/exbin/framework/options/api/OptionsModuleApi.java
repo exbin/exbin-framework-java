@@ -34,7 +34,7 @@ public interface OptionsModuleApi extends Module {
     public static String TOOLS_OPTIONS_MENU_GROUP_ID = MODULE_ID + ".toolsOptionsMenuGroup";
 
     @Nonnull
-    Action getOptionsAction();
+    Action createOptionsAction();
 
     /**
      * Adds options panel to given path.
@@ -61,20 +61,6 @@ public interface OptionsModuleApi extends Module {
     void addOptionsPage(OptionsPage<?> optionsPage);
 
     /**
-     * Extends main options panel.
-     *
-     * @param optionsPage options panel
-     */
-    void extendMainOptionsPage(OptionsPage<?> optionsPage);
-
-    /**
-     * Extends appearance options panel.
-     *
-     * @param optionsPage options panel
-     */
-    void extendAppearanceOptionsPage(OptionsPage<?> optionsPage);
-
-    /**
      * Registers options menu action in default position.
      */
     void registerMenuAction();
@@ -85,7 +71,7 @@ public interface OptionsModuleApi extends Module {
     void initialLoadFromPreferences();
 
     /**
-     *
+     * Invokes options changed event.
      */
     void notifyOptionsChanged();
 }

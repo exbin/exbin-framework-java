@@ -28,15 +28,42 @@ import org.exbin.framework.preferences.api.Preferences;
 @ParametersAreNonnullByDefault
 public interface OptionsPage<T extends OptionsData> {
 
+    /**
+     * Creates instance of options panel.
+     *
+     * @return panel
+     */
     @Nonnull
     OptionsComponent<T> createPanel();
 
+    /**
+     * Returns options data.
+     *
+     * @return options data
+     */
     @Nonnull
     T createOptions();
 
+    /**
+     * Loads options from preferences.
+     *
+     * @param preferences preferences
+     * @param options output options
+     */
     void loadFromPreferences(Preferences preferences, T options);
 
+    /**
+     * Saves options to preferences.
+     *
+     * @param preferences preferences
+     * @param options input options
+     */
     void saveToPreferences(Preferences preferences, T options);
 
+    /**
+     * Applies options.
+     *
+     * @param options options
+     */
     void applyPreferencesChanges(T options);
 }

@@ -29,16 +29,13 @@ import org.exbin.framework.ModuleUtils;
 public interface OperationUndoModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(OperationUndoModuleApi.class);
+    public static final String UNDO_MENU_GROUP_ID = MODULE_ID + ".undoMenuGroup";
+    public static final String UNDO_TOOL_BAR_GROUP_ID = MODULE_ID + ".undoToolBarGroup";
 
     /**
      * Registers undo/redo operations to main frame menu.
      */
     void registerMainMenu();
-
-    /**
-     * Registers undo/redo operations to main frame menu.
-     */
-    void registerUndoManagerInMainMenu();
 
     /**
      * Registers undo/redo operations to main frame tool bar.

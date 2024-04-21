@@ -32,15 +32,15 @@ public interface HelpModuleApi extends Module {
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(HelpModuleApi.class);
 
     /**
-     * Registers help action to main frame menu.
-     */
-    void registerMainMenu();
-
-    /**
      * Returns help action.
      *
      * @return help action
      */
     @Nonnull
-    Action getHelpAction();
+    Action createHelpAction();
+
+    /**
+     * Registers help action to main frame menu.
+     */
+    void registerMainMenu();
 }

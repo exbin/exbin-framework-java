@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.options.api.OptionsPage;
 
 /**
  * Interface for framework UI module.
@@ -50,4 +51,23 @@ public interface UiModuleApi extends Module {
      * Initialize UI. Should be called before any GUI is created.
      */
     void initSwingUi();
+
+    /**
+     * Registers options panels.
+     */
+    void registerOptionsPanels();
+
+    /**
+     * Extends main options panel.
+     *
+     * @param optionsPage options panel
+     */
+    void extendMainOptionsPage(OptionsPage<?> optionsPage);
+
+    /**
+     * Extends appearance options panel.
+     *
+     * @param optionsPage options panel
+     */
+    void extendAppearanceOptionsPage(OptionsPage<?> optionsPage);
 }

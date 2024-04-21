@@ -77,6 +77,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 
 /**
@@ -414,7 +415,8 @@ public class EditorTextModule implements Module {
             }
         });
 
-        optionsModule.extendAppearanceOptionsPage(new DefaultOptionsPage<TextAppearanceOptionsImpl>() {
+        UiModuleApi uiModule = App.getModule(UiModuleApi.class);
+        uiModule.extendAppearanceOptionsPage(new DefaultOptionsPage<TextAppearanceOptionsImpl>() {
             private TextAppearanceOptionsPanel panel;
 
             @Override

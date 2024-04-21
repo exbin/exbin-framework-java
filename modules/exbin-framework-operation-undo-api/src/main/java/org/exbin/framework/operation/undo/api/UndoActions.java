@@ -42,12 +42,4 @@ public interface UndoActions {
      */
     @Nonnull
     Action createRedoAction();
-
-    /**
-     * Returns undo manager action.
-     *
-     * @return undo manager action
-     */
-    @Nonnull
-    Action createUndoManagerAction();
 }

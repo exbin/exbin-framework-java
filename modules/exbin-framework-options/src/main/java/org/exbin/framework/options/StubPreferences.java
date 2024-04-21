@@ -17,8 +17,11 @@ package org.exbin.framework.options;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.exbin.framework.preferences.PreferencesWrapper;
 
 /**
@@ -42,37 +45,46 @@ public class StubPreferences extends PreferencesWrapper {
         }
 
         @Override
-        protected void putSpi(String key, String value) {
+        protected void putSpi(@Nonnull String key, @Nullable String value) {
             spiValues.put(key, value);
         }
 
+        @Nullable
         @Override
-        protected String getSpi(String key) {
+        protected String getSpi(@Nonnull String key) {
             return spiValues.get(key);
         }
 
         @Override
-        protected void removeSpi(String key) {
+        protected void removeSpi(@Nonnull String key) {
             spiValues.remove(key);
         }
 
         @Override
         protected void removeNodeSpi() throws BackingStoreException {
-            throw new UnsupportedOperationException("Can't remove the root!");
+            throw new IllegalStateException("Can't remove the root!");
         }
 
+        @Nullable
         @Override
         protected String[] keysSpi() throws BackingStoreException {
-            return (String[]) spiValues.keySet().toArray(new String[0]);
+            Set<String> keySet = spiValues.keySet();
+            if (keySet == null) {
+                return null;
+            }
+
+            return (String[]) keySet.toArray(new String[0]);
         }
 
+        @Nonnull
         @Override
         protected String[] childrenNamesSpi() throws BackingStoreException {
             return new String[0];
         }
 
+        @Nullable
         @Override
-        protected AbstractPreferences childSpi(String name) {
+        protected AbstractPreferences childSpi(@Nonnull String name) {
             return null;
         }
 

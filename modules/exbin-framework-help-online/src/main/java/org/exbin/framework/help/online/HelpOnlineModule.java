@@ -36,26 +36,21 @@ public class HelpOnlineModule implements HelpOnlineModuleApi {
 
     private URL helpUrl;
 
-    private OnlineHelpAction onlineHelpAction;
-
     public HelpOnlineModule() {
     }
 
     @Nonnull
     @Override
-    public OnlineHelpAction getOnlineHelpAction() {
-        if (onlineHelpAction == null) {
-            onlineHelpAction = new OnlineHelpAction();
-            onlineHelpAction.setOnlineHelpUrl(helpUrl);
-        }
-
+    public OnlineHelpAction createOnlineHelpAction() {
+        OnlineHelpAction onlineHelpAction = new OnlineHelpAction();
+        onlineHelpAction.setOnlineHelpUrl(helpUrl);
         return onlineHelpAction;
     }
 
     @Override
     public void registerOnlineHelpMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, getOnlineHelpAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createOnlineHelpAction(), new MenuPosition(PositionMode.TOP));
     }
 
     @Override

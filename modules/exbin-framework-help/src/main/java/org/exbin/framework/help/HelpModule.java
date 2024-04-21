@@ -33,25 +33,20 @@ import org.exbin.framework.help.api.HelpModuleApi;
 @ParametersAreNonnullByDefault
 public class HelpModule implements HelpModuleApi {
 
-    private HelpAction helpAction;
-
     public HelpModule() {
     }
 
     @Nonnull
     @Override
-    public HelpAction getHelpAction() {
-        if (helpAction == null) {
-            helpAction = new HelpAction();
-            helpAction.setup();
-        }
-
+    public HelpAction createHelpAction() {
+        HelpAction helpAction = new HelpAction();
+        helpAction.setup();
         return helpAction;
     }
 
     @Override
     public void registerMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, getHelpAction(), new MenuPosition(PositionMode.TOP));
+        actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createHelpAction(), new MenuPosition(PositionMode.TOP));
     }
 }

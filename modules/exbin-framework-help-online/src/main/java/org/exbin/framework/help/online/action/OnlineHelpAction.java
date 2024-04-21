@@ -17,13 +17,14 @@ package org.exbin.framework.help.online.action;
 
 import java.awt.event.ActionEvent;
 import java.net.URL;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
@@ -50,9 +51,9 @@ public class OnlineHelpAction extends AbstractAction {
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
     }
 
-    @Nullable
-    public URL getOnlineHelpUrl() {
-        return helpUrl;
+    @Nonnull
+    public Optional<URL> getOnlineHelpUrl() {
+        return Optional.ofNullable(helpUrl);
     }
 
     public void setOnlineHelpUrl(@Nullable URL helpUrl) {
@@ -61,6 +62,10 @@ public class OnlineHelpAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (helpUrl == null) {
+            throw new IllegalStateException("Help URL was not set");
+        }
+
         DesktopUtils.openDesktopURL(helpUrl.toExternalForm());
     }
 }
