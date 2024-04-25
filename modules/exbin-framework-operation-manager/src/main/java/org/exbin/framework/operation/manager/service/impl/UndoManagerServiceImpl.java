@@ -24,10 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
+import org.exbin.framework.operation.api.Command;
 import org.exbin.framework.operation.manager.service.UndoManagerService;
-import org.exbin.xbup.operation.Command;
-import org.exbin.xbup.operation.XBTDocOperation;
-import org.exbin.xbup.operation.XBTOpDocCommand;
 
 /**
  * Undo manager service implementation.
@@ -39,7 +37,7 @@ public class UndoManagerServiceImpl implements UndoManagerService {
 
     @Override
     public void exportCommand(Component parentComponent, Command command) {
-        if (command instanceof XBTOpDocCommand) {
+/*        if (command instanceof XBTOpDocCommand) {
             JFileChooser exportFileChooser = new JFileChooser();
             exportFileChooser.setAcceptAllFileFilterUsed(true);
             if (exportFileChooser.showSaveDialog(parentComponent) == JFileChooser.APPROVE_OPTION) {
@@ -62,7 +60,6 @@ public class UndoManagerServiceImpl implements UndoManagerService {
             }
         } else {
             throw new UnsupportedOperationException("Not supported yet.");
-        }
+        } */
     }
-
 }

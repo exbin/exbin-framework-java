@@ -21,8 +21,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractListModel;
-import org.exbin.xbup.operation.Command;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.framework.operation.api.Command;
+import org.exbin.framework.operation.undo.api.UndoableCommandSequence;
 
 /**
  * List model for undo manager.
@@ -32,49 +32,49 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 @ParametersAreNonnullByDefault
 public class UndoManagerModel extends AbstractListModel<String> {
 
-    private XBUndoHandler undoHandler = null;
+    private UndoableCommandSequence commandSequence = null;
 
     public UndoManagerModel() {
     }
 
     @Nullable
-    public XBUndoHandler getUndoHandler() {
-        return undoHandler;
+    public UndoableCommandSequence getCommandSequence() {
+        return commandSequence;
     }
 
-    public void setUndoHandler(XBUndoHandler undoHandler) {
-        if (this.undoHandler != null) {
+    public void setCommandSequence(UndoableCommandSequence commandSequence) {
+        if (this.commandSequence != null) {
             fireIntervalRemoved(this, 0, getList().size());
         }
 
-        this.undoHandler = undoHandler;
+        this.commandSequence = commandSequence;
         fireIntervalAdded(this, 0, getList().size());
     }
 
     @Override
     public int getSize() {
-        return undoHandler == null ? 0 : getList().size() + 1;
+        return commandSequence == null ? 0 : getList().size() + 1;
     }
 
     @Nullable
     @Override
     public String getElementAt(int index) {
-        return undoHandler == null ? null : (index == 0 ? "Initial" : getList().get(index - 1).getCaption())
-                + (undoHandler.getCommandPosition() == index ? " (current)" : "")
-                + (undoHandler.getSyncPoint() == index ? " (saved)" : "");
+        return commandSequence == null ? null : (index == 0 ? "Initial" : getList().get(index - 1).getName())
+                + (commandSequence.getCommandPosition() == index ? " (current)" : "")
+                + (commandSequence.getSyncPosition() == index ? " (saved)" : "");
     }
 
     @Nullable
     public Command getItem(int index) {
-        return undoHandler == null || index == 0 ? null : getList().get(index - 1);
+        return commandSequence == null || index == 0 ? null : getList().get(index - 1);
     }
 
     public int getCurrentPosition() {
-        return (int) undoHandler.getCommandPosition();
+        return (int) commandSequence.getCommandPosition();
     }
 
     @Nonnull
     private List<Command> getList() {
-        return Objects.requireNonNull(undoHandler.getCommandList());
+        return Objects.requireNonNull(commandSequence.getCommandList());
     }
 }

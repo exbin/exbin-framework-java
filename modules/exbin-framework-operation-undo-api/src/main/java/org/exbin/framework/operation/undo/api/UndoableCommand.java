@@ -13,41 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.manager.api;
+package org.exbin.framework.operation.undo.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
+import org.exbin.framework.operation.api.Command;
 
 /**
- * Interface for undo action set.
+ * Undoable command.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UndoActions {
+public interface UndoableCommand extends Command {
 
-    /**
-     * Returns undo action.
-     *
-     * @return undo action
-     */
-    @Nonnull
-    Action createUndoAction();
-
-    /**
-     * Returns redo action.
-     *
-     * @return redo action
-     */
-    @Nonnull
-    Action createRedoAction();
-
-    /**
-     * Returns undo manager action.
-     *
-     * @return undo manager action
-     */
-    @Nonnull
-    Action createUndoManagerAction();
 }

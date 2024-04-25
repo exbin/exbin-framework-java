@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.manager.api;
+package org.exbin.framework.operation.api;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
- * Interface for framework undo/redo module.
+ * Command sequence change listener.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UndoFileHandler {
+public interface CommandSequenceListener {
 
     /**
-     * Returns undo handler.
-     *
-     * @return undo handler
+     * Command sequence changed.
      */
-    @Nonnull
-    XBUndoHandler getUndoHandler();
+    void sequenceChanged();
 }

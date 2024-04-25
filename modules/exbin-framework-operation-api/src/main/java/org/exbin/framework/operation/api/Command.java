@@ -13,17 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.manager.api;
+package org.exbin.framework.operation.api;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Undo update listener.
+ * Command interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface UndoUpdateListener {
+@ParametersAreNonnullByDefault
+public interface Command {
 
     /**
-     * Notify about change in undo state.
+     * Returns operation name.
+     *
+     * @return operation name
      */
-    void undoChanged();
+    @Nonnull
+    String getName();
+
+    /**
+     * Performs operation on given document.
+     *
+     * @throws java.lang.Exception exception
+     */
+    void execute() throws Exception;
+
+    /**
+     * Disposes command.
+     *
+     * @throws java.lang.Exception exception
+     */
+    void dispose() throws Exception;
 }

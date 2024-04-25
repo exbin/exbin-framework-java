@@ -13,39 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.manager.api;
+package org.exbin.framework.operation.undo.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.operation.api.CommandSequence;
 
 /**
- * Interface for undo handling.
+ * Operation interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UndoRedoHandler {
+public interface UndoableCommandSequence extends CommandSequence, UndoRedoHandler {
 
     /**
-     * Returns whether undo operation is available.
+     * Performs executions or reverts to reqch synchronization position.
      *
-     * @return true if undo possible
+     * @throws java.lang.Exception exception
      */
-    boolean canUndo();
+    void performSync() throws Exception;
 
     /**
-     * Returns whether redo operation is available.
+     * Returns synchronization mark position.
      *
-     * @return true if redo possible
+     * @return command position
      */
-    boolean canRedo();
+    long getSyncPosition();
 
     /**
-     * Performs undo.
+     * Sets synchronization mark position.
+     *
+     * @param commandPosition command position
      */
-    void performUndo();
+    void setSyncPosition(long commandPosition);
 
     /**
-     * Performs redo.
+     * Sets synchronization mark position to current command position.
      */
-    void performRedo();
+    void setSyncPosition();
 }

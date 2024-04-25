@@ -13,33 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.manager.api;
+package org.exbin.framework.operation.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Empty implementation of undo handling.
+ * Operation interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EmptyUndoRedoHandler implements UndoRedoHandler {
+public interface Operation {
 
-    @Override
-    public boolean canUndo() {
-        return false;
-    }
+    /**
+     * Returns operation name.
+     *
+     * @return operation name
+     */
+    @Nonnull
+    String getName();
 
-    @Override
-    public boolean canRedo() {
-        return false;
-    }
+    /**
+     * Performs operation on given document.
+     *
+     * @throws java.lang.Exception exception
+     */
+    void execute() throws Exception;
 
-    @Override
-    public void performUndo() {
-    }
-
-    @Override
-    public void performRedo() {
-    }
+    /**
+     * Disposes command.
+     *
+     * @throws java.lang.Exception exception
+     */
+    void dispose() throws Exception;
 }

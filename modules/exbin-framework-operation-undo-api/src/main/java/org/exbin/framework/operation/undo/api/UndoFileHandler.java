@@ -17,7 +17,6 @@ package org.exbin.framework.operation.undo.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Interface for framework undo/redo module.
@@ -33,5 +32,5 @@ public interface UndoFileHandler {
      * @return undo handler
      */
     @Nonnull
-    XBUndoHandler getUndoHandler();
+    UndoRedoHandler getUndoHandler();
 }

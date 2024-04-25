@@ -17,7 +17,7 @@ package org.exbin.framework.operation.manager.service;
 
 import java.awt.Component;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.xbup.operation.Command;
+import org.exbin.framework.operation.api.Command;
 
 /**
  * Interface for undo manager service.

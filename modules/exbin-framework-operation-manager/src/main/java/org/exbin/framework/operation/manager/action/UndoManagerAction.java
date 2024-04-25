@@ -25,12 +25,12 @@ import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.operation.manager.OperationManagerModule;
-import org.exbin.framework.operation.manager.api.UndoRedoHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.operation.manager.api.UndoFileHandler;
 import org.exbin.framework.operation.manager.gui.UndoManagerControlPanel;
 import org.exbin.framework.operation.manager.gui.UndoManagerPanel;
 import org.exbin.framework.operation.manager.handler.UndoManagerControlHandler;
+import org.exbin.framework.operation.undo.api.UndoRedoHandler;
+import org.exbin.framework.operation.undo.api.UndoableCommandSequence;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 
@@ -53,8 +53,8 @@ public class UndoManagerAction extends AbstractAction implements ActionActiveCom
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         UndoManagerPanel undoManagerPanel = new UndoManagerPanel();
-        if (undoHandler instanceof UndoFileHandler) {
-            undoManagerPanel.setUndoHandler(((UndoFileHandler) undoHandler).getUndoHandler());
+        if (undoHandler instanceof UndoableCommandSequence) {
+            undoManagerPanel.setCommandSequence((UndoableCommandSequence) undoHandler);
         }
         UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
         final WindowHandler windowHandler = windowModule.createDialog(undoManagerPanel, undoManagerControlPanel);

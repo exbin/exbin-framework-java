@@ -22,13 +22,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.operation.manager.service.UndoManagerService;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.operation.api.Command;
+import org.exbin.framework.operation.undo.api.UndoableCommandSequence;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.xbup.operation.Command;
-import org.exbin.xbup.operation.XBDocCommand;
-import org.exbin.xbup.operation.XBTDocOperation;
-import org.exbin.xbup.operation.XBTOpDocCommand;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
 
 /**
  * Undo management panel.
@@ -51,8 +48,8 @@ public class UndoManagerPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    public void setUndoHandler(XBUndoHandler undoHandler) {
-        undoModel.setUndoHandler(undoHandler);
+    public void setCommandSequence(UndoableCommandSequence commandSequence) {
+        undoModel.setCommandSequence(commandSequence);
     }
 
     public void setUndoManagerService(UndoManagerService undoManagerService) {
@@ -284,17 +281,17 @@ public class UndoManagerPanel extends javax.swing.JPanel {
         // TODO revertButton.setEnabled(selectedIndex >= 0 && selectedIndex != undoModel.getCurrentPosition());
         exportButton.setEnabled(command != null);
 
-        commandCaptionTextField.setText(command != null ? command.getCaption() : "");
-        commandTypeTextField.setText(command instanceof XBDocCommand ? ((XBDocCommand) command).getBasicType().name() : "");
-        Date executionTime = command != null ? command.getExecutionTime().orElse(null) : null;
-        executionTimeTextField.setText(executionTime != null ? executionTime.toString() : "");
+        commandCaptionTextField.setText(command != null ? command.getName() : "");
+//        commandTypeTextField.setText(command instanceof XBDocCommand ? ((XBDocCommand) command).getBasicType().name() : "");
+//        Date executionTime = command != null ? command.getExecutionTime().orElse(null) : null;
+//        executionTimeTextField.setText(executionTime != null ? executionTime.toString() : "");
 
-        XBTDocOperation operation = null;
-        if (command instanceof XBTOpDocCommand) {
-            operation = ((XBTOpDocCommand) command).getCurrentOperation().orElse(null);
-        }
-        operationCaptionTextField.setText(operation != null ? operation.getCaption() : "");
-        operationTypeTextField.setText(operation != null ? operation.getBasicType().name() : "");
-        dataSizeTextField.setText(operation != null ? String.valueOf(operation.getData().getDataSize()) : "");
+//        XBTDocOperation operation = null;
+//        if (command instanceof XBTOpDocCommand) {
+//            operation = ((XBTOpDocCommand) command).getCurrentOperation().orElse(null);
+//        }
+//        operationCaptionTextField.setText(operation != null ? operation.getCaption() : "");
+//        operationTypeTextField.setText(operation != null ? operation.getBasicType().name() : "");
+//        dataSizeTextField.setText(operation != null ? String.valueOf(operation.getData().getDataSize()) : "");
     }
 }
