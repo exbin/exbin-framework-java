@@ -19,28 +19,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Command interface.
+ * Command type interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface Command {
+public interface CommandType {
 
     /**
-     * Returns operation name.
+     * Returns type name.
      *
-     * @return operation name
+     * @return type name
      */
     @Nonnull
     String getName();
-
-    /**
-     * Performs operation on given document.
-     */
-    void execute();
-
-    /**
-     * Disposes command.
-     */
-    void dispose();
 }

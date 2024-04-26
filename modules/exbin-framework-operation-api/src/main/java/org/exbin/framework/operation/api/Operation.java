@@ -36,15 +36,11 @@ public interface Operation {
 
     /**
      * Performs operation on given document.
-     *
-     * @throws java.lang.Exception exception
      */
-    void execute() throws Exception;
+    void execute();
 
     /**
      * Disposes command.
-     *
-     * @throws java.lang.Exception exception
      */
-    void dispose() throws Exception;
+    void dispose();
 }

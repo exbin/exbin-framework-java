@@ -19,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.operation.api.CommandSequence;
 
 /**
- * Operation interface.
+ * Undoable command sequence.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -27,11 +27,23 @@ import org.exbin.framework.operation.api.CommandSequence;
 public interface UndoableCommandSequence extends CommandSequence, UndoRedoHandler {
 
     /**
-     * Performs executions or reverts to reqch synchronization position.
+     * Performs specific number of redo commands.
      *
-     * @throws java.lang.Exception exception
+     * @param count count
      */
-    void performSync() throws Exception;
+    void performRedo(int count);
+
+    /**
+     * Performs specific number of undo commands.
+     *
+     * @param count count
+     */
+    void performUndo(int count);
+
+    /**
+     * Performs executions or reverts to reach synchronization position.
+     */
+    void performSync();
 
     /**
      * Returns synchronization mark position.

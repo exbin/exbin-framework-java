@@ -13,34 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.api;
+package org.exbin.framework.operation.undo.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.operation.api.Operation;
 
 /**
- * Command interface.
+ * Operation interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface Command {
+public interface UndoableOperation extends Operation {
 
     /**
-     * Returns operation name.
+     * Performs operation on given document and returns undo operation.
      *
-     * @return operation name
+     * @return undo operation
      */
     @Nonnull
-    String getName();
-
-    /**
-     * Performs operation on given document.
-     */
-    void execute();
-
-    /**
-     * Disposes command.
-     */
-    void dispose();
+    UndoableOperation executeWithUndo();
 }
