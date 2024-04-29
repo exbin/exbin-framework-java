@@ -26,12 +26,12 @@ import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import org.exbin.framework.App;
+import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.options.impl.TextEncodingOptionsImpl;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.editor.text.service.TextEncodingService;
-import org.exbin.xbup.core.util.StringUtils;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.utils.TestApplication;
 
@@ -293,7 +293,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         public void setAvailableEncodings(List<String> encodings) {
             availableEncodings = new ArrayList<>();
             if (encodings.isEmpty()) {
-                availableEncodings.add(StringUtils.ENCODING_UTF8);
+                availableEncodings.add(EncodingsHandler.ENCODING_UTF8);
             } else {
                 availableEncodings.addAll(encodings);
             }

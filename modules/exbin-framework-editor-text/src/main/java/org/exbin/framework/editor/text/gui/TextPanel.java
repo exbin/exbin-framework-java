@@ -39,7 +39,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter.Highlight;
-import javax.swing.undo.UndoableEdit;
 import org.exbin.framework.editor.text.TextCharsetApi;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
@@ -49,9 +48,9 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.TestApplication;
-import org.exbin.xbup.core.util.StringUtils;
 
 /**
  * Text editor panel.
@@ -81,7 +80,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
     private void init() {
         highlight = null;
         foundTextBackgroundColor = Color.YELLOW;
-        charset = Charset.forName(StringUtils.ENCODING_UTF8);
+        charset = Charset.forName(EncodingsHandler.ENCODING_UTF8);
         defaultFont = textArea.getFont();
         defaultColors = new Color[5];
         defaultColors[0] = new Color(textArea.getForeground().getRGB());

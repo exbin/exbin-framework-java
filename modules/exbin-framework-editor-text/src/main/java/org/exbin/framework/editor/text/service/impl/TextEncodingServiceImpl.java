@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 import org.exbin.framework.editor.text.service.*;
-import org.exbin.xbup.core.util.StringUtils;
 
 /**
  * Implementation of the text encoding service.
@@ -33,7 +33,7 @@ import org.exbin.xbup.core.util.StringUtils;
 public class TextEncodingServiceImpl implements TextEncodingService {
 
     private List<String> encodings = new ArrayList<>();
-    private String selectedEncoding = StringUtils.ENCODING_UTF8;
+    private String selectedEncoding = EncodingsHandler.ENCODING_UTF8;
     private TextEncodingStatusApi textEncodingStatus = null;
     private EncodingChangeListener encodingChangeListener = null;
 

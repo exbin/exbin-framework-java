@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.options.TextEncodingOptions;
 import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
 import org.exbin.framework.options.api.OptionsData;
-import org.exbin.xbup.core.util.StringUtils;
 
 /**
  * Text encoding options.
@@ -32,7 +32,7 @@ import org.exbin.xbup.core.util.StringUtils;
 @ParametersAreNonnullByDefault
 public class TextEncodingOptionsImpl implements TextEncodingOptions, OptionsData {
 
-    private String selectedEncoding = StringUtils.ENCODING_UTF8;
+    private String selectedEncoding = EncodingsHandler.ENCODING_UTF8;
     private List<String> encodings = new ArrayList<>();
 
     @Nonnull

@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.options.TextEncodingOptions;
-import org.exbin.xbup.core.util.StringUtils;
 
 /**
  * Text editor encodings preferences.
@@ -44,7 +44,7 @@ public class TextEncodingPreferences implements TextEncodingOptions {
 
     @Nonnull
     public String getDefaultEncoding() {
-        return preferences.get(PREFERENCES_TEXT_ENCODING_DEFAULT, StringUtils.ENCODING_UTF8);
+        return preferences.get(PREFERENCES_TEXT_ENCODING_DEFAULT, EncodingsHandler.ENCODING_UTF8);
     }
 
     public void setDefaultEncoding(String encodingName) {
@@ -54,7 +54,7 @@ public class TextEncodingPreferences implements TextEncodingOptions {
     @Nonnull
     @Override
     public String getSelectedEncoding() {
-        return preferences.get(PREFERENCES_TEXT_ENCODING_SELECTED, StringUtils.ENCODING_UTF8);
+        return preferences.get(PREFERENCES_TEXT_ENCODING_SELECTED, EncodingsHandler.ENCODING_UTF8);
     }
 
     @Override
