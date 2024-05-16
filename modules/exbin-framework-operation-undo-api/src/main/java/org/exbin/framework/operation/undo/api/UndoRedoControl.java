@@ -18,28 +18,20 @@ package org.exbin.framework.operation.undo.api;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Empty implementation of undo handling.
+ * Interface for undo control.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EmptyUndoRedoHandler implements UndoRedoHandler {
+public interface UndoRedoControl extends UndoRedoState {
 
-    @Override
-    public boolean canUndo() {
-        return false;
-    }
+    /**
+     * Performs redo.
+     */
+    void performRedo();
 
-    @Override
-    public boolean canRedo() {
-        return false;
-    }
-
-    @Override
-    public void performUndo() {
-    }
-
-    @Override
-    public void performRedo() {
-    }
+    /**
+     * Performs undo.
+     */
+    void performUndo();
 }

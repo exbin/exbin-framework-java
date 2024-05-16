@@ -47,9 +47,10 @@ import org.exbin.xbup.core.serial.XBPSerialReader;
 import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.DefaultComponentActivationService;
-import org.exbin.framework.operation.undo.api.UndoRedoHandler;
+import org.exbin.framework.operation.undo.api.UndoRedoControl;
 import org.exbin.xbup.operation.undo.XBTLinearUndo;
 import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.framework.operation.undo.api.UndoRedoState;
 
 /**
  * Audio file handler.
@@ -66,7 +67,7 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
     private String title;
     private javax.sound.sampled.AudioFileFormat.Type audioFormatType = null;
     private DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
-    private UndoRedoHandler undoRedoHandler = null;
+    private UndoRedoControl undoRedoControl = null;
 
     private String ext;
 
@@ -79,7 +80,7 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
 
     public void registerUndoHandler() {
         XBUndoHandler undoHandler = new XBTLinearUndo(null);
-        undoRedoHandler = new UndoRedoHandler() {
+        undoRedoControl = new UndoRedoControl() {
             @Override
             public boolean canUndo() {
                 return undoHandler.canUndo();
@@ -255,8 +256,8 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
     }
 
     private void notifyUndoChanged() {
-        if (undoRedoHandler != null) {
-            componentActivationService.updated(UndoRedoHandler.class, undoRedoHandler);
+        if (undoRedoControl != null) {
+            componentActivationService.updated(UndoRedoState.class, undoRedoControl);
         }
     }
 

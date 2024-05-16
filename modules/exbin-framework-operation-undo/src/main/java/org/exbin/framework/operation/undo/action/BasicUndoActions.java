@@ -27,9 +27,10 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
-import org.exbin.framework.operation.undo.api.UndoRedoHandler;
+import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.operation.undo.api.UndoRedoControl;
 
 /**
  * Undo handling action set.
@@ -70,18 +71,20 @@ public class BasicUndoActions implements UndoActions {
     @ParametersAreNonnullByDefault
     private class UndoAction extends AbstractAction implements ActionActiveComponent {
 
-        private UndoRedoHandler undoHandler = null;
+        private UndoRedoState undoRedo = null;
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            undoHandler.performUndo();
+            if (undoRedo instanceof UndoRedoControl) {
+                ((UndoRedoControl) undoRedo).performUndo();
+            }
         }
 
         @Override
         public void register(ComponentActivationManager manager) {
-            manager.registerUpdateListener(UndoRedoHandler.class, (instance) -> {
-                undoHandler = instance;
-                boolean canUndo = undoHandler != null && undoHandler.canUndo();
+            manager.registerUpdateListener(UndoRedoState.class, (instance) -> {
+                undoRedo = instance;
+                boolean canUndo = undoRedo != null && undoRedo.canUndo();
                 setEnabled(canUndo);
             });
         }
@@ -90,18 +93,20 @@ public class BasicUndoActions implements UndoActions {
     @ParametersAreNonnullByDefault
     private class RedoAction extends AbstractAction implements ActionActiveComponent {
 
-        private UndoRedoHandler undoHandler = null;
+        private UndoRedoState undoRedo = null;
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            undoHandler.performRedo();
+            if (undoRedo instanceof UndoRedoControl) {
+                ((UndoRedoControl) undoRedo).performRedo();
+            }
         }
 
         @Override
         public void register(ComponentActivationManager manager) {
-            manager.registerUpdateListener(UndoRedoHandler.class, (instance) -> {
-                undoHandler = instance;
-                boolean canRedo = undoHandler != null && undoHandler.canRedo();
+            manager.registerUpdateListener(UndoRedoState.class, (instance) -> {
+                undoRedo = instance;
+                boolean canRedo = undoRedo != null && undoRedo.canRedo();
                 setEnabled(canRedo);
             });
         }

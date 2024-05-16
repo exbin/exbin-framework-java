@@ -13,39 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.undo.api;
+package org.exbin.framework.operation.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for undo handling.
+ * Modified document state.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UndoRedoHandler {
+public interface ModifiedState {
 
     /**
-     * Returns whether undo operation is available.
+     * Returns whether undo operation is modified.
      *
-     * @return true if undo possible
+     * @return true if modified
      */
-    boolean canUndo();
-
-    /**
-     * Returns whether redo operation is available.
-     *
-     * @return true if redo possible
-     */
-    boolean canRedo();
-
-    /**
-     * Performs undo.
-     */
-    void performUndo();
-
-    /**
-     * Performs redo.
-     */
-    void performRedo();
+    boolean isModified();
 }

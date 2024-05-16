@@ -15,22 +15,28 @@
  */
 package org.exbin.framework.operation.undo.api;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for framework undo/redo module.
+ * Interface for undo state.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UndoFileHandler {
+public interface UndoRedoState {
 
     /**
-     * Returns undo handler.
+     * Returns whether undo operation is available.
      *
-     * @return undo handler
+     * @return true if undo possible
      */
-    @Nonnull
-    UndoRedoHandler getUndoHandler();
+    boolean canUndo();
+
+    /**
+     * Returns whether redo operation is available.
+     *
+     * @return true if redo possible
+     */
+    boolean canRedo();
+
 }

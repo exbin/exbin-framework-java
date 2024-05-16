@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.api;
+package org.exbin.framework.operation.undo.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Command sequence change listener.
+ * Interface for framework undo/redo module.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface CommandSequenceListener {
+public interface UndoRedoFileHandler {
 
     /**
-     * Command sequence changed.
+     * Returns undo handler.
+     *
+     * @return undo handler
      */
-    void sequenceChanged();
+    @Nonnull
+    UndoRedoState getUndoRedo();
 }

@@ -38,7 +38,8 @@ import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.DefaultComponentActivationService;
 import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
-import org.exbin.framework.operation.undo.api.UndoRedoHandler;
+import org.exbin.framework.operation.undo.api.UndoRedoControl;
+import org.exbin.framework.operation.undo.api.UndoRedoState;
 
 /**
  * Text file handler.
@@ -54,7 +55,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     protected String title;
     protected FileType fileType = null;
     protected DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
-    protected UndoRedoHandler undoRedoHandler = null;
+    protected UndoRedoControl undoRedoControl = null;
 
     public TextFileHandler() {
         init();
@@ -65,7 +66,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
 
     public void registerUndoHandler() {
         TextPanelCompoundUndoManager undoHandler = textPanel.getUndo();
-        undoRedoHandler = new UndoRedoHandler() {
+        undoRedoControl = new UndoRedoControl() {
             @Override
             public boolean canUndo() {
                 return undoHandler.canUndo();
@@ -88,7 +89,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
                 notifyUndoChanged();
             }
         };
-        undoHandler.setUndoUpdateListener(() -> {
+        undoHandler.setUndoRedoChangeListener(() -> {
             notifyUndoChanged();
         });
         notifyUndoChanged();
@@ -232,8 +233,8 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     }
 
     public void notifyUndoChanged() {
-        if (undoRedoHandler != null) {
-            componentActivationService.updated(UndoRedoHandler.class, undoRedoHandler);
+        if (undoRedoControl != null) {
+            componentActivationService.updated(UndoRedoState.class, undoRedoControl);
         }
     }
 }

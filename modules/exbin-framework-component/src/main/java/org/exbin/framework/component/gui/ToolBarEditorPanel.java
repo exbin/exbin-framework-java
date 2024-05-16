@@ -23,12 +23,12 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsHandlerEmpty;
 import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
-import org.exbin.framework.operation.undo.api.EmptyUndoRedoHandler;
-import org.exbin.framework.operation.undo.api.UndoRedoHandler;
+import org.exbin.framework.operation.undo.api.EmptyUndoRedo;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.operation.undo.api.UndoRedoState;
 
 /**
  * Panel with edit toolbar.
@@ -38,7 +38,7 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class ToolBarEditorPanel extends javax.swing.JPanel {
 
-    private UndoRedoHandler undoHandler = null;
+    private UndoRedoState undoHandler = null;
     private ClipboardActionsHandler clipboardHandler = null;
     private JToolBar toolBar = null;
 
@@ -74,7 +74,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
             testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
 
             ToolBarEditorPanel toolBarEditorPanel = new ToolBarEditorPanel();
-            UndoRedoHandler undoRedoHandler = new EmptyUndoRedoHandler();
+            UndoRedoState undoRedoHandler = new EmptyUndoRedo();
             toolBarEditorPanel.setUndoHandler(undoRedoHandler, guiUndoModule.createUndoActions());
             ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
             toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.getClipboardActions());
@@ -82,7 +82,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
         });
     }
 
-    public void setUndoHandler(UndoRedoHandler undoHandler, UndoActions undoActions) {
+    public void setUndoHandler(UndoRedoState undoHandler, UndoActions undoActions) {
         this.undoHandler = undoHandler;
         initToolBar();
         toolBar.add(undoActions.createUndoAction());

@@ -52,7 +52,8 @@ import org.exbin.xbup.core.serial.XBPSerialWriter;
 import org.exbin.xbup.visual.picture.XBBufferedImage;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.DefaultComponentActivationService;
-import org.exbin.framework.operation.undo.api.UndoRedoHandler;
+import org.exbin.framework.operation.undo.api.UndoRedoControl;
+import org.exbin.framework.operation.undo.api.UndoRedoState;
 
 /**
  * Image file handler.
@@ -71,7 +72,7 @@ public class ImageFileHandler implements EditableFileHandler, ComponentActivatio
     private String title;
     private FileType fileType = null;
     private DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
-    private UndoRedoHandler undoRedoHandler = null;
+    private UndoRedoControl undoRedoControl = null;
 
     public ImageFileHandler() {
         init();
@@ -83,7 +84,7 @@ public class ImageFileHandler implements EditableFileHandler, ComponentActivatio
 
     public void registerUndoHandler() {
         UndoManager undoHandler = imagePanel.getUndo();
-        undoRedoHandler = new UndoRedoHandler() {
+        undoRedoControl = new UndoRedoControl() {
             @Override
             public boolean canUndo() {
                 return undoHandler.canUndo();
@@ -249,8 +250,8 @@ public class ImageFileHandler implements EditableFileHandler, ComponentActivatio
     }
 
     private void notifyUndoChanged() {
-        if (undoRedoHandler != null) {
-            componentActivationService.updated(UndoRedoHandler.class, undoRedoHandler);
+        if (undoRedoControl != null) {
+            componentActivationService.updated(UndoRedoState.class, undoRedoControl);
         }
     }
 

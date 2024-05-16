@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.api;
+package org.exbin.framework.operation.undo.api;
 
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.operation.api.Command;
+import org.exbin.framework.operation.api.ModifiedState;
 
 /**
- * Operation interface.
+ * Undoable command sequence.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface CommandSequence {
+public interface UndoRedo extends UndoRedoControl, ModifiedState {
 
     /**
      * Executes given command and adds it at the end of the sequence replacing
@@ -36,18 +39,12 @@ public interface CommandSequence {
     void execute(Command command);
 
     /**
-     * Adds command at the end of the sequence without executing it.
+     * Returns top undo command.
      *
-     * @param command command to schedule
+     * @return top undo command if exists
      */
-    void schedule(Command command);
-
-    /**
-     * Executes specific number of scheduled commands.
-     *
-     * @param count count of commands to execute
-     */
-    void executeScheduled(int count);
+    @Nonnull
+    Optional<Command> getTopUndoCommand();
 
     /**
      * Returns list of commands.
@@ -66,21 +63,67 @@ public interface CommandSequence {
     long getCommandPosition();
 
     /**
+     * Returns commands count.
+     *
+     * @return commands count.
+     */
+    long getCommandsCount();
+
+    /**
      * Resets / clears all commands in sequence.
      */
     void clear();
 
     /**
-     * Registers command sequence listener.
+     * Performs specific number of redo commands.
      *
-     * @param listener listener
+     * @param count count
      */
-    void addCommandSequenceListener(CommandSequenceListener listener);
+    void performRedo(int count);
 
     /**
-     * Unregisters command sequence listener.
+     * Performs specific number of undo commands.
+     *
+     * @param count count
+     */
+    void performUndo(int count);
+
+    /**
+     * Performs executions or reverts to reach synchronization position.
+     */
+    void performSync();
+
+    /**
+     * Returns synchronization mark position.
+     *
+     * @return command position
+     */
+    long getSyncPosition();
+
+    /**
+     * Sets synchronization mark position.
+     *
+     * @param commandPosition command position
+     */
+    void setSyncPosition(long commandPosition);
+
+    /**
+     * Sets synchronization mark position to current command position.
+     */
+    void setSyncPosition();
+
+    /**
+     * Registers change listener.
      *
      * @param listener listener
      */
-    void removeCommandSequenceListener(CommandSequenceListener listener);
+    void addChangeListener(UndoRedoChangeListener listener);
+
+    /**
+     * Unregisters change listener.
+     *
+     * @param listener listener
+     */
+    void removeChangeListener(UndoRedoChangeListener listener);
+
 }

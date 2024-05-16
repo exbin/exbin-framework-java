@@ -29,8 +29,8 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.operation.manager.gui.UndoManagerControlPanel;
 import org.exbin.framework.operation.manager.gui.UndoManagerPanel;
 import org.exbin.framework.operation.manager.handler.UndoManagerControlHandler;
-import org.exbin.framework.operation.undo.api.UndoRedoHandler;
-import org.exbin.framework.operation.undo.api.UndoableCommandSequence;
+import org.exbin.framework.operation.undo.api.UndoRedo;
+import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 
@@ -46,15 +46,15 @@ public class UndoManagerAction extends AbstractAction implements ActionActiveCom
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OperationManagerModule.class);
 
-    private UndoRedoHandler undoHandler = null;
+    private UndoRedoState undoHandler = null;
 
     @Override
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         UndoManagerPanel undoManagerPanel = new UndoManagerPanel();
-        if (undoHandler instanceof UndoableCommandSequence) {
-            undoManagerPanel.setCommandSequence((UndoableCommandSequence) undoHandler);
+        if (undoHandler instanceof UndoRedo) {
+            undoManagerPanel.setCommandSequence((UndoRedo) undoHandler);
         }
         UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
         final WindowHandler windowHandler = windowModule.createDialog(undoManagerPanel, undoManagerControlPanel);
@@ -74,7 +74,7 @@ public class UndoManagerAction extends AbstractAction implements ActionActiveCom
 
     @Override
     public void register(ComponentActivationManager manager) {
-        manager.registerUpdateListener(UndoRedoHandler.class, (instance) -> {
+        manager.registerUpdateListener(UndoRedoState.class, (instance) -> {
             undoHandler = instance;
             setEnabled(instance != null);
         });

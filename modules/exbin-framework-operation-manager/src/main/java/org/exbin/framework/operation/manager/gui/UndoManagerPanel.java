@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.operation.manager.gui;
 
-import java.util.Date;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -23,7 +22,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.operation.manager.service.UndoManagerService;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.operation.api.Command;
-import org.exbin.framework.operation.undo.api.UndoableCommandSequence;
+import org.exbin.framework.operation.undo.api.UndoRedo;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 
@@ -48,8 +47,8 @@ public class UndoManagerPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    public void setCommandSequence(UndoableCommandSequence commandSequence) {
-        undoModel.setCommandSequence(commandSequence);
+    public void setCommandSequence(UndoRedo undoRedo) {
+        undoModel.setUndoRedo(undoRedo);
     }
 
     public void setUndoManagerService(UndoManagerService undoManagerService) {
