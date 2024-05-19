@@ -15,14 +15,11 @@
  */
 package org.exbin.framework.operation.undo.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Interface for undo control.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface UndoRedoControl extends UndoRedoState {
 
     /**

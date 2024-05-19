@@ -15,14 +15,11 @@
  */
 package org.exbin.framework.operation.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Modified document state.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface ModifiedState {
 
     /**

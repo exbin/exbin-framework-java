@@ -16,26 +16,24 @@
 package org.exbin.framework.operation.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Command interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface Command {
 
     /**
-     * Returns operation name.
+     * Returns command name.
      *
-     * @return operation name
+     * @return command name
      */
     @Nonnull
     String getName();
 
     /**
-     * Performs operation on given document.
+     * Performs command on given document.
      */
     void execute();
 

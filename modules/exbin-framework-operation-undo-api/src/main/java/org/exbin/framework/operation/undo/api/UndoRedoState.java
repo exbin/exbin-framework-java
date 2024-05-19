@@ -15,14 +15,11 @@
  */
 package org.exbin.framework.operation.undo.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Interface for undo state.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface UndoRedoState {
 
     /**
@@ -38,5 +35,4 @@ public interface UndoRedoState {
      * @return true if redo possible
      */
     boolean canRedo();
-
 }

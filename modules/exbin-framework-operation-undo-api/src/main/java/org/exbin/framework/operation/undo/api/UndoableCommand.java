@@ -26,4 +26,13 @@ import org.exbin.framework.operation.api.Command;
 @ParametersAreNonnullByDefault
 public interface UndoableCommand extends Command {
 
+    /**
+     * Performs redo on given document.
+     */
+    void redo();
+
+    /**
+     * Performs undo operation on given document.
+     */
+    void undo();
 }
