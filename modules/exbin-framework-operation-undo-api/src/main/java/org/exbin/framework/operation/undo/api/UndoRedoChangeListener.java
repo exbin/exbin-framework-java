@@ -15,14 +15,11 @@
  */
 package org.exbin.framework.operation.undo.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Undo change listener.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface UndoRedoChangeListener {
 
     /**

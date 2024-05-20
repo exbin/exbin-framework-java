@@ -16,14 +16,12 @@
 package org.exbin.framework.operation.undo.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for framework undo/redo module.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface UndoRedoFileHandler {
 
     /**

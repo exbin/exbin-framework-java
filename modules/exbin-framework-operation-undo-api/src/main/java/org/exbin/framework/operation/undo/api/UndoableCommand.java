@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.operation.undo.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.operation.api.Command;
 
 /**
@@ -23,7 +22,6 @@ import org.exbin.framework.operation.api.Command;
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface UndoableCommand extends Command {
 
     /**

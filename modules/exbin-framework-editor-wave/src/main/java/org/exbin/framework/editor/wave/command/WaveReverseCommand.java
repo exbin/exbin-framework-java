@@ -15,8 +15,6 @@
  */
 package org.exbin.framework.editor.wave.command;
 
-import java.util.Date;
-import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.xbup.audio.swing.XBWavePanel;
@@ -49,12 +47,12 @@ public class WaveReverseCommand extends AbstractCommand {
 
     @Nonnull
     @Override
-    public String getCaption() {
+    public String getName() {
         return "Wave section reversed";
     }
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         if (startPosition >= 0) {
             wave.getWave().performTransformReverse(startPosition, endPosition);
         } else {
@@ -64,27 +62,16 @@ public class WaveReverseCommand extends AbstractCommand {
     }
 
     @Override
-    public void redo() throws Exception {
+    public void redo() {
         execute();
     }
 
     @Override
-    public void undo() throws Exception {
+    public void undo() {
         execute();
     }
 
     @Override
-    public boolean canUndo() {
-        return true;
-    }
-
-    @Override
-    public void dispose() throws Exception {
-    }
-
-    @Nonnull
-    @Override
-    public Optional<Date> getExecutionTime() {
-        return Optional.empty();
+    public void dispose() {
     }
 }

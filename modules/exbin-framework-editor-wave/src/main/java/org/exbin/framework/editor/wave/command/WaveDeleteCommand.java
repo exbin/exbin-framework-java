@@ -15,8 +15,6 @@
  */
 package org.exbin.framework.editor.wave.command;
 
-import java.util.Date;
-import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
@@ -45,40 +43,29 @@ public class WaveDeleteCommand extends AbstractCommand {
 
     @Nonnull
     @Override
-    public String getCaption() {
+    public String getName() {
         return "Wave section deleted";
     }
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         deletedData = wave.getWave().cutData(startPosition, endPosition - startPosition);
         wave.rebuildZoomCache();
     }
 
     @Override
-    public void redo() throws Exception {
+    public void redo() {
         execute();
     }
 
     @Override
-    public void undo() throws Exception {
+    public void undo() {
         wave.getWave().insertData(deletedData, startPosition);
         wave.rebuildZoomCache();
         deletedData = null;
     }
 
     @Override
-    public boolean canUndo() {
-        return true;
-    }
-
-    @Override
-    public void dispose() throws Exception {
-    }
-
-    @Nonnull
-    @Override
-    public Optional<Date> getExecutionTime() {
-        return Optional.empty();
+    public void dispose() {
     }
 }

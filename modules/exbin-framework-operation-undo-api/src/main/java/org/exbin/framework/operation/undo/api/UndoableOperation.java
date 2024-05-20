@@ -16,15 +16,13 @@
 package org.exbin.framework.operation.undo.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.operation.api.Operation;
 
 /**
- * Operation interface.
+ * Undoable operation interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface UndoableOperation extends Operation {
 
     /**

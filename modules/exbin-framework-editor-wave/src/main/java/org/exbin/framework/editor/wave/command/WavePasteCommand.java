@@ -17,8 +17,10 @@ package org.exbin.framework.editor.wave.command;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.util.Date;
-import java.util.Optional;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
@@ -48,15 +50,21 @@ public class WavePasteCommand extends AbstractCommand {
 
     @Nonnull
     @Override
-    public String getCaption() {
+    public String getName() {
         return "Wave section pasted";
     }
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         if (clipboard.isDataFlavorAvailable(WaveClipboardData.WAVE_FLAVOR)) {
-            pastedWave = (XBWave) clipboard.getData(WaveClipboardData.WAVE_FLAVOR);
+            try {
+                pastedWave = (XBWave) clipboard.getData(WaveClipboardData.WAVE_FLAVOR);
+            } catch (UnsupportedFlavorException ex) {
+                Logger.getLogger(WavePasteCommand.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(WavePasteCommand.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         endPosition = startPosition + wave.getWave().getLengthInTicks();
@@ -65,30 +73,19 @@ public class WavePasteCommand extends AbstractCommand {
     }
 
     @Override
-    public void redo() throws Exception {
+    public void redo() {
         wave.getWave().insertData(deletedData, startPosition);
         wave.rebuildZoomCache();
         deletedData = null;
     }
 
     @Override
-    public void undo() throws Exception {
+    public void undo() {
         deletedData = wave.getWave().cutData(startPosition, endPosition - startPosition);
         wave.rebuildZoomCache();
     }
 
     @Override
-    public boolean canUndo() {
-        return true;
-    }
-
-    @Override
-    public void dispose() throws Exception {
-    }
-
-    @Nonnull
-    @Override
-    public Optional<Date> getExecutionTime() {
-        return Optional.empty();
+    public void dispose() {
     }
 }

@@ -58,7 +58,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.xbup.audio.swing.XBWavePanel;
 import org.exbin.xbup.audio.wave.XBWave;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.xbup.operation.undo.UndoRedo;
 
 /**
  * Audio panel wave editor.
@@ -68,7 +68,7 @@ import org.exbin.xbup.operation.undo.XBUndoHandler;
 @ParametersAreNonnullByDefault
 public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHandler {
 
-    private XBUndoHandler undoHandler;
+    private UndoRedo undoRedo;
     private boolean wavePlayed = false;
     private int drawPosition = -1;
     private int wavePosition = -1;
@@ -139,7 +139,7 @@ public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHa
         XBWavePanel.SelectionRange selectionRange = wavePanel.getSelection();
         WaveCutCommand cutCommand = new WaveCutCommand(wavePanel, selectionRange.getBegin(), selectionRange.getEnd());
         try {
-            undoHandler.execute(cutCommand);
+            undoRedo.execute(cutCommand);
         } catch (Exception ex) {
             Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -151,7 +151,7 @@ public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHa
         XBWavePanel.SelectionRange selectionRange = wavePanel.getSelection();
         WaveDeleteCommand deleteCommand = new WaveDeleteCommand(wavePanel, selectionRange.getBegin(), selectionRange.getEnd());
         try {
-            undoHandler.execute(deleteCommand);
+            undoRedo.execute(deleteCommand);
         } catch (Exception ex) {
             Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -162,7 +162,7 @@ public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHa
     public void performPaste() {
         WavePasteCommand pasteCommand = new WavePasteCommand(wavePanel, wavePanel.getCursorPosition());
         try {
-            undoHandler.execute(pasteCommand);
+            undoRedo.execute(pasteCommand);
         } catch (Exception ex) {
             Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -180,14 +180,14 @@ public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHa
     }
 
     @Nonnull
-    public XBUndoHandler getUndoHandler() {
-        return undoHandler;
+    public UndoRedo getUndoRedo() {
+        return undoRedo;
     }
 
     public void newWave() {
         wavePanel.setWave(null);
         scrollBar.setMaximum(wavePanel.getWaveWidth());
-        undoHandler.clear();
+        undoRedo.clear();
     }
 
     public void setWave(XBWave wave) {
@@ -227,11 +227,11 @@ public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHa
     }
 
     public boolean isModified() {
-        return undoHandler.getCommandPosition() != undoHandler.getSyncPoint();
+        return undoRedo.getCommandPosition() != undoRedo.getSyncPosition();
     }
 
     public void notifyFileSaved() {
-        undoHandler.setSyncPoint();
+        undoRedo.setSyncPosition();
     }
 
     public void performPlay() {
@@ -429,8 +429,8 @@ public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHa
     private javax.swing.JScrollBar scrollBar;
     // End of variables declaration//GEN-END:variables
 
-    public void setUndoHandler(XBUndoHandler undoHandler) {
-        this.undoHandler = undoHandler;
+    public void setUndoRedo(UndoRedo undoRedo) {
+        this.undoRedo = undoRedo;
     }
 
     public void setPopupMenu(JPopupMenu menu) {
@@ -512,7 +512,7 @@ public class AudioPanel extends javax.swing.JPanel implements ClipboardActionsHa
             waveReverseCommand = new WaveReverseCommand(wavePanel);
         }
         try {
-            undoHandler.execute(waveReverseCommand);
+            undoRedo.execute(waveReverseCommand);
         } catch (Exception ex) {
             Logger.getLogger(AudioPanel.class.getName()).log(Level.SEVERE, null, ex);
         }

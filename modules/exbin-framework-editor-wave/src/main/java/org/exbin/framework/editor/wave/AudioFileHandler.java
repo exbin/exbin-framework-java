@@ -49,7 +49,7 @@ import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.DefaultComponentActivationService;
 import org.exbin.framework.operation.undo.api.UndoRedoControl;
 import org.exbin.xbup.operation.undo.XBTLinearUndo;
-import org.exbin.xbup.operation.undo.XBUndoHandler;
+import org.exbin.xbup.operation.undo.UndoRedo;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 
 /**
@@ -79,22 +79,22 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
     }
 
     public void registerUndoHandler() {
-        XBUndoHandler undoHandler = new XBTLinearUndo(null);
+        UndoRedo undoRedo = new XBTLinearUndo(null);
         undoRedoControl = new UndoRedoControl() {
             @Override
             public boolean canUndo() {
-                return undoHandler.canUndo();
+                return undoRedo.canUndo();
             }
 
             @Override
             public boolean canRedo() {
-                return undoHandler.canRedo();
+                return undoRedo.canRedo();
             }
 
             @Override
             public void performUndo() {
                 try {
-                    undoHandler.performUndo();
+                    undoRedo.performUndo();
                     notifyUndoChanged();
                 } catch (Exception ex) {
                     Logger.getLogger(AudioFileHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -104,14 +104,14 @@ public class AudioFileHandler implements EditableFileHandler, ComponentActivatio
             @Override
             public void performRedo() {
                 try {
-                    undoHandler.performRedo();
+                    undoRedo.performRedo();
                     notifyUndoChanged();
                 } catch (Exception ex) {
                     Logger.getLogger(AudioFileHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };
-        audioPanel.setUndoHandler(undoHandler);
+        audioPanel.setUndoRedo(undoRedo);
         /* undoHandler.setUndoUpdateListener(() -> {
             notifyUndoChanged();
         }); */
