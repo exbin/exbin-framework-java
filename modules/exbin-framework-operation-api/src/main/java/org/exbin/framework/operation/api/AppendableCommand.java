@@ -15,20 +15,21 @@
  */
 package org.exbin.framework.operation.api;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Operation type interface.
+ * Interface for appendable command.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface OperationType {
+@ParametersAreNonnullByDefault
+public interface AppendableCommand {
 
     /**
-     * Returns operation type name.
+     * Attempts to append command.
      *
-     * @return operation type name
+     * @param command command
+     * @return true if sucessfully appended
      */
-    @Nonnull
-    String getName();
+    boolean appendCommand(Command command);
 }

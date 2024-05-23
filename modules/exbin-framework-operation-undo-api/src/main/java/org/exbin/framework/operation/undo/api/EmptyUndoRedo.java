@@ -60,23 +60,24 @@ public class EmptyUndoRedo implements UndoRedo {
         return Collections.emptyList();
     }
 
+    @Nonnull
     @Override
     public Optional<Command> getTopUndoCommand() {
         return Optional.empty();
     }
 
     @Override
-    public long getCommandPosition() {
+    public int getCommandPosition() {
         return 0;
     }
 
     @Override
-    public long getCommandsCount() {
+    public int getCommandsCount() {
         return 0;
     }
 
     @Override
-    public long getSyncPosition() {
+    public int getSyncPosition() {
         return 0;
     }
 
@@ -105,7 +106,7 @@ public class EmptyUndoRedo implements UndoRedo {
     }
 
     @Override
-    public void setSyncPosition(long syncPoint) {
+    public void setSyncPosition(int syncPoint) {
         throw new IllegalStateException();
     }
 

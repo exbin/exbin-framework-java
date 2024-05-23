@@ -15,20 +15,14 @@
  */
 package org.exbin.framework.operation.api;
 
-import javax.annotation.Nonnull;
-
 /**
- * Operation type interface.
+ * Enumeration of command execution phases.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface OperationType {
+public enum CommandPhase {
 
-    /**
-     * Returns operation type name.
-     *
-     * @return operation type name
-     */
-    @Nonnull
-    String getName();
+    CREATED,
+    EXECUTED,
+    REVERTED
 }
