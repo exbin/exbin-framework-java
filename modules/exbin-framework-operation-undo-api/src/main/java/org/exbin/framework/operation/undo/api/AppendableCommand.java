@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.api;
+package org.exbin.framework.operation.undo.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.operation.api.Command;
 
 /**
- * Interface for appendable operation.
+ * Interface for appendable command.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface AppendableOperation {
+public interface AppendableCommand {
 
     /**
-     * Attempts to append operation.
+     * Attempts to execute command as an append to existing command.
      *
-     * @param operation operation
+     * @param command command
      * @return true if sucessfully appended
      */
-    boolean appendOperation(Operation operation);
+    boolean appendExecute(Command command);
 }
