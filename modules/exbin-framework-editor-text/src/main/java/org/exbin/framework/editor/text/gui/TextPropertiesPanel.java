@@ -25,6 +25,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.text.Document;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.TextEditor;
@@ -38,6 +40,7 @@ import org.exbin.framework.utils.TestApplication;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TextPropertiesPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextPropertiesPanel.class);
@@ -209,6 +212,7 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
         }
     }
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }

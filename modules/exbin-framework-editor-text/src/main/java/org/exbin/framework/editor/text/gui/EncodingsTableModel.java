@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
 
@@ -84,7 +84,7 @@ public class EncodingsTableModel extends AbstractTableModel {
         }
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public String getColumnName(int column) {
         switch (column) {
@@ -96,9 +96,9 @@ public class EncodingsTableModel extends AbstractTableModel {
                 return "Country Codes";
             case 3:
                 return "Max Bytes";
+            default:
+                throw new IllegalStateException("Incorrect column index");
         }
-
-        return null;
     }
 
     private void rebuildFiltered() {
@@ -127,7 +127,7 @@ public class EncodingsTableModel extends AbstractTableModel {
         return 4;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         String name = filtered.get(rowIndex);
@@ -145,9 +145,9 @@ public class EncodingsTableModel extends AbstractTableModel {
             case 3: {
                 return record.maxBytes;
             }
+            default:
+                throw new IllegalStateException("Incorrect column index");
         }
-
-        return null;
     }
 
     public void setUsedEncodings(List<String> encodings) {

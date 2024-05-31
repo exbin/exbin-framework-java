@@ -27,7 +27,6 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.file.api.FileHandler;
 
 /**

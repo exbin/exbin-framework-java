@@ -364,6 +364,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         textArea.getCaret().addChangeListener(listener);
     }
 
+    @Nonnull
     @Override
     public Charset getCharset() {
         return charset;
@@ -374,6 +375,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         this.charset = charset;
     }
 
+    @Nonnull
     @Override
     public Font getDefaultFont() {
         return defaultFont;

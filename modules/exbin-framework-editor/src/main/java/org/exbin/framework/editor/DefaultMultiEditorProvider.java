@@ -410,6 +410,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         return editorActions.showAskForSaveDialog(modifiedFiles);
     }
 
+    @Nonnull
     @Override
     public Optional<File> getLastUsedDirectory() {
         return Optional.ofNullable(lastUsedDirectory);

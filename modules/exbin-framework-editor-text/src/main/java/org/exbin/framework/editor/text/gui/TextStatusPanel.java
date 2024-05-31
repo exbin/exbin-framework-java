@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.editor.text.gui;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
 import org.exbin.framework.editor.text.TextPositionStatusApi;
@@ -27,6 +29,7 @@ import org.exbin.framework.utils.WindowUtils;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TextStatusPanel extends javax.swing.JPanel implements TextPositionStatusApi, TextEncodingStatusApi {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextStatusPanel.class);
@@ -105,9 +108,11 @@ public class TextStatusPanel extends javax.swing.JPanel implements TextPositionS
         documentCursorPositionTextField.setText(textPosition);
     }
 
+    @Nonnull
     @Override
     public String getEncoding() {
-        return documentEncodingTextField.getText();
+        String text = documentEncodingTextField.getText();
+        return text == null ? "" : text;
     }
 
     @Override
