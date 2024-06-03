@@ -4,5 +4,10 @@
   <name>XBUP Help Support Module</name>
   <description>Module supporting basic help support</description>
   <dependency>
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+    <module id="org.exbin.framework.frame.api.FrameModuleApi" />
+    <module id="org.exbin.framework.window.api.WindowModuleApi" />
+    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
+    <module id="org.exbin.framework.utils.UtilsModule" />
   </dependency>
 </module>

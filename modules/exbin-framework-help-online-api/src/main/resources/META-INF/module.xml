@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.help.api.HelpModuleApi</id>
+  <name>XBUP Help Support Module</name>
+  <description>Module supporting basic help support</description>
+  <dependency>
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+  </dependency>
+</module>

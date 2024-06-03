@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.operation.api.OperationModuleApi</id>
+  <name>Undo Support Module</name>
+  <description>Module to provide support for operations capability</description>
+  <dependency>
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+  </dependency>
+</module>

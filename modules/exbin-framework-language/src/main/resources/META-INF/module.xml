@@ -4,5 +4,6 @@
   <name>Language support</name>
   <description>Module to support language</description>
   <dependency>
+    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
   </dependency>
 </module>

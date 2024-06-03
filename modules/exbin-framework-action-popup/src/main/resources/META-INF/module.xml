@@ -4,5 +4,9 @@
   <name>Popup Support Module</name>
   <description>Module to support popup operations</description>
   <dependency>
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+    <module id="org.exbin.framework.window.api.WindowModuleApi" />
+    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
+    <module id="org.exbin.framework.utils.UtilsModule" />
   </dependency>
 </module>

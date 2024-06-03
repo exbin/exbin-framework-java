@@ -4,5 +4,6 @@
   <name>Preferences Module</name>
   <description>Module for preferences</description>
   <dependency>
+    <module id="org.exbin.framework.preferences.api.PreferencesModuleApi" />
   </dependency>
 </module>

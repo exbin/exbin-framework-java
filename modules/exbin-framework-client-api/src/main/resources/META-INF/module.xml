@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.client.api.ClientModuleApi</id>
+  <name>Catalog client Module</name>
+  <description>Module to support client connection to catalog</description>
+  <dependency>
+  </dependency>
+</module>

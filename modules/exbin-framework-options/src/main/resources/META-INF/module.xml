@@ -4,5 +4,13 @@
   <name>Options Support Module</name>
   <description>Module to provide support for application options</description>
   <dependency>
+    <module id="org.exbin.framework.utils.UtilsModule" />
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+    <module id="org.exbin.framework.preferences.api.PreferencesModuleApi" />
+    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
+    <module id="org.exbin.framework.preferences.PreferencesModule" />
+    <module id="org.exbin.framework.ui.api.UiModuleApi" />
+    <module id="org.exbin.framework.frame.api.FrameModuleApi" />
+    <module id="org.exbin.framework.window.api.WindowModuleApi" />
   </dependency>
 </module>

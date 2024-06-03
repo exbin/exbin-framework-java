@@ -4,5 +4,10 @@
   <name>Window handling</name>
   <description>Module for window handling</description>
   <dependency>
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+    <module id="org.exbin.framework.preferences.api.PreferencesModuleApi" />
+    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
+    <module id="org.exbin.framework.frame.api.FrameModuleApi" />
+    <module id="org.exbin.framework.utils.UtilsModule" />
   </dependency>
 </module>

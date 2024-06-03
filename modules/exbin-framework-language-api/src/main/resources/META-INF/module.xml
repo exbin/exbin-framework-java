@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.language.api.LanguageModuleApi</id>
+  <name>Language support</name>
+  <description>Module to support language</description>
+  <dependency>
+  </dependency>
+</module>

@@ -4,5 +4,8 @@
   <name>Catalog client Module</name>
   <description>Module to support client connection to catalog</description>
   <dependency>
+    <module id="org.exbin.framework.preferences.PreferencesModule" />
+    <module id="org.exbin.framework.preferences.api.PreferencesModuleApi" />
+    <module id="org.exbin.framework.utils.UtilsModule" />
   </dependency>
 </module>

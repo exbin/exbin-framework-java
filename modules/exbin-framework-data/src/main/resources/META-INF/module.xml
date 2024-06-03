@@ -4,5 +4,10 @@
   <name>File Support Module</name>
   <description>Module to support file oprations</description>
   <dependency>
+    <module id="org.exbin.framework.action.ActionModule" />
+    <module id="org.exbin.framework.window.api.WindowModuleApi" />
+    <module id="org.exbin.framework.component.ComponentModule" />
+    <module id="org.exbin.framework.operation.undo.OperationUndoModule" />
+    <module id="org.exbin.framework.utils.UtilsModule" />
   </dependency>
 </module>

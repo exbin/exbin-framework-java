@@ -34,6 +34,8 @@ import org.exbin.framework.App;
 @ParametersAreNonnullByDefault
 public class BasicApplication {
 
+    public static final String PLUGINS_DIRECTORY = "plugins";
+
     private Preferences appPreferences;
 
     private BasicModuleProvider moduleProvider;
