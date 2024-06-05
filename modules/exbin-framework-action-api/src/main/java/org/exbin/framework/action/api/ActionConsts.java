@@ -69,14 +69,14 @@ public class ActionConsts {
     public static final String ACTION_SMALL_LARGE_POSTFIX = ".largeIcon";
     public static final String CYCLE_POPUP_MENU = "cyclePopupMenu";
 
-    public static String MAIN_MENU_ID = "mainMenu";
-    public static String MAIN_TOOL_BAR_ID = "mainToolBar";
-    public static String FILE_MENU_ID = MAIN_MENU_ID + "/File";
-    public static String EDIT_MENU_ID = MAIN_MENU_ID + "/Edit";
-    public static String VIEW_MENU_ID = MAIN_MENU_ID + "/View";
-    public static String TOOLS_MENU_ID = MAIN_MENU_ID + "/Tools";
-    public static String OPTIONS_MENU_ID = MAIN_MENU_ID + "/Options";
-    public static String HELP_MENU_ID = MAIN_MENU_ID + "/Help";
+    public static final String MAIN_MENU_ID = "mainMenu";
+    public static final String MAIN_TOOL_BAR_ID = "mainToolBar";
+    public static final String FILE_MENU_ID = MAIN_MENU_ID + "/File";
+    public static final String EDIT_MENU_ID = MAIN_MENU_ID + "/Edit";
+    public static final String VIEW_MENU_ID = MAIN_MENU_ID + "/View";
+    public static final String TOOLS_MENU_ID = MAIN_MENU_ID + "/Tools";
+    public static final String OPTIONS_MENU_ID = MAIN_MENU_ID + "/Options";
+    public static final String HELP_MENU_ID = MAIN_MENU_ID + "/Help";
 
     private ActionConsts() {
     }

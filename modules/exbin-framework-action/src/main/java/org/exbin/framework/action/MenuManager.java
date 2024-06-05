@@ -50,6 +50,7 @@ import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.SubMenuContribution;
+import org.exbin.framework.utils.ObjectUtils;
 
 /**
  * Menu manager.
@@ -566,12 +567,8 @@ public class MenuManager {
     };
 
     public void registerMenu(String menuId, String pluginId) {
-        if (menuId == null) {
-            throw new NullPointerException("Menu Id cannot be null");
-        }
-        if (pluginId == null) {
-            throw new NullPointerException("Plugin Id cannot be null");
-        }
+        ObjectUtils.requireNonNull(menuId);
+        ObjectUtils.requireNonNull(pluginId);
 
         MenuDefinition menu = menus.get(menuId);
         if (menu != null) {

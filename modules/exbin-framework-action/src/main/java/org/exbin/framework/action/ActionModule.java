@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.action;
 
+import java.awt.datatransfer.FlavorEvent;
+import java.awt.datatransfer.FlavorListener;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -38,10 +40,12 @@ import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.ClipboardUtils;
 
 /**
  * Implementation of action module.
@@ -295,7 +299,15 @@ public class ActionModule implements ActionModuleApi {
         getMenuManager().unregisterMenu(menuId);
     }
 
-    public void updateClipboardActionsState() {
-        clipboardTextActions.updateClipboardActionsState();
+    public void registerClipboardFlavorListener(ComponentActivationManager activationManager) {
+        ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
+
+            private final ClipboardFlavorState clipboardFlavorState = new ClipboardFlavorState();
+
+            @Override
+            public void flavorsChanged(FlavorEvent fe) {
+                activationManager.updateActionsForComponent(ClipboardFlavorState.class, clipboardFlavorState);
+            }
+        });
     }
 }

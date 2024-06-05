@@ -313,10 +313,6 @@ public class ClipboardTextActions implements ClipboardActionsApi {
         pasteTextAction.setEnabled(editable && data);
     }
 
-    public void updateClipboardActionsState() {
-
-    }
-
     private final class ClipboardListener implements FlavorListener {
 
         @Override

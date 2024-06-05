@@ -15,9 +15,6 @@
  */
 package org.exbin.framework.action;
 
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.FlavorEvent;
-import java.awt.datatransfer.FlavorListener;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -33,10 +30,9 @@ import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsApi;
-import org.exbin.framework.utils.ClipboardUtils;
 
 /**
- * Clipboard operations.
+ * Clipboard actions.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -50,8 +46,6 @@ public class ClipboardActions implements ClipboardActionsApi {
     public static final String CUT_ACTION_ID = "popupCutAction";
 
     private ResourceBundle resourceBundle;
-
-    private FlavorListener clipboardFlavorListener;
 
     public ClipboardActions() {
     }
@@ -113,20 +107,6 @@ public class ClipboardActions implements ClipboardActionsApi {
         selectAllAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         selectAllAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, selectAllAction);
         return selectAllAction;
-    }
-
-    public void registerClipboardListener() {
-        Clipboard clipboard = ClipboardUtils.getClipboard();
-        clipboardFlavorListener = (FlavorEvent e) -> {
-            // TODO updateClipboardActions();
-        };
-        clipboard.addFlavorListener(clipboardFlavorListener);
-    }
-
-    public void unregisterClipboardListener() {
-        Clipboard clipboard = ClipboardUtils.getClipboard();
-        clipboard.removeFlavorListener(clipboardFlavorListener);
-        clipboardFlavorListener = null;
     }
 
     @ParametersAreNonnullByDefault

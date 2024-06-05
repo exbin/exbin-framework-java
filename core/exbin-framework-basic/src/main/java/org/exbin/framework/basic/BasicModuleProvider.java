@@ -70,6 +70,7 @@ public class BasicModuleProvider implements ModuleProvider {
         runThread.start();
     }
 
+    @Nonnull
     @Override
     public <T extends Module> T getModule(Class<T> interfaceClass) {
         try {
@@ -211,10 +212,10 @@ public class BasicModuleProvider implements ModuleProvider {
 //                    try {
 //                        loader = new DynamicClassLoader("classpath", contextClassLoader);
 //                    } catch (Throwable tw) {
-                        // Alternative when executed from Java 8
-                        loader = new DynamicClassLoader(contextClassLoader);
+                    // Alternative when executed from Java 8
+                    loader = new DynamicClassLoader(contextClassLoader);
 //                    }
-                    
+
                     loader.add(libraryUri.toURL());
                     clazz = Class.forName(moduleRecord.getModuleId(), true, loader);
 
@@ -223,7 +224,6 @@ public class BasicModuleProvider implements ModuleProvider {
 //                        loader.add(libraryUri.toURL());
 //                        clazz = Class.forName(moduleRecord.getModuleId(), true, loader);
 //                    }
-
                     moduleRecord.setClassLoader(loader);
                 } else {
                     contextClassLoader.add(libraryUri.toURL());
@@ -254,7 +254,7 @@ public class BasicModuleProvider implements ModuleProvider {
         } catch (IOException ex) {
             // ignore
         }
-/*        if (moduleRecordStream != null) {
+        /*        if (moduleRecordStream != null) {
             try {
                 XBPullReader pullReader = new XBPullReader(moduleRecordStream);
                 XBPProviderSerialHandler serial = new XBPProviderSerialHandler(new XBToXBTPullConvertor(pullReader));
@@ -281,7 +281,7 @@ public class BasicModuleProvider implements ModuleProvider {
 ////                    module.init(moduleHandler);
 //                    unprocessedModules.remove(moduleIndex);
 //                } else {
-                    moduleIndex++;
+                moduleIndex++;
 //                }
             }
         }
@@ -322,7 +322,7 @@ public class BasicModuleProvider implements ModuleProvider {
             throw new IllegalStateException("Circular dependency detected");
         }
     }
-    
+
     /**
      * Gets info about module.
      *
