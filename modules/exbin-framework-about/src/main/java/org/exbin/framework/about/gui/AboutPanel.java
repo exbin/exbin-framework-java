@@ -53,7 +53,6 @@ public class AboutPanel extends javax.swing.JPanel {
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AboutPanel.class);
     private JComponent sideComponent = null;
     private boolean darkMode = false;
-    private final AboutModulesPanel aboutModulesPanel = new AboutModulesPanel();
     private final AboutAuthorsPanel aboutAuthorsPanel = new AboutAuthorsPanel();
     private String appHomepageLink;
 
@@ -96,7 +95,6 @@ public class AboutPanel extends javax.swing.JPanel {
         });
 
         productTabbedPane.insertTab(resourceBundle.getString("authorsPanel.TabConstraints.tabTitle"), null, aboutAuthorsPanel, null, 1);
-        productTabbedPane.insertTab(resourceBundle.getString("modulesPanel.TabConstraints.tabTitle"), null, aboutModulesPanel, null, 3);
     }
 
     /**
