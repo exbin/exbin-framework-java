@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.about.api.AboutModuleApi</id>
+  <api>org.exbin.framework.about.api.AboutModuleApi</api>
   <name>About Dialog Module</name>
   <description>Module with about dialog</description>
   <dependency>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.editor.api.EditorModuleApi</id>
+  <api>org.exbin.framework.editor.api.EditorModuleApi</api>
   <name>Editor Support</name>
   <description>Module for registrable framework editors</description>
   <dependency>

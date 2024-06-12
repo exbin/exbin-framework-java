@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.window.api.WindowModuleApi</id>
+  <api>org.exbin.framework.window.api.WindowModuleApi</api>
   <name>Window handling</name>
   <description>Module for window handling</description>
   <dependency>

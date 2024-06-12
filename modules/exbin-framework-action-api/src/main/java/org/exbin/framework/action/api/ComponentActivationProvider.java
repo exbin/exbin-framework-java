@@ -17,7 +17,6 @@ package org.exbin.framework.action.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.ComponentActivationService;
 
 /**
  * Component activation provider interface.

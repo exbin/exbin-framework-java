@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.action.popup.api.ActionPopupModuleApi</id>
+  <api>org.exbin.framework.action.popup.api.ActionPopupModuleApi</api>
   <name>Popup Support Module</name>
   <description>Module to support popup operations</description>
   <dependency>

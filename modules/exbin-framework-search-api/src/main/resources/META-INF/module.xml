@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.preferences.api.PreferencesModuleApi</api>
-  <name>Preferences Module</name>
+  <api>org.exbin.framework.search.api.SearchModuleApi</api>
+  <name>Search API Module</name>
   <description>Module for preferences</description>
   <dependency>
   </dependency>

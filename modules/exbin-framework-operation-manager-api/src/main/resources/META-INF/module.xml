@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.operation.undo.api.OperationUndoModuleApi</api>
+  <api>org.exbin.framework.operation.manager.api.OperationManagerModuleApi</api>
   <name>Undo Support Module</name>
   <description>Module to provide support for undo/redo capability</description>
   <dependency>

@@ -24,6 +24,11 @@ import javax.annotation.Nonnull;
  */
 public interface ToolBarContribution {
 
+    /**
+     * Returns toolbar position.
+     *
+     * @return toolbar position
+     */
     @Nonnull
     ToolBarPosition getToolBarPosition();
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.frame.api.FrameModuleApi</id>
+  <api>org.exbin.framework.frame.api.FrameModuleApi</api>
   <name>Frame handling</name>
   <description>Module for frame handling</description>
   <dependency>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.addon.manager.api.AddonManagerModuleApi</api>
+  <name>Addon Manager Module</name>
+  <description>Module to manage addons</description>
+  <dependency>
+    <module id="org.exbin.framework.utils.UtilsModule" />
+  </dependency>
+</module>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.file.api.FileModuleApi</id>
+  <api>org.exbin.framework.file.api.FileModuleApi</api>
   <name>File Support Module</name>
   <description>Module to support file oprations</description>
   <dependency>

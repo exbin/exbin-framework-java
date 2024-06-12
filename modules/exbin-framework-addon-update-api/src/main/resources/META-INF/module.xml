@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.addon.update.api.AddonUpdateModuleApi</api>
+  <name>Addon Updates Module</name>
+  <description>Module with check for updates</description>
+  <dependency>
+  </dependency>
+</module>

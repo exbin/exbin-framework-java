@@ -233,7 +233,7 @@ public class BasicModuleProvider implements ModuleProvider {
                 Constructor<?> ctor = clazz.getConstructor();
                 module = (Module) ctor.newInstance();
             } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | MalformedURLException ex) {
-                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Module: " + moduleRecord.getModuleId(), ex);
                 // ignore
             }
 

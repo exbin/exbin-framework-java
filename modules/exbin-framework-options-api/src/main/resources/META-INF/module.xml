@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.options.api.OptionsModuleapi</id>
+  <api>org.exbin.framework.options.api.OptionsModuleapi</api>
   <name>Options Support Module</name>
   <description>Module to provide support for application options</description>
   <dependency>
