@@ -34,7 +34,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.Preferences;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.api.OptionsModifiedListener;
@@ -46,6 +45,7 @@ import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UtilsModule;
 
 /**
  * Panel for application options and preferences setting.
@@ -66,10 +66,8 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
     private boolean modified;
     private OptionsMutableTreeNode top;
-    private final ApplicationFrameHandler frame;
 
-    public OptionsTreePanel(ApplicationFrameHandler frame) {
-        this.frame = frame;
+    public OptionsTreePanel() {
         initComponents();
         init();
     }
@@ -189,7 +187,11 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new OptionsTreePanel(null)));
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            WindowUtils.invokeWindow(new OptionsTreePanel());
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

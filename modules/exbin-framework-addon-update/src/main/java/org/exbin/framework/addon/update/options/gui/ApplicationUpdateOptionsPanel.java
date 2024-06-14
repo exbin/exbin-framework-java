@@ -25,6 +25,7 @@ import org.exbin.framework.addon.update.options.CheckForUpdateOptions;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UtilsModule;
 
 /**
  * Application update options panel.
@@ -106,7 +107,11 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new ApplicationUpdateOptionsPanel()));
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            WindowUtils.invokeWindow(new ApplicationUpdateOptionsPanel());
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

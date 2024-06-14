@@ -27,6 +27,7 @@ import org.exbin.framework.addon.update.service.CheckForUpdateService;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -233,7 +234,11 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new CheckForUpdatePanel()));
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            WindowUtils.invokeWindow(new CheckForUpdatePanel());
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -68,6 +68,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
     public static void main(String[] args) {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
             OperationUndoModule guiUndoModule = new OperationUndoModule();
             testApplication.addModule(OperationUndoModule.MODULE_ID, guiUndoModule);
             ActionModule guiActionModule = new ActionModule();

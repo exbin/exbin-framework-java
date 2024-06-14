@@ -70,6 +70,8 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
     public static void main(String[] args) {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            testApplication.addModule(org.exbin.framework.action.api.ActionModuleApi.MODULE_ID, new org.exbin.framework.action.ActionModule());
             ComponentModule guiComponentModule = new ComponentModule();
             testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
 

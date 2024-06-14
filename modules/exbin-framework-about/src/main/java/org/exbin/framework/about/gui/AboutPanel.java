@@ -41,6 +41,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.utils.UtilsModule;
 
 /**
  * Basic about panel.
@@ -331,7 +332,11 @@ public class AboutPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new AboutPanel()));
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            WindowUtils.invokeWindow(new AboutPanel());
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

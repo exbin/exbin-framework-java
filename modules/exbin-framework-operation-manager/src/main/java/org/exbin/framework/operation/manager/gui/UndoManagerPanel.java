@@ -24,6 +24,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.operation.api.Command;
 import org.exbin.framework.operation.undo.api.UndoRedo;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -247,7 +248,11 @@ public class UndoManagerPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new UndoManagerPanel()));
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            WindowUtils.invokeWindow(new UndoManagerPanel());
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

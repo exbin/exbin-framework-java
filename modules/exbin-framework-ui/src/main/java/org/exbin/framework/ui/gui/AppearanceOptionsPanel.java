@@ -28,6 +28,7 @@ import org.exbin.framework.ui.options.impl.AppearanceOptionsImpl;
 import org.exbin.framework.utils.ComponentResourceProvider;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UtilsModule;
 
 /**
  * Toolbar appearance options panel.
@@ -149,7 +150,11 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new AppearanceOptionsPanel()));
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            WindowUtils.invokeWindow(new AppearanceOptionsPanel());
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
