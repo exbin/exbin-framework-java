@@ -28,6 +28,7 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.editor.wave.service.WaveColorService;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UtilsModule;
 
 /**
  * Wave editor color selection panel.
@@ -142,7 +143,11 @@ public class WaveColorOptionsPanel extends javax.swing.JPanel implements Options
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new WaveColorOptionsPanel()));
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            WindowUtils.invokeWindow(new WaveColorOptionsPanel());
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

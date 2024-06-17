@@ -18,6 +18,7 @@ package org.exbin.framework.editor.text.gui;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
@@ -25,6 +26,7 @@ import javax.swing.text.JTextComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
@@ -113,7 +115,11 @@ public class TextGoToPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new TextGoToPanel()));
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            WindowUtils.invokeWindow(new TextGoToPanel());
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -123,6 +129,7 @@ public class TextGoToPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner posLineSpinner;
     // End of variables declaration//GEN-END:variables
 
+    @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }

@@ -17,6 +17,7 @@ package org.exbin.framework.editor.text.options.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.options.impl.TextAppearanceOptionsImpl;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -24,12 +25,14 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UtilsModule;
 
 /**
  * Text encoding options panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextAppearanceOptionsImpl> {
 
     private OptionsModifiedListener optionsModifiedListener;
@@ -104,7 +107,11 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new TextAppearanceOptionsPanel()));
+        TestApplication testApplication = UtilsModule.createTestApplication();
+        testApplication.launch(() -> {
+            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            WindowUtils.invokeWindow(new TextAppearanceOptionsPanel());
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
