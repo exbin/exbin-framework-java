@@ -25,7 +25,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -75,6 +74,7 @@ import org.exbin.framework.editor.text.service.TextFontService;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.editor.text.options.gui.TextEncodingPanel;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.ui.api.UiModuleApi;
@@ -360,8 +360,7 @@ public class EditorTextModule implements Module {
                 if (panel == null) {
                     panel = new TextEncodingOptionsPanel();
                     panel.setTextEncodingService(getEncodingsHandler().getTextEncodingService());
-                    panel.setAddEncodingsOperation((List<String> usedEncodings) -> {
-                        final List<String> result = new ArrayList<>();
+                    panel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingPanel.EncodingsUpdate encodingsUpdate) -> {
                         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
                         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                         final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
@@ -370,7 +369,7 @@ public class EditorTextModule implements Module {
                         final WindowHandler dialog = windowModule.createDialog(addEncodingPanel, controlPanel);
                         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                             if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                                result.addAll(addEncodingPanel.getEncodings());
+                                encodingsUpdate.update(addEncodingPanel.getEncodings());
                             }
 
                             dialog.close();
@@ -378,7 +377,6 @@ public class EditorTextModule implements Module {
                         });
                         windowModule.setWindowTitle(dialog, addEncodingPanel.getResourceBundle());
                         dialog.showCentered(frameModule.getFrame());
-                        return result;
                     });
                 }
 
