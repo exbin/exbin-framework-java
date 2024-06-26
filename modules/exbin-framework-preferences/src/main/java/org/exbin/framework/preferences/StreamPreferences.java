@@ -117,14 +117,14 @@ public class StreamPreferences extends AbstractPreferences {
     @Override
     protected String[] keysSpi() throws BackingStoreException {
         Set<String> keySet = spiValues.keySet();
-        return (String[]) keySet.toArray(new String[keySet.size()]);
+        return (String[]) keySet.toArray(new String[0]);
     }
 
     @Nonnull
     @Override
     protected String[] childrenNamesSpi() throws BackingStoreException {
         Set<String> keySet = children.keySet();
-        return (String[]) keySet.toArray(new String[keySet.size()]);
+        return (String[]) keySet.toArray(new String[0]);
     }
 
     @Nonnull

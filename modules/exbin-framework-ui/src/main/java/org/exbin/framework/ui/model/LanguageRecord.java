@@ -16,6 +16,7 @@
 package org.exbin.framework.ui.model;
 
 import java.util.Locale;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -50,14 +51,14 @@ public class LanguageRecord {
         return locale;
     }
 
-    @Nullable
-    public ImageIcon getFlag() {
-        return flag;
+    @Nonnull
+    public Optional<ImageIcon> getFlag() {
+        return Optional.ofNullable(flag);
     }
 
-    @Nullable
-    public String getNote() {
-        return note;
+    @Nonnull
+    public Optional<String> getNote() {
+        return Optional.ofNullable(note);
     }
 
     /**

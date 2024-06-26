@@ -20,6 +20,7 @@ import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,9 +133,9 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
                     languageText = defaultLocaleName;
                 }
                 renderer.setText(languageText);
-                ImageIcon flag = record.getFlag();
-                if (flag != null) {
-                    renderer.setIcon(flag);
+                Optional<ImageIcon> flag = record.getFlag();
+                if (flag.isPresent()) {
+                    renderer.setIcon(flag.get());
                 }
                 return renderer;
             }

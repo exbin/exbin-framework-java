@@ -17,6 +17,7 @@ package org.exbin.framework.editor.text.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
@@ -98,5 +99,9 @@ public class TextFontAction extends AbstractAction {
             dialog.dispose();
         });
         dialog.showCentered(frameModule.getFrame());
+    }
+
+    public void setFileHandler(@Nullable FileHandler fileHandler) {
+        this.fileHandler = fileHandler;
     }
 }
