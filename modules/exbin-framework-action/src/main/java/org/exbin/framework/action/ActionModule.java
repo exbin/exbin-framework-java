@@ -24,10 +24,12 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
@@ -40,6 +42,7 @@ import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
@@ -127,32 +130,71 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void initAction(Action action, ResourceBundle bundle, String actionId) {
-        actionManager.initAction(action, bundle, actionId);
+        initAction(action, bundle, action.getClass(), actionId);
     }
 
-    /**
-     * Sets action values according to values specified by resource bundle.
-     *
-     * @param action modified action
-     * @param bundle source bundle
-     * @param resourceClass resourceClass
-     * @param actionId action identifier and bundle key prefix
-     */
     @Override
     public void initAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId) {
-        actionManager.initAction(action, bundle, resourceClass, actionId);
+        action.putValue(Action.NAME, bundle.getString(actionId + ActionConsts.ACTION_NAME_POSTFIX));
+        action.putValue(ActionConsts.ACTION_ID, actionId);
+
+        // TODO keystroke from string with meta mask translation
+        if (bundle.containsKey(actionId + ActionConsts.ACTION_SHORT_DESCRIPTION_POSTFIX)) {
+            action.putValue(Action.SHORT_DESCRIPTION, bundle.getString(actionId + ActionConsts.ACTION_SHORT_DESCRIPTION_POSTFIX));
+        }
+        if (bundle.containsKey(actionId + ActionConsts.ACTION_SMALL_ICON_POSTFIX)) {
+            action.putValue(Action.SMALL_ICON, new javax.swing.ImageIcon(resourceClass.getResource(bundle.getString(actionId + ActionConsts.ACTION_SMALL_ICON_POSTFIX))));
+        }
+        if (bundle.containsKey(actionId + ActionConsts.ACTION_SMALL_LARGE_POSTFIX)) {
+            action.putValue(Action.LARGE_ICON_KEY, new javax.swing.ImageIcon(resourceClass.getResource(bundle.getString(actionId + ActionConsts.ACTION_SMALL_LARGE_POSTFIX))));
+        }
     }
 
     @Nonnull
     @Override
     public JMenuItem actionToMenuItem(Action action) {
-        return actionManager.actionToMenuItem(action);
+        return actionToMenuItem(action, null);
     }
 
     @Nonnull
     @Override
     public JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups) {
-        return actionManager.actionToMenuItem(action, buttonGroups);
+        JMenuItem menuItem;
+        ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
+        if (actionType != null) {
+            switch (actionType) {
+                case CHECK: {
+                    menuItem = new JCheckBoxMenuItem(action);
+                    break;
+                }
+                case RADIO: {
+                    menuItem = new JRadioButtonMenuItem(action);
+                    String radioGroup = (String) action.getValue(ActionConsts.ACTION_RADIO_GROUP);
+                    if (buttonGroups != null) {
+                        ButtonGroup buttonGroup = buttonGroups.get(radioGroup);
+                        if (buttonGroup == null) {
+                            buttonGroup = new ButtonGroup();
+                            buttonGroups.put(radioGroup, buttonGroup);
+                        }
+                        buttonGroup.add(menuItem);
+                    }
+                    break;
+                }
+                default: {
+                    menuItem = new JMenuItem(action);
+                }
+            }
+        } else {
+            menuItem = new JMenuItem(action);
+        }
+
+        Object dialogMode = action.getValue(ActionConsts.ACTION_DIALOG_MODE);
+        if (dialogMode instanceof Boolean && ((Boolean) dialogMode)) {
+            LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+            menuItem.setText(languageModule.getActionWithDialogText(menuItem.getText()));
+        }
+
+        return menuItem;
     }
 
     @Nonnull
@@ -285,15 +327,16 @@ public class ActionModule implements ActionModuleApi {
         return menuManager.menuGroupExists(menuId, groupId);
     }
 
-//    @Nonnull
-//    @Override
-//    public ClipboardActionsApi createClipboardActions(ClipboardActionsHandler clipboardActionsHandler) {
-//        ClipboardActions customClipboardActions = new ClipboardActions();
-//        customClipboardActions.setup(resourceBundle);
-//        customClipboardActions.setClipboardActionsHandler(clipboardActionsHandler);
-//        return customClipboardActions;
-//    }
-
+    /*
+    @Nonnull
+    @Override
+    public ClipboardActionsApi createClipboardActions(ClipboardActionsHandler clipboardActionsHandler) {
+        ClipboardActions customClipboardActions = new ClipboardActions();
+        customClipboardActions.setup(resourceBundle);
+        customClipboardActions.setClipboardActionsHandler(clipboardActionsHandler);
+        return customClipboardActions;
+    }
+     */
     @Override
     public void unregisterMenu(String menuId) {
         getMenuManager().unregisterMenu(menuId);

@@ -48,6 +48,7 @@ import org.exbin.framework.action.gui.DropDownButton;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.ComponentActivationInstanceListener;
 import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.utils.ObjectUtils;
 
 /**
  * Toolbar manager.
@@ -284,12 +285,8 @@ public class ToolBarManager {
     }
 
     public void registerToolBar(String toolBarId, String pluginId) {
-        if (toolBarId == null) {
-            throw new NullPointerException("Tool bar Id cannot be null");
-        }
-        if (pluginId == null) {
-            throw new NullPointerException("Plugin Id cannot be null");
-        }
+        ObjectUtils.requireNonNull(toolBarId);
+        ObjectUtils.requireNonNull(pluginId);
 
         ToolBarDefinition toolBar = toolBars.get(toolBarId);
         if (toolBar != null) {
