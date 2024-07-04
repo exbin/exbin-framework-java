@@ -22,8 +22,11 @@ import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import org.exbin.framework.action.api.ActionActiveComponent;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ComponentActivationInstanceListener;
 import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.action.api.ComponentActivationService;
 
 /**
@@ -32,11 +35,12 @@ import org.exbin.framework.action.api.ComponentActivationService;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionManager implements ComponentActivationService, ComponentActivationListener {
+public class ActionManager implements ComponentActivationService, ComponentActivationListener, ComponentActivationManager {
 
+    protected final List<Action> actions = new ArrayList<>();
     protected final List<ComponentActivationListener> listeners = new ArrayList<>();
-    private final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
-    private final Map<Class<?>, Object> activeComponentState = new HashMap<>();
+    protected final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
+    protected final Map<Class<?>, Object> activeComponentState = new HashMap<>();
 
     public ActionManager() {
     }
@@ -47,7 +51,14 @@ public class ActionManager implements ComponentActivationService, ComponentActiv
     }
 
     public void registerAction(Action action) {
+        actions.add(action);
+    }
 
+    public void initAction(Action action) {
+        ActionActiveComponent actionActiveComponent = (ActionActiveComponent) action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
+        if (actionActiveComponent != null) {
+            actionActiveComponent.register(this);
+        }
     }
 
     @Override
@@ -75,6 +86,7 @@ public class ActionManager implements ComponentActivationService, ComponentActiv
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
         activeComponentState.put(componentClass, componentInstance);
         List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
@@ -83,5 +95,15 @@ public class ActionManager implements ComponentActivationService, ComponentActiv
                 componentListener.update(componentInstance);
             }
         }
+    }
+
+    @Override
+    public <T> void registerListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public <T> void registerUpdateListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
