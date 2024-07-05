@@ -35,9 +35,9 @@ import org.exbin.framework.action.api.ComponentActivationService;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionManager implements ComponentActivationService, ComponentActivationListener, ComponentActivationManager {
+public class ActionManager implements ComponentActivationService, ComponentActivationListener {
 
-    protected final List<Action> actions = new ArrayList<>();
+    protected final Map<String, ActionRecord> actions = new HashMap<>();
     protected final List<ComponentActivationListener> listeners = new ArrayList<>();
     protected final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
     protected final Map<Class<?>, Object> activeComponentState = new HashMap<>();
@@ -51,13 +51,28 @@ public class ActionManager implements ComponentActivationService, ComponentActiv
     }
 
     public void registerAction(Action action) {
-        actions.add(action);
+        String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
+        ActionRecord actionRecord = actions.get(actionId);
+        if (actionRecord == null) {
+            actionRecord = new ActionRecord();
+            actions.put(actionId, actionRecord);
+        }
+        actionRecord.actionInstances.add(action);
     }
 
+    @SuppressWarnings("unchecked")
     public void initAction(Action action) {
         ActionActiveComponent actionActiveComponent = (ActionActiveComponent) action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
         if (actionActiveComponent != null) {
-            actionActiveComponent.register(this);
+            String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
+            ActionRecord actionRecord = actions.get(actionId);
+            actionActiveComponent.register(new ActivationManager(actionRecord));
+            for (Map.Entry<Class<?>, ComponentActivationInstanceListener<?>> entry : actionRecord.updateComponents.entrySet()) {
+                Class<?> updateComponent = entry.getKey();
+                Object updateValue = activeComponentState.get(updateComponent);
+                ComponentActivationInstanceListener listener = entry.getValue();
+                listener.update(updateValue);
+            }
         }
     }
 
@@ -81,12 +96,7 @@ public class ActionManager implements ComponentActivationService, ComponentActiv
         }
     }
 
-    public void clearState() {
-        activeComponentState.clear();
-    }
-
     @SuppressWarnings("unchecked")
-    @Override
     public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
         activeComponentState.put(componentClass, componentInstance);
         List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
@@ -97,13 +107,52 @@ public class ActionManager implements ComponentActivationService, ComponentActiv
         }
     }
 
-    @Override
-    public <T> void registerListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void clearState() {
+        activeComponentState.clear();
     }
 
-    @Override
-    public <T> void registerUpdateListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private class ActivationManager implements ComponentActivationManager {
+
+        private final ActionRecord actionRecord;
+
+        public ActivationManager(ActionRecord actionRecord) {
+            this.actionRecord = actionRecord;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
+            activeComponentState.put(componentClass, componentInstance);
+            List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
+            if (componentListeners != null) {
+                for (ComponentActivationInstanceListener componentListener : componentListeners) {
+                    componentListener.update(componentInstance);
+                }
+            }
+        }
+
+        @Override
+        public <T> void registerListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+            actionRecord.updateComponents.put(componentClass, listener);
+
+            List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
+            if (componentListeners == null) {
+                componentListeners = new ArrayList<>();
+                activeComponentListeners.put(componentClass, componentListeners);
+            }
+
+            componentListeners.add(listener);
+        }
+
+        @Override
+        public <T> void registerUpdateListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+            registerListener(componentClass, listener);
+        }
+    }
+
+    protected static class ActionRecord {
+
+        List<Action> actionInstances = new ArrayList<>();
+        Map<Class<?>, ComponentActivationInstanceListener<?>> updateComponents = new HashMap<>();
     }
 }
