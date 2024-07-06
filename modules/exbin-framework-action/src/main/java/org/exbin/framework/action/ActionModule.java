@@ -62,7 +62,6 @@ public class ActionModule implements ActionModuleApi {
     private ClipboardTextActions clipboardTextActions = null;
     private MenuManager menuManager = null;
     private ToolBarManager toolBarManager = null;
-    private final ActionManager actionManager = new ActionManager();
     private ResourceBundle resourceBundle;
 
     public ActionModule() {
