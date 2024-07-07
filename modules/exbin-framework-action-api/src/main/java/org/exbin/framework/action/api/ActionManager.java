@@ -13,30 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.api;
+package org.exbin.framework.action.api;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.ComponentActivationListener;
+import javax.swing.Action;
 
 /**
- * Interface for file handler for editor.
+ * Action manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditorFileHandler {
+public interface ActionManager extends ComponentActivationService, ComponentActivationListener {
 
-    /**
-     * Notifies file handler activated as editor.
-     *
-     * @param componentActivationListener component activation listener
-     */
-    void componentActivated(ComponentActivationListener componentActivationListener);
+    void registerAction(Action action);
 
-    /**
-     * Notifies file handler deactivated as editor.
-     *
-     * @param componentActivationListener component activation listener
-     */
-    void componentDeactivated(ComponentActivationListener componentActivationListener);
+    void initAction(Action action);
+
+    <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance);
 }

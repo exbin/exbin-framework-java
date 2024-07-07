@@ -65,6 +65,9 @@ public interface ActionModuleApi extends Module {
     void initAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId);
 
     @Nonnull
+    ActionManager createActionManager();
+
+    @Nonnull
     JMenuItem actionToMenuItem(Action action);
 
     @Nonnull

@@ -75,16 +75,12 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     protected FileHandler activeFile = null;
     @Nullable
     protected File lastUsedDirectory;
-    protected MultiEditorComponentActivationService componentActivationService = new MultiEditorComponentActivationService();
 
     public DefaultMultiEditorProvider() {
         init();
     }
 
     private void init() {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        componentActivationService.registerListener(frameModule.getFrameHandler().getComponentActivationListener());
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
         actionModule.registerMenu(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
@@ -114,17 +110,26 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
             }
         });
 
-        componentActivationService.updated(EditorProvider.class, this);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        frameModule.getFrameHandler().getComponentActivationListener().updated(EditorProvider.class, this);
         activeFileChanged();
     }
 
     public void activeFileChanged() {
-        updateActiveFile();
-        componentActivationService.updated(FileHandler.class, activeFile);
-        ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getComponentActivationService() : null;
-        componentActivationService.passRequestUpdate(fileComponentActivationService);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ComponentActivationListener componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
+
         if (activeFile instanceof EditorFileHandler) {
-            ((EditorFileHandler) activeFile).componentActivated(componentActivationService.getFileActivationListener(activeFile));
+            ((EditorFileHandler) activeFile).componentDeactivated(componentActivationListener); // componentActivationService.getFileActivationListener(activeFile));
+        }
+
+        updateActiveFile();
+        componentActivationListener.updated(FileHandler.class, activeFile);
+//        ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getComponentActivationService() : null;
+//        fileComponentActivationService.requestUpdate();
+//        fileComponentActivationService.passRequestUpdate(fileComponentActivationService);
+        if (activeFile instanceof EditorFileHandler) {
+            ((EditorFileHandler) activeFile).componentActivated(componentActivationListener); // componentActivationService.getFileActivationListener(activeFile));
         }
     }
 
@@ -196,15 +201,15 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     public void initFileHandler(FileHandler fileHandler) {
         if (fileHandler instanceof ComponentActivationProvider) {
-            ComponentActivationService fileComponentActivationService = ((ComponentActivationProvider) fileHandler).getComponentActivationService();
-            fileComponentActivationService.registerListener(new ComponentActivationListener() {
-                @Override
-                public <T> void updated(Class<T> instanceClass, T instance) {
-                    if (fileHandler == activeFile) {
-                        componentActivationService.passUpdate(instanceClass, instance);
-                    }
-                }
-            });
+//            ComponentActivationService fileComponentActivationService = ((ComponentActivationProvider) fileHandler).getComponentActivationService();
+//            fileComponentActivationService.registerListener(new ComponentActivationListener() {
+//                @Override
+//                public <T> void updated(Class<T> instanceClass, T instance) {
+//                    if (fileHandler == activeFile) {
+//                        componentActivationService.passUpdate(instanceClass, instance);
+//                    }
+//                }
+//            });
         }
     }
 

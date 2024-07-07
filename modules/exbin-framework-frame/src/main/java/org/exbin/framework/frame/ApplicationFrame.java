@@ -34,13 +34,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationService;
-import org.exbin.framework.action.api.DefaultComponentActivationService;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
@@ -57,9 +57,12 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     private JPanel currentStatusBarPanel = null;
     private boolean captionsVisible = true;
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
-    private DefaultComponentActivationService frameComponentActivationService = new DefaultComponentActivationService();
+    private ActionManager frameComponentActivationService;
 
     public ApplicationFrame() {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        frameComponentActivationService = actionModule.createActionManager();
+                
         // TODO support for undecorated mode
         // setUndecorated(true);
         initComponents();

@@ -24,10 +24,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.action.api.ComponentActivationInstanceListener;
-import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationManager;
-import org.exbin.framework.action.api.ComponentActivationService;
+import org.exbin.framework.action.api.DefaultComponentActivationService;
 
 /**
  * Action manager.
@@ -35,21 +35,15 @@ import org.exbin.framework.action.api.ComponentActivationService;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionManager implements ComponentActivationService, ComponentActivationListener {
+public class DefaultActionManager extends DefaultComponentActivationService implements ActionManager {
 
     protected final Map<String, ActionRecord> actions = new HashMap<>();
-    protected final List<ComponentActivationListener> listeners = new ArrayList<>();
     protected final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
-    protected final Map<Class<?>, Object> activeComponentState = new HashMap<>();
 
-    public ActionManager() {
+    public DefaultActionManager() {
     }
 
     @Override
-    public void registerListener(ComponentActivationListener listener) {
-        listeners.add(listener);
-    }
-
     public void registerAction(Action action) {
         String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
         ActionRecord actionRecord = actions.get(actionId);
@@ -61,6 +55,7 @@ public class ActionManager implements ComponentActivationService, ComponentActiv
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public void initAction(Action action) {
         ActionActiveComponent actionActiveComponent = (ActionActiveComponent) action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
         if (actionActiveComponent != null) {
@@ -76,27 +71,8 @@ public class ActionManager implements ComponentActivationService, ComponentActiv
         }
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public void requestUpdate() {
-        for (Map.Entry<Class<?>, Object> entry : activeComponentState.entrySet()) {
-            Class key = entry.getKey();
-            Object instance = entry.getValue();
-            for (ComponentActivationListener listener : listeners) {
-                listener.updated(key, instance);
-            }
-        }
-    }
-
     @Override
-    public <T> void updated(Class<T> instanceClass, @Nullable T instance) {
-        activeComponentState.put(instanceClass, instance);
-        for (ComponentActivationListener listener : listeners) {
-            listener.updated(instanceClass, instance);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
     public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
         activeComponentState.put(componentClass, componentInstance);
         List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
@@ -107,10 +83,7 @@ public class ActionManager implements ComponentActivationService, ComponentActiv
         }
     }
 
-    public void clearState() {
-        activeComponentState.clear();
-    }
-
+    @ParametersAreNonnullByDefault
     private class ActivationManager implements ComponentActivationManager {
 
         private final ActionRecord actionRecord;

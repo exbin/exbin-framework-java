@@ -33,6 +33,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.action.api.MenuGroup;
@@ -107,6 +108,12 @@ public class ActionModule implements ActionModuleApi {
         }
 
         return clipboardTextActions;
+    }
+    
+    @Nonnull
+    @Override
+    public ActionManager createActionManager() {
+        return new DefaultActionManager();
     }
 
     @Override
