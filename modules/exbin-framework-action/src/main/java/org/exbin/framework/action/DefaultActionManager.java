@@ -73,8 +73,8 @@ public class DefaultActionManager extends DefaultComponentActivationService impl
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
-        activeComponentState.put(componentClass, componentInstance);
+    public <T> void updated(Class<T> componentClass, @Nullable T componentInstance) {
+        super.updated(componentClass, componentInstance);
         List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
         if (componentListeners != null) {
             for (ComponentActivationInstanceListener componentListener : componentListeners) {

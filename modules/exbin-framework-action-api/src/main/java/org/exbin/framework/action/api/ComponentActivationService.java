@@ -16,6 +16,7 @@
 package org.exbin.framework.action.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 
 /**
  * Service for action update.
@@ -36,4 +37,11 @@ public interface ComponentActivationService {
      * Requests update of registered listeners.
      */
     void requestUpdate();
+
+    /**
+     * Requests update of registered listeners.
+     *
+     * @param action action
+     */
+    void requestUpdate(Action action);
 }

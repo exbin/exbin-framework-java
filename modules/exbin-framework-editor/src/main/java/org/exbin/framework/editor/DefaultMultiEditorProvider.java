@@ -124,13 +124,13 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         }
 
         updateActiveFile();
-        componentActivationListener.updated(FileHandler.class, activeFile);
 //        ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getComponentActivationService() : null;
 //        fileComponentActivationService.requestUpdate();
 //        fileComponentActivationService.passRequestUpdate(fileComponentActivationService);
         if (activeFile instanceof EditorFileHandler) {
             ((EditorFileHandler) activeFile).componentActivated(componentActivationListener); // componentActivationService.getFileActivationListener(activeFile));
         }
+        componentActivationListener.updated(FileHandler.class, activeFile);
     }
 
     /**

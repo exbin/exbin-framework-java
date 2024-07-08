@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.action.api;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
@@ -30,6 +29,4 @@ public interface ActionManager extends ComponentActivationService, ComponentActi
     void registerAction(Action action);
 
     void initAction(Action action);
-
-    <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance);
 }

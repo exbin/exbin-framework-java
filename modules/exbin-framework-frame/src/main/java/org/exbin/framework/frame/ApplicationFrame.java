@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -62,7 +63,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     public ApplicationFrame() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         frameComponentActivationService = actionModule.createActionManager();
-                
+
         // TODO support for undecorated mode
         // setUndecorated(true);
         initComponents();
@@ -265,13 +266,47 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID, frameComponentActivationService);
+        actionModule.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID, new ComponentActivationService() {
+            @Override
+            public void registerListener(ComponentActivationListener listener) {
+                frameComponentActivationService.registerListener(listener);
+            }
+
+            @Override
+            public void requestUpdate() {
+                frameComponentActivationService.requestUpdate();
+            }
+
+            @Override
+            public void requestUpdate(Action action) {
+                frameComponentActivationService.registerAction(action);
+                frameComponentActivationService.initAction(action);
+                frameComponentActivationService.requestUpdate(action);
+            }
+        });
     }
 
     @Override
     public void loadMainToolBar() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID, frameComponentActivationService);
+        actionModule.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID, new ComponentActivationService() {
+            @Override
+            public void registerListener(ComponentActivationListener listener) {
+                frameComponentActivationService.registerListener(listener);
+            }
+
+            @Override
+            public void requestUpdate() {
+                frameComponentActivationService.requestUpdate();
+            }
+
+            @Override
+            public void requestUpdate(Action action) {
+                frameComponentActivationService.registerAction(action);
+                frameComponentActivationService.initAction(action);
+                frameComponentActivationService.requestUpdate(action);
+            }
+        });
     }
 
     @Override
@@ -309,7 +344,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     public void setApplicationExitHandler(ApplicationExitHandler exitHandler) {
         this.exitHandler = exitHandler;
     }
-    
+
     @Nonnull
     @Override
     public ComponentActivationListener getComponentActivationListener() {
@@ -322,7 +357,6 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
         return frameComponentActivationService;
     }
 
-    
 //    @Override
 //    public void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider) {
 //        this.windowHeaderDecorationProvider = windowHeaderDecorationProvider;

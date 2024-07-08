@@ -16,7 +16,6 @@
 package org.exbin.framework.action;
 
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -34,11 +32,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionToolBarContribution;
 import org.exbin.framework.action.api.ActionType;
-import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarContribution;
@@ -46,8 +42,6 @@ import org.exbin.framework.action.api.ToolBarGroup;
 import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.action.gui.DropDownButton;
 import org.exbin.framework.action.api.ComponentActivationService;
-import org.exbin.framework.action.api.ComponentActivationInstanceListener;
-import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.utils.ObjectUtils;
 
 /**
@@ -57,29 +51,6 @@ import org.exbin.framework.utils.ObjectUtils;
  */
 @ParametersAreNonnullByDefault
 public class ToolBarManager {
-
-    private final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
-    private final ComponentActivationManager componentActivationManager = new ComponentActivationManager() {
-        @Override
-        public <T> void registerListener(Class<T> instanceClass, ComponentActivationInstanceListener<T> listener) {
-            List<ComponentActivationInstanceListener<?>> listeners = activeComponentListeners.get(instanceClass);
-            if (listeners == null) {
-                listeners = new ArrayList<>();
-                activeComponentListeners.put(instanceClass, listeners);
-            }
-            listeners.add(listener);
-        }
-
-        @Override
-        public <U> void registerUpdateListener(Class<U> instanceClass, ComponentActivationInstanceListener<U> listener) {
-            registerListener(instanceClass, listener);
-        }
-
-        @Override
-        public <T> void updateActionsForComponent(Class<T> componentClass, T componentInstance) {
-            // TODO
-        }
-    };
 
     /**
      * Tool bar records: tool bar id -> tool bar definition.
@@ -157,23 +128,10 @@ public class ToolBarManager {
             }
         }
 
-        processToolBarGroup(groupRecords, targetToolBar);
-        activationUpdateService.registerListener(new ComponentActivationListener() {
-            @Override
-            @SuppressWarnings("unchecked")
-            public <T> void updated(Class<T> instanceClass, T instance) {
-                List<ComponentActivationInstanceListener<?>> instanceListeners = activeComponentListeners.get(instanceClass);
-                if (instanceListeners != null) {
-                    for (ComponentActivationInstanceListener instanceListener : instanceListeners) {
-                        instanceListener.update(instance);
-                    }
-                }
-            }
-        });
-        activationUpdateService.requestUpdate();
+        processToolBarGroup(groupRecords, targetToolBar, activationUpdateService);
     }
 
-    private void processToolBarGroup(List<ToolBarGroupRecord> groups, JToolBar targetToolBar) {
+    private void processToolBarGroup(List<ToolBarGroupRecord> groups, JToolBar targetToolBar, ComponentActivationService activationUpdateService) {
         List<ToolBarGroupRecordPathNode> processingPath = new LinkedList<>();
         processingPath.add(new ToolBarGroupRecordPathNode(groups));
 
@@ -252,7 +210,7 @@ public class ToolBarManager {
                     }
 
                     targetToolBar.add(toolBarItem);
-                    initToolbarAction(action);
+                    finishToolbarAction(action, activationUpdateService);
                 }
 
                 toolBarContinues = true;
@@ -268,10 +226,9 @@ public class ToolBarManager {
         }
     }
 
-    public void initToolbarAction(Action action) {
-        Object value = action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
-        if (value instanceof ActionActiveComponent) {
-            ((ActionActiveComponent) value).register(componentActivationManager);
+    public void finishToolbarAction(Action action, ComponentActivationService activationUpdateService) {
+        if (action != null) {
+            activationUpdateService.requestUpdate(action);
         }
     }
 
@@ -314,16 +271,6 @@ public class ToolBarManager {
 
         ActionToolBarContribution toolBarContribution = new ActionToolBarContribution(action, position);
         toolBarDef.getContributions().add(toolBarContribution);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
-        List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
-        if (componentListeners != null) {
-            for (ComponentActivationInstanceListener componentListener : componentListeners) {
-                componentListener.update(componentInstance);
-            }
-        }
     }
 
     @ParametersAreNonnullByDefault

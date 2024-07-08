@@ -16,7 +16,6 @@
 package org.exbin.framework.action;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,14 +32,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionMenuContribution;
 import org.exbin.framework.action.api.ActionMenuCreation;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.ComponentActivationInstanceListener;
-import org.exbin.framework.action.api.ComponentActivationListener;
-import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.DirectMenuContribution;
 import org.exbin.framework.action.api.MenuContribution;
@@ -59,29 +54,6 @@ import org.exbin.framework.utils.ObjectUtils;
  */
 @ParametersAreNonnullByDefault
 public class MenuManager {
-
-    private final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
-    private final ComponentActivationManager componentActivationManager = new ComponentActivationManager() {
-        @Override
-        public <T> void registerListener(Class<T> instanceClass, ComponentActivationInstanceListener<T> listener) {
-            List<ComponentActivationInstanceListener<?>> listeners = activeComponentListeners.get(instanceClass);
-            if (listeners == null) {
-                listeners = new ArrayList<>();
-                activeComponentListeners.put(instanceClass, listeners);
-            }
-            listeners.add(listener);
-        }
-
-        @Override
-        public <U> void registerUpdateListener(Class<U> instanceClass, ComponentActivationInstanceListener<U> listener) {
-            registerListener(instanceClass, listener);
-        }
-
-        @Override
-        public <T> void updateActionsForComponent(Class<T> componentClass, T componentInstance) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    };
 
     /**
      * Menu records: menu id -> menu definition.
@@ -206,18 +178,6 @@ public class MenuManager {
 
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
         processMenuGroup(groupRecords, beforeItem, afterItem, targetMenu, buttonGroups, menuId, activationUpdateService);
-        activationUpdateService.registerListener(new ComponentActivationListener() {
-            @Override
-            @SuppressWarnings("unchecked")
-            public <T> void updated(Class<T> instanceClass, T instance) {
-                List<ComponentActivationInstanceListener<?>> instanceListeners = activeComponentListeners.get(instanceClass);
-                if (instanceListeners != null) {
-                    for (ComponentActivationInstanceListener instanceListener : instanceListeners) {
-                        instanceListener.update(instance);
-                    }
-                }
-            }
-        });
     }
 
     private void processMenuGroup(List<MenuGroupRecord> groups, Map<String, List<MenuContribution>> beforeItem, Map<String, List<MenuContribution>> afterItem, final MenuTarget targetMenu, final Map<String, ButtonGroup> buttonGroups, String menuId, ComponentActivationService activationUpdateService) {
@@ -290,7 +250,7 @@ public class MenuManager {
                                 }
 
                                 targetMenu.add(menuItem);
-                                initMenuAction(action);
+                                finishMenuAction(action, activationUpdateService);
                             }
                         };
                     } else if (next.contribution instanceof SubMenuContribution) {
@@ -335,7 +295,7 @@ public class MenuManager {
                                 }
 
                                 targetMenu.add(subMenu);
-                                initMenuAction(action);
+                                finishMenuAction(action, activationUpdateService);
                             }
                         };
                     } else if (next.contribution instanceof DirectMenuContribution) {
@@ -379,7 +339,8 @@ public class MenuManager {
                                 }
 
                                 targetMenu.add(menuItem);
-                                initMenuAction(action);
+                                finishMenu(menuItem, activationUpdateService);
+                                finishMenuAction(action, activationUpdateService);
                             }
                         };
                     } else {
@@ -476,14 +437,25 @@ public class MenuManager {
         }
     }
 
-    private void initMenuAction(@Nullable Action action) {
-        if (action == null) {
-            return;
+    private void finishMenuAction(@Nullable Action action, ComponentActivationService activationUpdateService) {
+        if (action != null) {
+            activationUpdateService.requestUpdate(action);
         }
+    }
 
-        Object value = action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
-        if (value instanceof ActionActiveComponent) {
-            ((ActionActiveComponent) value).register(componentActivationManager);
+    private void finishMenu(JMenu menu, ComponentActivationService activationUpdateService) {
+        for (int i = 0; i < menu.getItemCount(); i++) {
+            JMenuItem menuItem = menu.getItem(i);
+            if (menuItem == null) {
+                continue;
+            }
+            Action action = menuItem.getAction();
+            if (action != null) {
+                finishMenuAction(action, activationUpdateService);
+            }
+            if (menuItem instanceof JMenu) {
+                finishMenu((JMenu) menuItem, activationUpdateService);
+            }
         }
     }
 

@@ -81,6 +81,7 @@ public class MultiEditorPanel extends javax.swing.JPanel {
 
     public void removeAllFileHandlers() {
         tabbedPane.removeAll();
+        changeActiveIndex(-1);
     }
 
     public void removeAllFileHandlersExceptFile(int index) {

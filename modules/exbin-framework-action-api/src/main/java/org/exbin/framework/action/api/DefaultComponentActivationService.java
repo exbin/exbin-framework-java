@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 
 /**
  * Service for action update.
@@ -38,14 +39,47 @@ public class DefaultComponentActivationService implements ComponentActivationSer
         listeners.add(listener);
     }
 
-    @Override
     @SuppressWarnings("unchecked")
+    @Override
     public void requestUpdate() {
         for (Map.Entry<Class<?>, Object> entry : activeComponentState.entrySet()) {
             Class key = entry.getKey();
             Object instance = entry.getValue();
             for (ComponentActivationListener listener : listeners) {
                 listener.updated(key, instance);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void requestUpdate(Action action) {
+        Object value = action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
+        Map<Class<?>, ComponentActivationInstanceListener<?>> actionListeners = new HashMap<>();
+        if (value instanceof ActionActiveComponent) {
+            ((ActionActiveComponent) value).register(new ComponentActivationManager() {
+                @Override
+                public <T> void registerListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+                    actionListeners.put(componentClass, listener);
+                }
+
+                @Override
+                public <T> void registerUpdateListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+                    registerListener(componentClass, listener);
+                }
+
+                @Override
+                public <T> void updateActionsForComponent(Class<T> componentClass, T componentInstance) {
+                }
+            });
+        }
+
+        for (Map.Entry<Class<?>, Object> entry : activeComponentState.entrySet()) {
+            Class key = entry.getKey();
+            Object instance = entry.getValue();
+            ComponentActivationInstanceListener listener = actionListeners.get(key);
+            if (listener != null) {
+                listener.update(instance);
             }
         }
     }
