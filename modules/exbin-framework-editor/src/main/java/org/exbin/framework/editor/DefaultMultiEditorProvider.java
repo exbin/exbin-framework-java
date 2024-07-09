@@ -52,6 +52,7 @@ import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.file.api.EditableFileHandler;
+import org.exbin.framework.file.api.FileOperations;
 
 /**
  * Default multi editor provider.
@@ -110,8 +111,6 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
             }
         });
 
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.getFrameHandler().getComponentActivationListener().updated(EditorProvider.class, this);
         activeFileChanged();
     }
 
@@ -131,6 +130,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
             ((EditorFileHandler) activeFile).componentActivated(componentActivationListener); // componentActivationService.getFileActivationListener(activeFile));
         }
         componentActivationListener.updated(FileHandler.class, activeFile);
+        componentActivationListener.updated(FileOperations.class, this);
     }
 
     /**

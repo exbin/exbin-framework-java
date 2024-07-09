@@ -70,6 +70,7 @@ public class DefaultComponentActivationService implements ComponentActivationSer
 
                 @Override
                 public <T> void updateActionsForComponent(Class<T> componentClass, T componentInstance) {
+                    updated(componentClass, componentInstance);
                 }
             });
         }
