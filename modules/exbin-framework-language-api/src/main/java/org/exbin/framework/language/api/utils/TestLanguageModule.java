@@ -23,7 +23,7 @@ import org.exbin.framework.language.api.*;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Test implementatio of language module.
+ * Test implementation of language module.
  *
  * @author ExBin Project (https://exbin.org)
  */
