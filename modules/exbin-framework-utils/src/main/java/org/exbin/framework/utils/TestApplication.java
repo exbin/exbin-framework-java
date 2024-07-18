@@ -16,11 +16,8 @@
 package org.exbin.framework.utils;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -40,58 +37,6 @@ public class TestApplication {
     private static final String MODULE_ID = "MODULE_ID";
     private static final String MODULE_FILE = "module.xml";
 
-    private final ResourceBundle emptyBundle = new ResourceBundle() {
-
-        @Override
-        protected Object handleGetObject(String key) {
-            return "";
-        }
-
-        @Override
-        public Enumeration<String> getKeys() {
-            return Collections.emptyEnumeration();
-        }
-    };
-/*
-    private final LanguageModuleApi languageModule = new LanguageModuleApi() {
-        @Override
-        public ResourceBundle getAppBundle() {
-            return emptyBundle;
-        }
-
-        @Override
-        public void setAppBundle(ResourceBundle appBundle) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public ResourceBundle getBundle(Class<?> targetClass) {
-            return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass));
-        }
-
-        @Override
-        public String getActionWithDialogText(String actionTitle) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public String getActionWithDialogText(ResourceBundle bundle, String key) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Nonnull
-        public String getResourceBaseNameBundleByClass(Class<?> targetClass) {
-            String classNamePath = getClassNamePath(targetClass);
-            int classNamePos = classNamePath.lastIndexOf("/");
-            return classNamePath.substring(0, classNamePos + 1) + "resources" + classNamePath.substring(classNamePos);
-        }
-
-        @Nonnull
-        public String getClassNamePath(Class<?> targetClass) {
-            return targetClass.getCanonicalName().replace(".", "/");
-        }
-    };
-*/
     private final Map<String, Module> modules = new HashMap<>();
 
     TestApplication() {

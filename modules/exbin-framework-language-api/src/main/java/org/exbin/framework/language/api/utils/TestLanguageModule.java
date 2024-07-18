@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.language.api.utils;
 
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -31,6 +33,19 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class TestLanguageModule implements LanguageModuleApi {
 
     private ResourceBundle appBundle;
+
+    private final ResourceBundle emptyBundle = new ResourceBundle() {
+
+        @Override
+        protected Object handleGetObject(String key) {
+            return "";
+        }
+
+        @Override
+        public Enumeration<String> getKeys() {
+            return Collections.emptyEnumeration();
+        }
+    };
 
     @Nonnull
     @Override
