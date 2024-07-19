@@ -19,6 +19,11 @@ import java.net.URL;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.MenuPosition;
+import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.addon.manager.action.AddonManagerAction;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 
@@ -30,31 +35,24 @@ import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonManagerModule implements AddonManagerModuleApi {
 
-    private AddonManagerAction addonManagerAction;
-
-    private URL checkUpdateUrl;
-    private URL downloadUrl;
-
 //    private CheckForUpdateService checkForUpdateService;
 
     public AddonManagerModule() {
     }
 
     @Nonnull
-    public Action getCheckUpdateAction() {
-        if (addonManagerAction == null) {
-            addonManagerAction = new AddonManagerAction();
-        }
-
-        return addonManagerAction;
-    }
-/*
     @Override
-    public void registerDefaultMenuItem() {
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(WindowModuleApi.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
+    public Action createAddonManagerAction() {
+        return new AddonManagerAction();
     }
 
+    @Override
+    public void registerAddonManagerMenuItem() {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createAddonManagerAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
+    }
+
+    /*
     @Override
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
@@ -105,5 +103,5 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     public URL getUpdateUrl() {
         return checkUpdateUrl;
     }
-*/
+     */
 }

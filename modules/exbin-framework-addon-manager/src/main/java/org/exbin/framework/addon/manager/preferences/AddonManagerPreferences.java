@@ -19,18 +19,18 @@ import org.exbin.framework.preferences.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Check for update on start preferences.
+ * Addon manager preferences.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CheckForUpdatePreferences {
+public class AddonManagerPreferences {
 
     public static final String PREFERENCES_CHECK_FOR_UPDATE_ON_START = "start.checkForUpdate";
 
     private final Preferences preferences;
 
-    public CheckForUpdatePreferences(Preferences preferences) {
+    public AddonManagerPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
 

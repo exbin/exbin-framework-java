@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.addon.manager.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
@@ -29,4 +31,8 @@ public interface AddonManagerModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(AddonManagerModuleApi.class);
 
+    @Nonnull
+    Action createAddonManagerAction();
+
+    void registerAddonManagerMenuItem();
 }

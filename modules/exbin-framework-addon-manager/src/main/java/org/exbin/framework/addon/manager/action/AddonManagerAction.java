@@ -37,7 +37,7 @@ import org.exbin.framework.addon.manager.service.AddonCatalogService;
 @ParametersAreNonnullByDefault
 public class AddonManagerAction extends AbstractAction {
 
-    public static final String ACTION_ID = "checkUpdateAction";
+    public static final String ACTION_ID = "addonManagerAction";
 
     private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerAction.class);
 
