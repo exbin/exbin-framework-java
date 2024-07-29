@@ -34,20 +34,14 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonManagerPanel extends javax.swing.JPanel implements HyperlinkListener {
+public class AddonsPanel extends javax.swing.JPanel implements HyperlinkListener {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsPanel.class);
     private AddonCatalogService addonCatalogService;
     private Controller controller;
-    private PacksPanel packsPanel = new PacksPanel();
-    private AddonsPanel addonsPanel = new AddonsPanel();
-    private AddonsPanel installedPanel = new AddonsPanel();
 
-    public AddonManagerPanel() {
+    public AddonsPanel() {
         initComponents();
-        tabbedPane.add("Packs", packsPanel);
-        tabbedPane.add("Addons", addonsPanel);
-        tabbedPane.add("Installed", installedPanel);
     }
 
     @Nonnull
@@ -80,10 +74,10 @@ public class AddonManagerPanel extends javax.swing.JPanel implements HyperlinkLi
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tabbedPane = new javax.swing.JTabbedPane();
+        splitPane = new javax.swing.JSplitPane();
 
         setLayout(new java.awt.BorderLayout());
-        add(tabbedPane, java.awt.BorderLayout.CENTER);
+        add(splitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -95,12 +89,12 @@ public class AddonManagerPanel extends javax.swing.JPanel implements HyperlinkLi
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
             testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new AddonManagerPanel());
+            WindowUtils.invokeWindow(new AddonsPanel());
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JSplitPane splitPane;
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {
