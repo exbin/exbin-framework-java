@@ -18,6 +18,7 @@ package org.exbin.framework.addon.manager.gui;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.App;
@@ -39,9 +40,13 @@ public class PacksPanel extends javax.swing.JPanel implements HyperlinkListener 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(PacksPanel.class);
     private AddonCatalogService addonCatalogService;
     private Controller controller;
+    private FilterListPanel filterListPanel = new FilterListPanel();
+    private JComponent activeComponent;
 
     public PacksPanel() {
         initComponents();
+        splitPane.setLeftComponent(filterListPanel);
+        activeComponent = noItemSelectedLabel;
     }
 
     @Nonnull
@@ -75,8 +80,20 @@ public class PacksPanel extends javax.swing.JPanel implements HyperlinkListener 
     private void initComponents() {
 
         splitPane = new javax.swing.JSplitPane();
+        infoPanel = new javax.swing.JPanel();
+        noItemSelectedLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
+
+        infoPanel.setLayout(new java.awt.BorderLayout());
+
+        noItemSelectedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        noItemSelectedLabel.setText(resourceBundle.getString("noItemSelectedLabel.text")); // NOI18N
+        noItemSelectedLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        infoPanel.add(noItemSelectedLabel, java.awt.BorderLayout.CENTER);
+
+        splitPane.setRightComponent(infoPanel);
+
         add(splitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -94,6 +111,8 @@ public class PacksPanel extends javax.swing.JPanel implements HyperlinkListener 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel infoPanel;
+    private javax.swing.JLabel noItemSelectedLabel;
     private javax.swing.JSplitPane splitPane;
     // End of variables declaration//GEN-END:variables
 

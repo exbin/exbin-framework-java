@@ -30,7 +30,7 @@ import javax.swing.ImageIcon;
 public class AddonRecord {
 
     private String name;
-    private ImageIcon addonIcon;
+    private ImageIcon icon;
 
     public AddonRecord(String name) {
         this.name = name;
@@ -45,12 +45,12 @@ public class AddonRecord {
         this.name = name;
     }
 
-    public Optional<ImageIcon> getAddonIcon() {
-        return Optional.ofNullable(addonIcon);
+    public Optional<ImageIcon> getIcon() {
+        return Optional.ofNullable(icon);
     }
 
-    public void setAddonIcon(@Nullable ImageIcon addonIcon) {
-        this.addonIcon = addonIcon;
+    public void setIcon(@Nullable ImageIcon icon) {
+        this.icon = icon;
     }
 
 }

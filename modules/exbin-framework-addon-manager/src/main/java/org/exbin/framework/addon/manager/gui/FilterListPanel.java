@@ -15,9 +15,12 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.awt.Component;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.App;
@@ -43,6 +46,37 @@ public class FilterListPanel extends javax.swing.JPanel implements HyperlinkList
 
     public FilterListPanel() {
         initComponents();
+        itemsList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                DefaultListCellRenderer renderer = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                AddonRecord record = (AddonRecord) value;
+                renderer.setText(record.getName());
+                renderer.setIcon(record.getIcon().orElse(null));
+                return renderer;
+            }
+        });
+/*        itemsList.addListSelectionListener((event) -> {
+            int index = itemsList.getSelectedIndex();
+
+            JComponent targetComponent;
+            AddonRecord record = null;
+            if (index >= 0) {
+                record = itemsList.getModel().getElementAt(index);
+                targetComponent = record.getComponent();
+            } else {
+                targetComponent = noItemSelectedLabel;
+            }
+
+            if (activeComponent != targetComponent) {
+                gameInfoPanel.remove(activeComponent);
+                gameInfoPanel.add(targetComponent, BorderLayout.CENTER);
+                activeComponent = targetComponent;
+                gameInfoPanel.revalidate();
+                gameInfoPanel.repaint();
+                updateState();
+            }
+        }); */
     }
 
     @Nonnull
@@ -75,35 +109,37 @@ public class FilterListPanel extends javax.swing.JPanel implements HyperlinkList
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        gamesListScrollPane = new javax.swing.JScrollPane();
-        gamesList = new javax.swing.JList<>();
-        filterTextField = new javax.swing.JTextField();
         filterLabel = new javax.swing.JLabel();
+        filterTextField = new javax.swing.JTextField();
+        itemsListScrollPane = new javax.swing.JScrollPane();
+        itemsList = new javax.swing.JList<>();
 
-        gamesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        gamesListScrollPane.setViewportView(gamesList);
+        filterLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/16x16/view-filter.png"))); // NOI18N
 
         filterTextField.setEditable(false);
+
+        itemsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        itemsListScrollPane.setViewportView(itemsList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 104, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(filterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(filterTextField))
-                        .addComponent(gamesListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
+                        .addComponent(itemsListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 57, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
@@ -111,7 +147,7 @@ public class FilterListPanel extends javax.swing.JPanel implements HyperlinkList
                         .addComponent(filterTextField)
                         .addComponent(filterLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(gamesListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+                    .addComponent(itemsListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
                     .addContainerGap()))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -132,8 +168,8 @@ public class FilterListPanel extends javax.swing.JPanel implements HyperlinkList
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
     private javax.swing.JTextField filterTextField;
-    private javax.swing.JList<AddonRecord> gamesList;
-    private javax.swing.JScrollPane gamesListScrollPane;
+    private javax.swing.JList<AddonRecord> itemsList;
+    private javax.swing.JScrollPane itemsListScrollPane;
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {

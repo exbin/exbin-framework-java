@@ -45,9 +45,9 @@ public class AddonManagerPanel extends javax.swing.JPanel implements HyperlinkLi
 
     public AddonManagerPanel() {
         initComponents();
-        tabbedPane.add("Packs", packsPanel);
-        tabbedPane.add("Addons", addonsPanel);
-        tabbedPane.add("Installed", installedPanel);
+        tabbedPane.add(resourceBundle.getString("packsTab.title"), packsPanel);
+        tabbedPane.add(resourceBundle.getString("addonsTab.title"), addonsPanel);
+        tabbedPane.add(resourceBundle.getString("installedTab.title"), installedPanel);
     }
 
     @Nonnull
