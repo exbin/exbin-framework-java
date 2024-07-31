@@ -15,51 +15,54 @@
  */
 package org.exbin.framework.addon.manager.model;
 
-import java.util.List;
-import java.util.ArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Addon record.
+ * Addon dependency record.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonRecord extends ItemRecord {
+public class DependencyRecord {
 
-    private String description = "";
-    private RepositoryRecord repository;
-    private List<DependencyRecord> dependencies = new ArrayList<>();
+    private String id;
+    private Type type;
+    private boolean required = true;
 
-    public AddonRecord(String id, String name) {
-        super(id, name);
+    public DependencyRecord(String id) {
+        this.id = id;
     }
 
     @Nonnull
-    public String getDescription() {
-        return description;
+    public String getId() {
+        return id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Nonnull
-    public RepositoryRecord getRepository() {
-        return repository;
-    }
-
-    public void setRepository(RepositoryRecord repository) {
-        this.repository = repository;
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Nonnull
-    public List<DependencyRecord> getDependencies() {
-        return dependencies;
+    public Type getType() {
+        return type;
     }
 
-    public void setDependencies(List<DependencyRecord> dependencies) {
-        this.dependencies = dependencies;
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+    
+    public enum Type {
+        MODULE,
+        LIBRARY,
+        ADDON
     }
 }

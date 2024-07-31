@@ -24,7 +24,7 @@ import javax.swing.JList;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -50,7 +50,7 @@ public class FilterListPanel extends javax.swing.JPanel implements HyperlinkList
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 DefaultListCellRenderer renderer = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                AddonRecord record = (AddonRecord) value;
+                ItemRecord record = (ItemRecord) value;
                 renderer.setText(record.getName());
                 renderer.setIcon(record.getIcon().orElse(null));
                 return renderer;
@@ -60,7 +60,7 @@ public class FilterListPanel extends javax.swing.JPanel implements HyperlinkList
             int index = itemsList.getSelectedIndex();
 
             JComponent targetComponent;
-            AddonRecord record = null;
+            ItemRecord record = null;
             if (index >= 0) {
                 record = itemsList.getModel().getElementAt(index);
                 targetComponent = record.getComponent();
@@ -168,7 +168,7 @@ public class FilterListPanel extends javax.swing.JPanel implements HyperlinkList
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
     private javax.swing.JTextField filterTextField;
-    private javax.swing.JList<AddonRecord> itemsList;
+    private javax.swing.JList<ItemRecord> itemsList;
     private javax.swing.JScrollPane itemsListScrollPane;
     // End of variables declaration//GEN-END:variables
 

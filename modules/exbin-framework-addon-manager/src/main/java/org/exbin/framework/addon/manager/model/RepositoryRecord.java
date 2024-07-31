@@ -15,51 +15,51 @@
  */
 package org.exbin.framework.addon.manager.model;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.net.URL;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Addon record.
+ * Addon repository record.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonRecord extends ItemRecord {
+public class RepositoryRecord {
 
-    private String description = "";
-    private RepositoryRecord repository;
-    private List<DependencyRecord> dependencies = new ArrayList<>();
+    private String id;
+    private String name;
+    private URL repositoryUrl = null;
 
-    public AddonRecord(String id, String name) {
-        super(id, name);
+    public RepositoryRecord(String id) {
+        this.id = id;
     }
 
     @Nonnull
-    public String getDescription() {
-        return description;
+    public String getId() {
+        return id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Nonnull
-    public RepositoryRecord getRepository() {
-        return repository;
+    public Optional<URL> getRepositoryUrl() {
+        return Optional.ofNullable(repositoryUrl);
     }
 
-    public void setRepository(RepositoryRecord repository) {
-        this.repository = repository;
-    }
-
-    @Nonnull
-    public List<DependencyRecord> getDependencies() {
-        return dependencies;
-    }
-
-    public void setDependencies(List<DependencyRecord> dependencies) {
-        this.dependencies = dependencies;
+    public void setRepositoryUrl(@Nullable URL repositoryUrl) {
+        this.repositoryUrl = repositoryUrl;
     }
 }
