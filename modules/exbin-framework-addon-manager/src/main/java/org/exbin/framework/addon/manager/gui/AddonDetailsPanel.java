@@ -18,10 +18,7 @@ package org.exbin.framework.addon.manager.gui;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.App;
-import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -34,7 +31,7 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonDetailsPanel extends javax.swing.JPanel implements HyperlinkListener {
+public class AddonDetailsPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonDetailsPanel.class);
     private AddonCatalogService addonCatalogService;
@@ -51,18 +48,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel implements HyperlinkLi
 
     public void setController(Controller control) {
         this.controller = control;
-    }
-
-    /**
-     * Opens hyperlink in external browser.
-     *
-     * @param event hyperlink event
-     */
-    @Override
-    public void hyperlinkUpdate(HyperlinkEvent event) {
-        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            DesktopUtils.openDesktopURL(event.getURL().toExternalForm());
-        }
     }
 
     /**
@@ -99,7 +84,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel implements HyperlinkLi
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(169, Short.MAX_VALUE)
+                .addContainerGap(195, Short.MAX_VALUE)
                 .addComponent(enableButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(installButton)
@@ -122,7 +107,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel implements HyperlinkLi
 
         providerLabel.setText("Addon Provider");
 
-        homepageLinkLabel.setText("Homepage link");
+        homepageLinkLabel.setText("<html><body><a href=\"\">Homepage link</a></body></html>");
 
         versionLabel.setText("Version");
 
@@ -154,14 +139,14 @@ public class AddonDetailsPanel extends javax.swing.JPanel implements HyperlinkLi
             .addGroup(infoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
                     .addGroup(infoPanelLayout.createSequentialGroup()
                         .addComponent(addonNameLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(infoPanelLayout.createSequentialGroup()
-                        .addComponent(providerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                        .addComponent(providerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(homepageLinkLabel)
+                        .addComponent(homepageLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(versionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -173,11 +158,11 @@ public class AddonDetailsPanel extends javax.swing.JPanel implements HyperlinkLi
                 .addComponent(addonNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(homepageLinkLabel)
+                    .addComponent(homepageLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(versionLabel)
                     .addComponent(providerLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

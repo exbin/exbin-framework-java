@@ -19,10 +19,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import org.exbin.framework.App;
-import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -35,7 +32,7 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonsPanel extends javax.swing.JPanel implements HyperlinkListener {
+public class AddonsPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsPanel.class);
     private AddonCatalogService addonCatalogService;
@@ -56,18 +53,6 @@ public class AddonsPanel extends javax.swing.JPanel implements HyperlinkListener
 
     public void setController(Controller control) {
         this.controller = control;
-    }
-
-    /**
-     * Opens hyperlink in external browser.
-     *
-     * @param event hyperlink event
-     */
-    @Override
-    public void hyperlinkUpdate(HyperlinkEvent event) {
-        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            DesktopUtils.openDesktopURL(event.getURL().toExternalForm());
-        }
     }
 
     /**

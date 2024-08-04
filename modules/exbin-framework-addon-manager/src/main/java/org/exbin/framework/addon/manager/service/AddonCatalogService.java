@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.addon.manager.service;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.addon.manager.model.AddonRecord;
 
 /**
  * Addon catalog service.
@@ -25,4 +27,17 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface AddonCatalogService {
 
+    @Nonnull
+    AddonsListResult getAddons(String searchCondition);
+    
+    @Nonnull
+    AddonsListResult searchForAddons(String searchCondition);
+    
+    public interface AddonsListResult {
+        
+        int resultCount();
+        
+        @Nonnull
+        AddonRecord getLazyResult(int index);
+    }
 }
