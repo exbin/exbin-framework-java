@@ -28,16 +28,13 @@ import org.exbin.framework.addon.manager.model.AddonRecord;
 public interface AddonCatalogService {
 
     @Nonnull
-    AddonsListResult getAddons(String searchCondition);
-    
-    @Nonnull
     AddonsListResult searchForAddons(String searchCondition);
     
     public interface AddonsListResult {
         
-        int resultCount();
+        int itemsCount();
         
         @Nonnull
-        AddonRecord getLazyResult(int index);
+        AddonRecord getLazyItem(int index);
     }
 }

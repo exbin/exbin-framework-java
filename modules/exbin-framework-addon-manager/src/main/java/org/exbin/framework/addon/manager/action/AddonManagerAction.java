@@ -28,6 +28,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.CloseControlPanel;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 
 /**
  * Addon manager action.
@@ -51,12 +52,17 @@ public class AddonManagerAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        
+        addonManagerService = new AddonCatalogServiceImpl();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
+        addonManagerPanel.setAddonCatalogService(addonManagerService);
+        
+        
         CloseControlPanel controlPanel = new CloseControlPanel();
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());

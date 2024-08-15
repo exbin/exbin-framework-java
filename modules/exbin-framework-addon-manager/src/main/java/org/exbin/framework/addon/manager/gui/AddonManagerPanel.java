@@ -56,6 +56,13 @@ public class AddonManagerPanel extends javax.swing.JPanel {
         this.controller = control;
     }
 
+    public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
+        this.addonCatalogService = addonCatalogService;
+        packsPanel.setAddonCatalogService(addonCatalogService);
+        addonsPanel.setAddonCatalogService(addonCatalogService);
+        installedPanel.setAddonCatalogService(addonCatalogService);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

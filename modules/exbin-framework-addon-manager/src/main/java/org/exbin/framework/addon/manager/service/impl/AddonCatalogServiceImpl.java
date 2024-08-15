@@ -17,6 +17,7 @@ package org.exbin.framework.addon.manager.service.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 
 /**
@@ -29,14 +30,18 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
 
     @Nonnull
     @Override
-    public AddonsListResult getAddons(String searchCondition) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Nonnull
-    @Override
     public AddonsListResult searchForAddons(String searchCondition) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        return new AddonsListResult() {
+            @Override
+            public int itemsCount() {
+                return 0;
+            }
 
+            @Nonnull
+            @Override
+            public AddonRecord getLazyItem(int index) {
+                throw new IndexOutOfBoundsException();
+            }
+        };
+    }
 }
