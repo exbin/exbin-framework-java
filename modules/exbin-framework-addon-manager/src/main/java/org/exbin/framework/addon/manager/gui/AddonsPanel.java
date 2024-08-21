@@ -74,6 +74,8 @@ public class AddonsPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        splitPane.setDividerLocation(250);
+
         infoPanel.setLayout(new java.awt.BorderLayout());
 
         noItemSelectedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

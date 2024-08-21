@@ -45,6 +45,8 @@ public class AddonManagerPanel extends javax.swing.JPanel {
         tabbedPane.add(resourceBundle.getString("packsTab.title"), packsPanel);
         tabbedPane.add(resourceBundle.getString("addonsTab.title"), addonsPanel);
         tabbedPane.add(resourceBundle.getString("installedTab.title"), installedPanel);
+        tabbedPane.revalidate();
+        tabbedPane.repaint();
     }
 
     @Nonnull
