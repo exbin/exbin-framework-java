@@ -31,6 +31,7 @@ public class ItemRecord {
 
     private String id;
     private String name;
+    private String version = "";
     private boolean enabled = true;
     private ImageIcon icon;
 
@@ -57,6 +58,15 @@ public class ItemRecord {
         this.name = name;
     }
 
+    @Nonnull
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -65,6 +75,7 @@ public class ItemRecord {
         this.enabled = enabled;
     }
 
+    @Nonnull
     public Optional<ImageIcon> getIcon() {
         return Optional.ofNullable(icon);
     }

@@ -16,16 +16,18 @@
 package org.exbin.framework.addon.manager.gui;
 
 import java.awt.Component;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
@@ -38,7 +40,6 @@ import org.exbin.framework.utils.UtilsModule;
 public class FilterListPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FilterListPanel.class);
-    private AddonCatalogService addonCatalogService;
     private Controller controller;
 
     public FilterListPanel() {
@@ -53,27 +54,16 @@ public class FilterListPanel extends javax.swing.JPanel {
                 return renderer;
             }
         });
-/*        itemsList.addListSelectionListener((event) -> {
-            int index = itemsList.getSelectedIndex();
-
-            JComponent targetComponent;
-            ItemRecord record = null;
-            if (index >= 0) {
-                record = itemsList.getModel().getElementAt(index);
-                targetComponent = record.getComponent();
-            } else {
-                targetComponent = noItemSelectedLabel;
+        itemsList.addListSelectionListener((event) -> {
+            if (controller != null) {
+                int index = itemsList.getSelectedIndex();
+                if (index >= 0) {
+                    controller.notifyItemSelected(itemsList.getModel().getElementAt(index));
+                } else {
+                    controller.notifyItemSelected(null);
+                }
             }
-
-            if (activeComponent != targetComponent) {
-                gameInfoPanel.remove(activeComponent);
-                gameInfoPanel.add(targetComponent, BorderLayout.CENTER);
-                activeComponent = targetComponent;
-                gameInfoPanel.revalidate();
-                gameInfoPanel.repaint();
-                updateState();
-            }
-        }); */
+        });
     }
 
     @Nonnull
@@ -81,8 +71,13 @@ public class FilterListPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    public void setController(Controller control) {
-        this.controller = control;
+    public void setController(Controller controller) {
+        this.controller = controller;
+        DefaultListModel<ItemRecord> listModel = new DefaultListModel<>();
+        for (ItemRecord item : controller.getItems()) {
+            listModel.addElement(item);
+        }
+        itemsList.setModel(listModel);
     }
 
     /**
@@ -159,5 +154,9 @@ public class FilterListPanel extends javax.swing.JPanel {
 
     public interface Controller {
 
+        @Nonnull
+        List<ItemRecord> getItems();
+
+        void notifyItemSelected(@Nullable ItemRecord itemRecord);
     }
 }

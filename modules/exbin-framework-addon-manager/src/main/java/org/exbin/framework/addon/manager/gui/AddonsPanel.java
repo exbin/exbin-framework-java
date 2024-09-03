@@ -15,19 +15,21 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.awt.BorderLayout;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
 /**
- * Addon manager panel.
+ * Addons list with details panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -35,15 +37,14 @@ import org.exbin.framework.utils.UtilsModule;
 public class AddonsPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsPanel.class);
-    private AddonCatalogService addonCatalogService;
     private Controller controller;
     private FilterListPanel filterListPanel = new FilterListPanel();
-    private JComponent activeComponent;
+    private ItemRecord activeRecord;
+    private AddonDetailsPanel addonDetailsPanel = new AddonDetailsPanel();
 
     public AddonsPanel() {
         initComponents();
         splitPane.setLeftComponent(filterListPanel);
-        activeComponent = noItemSelectedLabel;
     }
 
     @Nonnull
@@ -51,12 +52,36 @@ public class AddonsPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    public void setController(Controller control) {
-        this.controller = control;
-    }
+    public void setController(Controller controller) {
+        this.controller = controller;
+        filterListPanel.setController(new FilterListPanel.Controller() {
+            @Nonnull
+            @Override
+            public List<ItemRecord> getItems() {
+                return controller.getItems();
+            }
 
-    public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
-        this.addonCatalogService = addonCatalogService;
+            @Override
+            public void notifyItemSelected(@Nullable ItemRecord itemRecord) {
+                if (activeRecord != itemRecord) {
+                    if (activeRecord == null) {
+                        infoPanel.remove(noItemSelectedLabel);
+                        addonDetailsPanel.setRecord(itemRecord);
+                        infoPanel.add(addonDetailsPanel, BorderLayout.CENTER);
+                        infoPanel.revalidate();
+                        infoPanel.repaint();
+                    } else if (itemRecord == null) {
+                        infoPanel.remove(addonDetailsPanel);
+                        infoPanel.add(noItemSelectedLabel, BorderLayout.CENTER);
+                        infoPanel.revalidate();
+                        infoPanel.repaint();
+                    } else {
+                        addonDetailsPanel.setRecord(itemRecord);
+                    }
+                    activeRecord = itemRecord;
+                }
+            }
+        });
     }
 
     /**
@@ -109,5 +134,7 @@ public class AddonsPanel extends javax.swing.JPanel {
 
     public interface Controller {
 
+        @Nonnull
+        List<ItemRecord> getItems();
     }
 }

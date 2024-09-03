@@ -15,13 +15,19 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.ModuleProvider;
+import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.basic.BasicModuleProvider;
+import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
@@ -54,15 +60,30 @@ public class AddonManagerPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    public void setController(Controller control) {
-        this.controller = control;
+    public void setController(Controller controller) {
+        this.controller = controller;
+        installedPanel.setController(new AddonsPanel.Controller() {
+            @Nonnull
+            @Override
+            public List<ItemRecord> getItems() {
+                List<ItemRecord> installedAddons = new ArrayList<>();
+                ModuleProvider moduleProvider = App.getModuleProvider();
+                if (moduleProvider instanceof BasicModuleProvider) {
+                    List<ModuleRecord> modulesList = ((BasicModuleProvider) moduleProvider).getModulesList();
+                    for (ModuleRecord moduleRecord : modulesList) {
+                        ItemRecord itemRecord = new ItemRecord(moduleRecord.getModuleId(), moduleRecord.getName());
+                        // itemRecord.setDescription(moduleRecord.getDescription());
+                        installedAddons.add(itemRecord);
+                    }
+                }
+                return installedAddons;
+            }
+        });
     }
 
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
         this.addonCatalogService = addonCatalogService;
         packsPanel.setAddonCatalogService(addonCatalogService);
-        addonsPanel.setAddonCatalogService(addonCatalogService);
-        installedPanel.setAddonCatalogService(addonCatalogService);
     }
 
     /**
@@ -98,6 +119,8 @@ public class AddonManagerPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {
+        @Nonnull
+        List<ItemRecord> getInstalledItems();
 
     }
 }

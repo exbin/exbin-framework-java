@@ -191,6 +191,10 @@ public class BasicModuleProvider implements ModuleProvider {
                         Node node = childModuleNode.item(i);
                         if ("id".equals(node.getNodeName())) {
                             moduleRecord.setModuleId(node.getTextContent());
+                        } else if ("name".equals(node.getNodeName())) {
+                            moduleRecord.setName(node.getTextContent());
+                        } else if ("description".equals(node.getNodeName())) {
+                            moduleRecord.setDescription(node.getTextContent());
                             break;
                         }
                     }

@@ -17,6 +17,7 @@ package org.exbin.framework.addon.manager.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
@@ -24,6 +25,7 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
+import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.CloseControlPanel;
@@ -61,6 +63,12 @@ public class AddonManagerAction extends AbstractAction {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
         addonManagerPanel.setAddonCatalogService(addonManagerService);
+        addonManagerPanel.setController(new AddonManagerPanel.Controller() {
+            @Override
+            public List<ItemRecord> getInstalledItems() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
         
         
         CloseControlPanel controlPanel = new CloseControlPanel();

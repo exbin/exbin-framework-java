@@ -19,9 +19,9 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
@@ -34,7 +34,6 @@ import org.exbin.framework.utils.UtilsModule;
 public class AddonDetailsPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonDetailsPanel.class);
-    private AddonCatalogService addonCatalogService;
     private Controller controller;
 
     public AddonDetailsPanel() {
@@ -48,6 +47,11 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
     public void setController(Controller control) {
         this.controller = control;
+    }
+
+    public void setRecord(ItemRecord itemRecord) {
+        addonNameLabel.setText(itemRecord.getName());
+        versionLabel.setText(itemRecord.getVersion());
     }
 
     /**

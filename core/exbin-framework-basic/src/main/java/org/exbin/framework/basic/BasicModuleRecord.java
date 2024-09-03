@@ -52,6 +52,10 @@ public class BasicModuleRecord implements ModuleRecord {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Nonnull
     public ClassLoader getClassLoader() {
         if (classLoader == null) {
@@ -68,6 +72,10 @@ public class BasicModuleRecord implements ModuleRecord {
     @Override
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Nonnull

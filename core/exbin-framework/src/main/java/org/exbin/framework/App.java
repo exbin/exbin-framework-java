@@ -15,6 +15,7 @@
  */
 package org.exbin.framework;
 
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -55,5 +56,10 @@ public final class App {
         }
 
         App.moduleProvider = moduleProvider;
+    }
+
+    @Nonnull
+    public static ModuleProvider getModuleProvider() {
+        return Objects.requireNonNull(moduleProvider);
     }
 }
