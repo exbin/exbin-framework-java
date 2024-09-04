@@ -115,6 +115,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
         versionLabel.setText("Version");
 
+        overviewTextArea.setEditable(false);
         overviewTextArea.setColumns(20);
         overviewTextArea.setRows(5);
         overviewScrollPane.setViewportView(overviewTextArea);
