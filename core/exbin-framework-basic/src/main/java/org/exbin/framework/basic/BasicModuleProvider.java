@@ -167,17 +167,34 @@ public class BasicModuleProvider implements ModuleProvider {
      * @param libraryUri library URI
      */
     private void addModulePlugin(URI libraryUri, boolean loadClass) {
-        URL moduleRecordUrl;
+        final BasicModuleRecord moduleRecord = new BasicModuleRecord();
+        moduleRecord.setClassLoader(contextClassLoader);
+
+        URL moduleRecordUrl = null;
         InputStream moduleRecordStream = null;
         try {
             moduleRecordUrl = new URL("jar:" + libraryUri.toURL().toExternalForm() + "!/META-INF/" + MODULE_FILE);
             moduleRecordStream = moduleRecordUrl.openStream();
+
+            // TODO Don't guess it from file name
+            String fileName = libraryUri.toURL().getFile();
+            if (fileName.endsWith(".jar")) {
+                int lastIndex = fileName.lastIndexOf("-");
+                if (lastIndex > 0) {
+                    if (fileName.length() > lastIndex + 9 && "SNAPSHOT".equals(fileName.substring(lastIndex + 1, lastIndex + 9))) {
+                        int prevIndex = fileName.lastIndexOf("-", lastIndex - 1);
+                        if (prevIndex > 0) {
+                            moduleRecord.setVersion(fileName.substring(prevIndex + 1, fileName.length() - 4));
+                        }
+                    } else {
+                        moduleRecord.setVersion(fileName.substring(lastIndex + 1, fileName.length() - 4));
+                    }
+                }
+            }
         } catch (IOException ex) {
             // ignore
         }
 
-        final BasicModuleRecord moduleRecord = new BasicModuleRecord();
-        moduleRecord.setClassLoader(contextClassLoader);
         if (moduleRecordStream != null) {
             try {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();

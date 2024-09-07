@@ -33,6 +33,14 @@ public interface ModuleRecord {
     String getName();
 
     /**
+     * Returns module version.
+     *
+     * @return module version
+     */
+    @Nonnull
+    String getVersion();
+
+    /**
      * Returns module description.
      *
      * @return description text

@@ -52,6 +52,8 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     public void setRecord(ItemRecord itemRecord) {
         addonNameLabel.setText(itemRecord.getName());
         versionLabel.setText(itemRecord.getVersion());
+        String description = itemRecord.getDescription().orElse("");
+        overviewTextPane.setText("<html><body>id: " + itemRecord.getId() + "<br/>" + description + "</body></html>");
     }
 
     /**
@@ -73,7 +75,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         versionLabel = new javax.swing.JLabel();
         tabbedPane = new javax.swing.JTabbedPane();
         overviewScrollPane = new javax.swing.JScrollPane();
-        overviewTextArea = new javax.swing.JTextArea();
+        overviewTextPane = new javax.swing.JTextPane();
         depenciesScrollPane = new javax.swing.JScrollPane();
         depenciesTable = new javax.swing.JTable();
 
@@ -109,16 +111,16 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         addonNameLabel.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         addonNameLabel.setText("Addon Name");
 
+        providerLabel.setFont(providerLabel.getFont().deriveFont((providerLabel.getFont().getStyle() & ~java.awt.Font.ITALIC) & ~java.awt.Font.BOLD));
         providerLabel.setText("Addon Provider");
 
         homepageLinkLabel.setText("<html><body><a href=\"\">Homepage link</a></body></html>");
 
         versionLabel.setText("Version");
 
-        overviewTextArea.setEditable(false);
-        overviewTextArea.setColumns(20);
-        overviewTextArea.setRows(5);
-        overviewScrollPane.setViewportView(overviewTextArea);
+        overviewTextPane.setContentType("text/html"); // NOI18N
+        overviewTextPane.setText("<html>\n  <head>\n\n  </head>\n  <body>\n    <p style=\"margin-top: 0\">\n      Test\n    </p>\n  </body>\n</html>\n");
+        overviewScrollPane.setViewportView(overviewTextPane);
 
         tabbedPane.addTab("Overview", overviewScrollPane);
 
@@ -197,7 +199,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JPanel infoPanel;
     private javax.swing.JButton installButton;
     private javax.swing.JScrollPane overviewScrollPane;
-    private javax.swing.JTextArea overviewTextArea;
+    private javax.swing.JTextPane overviewTextPane;
     private javax.swing.JLabel providerLabel;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JLabel versionLabel;

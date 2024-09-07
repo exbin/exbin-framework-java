@@ -17,7 +17,9 @@ package org.exbin.framework.addon.manager.model;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -28,7 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class AddonRecord extends ItemRecord {
 
-    private String description = "";
+    private String description = null;
     private RepositoryRecord repository;
     private List<DependencyRecord> dependencies = new ArrayList<>();
 
@@ -37,11 +39,13 @@ public class AddonRecord extends ItemRecord {
     }
 
     @Nonnull
-    public String getDescription() {
-        return description;
+    @Override
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
     }
 
-    public void setDescription(String description) {
+    @Override
+    public void setDescription(@Nullable String description) {
         this.description = description;
     }
 

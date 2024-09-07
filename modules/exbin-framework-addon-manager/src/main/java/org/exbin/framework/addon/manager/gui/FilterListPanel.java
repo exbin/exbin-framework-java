@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JList;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.ItemRecord;
@@ -42,18 +41,18 @@ public class FilterListPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FilterListPanel.class);
     private Controller controller;
-    private ImageIcon defaultItemIcon = new ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/puzzle-svgrepo-com-48x48.png"));
 
     public FilterListPanel() {
         initComponents();
         itemsList.setCellRenderer(new DefaultListCellRenderer() {
+            
+            private AddonItemPanel addonItemPanel = new AddonItemPanel();
+
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                DefaultListCellRenderer renderer = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 ItemRecord record = (ItemRecord) value;
-                renderer.setText(record.getName());
-                renderer.setIcon(record.getIcon().orElse(defaultItemIcon));
-                return renderer;
+                addonItemPanel.setItemRecord(list, record, isSelected, cellHasFocus);
+                return addonItemPanel;
             }
         });
         itemsList.addListSelectionListener((event) -> {

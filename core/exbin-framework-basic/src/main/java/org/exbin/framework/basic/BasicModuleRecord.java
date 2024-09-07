@@ -22,6 +22,7 @@ public class BasicModuleRecord implements ModuleRecord {
     private String moduleId;
     private String name;
     private ClassLoader classLoader;
+    private String version = "";
     private String description;
     private final List<String> dependencyModuleIds = new ArrayList<>();
     private final List<String> optionalModuleIds = new ArrayList<>();
@@ -54,6 +55,16 @@ public class BasicModuleRecord implements ModuleRecord {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Nonnull
+    @Override
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     @Nonnull

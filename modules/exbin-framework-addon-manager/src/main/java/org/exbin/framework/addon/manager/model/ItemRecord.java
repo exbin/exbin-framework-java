@@ -34,6 +34,8 @@ public class ItemRecord {
     private String version = "";
     private boolean enabled = true;
     private ImageIcon icon;
+    private String provider = null;
+    private String description = null;
 
     public ItemRecord(String id, String name) {
         this.id = id;
@@ -84,4 +86,21 @@ public class ItemRecord {
         this.icon = icon;
     }
 
+    @Nonnull
+    public Optional<String> getProvider() {
+        return Optional.ofNullable(provider);
+    }
+
+    public void setProvider(@Nullable String provider) {
+        this.provider = provider;
+    }
+
+    @Nonnull
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
+    }
+
+    public void setDescription(@Nullable String description) {
+        this.description = description;
+    }
 }
