@@ -35,6 +35,7 @@ public class ItemRecord {
     private boolean enabled = true;
     private ImageIcon icon;
     private String provider = null;
+    private String homepage = null;
     private String description = null;
 
     public ItemRecord(String id, String name) {
@@ -93,6 +94,15 @@ public class ItemRecord {
 
     public void setProvider(@Nullable String provider) {
         this.provider = provider;
+    }
+
+    @Nonnull
+    public Optional<String> getHomepage() {
+        return Optional.ofNullable(homepage);
+    }
+
+    public void setHomepage(@Nullable String homepage) {
+        this.homepage = homepage;
     }
 
     @Nonnull

@@ -2,6 +2,8 @@
 <module>
   <api>org.exbin.framework.window.api.WindowModuleApi</api>
   <name>Window handling</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
   <description>Module for window handling</description>
   <dependency>
     <module id="org.exbin.framework.utils.UtilsModule" />

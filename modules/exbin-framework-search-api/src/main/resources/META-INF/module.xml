@@ -2,7 +2,9 @@
 <module>
   <api>org.exbin.framework.search.api.SearchModuleApi</api>
   <name>Search API Module</name>
-  <description>Module for preferences</description>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Support for searching</description>
   <dependency>
   </dependency>
 </module>

@@ -212,7 +212,10 @@ public class BasicModuleProvider implements ModuleProvider {
                             moduleRecord.setName(node.getTextContent());
                         } else if ("description".equals(node.getNodeName())) {
                             moduleRecord.setDescription(node.getTextContent());
-                            break;
+                        } else if ("homepage".equals(node.getNodeName())) {
+                            moduleRecord.setHomepage(node.getTextContent());
+                        } else if ("provider".equals(node.getNodeName())) {
+                            moduleRecord.setProvider(node.getTextContent());
                         }
                     }
                 }

@@ -2,7 +2,9 @@
 <module>
   <id>org.exbin.framework.editor.EditorModule</id>
   <name>Editor Support</name>
-  <description>Module for registrable framework editors</description>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Module for registrable editors</description>
   <dependency>
     <module id="org.exbin.framework.operation.api.OperationModuleApi" />
     <module id="org.exbin.framework.operation.undo.api.OperationUndoModuleApi" />

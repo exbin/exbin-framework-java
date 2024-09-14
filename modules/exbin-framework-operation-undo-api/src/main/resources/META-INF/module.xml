@@ -2,6 +2,8 @@
 <module>
   <api>org.exbin.framework.operation.undo.api.OperationUndoModuleApi</api>
   <name>Undo Support Module</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
   <description>Module to provide support for undo/redo capability</description>
   <dependency>
     <module id="org.exbin.framework.action.api.ActionModuleApi" />

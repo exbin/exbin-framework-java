@@ -2,6 +2,8 @@
 <module>
   <api>org.exbin.framework.about.api.AboutModuleApi</api>
   <name>About Dialog Module</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
   <description>Module with about dialog</description>
   <dependency>
     <module id="org.exbin.framework.utils.UtilsModule" />

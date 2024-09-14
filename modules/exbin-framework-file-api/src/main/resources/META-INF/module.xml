@@ -2,7 +2,9 @@
 <module>
   <api>org.exbin.framework.file.api.FileModuleApi</api>
   <name>File Support Module</name>
-  <description>Module to support file oprations</description>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Module to support file operations</description>
   <dependency>
     <module id="org.exbin.framework.action.api.ActionModuleApi" />
   </dependency>

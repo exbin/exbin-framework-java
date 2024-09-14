@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <module>
   <api>org.exbin.framework.component.api.ComponentModuleApi</api>
-  <name>File Support Module</name>
-  <description>Module to support file oprations</description>
+  <name>Component Support Module</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Module to support for visual components</description>
   <dependency>
     <module id="org.exbin.framework.action.api.ActionModuleApi" />
   </dependency>

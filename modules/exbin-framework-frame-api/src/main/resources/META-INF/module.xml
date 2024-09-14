@@ -2,6 +2,8 @@
 <module>
   <api>org.exbin.framework.frame.api.FrameModuleApi</api>
   <name>Frame handling</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
   <description>Module for frame handling</description>
   <dependency>
     <module id="org.exbin.framework.utils.UtilsModule" />

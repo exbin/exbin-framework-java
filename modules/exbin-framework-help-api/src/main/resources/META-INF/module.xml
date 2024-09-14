@@ -2,6 +2,8 @@
 <module>
   <api>org.exbin.framework.help.api.HelpModuleApi</api>
   <name>XBUP Help Support Module</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
   <description>Module supporting basic help support</description>
   <dependency>
     <module id="org.exbin.framework.action.api.ActionModuleApi" />

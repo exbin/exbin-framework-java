@@ -15,12 +15,14 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.awt.event.MouseListener;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
@@ -35,6 +37,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonDetailsPanel.class);
     private Controller controller;
+    private MouseListener homepageLinkListener;
 
     public AddonDetailsPanel() {
         initComponents();
@@ -52,6 +55,26 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     public void setRecord(ItemRecord itemRecord) {
         addonNameLabel.setText(itemRecord.getName());
         versionLabel.setText(itemRecord.getVersion());
+        String provider = itemRecord.getProvider().orElse("");
+        String homepage = itemRecord.getHomepage().orElse(null);
+
+        if (homepageLinkListener != null) {
+            providerLabel.removeMouseListener(homepageLinkListener);
+        }
+        if (homepage != null) {
+            provider = "<html><body><a href=\"" + homepage + "\">" + (provider.isEmpty() ? "Provider" : provider) + "</a></body></html>";
+            providerLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            homepageLinkListener = new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    DesktopUtils.openDesktopURL(homepage);
+                }
+            };
+            providerLabel.addMouseListener(homepageLinkListener);
+        } else {
+            providerLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        }
+        providerLabel.setText(provider);
         String description = itemRecord.getDescription().orElse("");
         overviewTextPane.setText("<html><body>id: " + itemRecord.getId() + "<br/>" + description + "</body></html>");
     }
@@ -71,7 +94,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         infoPanel = new javax.swing.JPanel();
         addonNameLabel = new javax.swing.JLabel();
         providerLabel = new javax.swing.JLabel();
-        homepageLinkLabel = new javax.swing.JLabel();
         versionLabel = new javax.swing.JLabel();
         tabbedPane = new javax.swing.JTabbedPane();
         overviewScrollPane = new javax.swing.JScrollPane();
@@ -90,7 +112,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(195, Short.MAX_VALUE)
+                .addContainerGap(239, Short.MAX_VALUE)
                 .addComponent(enableButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(installButton)
@@ -113,8 +135,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
         providerLabel.setFont(providerLabel.getFont().deriveFont((providerLabel.getFont().getStyle() & ~java.awt.Font.ITALIC) & ~java.awt.Font.BOLD));
         providerLabel.setText("Addon Provider");
-
-        homepageLinkLabel.setText("<html><body><a href=\"\">Homepage link</a></body></html>");
 
         versionLabel.setText("Version");
 
@@ -146,16 +166,14 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             .addGroup(infoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(infoPanelLayout.createSequentialGroup()
                         .addComponent(addonNameLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(infoPanelLayout.createSequentialGroup()
                         .addComponent(providerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(homepageLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(versionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(versionLabel)))
                 .addContainerGap())
         );
         infoPanelLayout.setVerticalGroup(
@@ -165,7 +183,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
                 .addComponent(addonNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(homepageLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(versionLabel)
                     .addComponent(providerLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -195,7 +212,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane depenciesScrollPane;
     private javax.swing.JTable depenciesTable;
     private javax.swing.JButton enableButton;
-    private javax.swing.JLabel homepageLinkLabel;
     private javax.swing.JPanel infoPanel;
     private javax.swing.JButton installButton;
     private javax.swing.JScrollPane overviewScrollPane;

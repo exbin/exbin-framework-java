@@ -2,6 +2,8 @@
 <module>
   <api>org.exbin.framework.options.api.OptionsModuleapi</api>
   <name>Options Support Module</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
   <description>Module to provide support for application options</description>
   <dependency>
     <module id="org.exbin.framework.action.api.ActionModuleApi" />

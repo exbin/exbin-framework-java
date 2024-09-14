@@ -2,6 +2,8 @@
 <module>
   <api>org.exbin.framework.ui.api.UiModuleApi</api>
   <name>UI handling</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
   <description>Module for user interface handling</description>
   <dependency>
     <module id="org.exbin.framework.utils.UtilsModule" />

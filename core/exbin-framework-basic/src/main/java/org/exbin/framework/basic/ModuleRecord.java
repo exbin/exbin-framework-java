@@ -6,6 +6,7 @@
 package org.exbin.framework.basic;
 
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.exbin.framework.Module;
 
@@ -46,7 +47,23 @@ public interface ModuleRecord {
      * @return description text
      */
     @Nonnull
-    String getDescription();
+    Optional<String> getDescription();
+
+    /**
+     * Returns module provider.
+     *
+     * @return module provider
+     */
+    @Nonnull
+    Optional<String> getProvider();
+
+    /**
+     * Returns module homepage.
+     *
+     * @return module homepage
+     */
+    @Nonnull
+    Optional<String> getHomepage();
 
     /**
      * Returns list of required dependency modules.

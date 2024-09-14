@@ -73,7 +73,9 @@ public class AddonManagerPanel extends javax.swing.JPanel {
                     for (ModuleRecord moduleRecord : modulesList) {
                         ItemRecord itemRecord = new ItemRecord(moduleRecord.getModuleId(), moduleRecord.getName());
                         itemRecord.setVersion(moduleRecord.getVersion());
-                        itemRecord.setDescription(moduleRecord.getDescription());
+                        itemRecord.setProvider(moduleRecord.getProvider().orElse(null));
+                        itemRecord.setHomepage(moduleRecord.getHomepage().orElse(null));
+                        itemRecord.setDescription(moduleRecord.getDescription().orElse(null));
                         installedAddons.add(itemRecord);
                     }
                 }

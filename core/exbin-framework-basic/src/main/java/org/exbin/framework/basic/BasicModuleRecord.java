@@ -7,7 +7,9 @@ package org.exbin.framework.basic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 
@@ -23,7 +25,9 @@ public class BasicModuleRecord implements ModuleRecord {
     private String name;
     private ClassLoader classLoader;
     private String version = "";
-    private String description;
+    private String description = null;
+    private String provider = null;
+    private String homepage = null;
     private final List<String> dependencyModuleIds = new ArrayList<>();
     private final List<String> optionalModuleIds = new ArrayList<>();
     private Module module;
@@ -79,13 +83,32 @@ public class BasicModuleRecord implements ModuleRecord {
         this.classLoader = classLoader;
     }
 
-    @Nonnull
     @Override
-    public String getDescription() {
-        return description;
+    public Optional<String> getProvider() {
+        return Optional.ofNullable(provider);
     }
 
-    public void setDescription(String description) {
+    public void setProvider(@Nullable String provider) {
+        this.provider = provider;
+    }
+
+    @Nonnull
+    @Override
+    public Optional<String> getHomepage() {
+        return Optional.ofNullable(homepage);
+    }
+
+    public void setHomepage(@Nullable String homepage) {
+        this.homepage = homepage;
+    }
+
+    @Nonnull
+    @Override
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
+    }
+
+    public void setDescription(@Nullable String description) {
         this.description = description;
     }
 
