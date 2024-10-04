@@ -19,18 +19,6 @@ ext.depsExbinAuxiliaryJava = [
     version: '0.2.1'
 ]
 
-ext.depsXbupJava = [
-    githubProfile: 'exbin',
-    githubRepo: 'xbup-java',
-    version: '0.3.0-SNAPSHOT'
-]
-
-ext.depsXbupDataJava = [
-    githubProfile: 'exbin',
-    githubRepo: 'xbup-data-java',
-    version: '0.2.2'
-]
-
 import org.gradle.util.VersionNumber
 
 apply from: '../deps_processing.gradle'
