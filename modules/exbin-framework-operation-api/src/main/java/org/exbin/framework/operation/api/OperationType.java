@@ -15,20 +15,10 @@
  */
 package org.exbin.framework.operation.api;
 
-import javax.annotation.Nonnull;
-
 /**
  * Operation type interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 public interface OperationType {
-
-    /**
-     * Returns operation type name.
-     *
-     * @return operation type name
-     */
-    @Nonnull
-    String getName();
 }

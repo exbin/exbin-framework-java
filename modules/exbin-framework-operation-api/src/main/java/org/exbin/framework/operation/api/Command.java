@@ -25,12 +25,12 @@ import javax.annotation.Nonnull;
 public interface Command {
 
     /**
-     * Returns command name.
+     * Returns type of the command.
      *
-     * @return command name
+     * @return command type
      */
     @Nonnull
-    String getName();
+    CommandType getType();
 
     /**
      * Performs command on given document.

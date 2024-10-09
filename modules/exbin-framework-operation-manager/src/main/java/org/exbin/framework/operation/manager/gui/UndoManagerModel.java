@@ -59,7 +59,7 @@ public class UndoManagerModel extends AbstractListModel<String> {
     @Nullable
     @Override
     public String getElementAt(int index) {
-        return undoRedo == null ? null : (index == 0 ? "Initial" : getList().get(index - 1).getName())
+        return undoRedo == null ? null : (index == 0 ? "Initial" : getList().get(index - 1).getType().toString())
                 + (undoRedo.getCommandPosition() == index ? " (current)" : "")
                 + (undoRedo.getSyncPosition() == index ? " (saved)" : "");
     }

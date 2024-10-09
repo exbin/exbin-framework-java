@@ -285,7 +285,7 @@ public class UndoManagerPanel extends javax.swing.JPanel {
         // TODO revertButton.setEnabled(selectedIndex >= 0 && selectedIndex != undoModel.getCurrentPosition());
         exportButton.setEnabled(command != null);
 
-        commandCaptionTextField.setText(command != null ? command.getName() : "");
+        commandCaptionTextField.setText(command != null ? command.getType().toString() : "");
 //        commandTypeTextField.setText(command instanceof XBDocCommand ? ((XBDocCommand) command).getBasicType().name() : "");
 //        Date executionTime = command != null ? command.getExecutionTime().orElse(null) : null;
 //        executionTimeTextField.setText(executionTime != null ? executionTime.toString() : "");
