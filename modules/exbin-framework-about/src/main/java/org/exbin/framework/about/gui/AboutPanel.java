@@ -410,34 +410,31 @@ public class AboutPanel extends javax.swing.JPanel {
         appDescLabel.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_DESCRIPTION));
 
         appHomepageLabel.setComponentPopupMenu(new JPopupMenu() {
-            private boolean initialized = false;
 
             @Override
             public void show(Component invoker, int x, int y) {
-                if (!initialized) {
-                    DefaultPopupMenu.getInstance().appendLinkMenu(this, new LinkActionsHandler() {
-                        @Override
-                        public void performCopyLink() {
-                            String targetURL = appHomepageLink;
-                            StringSelection stringSelection = new StringSelection(targetURL);
-                            ClipboardUtils.getClipboard().setContents(stringSelection, stringSelection);
-                        }
+                JPopupMenu popupMenu = UiUtils.createPopupMenu();
+                DefaultPopupMenu.getInstance().appendLinkMenu(popupMenu, new LinkActionsHandler() {
+                    @Override
+                    public void performCopyLink() {
+                        String targetURL = appHomepageLink;
+                        StringSelection stringSelection = new StringSelection(targetURL);
+                        ClipboardUtils.getClipboard().setContents(stringSelection, stringSelection);
+                    }
 
-                        @Override
-                        public void performOpenLink() {
-                            String targetURL = appHomepageLink;
-                            DesktopUtils.openDesktopURL(targetURL);
-                        }
+                    @Override
+                    public void performOpenLink() {
+                        String targetURL = appHomepageLink;
+                        DesktopUtils.openDesktopURL(targetURL);
+                    }
 
-                        @Override
-                        public boolean isLinkSelected() {
-                            return true;
-                        }
-                    });
+                    @Override
+                    public boolean isLinkSelected() {
+                        return true;
+                    }
+                });
 
-                    initialized = true;
-                }
-                super.show(invoker, x, y);
+                popupMenu.show(invoker, x, y);
             }
         });
     }

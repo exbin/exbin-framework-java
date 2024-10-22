@@ -48,6 +48,7 @@ import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.impl.TextEncodingServiceImpl;
+import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 
@@ -237,7 +238,7 @@ public class EncodingsHandler {
     }
 
     public void popupEncodingsMenu(MouseEvent mouseEvent) {
-        JPopupMenu popupMenu = new JPopupMenu();
+        JPopupMenu popupMenu = UiUtils.createPopupMenu();
 
         List<String> encodings = textEncodingService.getEncodings();
         String selectedEncoding = textEncodingService.getSelectedEncoding();

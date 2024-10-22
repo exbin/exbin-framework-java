@@ -58,6 +58,7 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Utilities for default menu generation.
@@ -605,7 +606,7 @@ public class DefaultPopupMenu {
     protected void showPopupMenu(Component component, Point point, ClipboardActionsHandler handler) {
         boolean editable = handler.isEditable();
 
-        JPopupMenu popupMenu = new JPopupMenu();
+        JPopupMenu popupMenu = UiUtils.createPopupMenu();
         popupMenu.setName("defaultPopupMenu");
 
         boolean hasExtra = false;

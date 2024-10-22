@@ -53,6 +53,7 @@ import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileOperations;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Default multi editor provider.
@@ -104,7 +105,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 ComponentActivationService componentActivationService = frameModule.getFrameHandler().getComponentActivationService();
                 ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                JPopupMenu fileContextPopupMenu = new JPopupMenu();
+                JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
                 actionModule.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, componentActivationService);
                 fileContextPopupMenu.show(component, positionX, positionY);
                 // TODO dispose?

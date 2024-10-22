@@ -19,10 +19,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Window;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -35,6 +37,7 @@ import javax.swing.UIManager;
 public class UiUtils {
 
     private static final int BUTTON_CLICK_TIME = 150;
+    private static JPopupMenuBuilder popupMenuBuilder = null;
 
     private UiUtils() {
     }
@@ -52,6 +55,39 @@ public class UiUtils {
 
         int medium = (backgroundColor.getRed() + backgroundColor.getBlue() + backgroundColor.getGreen()) / 3;
         return medium < 96;
+    }
+
+    /**
+     * Creates new instance of popup menu.
+     *
+     * @return new instance of popup menu
+     */
+    @Nonnull
+    public static JPopupMenu createPopupMenu() {
+        if (popupMenuBuilder != null) {
+            return popupMenuBuilder.build();
+        }
+
+        return new JPopupMenu();
+    }
+
+    /**
+     * Returns current popup menu builder.
+     *
+     * @return popup menu builder
+     */
+    @Nullable
+    public static JPopupMenuBuilder getPopupMenuBuilder() {
+        return popupMenuBuilder;
+    }
+
+    /**
+     * Sets popup menu builder.
+     *
+     * @param popupMenuBuilder popup menu builder
+     */
+    public static void setPopupMenuBuilder(@Nullable JPopupMenuBuilder popupMenuBuilder) {
+        UiUtils.popupMenuBuilder = popupMenuBuilder;
     }
 
     /**
@@ -79,5 +115,11 @@ public class UiUtils {
      */
     public static void doButtonClick(JButton button) {
         button.doClick(BUTTON_CLICK_TIME);
+    }
+
+    public interface JPopupMenuBuilder {
+
+        @Nonnull
+        JPopupMenu build();
     }
 }
