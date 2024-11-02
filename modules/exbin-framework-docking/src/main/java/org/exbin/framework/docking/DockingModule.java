@@ -45,7 +45,7 @@ import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.docking.api.DockingModuleApi;
 
 /**
- * Implementation of XBUP framework docking module.
+ * Implementation of docking module.
  *
  * @author ExBin Project (https://exbin.org)
  */

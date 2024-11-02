@@ -26,7 +26,7 @@ import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.file.api.UsedDirectoryApi;
 
 /**
- * XBUP framework editor interface.
+ * Editor provider interface.
  *
  * @author ExBin Project (https://exbin.org)
  */

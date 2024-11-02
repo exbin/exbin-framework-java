@@ -27,7 +27,7 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 
 /**
- * Implementation of XBUP framework online help support module.
+ * Implementation of the online help support module.
  *
  * @author ExBin Project (https://exbin.org)
  */

@@ -25,7 +25,7 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for XBUP framework file module.
+ * Interface for file support module.
  *
  * @author ExBin Project (https://exbin.org)
  */

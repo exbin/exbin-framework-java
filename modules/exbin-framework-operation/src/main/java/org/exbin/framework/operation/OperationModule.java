@@ -18,7 +18,7 @@ package org.exbin.framework.operation;
 import org.exbin.framework.operation.api.OperationModuleApi;
 
 /**
- * Implementation of XBUP framework operation module.
+ * Implementation of operation support module.
  *
  * @author ExBin Project (https://exbin.org)
  */

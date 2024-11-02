@@ -34,7 +34,7 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for XBUP framework action module.
+ * Interface for action support module.
  *
  * @author ExBin Project (https://exbin.org)
  */

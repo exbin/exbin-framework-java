@@ -23,7 +23,7 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
 /**
- * XBUP framework editor module api interface.
+ * Interface for editor module.
  *
  * @author ExBin Project (https://exbin.org)
  */

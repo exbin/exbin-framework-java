@@ -31,7 +31,7 @@ import org.exbin.framework.operation.undo.api.UndoActions;
 import org.exbin.framework.action.api.ActionModuleApi;
 
 /**
- * Implementation of XBUP framework undo/redo module.
+ * Implementation of undo/redo support module.
  *
  * @author ExBin Project (https://exbin.org)
  */

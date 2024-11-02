@@ -27,7 +27,7 @@ import org.exbin.framework.operation.manager.api.OperationManagerModuleApi;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
 
 /**
- * Implementation of XBUP framework operation manager module.
+ * Implementation of operation manager module.
  *
  * @author ExBin Project (https://exbin.org)
  */

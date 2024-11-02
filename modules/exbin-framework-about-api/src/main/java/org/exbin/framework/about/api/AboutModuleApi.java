@@ -23,7 +23,7 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface of the XBUP framework about module.
+ * Interface of the about application module.
  *
  * @author ExBin Project (https://exbin.org)
  */
