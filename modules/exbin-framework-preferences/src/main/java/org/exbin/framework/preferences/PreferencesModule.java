@@ -28,8 +28,6 @@ import org.exbin.framework.preferences.api.PreferencesModuleApi;
 @ParametersAreNonnullByDefault
 public class PreferencesModule implements PreferencesModuleApi {
 
-    private java.util.ResourceBundle resourceBundle = null;
-
     private Preferences appPreferences;
 
     public PreferencesModule() {
@@ -51,5 +49,9 @@ public class PreferencesModule implements PreferencesModuleApi {
     @Override
     public Preferences getAppPreferences() {
         return appPreferences;
+    }
+
+    public void setAppPreferences(Preferences appPreferences) {
+        this.appPreferences = appPreferences;
     }
 }
