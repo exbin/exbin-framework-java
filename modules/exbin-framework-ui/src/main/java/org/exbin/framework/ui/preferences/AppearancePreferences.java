@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.ui.options.AppearanceOptions;
 
 /**
- * Apperance options preferences.
+ * Appearance options preferences.
  *
  * @author ExBin Project (https://exbin.org)
  */

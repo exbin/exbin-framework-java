@@ -49,7 +49,7 @@ import org.exbin.framework.utils.UtilsModule;
 @ParametersAreNonnullByDefault
 public class MainOptionsPanel extends javax.swing.JPanel implements OptionsComponent<UiOptionsImpl> {
 
-    private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(MainOptionsPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(MainOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
     private OptionsComponent extendedOptionsPanel = null;
     private String defaultLocaleName = "";

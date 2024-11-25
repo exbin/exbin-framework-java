@@ -275,7 +275,6 @@ public class UiModule implements UiModuleApi {
         }
         mainOptionsExtPage = optionsPage;
 
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         Optional<MainOptionsPanel> mainOptionsPanel = mainOptionsManager.getMainOptionsPanel();
         if (mainOptionsPanel.isPresent()) {
             mainOptionsPanel.get().addExtendedPanel(mainOptionsExtPage.createPanel());

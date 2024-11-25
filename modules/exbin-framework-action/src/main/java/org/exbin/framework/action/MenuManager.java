@@ -46,6 +46,7 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.SubMenuContribution;
 import org.exbin.framework.utils.ObjectUtils;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Menu manager.
@@ -260,7 +261,8 @@ public class MenuManager {
                             @Override
                             public void process() {
                                 SubMenuContribution subMenuContribution = (SubMenuContribution) next.contribution;
-                                subMenu = new JMenu(subMenuContribution.getAction());
+                                subMenu = UiUtils.createMenu();
+                                subMenu.setAction(subMenuContribution.getAction());
                                 buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId(), activationUpdateService);
                             }
 

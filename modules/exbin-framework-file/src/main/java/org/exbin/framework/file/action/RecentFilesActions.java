@@ -38,6 +38,7 @@ import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.preferences.RecentFilesPreferences;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Recent files actions.
@@ -75,7 +76,8 @@ public class RecentFilesActions {
             }
         };
         fileOpenRecentAction.putValue(Action.SHORT_DESCRIPTION, resourceBundle.getString("openRecentMenu.shortDescription"));
-        JMenu fileOpenRecentMenu = new JMenu(fileOpenRecentAction);
+        JMenu fileOpenRecentMenu = UiUtils.createMenu();
+        fileOpenRecentMenu.setAction(fileOpenRecentAction);
         recentFiles = new ArrayList<>();
         if (preferences != null) {
             loadState(fileOpenRecentMenu);
@@ -116,7 +118,8 @@ public class RecentFilesActions {
         for (int recentFileIndex = 0; recentFileIndex < recentFiles.size(); recentFileIndex++) {
             String filename = recentFiles.get(recentFileIndex).getFileName();
             File file = new File(filename);
-            JMenuItem menuItem = new JMenuItem(file.getName());
+            JMenuItem menuItem = UiUtils.createMenuItem();
+            menuItem.setText(file.getName());
             menuItem.setToolTipText(filename);
             {
                 URI fileUri;

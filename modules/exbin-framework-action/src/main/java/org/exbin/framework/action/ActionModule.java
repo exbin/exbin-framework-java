@@ -50,6 +50,7 @@ import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Implementation of action module.
@@ -170,11 +171,13 @@ public class ActionModule implements ActionModuleApi {
         if (actionType != null) {
             switch (actionType) {
                 case CHECK: {
-                    menuItem = new JCheckBoxMenuItem(action);
+                    menuItem = UiUtils.createCheckBoxMenuItem();
+                    menuItem.setAction(action);
                     break;
                 }
                 case RADIO: {
-                    menuItem = new JRadioButtonMenuItem(action);
+                    menuItem = UiUtils.createRadioButtonMenuItem();
+                    menuItem.setAction(action);
                     String radioGroup = (String) action.getValue(ActionConsts.ACTION_RADIO_GROUP);
                     if (buttonGroups != null) {
                         ButtonGroup buttonGroup = buttonGroups.get(radioGroup);
@@ -187,11 +190,13 @@ public class ActionModule implements ActionModuleApi {
                     break;
                 }
                 default: {
-                    menuItem = new JMenuItem(action);
+                    menuItem = UiUtils.createMenuItem();
+                    menuItem.setAction(action);
                 }
             }
         } else {
-            menuItem = new JMenuItem(action);
+            menuItem = UiUtils.createMenuItem();
+            menuItem.setAction(action);
         }
 
         Object dialogMode = action.getValue(ActionConsts.ACTION_DIALOG_MODE);

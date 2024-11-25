@@ -612,7 +612,7 @@ public class DefaultPopupMenu {
         boolean hasExtra = false;
         if (handler instanceof TextActionsHandler) {
             if (copyTextAction.isEnabled()) {
-                JMenuItem copyTextMenuItem = new JMenuItem();
+                JMenuItem copyTextMenuItem = UiUtils.createMenuItem();
                 copyTextMenuItem.setAction(copyTextAction);
                 copyTextMenuItem.setName("basicCopyTextMenuItem");
                 popupMenu.add(copyTextMenuItem);
@@ -622,7 +622,7 @@ public class DefaultPopupMenu {
 
         if (handler instanceof ImageActionsHandler) {
             if (copyImageAction.isEnabled()) {
-                JMenuItem copyImageMenuItem = new JMenuItem();
+                JMenuItem copyImageMenuItem = UiUtils.createMenuItem();
                 copyImageMenuItem.setAction(copyImageAction);
                 copyImageMenuItem.setName("basicCopyImageMenuItem");
                 popupMenu.add(copyImageMenuItem);
@@ -632,7 +632,7 @@ public class DefaultPopupMenu {
 
         if (handler instanceof LinkActionsHandler) {
             if (openLinkAction.isEnabled()) {
-                JMenuItem openLinkMenuItem = new JMenuItem();
+                JMenuItem openLinkMenuItem = UiUtils.createMenuItem();
                 openLinkMenuItem.setAction(openLinkAction);
                 openLinkMenuItem.setName("basicOpenLinkMenuItem");
                 popupMenu.add(openLinkMenuItem);
@@ -640,7 +640,7 @@ public class DefaultPopupMenu {
             }
 
             if (copyLinkAction.isEnabled()) {
-                JMenuItem copyLinkMenuItem = new JMenuItem();
+                JMenuItem copyLinkMenuItem = UiUtils.createMenuItem();
                 copyLinkMenuItem.setAction(copyLinkAction);
                 copyLinkMenuItem.setName("basicCopyLinkMenuItem");
                 popupMenu.add(copyLinkMenuItem);

@@ -88,7 +88,7 @@ public class EncodingsHandler {
             textEncodingService.setSelectedEncoding(((JRadioButtonMenuItem) e.getSource()).getText());
         };
 
-        utfEncodingRadioButtonMenuItem = new JRadioButtonMenuItem();
+        utfEncodingRadioButtonMenuItem = UiUtils.createRadioButtonMenuItem();
         utfEncodingRadioButtonMenuItem.setSelected(true);
         utfEncodingRadioButtonMenuItem.setText(resourceBundle.getString("defaultEncoding.text"));
         utfEncodingRadioButtonMenuItem.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{ENCODING_UTF8}));
@@ -145,7 +145,7 @@ public class EncodingsHandler {
         actionModule.initAction(manageEncodingsAction, resourceBundle, MANAGE_ENCODINGS_ACTION_ID);
         manageEncodingsAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
 
-        toolsEncodingMenu = new JMenu();
+        toolsEncodingMenu = UiUtils.createMenu();
         toolsEncodingMenu.addSeparator();
         toolsEncodingMenu.add(actionModule.actionToMenuItem(manageEncodingsAction));
         toolsEncodingMenu.setText(resourceBundle.getString("toolsEncodingMenu.text"));
@@ -195,7 +195,8 @@ public class EncodingsHandler {
             int selectedEncodingIndex = encodings.indexOf(textEncodingService.getSelectedEncoding());
             for (int index = 0; index < encodings.size(); index++) {
                 String encoding = encodings.get(index);
-                JRadioButtonMenuItem item = new JRadioButtonMenuItem(encoding);
+                JRadioButtonMenuItem item = UiUtils.createRadioButtonMenuItem();
+                item.setText(encoding);
                 item.addActionListener(encodingActionListener);
                 item.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{encoding}));
                 toolsEncodingMenu.add(item, index);
@@ -243,7 +244,9 @@ public class EncodingsHandler {
         List<String> encodings = textEncodingService.getEncodings();
         String selectedEncoding = textEncodingService.getSelectedEncoding();
         if (encodings.isEmpty()) {
-            JRadioButtonMenuItem utfEncoding = new JRadioButtonMenuItem(resourceBundle.getString("defaultEncoding.text"), ENCODING_UTF8.equals(selectedEncoding));
+            JRadioButtonMenuItem utfEncoding = UiUtils.createRadioButtonMenuItem();
+            utfEncoding.setText(resourceBundle.getString("defaultEncoding.text"));
+            utfEncoding.setSelected(ENCODING_UTF8.equals(selectedEncoding));
             utfEncoding.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{ENCODING_UTF8}));
             utfEncoding.addActionListener(utfEncodingActionListener);
             popupMenu.add(utfEncoding);
@@ -251,7 +254,9 @@ public class EncodingsHandler {
             int selectedEncodingIndex = encodings.indexOf(selectedEncoding);
             for (int index = 0; index < encodings.size(); index++) {
                 String encoding = encodings.get(index);
-                JRadioButtonMenuItem item = new JRadioButtonMenuItem(encoding, index == selectedEncodingIndex);
+                JRadioButtonMenuItem item = UiUtils.createRadioButtonMenuItem();
+                item.setText(encoding);
+                item.setSelected(index == selectedEncodingIndex);
                 item.addActionListener(encodingActionListener);
                 item.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{encoding}));
                 popupMenu.add(item, index);

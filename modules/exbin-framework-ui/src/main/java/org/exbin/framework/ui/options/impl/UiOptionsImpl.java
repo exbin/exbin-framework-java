@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.ui.api.preferences.UiPreferences;
+import org.exbin.framework.utils.ObjectUtils;
 
 /**
  * UI options.
@@ -30,7 +31,7 @@ import org.exbin.framework.ui.api.preferences.UiPreferences;
 @ParametersAreNonnullByDefault
 public class UiOptionsImpl implements OptionsData, UiOptions {
 
-    private String lookAndFeel;
+    private String lookAndFeel = "";
     private Locale languageLocale;
     private String renderingMode;
     private String guiScaling;
@@ -53,7 +54,7 @@ public class UiOptionsImpl implements OptionsData, UiOptions {
     @Nonnull
     @Override
     public Locale getLanguageLocale() {
-        return languageLocale;
+        return ObjectUtils.requireNonNull(languageLocale);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class UiOptionsImpl implements OptionsData, UiOptions {
     @Nonnull
     @Override
     public String getRenderingMode() {
-        return renderingMode;
+        return ObjectUtils.requireNonNull(renderingMode);
     }
 
     @Override
@@ -75,7 +76,7 @@ public class UiOptionsImpl implements OptionsData, UiOptions {
     @Nonnull
     @Override
     public String getGuiScaling() {
-        return guiScaling;
+        return ObjectUtils.requireNonNull(guiScaling);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class UiOptionsImpl implements OptionsData, UiOptions {
     @Nonnull
     @Override
     public String getFontAntialiasing() {
-        return fontAntialiasing;
+        return ObjectUtils.requireNonNull(fontAntialiasing);
     }
 
     @Override
@@ -117,7 +118,7 @@ public class UiOptionsImpl implements OptionsData, UiOptions {
     @Nonnull
     @Override
     public String getMacOsAppearance() {
-        return macOsAppearance;
+        return ObjectUtils.requireNonNull(macOsAppearance);
     }
 
     @Override
