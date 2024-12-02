@@ -71,6 +71,7 @@ public class WindowModule implements WindowModuleApi {
     public static final String PREFERENCES_MAXIMIZED = "maximized";
 
     private ResourceBundle resourceBundle;
+    private boolean hideHeaderPanels = false;
 
     public WindowModule() {
     }
@@ -92,7 +93,11 @@ public class WindowModule implements WindowModuleApi {
 
     @Nonnull
     @Override
-    public WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull Class<?> resourceClass, @Nonnull ResourceBundle resourceBundle) {
+    public JPanel addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle) {
+        if (hideHeaderPanels) {
+            return new JPanel();
+        }
+
         URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
         Icon headerIcon = iconUrl != null ? new ImageIcon(iconUrl) : null;
         return addHeaderPanel(window, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
@@ -100,7 +105,11 @@ public class WindowModule implements WindowModuleApi {
 
     @Nonnull
     @Override
-    public WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull String headerTitle, @Nonnull String headerDescription, @Nullable Icon headerIcon) {
+    public JPanel addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon) {
+        if (hideHeaderPanels) {
+            return new JPanel();
+        }
+
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
         headerPanel.setDescription(headerDescription);
@@ -121,6 +130,10 @@ public class WindowModule implements WindowModuleApi {
         return headerPanel;
     }
 
+    public void setHideHeaderPanels(boolean hide) {
+        this.hideHeaderPanels = hide;
+    }
+    
     @Nonnull
     @Override
     public WindowHandler createWindow(final JComponent component, Component parent, String dialogTitle, Dialog.ModalityType modalityType) {

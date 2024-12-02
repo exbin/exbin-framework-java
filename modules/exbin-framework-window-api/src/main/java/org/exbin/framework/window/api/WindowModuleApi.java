@@ -91,10 +91,12 @@ public interface WindowModuleApi extends Module {
     WindowHandler createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component, @Nullable JPanel controlPanel);
 
     @Nonnull
-    WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull Class<?> resourceClass, @Nonnull ResourceBundle resourceBundle);
+    JPanel addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle);
 
     @Nonnull
-    WindowHeaderPanel addHeaderPanel(@Nonnull Window window, @Nonnull String headerTitle, @Nonnull String headerDescription, @Nullable Icon headerIcon);
+    JPanel addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon);
+
+    void setHideHeaderPanels(boolean hide);
 
     @Nonnull
     WindowHandler createWindow(final JComponent component, Component parent, String dialogTitle, Dialog.ModalityType modalityType);
