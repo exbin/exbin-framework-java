@@ -31,7 +31,7 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsData;
-import org.exbin.framework.options.gui.OptionsTreePanel;
+import org.exbin.framework.options.api.OptionsPanelType;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.utils.ComponentResourceProvider;
@@ -53,6 +53,7 @@ public class OptionsModule implements OptionsModuleApi {
     private ResourceBundle resourceBundle;
 
     private final List<OptionsPageRecord> optionsPages = new ArrayList<>();
+    private OptionsPanelType optionsPanelType = OptionsPanelType.TREE;
 
     public OptionsModule() {
     }
@@ -77,7 +78,7 @@ public class OptionsModule implements OptionsModuleApi {
     public OptionsAction createOptionsAction() {
         ensureSetup();
         OptionsAction optionsAction = new OptionsAction();
-        optionsAction.setup(resourceBundle, (OptionsTreePanel optionsTreePanel) -> {
+        optionsAction.setup(resourceBundle, (OptionsPageReceiver optionsTreePanel) -> {
             optionsPages.forEach((record) -> {
                 optionsTreePanel.addOptionsPage(record.optionsPage, record.path);
             });
@@ -162,6 +163,17 @@ public class OptionsModule implements OptionsModuleApi {
         if (!optionsActionRegistered) {
             actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, optionsAction, new MenuPosition(TOOLS_OPTIONS_MENU_GROUP_ID));
         }
+    }
+
+    @Nonnull
+    @Override
+    public OptionsPanelType getOptionsPanelType() {
+        return optionsPanelType;
+    }
+
+    @Override
+    public void setOptionsPanelType(OptionsPanelType optionsPanelType) {
+        this.optionsPanelType = optionsPanelType;
     }
 
     @ParametersAreNonnullByDefault

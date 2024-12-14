@@ -35,15 +35,14 @@ import javax.swing.tree.DefaultTreeModel;
 import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.options.OptionsPageReceiver;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
-import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
@@ -53,7 +52,7 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponentsIssuable {
+public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageReceiver, LazyComponentsIssuable {
 
     public static final String OPTIONS_PANEL_KEY = "options";
 
@@ -105,12 +104,12 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
                     optionsAreaTitleLabel.setText(" " + (String) node.getUserObject());
                 }
                 if (currentOptionsPanel != null) {
-                    optionsAreaScrollPane.remove((Component) currentOptionsPanel.panel);
+                    optionsAreaScrollPane.remove((Component) currentOptionsPanel.getPanel());
                 }
                 if (caption != null) {
                     currentOptionsPanel = optionPages.get(caption);
                     if (currentOptionsPanel != null) {
-                        optionsAreaScrollPane.setViewportView((Component) currentOptionsPanel.panel);
+                        optionsAreaScrollPane.setViewportView((Component) currentOptionsPanel.getPanel());
                     } else {
                         optionsAreaScrollPane.setViewportView(null);
                     }
@@ -144,9 +143,9 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
     private void initComponents() {
 
         optionsSplitPane = new javax.swing.JSplitPane();
-        optionsTreeScrollPane = new javax.swing.JScrollPane();
+        categoriesScrollPane = new javax.swing.JScrollPane();
         optionsTree = new javax.swing.JTree();
-        optionsTreePanel = new javax.swing.JPanel();
+        optionsPagePanel = new javax.swing.JPanel();
         optionsAreaScrollPane = new javax.swing.JScrollPane();
         optionsAreaTitlePanel = new javax.swing.JPanel();
         optionsAreaTitleLabel = new javax.swing.JLabel();
@@ -156,12 +155,12 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
         optionsSplitPane.setDividerLocation(130);
 
-        optionsTreeScrollPane.setViewportView(optionsTree);
+        categoriesScrollPane.setViewportView(optionsTree);
 
-        optionsSplitPane.setLeftComponent(optionsTreeScrollPane);
+        optionsSplitPane.setLeftComponent(categoriesScrollPane);
 
-        optionsTreePanel.setLayout(new java.awt.BorderLayout());
-        optionsTreePanel.add(optionsAreaScrollPane, java.awt.BorderLayout.CENTER);
+        optionsPagePanel.setLayout(new java.awt.BorderLayout());
+        optionsPagePanel.add(optionsAreaScrollPane, java.awt.BorderLayout.CENTER);
 
         optionsAreaTitlePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         optionsAreaTitlePanel.setLayout(new java.awt.BorderLayout());
@@ -173,9 +172,9 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
         optionsAreaTitleLabel.setVerifyInputWhenFocusTarget(false);
         optionsAreaTitlePanel.add(optionsAreaTitleLabel, java.awt.BorderLayout.NORTH);
 
-        optionsTreePanel.add(optionsAreaTitlePanel, java.awt.BorderLayout.NORTH);
+        optionsPagePanel.add(optionsAreaTitlePanel, java.awt.BorderLayout.NORTH);
 
-        optionsSplitPane.setRightComponent(optionsTreePanel);
+        optionsSplitPane.setRightComponent(optionsPagePanel);
 
         add(optionsSplitPane, java.awt.BorderLayout.CENTER);
         add(separator, java.awt.BorderLayout.SOUTH);
@@ -195,13 +194,13 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane categoriesScrollPane;
     private javax.swing.JScrollPane optionsAreaScrollPane;
     private javax.swing.JLabel optionsAreaTitleLabel;
     private javax.swing.JPanel optionsAreaTitlePanel;
+    private javax.swing.JPanel optionsPagePanel;
     private javax.swing.JSplitPane optionsSplitPane;
     private javax.swing.JTree optionsTree;
-    private javax.swing.JPanel optionsTreePanel;
-    private javax.swing.JScrollPane optionsTreeScrollPane;
     private javax.swing.JSeparator separator;
     // End of variables declaration//GEN-END:variables
 
@@ -213,6 +212,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
         // applyButton.setEnabled(modified);
     }
 
+    @Override
     public void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path) {
         String panelKey;
         if (path == null) {
@@ -224,7 +224,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
         PageRecord<?> pageRecord = new PageRecord<>(optionPage);
         optionPages.put(panelKey, pageRecord);
-        pageRecord.panel.setOptionsModifiedListener(optionsModifiedListener);
+        pageRecord.getPanel().setOptionsModifiedListener(optionsModifiedListener);
         optionsTree.setSelectionRow(0);
     }
 
@@ -266,6 +266,10 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
     private void establishPath(List<OptionsPathItem> path) {
         OptionsMutableTreeNode node = top;
+        if (path.size() == 1 && OPTIONS_PANEL_KEY.equals(path.get(0).getName())) {
+            return;
+        }
+
         for (OptionsPathItem pathItem : path) {
             int childIndex = 0;
             OptionsMutableTreeNode child = null;
@@ -311,7 +315,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
     public void addChildComponentListener(LazyComponentListener listener) {
         listeners.add(listener);
         for (PageRecord<?> pageRecord : optionPages.values()) {
-            listener.componentCreated((Component) pageRecord.panel);
+            listener.componentCreated((Component) pageRecord.getPanel());
         }
     }
 
@@ -332,43 +336,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements LazyComponen
 
         public String getName() {
             return name;
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    private static class PageRecord<T extends OptionsData> {
-
-        private final OptionsPage<T> page;
-        private final OptionsComponent<T> panel;
-
-        PageRecord(OptionsPage<T> page) {
-            this.page = page;
-            this.panel = page.createPanel();
-        }
-
-        void loadFromPreferences(Preferences preferences) {
-            T options = page.createOptions();
-            page.loadFromPreferences(preferences, options);
-            panel.loadFromOptions(options);
-        }
-
-        void saveToPreferences(Preferences preferences) {
-            T options = page.createOptions();
-            panel.saveToOptions(options);
-            page.saveToPreferences(preferences, options);
-        }
-
-        void saveAndApply(Preferences preferences) {
-            T options = page.createOptions();
-            panel.saveToOptions(options);
-            page.saveToPreferences(preferences, options);
-            page.applyPreferencesChanges(options);
-        }
-
-        void applyPreferencesChanges(Preferences preferences) {
-            T options = page.createOptions();
-            panel.saveToOptions(options);
-            page.applyPreferencesChanges(options);
         }
     }
 

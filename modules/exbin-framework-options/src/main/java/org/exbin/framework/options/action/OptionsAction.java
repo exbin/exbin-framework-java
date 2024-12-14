@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.options.action;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,7 +23,11 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.options.OptionsPageReceiver;
+import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.api.OptionsPanelType;
 import org.exbin.framework.window.api.WindowModuleApi;
+import org.exbin.framework.options.gui.OptionsListPanel;
 import org.exbin.framework.options.gui.OptionsTreePanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
@@ -60,39 +63,73 @@ public class OptionsAction extends AbstractAction {
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        OptionsTreePanel optionsTreePanel = new OptionsTreePanel();
-        optionsPagesProvider.registerOptionsPages(optionsTreePanel);
-        Dimension preferredSize = optionsTreePanel.getPreferredSize();
-        optionsTreePanel.setPreferredSize(new Dimension(preferredSize.width + 200, preferredSize.height + 200));
-        optionsTreePanel.setPreferences(preferencesModule.getAppPreferences());
-        optionsTreePanel.pagesFinished();
-        optionsTreePanel.loadAllFromPreferences();
-
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+        OptionsPanelType optionsPanelType = optionsModule.getOptionsPanelType();
         OptionsControlPanel controlPanel = new OptionsControlPanel();
-        final WindowHandler dialog = windowModule.createDialog(optionsTreePanel, controlPanel);
-        windowModule.setWindowTitle(dialog, optionsTreePanel.getResourceBundle());
-        controlPanel.setHandler((actionType) -> {
-            switch (actionType) {
-                case SAVE: {
-                    optionsTreePanel.saveAndApplyAll();
-                    break;
-                }
-                case CANCEL: {
-                    break;
-                }
-                case APPLY_ONCE: {
-                    optionsTreePanel.applyPreferencesChanges();
-                    break;
-                }
-            }
-            dialog.close();
-        });
-        dialog.showCentered(frameModule.getFrame());
+        WindowHandler dialog;
+        switch (optionsPanelType) {
+            case LIST:
+                OptionsListPanel optionsListPanel = new OptionsListPanel();
+                optionsPagesProvider.registerOptionsPages(optionsListPanel);
+                optionsListPanel.setPreferences(preferencesModule.getAppPreferences());
+                optionsListPanel.pagesFinished();
+                optionsListPanel.loadAllFromPreferences();
+
+                dialog = windowModule.createDialog(optionsListPanel, controlPanel);
+                windowModule.setWindowTitle(dialog, optionsListPanel.getResourceBundle());
+                controlPanel.setHandler((actionType) -> {
+                    switch (actionType) {
+                        case SAVE: {
+                            optionsListPanel.saveAndApplyAll();
+                            break;
+                        }
+                        case CANCEL: {
+                            break;
+                        }
+                        case APPLY_ONCE: {
+                            optionsListPanel.applyPreferencesChanges();
+                            break;
+                        }
+                    }
+                    dialog.close();
+                });
+                dialog.showCentered(frameModule.getFrame());
+                break;
+            case TREE:
+                OptionsTreePanel optionsTreePanel = new OptionsTreePanel();
+                optionsPagesProvider.registerOptionsPages(optionsTreePanel);
+                optionsTreePanel.setPreferences(preferencesModule.getAppPreferences());
+                optionsTreePanel.pagesFinished();
+                optionsTreePanel.loadAllFromPreferences();
+
+                dialog = windowModule.createDialog(optionsTreePanel, controlPanel);
+                windowModule.setWindowTitle(dialog, optionsTreePanel.getResourceBundle());
+                controlPanel.setHandler((actionType) -> {
+                    switch (actionType) {
+                        case SAVE: {
+                            optionsTreePanel.saveAndApplyAll();
+                            break;
+                        }
+                        case CANCEL: {
+                            break;
+                        }
+                        case APPLY_ONCE: {
+                            optionsTreePanel.applyPreferencesChanges();
+                            break;
+                        }
+                    }
+                    dialog.close();
+                });
+                dialog.showCentered(frameModule.getFrame());
+                break;
+            default:
+                throw new IllegalStateException("Illegal options panel type " + optionsPanelType.name());
+        }
     }
 
     @ParametersAreNonnullByDefault
     public interface OptionsPagesProvider {
 
-        void registerOptionsPages(OptionsTreePanel optionsTreePanel);
+        void registerOptionsPages(OptionsPageReceiver optionsPageReceiver);
     }
 }

@@ -74,4 +74,19 @@ public interface OptionsModuleApi extends Module {
      * Invokes options changed event.
      */
     void notifyOptionsChanged();
+
+    /**
+     * Returns options panel type.
+     *
+     * @return options panel type
+     */
+    @Nonnull
+    OptionsPanelType getOptionsPanelType();
+
+    /**
+     * Sets options panel type.
+     *
+     * @param optionsPanelType options panel type
+     */
+    void setOptionsPanelType(OptionsPanelType optionsPanelType);
 }
