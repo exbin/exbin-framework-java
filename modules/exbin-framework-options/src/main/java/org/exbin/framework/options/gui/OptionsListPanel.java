@@ -41,7 +41,7 @@ import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
-import org.exbin.framework.options.OptionsPageReceiver;
+import org.exbin.framework.options.api.OptionsPageReceiver;
 
 /**
  * Panel for application options and preferences setting.
@@ -147,11 +147,11 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(categoriesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(optionsAreaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE))
+                        .addComponent(optionsAreaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(categoryLabel)
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(6, 6, 6))
+                .addContainerGap())
             .addComponent(separator)
         );
         layout.setVerticalGroup(
@@ -162,7 +162,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(optionsAreaScrollPane)
-                    .addComponent(categoriesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE))
+                    .addComponent(categoriesScrollPane))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
         );

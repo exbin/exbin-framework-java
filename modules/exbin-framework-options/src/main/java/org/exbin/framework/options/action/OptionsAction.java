@@ -23,7 +23,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.options.OptionsPageReceiver;
+import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPanelType;
 import org.exbin.framework.window.api.WindowModuleApi;

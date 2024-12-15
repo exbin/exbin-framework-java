@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options;
+package org.exbin.framework.options.api;
 
 import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.options.api.OptionsPage;
-import org.exbin.framework.options.api.OptionsPathItem;
 
 /**
  * Interface for options panel page receiver.

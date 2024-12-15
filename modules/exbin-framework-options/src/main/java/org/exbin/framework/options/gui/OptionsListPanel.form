@@ -22,14 +22,14 @@
                   <Group type="102" attributes="0">
                       <Component id="categoriesScrollPane" min="-2" pref="200" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="optionsAreaScrollPane" pref="591" max="32767" attributes="0"/>
+                      <Component id="optionsAreaScrollPane" pref="16" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="categoryLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
           <Component id="separator" alignment="0" max="32767" attributes="0"/>
       </Group>
@@ -42,7 +42,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="optionsAreaScrollPane" max="32767" attributes="0"/>
-                  <Component id="categoriesScrollPane" pref="450" max="32767" attributes="0"/>
+                  <Component id="categoriesScrollPane" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="separator" min="-2" pref="3" max="-2" attributes="0"/>

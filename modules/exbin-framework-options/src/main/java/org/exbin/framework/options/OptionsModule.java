@@ -35,6 +35,7 @@ import org.exbin.framework.options.api.OptionsPanelType;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.utils.ComponentResourceProvider;
+import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -127,6 +128,13 @@ public class OptionsModule implements OptionsModuleApi {
         }
 
         addOptionsPage(optionsPage, optionsDefaultPath);
+    }
+
+    @Override
+    public void passOptionsPages(OptionsPageReceiver optionsPageReceiver) {
+        for (OptionsPageRecord optionsPageRecord : optionsPages) {
+            optionsPageReceiver.addOptionsPage(optionsPageRecord.optionsPage, optionsPageRecord.path);
+        }
     }
 
     @Override

@@ -38,7 +38,7 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.OptionsPageReceiver;
+import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.utils.LazyComponentListener;

@@ -61,6 +61,13 @@ public interface OptionsModuleApi extends Module {
     void addOptionsPage(OptionsPage<?> optionsPage);
 
     /**
+     * Passes options page to receiver.
+     *
+     * @param optionsPageReceiver options page receiver
+     */
+    void passOptionsPages(OptionsPageReceiver optionsPageReceiver);
+
+    /**
      * Registers options menu action in default position.
      */
     void registerMenuAction();
