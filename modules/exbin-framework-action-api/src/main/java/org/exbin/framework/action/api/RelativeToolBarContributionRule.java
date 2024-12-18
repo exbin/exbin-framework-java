@@ -17,43 +17,32 @@ package org.exbin.framework.action.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * Menu group definition.
+ * Toolbar contribution rule for item relative position.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MenuGroup {
+@Immutable
+public class RelativeToolBarContributionRule implements ToolBarContributionRule {
 
-    private final String groupId;
-    private final MenuPosition position;
-    private final SeparationMode separationMode;
+    private final NextToMode nextToMode;
+    private final ToolBarContribution toolbarContribution;
 
-    public MenuGroup(String groupId, MenuPosition position) {
-        this.groupId = groupId;
-        this.position = position;
-        separationMode = SeparationMode.NONE;
-    }
-
-    public MenuGroup(String groupId, MenuPosition position, SeparationMode separationMode) {
-        this.groupId = groupId;
-        this.position = position;
-        this.separationMode = separationMode;
+    public RelativeToolBarContributionRule(NextToMode nextToMode, ToolBarContribution toolbarContribution) {
+        this.nextToMode = nextToMode;
+        this.toolbarContribution = toolbarContribution;
     }
 
     @Nonnull
-    public String getGroupId() {
-        return groupId;
+    public NextToMode getNextToMode() {
+        return nextToMode;
     }
 
     @Nonnull
-    public MenuPosition getPosition() {
-        return position;
-    }
-
-    @Nonnull
-    public SeparationMode getSeparationMode() {
-        return separationMode;
+    public ToolBarContribution getToolBarContribution() {
+        return toolbarContribution;
     }
 }

@@ -63,7 +63,7 @@ public class LanguageRecord {
 
     /**
      * Returns text representing current language.
-     *
+     * <p>
      * Returns empty string for ROOT locale.
      *
      * @return representation text

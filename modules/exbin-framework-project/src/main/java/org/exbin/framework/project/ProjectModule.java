@@ -24,8 +24,9 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.MenuGroup;
-import org.exbin.framework.action.api.MenuPosition;
+import org.exbin.framework.action.api.GroupMenuContributionRule;
+import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.project.action.NewProjectAction;
 import org.exbin.framework.project.action.OpenProjectAction;
@@ -105,10 +106,14 @@ public class ProjectModule implements ProjectModuleApi {
     @Override
     public void registerMenuFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(PROJECT_MENU_ID, new MenuGroup(PROJECT_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
-        actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getNewProjectAction(), new MenuPosition(PROJECT_MENU_GROUP_ID));
-        actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getOpenProjectAction(), new MenuPosition(PROJECT_MENU_GROUP_ID));
-        actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getSaveProjectAction(), new MenuPosition(PROJECT_MENU_GROUP_ID));
+        MenuContribution contribution = actionModule.registerMenuGroup(PROJECT_MENU_ID, MODULE_ID, PROJECT_MENU_GROUP_ID);
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getNewProjectAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
+        contribution = actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getOpenProjectAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
+        contribution = actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getSaveProjectAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
     }
 
     @Nonnull

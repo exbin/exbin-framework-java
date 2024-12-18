@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -37,12 +38,15 @@ import org.exbin.framework.action.api.ActionMenuContribution;
 import org.exbin.framework.action.api.ActionMenuCreation;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationService;
-import org.exbin.framework.action.api.DirectMenuContribution;
+import org.exbin.framework.action.api.DirectSubMenuContribution;
+import org.exbin.framework.action.api.GroupMenuContribution;
+import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuGroup;
-import org.exbin.framework.action.api.MenuPosition;
+import org.exbin.framework.action.api.MenuContributionRule;
 import org.exbin.framework.action.api.NextToMode;
+import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
+import org.exbin.framework.action.api.SeparationMenuContributionRule;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.SubMenuContribution;
 import org.exbin.framework.utils.ObjectUtils;
@@ -60,11 +64,6 @@ public class MenuManager {
      * Menu records: menu id -> menu definition.
      */
     private Map<String, MenuDefinition> menus = new HashMap<>();
-
-    /**
-     * Menu group records: menu id -> menu group.
-     */
-    private Map<String, List<MenuGroup>> menuGroups = new HashMap<>();
 
     /**
      * Menu modified flags.
@@ -115,21 +114,23 @@ public class MenuManager {
         }
 
         // Build full tree of groups
-        List<MenuGroup> groups = menuGroups.get(menuId);
-        if (groups != null) {
-            for (MenuGroup group : groups) {
-                String groupId = group.getGroupId();
-                SeparationMode separationMode = group.getSeparationMode();
-                MenuPosition position = group.getPosition();
-                PositionMode basicMode = position.getBasicMode();
-                if (basicMode != PositionMode.UNSPECIFIED) {
-                    MenuGroupRecord groupRecord = groupsMap.get(basicMode.name());
-                    MenuGroupRecord menuGroupRecord = new MenuGroupRecord(groupId);
-                    menuGroupRecord.separationMode = separationMode;
-                    groupRecord.subGroups.add(menuGroupRecord);
-                    groupsMap.put(groupId, menuGroupRecord);
-                } else {
-                    MenuGroupRecord groupRecord = groupsMap.get(position.getGroupId());
+        for (MenuContribution contribution : menuDef.getContributions()) {
+            if (!(contribution instanceof GroupMenuContribution)) {
+                continue;
+            }
+            String groupId = ((GroupMenuContribution) contribution).getGroupId();
+            SeparationMode separationMode = getSeparationMode(menuId, contribution);
+            String parentGroupId = getParentGroup(menuId, contribution);
+            if (parentGroupId != null) {
+                MenuGroupRecord groupRecord = groupsMap.get(parentGroupId);
+                MenuGroupRecord menuGroupRecord = new MenuGroupRecord(groupId);
+                menuGroupRecord.separationMode = separationMode;
+                groupRecord.subGroups.add(menuGroupRecord);
+                groupsMap.put(groupId, menuGroupRecord);
+            } else {
+                PositionMode positionMode = getPositionMode(menuId, contribution);
+                if (positionMode == null) {
+                    MenuGroupRecord groupRecord = groupsMap.get(positionMode.name());
                     MenuGroupRecord menuGroupRecord = new MenuGroupRecord(groupId);
                     menuGroupRecord.separationMode = separationMode;
                     groupRecord.subGroups.add(menuGroupRecord);
@@ -140,14 +141,17 @@ public class MenuManager {
 
         // Go thru all contributions and link them to its target group
         for (MenuContribution contribution : menuDef.getContributions()) {
-            MenuPosition menuPosition = contribution.getMenuPosition();
-            PositionMode basicMode = menuPosition.getBasicMode();
-            NextToMode nextToMode = menuPosition.getNextToMode();
-            if (basicMode != PositionMode.UNSPECIFIED) {
-                MenuGroupRecord menuGroupRecord = groupsMap.get(basicMode.name());
+            PositionMode positionMode = getPositionMode(menuId, contribution);
+            String parentGroupId = getParentGroup(menuId, contribution);
+            if (positionMode != null) {
+                MenuGroupRecord menuGroupRecord = groupsMap.get(positionMode.name());
                 menuGroupRecord.contributions.add(contribution);
             } else {
-                switch (nextToMode) {
+                if (parentGroupId != null) {
+                    MenuGroupRecord menuGroupRecord = groupsMap.get(parentGroupId);
+                    menuGroupRecord.contributions.add(contribution);
+                }
+                /*switch (nextToMode) {
                     case UNSPECIFIED: {
                         MenuGroupRecord menuGroupRecord = groupsMap.get(menuPosition.getGroupId());
                         menuGroupRecord.contributions.add(contribution);
@@ -173,7 +177,7 @@ public class MenuManager {
                     }
                     default:
                         throw new IllegalStateException();
-                }
+                } */
             }
         }
 
@@ -300,13 +304,13 @@ public class MenuManager {
                                 finishMenuAction(action, activationUpdateService);
                             }
                         };
-                    } else if (next.contribution instanceof DirectMenuContribution) {
+                    } else if (next.contribution instanceof DirectSubMenuContribution) {
                         processed = new ProcessedContribution() {
-                            DirectMenuContribution directMenuContribution;
+                            DirectSubMenuContribution directMenuContribution;
 
                             @Override
                             public void process() {
-                                directMenuContribution = (DirectMenuContribution) next.contribution;
+                                directMenuContribution = (DirectSubMenuContribution) next.contribution;
                             }
 
                             @Override
@@ -345,6 +349,8 @@ public class MenuManager {
                                 finishMenuAction(action, activationUpdateService);
                             }
                         };
+                    } else if (next.contribution instanceof DirectSubMenuContribution) {
+                        continue;
                     } else {
                         throw new UnsupportedOperationException("Not supported yet.");
                     }
@@ -354,7 +360,7 @@ public class MenuManager {
                         rootProcessed = processed;
                     }
                     String name = processed.getName();
-                    NextToMode nextToMode = next.contribution.getMenuPosition().getNextToMode();
+                    /*NextToMode nextToMode = next.contribution.getMenuPosition().getNextToMode();
                     switch (nextToMode) {
                         case BEFORE: {
                             next.parent.before.add(processed);
@@ -369,7 +375,7 @@ public class MenuManager {
                         }
                         default:
                             throw new IllegalStateException();
-                    }
+                    } */
                     List<MenuContribution> nextToBefore = beforeItem.get(name);
                     if (nextToBefore != null) {
                         nextToBefore.forEach((menuContribution) -> {
@@ -462,20 +468,70 @@ public class MenuManager {
     }
 
     boolean menuGroupExists(String menuId, String groupId) {
-        List<MenuGroup> menuGroupDefs = menuGroups.get(menuId);
-        if (menuGroupDefs == null) {
+        MenuDefinition menuDefs = menus.get(menuId);
+        if (menuDefs == null) {
             return false;
         }
 
-        if (menuGroupDefs.stream().anyMatch((menuGroup) -> (groupId.equals(menuGroup.getGroupId())))) {
+        if (menuDefs.getContributions().stream().anyMatch((contribution) -> (contribution instanceof GroupMenuContribution && ((GroupMenuContribution) contribution).getGroupId().equals(groupId)))) {
             return true;
         }
 
         return false;
     }
+    
+    @Nullable
+    private GroupMenuContribution getGroup(String menuId, String groupId) {
+        MenuDefinition menuDefinition = menus.get(menuId);
+        for (MenuContribution contribution : menuDefinition.getContributions()) {
+            if (contribution instanceof GroupMenuContribution) {
+                if (((GroupMenuContribution) contribution).getGroupId().equals(groupId)) {
+                    return (GroupMenuContribution) contribution;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private SeparationMode getSeparationMode(String menuId, MenuContribution contribution) {
+        MenuDefinition menuDefinition = menus.get(menuId);
+        List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
+        for (MenuContributionRule rule : rules) {
+            if (rule instanceof SeparationMenuContributionRule) {
+                return ((SeparationMenuContributionRule) contribution).getSeparationMode();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private PositionMode getPositionMode(String menuId, MenuContribution contribution) {
+        MenuDefinition menuDefinition = menus.get(menuId);
+        List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
+        for (MenuContributionRule rule : rules) {
+            if (rule instanceof PositionMenuContributionRule) {
+                return ((PositionMenuContributionRule) contribution).getPositionMode();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private String getParentGroup(String menuId, MenuContribution contribution) {
+        MenuDefinition menuDefinition = menus.get(menuId);
+        List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
+        for (MenuContributionRule rule : rules) {
+            if (rule instanceof GroupMenuContributionRule) {
+                return ((GroupMenuContributionRule) contribution).getGroupId();
+            }
+        }
+        return null;
+    }
 
     public void unregisterMenu(String menuId) {
-        MenuDefinition definition = menus.get(menuId);
+        throw new IllegalStateException();
+/*        MenuDefinition definition = menus.get(menuId);
         if (definition != null) {
             // TODO clear pointers to improve garbage collection performance?
 //            List<MenuContribution> contributions = definition.getContributions();
@@ -483,7 +539,7 @@ public class MenuManager {
 //                contribution.
 //            }
 
-            for (Map.Entry<String, List<MenuGroup>> usage : menuGroups.entrySet()) {
+            for (Map.Entry<String, List<Integer>> usage : menuGroups.entrySet()) {
                 if (menuId.equals(usage.getKey())) {
                     menuGroups.remove(usage.getKey());
                     break;
@@ -497,7 +553,7 @@ public class MenuManager {
                 }
             }
             menus.remove(menuId);
-        }
+        } */
     }
 
     private static abstract class ProcessedContribution {
@@ -553,52 +609,66 @@ public class MenuManager {
         menus.put(menuId, menuDefinition);
     }
 
-    public void registerMenuGroup(String menuId, MenuGroup menuGroup) {
-        List<MenuGroup> groups = menuGroups.get(menuId);
-        if (groups == null) {
-            groups = new LinkedList<>();
-            menuGroups.put(menuId, groups);
-        }
-        groups.add(menuGroup);
-    }
-
-    public void registerMenuItem(String menuId, String pluginId, Action action, MenuPosition position) {
+    @Nonnull
+    public MenuContribution registerMenuItem(String menuId, String pluginId, Action action) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
             throw new IllegalStateException("Menu with Id " + menuId + " doesn't exist");
         }
 
-        ActionMenuContribution menuContribution = new ActionMenuContribution(action, position);
+        ActionMenuContribution menuContribution = new ActionMenuContribution(action);
         menuDef.getContributions().add(menuContribution);
+        return menuContribution;
     }
 
-    public void registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName, MenuPosition position) {
+    @Nonnull
+    public MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName) {
         Action subMenuAction = new AbstractAction(subMenuName) {
             @Override
             public void actionPerformed(ActionEvent e) {
             }
         };
-        registerMenuItem(menuId, pluginId, subMenuId, subMenuAction, position);
+        return registerMenuItem(menuId, pluginId, subMenuId, subMenuAction);
     }
 
-    public void registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction, MenuPosition position) {
+    @Nonnull
+    public MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
             throw new IllegalStateException("Menu with Id " + menuId + " doesn't exist");
         }
 
-        SubMenuContribution menuContribution = new SubMenuContribution(subMenuId, subMenuAction, position);
+        SubMenuContribution menuContribution = new SubMenuContribution(subMenuId, subMenuAction);
         menuDef.getContributions().add(menuContribution);
+        return menuContribution;
     }
 
-    public void registerMenuItem(String menuId, String pluginId, JMenu menu, MenuPosition position) {
+    @Nonnull
+    public MenuContribution registerMenuItem(String menuId, String pluginId, JMenu menu) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
             throw new IllegalStateException("Menu with Id " + menuId + " doesn't exist");
         }
 
-        DirectMenuContribution menuContribution = new DirectMenuContribution(menu, position);
+        DirectSubMenuContribution menuContribution = new DirectSubMenuContribution(menu);
         menuDef.getContributions().add(menuContribution);
+        return menuContribution;
+    }
+
+    @Nonnull
+    public MenuContribution registerMenuGroup(String menuId, String pluginId, String groupId) {
+        MenuDefinition menuDef = menus.get(menuId);
+        if (menuDef == null) {
+            throw new IllegalStateException("Menu with Id " + menuId + " doesn't exist");
+        }
+
+        GroupMenuContribution groupContribution = new GroupMenuContribution(groupId);
+        menuDef.getContributions().add(groupContribution);
+        return groupContribution;
+    }
+
+    public void registerMenuRule(MenuContribution contribution, MenuContributionRule rule) {
+
     }
 
     @ParametersAreNonnullByDefault

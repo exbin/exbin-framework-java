@@ -27,20 +27,20 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import javax.swing.JMenu;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.action.api.MenuGroup;
-import org.exbin.framework.action.api.MenuPosition;
-import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMode;
-import org.exbin.framework.action.api.ToolBarGroup;
-import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.GroupMenuContributionRule;
+import org.exbin.framework.action.api.GroupToolBarContributionRule;
+import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.PositionMenuContributionRule;
+import org.exbin.framework.action.api.PositionToolBarContributionRule;
+import org.exbin.framework.action.api.ToolBarContribution;
 import org.exbin.framework.file.action.FileActions;
 import org.exbin.framework.file.action.NewFileAction;
 import org.exbin.framework.file.action.OpenFileAction;
@@ -111,20 +111,29 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerMenuFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(ActionConsts.FILE_MENU_ID, new MenuGroup(FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createNewFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createOpenFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createSaveFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createSaveAsFileAction(), new MenuPosition(FILE_MENU_GROUP_ID));
+        MenuContribution contribution = actionModule.registerMenuGroup(ActionConsts.FILE_MENU_ID, MODULE_ID, FILE_MENU_GROUP_ID);
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createNewFileAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createOpenFileAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createSaveFileAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createSaveAsFileAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
     }
 
     @Override
     public void registerToolBarFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, new ToolBarGroup(FILE_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.TOP)));
-        actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createNewFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createOpenFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
-        actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createSaveFileAction(), new ToolBarPosition(FILE_TOOL_BAR_GROUP_ID));
+        ToolBarContribution contribution = actionModule.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, FILE_TOOL_BAR_GROUP_ID);
+        actionModule.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
+        contribution = actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createNewFileAction());
+        actionModule.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
+        contribution = actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createOpenFileAction());
+        actionModule.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
+        contribution = actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createSaveFileAction());
+        actionModule.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
     }
 
     @Override
@@ -145,7 +154,8 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, recentFileMenu, new MenuPosition(NextToMode.AFTER, languageModule.getActionWithDialogText((String) createOpenFileAction().getValue(Action.NAME))));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, recentFileMenu);
+        // TODO actionModule.registerMenuRule(contribution, new RelativeMenuContributionRule(NextToMode.AFTER, contribution)); languageModule.getActionWithDialogText((String) createOpenFileAction().getValue(Action.NAME))
     }
 
     @Nonnull

@@ -43,17 +43,6 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel {
         scrollPane = new javax.swing.JScrollPane();
         keyMapTable = new javax.swing.JTable();
 
-        keyMapTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3"
-            }
-        ));
         scrollPane.setViewportView(keyMapTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

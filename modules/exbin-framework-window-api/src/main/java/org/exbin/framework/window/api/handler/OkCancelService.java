@@ -15,8 +15,8 @@
  */
 package org.exbin.framework.window.api.handler;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.JButton;
 import org.exbin.framework.utils.OkCancelListener;
 
@@ -27,9 +27,19 @@ import org.exbin.framework.utils.OkCancelListener;
  */
 public interface OkCancelService {
 
-    @Nullable
-    JButton getDefaultButton();
+    /**
+     * Returns default button.
+     *
+     * @return default button
+     */
+    @Nonnull
+    Optional<JButton> getDefaultButton();
 
+    /**
+     * Returns OK / cancel listener
+     *
+     * @return OK / cancel listener
+     */
     @Nonnull
     OkCancelListener getOkCancelListener();
 }

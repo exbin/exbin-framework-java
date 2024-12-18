@@ -15,14 +15,14 @@
  */
 package org.exbin.framework.addon.manager;
 
-import java.net.URL;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.MenuPosition;
+import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.addon.manager.action.AddonManagerAction;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
@@ -36,7 +36,6 @@ import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 public class AddonManagerModule implements AddonManagerModuleApi {
 
 //    private CheckForUpdateService checkForUpdateService;
-
     public AddonManagerModule() {
     }
 
@@ -49,7 +48,8 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     @Override
     public void registerAddonManagerMenuItem() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createAddonManagerAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createAddonManagerAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE_LAST));
     }
 
     /*

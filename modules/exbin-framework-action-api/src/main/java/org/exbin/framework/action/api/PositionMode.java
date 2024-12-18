@@ -22,7 +22,6 @@ package org.exbin.framework.action.api;
  */
 public enum PositionMode {
 
-    UNSPECIFIED,
     /**
      * Top position.
      */
@@ -46,9 +45,5 @@ public enum PositionMode {
     /**
      * End of the bottom position.
      */
-    BOTTOM_LAST,
-    /**
-     * Hidden position, should be included manually.
-     */
-    CUSTOM
+    BOTTOM_LAST
 }

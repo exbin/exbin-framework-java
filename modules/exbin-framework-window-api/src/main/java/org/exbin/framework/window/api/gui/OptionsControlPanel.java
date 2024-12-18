@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.window.api.gui;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
@@ -166,8 +167,8 @@ public class OptionsControlPanel extends javax.swing.JPanel implements OptionsCo
 
     @Nonnull
     @Override
-    public JButton getDefaultButton() {
-        return saveButton;
+    public Optional<JButton> getDefaultButton() {
+        return Optional.of(saveButton);
     }
 
     @Nonnull

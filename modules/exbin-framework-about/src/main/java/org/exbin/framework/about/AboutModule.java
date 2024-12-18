@@ -23,13 +23,15 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.about.action.AboutAction;
-import org.exbin.framework.action.api.MenuGroup;
-import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.about.api.AboutModuleApi;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.GroupMenuContributionRule;
+import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.PositionMenuContributionRule;
+import org.exbin.framework.action.api.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 
@@ -78,9 +80,12 @@ public class AboutModule implements AboutModuleApi {
             aboutActionRegistered = true;
         }
 
-        actionModule.registerMenuGroup(ActionConsts.HELP_MENU_ID, new MenuGroup(HELP_ABOUT_MENU_GROUP_ID, new MenuPosition(PositionMode.BOTTOM_LAST), aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
+        MenuContribution contribution = actionModule.registerMenuGroup(ActionConsts.HELP_MENU_ID, MODULE_ID, HELP_ABOUT_MENU_GROUP_ID);
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM_LAST));
+        actionModule.registerMenuRule(contribution, new SeparationMenuContributionRule(aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
-            actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createAboutAction(), new MenuPosition(HELP_ABOUT_MENU_GROUP_ID));
+            contribution = actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createAboutAction());
+            actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(HELP_ABOUT_MENU_GROUP_ID));
         }
     }
 

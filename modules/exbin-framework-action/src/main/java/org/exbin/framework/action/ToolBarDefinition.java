@@ -16,10 +16,13 @@
 package org.exbin.framework.action;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.ToolBarContribution;
+import org.exbin.framework.action.api.ToolBarContributionRule;
 
 /**
  * Toolbar definition.
@@ -31,6 +34,7 @@ public class ToolBarDefinition {
 
     private final String pluginId;
     private List<ToolBarContribution> contributions = new ArrayList<>();
+    private Map<ToolBarContribution, List<ToolBarContributionRule>> rules = new HashMap<>();
 
     public ToolBarDefinition(String pluginId) {
         this.pluginId = pluginId;
@@ -43,5 +47,14 @@ public class ToolBarDefinition {
 
     public void setContributions(List<ToolBarContribution> contributions) {
         this.contributions = contributions;
+    }
+
+    @Nonnull
+    public Map<ToolBarContribution, List<ToolBarContributionRule>> getRules() {
+        return rules;
+    }
+
+    public void setRules(Map<ToolBarContribution, List<ToolBarContributionRule>> rules) {
+        this.rules = rules;
     }
 }

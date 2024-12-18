@@ -19,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
- * Service for action update.
+ * Service for component activation.
  *
  * @author ExBin Project (https://exbin.org)
  */

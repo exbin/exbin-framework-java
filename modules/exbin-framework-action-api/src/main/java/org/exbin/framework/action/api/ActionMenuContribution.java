@@ -28,21 +28,13 @@ import javax.swing.Action;
 public class ActionMenuContribution implements MenuContribution {
 
     private final Action action;
-    private final MenuPosition position;
 
-    public ActionMenuContribution(Action action, MenuPosition position) {
+    public ActionMenuContribution(Action action) {
         this.action = action;
-        this.position = position;
     }
 
     @Nonnull
     public Action getAction() {
         return action;
-    }
-
-    @Nonnull
-    @Override
-    public MenuPosition getMenuPosition() {
-        return position;
     }
 }

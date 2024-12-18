@@ -57,12 +57,8 @@ import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.action.api.MenuGroup;
-import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
-import org.exbin.framework.action.api.ToolBarGroup;
-import org.exbin.framework.action.api.ToolBarPosition;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.handler.DefaultControlHandler;
@@ -74,6 +70,14 @@ import org.exbin.framework.editor.text.service.TextFontService;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.GroupMenuContributionRule;
+import org.exbin.framework.action.api.GroupToolBarContributionRule;
+import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.PositionMenuContributionRule;
+import org.exbin.framework.action.api.PositionToolBarContributionRule;
+import org.exbin.framework.action.api.SeparationMenuContributionRule;
+import org.exbin.framework.action.api.SeparationToolBarContributionRule;
+import org.exbin.framework.action.api.ToolBarContribution;
 import org.exbin.framework.editor.text.options.gui.TextEncodingPanel;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -158,7 +162,8 @@ public class EditorTextModule implements Module {
         encodingsHandler.rebuildEncodings();
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, encodingsHandler.getToolsEncodingMenu(), new MenuPosition(PositionMode.TOP_LAST));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, encodingsHandler.getToolsEncodingMenu());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP_LAST));
     }
 
     public void registerOptionsPanels() {
@@ -453,7 +458,7 @@ public class EditorTextModule implements Module {
             }
         });
     }
-    
+
     public void registerUndoHandler() {
         editorProvider.registerUndoHandler();
     }
@@ -461,12 +466,14 @@ public class EditorTextModule implements Module {
     public void registerWordWrapping() {
         createWordWrappingAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, createWordWrappingAction(), new MenuPosition(PositionMode.BOTTOM));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, createWordWrappingAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, createGoToLineAction(), new MenuPosition(PositionMode.BOTTOM));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, createGoToLineAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM));
     }
 
     public TextStatusPanel getTextStatusPanel() {
@@ -560,33 +567,45 @@ public class EditorTextModule implements Module {
     public void registerEditFindMenuActions() {
         getFindReplaceActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(ActionConsts.EDIT_MENU_ID, new MenuGroup(EDIT_FIND_MENU_GROUP_ID, new MenuPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.createEditFindAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.createEditFindAgainAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
-        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.createEditReplaceAction(), new MenuPosition(EDIT_FIND_MENU_GROUP_ID));
+        MenuContribution contribution = actionModule.registerMenuGroup(ActionConsts.EDIT_MENU_ID, MODULE_ID, EDIT_FIND_MENU_GROUP_ID);
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE));
+        actionModule.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMode.AROUND));
+        contribution = actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.createEditFindAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(EDIT_FIND_MENU_GROUP_ID));
+        contribution = actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.createEditFindAgainAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(EDIT_FIND_MENU_GROUP_ID));
+        contribution = actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, MODULE_ID, findReplaceActions.createEditReplaceAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(EDIT_FIND_MENU_GROUP_ID));
     }
 
     public void registerEditFindToolBarActions() {
         getFindReplaceActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, new ToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID, new ToolBarPosition(PositionMode.MIDDLE), SeparationMode.AROUND));
-        actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceActions.createEditFindAction(), new ToolBarPosition(EDIT_FIND_TOOL_BAR_GROUP_ID));
+        ToolBarContribution contribution = actionModule.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, EDIT_FIND_TOOL_BAR_GROUP_ID);
+        actionModule.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.MIDDLE));
+        actionModule.registerToolBarRule(contribution, new SeparationToolBarContributionRule(SeparationMode.AROUND));
+        contribution = actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, findReplaceActions.createEditFindAction());
+        actionModule.registerToolBarRule(contribution, new GroupToolBarContributionRule(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createTextFontAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createTextColorAction(), new MenuPosition(PositionMode.TOP));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createTextFontAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createTextColorAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
     }
 
     public void registerPropertiesMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createPropertiesAction(), new MenuPosition(PositionMode.BOTTOM));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createPropertiesAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createPrintAction(), new MenuPosition(PositionMode.BOTTOM));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createPrintAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM));
     }
 
     public void loadFromPreferences(Preferences preferences) {

@@ -20,8 +20,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.GroupMenuContributionRule;
+import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.operation.manager.action.UndoManagerAction;
 import org.exbin.framework.operation.manager.api.OperationManagerModuleApi;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
@@ -46,7 +47,8 @@ public class OperationManagerModule implements OperationManagerModuleApi {
     @Override
     public void registerOperationManagerInMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, OperationManagerModuleApi.MODULE_ID, createUndoManagerAction(), new MenuPosition(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.EDIT_MENU_ID, OperationManagerModuleApi.MODULE_ID, createUndoManagerAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
     }
 
     @Nonnull

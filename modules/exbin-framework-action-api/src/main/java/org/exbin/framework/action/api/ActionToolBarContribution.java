@@ -28,21 +28,13 @@ import javax.swing.Action;
 public class ActionToolBarContribution implements ToolBarContribution {
 
     private final Action action;
-    private final ToolBarPosition position;
 
-    public ActionToolBarContribution(Action action, ToolBarPosition position) {
+    public ActionToolBarContribution(Action action) {
         this.action = action;
-        this.position = position;
     }
 
     @Nonnull
     public Action getAction() {
         return action;
-    }
-
-    @Nonnull
-    @Override
-    public ToolBarPosition getToolBarPosition() {
-        return position;
     }
 }

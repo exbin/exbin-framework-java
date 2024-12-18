@@ -17,39 +17,21 @@ package org.exbin.framework.action.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * Tool bar group definition.
+ * Tool bar contribution rule for items separation.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ToolBarGroup {
+@Immutable
+public class SeparationToolBarContributionRule implements ToolBarContributionRule {
 
-    private final String groupId;
-    private final ToolBarPosition position;
     private final SeparationMode separationMode;
 
-    public ToolBarGroup(String groupId, ToolBarPosition position) {
-        this.groupId = groupId;
-        this.position = position;
-        separationMode = SeparationMode.NONE;
-    }
-
-    public ToolBarGroup(String groupId, ToolBarPosition position, SeparationMode separationMode) {
-        this.groupId = groupId;
-        this.position = position;
+    public SeparationToolBarContributionRule(SeparationMode separationMode) {
         this.separationMode = separationMode;
-    }
-
-    @Nonnull
-    public String getGroupId() {
-        return groupId;
-    }
-
-    @Nonnull
-    public ToolBarPosition getPosition() {
-        return position;
     }
 
     @Nonnull

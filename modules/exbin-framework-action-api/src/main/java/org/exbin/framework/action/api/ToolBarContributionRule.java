@@ -16,9 +16,9 @@
 package org.exbin.framework.action.api;
 
 /**
- * Interface for menu contributions.
+ * Interface for tool bar contributions rule.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface MenuContribution {
+public interface ToolBarContributionRule {
 }

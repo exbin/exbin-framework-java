@@ -15,10 +15,27 @@
  */
 package org.exbin.framework.action.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+
 /**
- * Interface for menu contributions.
+ * Menu contribution rule for items separation.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface MenuContribution {
+@ParametersAreNonnullByDefault
+@Immutable
+public class SeparationMenuContributionRule implements MenuContributionRule {
+
+    private final SeparationMode separationMode;
+
+    public SeparationMenuContributionRule(SeparationMode separationMode) {
+        this.separationMode = separationMode;
+    }
+
+    @Nonnull
+    public SeparationMode getSeparationMode() {
+        return separationMode;
+    }
 }

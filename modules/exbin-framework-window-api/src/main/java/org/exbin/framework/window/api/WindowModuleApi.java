@@ -28,7 +28,6 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 
 /**
  * Interface for framework window module.
@@ -90,9 +89,26 @@ public interface WindowModuleApi extends Module {
     @Nonnull
     WindowHandler createDialog(@Nullable Component parentComponent, Dialog.ModalityType modalityType, @Nullable JComponent component, @Nullable JPanel controlPanel);
 
+    /**
+     * Adds header section to the window.
+     *
+     * @param window target window
+     * @param resourceClass class for resource location
+     * @param resourceBundle resource containing texts / icon for header
+     * @return header panel
+     */
     @Nonnull
     JPanel addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle);
 
+    /**
+     * Adds header section to the window.
+     *
+     * @param window target window
+     * @param headerTitle header title
+     * @param headerDescription header description
+     * @param headerIcon optional header icon
+     * @return header panel
+     */
     @Nonnull
     JPanel addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon);
 

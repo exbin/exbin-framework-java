@@ -15,37 +15,10 @@
  */
 package org.exbin.framework.action.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
- * Tool bar position.
+ * Menu contribution rule.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class ToolBarPosition {
-
-    private final PositionMode basicMode;
-    private final String groupId;
-
-    public ToolBarPosition(PositionMode basicMode) {
-        this.basicMode = basicMode;
-        groupId = "";
-    }
-
-    public ToolBarPosition(String groupId) {
-        basicMode = PositionMode.UNSPECIFIED;
-        this.groupId = groupId;
-    }
-
-    @Nonnull
-    public PositionMode getBasicMode() {
-        return basicMode;
-    }
-
-    @Nonnull
-    public String getGroupId() {
-        return groupId;
-    }
+public interface MenuContributionRule {
 }

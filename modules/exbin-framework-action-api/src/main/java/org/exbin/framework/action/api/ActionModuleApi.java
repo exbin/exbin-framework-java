@@ -64,12 +64,30 @@ public interface ActionModuleApi extends Module {
      */
     void initAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId);
 
+    /**
+     * Creates instance of action manager.
+     *
+     * @return action manager
+     */
     @Nonnull
     ActionManager createActionManager();
 
+    /**
+     * Converts action to menu item.
+     *
+     * @param action action
+     * @return menu item
+     */
     @Nonnull
     JMenuItem actionToMenuItem(Action action);
 
+    /**
+     * Converts action to menu item.
+     *
+     * @param action action
+     * @param buttonGroups button groups
+     * @return menu item
+     */
     @Nonnull
     JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups);
 
@@ -100,22 +118,15 @@ public interface ActionModuleApi extends Module {
     void registerMenu(String menuId, String pluginId);
 
     /**
-     * Registers menu group for particular menu.
-     *
-     * @param menuId menu identificator
-     * @param menuGroup menu group
-     */
-    void registerMenuGroup(String menuId, MenuGroup menuGroup);
-
-    /**
      * Registers menu as a child item for given menu.
      *
      * @param menuId menu Id
      * @param pluginId plugin Id
      * @param item menu item
-     * @param position menu position
+     * @return menu contribution
      */
-    void registerMenuItem(String menuId, String pluginId, JMenu item, MenuPosition position);
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, String pluginId, JMenu item);
 
     /**
      * Registers menu item as a child item for given menu.
@@ -123,9 +134,10 @@ public interface ActionModuleApi extends Module {
      * @param menuId menu Id
      * @param pluginId plugin Id
      * @param item menu item
-     * @param position menu position
+     * @return menu contribution
      */
-    void registerMenuItem(String menuId, String pluginId, JMenuItem item, MenuPosition position);
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, String pluginId, JMenuItem item);
 
     /**
      * Registers menu item as a child item for given menu.
@@ -133,9 +145,10 @@ public interface ActionModuleApi extends Module {
      * @param menuId menu Id
      * @param pluginId plugin Id
      * @param action action
-     * @param position menu position
+     * @return menu contribution
      */
-    void registerMenuItem(String menuId, String pluginId, Action action, MenuPosition position);
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, String pluginId, Action action);
 
     /**
      * Registers menu item as a child item for given menu.
@@ -144,9 +157,10 @@ public interface ActionModuleApi extends Module {
      * @param pluginId plugin Id
      * @param subMenuId sub-menu id
      * @param subMenuAction sub-menu action
-     * @param position menu position
+     * @return menu contribution
      */
-    void registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction, MenuPosition position);
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction);
 
     /**
      * Registers menu item as a child item for given menu.
@@ -155,9 +169,29 @@ public interface ActionModuleApi extends Module {
      * @param pluginId plugin Id
      * @param subMenuId sub-menu id
      * @param subMenuName sub-menu name
-     * @param position menu position
+     * @return menu contribution
      */
-    void registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName, MenuPosition position);
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName);
+
+    /**
+     * Registers menu item as a child item for given menu.
+     *
+     * @param menuId menu Id
+     * @param pluginId plugin Id
+     * @param groupId group id
+     * @return menu contribution
+     */
+    @Nonnull
+    MenuContribution registerMenuGroup(String menuId, String pluginId, String groupId);
+
+    /**
+     * Registers menu contribution rule.
+     *
+     * @param menuContribution menu contribution
+     * @param rule menu contribution rule
+     */
+    void registerMenuRule(MenuContribution menuContribution, MenuContributionRule rule);
 
     /**
      * Returns clipboard/editing actions.
@@ -167,6 +201,11 @@ public interface ActionModuleApi extends Module {
     @Nonnull
     ClipboardActionsApi getClipboardActions();
 
+    /**
+     * Returns clipboard/editing text actions.
+     *
+     * @return clipboard/editing text actions.
+     */
     @Nonnull
     ClipboardActionsApi getClipboardTextActions();
 
@@ -201,30 +240,57 @@ public interface ActionModuleApi extends Module {
     void registerToolBar(String toolBarId, String pluginId);
 
     /**
-     * Registers tool bar group for particular tool bar.
-     *
-     * @param toolBarId toolbar id
-     * @param toolBarGroup toolbar group
-     */
-    void registerToolBarGroup(String toolBarId, ToolBarGroup toolBarGroup);
-
-    /**
      * Registers item as a child item for given tool bar.
      *
      * @param toolBarId toolbar id
      * @param pluginId plugin id
      * @param action action
-     * @param position toolbar position
+     * @return toolbar contribution
      */
-    void registerToolBarItem(String toolBarId, String pluginId, Action action, ToolBarPosition position);
+    @Nonnull
+    ToolBarContribution registerToolBarItem(String toolBarId, String pluginId, Action action);
+
+    /**
+     * Registers group as a child item for given tool bar.
+     *
+     * @param toolBarId toolbar id
+     * @param pluginId plugin id
+     * @param groupId group id
+     * @return toolbar contribution
+     */
+    @Nonnull
+    ToolBarContribution registerToolBarGroup(String toolBarId, String pluginId, String groupId);
+
+    /**
+     * Registers tool bar contribution rule.
+     *
+     * @param toolBarContribution tool bar contribution
+     * @param rule tool bar contribution rule
+     */
+    void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule);
 
     /**
      * Registers tool bar clipboard actions.
      */
     void registerToolBarClipboardActions();
 
+    /**
+     * Registers default clipboard menu items.
+     *
+     * @param menuId menu id
+     * @param moduleId module id
+     * @param separationMode separation mode
+     */
     void registerClipboardMenuItems(String menuId, String moduleId, SeparationMode separationMode);
 
+    /**
+     * Registers clipboard menu items.
+     *
+     * @param actions clipboard actions
+     * @param menuId menu id
+     * @param moduleId module id
+     * @param separationMode separation mode
+     */
     void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMode separationMode);
 
     /**

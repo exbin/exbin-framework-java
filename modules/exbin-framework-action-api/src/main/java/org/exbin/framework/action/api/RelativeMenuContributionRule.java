@@ -17,32 +17,32 @@ package org.exbin.framework.action.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JMenu;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * Record for action as menu item contribution.
+ * Menu contribution rule for item relative position.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DirectMenuContribution implements MenuContribution {
+@Immutable
+public class RelativeMenuContributionRule implements MenuContributionRule {
 
-    private final JMenu menu;
-    private final MenuPosition position;
+    private final NextToMode nextToMode;
+    private final MenuContribution menuContribution;
 
-    public DirectMenuContribution(JMenu menu, MenuPosition position) {
-        this.menu = menu;
-        this.position = position;
+    public RelativeMenuContributionRule(NextToMode nextToMode, MenuContribution menuContribution) {
+        this.nextToMode = nextToMode;
+        this.menuContribution = menuContribution;
     }
 
     @Nonnull
-    public JMenu getMenu() {
-        return menu;
+    public NextToMode getNextToMode() {
+        return nextToMode;
     }
 
     @Nonnull
-    @Override
-    public MenuPosition getMenuPosition() {
-        return position;
+    public MenuContribution getMenuContribution() {
+        return menuContribution;
     }
 }

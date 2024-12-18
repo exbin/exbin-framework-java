@@ -16,10 +16,13 @@
 package org.exbin.framework.action;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.MenuContributionRule;
 
 /**
  * Menu definition.
@@ -31,23 +34,27 @@ public class MenuDefinition {
 
     private final String pluginId;
     private List<MenuContribution> contributions = new ArrayList<>();
+    private Map<MenuContribution, List<MenuContributionRule>> rules = new HashMap<>();
 
     public MenuDefinition(String pluginId) {
         this.pluginId = pluginId;
     }
 
-    /**
-     * @return the contributions
-     */
     @Nonnull
     public List<MenuContribution> getContributions() {
         return contributions;
     }
 
-    /**
-     * @param contributions the contributions to set
-     */
     public void setContributions(List<MenuContribution> contributions) {
         this.contributions = contributions;
+    }
+
+    @Nonnull
+    public Map<MenuContribution, List<MenuContributionRule>> getRules() {
+        return rules;
+    }
+
+    public void setRules(Map<MenuContribution, List<MenuContributionRule>> rules) {
+        this.rules = rules;
     }
 }

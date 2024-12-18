@@ -29,12 +29,10 @@ public class SubMenuContribution implements MenuContribution {
 
     private final String menuId;
     private final Action action;
-    private final MenuPosition position;
 
-    public SubMenuContribution(String menuId, Action action, MenuPosition position) {
+    public SubMenuContribution(String menuId, Action action) {
         this.menuId = menuId;
         this.action = action;
-        this.position = position;
     }
 
     @Nonnull
@@ -45,11 +43,5 @@ public class SubMenuContribution implements MenuContribution {
     @Nonnull
     public Action getAction() {
         return action;
-    }
-
-    @Nonnull
-    @Override
-    public MenuPosition getMenuPosition() {
-        return position;
     }
 }

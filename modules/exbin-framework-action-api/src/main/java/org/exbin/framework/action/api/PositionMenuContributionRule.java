@@ -15,10 +15,27 @@
  */
 package org.exbin.framework.action.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+
 /**
- * Interface for menu contributions.
+ * Menu contribution rule for item position.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface MenuContribution {
+@ParametersAreNonnullByDefault
+@Immutable
+public class PositionMenuContributionRule implements MenuContributionRule {
+
+    private final PositionMode positionMode;
+
+    public PositionMenuContributionRule(PositionMode positionMode) {
+        this.positionMode = positionMode;
+    }
+
+    @Nonnull
+    public PositionMode getPositionMode() {
+        return positionMode;
+    }
 }

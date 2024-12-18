@@ -15,10 +15,26 @@
  */
 package org.exbin.framework.action.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JMenu;
+
 /**
- * Interface for menu contributions.
+ * Record for action as menu item contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface MenuContribution {
+@ParametersAreNonnullByDefault
+public class DirectSubMenuContribution implements MenuContribution {
+
+    private final JMenu menu;
+
+    public DirectSubMenuContribution(JMenu menu) {
+        this.menu = menu;
+    }
+
+    @Nonnull
+    public JMenu getMenu() {
+        return menu;
+    }
 }

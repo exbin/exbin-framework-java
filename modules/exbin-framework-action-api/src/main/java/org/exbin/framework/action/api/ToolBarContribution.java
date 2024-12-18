@@ -15,20 +15,10 @@
  */
 package org.exbin.framework.action.api;
 
-import javax.annotation.Nonnull;
-
 /**
  * Interface for tool bar contributions.
  *
  * @author ExBin Project (https://exbin.org)
  */
 public interface ToolBarContribution {
-
-    /**
-     * Returns toolbar position.
-     *
-     * @return toolbar position
-     */
-    @Nonnull
-    ToolBarPosition getToolBarPosition();
 }

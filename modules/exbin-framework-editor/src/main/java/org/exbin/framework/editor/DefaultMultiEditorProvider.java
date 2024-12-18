@@ -36,12 +36,12 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.ComponentActivationService;
-import org.exbin.framework.action.api.MenuPosition;
+import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.editor.action.EditorActions;
 import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.editor.api.EditorModuleApi;
-import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.editor.gui.MultiEditorPanel;
 import org.exbin.framework.file.api.AllFileTypes;
@@ -86,9 +86,12 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
         actionModule.registerMenu(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
-        actionModule.registerMenuItem(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID, editorModule.createCloseFileAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID, editorModule.createCloseAllFilesAction(), new MenuPosition(PositionMode.TOP));
-        actionModule.registerMenuItem(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID, editorModule.createCloseOtherFilesAction(), new MenuPosition(PositionMode.TOP));
+        MenuContribution contribution = actionModule.registerMenuItem(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID, editorModule.createCloseFileAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = actionModule.registerMenuItem(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID, editorModule.createCloseAllFilesAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = actionModule.registerMenuItem(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID, editorModule.createCloseOtherFilesAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
 
         multiEditorPanel.setController(new MultiEditorPanel.Controller() {
             @Override

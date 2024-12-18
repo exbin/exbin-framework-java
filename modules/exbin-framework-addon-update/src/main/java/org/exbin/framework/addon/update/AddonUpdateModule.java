@@ -26,7 +26,6 @@ import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.preferences.api.Preferences;
-import org.exbin.framework.action.api.MenuPosition;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.addon.update.options.CheckForUpdateOptions;
@@ -38,6 +37,8 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.addon.update.action.CheckForUpdateAction;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.addon.update.api.AddonUpdateModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -78,7 +79,8 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     @Override
     public void registerDefaultMenuItem() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction(), new MenuPosition(PositionMode.MIDDLE_LAST));
+        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, getCheckUpdateAction());
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE_LAST));
     }
 
     @Override

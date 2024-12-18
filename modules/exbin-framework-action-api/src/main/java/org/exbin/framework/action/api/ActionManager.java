@@ -26,7 +26,17 @@ import javax.swing.Action;
 @ParametersAreNonnullByDefault
 public interface ActionManager extends ComponentActivationService, ComponentActivationListener {
 
+    /**
+     * Registers given action.
+     *
+     * @param action action
+     */
     void registerAction(Action action);
 
+    /**
+     * Initializes given action.
+     *
+     * @param action action
+     */
     void initAction(Action action);
 }

@@ -17,51 +17,25 @@ package org.exbin.framework.action.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * Menu position.
- *
- * TODO: Replace with rules-based system
+ * Toolbar contribution rule for items group.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MenuPosition {
+@Immutable
+public class GroupToolBarContribution implements ToolBarContribution {
 
-    private final PositionMode basicMode;
-    private final NextToMode nextToMode;
     private final String groupId;
 
-    public MenuPosition(PositionMode basicMode) {
-        this.basicMode = basicMode;
-        this.groupId = "";
-        this.nextToMode = NextToMode.UNSPECIFIED;
-    }
-
-    public MenuPosition(String groupId) {
-        this.basicMode = PositionMode.UNSPECIFIED;
+    public GroupToolBarContribution(String groupId) {
         this.groupId = groupId;
-        this.nextToMode = NextToMode.UNSPECIFIED;
-    }
-
-    public MenuPosition(NextToMode nextToMode, String menuItemId) {
-        this.basicMode = PositionMode.UNSPECIFIED;
-        this.groupId = menuItemId;
-        this.nextToMode = nextToMode;
-    }
-
-    @Nonnull
-    public PositionMode getBasicMode() {
-        return basicMode;
     }
 
     @Nonnull
     public String getGroupId() {
         return groupId;
-    }
-
-    @Nonnull
-    public NextToMode getNextToMode() {
-        return nextToMode;
     }
 }

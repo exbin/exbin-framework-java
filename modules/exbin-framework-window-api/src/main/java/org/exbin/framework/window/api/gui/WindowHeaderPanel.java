@@ -21,6 +21,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -146,12 +147,12 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
         descriptionTextArea.setText(description);
     }
 
-    @Nullable
-    public Icon getIcon() {
-        return iconLabel.getIcon();
+    @Nonnull
+    public Optional<Icon> getIcon() {
+        return Optional.ofNullable(iconLabel.getIcon());
     }
 
-    public void setIcon(Icon icon) {
+    public void setIcon(@Nullable Icon icon) {
         iconLabel.setIcon(icon);
         iconLabel.setPreferredSize(new Dimension(icon == null ? 0 : 64, 64));
     }

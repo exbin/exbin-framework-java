@@ -15,10 +15,27 @@
  */
 package org.exbin.framework.action.api;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+
 /**
- * Interface for menu contributions.
+ * Toolbar contribution rule for items group.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface MenuContribution {
+@ParametersAreNonnullByDefault
+@Immutable
+public class GroupToolBarContributionRule implements ToolBarContributionRule {
+
+    private final String groupId;
+
+    public GroupToolBarContributionRule(String groupId) {
+        this.groupId = groupId;
+    }
+
+    @Nonnull
+    public String getGroupId() {
+        return groupId;
+    }
 }

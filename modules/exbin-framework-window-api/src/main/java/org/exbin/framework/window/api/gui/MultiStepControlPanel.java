@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.window.api.gui;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
@@ -190,8 +191,8 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
 
     @Nonnull
     @Override
-    public JButton getDefaultButton() {
-        return finishButton;
+    public Optional<JButton> getDefaultButton() {
+        return Optional.of(finishButton);
     }
 
     @Nonnull

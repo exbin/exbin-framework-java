@@ -130,10 +130,11 @@ public class WindowModule implements WindowModuleApi {
         return headerPanel;
     }
 
+    @Override
     public void setHideHeaderPanels(boolean hide) {
         this.hideHeaderPanels = hide;
     }
-    
+
     @Nonnull
     @Override
     public WindowHandler createWindow(final JComponent component, Component parent, String dialogTitle, Dialog.ModalityType modalityType) {
@@ -255,11 +256,11 @@ public class WindowModule implements WindowModuleApi {
             ((JDialog) dialog.getWindow()).setIconImage(applicationIcon.get());
         }
         if (controlPanel instanceof OkCancelService) {
-            JButton defaultButton = ((OkCancelService) controlPanel).getDefaultButton();
-            if (defaultButton != null) {
+            Optional<JButton> defaultButton = ((OkCancelService) controlPanel).getDefaultButton();
+            if (defaultButton.isPresent()) {
                 JRootPane rootPane = SwingUtilities.getRootPane(dialog.getWindow());
                 if (rootPane != null) {
-                    rootPane.setDefaultButton(defaultButton);
+                    rootPane.setDefaultButton(defaultButton.get());
                 }
             }
         }
@@ -313,10 +314,10 @@ public class WindowModule implements WindowModuleApi {
             this.okCancelService = okCancelService;
         }
 
-        @Nullable
+        @Nonnull
         @Override
-        public JButton getDefaultButton() {
-            return null;
+        public Optional<JButton> getDefaultButton() {
+            return Optional.empty();
         }
 
         @Nonnull

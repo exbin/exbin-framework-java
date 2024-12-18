@@ -26,14 +26,15 @@ import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.GroupMenuContributionRule;
+import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.action.api.MenuGroup;
-import org.exbin.framework.action.api.MenuPosition;
+import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.editor.action.CloseAllFilesAction;
 import org.exbin.framework.editor.action.CloseFileAction;
@@ -223,8 +224,10 @@ public class EditorModule implements EditorModuleApi {
     @Override
     public void registerMenuFileCloseActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenuGroup(ActionConsts.FILE_MENU_ID, new MenuGroup(FileModuleApi.FILE_MENU_GROUP_ID, new MenuPosition(PositionMode.TOP)));
-        actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createCloseFileAction(), new MenuPosition(FileModuleApi.FILE_MENU_GROUP_ID));
+        MenuContribution contribution = actionModule.registerMenuGroup(ActionConsts.FILE_MENU_ID, MODULE_ID, FileModuleApi.FILE_MENU_GROUP_ID);
+        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createCloseFileAction());
+        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(FileModuleApi.FILE_MENU_GROUP_ID));
     }
 
     @Nonnull
