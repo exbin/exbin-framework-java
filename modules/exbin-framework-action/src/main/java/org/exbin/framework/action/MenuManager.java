@@ -16,6 +16,7 @@
 package org.exbin.framework.action;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -130,17 +131,21 @@ public class MenuManager {
             } else {
                 PositionMode positionMode = getPositionMode(menuId, contribution);
                 if (positionMode == null) {
-                    MenuGroupRecord groupRecord = groupsMap.get(positionMode.name());
-                    MenuGroupRecord menuGroupRecord = new MenuGroupRecord(groupId);
-                    menuGroupRecord.separationMode = separationMode;
-                    groupRecord.subGroups.add(menuGroupRecord);
-                    groupsMap.put(groupId, menuGroupRecord);
+                    positionMode = PositionMode.DEFAULT;
                 }
+                MenuGroupRecord groupRecord = groupsMap.get(positionMode.name());
+                MenuGroupRecord menuGroupRecord = new MenuGroupRecord(groupId);
+                menuGroupRecord.separationMode = separationMode;
+                groupRecord.subGroups.add(menuGroupRecord);
+                groupsMap.put(groupId, menuGroupRecord);
             }
         }
 
         // Go thru all contributions and link them to its target group
         for (MenuContribution contribution : menuDef.getContributions()) {
+            if ((contribution instanceof GroupMenuContribution)) {
+                continue;
+            }
             PositionMode positionMode = getPositionMode(menuId, contribution);
             String parentGroupId = getParentGroup(menuId, contribution);
             if (positionMode != null) {
@@ -149,6 +154,9 @@ public class MenuManager {
             } else {
                 if (parentGroupId != null) {
                     MenuGroupRecord menuGroupRecord = groupsMap.get(parentGroupId);
+                    menuGroupRecord.contributions.add(contribution);
+                } else {
+                    MenuGroupRecord menuGroupRecord = groupsMap.get(PositionMode.DEFAULT.name());
                     menuGroupRecord.contributions.add(contribution);
                 }
                 /*switch (nextToMode) {
@@ -479,7 +487,7 @@ public class MenuManager {
 
         return false;
     }
-    
+
     @Nullable
     private GroupMenuContribution getGroup(String menuId, String groupId) {
         MenuDefinition menuDefinition = menus.get(menuId);
@@ -497,9 +505,12 @@ public class MenuManager {
     private SeparationMode getSeparationMode(String menuId, MenuContribution contribution) {
         MenuDefinition menuDefinition = menus.get(menuId);
         List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
+        if (rules == null) {
+            return null;
+        }
         for (MenuContributionRule rule : rules) {
             if (rule instanceof SeparationMenuContributionRule) {
-                return ((SeparationMenuContributionRule) contribution).getSeparationMode();
+                return ((SeparationMenuContributionRule) rule).getSeparationMode();
             }
         }
         return null;
@@ -509,9 +520,12 @@ public class MenuManager {
     private PositionMode getPositionMode(String menuId, MenuContribution contribution) {
         MenuDefinition menuDefinition = menus.get(menuId);
         List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
+        if (rules == null) {
+            return null;
+        }
         for (MenuContributionRule rule : rules) {
             if (rule instanceof PositionMenuContributionRule) {
-                return ((PositionMenuContributionRule) contribution).getPositionMode();
+                return ((PositionMenuContributionRule) rule).getPositionMode();
             }
         }
         return null;
@@ -521,30 +535,25 @@ public class MenuManager {
     private String getParentGroup(String menuId, MenuContribution contribution) {
         MenuDefinition menuDefinition = menus.get(menuId);
         List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
+        if (rules == null) {
+            return null;
+        }
         for (MenuContributionRule rule : rules) {
             if (rule instanceof GroupMenuContributionRule) {
-                return ((GroupMenuContributionRule) contribution).getGroupId();
+                return ((GroupMenuContributionRule) rule).getGroupId();
             }
         }
         return null;
     }
 
     public void unregisterMenu(String menuId) {
-        throw new IllegalStateException();
-/*        MenuDefinition definition = menus.get(menuId);
+        MenuDefinition definition = menus.get(menuId);
         if (definition != null) {
             // TODO clear pointers to improve garbage collection performance?
 //            List<MenuContribution> contributions = definition.getContributions();
 //            for (MenuContribution contribution : contributions) {
 //                contribution.
 //            }
-
-            for (Map.Entry<String, List<Integer>> usage : menuGroups.entrySet()) {
-                if (menuId.equals(usage.getKey())) {
-                    menuGroups.remove(usage.getKey());
-                    break;
-                }
-            }
 
             for (Map.Entry<String, String> usage : pluginsUsage.entrySet()) {
                 if (menuId.equals(usage.getValue())) {
@@ -553,7 +562,7 @@ public class MenuManager {
                 }
             }
             menus.remove(menuId);
-        } */
+        }
     }
 
     private static abstract class ProcessedContribution {
@@ -668,7 +677,23 @@ public class MenuManager {
     }
 
     public void registerMenuRule(MenuContribution contribution, MenuContributionRule rule) {
-
+        MenuDefinition match = null;
+        for (MenuDefinition menuDef : menus.values()) {
+            if (menuDef.getContributions().contains(contribution)) {
+                match = menuDef;
+                break;
+            }
+        }
+        if (match == null) {
+            throw new IllegalStateException("Invalid menu contribution rule");
+        }
+        
+        List<MenuContributionRule> rules = match.getRules().get(contribution);
+        if (rules == null) {
+            rules = new ArrayList<>();
+            match.getRules().put(contribution, rules);
+        }
+        rules.add(rule);
     }
 
     @ParametersAreNonnullByDefault

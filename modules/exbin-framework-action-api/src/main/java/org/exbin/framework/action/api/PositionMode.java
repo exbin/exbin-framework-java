@@ -31,11 +31,15 @@ public enum PositionMode {
      */
     TOP_LAST,
     /**
-     * Default: Normal position in the middle section.
+     * Position in the middle section.
      */
     MIDDLE,
     /**
-     * Normal position at the end of the middle section.
+     * Default: Normal position in the center.
+     */
+    DEFAULT,
+    /**
+     * Position at the end of the middle section.
      */
     MIDDLE_LAST,
     /**
@@ -45,5 +49,8 @@ public enum PositionMode {
     /**
      * End of the bottom position.
      */
-    BOTTOM_LAST
+    BOTTOM_LAST;
+
+    private PositionMode() {
+    }
 }

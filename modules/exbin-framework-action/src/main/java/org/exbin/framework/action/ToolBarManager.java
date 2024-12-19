@@ -16,6 +16,7 @@
 package org.exbin.framework.action;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -109,17 +110,21 @@ public class ToolBarManager {
             } else {
                 PositionMode positionMode = getPositionMode(toolBarId, contribution);
                 if (positionMode == null) {
-                    ToolBarGroupRecord groupRecord = groupsMap.get(positionMode.name());
-                    ToolBarGroupRecord menuGroupRecord = new ToolBarGroupRecord(groupId);
-                    menuGroupRecord.separationMode = separationMode;
-                    groupRecord.subGroups.add(menuGroupRecord);
-                    groupsMap.put(groupId, menuGroupRecord);
+                    positionMode = PositionMode.DEFAULT;
                 }
+                ToolBarGroupRecord groupRecord = groupsMap.get(positionMode.name());
+                ToolBarGroupRecord menuGroupRecord = new ToolBarGroupRecord(groupId);
+                menuGroupRecord.separationMode = separationMode;
+                groupRecord.subGroups.add(menuGroupRecord);
+                groupsMap.put(groupId, menuGroupRecord);
             }
         }
 
         // Go thru all contributions and link them to its target group
         for (ToolBarContribution contribution : toolBarDef.getContributions()) {
+            if (contribution instanceof GroupToolBarContribution) {
+                continue;
+            }
             PositionMode positionMode = getPositionMode(toolBarId, contribution);
             String parentGroupId = getParentGroup(toolBarId, contribution);
             if (positionMode != null) {
@@ -128,6 +133,9 @@ public class ToolBarManager {
             } else {
                 if (parentGroupId != null) {
                     ToolBarGroupRecord toolBarGroupRecord = groupsMap.get(parentGroupId);
+                    toolBarGroupRecord.contributions.add(contribution);
+                } else {
+                    ToolBarGroupRecord toolBarGroupRecord = groupsMap.get(PositionMode.DEFAULT.name());
                     toolBarGroupRecord.contributions.add(contribution);
                 }
             }
@@ -284,7 +292,23 @@ public class ToolBarManager {
     }
 
     public void registerToolBarRule(ToolBarContribution contribution, ToolBarContributionRule rule) {
+        ToolBarDefinition match = null;
+        for (ToolBarDefinition toolBarDef : toolBars.values()) {
+            if (toolBarDef.getContributions().contains(contribution)) {
+                match = toolBarDef;
+                break;
+            }
+        }
+        if (match == null) {
+            throw new IllegalStateException("Invalid tool bar contribution rule");
+        }
 
+        List<ToolBarContributionRule> rules = match.getRules().get(contribution);
+        if (rules == null) {
+            rules = new ArrayList<>();
+            match.getRules().put(contribution, rules);
+        }
+        rules.add(rule);
     }
 
     @Nullable
@@ -304,9 +328,12 @@ public class ToolBarManager {
     private SeparationMode getSeparationMode(String toolBarId, ToolBarContribution contribution) {
         ToolBarDefinition toolBarDefinition = toolBars.get(toolBarId);
         List<ToolBarContributionRule> rules = toolBarDefinition.getRules().get(contribution);
+        if (rules == null) {
+            return null;
+        }
         for (ToolBarContributionRule rule : rules) {
             if (rule instanceof SeparationToolBarContributionRule) {
-                return ((SeparationToolBarContributionRule) contribution).getSeparationMode();
+                return ((SeparationToolBarContributionRule) rule).getSeparationMode();
             }
         }
         return null;
@@ -316,22 +343,27 @@ public class ToolBarManager {
     private PositionMode getPositionMode(String toolBarId, ToolBarContribution contribution) {
         ToolBarDefinition toolBarDefinition = toolBars.get(toolBarId);
         List<ToolBarContributionRule> rules = toolBarDefinition.getRules().get(contribution);
+        if (rules == null) {
+            return null;
+        }
         for (ToolBarContributionRule rule : rules) {
             if (rule instanceof PositionToolBarContributionRule) {
-                return ((PositionToolBarContributionRule) contribution).getPositionMode();
+                return ((PositionToolBarContributionRule) rule).getPositionMode();
             }
         }
         return null;
     }
 
-
     @Nullable
     private String getParentGroup(String toolBarId, ToolBarContribution contribution) {
         ToolBarDefinition menuDefinition = toolBars.get(toolBarId);
         List<ToolBarContributionRule> rules = menuDefinition.getRules().get(contribution);
+        if (rules == null) {
+            return null;
+        }
         for (ToolBarContributionRule rule : rules) {
             if (rule instanceof GroupToolBarContributionRule) {
-                return ((GroupToolBarContributionRule) contribution).getGroupId();
+                return ((GroupToolBarContributionRule) rule).getGroupId();
             }
         }
         return null;
