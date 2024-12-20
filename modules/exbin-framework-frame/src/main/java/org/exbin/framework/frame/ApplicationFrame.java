@@ -42,7 +42,10 @@ import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationService;
+import org.exbin.framework.action.api.MenuManagement;
+import org.exbin.framework.action.api.ToolBarManagement;
 import org.exbin.framework.frame.api.FrameModuleApi;
+import static org.exbin.framework.frame.api.FrameModuleApi.MODULE_ID;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 
@@ -266,7 +269,8 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID, new ComponentActivationService() {
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        mgmt.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID, new ComponentActivationService() {
             @Override
             public void registerListener(ComponentActivationListener listener) {
                 frameComponentActivationService.registerListener(listener);
@@ -289,7 +293,8 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainToolBar() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID, new ComponentActivationService() {
+        ToolBarManagement mgmt = actionModule.getToolBarManagement(MODULE_ID);
+        mgmt.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID, new ComponentActivationService() {
             @Override
             public void registerListener(ComponentActivationListener listener) {
                 frameComponentActivationService.registerListener(listener);

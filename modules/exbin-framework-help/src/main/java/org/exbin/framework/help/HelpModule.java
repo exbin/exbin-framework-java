@@ -23,7 +23,9 @@ import org.exbin.framework.help.action.HelpAction;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
+import static org.exbin.framework.frame.api.FrameModuleApi.MODULE_ID;
 import org.exbin.framework.help.api.HelpModuleApi;
 
 /**
@@ -48,7 +50,8 @@ public class HelpModule implements HelpModuleApi {
     @Override
     public void registerMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createHelpAction());
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, createHelpAction());
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
     }
 }

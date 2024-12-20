@@ -38,9 +38,11 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.GroupToolBarContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionToolBarContributionRule;
 import org.exbin.framework.action.api.ToolBarContribution;
+import org.exbin.framework.action.api.ToolBarManagement;
 import org.exbin.framework.file.action.FileActions;
 import org.exbin.framework.file.action.NewFileAction;
 import org.exbin.framework.file.action.OpenFileAction;
@@ -111,29 +113,31 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerMenuFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        MenuContribution contribution = actionModule.registerMenuGroup(ActionConsts.FILE_MENU_ID, MODULE_ID, FILE_MENU_GROUP_ID);
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-        contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createNewFileAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
-        contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createOpenFileAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
-        contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createSaveFileAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
-        contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, createSaveAsFileAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.FILE_MENU_ID, FILE_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createNewFileAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createOpenFileAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createSaveFileAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createSaveAsFileAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
     }
 
     @Override
     public void registerToolBarFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        ToolBarContribution contribution = actionModule.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, FILE_TOOL_BAR_GROUP_ID);
-        actionModule.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
-        contribution = actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createNewFileAction());
-        actionModule.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
-        contribution = actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createOpenFileAction());
-        actionModule.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
-        contribution = actionModule.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, createSaveFileAction());
-        actionModule.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
+        ToolBarManagement mgmt = actionModule.getToolBarManagement(MODULE_ID);
+        ToolBarContribution contribution = mgmt.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, FILE_TOOL_BAR_GROUP_ID);
+        mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, createNewFileAction());
+        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, createOpenFileAction());
+        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, createSaveFileAction());
+        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
     }
 
     @Override
@@ -154,7 +158,8 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, recentFileMenu);
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, recentFileMenu);
         // TODO actionModule.registerMenuRule(contribution, new RelativeMenuContributionRule(NextToMode.AFTER, contribution)); languageModule.getActionWithDialogText((String) createOpenFileAction().getValue(Action.NAME))
     }
 

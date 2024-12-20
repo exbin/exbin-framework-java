@@ -44,11 +44,13 @@ import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.GroupToolBarContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuContributionRule;
+import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionToolBarContributionRule;
 import org.exbin.framework.action.api.SeparationMenuContributionRule;
 import org.exbin.framework.action.api.ToolBarContribution;
 import org.exbin.framework.action.api.ToolBarContributionRule;
+import org.exbin.framework.action.api.ToolBarManagement;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -133,7 +135,7 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
-    public void fillPopupMenu(JPopupMenu popupMenu, int position) {
+    public void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position) {
         ActionPopupModuleApi popupModule = App.getModule(ActionPopupModuleApi.class);
         popupModule.fillDefaultEditPopupMenu(popupMenu, position);
     }
@@ -229,60 +231,109 @@ public class ActionModule implements ActionModuleApi {
         return toolBarManager;
     }
 
+    @Nonnull
     @Override
-    public void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
-        getMenuManager().buildMenu(targetMenu, menuId, activationUpdateService);
-    }
+    public MenuManagement getMenuManagement(String moduleId) {
+        return new MenuManagement() {
+            @Override
+            public void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
+                getMenuManager().buildMenu(targetMenu, menuId, activationUpdateService);
+            }
 
-    @Override
-    public void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService) {
-        getMenuManager().buildMenu(targetMenuBar, menuId, activationUpdateService);
-    }
+            @Override
+            public void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService) {
+                getMenuManager().buildMenu(targetMenuBar, menuId, activationUpdateService);
+            }
 
-    @Override
-    public void registerMenu(String menuId, String pluginId) {
-        getMenuManager().registerMenu(menuId, pluginId);
+            @Override
+            public void registerMenu(String menuId) {
+                getMenuManager().registerMenu(menuId, moduleId);
+            }
+
+            @Override
+            public void unregisterMenu(String menuId) {
+                getMenuManager().unregisterMenu(menuId);
+            }
+
+            @Nonnull
+            @Override
+            public MenuContribution registerMenuItem(String menuId, JMenu item) {
+                return getMenuManager().registerMenuItem(menuId, moduleId, item);
+            }
+
+            @Nonnull
+            @Override
+            public MenuContribution registerMenuItem(String menuId, JMenuItem item) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Nonnull
+            @Override
+            public MenuContribution registerMenuItem(String menuId, Action action) {
+                return getMenuManager().registerMenuItem(menuId, moduleId, action);
+            }
+
+            @Nonnull
+            @Override
+            public MenuContribution registerMenuItem(String menuId, String subMenuId, Action subMenuAction) {
+                return getMenuManager().registerMenuItem(menuId, moduleId, subMenuId, subMenuAction);
+            }
+
+            @Nonnull
+            @Override
+            public MenuContribution registerMenuItem(String menuId, String subMenuId, String subMenuName) {
+                return getMenuManager().registerMenuItem(menuId, moduleId, subMenuId, subMenuName);
+            }
+
+            @Nonnull
+            @Override
+            public MenuContribution registerMenuGroup(String menuId, String groupId) {
+                return getMenuManager().registerMenuGroup(menuId, moduleId, groupId);
+            }
+
+            @Override
+            public boolean menuGroupExists(String menuId, String groupId) {
+                return menuManager.menuGroupExists(menuId, groupId);
+            }
+
+            @Override
+            public void registerMenuRule(MenuContribution menuContribution, MenuContributionRule rule) {
+                getMenuManager().registerMenuRule(menuContribution, rule);
+            }
+        };
     }
 
     @Nonnull
     @Override
-    public MenuContribution registerMenuItem(String menuId, String pluginId, JMenu menu) {
-        return getMenuManager().registerMenuItem(menuId, pluginId, menu);
-    }
+    public ToolBarManagement getToolBarManagement(String moduleId) {
+        return new ToolBarManagement() {
+            @Override
+            public void buildToolBar(JToolBar targetToolBar, String toolBarId, ComponentActivationService activationUpdateService) {
+                getToolBarManager().buildToolBar(targetToolBar, toolBarId, activationUpdateService);
+            }
 
-    @Nonnull
-    @Override
-    public MenuContribution registerMenuItem(String menuId, String pluginId, JMenuItem item) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+            @Override
+            public void registerToolBar(String toolBarId) {
+                getToolBarManager().registerToolBar(toolBarId, moduleId);
+            }
 
-    @Nonnull
-    @Override
-    public MenuContribution registerMenuItem(String menuId, String pluginId, Action action) {
-        return getMenuManager().registerMenuItem(menuId, pluginId, action);
-    }
+            @Nonnull
+            @Override
+            public ToolBarContribution registerToolBarItem(String toolBarId, Action action) {
+                return getToolBarManager().registerToolBarItem(toolBarId, moduleId, action);
+            }
 
-    @Nonnull
-    @Override
-    public MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction) {
-        return getMenuManager().registerMenuItem(menuId, pluginId, subMenuId, subMenuAction);
-    }
+            @Nonnull
+            @Override
+            public ToolBarContribution registerToolBarGroup(String toolBarId, String groupId) {
+                return getToolBarManager().registerToolBarGroup(toolBarId, moduleId, groupId);
+            }
 
-    @Nonnull
-    @Override
-    public MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName) {
-        return getMenuManager().registerMenuItem(menuId, pluginId, subMenuId, subMenuName);
-    }
-
-    @Nonnull
-    @Override
-    public MenuContribution registerMenuGroup(String menuId, String pluginId, String groupId) {
-        return getMenuManager().registerMenuGroup(menuId, pluginId, groupId);
-    }
-
-    @Override
-    public void registerMenuRule(MenuContribution menuContribution, MenuContributionRule rule) {
-        getMenuManager().registerMenuRule(menuContribution, rule);
+            @Override
+            public void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule) {
+                getToolBarManager().registerToolBarRule(toolBarContribution, rule);
+            }
+        };
     }
 
     @Override
@@ -292,19 +343,20 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMode separationMode) {
-        MenuContribution contribution = registerMenuGroup(menuId, moduleId, CLIPBOARD_ACTIONS_MENU_GROUP_ID);
-        registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-        registerMenuRule(contribution, new SeparationMenuContributionRule(separationMode));
-        contribution = registerMenuItem(menuId, moduleId, actions.createCutAction());
-        registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = registerMenuItem(menuId, moduleId, actions.createCopyAction());
-        registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = registerMenuItem(menuId, moduleId, actions.createPasteAction());
-        registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = registerMenuItem(menuId, moduleId, actions.createDeleteAction());
-        registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = registerMenuItem(menuId, moduleId, actions.createSelectAllAction());
-        registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        MenuManagement mgmt = getMenuManagement(moduleId);
+        MenuContribution contribution = mgmt.registerMenuGroup(menuId, CLIPBOARD_ACTIONS_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(separationMode));
+        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createCutAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createCopyAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createPasteAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createDeleteAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createSelectAllAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
 
     @Override
@@ -315,33 +367,6 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ComponentActivationService activationUpdateService) {
-        getToolBarManager().buildToolBar(targetToolBar, toolBarId, activationUpdateService);
-    }
-
-    @Override
-    public void registerToolBar(String toolBarId, String pluginId) {
-        getToolBarManager().registerToolBar(toolBarId, pluginId);
-    }
-
-    @Nonnull
-    @Override
-    public ToolBarContribution registerToolBarItem(String toolBarId, String pluginId, Action action) {
-        return getToolBarManager().registerToolBarItem(toolBarId, pluginId, action);
-    }
-
-    @Nonnull
-    @Override
-    public ToolBarContribution registerToolBarGroup(String toolBarId, String pluginId, String groupId) {
-        return getToolBarManager().registerToolBarGroup(toolBarId, pluginId, groupId);
-    }
-
-    @Override
-    public void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule) {
-        getToolBarManager().registerToolBarRule(toolBarContribution, rule);
-    }
-
-    @Override
     public void registerMenuClipboardActions() {
         registerClipboardMenuItems(ActionConsts.EDIT_MENU_ID, MODULE_ID, SeparationMode.NONE);
     }
@@ -349,26 +374,22 @@ public class ActionModule implements ActionModuleApi {
     @Override
     public void registerToolBarClipboardActions() {
         getClipboardActions();
-        ToolBarContribution contribution = registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
-        registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
-        contribution = registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.createCutAction());
-        registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.createCopyAction());
-        registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.createPasteAction());
-        registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID, clipboardActions.createDeleteAction());
-        registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        ToolBarManagement mgmt = getToolBarManagement(MODULE_ID);
+        ToolBarContribution contribution = mgmt.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
+        mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCutAction());
+        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCopyAction());
+        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createPasteAction());
+        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createDeleteAction());
+        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
     }
 
     @Override
     public void registerClipboardHandler(ClipboardActionsHandler clipboardHandler) {
 //        getClipboardActions().setClipboardActionsHandler(clipboardHandler);
-    }
-
-    @Override
-    public boolean menuGroupExists(String menuId, String groupId) {
-        return menuManager.menuGroupExists(menuId, groupId);
     }
 
     /*
@@ -381,11 +402,6 @@ public class ActionModule implements ActionModuleApi {
         return customClipboardActions;
     }
      */
-    @Override
-    public void unregisterMenu(String menuId) {
-        getMenuManager().unregisterMenu(menuId);
-    }
-
     public void registerClipboardFlavorListener(ComponentActivationManager activationManager) {
         ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
 

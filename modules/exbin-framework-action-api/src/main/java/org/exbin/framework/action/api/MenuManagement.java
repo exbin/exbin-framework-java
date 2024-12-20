@@ -15,14 +15,16 @@
  */
 package org.exbin.framework.action.api;
 
-import java.awt.Component;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JToolBar;
 
 /**
- * Interface for application's menus.
+ * Interface for registered menus management.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -30,46 +32,113 @@ import javax.swing.JToolBar;
 public interface MenuManagement {
 
     /**
-     * Adds all items from given menu instance into menu manager.
+     * Returns menu using given identificator.
      *
-     * @param menu menu
-     * @param pluginId plugin id
+     * @param targetMenu target menu
+     * @param menuId menu identificator
+     * @param activationUpdateService activation update service
+     */
+    void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService);
+
+    /**
+     * Returns menu using given identificator.
+     *
+     * @param targetMenuBar target menu bar
+     * @param menuId menu identificator
+     * @param activationUpdateService activation update service
+     */
+    void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService);
+
+    /**
+     * Registers menu associating it with given identificator.
+     *
+     * @param menuId menu identificator
+     */
+    void registerMenu(String menuId);
+
+    /**
+     * Unregisters menu and all it's items.
+     *
      * @param menuId menu id
-     * @param positionMode position mode
      */
-    void extendMenu(JMenu menu, Integer pluginId, String menuId, PositionMode positionMode);
+    void unregisterMenu(String menuId);
 
     /**
-     * Adds given menu component into menu manager.
+     * Registers menu as a child item for given menu.
      *
-     * @param menuItem menu item
-     * @param pluginId plugin id
-     * @param positionMode position mode
+     * @param menuId menu Id
+     * @param item menu item
+     * @return menu contribution
+     */
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, JMenu item);
+
+    /**
+     * Registers menu item as a child item for given menu.
+     *
+     * @param menuId menu Id
+     * @param item menu item
+     * @return menu contribution
+     */
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, JMenuItem item);
+
+    /**
+     * Registers menu item as a child item for given menu.
+     *
+     * @param menuId menu Id
+     * @param action action
+     * @return menu contribution
+     */
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, Action action);
+
+    /**
+     * Registers menu item as a child item for given menu.
+     *
+     * @param menuId menu Id
+     * @param subMenuId sub-menu id
+     * @param subMenuAction sub-menu action
+     * @return menu contribution
+     */
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, String subMenuId, Action subMenuAction);
+
+    /**
+     * Registers menu item as a child item for given menu.
+     *
+     * @param menuId menu Id
+     * @param subMenuId sub-menu id
+     * @param subMenuName sub-menu name
+     * @return menu contribution
+     */
+    @Nonnull
+    MenuContribution registerMenuItem(String menuId, String subMenuId, String subMenuName);
+
+    /**
+     * Registers menu item as a child item for given menu.
+     *
+     * @param menuId menu Id
+     * @param groupId group id
+     * @return menu contribution
+     */
+    @Nonnull
+    MenuContribution registerMenuGroup(String menuId, String groupId);
+
+    /**
+     * Returns true if given menu group exists.
+     *
      * @param menuId menu id
+     * @param groupId group id
+     * @return true if group exists
      */
-    void addMenuItem(Component menuItem, Integer pluginId, String menuId, PositionMode positionMode);
+    boolean menuGroupExists(String menuId, String groupId);
 
     /**
-     * Insert menu into menubar into main menu manager.
+     * Registers menu contribution rule.
      *
-     * @param menu menu
-     * @param pluginId plugin id
-     * @param positionMode position mode
+     * @param menuContribution menu contribution
+     * @param rule menu contribution rule
      */
-    void insertMenu(JMenu menu, Integer pluginId, PositionMode positionMode);
-
-    /**
-     * Adds all items from given toolbar instance into menu manager.
-     *
-     * @param toolBar toolbar
-     */
-    void extendToolBar(JToolBar toolBar);
-
-    /**
-     * Copy and insert main popup menu into given popup menu.
-     *
-     * @param popupMenu popup menu
-     * @param position position
-     */
-    void insertMainPopupMenu(JPopupMenu popupMenu, int position);
+    void registerMenuRule(MenuContribution menuContribution, MenuContributionRule rule);
 }

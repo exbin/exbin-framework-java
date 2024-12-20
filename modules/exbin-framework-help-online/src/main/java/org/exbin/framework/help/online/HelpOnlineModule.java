@@ -25,7 +25,9 @@ import org.exbin.framework.help.online.api.HelpOnlineModuleApi;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
+import static org.exbin.framework.frame.api.FrameModuleApi.MODULE_ID;
 
 /**
  * Implementation of the online help support module.
@@ -51,8 +53,9 @@ public class HelpOnlineModule implements HelpOnlineModuleApi {
     @Override
     public void registerOnlineHelpMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createOnlineHelpAction());
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, createOnlineHelpAction());
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
     }
 
     @Override

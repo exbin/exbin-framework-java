@@ -38,9 +38,11 @@ import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
+import static org.exbin.framework.frame.api.FrameModuleApi.MODULE_ID;
 import org.exbin.framework.options.action.OptionsAction;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
@@ -169,12 +171,13 @@ public class OptionsModule implements OptionsModuleApi {
             }); */
             optionsActionRegistered = true;
         }
-        MenuContribution contribution = actionModule.registerMenuGroup(ActionConsts.TOOLS_MENU_ID, MODULE_ID, TOOLS_OPTIONS_MENU_GROUP_ID);
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM_LAST));
-        actionModule.registerMenuRule(contribution, new SeparationMenuContributionRule(optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.TOOLS_MENU_ID, TOOLS_OPTIONS_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM_LAST));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(optionsActionRegistered ? SeparationMode.NONE : SeparationMode.AROUND));
         if (!optionsActionRegistered) {
-            contribution = actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, optionsAction);
-            actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(TOOLS_OPTIONS_MENU_GROUP_ID));
+            contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, optionsAction);
+            mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TOOLS_OPTIONS_MENU_GROUP_ID));
         }
     }
 

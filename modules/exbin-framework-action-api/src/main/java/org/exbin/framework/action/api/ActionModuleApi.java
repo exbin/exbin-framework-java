@@ -25,11 +25,8 @@ import org.exbin.framework.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JToolBar;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
@@ -92,106 +89,22 @@ public interface ActionModuleApi extends Module {
     JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups);
 
     /**
-     * Returns menu using given identificator.
+     * Returns menu management interface.
      *
-     * @param targetMenu target menu
-     * @param menuId menu identificator
-     * @param activationUpdateService activation update service
-     */
-    void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService);
-
-    /**
-     * Returns menu using given identificator.
-     *
-     * @param targetMenuBar target menu bar
-     * @param menuId menu identificator
-     * @param activationUpdateService activation update service
-     */
-    void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService);
-
-    /**
-     * Registers menu associating it with given identificator.
-     *
-     * @param menuId menu identificator
-     * @param pluginId plugin identificator
-     */
-    void registerMenu(String menuId, String pluginId);
-
-    /**
-     * Registers menu as a child item for given menu.
-     *
-     * @param menuId menu Id
-     * @param pluginId plugin Id
-     * @param item menu item
-     * @return menu contribution
+     * @param moduleId module id
+     * @return menu management interface
      */
     @Nonnull
-    MenuContribution registerMenuItem(String menuId, String pluginId, JMenu item);
+    MenuManagement getMenuManagement(String moduleId);
 
     /**
-     * Registers menu item as a child item for given menu.
+     * Returns tool bar management interface.
      *
-     * @param menuId menu Id
-     * @param pluginId plugin Id
-     * @param item menu item
-     * @return menu contribution
+     * @param moduleId module id
+     * @return tool bar management interface
      */
     @Nonnull
-    MenuContribution registerMenuItem(String menuId, String pluginId, JMenuItem item);
-
-    /**
-     * Registers menu item as a child item for given menu.
-     *
-     * @param menuId menu Id
-     * @param pluginId plugin Id
-     * @param action action
-     * @return menu contribution
-     */
-    @Nonnull
-    MenuContribution registerMenuItem(String menuId, String pluginId, Action action);
-
-    /**
-     * Registers menu item as a child item for given menu.
-     *
-     * @param menuId menu Id
-     * @param pluginId plugin Id
-     * @param subMenuId sub-menu id
-     * @param subMenuAction sub-menu action
-     * @return menu contribution
-     */
-    @Nonnull
-    MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction);
-
-    /**
-     * Registers menu item as a child item for given menu.
-     *
-     * @param menuId menu Id
-     * @param pluginId plugin Id
-     * @param subMenuId sub-menu id
-     * @param subMenuName sub-menu name
-     * @return menu contribution
-     */
-    @Nonnull
-    MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName);
-
-    /**
-     * Registers menu item as a child item for given menu.
-     *
-     * @param menuId menu Id
-     * @param pluginId plugin Id
-     * @param groupId group id
-     * @return menu contribution
-     */
-    @Nonnull
-    MenuContribution registerMenuGroup(String menuId, String pluginId, String groupId);
-
-    /**
-     * Registers menu contribution rule.
-     *
-     * @param menuContribution menu contribution
-     * @param rule menu contribution rule
-     */
-    void registerMenuRule(MenuContribution menuContribution, MenuContributionRule rule);
+    ToolBarManagement getToolBarManagement(String moduleId);
 
     /**
      * Returns clipboard/editing actions.
@@ -215,59 +128,12 @@ public interface ActionModuleApi extends Module {
     void registerMenuClipboardActions();
 
     /**
-     * Returns tool bar using given identificator.
-     *
-     * @param targetToolBar target toolbar
-     * @param toolBarId toolbar id
-     * @param activationUpdateService activation update service
-     */
-    void buildToolBar(JToolBar targetToolBar, String toolBarId, ComponentActivationService activationUpdateService);
-
-    /**
      * Fills given popup menu with default clipboard actions.
      *
      * @param popupMenu popup menu
      * @param position target index position or -1 for adding at the end
      */
-    void fillPopupMenu(JPopupMenu popupMenu, int position);
-
-    /**
-     * Registers tool bar associating it with given identificator.
-     *
-     * @param toolBarId toolbar id
-     * @param pluginId plugin id
-     */
-    void registerToolBar(String toolBarId, String pluginId);
-
-    /**
-     * Registers item as a child item for given tool bar.
-     *
-     * @param toolBarId toolbar id
-     * @param pluginId plugin id
-     * @param action action
-     * @return toolbar contribution
-     */
-    @Nonnull
-    ToolBarContribution registerToolBarItem(String toolBarId, String pluginId, Action action);
-
-    /**
-     * Registers group as a child item for given tool bar.
-     *
-     * @param toolBarId toolbar id
-     * @param pluginId plugin id
-     * @param groupId group id
-     * @return toolbar contribution
-     */
-    @Nonnull
-    ToolBarContribution registerToolBarGroup(String toolBarId, String pluginId, String groupId);
-
-    /**
-     * Registers tool bar contribution rule.
-     *
-     * @param toolBarContribution tool bar contribution
-     * @param rule tool bar contribution rule
-     */
-    void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule);
+    void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position);
 
     /**
      * Registers tool bar clipboard actions.
@@ -304,22 +170,6 @@ public interface ActionModuleApi extends Module {
      * Registers default clipboard actions in default popup menu.
      */
     void registerClipboardTextActions();
-
-    /**
-     * Unregisters menu and all it's items.
-     *
-     * @param menuId menu id
-     */
-    void unregisterMenu(String menuId);
-
-    /**
-     * Returns true if given menu group exists.
-     *
-     * @param menuId menu id
-     * @param groupId group id
-     * @return true if group exists
-     */
-    boolean menuGroupExists(String menuId, String groupId);
 
     /**
      * Adds component popup menu event dispatcher.

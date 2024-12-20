@@ -26,8 +26,10 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
+import static org.exbin.framework.frame.api.FrameModuleApi.MODULE_ID;
 import org.exbin.framework.project.action.NewProjectAction;
 import org.exbin.framework.project.action.OpenProjectAction;
 import org.exbin.framework.project.action.SaveProjectAction;
@@ -106,14 +108,15 @@ public class ProjectModule implements ProjectModuleApi {
     @Override
     public void registerMenuFileHandlingActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        MenuContribution contribution = actionModule.registerMenuGroup(PROJECT_MENU_ID, MODULE_ID, PROJECT_MENU_GROUP_ID);
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-        contribution = actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getNewProjectAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
-        contribution = actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getOpenProjectAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
-        contribution = actionModule.registerMenuItem(PROJECT_MENU_ID, MODULE_ID, getSaveProjectAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(PROJECT_MENU_ID, PROJECT_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerMenuItem(PROJECT_MENU_ID, getNewProjectAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(PROJECT_MENU_ID, getOpenProjectAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(PROJECT_MENU_ID, getSaveProjectAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
     }
 
     @Nonnull

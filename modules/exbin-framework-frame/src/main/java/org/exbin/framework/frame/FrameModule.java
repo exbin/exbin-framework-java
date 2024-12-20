@@ -43,8 +43,10 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.SeparationMenuContributionRule;
+import org.exbin.framework.action.api.ToolBarManagement;
 import org.exbin.framework.frame.action.FrameActions;
 import org.exbin.framework.utils.DesktopUtils;
 
@@ -104,31 +106,33 @@ public class FrameModule implements FrameModuleApi {
 
     private void initMainMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.registerMenu(ActionConsts.MAIN_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(ActionConsts.FILE_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(ActionConsts.EDIT_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(ActionConsts.VIEW_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(ActionConsts.TOOLS_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(ActionConsts.OPTIONS_MENU_ID, MODULE_ID);
-        actionModule.registerMenu(ActionConsts.HELP_MENU_ID, MODULE_ID);
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        mgmt.registerMenu(ActionConsts.MAIN_MENU_ID);
+        mgmt.registerMenu(ActionConsts.FILE_MENU_ID);
+        mgmt.registerMenu(ActionConsts.EDIT_MENU_ID);
+        mgmt.registerMenu(ActionConsts.VIEW_MENU_ID);
+        mgmt.registerMenu(ActionConsts.TOOLS_MENU_ID);
+        mgmt.registerMenu(ActionConsts.OPTIONS_MENU_ID);
+        mgmt.registerMenu(ActionConsts.HELP_MENU_ID);
 
-        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.FILE_MENU_ID, resourceBundle.getString("fileMenu.text"));
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-        contribution = actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.EDIT_MENU_ID, resourceBundle.getString("editMenu.text"));
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-        contribution = actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.VIEW_MENU_ID, resourceBundle.getString("viewMenu.text"));
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-        contribution = actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.TOOLS_MENU_ID, resourceBundle.getString("toolsMenu.text"));
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-        contribution = actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.OPTIONS_MENU_ID, resourceBundle.getString("optionsMenu.text"));
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-        contribution = actionModule.registerMenuItem(ActionConsts.MAIN_MENU_ID, MODULE_ID, ActionConsts.HELP_MENU_ID, resourceBundle.getString("helpMenu.text"));
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.MAIN_MENU_ID, ActionConsts.FILE_MENU_ID, resourceBundle.getString("fileMenu.text"));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerMenuItem(ActionConsts.MAIN_MENU_ID, ActionConsts.EDIT_MENU_ID, resourceBundle.getString("editMenu.text"));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerMenuItem(ActionConsts.MAIN_MENU_ID, ActionConsts.VIEW_MENU_ID, resourceBundle.getString("viewMenu.text"));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerMenuItem(ActionConsts.MAIN_MENU_ID, ActionConsts.TOOLS_MENU_ID, resourceBundle.getString("toolsMenu.text"));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerMenuItem(ActionConsts.MAIN_MENU_ID, ActionConsts.OPTIONS_MENU_ID, resourceBundle.getString("optionsMenu.text"));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerMenuItem(ActionConsts.MAIN_MENU_ID, ActionConsts.HELP_MENU_ID, resourceBundle.getString("helpMenu.text"));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
     }
 
     private void initMainToolBar() {
-        ActionModuleApi menuModule = App.getModule(ActionModuleApi.class);
-        menuModule.registerToolBar(ActionConsts.MAIN_TOOL_BAR_ID, MODULE_ID);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        ToolBarManagement mgmt = actionModule.getToolBarManagement(MODULE_ID);
+        mgmt.registerToolBar(ActionConsts.MAIN_TOOL_BAR_ID);
     }
 
     @Nonnull
@@ -245,12 +249,13 @@ public class FrameModule implements FrameModuleApi {
             exitActionRegistered = true;
         }
 
-        MenuContribution contribution = actionModule.registerMenuGroup(ActionConsts.FILE_MENU_ID, MODULE_ID, appClosingActionsGroup);
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM_LAST));
-        actionModule.registerMenuRule(contribution, new SeparationMenuContributionRule(exitActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.FILE_MENU_ID, appClosingActionsGroup);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM_LAST));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(exitActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!exitActionRegistered) {
-            contribution = actionModule.registerMenuItem(ActionConsts.FILE_MENU_ID, MODULE_ID, getExitAction());
-            actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(appClosingActionsGroup));
+            contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, getExitAction());
+            mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(appClosingActionsGroup));
         }
     }
 
@@ -338,10 +343,11 @@ public class FrameModule implements FrameModuleApi {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
-        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, frameActions.getViewToolBarAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
-        contribution = actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, frameActions.getViewToolBarCaptionsAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.VIEW_MENU_ID, frameActions.getViewToolBarAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
+        contribution = mgmt.registerMenuItem(ActionConsts.VIEW_MENU_ID, frameActions.getViewToolBarCaptionsAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
     }
 
     @Override
@@ -349,16 +355,18 @@ public class FrameModule implements FrameModuleApi {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
-        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.VIEW_MENU_ID, MODULE_ID, frameActions.getViewStatusBarAction());
-        actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.VIEW_MENU_ID, frameActions.getViewStatusBarAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
     }
 
     private void createViewBarsMenuGroup() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        if (!actionModule.menuGroupExists(ActionConsts.VIEW_MENU_ID, VIEW_BARS_GROUP_ID)) {
-            MenuContribution contribution = actionModule.registerMenuGroup(ActionConsts.VIEW_MENU_ID, MODULE_ID, VIEW_BARS_GROUP_ID);
-            actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-            actionModule.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMode.BELOW));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        if (!mgmt.menuGroupExists(ActionConsts.VIEW_MENU_ID, VIEW_BARS_GROUP_ID)) {
+            MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.VIEW_MENU_ID, VIEW_BARS_GROUP_ID);
+            mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+            mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMode.BELOW));
         }
     }
 

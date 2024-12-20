@@ -22,6 +22,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.addon.manager.action.AddonManagerAction;
@@ -48,8 +49,9 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     @Override
     public void registerAddonManagerMenuItem() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        MenuContribution contribution = actionModule.registerMenuItem(ActionConsts.TOOLS_MENU_ID, MODULE_ID, createAddonManagerAction());
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE_LAST));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, createAddonManagerAction());
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE_LAST));
     }
 
     /*

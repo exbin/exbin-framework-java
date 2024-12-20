@@ -30,6 +30,7 @@ import org.exbin.framework.about.api.AboutModuleApi;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
+import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -80,12 +81,13 @@ public class AboutModule implements AboutModuleApi {
             aboutActionRegistered = true;
         }
 
-        MenuContribution contribution = actionModule.registerMenuGroup(ActionConsts.HELP_MENU_ID, MODULE_ID, HELP_ABOUT_MENU_GROUP_ID);
-        actionModule.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM_LAST));
-        actionModule.registerMenuRule(contribution, new SeparationMenuContributionRule(aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.HELP_MENU_ID, HELP_ABOUT_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM_LAST));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
-            contribution = actionModule.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createAboutAction());
-            actionModule.registerMenuRule(contribution, new GroupMenuContributionRule(HELP_ABOUT_MENU_GROUP_ID));
+            contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createAboutAction());
+            mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(HELP_ABOUT_MENU_GROUP_ID));
         }
     }
 
