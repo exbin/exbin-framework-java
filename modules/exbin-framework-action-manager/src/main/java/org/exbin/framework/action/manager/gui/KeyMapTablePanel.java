@@ -13,22 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.gui;
+package org.exbin.framework.action.manager.gui;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.action.manager.model.KeyMapTableModel;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
- * Keymap options panel.
+ * Keymap table panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class KeyMapSettingsPanel extends javax.swing.JPanel {
+public class KeyMapTablePanel extends javax.swing.JPanel {
 
-    public KeyMapSettingsPanel() {
+    private final KeyMapTableModel tableModel = new KeyMapTableModel();
+
+    public KeyMapTablePanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        keyMapTable.setModel(tableModel);
     }
 
     /**
@@ -69,7 +77,7 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new KeyMapSettingsPanel()));
+        TestApplication.run(() -> WindowUtils.invokeWindow(new KeyMapTablePanel()));
     }
 
 
