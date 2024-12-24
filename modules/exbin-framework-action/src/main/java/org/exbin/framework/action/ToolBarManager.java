@@ -369,6 +369,19 @@ public class ToolBarManager {
         return null;
     }
 
+    @Nonnull
+    public List<Action> getAllManagedActions() {
+        List<Action> actions = new ArrayList<>();
+        for (ToolBarDefinition toolBarDef : toolBars.values()) {
+            for (ToolBarContribution contribution : toolBarDef.getContributions()) {
+                if (contribution instanceof ActionToolBarContribution) {
+                    actions.add(((ActionToolBarContribution) contribution).getAction());
+                }
+            }
+        }
+        return actions;
+    }
+
     @ParametersAreNonnullByDefault
     private class ToolBarGroupRecord {
 

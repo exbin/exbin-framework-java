@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.action.api;
 
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -184,4 +185,12 @@ public interface ActionModuleApi extends Module {
      * @param dispatcher event dispatcher
      */
     void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher);
+
+    /**
+     * Returns list of action managed by menu and toolbar managers.
+     *
+     * @return list of actions
+     */
+    @Nonnull
+    List<Action> getAllManagedActions();
 }

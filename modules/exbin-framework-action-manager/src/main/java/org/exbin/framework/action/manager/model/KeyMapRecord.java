@@ -16,6 +16,7 @@
 package org.exbin.framework.action.manager.model;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -27,13 +28,27 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class KeyMapRecord {
 
     private final String name;
+    private final String type;
+    private final String shortcut;
 
-    public KeyMapRecord(String name) {
+    public KeyMapRecord(String name, String type, @Nullable String shortcut) {
         this.name = name;
+        this.type = type;
+        this.shortcut = shortcut;
     }
 
     @Nonnull
     public String getName() {
         return name;
+    }
+
+    @Nonnull
+    public String getType() {
+        return type;
+    }
+
+    @Nullable
+    public String getShortcut() {
+        return shortcut;
     }
 }

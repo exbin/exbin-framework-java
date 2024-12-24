@@ -44,7 +44,6 @@ import org.exbin.framework.action.api.GroupMenuContribution;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuContributionRule;
-import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMenuContributionRule;
@@ -563,6 +562,19 @@ public class MenuManager {
             }
             menus.remove(menuId);
         }
+    }
+
+    @Nonnull
+    public List<Action> getAllManagedActions() {
+        List<Action> actions = new ArrayList<>();
+        for (MenuDefinition menuDef : menus.values()) {
+            for (MenuContribution contribution : menuDef.getContributions()) {
+                if (contribution instanceof ActionMenuContribution) {
+                    actions.add(((ActionMenuContribution) contribution).getAction());
+                }
+            }
+        }
+        return actions;
     }
 
     private static abstract class ProcessedContribution {

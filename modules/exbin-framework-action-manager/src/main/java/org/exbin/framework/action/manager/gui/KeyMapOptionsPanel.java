@@ -16,10 +16,12 @@
 package org.exbin.framework.action.manager.gui;
 
 import java.awt.BorderLayout;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.action.manager.model.KeyMapRecord;
 import org.exbin.framework.action.manager.options.impl.ActionOptionsImpl;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -53,6 +55,10 @@ public class KeyMapOptionsPanel extends javax.swing.JPanel implements OptionsCom
     @Override
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+    
+    public void setRecords(List<KeyMapRecord> records) {
+        keyMap.setRecords(records);
     }
 
     /**

@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.action.manager.gui;
 
+import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.action.manager.model.KeyMapRecord;
 import org.exbin.framework.action.manager.model.KeyMapTableModel;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
@@ -39,6 +41,10 @@ public class KeyMapTablePanel extends javax.swing.JPanel {
         keyMapTable.setModel(tableModel);
     }
 
+    public void setRecords(List<KeyMapRecord> records) {
+        tableModel.setRecords(records);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -59,14 +65,14 @@ public class KeyMapTablePanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 807, Short.MAX_VALUE)
+                .addComponent(scrollPane)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
+                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

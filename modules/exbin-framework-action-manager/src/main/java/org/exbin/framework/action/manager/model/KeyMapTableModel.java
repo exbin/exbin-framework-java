@@ -20,6 +20,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Key map table model.
@@ -29,6 +31,7 @@ import javax.swing.table.AbstractTableModel;
 @ParametersAreNonnullByDefault
 public class KeyMapTableModel extends AbstractTableModel {
 
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(KeyMapTableModel.class);
     private List<KeyMapRecord> records = new ArrayList<>();
 
     @Override
@@ -46,6 +49,20 @@ public class KeyMapTableModel extends AbstractTableModel {
         super.setValueAt(aValue, rowIndex, columnIndex);
     }
 
+    @Nonnull
+    @Override
+    public String getColumnName(int column) {
+        switch (column) {
+            case 0:
+                return resourceBundle.getString("column.name");
+            case 1:
+                return resourceBundle.getString("column.type");
+            case 2:
+                return resourceBundle.getString("column.shortcut");
+        }
+        throw new IllegalStateException();
+    }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         KeyMapRecord record = records.get(rowIndex);
@@ -53,9 +70,9 @@ public class KeyMapTableModel extends AbstractTableModel {
             case 0:
                 return record.getName();
             case 1:
-                return "";
+                return record.getType();
             case 2:
-                return "";
+                return record.getShortcut();
         }
 
         return null;

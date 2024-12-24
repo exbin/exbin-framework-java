@@ -20,8 +20,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
+import javax.swing.KeyStroke;
 import org.exbin.framework.App;
+import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.manager.gui.KeyMapOptionsPanel;
+import org.exbin.framework.action.manager.model.KeyMapRecord;
 import org.exbin.framework.action.manager.options.impl.ActionOptionsImpl;
 import org.exbin.framework.action.manager.preferences.ActionPreferences;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -39,7 +44,9 @@ import org.exbin.framework.preferences.api.Preferences;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionManagerModule {
+public class ActionManagerModule implements org.exbin.framework.Module {
+
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ActionManagerModule.class);
 
     private ResourceBundle resourceBundle;
 
@@ -71,7 +78,19 @@ public class ActionManagerModule {
             @Nonnull
             @Override
             public OptionsComponent<ActionOptionsImpl> createPanel() {
-                return new KeyMapOptionsPanel();
+                KeyMapOptionsPanel panel = new KeyMapOptionsPanel();
+                List<KeyMapRecord> records = new ArrayList<>();
+                ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+                List<Action> actions = actionModule.getAllManagedActions();
+                for (Action action : actions) {
+                    String name = (String) action.getValue(Action.NAME);
+                    String type = "";
+                    KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
+                    String shortcut = keyStroke == null ? "" : keyStroke.toString();
+                    records.add(new KeyMapRecord(name, type, shortcut));
+                }
+                panel.setRecords(records);
+                return panel;
             }
 
             @Nonnull

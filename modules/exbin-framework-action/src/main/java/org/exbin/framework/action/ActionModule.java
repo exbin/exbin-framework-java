@@ -17,6 +17,8 @@ package org.exbin.framework.action;
 
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -211,6 +213,19 @@ public class ActionModule implements ActionModuleApi {
         }
 
         return menuItem;
+    }
+
+    @Nonnull
+    @Override
+    public List<Action> getAllManagedActions() {
+        List<Action> actions = new ArrayList<>();
+        MenuManager menuManager = getMenuManager();
+        actions.addAll(menuManager.getAllManagedActions());
+        
+        ToolBarManager toolBarManager = getToolBarManager();
+        actions.addAll(toolBarManager.getAllManagedActions());
+                
+        return actions;
     }
 
     @Nonnull
