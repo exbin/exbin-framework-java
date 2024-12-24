@@ -18,6 +18,8 @@ package org.exbin.framework.action.manager.model;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
 
 /**
  * Key map record.
@@ -29,10 +31,12 @@ public class KeyMapRecord {
 
     private final String name;
     private final String type;
-    private final String shortcut;
+    private final ImageIcon icon;
+    private final KeyStroke shortcut;
 
-    public KeyMapRecord(String name, String type, @Nullable String shortcut) {
+    public KeyMapRecord(String name, @Nullable ImageIcon icon, String type, @Nullable KeyStroke shortcut) {
         this.name = name;
+        this.icon = icon;
         this.type = type;
         this.shortcut = shortcut;
     }
@@ -42,13 +46,18 @@ public class KeyMapRecord {
         return name;
     }
 
+    @Nullable
+    public ImageIcon getIcon() {
+        return icon;
+    }
+
     @Nonnull
     public String getType() {
         return type;
     }
 
     @Nullable
-    public String getShortcut() {
+    public KeyStroke getShortcut() {
         return shortcut;
     }
 }

@@ -17,6 +17,7 @@ package org.exbin.framework.action.manager.gui;
 
 import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.KeyStroke;
 import org.exbin.framework.action.manager.model.KeyMapRecord;
 import org.exbin.framework.action.manager.model.KeyMapTableModel;
 import org.exbin.framework.utils.TestApplication;
@@ -39,6 +40,8 @@ public class KeyMapTablePanel extends javax.swing.JPanel {
 
     private void init() {
         keyMapTable.setModel(tableModel);
+        keyMapTable.setDefaultRenderer(KeyMapRecord.class, new KeyMapTableTitleRenderer());
+        keyMapTable.setDefaultRenderer(KeyStroke.class, new KeyMapTableKeyStrokeRenderer());
     }
 
     public void setRecords(List<KeyMapRecord> records) {
@@ -57,6 +60,7 @@ public class KeyMapTablePanel extends javax.swing.JPanel {
         scrollPane = new javax.swing.JScrollPane();
         keyMapTable = new javax.swing.JTable();
 
+        keyMapTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scrollPane.setViewportView(keyMapTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -65,7 +69,7 @@ public class KeyMapTablePanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrollPane)
+                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(

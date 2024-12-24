@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.KeyStroke;
 import javax.swing.table.AbstractTableModel;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -68,7 +69,7 @@ public class KeyMapTableModel extends AbstractTableModel {
         KeyMapRecord record = records.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                return record.getName();
+                return record;
             case 1:
                 return record.getType();
             case 2:
@@ -81,6 +82,15 @@ public class KeyMapTableModel extends AbstractTableModel {
     @Nonnull
     @Override
     public Class<?> getColumnClass(int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                return KeyMapRecord.class;
+            case 1:
+                return String.class;
+            case 2:
+                return KeyStroke.class;
+        }
+
         return String.class;
     }
 

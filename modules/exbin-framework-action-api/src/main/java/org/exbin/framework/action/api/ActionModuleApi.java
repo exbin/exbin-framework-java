@@ -187,10 +187,18 @@ public interface ActionModuleApi extends Module {
     void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher);
 
     /**
-     * Returns list of action managed by menu and toolbar managers.
+     * Returns list of action managed by menu managers.
      *
      * @return list of actions
      */
     @Nonnull
-    List<Action> getAllManagedActions();
+    List<Action> getMenuManagedActions();
+
+    /**
+     * Returns list of action managed by toolbar managers.
+     *
+     * @return list of actions
+     */
+    @Nonnull
+    List<Action> getToolBarManagedActions();
 }

@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleUtils;
@@ -81,13 +82,22 @@ public class ActionManagerModule implements org.exbin.framework.Module {
                 KeyMapOptionsPanel panel = new KeyMapOptionsPanel();
                 List<KeyMapRecord> records = new ArrayList<>();
                 ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                List<Action> actions = actionModule.getAllManagedActions();
+                List<Action> actions = actionModule.getMenuManagedActions();
                 for (Action action : actions) {
                     String name = (String) action.getValue(Action.NAME);
-                    String type = "";
+                    ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
+                    String type = "Menu";
                     KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-                    String shortcut = keyStroke == null ? "" : keyStroke.toString();
-                    records.add(new KeyMapRecord(name, type, shortcut));
+                    records.add(new KeyMapRecord(name, icon, type, keyStroke));
+                }
+
+                actions = actionModule.getToolBarManagedActions();
+                for (Action action : actions) {
+                    String name = (String) action.getValue(Action.NAME);
+                    ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
+                    String type = "Tool Bar";
+                    KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
+                    records.add(new KeyMapRecord(name, icon, type, keyStroke));
                 }
                 panel.setRecords(records);
                 return panel;

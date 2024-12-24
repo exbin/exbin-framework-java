@@ -217,14 +217,21 @@ public class ActionModule implements ActionModuleApi {
 
     @Nonnull
     @Override
-    public List<Action> getAllManagedActions() {
+    public List<Action> getMenuManagedActions() {
         List<Action> actions = new ArrayList<>();
-        MenuManager menuManager = getMenuManager();
+        getMenuManager();
         actions.addAll(menuManager.getAllManagedActions());
-        
-        ToolBarManager toolBarManager = getToolBarManager();
+
+        return actions;
+    }
+
+    @Nonnull
+    @Override
+    public List<Action> getToolBarManagedActions() {
+        List<Action> actions = new ArrayList<>();
+        getToolBarManager();
         actions.addAll(toolBarManager.getAllManagedActions());
-                
+
         return actions;
     }
 
@@ -362,15 +369,15 @@ public class ActionModule implements ActionModuleApi {
         MenuContribution contribution = mgmt.registerMenuGroup(menuId, CLIPBOARD_ACTIONS_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(separationMode));
-        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createCutAction());
+        contribution = mgmt.registerMenuItem(menuId, actions.createCutAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createCopyAction());
+        contribution = mgmt.registerMenuItem(menuId, actions.createCopyAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createPasteAction());
+        contribution = mgmt.registerMenuItem(menuId, actions.createPasteAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createDeleteAction());
+        contribution = mgmt.registerMenuItem(menuId, actions.createDeleteAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, moduleId, actions.createSelectAllAction());
+        contribution = mgmt.registerMenuItem(menuId, actions.createSelectAllAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
 

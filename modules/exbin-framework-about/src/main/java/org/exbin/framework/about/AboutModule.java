@@ -86,7 +86,7 @@ public class AboutModule implements AboutModuleApi {
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM_LAST));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
-            contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, MODULE_ID, createAboutAction());
+            contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, createAboutAction());
             mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(HELP_ABOUT_MENU_GROUP_ID));
         }
     }
