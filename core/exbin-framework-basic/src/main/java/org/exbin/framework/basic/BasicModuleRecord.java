@@ -5,6 +5,7 @@
  */
 package org.exbin.framework.basic;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,7 @@ import org.exbin.framework.Module;
 @ParametersAreNonnullByDefault
 public class BasicModuleRecord implements ModuleRecord {
 
-    private String moduleId;
+    private String moduleId = "";
     private String name;
     private ClassLoader classLoader;
     private String version = "";
@@ -132,5 +133,26 @@ public class BasicModuleRecord implements ModuleRecord {
 
     public void setModule(Module module) {
         this.module = module;
+    }
+
+    @ParametersAreNonnullByDefault
+    public static class ModuleLink implements Module {
+
+        private final URI moduleLink;
+        private final boolean preloaded;
+
+        public ModuleLink(URI moduleLink, boolean preloaded) {
+            this.moduleLink = moduleLink;
+            this.preloaded = preloaded;
+        }
+
+        @Nonnull
+        public URI getModuleLink() {
+            return moduleLink;
+        }
+
+        public boolean isPreloaded() {
+            return preloaded;
+        }
     }
 }

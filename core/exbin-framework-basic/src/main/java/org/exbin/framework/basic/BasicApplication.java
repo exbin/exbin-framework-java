@@ -102,7 +102,7 @@ public class BasicApplication {
     }
 
     public void loadModulesFromPath(URI pathUri) {
-        moduleProvider.loadModulesFromPath(pathUri);
+        moduleProvider.addModulesFromPath(pathUri);
     }
 
     public void addModulesFromPath(URL pathUrl) {

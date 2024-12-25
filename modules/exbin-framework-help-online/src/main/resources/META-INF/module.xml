@@ -6,6 +6,7 @@
   <homepage>https://exbin.org</homepage>
   <description>Module for online help</description>
   <dependency>
+    <module id="org.exbin.framework.help.online.api.HelpOnlineModuleApi" />
     <module id="org.exbin.framework.frame.api.FrameModuleApi" />
     <module id="org.exbin.framework.window.api.WindowModuleApi" />
     <module id="org.exbin.framework.action.api.ActionModuleApi" />

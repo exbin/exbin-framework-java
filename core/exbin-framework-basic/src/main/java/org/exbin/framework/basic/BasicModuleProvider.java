@@ -42,7 +42,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleProvider;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -108,19 +107,19 @@ public class BasicModuleProvider implements ModuleProvider {
         }
     }
 
-    public void loadModulesFromPath(URI pathUri) {
+    public void addModulesFromPath(URI pathUri) {
         File directory = new File(pathUri);
         if (directory.exists() && directory.isDirectory()) {
             File[] jarFiles = directory.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".jar"));
             for (File jarFile : jarFiles) {
-                addModulePlugin(jarFile.toURI(), true);
+                addModulePlugin(jarFile.toURI(), false);
             }
         }
     }
 
     public void addModulesFromPath(URL pathUrl) {
         try {
-            loadModulesFromPath(pathUrl.toURI());
+            addModulesFromPath(pathUrl.toURI());
         } catch (URISyntaxException ex) {
             Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -130,7 +129,7 @@ public class BasicModuleProvider implements ModuleProvider {
         String classpath = System.getProperty("java.class.path");
         String[] classpathEntries = classpath.split(File.pathSeparator);
         for (String classpathEntry : classpathEntries) {
-            addModulePlugin(new File(classpathEntry).toURI(), false);
+            addModulePlugin(new File(classpathEntry).toURI(), true);
         }
     }
 
@@ -145,7 +144,7 @@ public class BasicModuleProvider implements ModuleProvider {
             String rootDirectory = new File(moduleClassLocation.toURI()).getParentFile().toURI().toString();
             for (String path : paths) {
                 try {
-                    addModulePlugin(new URI(rootDirectory + path), false);
+                    addModulePlugin(new URI(rootDirectory + path), true);
                 } catch (URISyntaxException ex) {
                     // Ignore
                 }
@@ -160,15 +159,74 @@ public class BasicModuleProvider implements ModuleProvider {
         return contextClassLoader;
     }
 
+    @Nonnull
+    private Module loadModule(BasicModuleRecord moduleRecord) {
+        Module module = moduleRecord.getModule();
+        String moduleId = moduleRecord.getModuleId();
+        if (moduleId.isEmpty()) {
+            throw new IllegalStateException("Library is not a module");
+        }
+        
+        if (!(module instanceof BasicModuleRecord.ModuleLink)) {
+            throw new IllegalStateException("Module is already loaded");
+        }
+
+        boolean preloaded = ((BasicModuleRecord.ModuleLink) module).isPreloaded();
+        URI moduleLink = ((BasicModuleRecord.ModuleLink) module).getModuleLink();
+
+        if (preloaded) {
+            try {
+                contextClassLoader.add(moduleLink.toURL());
+                Class<?> clazz = contextClassLoader.loadClass(moduleId);
+                moduleRecord.setClassLoader(contextClassLoader);
+                Constructor<?> ctor = clazz.getConstructor();
+                module = (Module) ctor.newInstance();
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | MalformedURLException | NoClassDefFoundError ex) {
+                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Module: " + moduleRecord.getModuleId(), ex);
+                // ignore
+            }
+        } else {
+            try {
+                DynamicClassLoader loader;
+                //                    try {
+                //                        loader = new DynamicClassLoader("classpath", contextClassLoader);
+                //                    } catch (Throwable tw) {
+                // Alternative when executed from Java 8
+                loader = new DynamicClassLoader(contextClassLoader);
+                //                    }
+
+                loader.add(moduleLink.toURL());
+                Class<?> clazz = Class.forName(moduleRecord.getModuleId(), true, loader);
+
+                //                    if (LookAndFeelApplier.class.isAssignableFrom(clazz)) {
+                //                        loader = contextClassLoader;
+                //                        loader.add(libraryUri.toURL());
+                //                        clazz = Class.forName(moduleRecord.getModuleId(), true, loader);
+                //                    }
+                moduleRecord.setClassLoader(loader);
+                Constructor<?> ctor = clazz.getConstructor();
+                module = (Module) ctor.newInstance();
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | MalformedURLException | NoClassDefFoundError ex) {
+                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Module: " + moduleRecord.getModuleId(), ex);
+                // ignore
+            }
+        }
+        moduleRecord.setModule(module);
+
+        return module;
+    }
+
     /**
      * Attempts to load main library class if library URL contains valid module
      * declaration.
      *
      * @param libraryUri library URI
      */
-    private void addModulePlugin(URI libraryUri, boolean loadClass) {
+    @Nonnull
+    private BasicModuleRecord addModulePlugin(URI libraryUri, boolean preloaded) {
         final BasicModuleRecord moduleRecord = new BasicModuleRecord();
         moduleRecord.setClassLoader(contextClassLoader);
+        moduleRecord.setModule(new BasicModuleRecord.ModuleLink(libraryUri, preloaded));
 
         URL moduleRecordUrl = null;
         InputStream moduleRecordStream = null;
@@ -227,43 +285,9 @@ public class BasicModuleProvider implements ModuleProvider {
             }
         }
 
-        if (moduleRecord.getModuleId() != null) {
-            Module module = null;
-            try {
-                Class<?> clazz;
-                if (loadClass) {
-                    DynamicClassLoader loader;
-//                    try {
-//                        loader = new DynamicClassLoader("classpath", contextClassLoader);
-//                    } catch (Throwable tw) {
-                    // Alternative when executed from Java 8
-                    loader = new DynamicClassLoader(contextClassLoader);
-//                    }
+        modules.put(moduleRecord.getModuleId(), moduleRecord);
 
-                    loader.add(libraryUri.toURL());
-                    clazz = Class.forName(moduleRecord.getModuleId(), true, loader);
-
-//                    if (LookAndFeelApplier.class.isAssignableFrom(clazz)) {
-//                        loader = contextClassLoader;
-//                        loader.add(libraryUri.toURL());
-//                        clazz = Class.forName(moduleRecord.getModuleId(), true, loader);
-//                    }
-                    moduleRecord.setClassLoader(loader);
-                } else {
-                    contextClassLoader.add(libraryUri.toURL());
-                    clazz = contextClassLoader.loadClass(moduleRecord.getModuleId());
-                    moduleRecord.setClassLoader(contextClassLoader);
-                }
-                Constructor<?> ctor = clazz.getConstructor();
-                module = (Module) ctor.newInstance();
-            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | MalformedURLException ex) {
-                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Module: " + moduleRecord.getModuleId(), ex);
-                // ignore
-            }
-
-            moduleRecord.setModule(module);
-            modules.put(moduleRecord.getModuleId(), moduleRecord);
-        }
+        return moduleRecord;
     }
 
     private void addModule(Module module) {
@@ -300,9 +324,9 @@ public class BasicModuleProvider implements ModuleProvider {
             int moduleIndex = 0;
             while (moduleIndex < unprocessedModules.size()) {
                 ModuleRecord moduleRecord = unprocessedModules.get(moduleIndex);
-                Module module = moduleRecord.getModule();
+//                Module module = moduleRecord.getModule();
 //                if (module instanceof LookAndFeelApplier) {
-////                    module.init(moduleHandler);
+                ////                    module.init(moduleHandler);
 //                    unprocessedModules.remove(moduleIndex);
 //                } else {
                 moduleIndex++;
@@ -332,6 +356,10 @@ public class BasicModuleProvider implements ModuleProvider {
 
                 if (dependecySatisfied) {
                     Module module = moduleRecord.getModule();
+                    String moduleId = ((BasicModuleRecord) moduleRecord).getModuleId();
+                    if (module instanceof BasicModuleRecord.ModuleLink && !moduleId.isEmpty()) {
+                        loadModule((BasicModuleRecord) moduleRecord);
+                    }
 //                    module.init(moduleHandler);
                     unprocessedModules.remove(moduleIndex);
                 } else {
@@ -375,7 +403,12 @@ public class BasicModuleProvider implements ModuleProvider {
         if (moduleRecord == null) {
             throw new IllegalArgumentException("Module for id " + moduleId + " was not found.");
         }
-        return moduleRecord.getModule();
+        Module module = moduleRecord.getModule();
+        if (module instanceof BasicModuleRecord.ModuleLink) {
+            throw new IllegalArgumentException("Module for id " + moduleId + " is not loaded.");
+
+        }
+        return module;
     }
 
     /**
