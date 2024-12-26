@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.help.api.HelpModuleApi</api>
+  <api>org.exbin.framework.help.online.api.HelpOnlineModuleApi</api>
   <name>XBUP Help Support Module</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>

@@ -8,7 +8,7 @@
   <dependency>
     <module id="org.exbin.framework.action.api.ActionModuleApi" />
     <module id="org.exbin.framework.window.api.WindowModuleApi" />
-    <module id="org.exbin.framework.options.api.OptionsModuleapi" />
+    <module id="org.exbin.framework.options.api.OptionsModuleApi" />
     <module id="org.exbin.framework.preferences.api.PreferencesModuleApi" />
     <module id="org.exbin.framework.language.api.LanguageModuleApi" />
     <module id="org.exbin.framework.utils.UtilsModule" />

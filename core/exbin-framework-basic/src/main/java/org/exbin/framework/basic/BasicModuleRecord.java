@@ -23,6 +23,7 @@ import org.exbin.framework.Module;
 public class BasicModuleRecord implements ModuleRecord {
 
     private String moduleId = "";
+    private ModuleType type = ModuleType.MODULE;
     private String name;
     private ClassLoader classLoader;
     private String version = "";
@@ -31,6 +32,7 @@ public class BasicModuleRecord implements ModuleRecord {
     private String homepage = null;
     private final List<String> dependencyModuleIds = new ArrayList<>();
     private final List<String> optionalModuleIds = new ArrayList<>();
+    private final List<String> dependencyLibraries = new ArrayList<>();
     private Module module;
 
     public BasicModuleRecord() {
@@ -50,6 +52,16 @@ public class BasicModuleRecord implements ModuleRecord {
 
     public void setModuleId(String moduleId) {
         this.moduleId = moduleId;
+    }
+
+    @Nonnull
+    @Override
+    public ModuleType getType() {
+        return type;
+    }
+
+    public void setType(ModuleType type) {
+        this.type = type;
     }
 
     @Nonnull
@@ -119,10 +131,26 @@ public class BasicModuleRecord implements ModuleRecord {
         return dependencyModuleIds;
     }
 
+    public void setDependencyModuleIds(List<String> dependencyModuleIds) {
+        this.dependencyModuleIds.clear();
+        this.dependencyModuleIds.addAll(dependencyModuleIds);
+    }
+
     @Nonnull
     @Override
     public List<String> getOptionalModuleIds() {
         return optionalModuleIds;
+    }
+
+    @Nonnull
+    @Override
+    public List<String> getDependencyLibraries() {
+        return dependencyLibraries;
+    }
+
+    public void setDependencyLibraries(List<String> dependencyLibraries) {
+        this.dependencyLibraries.clear();
+        this.dependencyLibraries.addAll(dependencyLibraries);
     }
 
     @Nonnull

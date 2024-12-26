@@ -57,6 +57,7 @@ public class BasicModuleProvider implements ModuleProvider {
     private static final String MODULE_ID = "MODULE_ID";
     private static final String MODULE_FILE = "module.xml";
     private final Map<String, ModuleRecord> modules = new HashMap<>();
+    private final Map<String, LibraryRecord> libraries = new HashMap<>();
     private DynamicClassLoader contextClassLoader = new DynamicClassLoader();
 
     public BasicModuleProvider() {
@@ -64,9 +65,12 @@ public class BasicModuleProvider implements ModuleProvider {
 
     @Override
     public void launch(Runnable runnable) {
-        Thread runThread = new Thread(runnable);
-        runThread.setContextClassLoader(contextClassLoader);
-        runThread.start();
+        try {
+            Thread runThread = contextClassLoader.createThread(runnable);
+            runThread.start();
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Nonnull
@@ -166,7 +170,7 @@ public class BasicModuleProvider implements ModuleProvider {
         if (moduleId.isEmpty()) {
             throw new IllegalStateException("Library is not a module");
         }
-        
+
         if (!(module instanceof BasicModuleRecord.ModuleLink)) {
             throw new IllegalStateException("Module is already loaded");
         }
@@ -174,18 +178,34 @@ public class BasicModuleProvider implements ModuleProvider {
         boolean preloaded = ((BasicModuleRecord.ModuleLink) module).isPreloaded();
         URI moduleLink = ((BasicModuleRecord.ModuleLink) module).getModuleLink();
 
-        if (preloaded) {
+        List<String> dependencyLibraries = moduleRecord.getDependencyLibraries();
+        for (String dependencyLibrary : dependencyLibraries) {
+            LibraryRecord record = libraries.get(dependencyLibrary);
+            if (!record.loaded) {
+                try {
+                    contextClassLoader.add(record.uri.toURL());
+                    record.loaded = true;
+                    libraries.put(dependencyLibrary, record);
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        if (moduleRecord.getType() == ModuleType.API) {
             try {
                 contextClassLoader.add(moduleLink.toURL());
-                Class<?> clazz = contextClassLoader.loadClass(moduleId);
-                moduleRecord.setClassLoader(contextClassLoader);
-                Constructor<?> ctor = clazz.getConstructor();
-                module = (Module) ctor.newInstance();
-            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | MalformedURLException | NoClassDefFoundError ex) {
+            } catch (MalformedURLException | NoClassDefFoundError ex) {
                 Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Module: " + moduleRecord.getModuleId(), ex);
                 // ignore
             }
-        } else {
+            module = new Module() {
+            };
+            moduleRecord.setModule(module);
+            return module;
+        }
+
+        if (preloaded) {
             try {
                 DynamicClassLoader loader;
                 //                    try {
@@ -210,7 +230,19 @@ public class BasicModuleProvider implements ModuleProvider {
                 Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Module: " + moduleRecord.getModuleId(), ex);
                 // ignore
             }
+        } else {
+            try {
+                contextClassLoader.add(moduleLink.toURL());
+                Class<?> clazz = contextClassLoader.loadClass(moduleId);
+                moduleRecord.setClassLoader(contextClassLoader);
+                Constructor<?> ctor = clazz.getConstructor();
+                module = (Module) ctor.newInstance();
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | MalformedURLException | NoClassDefFoundError ex) {
+                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Module: " + moduleRecord.getModuleId(), ex);
+                // ignore
+            }
         }
+
         moduleRecord.setModule(module);
 
         return module;
@@ -266,6 +298,9 @@ public class BasicModuleProvider implements ModuleProvider {
                         Node node = childModuleNode.item(i);
                         if ("id".equals(node.getNodeName())) {
                             moduleRecord.setModuleId(node.getTextContent());
+                        } else if ("api".equals(node.getNodeName())) {
+                            moduleRecord.setModuleId(node.getTextContent());
+                            moduleRecord.setType(ModuleType.API);
                         } else if ("name".equals(node.getNodeName())) {
                             moduleRecord.setName(node.getTextContent());
                         } else if ("description".equals(node.getNodeName())) {
@@ -274,6 +309,20 @@ public class BasicModuleProvider implements ModuleProvider {
                             moduleRecord.setHomepage(node.getTextContent());
                         } else if ("provider".equals(node.getNodeName())) {
                             moduleRecord.setProvider(node.getTextContent());
+                        } else if ("dependency".equals(node.getNodeName())) {
+                            List<String> dependecyModuleIds = new ArrayList<>();
+                            List<String> dependecyLibraries = new ArrayList<>();
+                            NodeList childNodes = node.getChildNodes();
+                            for (int j = 0; j < childNodes.getLength(); j++) {
+                                Node depRecord = childNodes.item(j);
+                                if ("module".equals(depRecord.getNodeName())) {
+                                    dependecyModuleIds.add(depRecord.getAttributes().getNamedItem("id").getNodeValue());
+                                } else if ("library".equals(depRecord.getNodeName())) {
+                                    dependecyLibraries.add(depRecord.getAttributes().getNamedItem("jar").getNodeValue());
+                                }
+                            }
+                            moduleRecord.setDependencyModuleIds(dependecyModuleIds);
+                            moduleRecord.setDependencyLibraries(dependecyLibraries);
                         }
                     }
                 }
@@ -283,9 +332,19 @@ public class BasicModuleProvider implements ModuleProvider {
             } catch (IOException | SAXException | ParserConfigurationException ex) {
                 Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
             }
+            modules.put(moduleRecord.getModuleId(), moduleRecord);
+        } else {
+            try {
+                String fullPath = libraryUri.toURL().toExternalForm();
+                int lastPart = fullPath.lastIndexOf("/");
+                String fileName = lastPart >= 0 ? fullPath.substring(lastPart + 1) : fullPath;
+                LibraryRecord libraryRecord = new LibraryRecord();
+                libraryRecord.uri = libraryUri;
+                libraries.put(fileName, libraryRecord);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-
-        modules.put(moduleRecord.getModuleId(), moduleRecord);
 
         return moduleRecord;
     }
@@ -348,7 +407,7 @@ public class BasicModuleProvider implements ModuleProvider {
                 boolean dependecySatisfied = true;
                 for (String dependecyModuleId : dependencyModuleIds) {
                     ModuleRecord dependecyModule = getModuleRecordById(dependecyModuleId);
-                    if (dependecyModule == null || findModule(unprocessedModules, dependecyModuleId)) {
+                    if (dependecyModule == null || (dependecyModule.getModule() instanceof BasicModuleRecord.ModuleLink) || findModule(unprocessedModules, dependecyModuleId)) {
                         dependecySatisfied = false;
                         break;
                     }
@@ -371,7 +430,20 @@ public class BasicModuleProvider implements ModuleProvider {
         } while (postRoundCount > 0 && postRoundCount < preRoundCount);
 
         if (postRoundCount > 0) {
-            throw new IllegalStateException("Circular dependency detected");
+            for (ModuleRecord unprocessedModule : unprocessedModules) {
+                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Unprocessed Module: " + unprocessedModule.getModuleId());
+                List<String> dependencyModuleIds = unprocessedModule.getDependencyModuleIds();
+                for (String dependecyModuleId : dependencyModuleIds) {
+                    ModuleRecord dependecyModule = getModuleRecordById(dependecyModuleId);
+                    if (dependecyModule == null || (dependecyModule.getModule() instanceof BasicModuleRecord.ModuleLink) || findModule(unprocessedModules, dependecyModuleId)) {
+                        System.out.println("Missing dep: " + dependecyModuleId);
+                    }
+                }
+            }
+            for (ModuleRecord module : modules.values()) {
+                System.out.println("Module: " + module.getModuleId() + (module.getModule() instanceof BasicModuleRecord.ModuleLink ? " L" : ""));
+            }
+            throw new IllegalStateException("Unsatisfied dependency detected");
         }
     }
 
@@ -419,5 +491,11 @@ public class BasicModuleProvider implements ModuleProvider {
     @Nonnull
     public List<ModuleRecord> getModulesList() {
         return new ArrayList<>(modules.values());
+    }
+
+    private static class LibraryRecord {
+
+        URI uri;
+        boolean loaded = false;
     }
 }

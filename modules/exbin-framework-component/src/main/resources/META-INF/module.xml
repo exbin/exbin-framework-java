@@ -6,6 +6,7 @@
   <homepage>https://exbin.org</homepage>
   <description>Module to support for visual components</description>
   <dependency>
+    <module id="org.exbin.framework.component.api.ComponentModuleApi" />
     <module id="org.exbin.framework.utils.UtilsModule" />
     <module id="org.exbin.framework.action.ActionModule" />
     <module id="org.exbin.framework.operation.undo.OperationUndoModule" />

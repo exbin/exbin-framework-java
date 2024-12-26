@@ -16,6 +16,8 @@
 package org.exbin.framework.basic;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
@@ -78,5 +80,14 @@ public class DynamicClassLoader extends URLClassLoader {
     @SuppressWarnings("unused")
     private void appendToClassPathForInstrumentation(String jarfile) throws IOException {
         add(Paths.get(jarfile).toRealPath().toUri().toURL());
+    }
+
+    @Nonnull
+    public Thread createThread(Runnable runnable) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Class<?> threadClass = loadClass("java.lang.Thread");
+        Constructor<?> constructor = threadClass.getConstructor(Runnable.class);
+        Thread runThread = (Thread) constructor.newInstance(runnable);
+        runThread.setContextClassLoader(this);
+        return runThread;
     }
 }

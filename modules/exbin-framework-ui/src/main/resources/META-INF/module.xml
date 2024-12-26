@@ -6,8 +6,9 @@
   <homepage>https://exbin.org</homepage>
   <description>Module for user interface handling</description>
   <dependency>
+    <module id="org.exbin.framework.ui.api.UiModuleApi" />
     <module id="org.exbin.framework.action.api.ActionModuleApi" />
-    <module id="org.exbin.framework.options.api.OptionsModuleapi" />
+    <module id="org.exbin.framework.options.api.OptionsModuleApi" />
     <module id="org.exbin.framework.preferences.api.PreferencesModuleApi" />
     <module id="org.exbin.framework.frame.api.FrameModuleApi" />
     <module id="org.exbin.framework.language.api.LanguageModuleApi" />

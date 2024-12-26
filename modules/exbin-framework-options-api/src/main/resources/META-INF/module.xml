@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.options.api.OptionsModuleapi</api>
+  <api>org.exbin.framework.options.api.OptionsModuleApi</api>
   <name>Options Support Module</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>

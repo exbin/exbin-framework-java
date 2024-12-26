@@ -26,6 +26,14 @@ public interface ModuleRecord {
     String getModuleId();
 
     /**
+     * Returns module type.
+     *
+     * @return module type
+     */
+    @Nonnull
+    ModuleType getType();
+
+    /**
      * Returns module name.
      *
      * @return module name
@@ -72,6 +80,13 @@ public interface ModuleRecord {
      */
     @Nonnull
     List<String> getDependencyModuleIds();
+
+    /**
+     * Returns list of required dependency libraries.
+     *
+     * @return list of dependecy libraries
+     */
+    List<String> getDependencyLibraries();
 
     /**
      * Returns list of optional modules.
