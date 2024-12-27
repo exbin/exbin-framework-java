@@ -15,39 +15,18 @@
  */
 package org.exbin.framework;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Module provider interface.
+ * Plugin module interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ModuleProvider {
+public interface PluginModule extends Module {
 
     /**
-     * Launches application via launcher module.
-     *
-     * @param launcherModuleId launcher module id
-     * @param args command line arguments
+     * Performs plugin registration.
      */
-    void launch(String launcherModuleId, String[] args);
-
-    /**
-     * Launches application.
-     *
-     * @param runnable runnable
-     */
-    void launch(Runnable runnable);
-
-    /**
-     * Returns module for given module class or interface.
-     *
-     * @param <T> module class
-     * @param interfaceClass module class or interface
-     * @return module instance
-     */
-    @Nonnull
-    <T extends Module> T getModule(Class<T> interfaceClass);
+    void register();
 }

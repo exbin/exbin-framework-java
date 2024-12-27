@@ -39,8 +39,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.exbin.framework.LauncherModule;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleProvider;
+import org.exbin.framework.PluginModule;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -58,15 +60,29 @@ public class BasicModuleProvider implements ModuleProvider {
     private static final String MODULE_FILE = "module.xml";
     private final Map<String, ModuleRecord> modules = new HashMap<>();
     private final Map<String, LibraryRecord> libraries = new HashMap<>();
-    private DynamicClassLoader contextClassLoader = new DynamicClassLoader();
+    private DynamicClassLoader contextClassLoader;
 
-    public BasicModuleProvider() {
+    public BasicModuleProvider(DynamicClassLoader contextClassLoader) {
+        this.contextClassLoader = contextClassLoader;
     }
 
     @Override
     public void launch(Runnable runnable) {
+        Thread runThread = new Thread(runnable, "app");
+        runThread.setContextClassLoader(contextClassLoader);
+        runThread.start();
+    }
+
+    @Override
+    public void launch(String launcherModuleId, String[] args) {
         try {
-            Thread runThread = contextClassLoader.createThread(runnable);
+            Class<?> launcherClass = contextClassLoader.loadClass(launcherModuleId);
+            Constructor<?> constructor = launcherClass.getConstructor();
+            LauncherModule launcherModule = (LauncherModule) constructor.newInstance();
+            Thread runThread = new Thread(() -> {
+                launcherModule.launch(args);
+            }, "app");
+            runThread.setContextClassLoader(contextClassLoader);
             runThread.start();
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
@@ -301,6 +317,9 @@ public class BasicModuleProvider implements ModuleProvider {
                         } else if ("api".equals(node.getNodeName())) {
                             moduleRecord.setModuleId(node.getTextContent());
                             moduleRecord.setType(ModuleType.API);
+                        } else if ("plugin".equals(node.getNodeName())) {
+                            moduleRecord.setModuleId(node.getTextContent());
+                            moduleRecord.setType(ModuleType.PLUGIN);
                         } else if ("name".equals(node.getNodeName())) {
                             moduleRecord.setName(node.getTextContent());
                         } else if ("description".equals(node.getNodeName())) {
@@ -444,6 +463,12 @@ public class BasicModuleProvider implements ModuleProvider {
                 System.out.println("Module: " + module.getModuleId() + (module.getModule() instanceof BasicModuleRecord.ModuleLink ? " L" : ""));
             }
             throw new IllegalStateException("Unsatisfied dependency detected");
+        }
+
+        for (ModuleRecord moduleRecord : modules.values()) {
+            if (moduleRecord.getType() == ModuleType.PLUGIN) {
+                ((PluginModule) moduleRecord.getModule()).register();
+            }
         }
     }
 

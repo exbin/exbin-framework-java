@@ -16,8 +16,6 @@
 package org.exbin.framework.basic;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
@@ -36,6 +34,8 @@ public class DynamicClassLoader extends URLClassLoader {
     static {
         registerAsParallelCapable();
     }
+
+    private boolean clientFirst = false;
 
     /*
      * Required when this classloader is used as the system classloader.
@@ -56,8 +56,46 @@ public class DynamicClassLoader extends URLClassLoader {
         this(Thread.currentThread().getContextClassLoader());
     }
 
+    public DynamicClassLoader(Class manifestClass) {
+        this();
+
+        URL classResourceUrl = manifestClass.getResource(manifestClass.getSimpleName() + ".class");
+        if ("jar".equals(classResourceUrl.getProtocol())) {
+            // Application started from class, assume all modules are on the path
+            clientFirst = true;
+        }
+    }
+
     void add(URL url) {
         addURL(url);
+    }
+
+    @Nonnull
+    @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        if (clientFirst) {
+            // has the class loaded already?
+            Class<?> loadedClass = findLoadedClass(name);
+            if (loadedClass == null) {
+                try {
+                    // find the class from given jar urls 
+                    loadedClass = findClass(name);
+                } catch (ClassNotFoundException e) {
+                    // Hmmm... class does not exist in the given urls.
+                    // Let's try finding it in our parent classloader.
+                    // this'll throw ClassNotFoundException in failure.                  
+                    loadedClass = super.loadClass(name, resolve);
+                }
+            }
+
+            // marked to resolve
+            if (resolve) {
+                resolveClass(loadedClass);
+            }
+            return loadedClass;
+        }
+
+        return super.loadClass(name, resolve);
     }
 
     @Nullable
@@ -80,14 +118,5 @@ public class DynamicClassLoader extends URLClassLoader {
     @SuppressWarnings("unused")
     private void appendToClassPathForInstrumentation(String jarfile) throws IOException {
         add(Paths.get(jarfile).toRealPath().toUri().toURL());
-    }
-
-    @Nonnull
-    public Thread createThread(Runnable runnable) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Class<?> threadClass = loadClass("java.lang.Thread");
-        Constructor<?> constructor = threadClass.getConstructor(Runnable.class);
-        Thread runThread = (Thread) constructor.newInstance(runnable);
-        runThread.setContextClassLoader(this);
-        return runThread;
     }
 }

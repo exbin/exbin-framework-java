@@ -16,6 +16,8 @@
 package org.exbin.framework.basic;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -43,11 +45,23 @@ public class BasicApplication {
     private String targetLaf = null;
     private File appDirectory = new File("");
 
-    public BasicApplication() {
+    public BasicApplication(DynamicClassLoader dynamicClassLoader) {
+        moduleProvider = new BasicModuleProvider(dynamicClassLoader);
+    }
+    
+    @Nonnull
+    public static BasicApplication createApplication(Class manifestClass) {
+        try {
+            DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(manifestClass);
+            Class<?> applicationClass = dynamicClassLoader.loadClass(BasicApplication.class.getCanonicalName());
+            Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class);
+            return (BasicApplication) constructor.newInstance(dynamicClassLoader);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+            throw new RuntimeException("Unable to create application instance", ex);
+        }
     }
 
     public void init() {
-        moduleProvider = new BasicModuleProvider();
         App.setModuleProvider(moduleProvider);
     }
 

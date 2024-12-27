@@ -41,6 +41,14 @@ public final class App {
         moduleProvider.launch(runnable);
     }
 
+    public static void launch(String launcherModuleId, String[] args) {
+        if (moduleProvider == null) {
+            throw new IllegalStateException("Module provider not initialized");
+        }
+
+        moduleProvider.launch(launcherModuleId, args);
+    }
+
     @Nonnull
     public static <T extends Module> T getModule(Class<T> interfaceClass) {
         if (moduleProvider != null) {

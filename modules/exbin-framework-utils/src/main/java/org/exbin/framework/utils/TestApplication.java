@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.utils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.LauncherModule;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleProvider;
 
@@ -42,11 +45,33 @@ public class TestApplication {
     TestApplication() {
     }
 
-    public void launch(@Nonnull Runnable runnable) {
+    public void launch(Runnable runnable) {
+        attachModuleProvider();
+        App.launch(runnable);
+    }
+
+    public void launch(String launcherModuleId, String[] args) {
+        attachModuleProvider();
+        App.launch(launcherModuleId, args);
+    }
+
+    private void attachModuleProvider() {
         App.setModuleProvider(new ModuleProvider() {
             @Override
             public void launch(Runnable runnable) {
                 runnable.run();
+            }
+
+            @Override
+            public void launch(String launcherModuleId, String[] args) {
+                try {
+                    Class<?> launcherClass = Class.forName(launcherModuleId);
+                    Constructor<?> constructor = launcherClass.getConstructor();
+                    LauncherModule launcherModule = (LauncherModule) constructor.newInstance();
+                    launcherModule.launch(args);
+                } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
+                    Logger.getLogger(TestApplication.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
             @Nonnull
@@ -79,10 +104,9 @@ public class TestApplication {
                 throw new IllegalStateException("Module not included in test application");
             }
         });
-        App.launch(runnable);
     }
 
-    public static void run(@Nonnull Runnable runnable) {
+    public static void run(Runnable runnable) {
         new TestApplication().launch(runnable);
     }
 
