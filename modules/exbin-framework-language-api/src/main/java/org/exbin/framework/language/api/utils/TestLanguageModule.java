@@ -101,6 +101,22 @@ public class TestLanguageModule implements LanguageModuleApi {
         throw new IllegalStateException();
     }
 
+    @Nonnull
+    @Override
+    public List<IconSetProvider> getIconSets() {
+        throw new IllegalStateException();
+    }
+
+    @Override
+    public void registerIconSetProvider(IconSetProvider iconSetProvider) {
+        throw new IllegalStateException();
+    }
+
+    @Override
+    public void switchToIconSet(String iconSetId) {
+        throw new IllegalStateException();
+    }
+
     /**
      * Returns class name path.
      * <br>

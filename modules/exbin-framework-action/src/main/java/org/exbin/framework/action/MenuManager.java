@@ -44,8 +44,10 @@ import org.exbin.framework.action.api.GroupMenuContribution;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuContributionRule;
+import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
+import org.exbin.framework.action.api.RelativeMenuContributionRule;
 import org.exbin.framework.action.api.SeparationMenuContributionRule;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.SubMenuContribution;
@@ -155,36 +157,36 @@ public class MenuManager {
                     MenuGroupRecord menuGroupRecord = groupsMap.get(parentGroupId);
                     menuGroupRecord.contributions.add(contribution);
                 } else {
+                    // TODO Rework for multiple rules and other stuff
+                    /* RelativeMenuContributionRule relativeContributionRule = getRelativeToRule(menuId, contribution);
+                    if (relativeContributionRule != null) {
+                        switch (nextToMode) {
+                            case BEFORE: {
+                                List<MenuContribution> contributions = beforeItem.get(menuPosition.getGroupId());
+                                if (contributions == null) {
+                                    contributions = new LinkedList<>();
+                                    beforeItem.put(menuPosition.getGroupId(), contributions);
+                                }
+                                contributions.add(contribution);
+                                break;
+                            }
+                            case AFTER: {
+                                List<MenuContribution> contributions = afterItem.get(menuPosition.getGroupId());
+                                if (contributions == null) {
+                                    contributions = new LinkedList<>();
+                                    afterItem.put(menuPosition.getGroupId(), contributions);
+                                }
+                                contributions.add(contribution);
+                                break;
+                            }
+                            default:
+                                throw new IllegalStateException();
+                        }
+                    } */
+
                     MenuGroupRecord menuGroupRecord = groupsMap.get(PositionMode.DEFAULT.name());
                     menuGroupRecord.contributions.add(contribution);
                 }
-                /*switch (nextToMode) {
-                    case UNSPECIFIED: {
-                        MenuGroupRecord menuGroupRecord = groupsMap.get(menuPosition.getGroupId());
-                        menuGroupRecord.contributions.add(contribution);
-                        break;
-                    }
-                    case BEFORE: {
-                        List<MenuContribution> contributions = beforeItem.get(menuPosition.getGroupId());
-                        if (contributions == null) {
-                            contributions = new LinkedList<>();
-                            beforeItem.put(menuPosition.getGroupId(), contributions);
-                        }
-                        contributions.add(contribution);
-                        break;
-                    }
-                    case AFTER: {
-                        List<MenuContribution> contributions = afterItem.get(menuPosition.getGroupId());
-                        if (contributions == null) {
-                            contributions = new LinkedList<>();
-                            afterItem.put(menuPosition.getGroupId(), contributions);
-                        }
-                        contributions.add(contribution);
-                        break;
-                    }
-                    default:
-                        throw new IllegalStateException();
-                } */
             }
         }
 
@@ -545,6 +547,21 @@ public class MenuManager {
         return null;
     }
 
+    @Nullable
+    private RelativeMenuContributionRule getRelativeToRule(String menuId, MenuContribution contribution) {
+        MenuDefinition menuDefinition = menus.get(menuId);
+        List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
+        if (rules == null) {
+            return null;
+        }
+        for (MenuContributionRule rule : rules) {
+            if (rule instanceof RelativeMenuContributionRule) {
+                return (RelativeMenuContributionRule) rule;
+            }
+        }
+        return null;
+    }
+
     public void unregisterMenu(String menuId) {
         MenuDefinition definition = menus.get(menuId);
         if (definition != null) {
@@ -699,7 +716,7 @@ public class MenuManager {
         if (match == null) {
             throw new IllegalStateException("Invalid menu contribution rule");
         }
-        
+
         List<MenuContributionRule> rules = match.getRules().get(contribution);
         if (rules == null) {
             rules = new ArrayList<>();

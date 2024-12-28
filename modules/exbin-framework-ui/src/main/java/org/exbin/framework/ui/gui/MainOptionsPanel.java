@@ -84,6 +84,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
             }
         }
         visualThemeComboBox.setSelectedIndex(findMatchingElement(visualThemeComboBox.getModel(), options.getLookAndFeel()));
+        iconSetComboBox.setSelectedIndex(findMatchingElement(iconSetComboBox.getModel(), options.getIconSet()));
         renderingModeComboBox.setSelectedIndex(findMatchingElement(renderingModeComboBox.getModel(), options.getRenderingMode()));
         fontAntialiasingComboBox.setSelectedIndex(findMatchingElement(fontAntialiasingComboBox.getModel(), options.getFontAntialiasing()));
         guiScalingComboBox.setSelectedIndex(findMatchingElement(guiScalingComboBox.getModel(), options.getGuiScaling()));
@@ -107,6 +108,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     public void saveToOptions(UiOptionsImpl options) {
         options.setLanguageLocale(((LanguageRecord) languageComboBox.getSelectedItem()).getLocale());
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
+        options.setIconSet((String) iconSetComboBox.getSelectedItem());
         options.setRenderingMode((String) renderingModeComboBox.getSelectedItem());
         options.setFontAntialiasing((String) fontAntialiasingComboBox.getSelectedItem());
         options.setGuiScaling((String) guiScalingComboBox.getSelectedItem());
@@ -161,6 +163,25 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
                 }
                 int selectedIndex = visualThemeComboBox.getSelectedIndex();
                 return super.getListCellRendererComponent(list, selectedIndex >= 0 ? themeNames.get(selectedIndex) : value, index, isSelected, cellHasFocus);
+            }
+        });
+    }
+
+    public void setIconSets(List<String> iconSetKeys, List<String> iconSetNames) {
+        DefaultComboBoxModel<String> iconSetComboBoxModel = new DefaultComboBoxModel<>();
+        iconSetKeys.forEach((iconSetKey) -> {
+            iconSetComboBoxModel.addElement(iconSetKey);
+        });
+        iconSetComboBox.setModel(iconSetComboBoxModel);
+        iconSetComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Nonnull
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, @Nullable Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (index >= 0) {
+                    return super.getListCellRendererComponent(list, iconSetNames.get(index), index, isSelected, cellHasFocus);
+                }
+                int selectedIndex = iconSetComboBox.getSelectedIndex();
+                return super.getListCellRendererComponent(list, selectedIndex >= 0 ? iconSetNames.get(selectedIndex) : value, index, isSelected, cellHasFocus);
             }
         });
     }
@@ -263,6 +284,9 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         languageComboBox = new javax.swing.JComboBox<>();
         visualThemeLabel = new javax.swing.JLabel();
         visualThemeComboBox = new javax.swing.JComboBox<>();
+        visualThemeOptionsButton = new javax.swing.JButton();
+        iconSetLabel = new javax.swing.JLabel();
+        iconSetComboBox = new javax.swing.JComboBox<>();
         renderingModeLabel = new javax.swing.JLabel();
         renderingModeComboBox = new javax.swing.JComboBox<>();
         fontAntialiasingLabel = new javax.swing.JLabel();
@@ -329,6 +353,17 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
             }
         });
 
+        visualThemeOptionsButton.setText(resourceBundle.getString("visualThemeOptionsButton.text")); // NOI18N
+        visualThemeOptionsButton.setEnabled(false);
+
+        iconSetLabel.setText(resourceBundle.getString("iconSetLabek.text")); // NOI18N
+
+        iconSetComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                iconSetComboBoxItemStateChanged(evt);
+            }
+        });
+
         renderingModeLabel.setText(resourceBundle.getString("renderingModeLabel.text") + " *"); // NOI18N
 
         renderingModeComboBox.addItemListener(new java.awt.event.ItemListener() {
@@ -365,57 +400,64 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         generalPanel.setLayout(generalPanelLayout);
         generalPanelLayout.setHorizontalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-            .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(generalPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(visualThemeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(languageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(renderingModeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(fontAntialiasingComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(generalPanelLayout.createSequentialGroup()
-                            .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(visualThemeLabel)
-                                .addComponent(languageLabel)
-                                .addComponent(renderingModeLabel)
-                                .addComponent(fontAntialiasingLabel)
-                                .addComponent(guiScalingLabel))
-                            .addGap(0, 0, Short.MAX_VALUE))
-                        .addGroup(generalPanelLayout.createSequentialGroup()
-                            .addComponent(guiScalingComboBox, 0, 0, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(guiScalingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap()))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(languageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addComponent(visualThemeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(visualThemeOptionsButton))
+                    .addComponent(iconSetComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(renderingModeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(fontAntialiasingComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addComponent(guiScalingComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(guiScalingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(visualThemeLabel)
+                            .addComponent(languageLabel)
+                            .addComponent(iconSetLabel)
+                            .addComponent(renderingModeLabel)
+                            .addComponent(fontAntialiasingLabel)
+                            .addComponent(guiScalingLabel))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 266, Short.MAX_VALUE)
-            .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(generalPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(languageLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(languageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(visualThemeLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(languageLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(languageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(visualThemeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(visualThemeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(renderingModeLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(renderingModeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(fontAntialiasingLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(fontAntialiasingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(guiScalingLabel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(guiScalingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(guiScalingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(visualThemeOptionsButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(iconSetLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(iconSetComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(renderingModeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(renderingModeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fontAntialiasingLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fontAntialiasingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(guiScalingLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(guiScalingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(guiScalingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         mainOptionsBasicPanel.add(generalPanel, java.awt.BorderLayout.CENTER);
@@ -430,7 +472,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
             mainOptionsNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainOptionsNotePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(requireRestartLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addComponent(requireRestartLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
                 .addContainerGap())
         );
         mainOptionsNotePanelLayout.setVerticalGroup(
@@ -472,6 +514,10 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         notifyModified();
     }//GEN-LAST:event_macOsAppearanceComboBoxjComboBoxItemStateChanged
 
+    private void iconSetComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_iconSetComboBoxItemStateChanged
+        notifyModified();
+    }//GEN-LAST:event_iconSetComboBoxItemStateChanged
+
     /**
      * Test method for this panel.
      *
@@ -492,6 +538,8 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     private javax.swing.JComboBox<String> guiScalingComboBox;
     private javax.swing.JLabel guiScalingLabel;
     private javax.swing.JSpinner guiScalingSpinner;
+    private javax.swing.JComboBox<String> iconSetComboBox;
+    private javax.swing.JLabel iconSetLabel;
     private javax.swing.JComboBox<LanguageRecord> languageComboBox;
     private javax.swing.JLabel languageLabel;
     private javax.swing.JComboBox<String> macOsAppearanceComboBox;
@@ -505,6 +553,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     private javax.swing.JCheckBox useScreenMenuBarCheckBox;
     private javax.swing.JComboBox<String> visualThemeComboBox;
     private javax.swing.JLabel visualThemeLabel;
+    private javax.swing.JButton visualThemeOptionsButton;
     // End of variables declaration//GEN-END:variables
 
     private void notifyModified() {

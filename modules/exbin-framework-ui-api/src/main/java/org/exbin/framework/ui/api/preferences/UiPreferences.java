@@ -33,6 +33,7 @@ public class UiPreferences {
     public static final String PREFERENCES_LOCALE_COUNTRY = "locale.country";
     public static final String PREFERENCES_LOCALE_VARIANT = "locale.variant";
     public static final String PREFERENCES_LOCALE_TAG = "locale.tag";
+    public static final String PREFERENCES_ICONSET = "iconset";
     public static final String PREFERENCES_RENDERING_MODE = "rendering.renderingMode";
     public static final String PREFERENCES_RENDERING_SCALING = "rendering.guiScaling";
     public static final String PREFERENCES_RENDERING_SCALING_RATE = "rendering.guiScalingRate";
@@ -119,6 +120,15 @@ public class UiPreferences {
 
     public void setLookAndFeel(String lookAndFeel) {
         preferences.put(PREFERENCES_LOOK_AND_FEEL, lookAndFeel);
+    }
+
+    @Nonnull
+    public String getIconSet() {
+        return preferences.get(PREFERENCES_ICONSET, "");
+    }
+
+    public void setIconSet(String iconSet) {
+        preferences.put(PREFERENCES_ICONSET, iconSet);
     }
 
     @Nonnull

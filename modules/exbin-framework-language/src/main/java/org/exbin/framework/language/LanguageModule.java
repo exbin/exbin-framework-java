@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.language.api.IconSetProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.LanguageProvider;
 
@@ -42,8 +43,10 @@ public class LanguageModule implements LanguageModuleApi {
 
     private ResourceBundle appBundle;
     private ClassLoader languageClassLoader = null;
+    private IconSetProvider iconSetProvider = null;
     private Locale languageLocale = null;
     private final List<LanguageProvider> languagePlugins = new ArrayList<>();
+    private final List<IconSetProvider> iconSets = new ArrayList<>();
 
     public LanguageModule() {
     }
@@ -68,7 +71,12 @@ public class LanguageModule implements LanguageModuleApi {
         if (languageClassLoader == null) {
             return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass), getLanguageBundleLocale());
         } else {
-            return new LanguageResourceBundle(getResourceBaseNameBundleByClass(targetClass));
+            String baseName = getResourceBaseNameBundleByClass(targetClass);
+            LanguageResourceBundle bundle = new LanguageResourceBundle(baseName);
+            if (iconSetProvider != null) {
+                bundle.setIconSet(iconSetProvider);
+            }
+            return bundle;
         }
     }
 
@@ -129,9 +137,9 @@ public class LanguageModule implements LanguageModuleApi {
                 Locale bestMatch = matchingLocales.get(0);
                 for (LanguageProvider languagePlugin : languagePlugins) {
                     if (languagePlugin.getLocale().equals(bestMatch)) {
-                        ClassLoader languageClassLoader = languagePlugin.getClassLoader().orElse(null);
-                        if (languageClassLoader != null) {
-                            setLanguageClassLoader(languageClassLoader);
+                        ClassLoader classLoader = languagePlugin.getClassLoader().orElse(null);
+                        if (classLoader != null) {
+                            setLanguageClassLoader(classLoader);
                             try {
                                 // TODO use better method than string to class conversion
                                 appBundle = getBundle(Class.forName(appBundle.getBaseBundleName().replaceFirst("/resources/", "/").replaceAll("/", ".")));
@@ -207,6 +215,28 @@ public class LanguageModule implements LanguageModuleApi {
         return languagePlugins;
     }
 
+    @Override
+    public List<IconSetProvider> getIconSets() {
+        return iconSets;
+    }
+
+    @Override
+    public void registerIconSetProvider(IconSetProvider iconSetProvider) {
+        iconSets.add(iconSetProvider);
+    }
+
+    @Override
+    public void switchToIconSet(String iconSetId) {
+        for (IconSetProvider iconSet : iconSets) {
+            if (iconSetId.equals(iconSet.getId())) {
+                iconSetProvider = iconSet;
+                return;
+            }
+        }
+
+        iconSetProvider = null;
+    }
+
     @Nonnull
     public Locale getLanguageBundleLocale() {
         return languageLocale == null ? Locale.getDefault() : languageLocale;
@@ -221,16 +251,26 @@ public class LanguageModule implements LanguageModuleApi {
 
         private final ResourceBundle mainResourceBundle;
         private final ResourceBundle languageResourceBundle;
+        private IconSetProvider iconSetProvider = null;
+        private String baseName;
 
         public LanguageResourceBundle(String baseName) {
+            this.baseName = baseName;
             mainResourceBundle = ResourceBundle.getBundle(baseName, Locale.ROOT);
             languageResourceBundle = ResourceBundle.getBundle(baseName, getLanguageBundleLocale(), languageClassLoader);
+        }
+
+        public void setIconSet(@Nullable IconSetProvider iconSetProvider) {
+            this.iconSetProvider = iconSetProvider;
         }
 
         @Nullable
         @Override
         protected Object handleGetObject(String key) {
-            Object object = languageResourceBundle.getObject(key);
+            Object object = iconSetProvider != null ? iconSetProvider.getIconKey(baseName + "." + key) : null;
+            if (object == null) {
+                object = languageResourceBundle.getObject(key);
+            }
             if (object == null) {
                 object = mainResourceBundle.getObject(key);
             }

@@ -33,6 +33,11 @@ public interface UiOptions {
     void setLanguageLocale(Locale languageLocale);
 
     @Nonnull
+    String getIconSet();
+
+    void setIconSet(String iconPack);
+
+    @Nonnull
     String getLookAndFeel();
 
     void setLookAndFeel(String lookAndFeel);

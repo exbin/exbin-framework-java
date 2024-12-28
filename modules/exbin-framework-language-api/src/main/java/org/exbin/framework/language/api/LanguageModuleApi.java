@@ -108,4 +108,25 @@ public interface LanguageModuleApi extends Module {
      * @param locale language locale
      */
     void switchToLanguage(Locale locale);
+
+    /**
+     * Returns icon set providers.
+     *
+     * @return icon set providers
+     */
+    List<IconSetProvider> getIconSets();
+
+    /**
+     * Registers icon set provider.
+     *
+     * @param iconSetProvider icon set provider
+     */
+    void registerIconSetProvider(IconSetProvider iconSetProvider);
+
+    /**
+     * Switches to specific icon set.
+     *
+     * @param iconSetId icon set id
+     */
+    void switchToIconSet(String iconSetId);
 }

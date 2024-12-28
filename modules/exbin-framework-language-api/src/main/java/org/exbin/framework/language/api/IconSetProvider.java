@@ -13,36 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.language.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Toolbar contribution rule for item relative position.
+ * Icon set provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-@Immutable
-public class RelativeToolBarContributionRule implements ToolBarContributionRule {
+public interface IconSetProvider {
 
-    private final NextToMode nextToMode;
-    private final String toolbarContributionId;
-
-    public RelativeToolBarContributionRule(NextToMode nextToMode, String toolbarContributionId) {
-        this.nextToMode = nextToMode;
-        this.toolbarContributionId = toolbarContributionId;
-    }
-
+    /**
+     * Returns icon set id.
+     *
+     * @return id
+     */
     @Nonnull
-    public NextToMode getNextToMode() {
-        return nextToMode;
-    }
+    String getId();
 
+    /**
+     * Returns icon set name.
+     *
+     * @return name
+     */
     @Nonnull
-    public String getToolbarContributionId() {
-        return toolbarContributionId;
-    }
+    String getName();
+
+    /**
+     * Returns icon resource for given key.
+     *
+     * @param key
+     * @return resource path
+     */
+    @Nullable
+    String getIconKey(String key);
 }

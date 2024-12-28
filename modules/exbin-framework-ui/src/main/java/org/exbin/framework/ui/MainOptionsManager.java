@@ -27,6 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
+import org.exbin.framework.language.api.IconSetProvider;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -52,6 +53,8 @@ public class MainOptionsManager {
     private boolean valuesInitialized = false;
     private List<String> themes;
     private List<String> themeNames;
+    private List<String> iconSets;
+    private List<String> iconSetNames;
     private List<LanguageRecord> languageLocales = null;
     private List<String> renderingMethodKeys;
     private List<String> renderingMethodNames;
@@ -89,6 +92,16 @@ public class MainOptionsManager {
                 themes.add(lookAndFeelInfo.getClassName());
                 themeNames.add(lookAndFeelInfo.getName());
             }
+        }
+
+        iconSets = new ArrayList<>();
+        iconSets.add("");
+        iconSetNames = new ArrayList<>();
+        iconSetNames.add(resourceBundle.getString("iconset.defaultTheme"));
+        List<IconSetProvider> providers = App.getModule(LanguageModuleApi.class).getIconSets();
+        for (IconSetProvider provider : providers) {
+            iconSets.add(provider.getId());
+            iconSetNames.add(provider.getName());
         }
 
         languageLocales = new ArrayList<>();
@@ -177,6 +190,7 @@ public class MainOptionsManager {
 
                 mainOptionsPanel = new MainOptionsPanel();
                 mainOptionsPanel.setThemes(themes, themeNames);
+                mainOptionsPanel.setIconSets(iconSets, iconSetNames);
                 mainOptionsPanel.setDefaultLocaleName("<" + resourceBundle.getString("locale.defaultLanguage") + ">");
                 mainOptionsPanel.setLanguageLocales(languageLocales);
                 mainOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
@@ -216,6 +230,9 @@ public class MainOptionsManager {
             public void applyPreferencesChanges(UiOptionsImpl options) {
                 String selectedTheme = options.getLookAndFeel();
                 // TODO application.applyLookAndFeel(selectedTheme);
+                
+                // TODO This would require rebuild of the window to force icons reload
+                // App.getModule(LanguageModuleApi.class).switchToIconSet(options.getIconSet());
             }
         };
     }

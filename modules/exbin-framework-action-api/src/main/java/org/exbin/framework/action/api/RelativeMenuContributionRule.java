@@ -29,11 +29,11 @@ import javax.annotation.concurrent.Immutable;
 public class RelativeMenuContributionRule implements MenuContributionRule {
 
     private final NextToMode nextToMode;
-    private final MenuContribution menuContribution;
+    private final String menuContributionId;
 
-    public RelativeMenuContributionRule(NextToMode nextToMode, MenuContribution menuContribution) {
+    public RelativeMenuContributionRule(NextToMode nextToMode, String menuContributionId) {
         this.nextToMode = nextToMode;
-        this.menuContribution = menuContribution;
+        this.menuContributionId = menuContributionId;
     }
 
     @Nonnull
@@ -42,7 +42,7 @@ public class RelativeMenuContributionRule implements MenuContributionRule {
     }
 
     @Nonnull
-    public MenuContribution getMenuContribution() {
-        return menuContribution;
+    public String getMenuContributionId() {
+        return menuContributionId;
     }
 }

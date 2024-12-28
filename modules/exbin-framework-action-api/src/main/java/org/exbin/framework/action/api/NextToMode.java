@@ -22,7 +22,6 @@ package org.exbin.framework.action.api;
  */
 public enum NextToMode {
 
-    UNSPECIFIED,
     BEFORE,
     AFTER
 }

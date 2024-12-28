@@ -159,6 +159,11 @@ public class UiModule implements UiModuleApi {
         languageModule.switchToLanguage(locale);
 
         switchToLookAndFeel(uiPreferences.getLookAndFeel());
+        
+        String iconSet = uiPreferences.getIconSet();
+        if (!iconSet.isEmpty()) {
+            languageModule.switchToIconSet(iconSet);
+        }
     }
 
     public void switchToLookAndFeel(String laf) {

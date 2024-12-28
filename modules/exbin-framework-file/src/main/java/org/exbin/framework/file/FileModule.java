@@ -39,8 +39,10 @@ import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.GroupToolBarContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuManagement;
+import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionToolBarContributionRule;
+import org.exbin.framework.action.api.RelativeMenuContributionRule;
 import org.exbin.framework.action.api.ToolBarContribution;
 import org.exbin.framework.action.api.ToolBarManagement;
 import org.exbin.framework.file.action.FileActions;
@@ -157,10 +159,9 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         getRecentFilesActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
-        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, recentFileMenu);
-        // TODO actionModule.registerMenuRule(contribution, new RelativeMenuContributionRule(NextToMode.AFTER, contribution)); languageModule.getActionWithDialogText((String) createOpenFileAction().getValue(Action.NAME))
+        mgmt.registerMenuRule(contribution, new RelativeMenuContributionRule(NextToMode.AFTER, OpenFileAction.ACTION_ID));
     }
 
     @Nonnull

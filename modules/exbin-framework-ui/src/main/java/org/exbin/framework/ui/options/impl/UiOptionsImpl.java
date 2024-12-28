@@ -32,6 +32,7 @@ import org.exbin.framework.utils.ObjectUtils;
 public class UiOptionsImpl implements OptionsData, UiOptions {
 
     private String lookAndFeel = "";
+    private String iconSet = "";
     private Locale languageLocale;
     private String renderingMode;
     private String guiScaling;
@@ -49,6 +50,17 @@ public class UiOptionsImpl implements OptionsData, UiOptions {
     @Override
     public void setLookAndFeel(String lookAndFeel) {
         this.lookAndFeel = lookAndFeel;
+    }
+
+    @Nonnull
+    @Override
+    public String getIconSet() {
+        return iconSet;
+    }
+
+    @Override
+    public void setIconSet(String iconSet) {
+        this.iconSet = iconSet;
     }
 
     @Nonnull
@@ -128,6 +140,7 @@ public class UiOptionsImpl implements OptionsData, UiOptions {
 
     public void loadFromPreferences(UiPreferences preferences) {
         lookAndFeel = preferences.getLookAndFeel();
+        iconSet = preferences.getIconSet();
         languageLocale = preferences.getLocale();
         renderingMode = preferences.getRenderingMode();
         guiScaling = preferences.getGuiScaling();
@@ -140,6 +153,7 @@ public class UiOptionsImpl implements OptionsData, UiOptions {
     public void saveToParameters(UiPreferences preferences) {
         preferences.setLocale(languageLocale);
         preferences.setLookAndFeel(lookAndFeel);
+        preferences.setIconSet(iconSet);
         preferences.setRenderingMode(renderingMode);
         preferences.setGuiScaling(guiScaling);
         preferences.setGuiScalingRate(guiScalingRate);
