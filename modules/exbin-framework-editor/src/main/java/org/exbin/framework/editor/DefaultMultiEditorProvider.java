@@ -243,7 +243,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     @Override
     public void saveFile(FileHandler fileHandler) {
         if (!(fileHandler instanceof EditableFileHandler)) {
-            throw new IllegalStateException("Unable to save file" + fileHandler == null ? "" : " " + fileHandler.getTitle());
+            throw new IllegalStateException("Unable to save file" + (fileHandler == null ? "" : " " + fileHandler.getTitle()));
         }
 
         if (fileHandler.getFileUri().isPresent()) {

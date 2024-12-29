@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.file.action;
 
+import java.awt.Dialog;
 import java.awt.FileDialog;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -102,12 +103,7 @@ public class FileActions implements FileActionsApi {
             FileDialog fileDialog = new FileDialog(frameModule.getFrame());
             fileDialog.setMode(FileDialog.LOAD);
             fileDialog.setMultipleMode(false);
-            FilenameFilter filter = new FilenameFilter() {
-                @Override
-                public boolean accept(File file, String string) {
-                    return true;
-                }
-            };
+            FilenameFilter filter = (File file, String string) -> true;
             fileDialog.setFilenameFilter(filter);
             if (usedDirectory != null) {
                 File lastUsedDirectory = usedDirectory.getLastUsedDirectory().orElse(null);
@@ -118,6 +114,8 @@ public class FileActions implements FileActionsApi {
             if (selectedFile != null) {
                 fileDialog.setFile(selectedFile.getAbsolutePath());
             }
+            fileDialog.setModal(true);
+            fileDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
             fileDialog.setLocationByPlatform(true);
             fileDialog.setLocationRelativeTo(frameModule.getFrame());
             fileDialog.setVisible(true);
@@ -174,12 +172,7 @@ public class FileActions implements FileActionsApi {
             FileDialog fileDialog = new FileDialog(frameModule.getFrame());
             fileDialog.setMode(FileDialog.SAVE);
             fileDialog.setMultipleMode(false);
-            FilenameFilter filter = new FilenameFilter() {
-                @Override
-                public boolean accept(File file, String string) {
-                    return true;
-                }
-            };
+            FilenameFilter filter = (File file, String string) -> true;
             fileDialog.setFilenameFilter(filter);
             if (usedDirectory != null) {
                 File lastUsedDirectory = usedDirectory.getLastUsedDirectory().orElse(null);
@@ -190,6 +183,8 @@ public class FileActions implements FileActionsApi {
             if (selectedFile != null) {
                 fileDialog.setFile(selectedFile.getAbsolutePath());
             }
+            fileDialog.setModal(true);
+            fileDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
             fileDialog.setLocationByPlatform(true);
             fileDialog.setLocationRelativeTo(frameModule.getFrame());
             fileDialog.setVisible(true);
@@ -239,7 +234,7 @@ public class FileActions implements FileActionsApi {
     @Override
     public void saveAsFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
         if (!(fileHandler instanceof EditableFileHandler)) {
-            throw new IllegalStateException("Unable to save file" + fileHandler == null ? "" : " " + fileHandler.getTitle());
+            throw new IllegalStateException("Unable to save file" + (fileHandler == null ? "" : " " + fileHandler.getTitle()));
         }
 
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);

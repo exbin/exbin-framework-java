@@ -274,7 +274,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Nonnull
     public OptionsPage<FileOptionsImpl> getFileOptionsPage() {
         return new DefaultOptionsPage<FileOptionsImpl>() {
-            
+
             @Nonnull
             @Override
             public OptionsComponent<FileOptionsImpl> createPanel() {
@@ -320,7 +320,6 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
             }
         };
     }
-
 
     @Override
     public void registerOptionsPanels() {

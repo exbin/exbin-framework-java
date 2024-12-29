@@ -20,6 +20,7 @@ import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -36,6 +37,7 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.ui.options.impl.UiOptionsImpl;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.ui.api.ConfigurableLafProvider;
 import org.exbin.framework.ui.model.LanguageRecord;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.TestApplication;
@@ -51,8 +53,10 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(MainOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
+    private ThemeConfigurationListener themeConfigurationListener;
     private OptionsComponent extendedOptionsPanel = null;
     private String defaultLocaleName = "";
+    private Map<String, ConfigurableLafProvider> themeOptions = null;
 
     public MainOptionsPanel() {
         init();
@@ -148,7 +152,8 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         this.defaultLocaleName = defaultLocaleName;
     }
 
-    public void setThemes(List<String> themeKeys, List<String> themeNames) {
+    public void setThemes(List<String> themeKeys, List<String> themeNames, Map<String, ConfigurableLafProvider> themeOptions) {
+        this.themeOptions = themeOptions;
         DefaultComboBoxModel<String> themeComboBoxModel = new DefaultComboBoxModel<>();
         themeKeys.forEach((themeKey) -> {
             themeComboBoxModel.addElement(themeKey);
@@ -355,6 +360,11 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
 
         visualThemeOptionsButton.setText(resourceBundle.getString("visualThemeOptionsButton.text")); // NOI18N
         visualThemeOptionsButton.setEnabled(false);
+        visualThemeOptionsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                visualThemeOptionsButtonActionPerformed(evt);
+            }
+        });
 
         iconSetLabel.setText(resourceBundle.getString("iconSetLabek.text")); // NOI18N
 
@@ -487,6 +497,9 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     }// </editor-fold>//GEN-END:initComponents
 
     private void visualThemeComboBoxjComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_visualThemeComboBoxjComboBoxItemStateChanged
+        String selectedTheme = (String) visualThemeComboBox.getSelectedItem();
+        ConfigurableLafProvider lafProvider = themeOptions.get(selectedTheme);
+        visualThemeOptionsButton.setEnabled(lafProvider != null);
         notifyModified();
     }//GEN-LAST:event_visualThemeComboBoxjComboBoxItemStateChanged
 
@@ -517,6 +530,14 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     private void iconSetComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_iconSetComboBoxItemStateChanged
         notifyModified();
     }//GEN-LAST:event_iconSetComboBoxItemStateChanged
+
+    private void visualThemeOptionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualThemeOptionsButtonActionPerformed
+        if (themeConfigurationListener != null) {
+            String selectedTheme = (String) visualThemeComboBox.getSelectedItem();
+            ConfigurableLafProvider lafProvider = themeOptions.get(selectedTheme);
+            themeConfigurationListener.configureTheme(lafProvider);
+        }
+    }//GEN-LAST:event_visualThemeOptionsButtonActionPerformed
 
     /**
      * Test method for this panel.
@@ -567,6 +588,10 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         optionsModifiedListener = listener;
     }
 
+    public void setThemeConfigurationListener(ThemeConfigurationListener themeConfigurationListener) {
+        this.themeConfigurationListener = themeConfigurationListener;
+    }
+
     public void addExtendedPanel(OptionsComponent<?> optionsPanel) {
         if (extendedOptionsPanel != null) {
             remove((Component) extendedOptionsPanel);
@@ -574,5 +599,10 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
         extendedOptionsPanel = optionsPanel;
         add((Component) extendedOptionsPanel, BorderLayout.CENTER);
         extendedOptionsPanel.setOptionsModifiedListener(optionsModifiedListener);
+    }
+
+    public interface ThemeConfigurationListener {
+
+        void configureTheme(ConfigurableLafProvider lafProvider);
     }
 }

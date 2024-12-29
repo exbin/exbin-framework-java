@@ -31,7 +31,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
 /**
- * Toolbar appearance options panel.
+ * Appearance options panel.
  *
  * @author ExBin Project (https://exbin.org)
  */

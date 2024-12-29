@@ -15,9 +15,12 @@
  */
 package org.exbin.framework.ui;
 
+import java.awt.Dialog;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -25,20 +28,28 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.IconSetProvider;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsPage;
+import org.exbin.framework.ui.api.ConfigurableLafProvider;
 import org.exbin.framework.ui.gui.MainOptionsPanel;
 import org.exbin.framework.ui.options.impl.UiOptionsImpl;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.LanguageProvider;
+import org.exbin.framework.ui.api.LafProvider;
+import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.api.preferences.UiPreferences;
 import org.exbin.framework.ui.model.LanguageRecord;
+import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.WindowModuleApi;
+import org.exbin.framework.window.api.gui.DefaultControlPanel;
 
 /**
  * Interface for application options panels management.
@@ -53,6 +64,7 @@ public class MainOptionsManager {
     private boolean valuesInitialized = false;
     private List<String> themes;
     private List<String> themeNames;
+    private Map<String, ConfigurableLafProvider> themeOptions;
     private List<String> iconSets;
     private List<String> iconSetNames;
     private List<LanguageRecord> languageLocales = null;
@@ -64,7 +76,7 @@ public class MainOptionsManager {
     private List<String> guiMacOsAppearanceNames;
     private List<String> guiMacOsAppearancesKeys;
     private List<String> macOsAppearancesKeys;
-    
+
     private MainOptionsPanel mainOptionsPanel;
 
     public MainOptionsManager() {
@@ -91,6 +103,13 @@ public class MainOptionsManager {
             if (!themes.contains(lookAndFeelInfo.getClassName())) {
                 themes.add(lookAndFeelInfo.getClassName());
                 themeNames.add(lookAndFeelInfo.getName());
+            }
+        }
+        themeOptions = new HashMap<>();
+        List<LafProvider> lafProviders = App.getModule(UiModuleApi.class).getLafProviders();
+        for (LafProvider lafProvider : lafProviders) {
+            if (lafProvider instanceof ConfigurableLafProvider) {
+                themeOptions.put(lafProvider.getLafId(), (ConfigurableLafProvider) lafProvider);
             }
         }
 
@@ -189,7 +208,7 @@ public class MainOptionsManager {
                 }
 
                 mainOptionsPanel = new MainOptionsPanel();
-                mainOptionsPanel.setThemes(themes, themeNames);
+                mainOptionsPanel.setThemes(themes, themeNames, themeOptions);
                 mainOptionsPanel.setIconSets(iconSets, iconSetNames);
                 mainOptionsPanel.setDefaultLocaleName("<" + resourceBundle.getString("locale.defaultLanguage") + ">");
                 mainOptionsPanel.setLanguageLocales(languageLocales);
@@ -199,6 +218,30 @@ public class MainOptionsManager {
                 if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
                     mainOptionsPanel.setMacOsAppearances(guiMacOsAppearancesKeys, guiMacOsAppearanceNames);
                 }
+                mainOptionsPanel.setThemeConfigurationListener((ConfigurableLafProvider lafProvider) -> {
+                    JComponent optionsPanel = lafProvider.getOptionsPanel();
+                    DefaultControlPanel controlPanel = new DefaultControlPanel();
+
+                    WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+                    FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                    final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, optionsPanel, controlPanel);
+                    controlPanel.setHandler((actionType) -> {
+                        switch (actionType) {
+                            case OK: {
+
+                                break;
+                            }
+                            case CANCEL: {
+
+                                break;
+                            }
+                        }
+                        dialog.close();
+                    });
+
+                    dialog.showCentered(frameModule.getFrame());
+
+                });
                 return mainOptionsPanel;
             }
 
@@ -230,7 +273,7 @@ public class MainOptionsManager {
             public void applyPreferencesChanges(UiOptionsImpl options) {
                 String selectedTheme = options.getLookAndFeel();
                 // TODO application.applyLookAndFeel(selectedTheme);
-                
+
                 // TODO This would require rebuild of the window to force icons reload
                 // App.getModule(LanguageModuleApi.class).switchToIconSet(options.getIconSet());
             }
