@@ -68,7 +68,7 @@ public class LanguageModule implements LanguageModuleApi {
     @Nonnull
     @Override
     public ResourceBundle getBundle(Class<?> targetClass) {
-        if (languageClassLoader == null) {
+        if (languageClassLoader == null && iconSetProvider == null) {
             return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass), getLanguageBundleLocale());
         } else {
             String baseName = getResourceBaseNameBundleByClass(targetClass);
@@ -252,10 +252,10 @@ public class LanguageModule implements LanguageModuleApi {
         private final ResourceBundle mainResourceBundle;
         private final ResourceBundle languageResourceBundle;
         private IconSetProvider iconSetProvider = null;
-        private String baseName;
+        private String prefix;
 
         public LanguageResourceBundle(String baseName) {
-            this.baseName = baseName;
+            this.prefix = baseName.replace("/", ".") + ".";
             mainResourceBundle = ResourceBundle.getBundle(baseName, Locale.ROOT);
             languageResourceBundle = ResourceBundle.getBundle(baseName, getLanguageBundleLocale(), languageClassLoader);
         }
@@ -267,7 +267,7 @@ public class LanguageModule implements LanguageModuleApi {
         @Nullable
         @Override
         protected Object handleGetObject(String key) {
-            Object object = iconSetProvider != null ? iconSetProvider.getIconKey(baseName + "." + key) : null;
+            Object object = iconSetProvider != null ? iconSetProvider.getIconKey(prefix + key) : null;
             if (object == null) {
                 object = languageResourceBundle.getObject(key);
             }

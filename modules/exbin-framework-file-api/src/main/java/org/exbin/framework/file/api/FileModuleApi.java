@@ -104,4 +104,6 @@ public interface FileModuleApi extends Module {
     FileActionsApi getFileActions();
 
     void updateRecentFilesList(URI fileUri, FileType fileType);
+    
+    void registerOptionsPanels();
 }

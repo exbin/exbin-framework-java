@@ -9,6 +9,7 @@ if (rootProject.path == ':') {
     include ':modules:exbin-framework-language-api'
     include ':modules:exbin-framework-preferences'
     include ':modules:exbin-framework-preferences-api'
+    include ':modules:exbin-framework-options-api'
     include ':modules:exbin-framework-utils'
     include ':modules:exbin-framework-window-api'
 }

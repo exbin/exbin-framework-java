@@ -168,4 +168,8 @@ public class TestFileModule implements FileModuleApi {
     @Override
     public void updateRecentFilesList(URI fileUri, FileType fileType) {
     }
+
+    @Override
+    public void registerOptionsPanels() {
+    }
 }

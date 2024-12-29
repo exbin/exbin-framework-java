@@ -53,12 +53,22 @@ import org.exbin.framework.file.action.SaveAsFileAction;
 import org.exbin.framework.file.action.SaveFileAction;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.file.api.FileOperationsProvider;
+import org.exbin.framework.file.options.gui.FileOptionsPanel;
+import org.exbin.framework.file.options.impl.FileOptionsImpl;
+import org.exbin.framework.file.preferences.FilePreferences;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.options.api.DefaultOptionsPage;
+import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.api.OptionsPage;
+import org.exbin.framework.options.api.OptionsPathItem;
+import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.utils.ComponentResourceProvider;
 
 /**
- * Implementation of framework file module.
+ * Framework file module.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -259,5 +269,66 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
             return;
         }
         fileOperations.loadFromFile(fileUri, null);
+    }
+
+    @Nonnull
+    public OptionsPage<FileOptionsImpl> getFileOptionsPage() {
+        return new DefaultOptionsPage<FileOptionsImpl>() {
+            
+            @Nonnull
+            @Override
+            public OptionsComponent<FileOptionsImpl> createPanel() {
+                FileOptionsPanel fileOptionsPanel = new FileOptionsPanel();
+                List<String> fileDialogsKeys = new ArrayList<>();
+                fileDialogsKeys.add("SWING");
+                fileDialogsKeys.add("AWT");
+                List<String> fileDialogsNames = new ArrayList<>();
+                fileDialogsNames.add(resourceBundle.getString("fileDialogs.swing"));
+                fileDialogsNames.add(resourceBundle.getString("fileDialogs.swt"));
+                fileOptionsPanel.setFileDialogs(fileDialogsKeys, fileDialogsNames);
+                return fileOptionsPanel;
+            }
+
+            @Nonnull
+            @Override
+            public ResourceBundle getResourceBundle() {
+                return App.getModule(LanguageModuleApi.class).getBundle(FileOptionsPanel.class);
+            }
+
+            @Nonnull
+            @Override
+            public FileOptionsImpl createOptions() {
+                return new FileOptionsImpl();
+            }
+
+            @Override
+            public void loadFromPreferences(Preferences preferences, FileOptionsImpl options) {
+                FilePreferences prefs = new FilePreferences(preferences);
+                options.setFileDialogs(prefs.getFileDialogs());
+            }
+
+            @Override
+            public void saveToPreferences(Preferences preferences, FileOptionsImpl options) {
+                FilePreferences prefs = new FilePreferences(preferences);
+                prefs.setFileDialogs(options.getFileDialogs());
+            }
+
+            @Override
+            public void applyPreferencesChanges(FileOptionsImpl options) {
+                String fileDialogs = options.getFileDialogs();
+                getFileActions().setUseAwtDialogs("AWT".equals(fileDialogs));
+            }
+        };
+    }
+
+
+    @Override
+    public void registerOptionsPanels() {
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+        OptionsPage<FileOptionsImpl> fileOptionsPage = getFileOptionsPage();
+        ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) fileOptionsPage).getResourceBundle();
+        List<OptionsPathItem> optionsPath = new ArrayList<>();
+        optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
+        optionsModule.addOptionsPage(fileOptionsPage, optionsPath);
     }
 }

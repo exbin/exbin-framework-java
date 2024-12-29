@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.file.action;
 
+import java.awt.FileDialog;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
@@ -50,6 +52,7 @@ public class FileActions implements FileActionsApi {
     public static final String ALL_FILES_FILTER = "AllFilesFilter";
 
     private ResourceBundle resourceBundle;
+    private boolean useAwtDialogs = true;
 
     public FileActions() {
     }
@@ -95,6 +98,37 @@ public class FileActions implements FileActionsApi {
     @Override
     public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        if (useAwtDialogs) {
+            FileDialog fileDialog = new FileDialog(frameModule.getFrame());
+            fileDialog.setMode(FileDialog.LOAD);
+            fileDialog.setMultipleMode(false);
+            FilenameFilter filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File file, String string) {
+                    return true;
+                }
+            };
+            fileDialog.setFilenameFilter(filter);
+            if (usedDirectory != null) {
+                File lastUsedDirectory = usedDirectory.getLastUsedDirectory().orElse(null);
+                if (lastUsedDirectory != null) {
+                    fileDialog.setDirectory(lastUsedDirectory.getAbsolutePath());
+                }
+            }
+            if (selectedFile != null) {
+                fileDialog.setFile(selectedFile.getAbsolutePath());
+            }
+            fileDialog.setLocationByPlatform(true);
+            fileDialog.setLocationRelativeTo(frameModule.getFrame());
+            fileDialog.setVisible(true);
+            String file = fileDialog.getFile();
+            OpenFileResult result = new OpenFileResult();
+            result.dialogResult = file != null ? JFileChooser.APPROVE_OPTION : JFileChooser.CANCEL_OPTION;
+            result.selectedFile = file != null ? new File(fileDialog.getDirectory(), file) : null;
+            result.fileType = null;
+            return result;
+        }
+
         JFileChooser openFileChooser = new JFileChooser();
         setupFileFilters(openFileChooser, fileTypes);
         if (usedDirectory != null) {
@@ -125,9 +159,48 @@ public class FileActions implements FileActionsApi {
         return showSaveFileDialog(fileTypes, selectedFile, usedDirectory, null);
     }
 
+    public boolean isUseAwtDialogs() {
+        return useAwtDialogs;
+    }
+
+    public void setUseAwtDialogs(boolean useAwtDialogs) {
+        this.useAwtDialogs = useAwtDialogs;
+    }
+
     @Nonnull
     private OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        if (useAwtDialogs) {
+            FileDialog fileDialog = new FileDialog(frameModule.getFrame());
+            fileDialog.setMode(FileDialog.SAVE);
+            fileDialog.setMultipleMode(false);
+            FilenameFilter filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File file, String string) {
+                    return true;
+                }
+            };
+            fileDialog.setFilenameFilter(filter);
+            if (usedDirectory != null) {
+                File lastUsedDirectory = usedDirectory.getLastUsedDirectory().orElse(null);
+                if (lastUsedDirectory != null) {
+                    fileDialog.setDirectory(lastUsedDirectory.getAbsolutePath());
+                }
+            }
+            if (selectedFile != null) {
+                fileDialog.setFile(selectedFile.getAbsolutePath());
+            }
+            fileDialog.setLocationByPlatform(true);
+            fileDialog.setLocationRelativeTo(frameModule.getFrame());
+            fileDialog.setVisible(true);
+            String file = fileDialog.getFile();
+            OpenFileResult result = new OpenFileResult();
+            result.dialogResult = file != null ? JFileChooser.APPROVE_OPTION : JFileChooser.CANCEL_OPTION;
+            result.selectedFile = file != null ? new File(fileDialog.getDirectory(), file) : null;
+            result.fileType = null;
+            return result;
+        }
+
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         setupFileFilters(saveFileChooser, fileTypes);
@@ -152,7 +225,7 @@ public class FileActions implements FileActionsApi {
     @Override
     public void saveFile(@Nullable FileHandler fileHandler, FileTypes fileTypes, @Nullable UsedDirectoryApi usedDirectory) {
         if (!(fileHandler instanceof EditableFileHandler)) {
-            throw new IllegalStateException("Unable to save file" + fileHandler == null ? "" : " " + fileHandler.getTitle());
+            throw new IllegalStateException("Unable to save file" + (fileHandler == null ? "" : " " + fileHandler.getTitle()));
         }
 
         Optional<URI> fileUri = fileHandler.getFileUri();
