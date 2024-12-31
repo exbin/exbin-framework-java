@@ -17,15 +17,36 @@ package org.exbin.framework.ui.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
+import org.exbin.framework.preferences.api.Preferences;
 
 /**
- * Look&feel provider with support for additional options.
+ * Look&feel provider with options handler.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ConfigurableLafProvider extends LafProvider {
+public interface LafOptionsHandler {
 
+    /**
+     * Returns options component.
+     *
+     * @return component
+     */
     @Nonnull
-    LafOptionsHandler getOptionsHandler();
+    JComponent createOptionsComponent();
+
+    /**
+     * Loads options from preferences.
+     *
+     * @param preferences preferences
+     */
+    void loadFromPreferences(Preferences preferences);
+
+    /**
+     * Saves options to preferences.
+     *
+     * @param preferences preferences
+     */
+    void saveToPreferences(Preferences preferences);
 }

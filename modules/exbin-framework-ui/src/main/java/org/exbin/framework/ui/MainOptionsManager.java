@@ -43,10 +43,14 @@ import org.exbin.framework.ui.options.impl.UiOptionsImpl;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.LanguageProvider;
+import org.exbin.framework.options.api.OptionsData;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
+import org.exbin.framework.ui.api.LafOptionsHandler;
 import org.exbin.framework.ui.api.LafProvider;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.api.preferences.UiPreferences;
 import org.exbin.framework.ui.model.LanguageRecord;
+import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
@@ -207,6 +211,7 @@ public class MainOptionsManager {
                     initValues();
                 }
 
+                Map<String, LafOptionsHandler> themeOptionsHandlers = new HashMap<>();
                 mainOptionsPanel = new MainOptionsPanel();
                 mainOptionsPanel.setThemes(themes, themeNames, themeOptions);
                 mainOptionsPanel.setIconSets(iconSets, iconSetNames);
@@ -219,20 +224,26 @@ public class MainOptionsManager {
                     mainOptionsPanel.setMacOsAppearances(guiMacOsAppearancesKeys, guiMacOsAppearanceNames);
                 }
                 mainOptionsPanel.setThemeConfigurationListener((ConfigurableLafProvider lafProvider) -> {
-                    JComponent optionsPanel = lafProvider.getOptionsPanel();
+                    LafOptionsHandler optionsHandler = themeOptionsHandlers.get(lafProvider.getLafId());
+                    if (optionsHandler == null) {
+                        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+                        optionsHandler = lafProvider.getOptionsHandler();
+                        optionsHandler.loadFromPreferences(preferencesModule.getAppPreferences());
+                    }
+                    final LafOptionsHandler finalOptionsHandler = optionsHandler;
+                    
                     DefaultControlPanel controlPanel = new DefaultControlPanel();
-
                     WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
                     FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                    final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, optionsPanel, controlPanel);
+                    final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, optionsHandler.createOptionsComponent(), controlPanel);
                     controlPanel.setHandler((actionType) -> {
                         switch (actionType) {
                             case OK: {
-
+                                themeOptionsHandlers.put(lafProvider.getLafId(), finalOptionsHandler);
                                 break;
                             }
                             case CANCEL: {
-
+                                // ignore
                                 break;
                             }
                         }
