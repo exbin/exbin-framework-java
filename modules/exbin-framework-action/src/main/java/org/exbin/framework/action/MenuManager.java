@@ -18,11 +18,9 @@ package org.exbin.framework.action;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -70,13 +68,11 @@ public class MenuManager {
     /**
      * Menu modified flags.
      */
-    private Set<String> menuModified = new HashSet<>();
-
+    // private Set<String> menuModified = new HashSet<>();
     /**
      * Map of plugins usage per menu id.
      */
-    private Map<String, String> pluginsUsage = new HashMap<>();
-
+    // private Map<String, String> pluginsUsage = new HashMap<>();
     public MenuManager() {
     }
 
@@ -158,23 +154,23 @@ public class MenuManager {
                     menuGroupRecord.contributions.add(contribution);
                 } else {
                     // TODO Rework for multiple rules and other stuff
-                    /* RelativeMenuContributionRule relativeContributionRule = getRelativeToRule(menuId, contribution);
+                    RelativeMenuContributionRule relativeContributionRule = getRelativeToRule(menuId, contribution);
                     if (relativeContributionRule != null) {
-                        switch (nextToMode) {
+                        switch (relativeContributionRule.getNextToMode()) {
                             case BEFORE: {
-                                List<MenuContribution> contributions = beforeItem.get(menuPosition.getGroupId());
+                                List<MenuContribution> contributions = beforeItem.get(relativeContributionRule.getContributionActionId());
                                 if (contributions == null) {
                                     contributions = new LinkedList<>();
-                                    beforeItem.put(menuPosition.getGroupId(), contributions);
+                                    beforeItem.put(relativeContributionRule.getContributionActionId(), contributions);
                                 }
                                 contributions.add(contribution);
                                 break;
                             }
                             case AFTER: {
-                                List<MenuContribution> contributions = afterItem.get(menuPosition.getGroupId());
+                                List<MenuContribution> contributions = afterItem.get(relativeContributionRule.getContributionActionId());
                                 if (contributions == null) {
                                     contributions = new LinkedList<>();
-                                    afterItem.put(menuPosition.getGroupId(), contributions);
+                                    afterItem.put(relativeContributionRule.getContributionActionId(), contributions);
                                 }
                                 contributions.add(contribution);
                                 break;
@@ -182,10 +178,10 @@ public class MenuManager {
                             default:
                                 throw new IllegalStateException();
                         }
-                    } */
-
-                    MenuGroupRecord menuGroupRecord = groupsMap.get(PositionMode.DEFAULT.name());
-                    menuGroupRecord.contributions.add(contribution);
+                    } else {
+                        MenuGroupRecord menuGroupRecord = groupsMap.get(PositionMode.DEFAULT.name());
+                        menuGroupRecord.contributions.add(contribution);
+                    }
                 }
             }
         }
@@ -227,17 +223,26 @@ public class MenuManager {
                     if (next.contribution instanceof ActionMenuContribution) {
                         processed = new ProcessedContribution() {
                             JMenuItem menuItem;
+                            String actionId;
 
                             @Override
                             public void process() {
                                 Action action = ((ActionMenuContribution) next.contribution).getAction();
+                                actionId = (String) action.getValue(ActionConsts.ACTION_ID);
                                 ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
                                 menuItem = actionModule.actionToMenuItem(action, buttonGroups);
                             }
 
+                            @Nonnull
                             @Override
                             public String getName() {
                                 return menuItem.getText();
+                            }
+
+                            @Nonnull
+                            @Override
+                            String getActionId() {
+                                return actionId == null ? "" : actionId;
                             }
 
                             @Override
@@ -270,18 +275,28 @@ public class MenuManager {
                     } else if (next.contribution instanceof SubMenuContribution) {
                         processed = new ProcessedContribution() {
                             JMenu subMenu;
+                            String actionId;
 
                             @Override
                             public void process() {
                                 SubMenuContribution subMenuContribution = (SubMenuContribution) next.contribution;
                                 subMenu = UiUtils.createMenu();
-                                subMenu.setAction(subMenuContribution.getAction());
+                                Action action = subMenuContribution.getAction();
+                                actionId = (String) action.getValue(ActionConsts.ACTION_ID);
+                                subMenu.setAction(action);
                                 buildMenu(new MenuWrapper(subMenu, targetMenu.isPopup()), subMenuContribution.getMenuId(), activationUpdateService);
                             }
 
+                            @Nonnull
                             @Override
                             public String getName() {
                                 return subMenu.getText();
+                            }
+
+                            @Nonnull
+                            @Override
+                            String getActionId() {
+                                return actionId == null ? "" : actionId;
                             }
 
                             @Override
@@ -316,15 +331,27 @@ public class MenuManager {
                     } else if (next.contribution instanceof DirectSubMenuContribution) {
                         processed = new ProcessedContribution() {
                             DirectSubMenuContribution directMenuContribution;
+                            String actionId;
 
                             @Override
                             public void process() {
                                 directMenuContribution = (DirectSubMenuContribution) next.contribution;
+                                Action action = directMenuContribution.getMenu().getAction();
+                                if (action != null) {
+                                    actionId = (String) action.getValue(ActionConsts.ACTION_ID);
+                                }
                             }
 
+                            @Nonnull
                             @Override
                             public String getName() {
                                 return directMenuContribution.getMenu().getName();
+                            }
+
+                            @Nonnull
+                            @Override
+                            String getActionId() {
+                                return actionId == null ? "" : actionId;
                             }
 
                             @Override
@@ -368,34 +395,32 @@ public class MenuManager {
                     if (next.parent == null) {
                         rootProcessed = processed;
                     }
-                    String name = processed.getName();
-                    /*NextToMode nextToMode = next.contribution.getMenuPosition().getNextToMode();
-                    switch (nextToMode) {
-                        case BEFORE: {
-                            next.parent.before.add(processed);
-                            break;
+                    String actionId = processed.getActionId();
+                    NextToMode nextToMode = next.nextToMode;
+                    if (nextToMode != null) {
+                        switch (nextToMode) {
+                            case BEFORE: {
+                                next.parent.before.add(processed);
+                                break;
+                            }
+                            case AFTER: {
+                                next.parent.after.add(processed);
+                                break;
+                            }
                         }
-                        case AFTER: {
-                            next.parent.after.add(processed);
-                            break;
-                        }
-                        case UNSPECIFIED: {
-                            break;
-                        }
-                        default:
-                            throw new IllegalStateException();
-                    } */
-                    List<MenuContribution> nextToBefore = beforeItem.get(name);
+                    }
+
+                    List<MenuContribution> nextToBefore = beforeItem.get(actionId);
                     if (nextToBefore != null) {
                         nextToBefore.forEach((menuContribution) -> {
-                            queue.add(new QueuedContribution(processed, menuContribution));
+                            queue.add(new QueuedContribution(processed, menuContribution, NextToMode.BEFORE));
                         });
                     }
 
-                    List<MenuContribution> nextToAfter = afterItem.get(name);
+                    List<MenuContribution> nextToAfter = afterItem.get(actionId);
                     if (nextToAfter != null) {
                         nextToAfter.forEach((menuContribution) -> {
-                            queue.add(new QueuedContribution(processed, menuContribution));
+                            queue.add(new QueuedContribution(processed, menuContribution, NextToMode.AFTER));
                         });
                     }
                 }
@@ -571,12 +596,12 @@ public class MenuManager {
 //                contribution.
 //            }
 
-            for (Map.Entry<String, String> usage : pluginsUsage.entrySet()) {
+            /*            for (Map.Entry<String, String> usage : pluginsUsage.entrySet()) {
                 if (menuId.equals(usage.getValue())) {
                     pluginsUsage.remove(usage.getKey());
                     break;
                 }
-            }
+            } */
             menus.remove(menuId);
         }
     }
@@ -601,6 +626,10 @@ public class MenuManager {
 
         abstract void process();
 
+        @Nonnull
+        abstract String getActionId();
+
+        @Nonnull
         abstract String getName();
 
         abstract boolean shouldCreate();
@@ -612,10 +641,17 @@ public class MenuManager {
 
         ProcessedContribution parent;
         MenuContribution contribution;
+        NextToMode nextToMode = null;
 
         public QueuedContribution(ProcessedContribution parent, MenuContribution contribution) {
             this.parent = parent;
             this.contribution = contribution;
+        }
+
+        public QueuedContribution(ProcessedContribution parent, MenuContribution contribution, NextToMode nextToMode) {
+            this.parent = parent;
+            this.contribution = contribution;
+            this.nextToMode = nextToMode;
         }
     }
 

@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -43,14 +43,12 @@ import org.exbin.framework.ui.options.impl.UiOptionsImpl;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.LanguageProvider;
-import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.ui.api.LafOptionsHandler;
 import org.exbin.framework.ui.api.LafProvider;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.api.preferences.UiPreferences;
 import org.exbin.framework.ui.model.LanguageRecord;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
@@ -231,11 +229,12 @@ public class MainOptionsManager {
                         optionsHandler.loadFromPreferences(preferencesModule.getAppPreferences());
                     }
                     final LafOptionsHandler finalOptionsHandler = optionsHandler;
-                    
+
                     DefaultControlPanel controlPanel = new DefaultControlPanel();
                     WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
                     FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                     final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, optionsHandler.createOptionsComponent(), controlPanel);
+                    ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString("theme.optionsWindow.title"));
                     controlPanel.setHandler((actionType) -> {
                         switch (actionType) {
                             case OK: {
