@@ -233,7 +233,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     }
 
     @Override
-    public void updateRecentFilesList(URI fileUri, FileType fileType) {
+    public void updateRecentFilesList(URI fileUri, @Nullable FileType fileType) {
         if (recentFilesActions != null) {
             recentFilesActions.updateRecentFilesList(fileUri, fileType);
         }

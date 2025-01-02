@@ -182,7 +182,7 @@ public class RecentFilesActions {
         this.preferences = preferences;
     }
 
-    public void updateRecentFilesList(URI fileUri, FileType fileType) {
+    public void updateRecentFilesList(URI fileUri, @Nullable FileType fileType) {
         if (recentFiles != null) {
             int i = 0;
             while (i < recentFiles.size()) {
@@ -193,7 +193,7 @@ public class RecentFilesActions {
                 i++;
             }
 
-            recentFiles.add(0, new RecentItem(fileUri.toString(), "", fileType.getFileTypeId()));
+            recentFiles.add(0, new RecentItem(fileUri.toString(), "", fileType != null ? fileType.getFileTypeId() : null));
             if (recentFiles.size() > 15) {
                 recentFiles.remove(15);
             }

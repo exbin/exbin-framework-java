@@ -201,7 +201,7 @@ public class TextEditor implements EditorProvider {
     }
 
     @Override
-    public void updateRecentFilesList(URI fileUri, FileType fileType) {
+    public void updateRecentFilesList(URI fileUri, @Nullable FileType fileType) {
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.updateRecentFilesList(fileUri, fileType);
     }

@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 
@@ -166,7 +167,7 @@ public class TestFileModule implements FileModuleApi {
     }
 
     @Override
-    public void updateRecentFilesList(URI fileUri, FileType fileType) {
+    public void updateRecentFilesList(URI fileUri, @Nullable FileType fileType) {
     }
 
     @Override

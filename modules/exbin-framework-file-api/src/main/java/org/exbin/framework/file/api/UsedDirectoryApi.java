@@ -51,5 +51,5 @@ public interface UsedDirectoryApi {
      * @param fileUri file Uri
      * @param fileType file type
      */
-    void updateRecentFilesList(URI fileUri, FileType fileType);
+    void updateRecentFilesList(URI fileUri, @Nullable FileType fileType);
 }

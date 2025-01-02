@@ -103,7 +103,7 @@ public interface FileModuleApi extends Module {
     @Nonnull
     FileActionsApi getFileActions();
 
-    void updateRecentFilesList(URI fileUri, FileType fileType);
+    void updateRecentFilesList(URI fileUri, @Nullable FileType fileType);
     
     void registerOptionsPanels();
 }
