@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuContributionRule;
@@ -32,11 +34,26 @@ import org.exbin.framework.action.api.MenuContributionRule;
 @ParametersAreNonnullByDefault
 public class MenuDefinition {
 
-    private final String pluginId;
+    private String pluginId = null;
     private List<MenuContribution> contributions = new ArrayList<>();
     private Map<MenuContribution, List<MenuContributionRule>> rules = new HashMap<>();
 
-    public MenuDefinition(String pluginId) {
+    public MenuDefinition(@Nullable String pluginId) {
+        this.pluginId = pluginId;
+    }
+
+    /**
+     * Returns plugin registering this menu or null if menu is not yet
+     * registered.
+     *
+     * @return plugin id
+     */
+    @Nonnull
+    public Optional<String> getPluginId() {
+        return Optional.ofNullable(pluginId);
+    }
+
+    public void setPluginId(String pluginId) {
         this.pluginId = pluginId;
     }
 

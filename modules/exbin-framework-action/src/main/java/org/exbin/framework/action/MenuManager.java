@@ -676,7 +676,11 @@ public class MenuManager {
 
         MenuDefinition menu = menus.get(menuId);
         if (menu != null) {
-            throw new IllegalStateException("Menu with ID " + menuId + " already exists.");
+            if (menu.getPluginId().isPresent()) {
+                throw new IllegalStateException("Menu with ID " + menuId + " already exists.");
+            } else {
+                menu.setPluginId(pluginId);
+            }
         }
 
         MenuDefinition menuDefinition = new MenuDefinition(pluginId);
@@ -687,7 +691,8 @@ public class MenuManager {
     public MenuContribution registerMenuItem(String menuId, String pluginId, Action action) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
-            throw new IllegalStateException("Menu with Id " + menuId + " doesn't exist");
+            menuDef = new MenuDefinition(null);
+            menus.put(menuId, menuDef);
         }
 
         ActionMenuContribution menuContribution = new ActionMenuContribution(action);
@@ -709,7 +714,8 @@ public class MenuManager {
     public MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
-            throw new IllegalStateException("Menu with Id " + menuId + " doesn't exist");
+            menuDef = new MenuDefinition(null);
+            menus.put(menuId, menuDef);
         }
 
         SubMenuContribution menuContribution = new SubMenuContribution(subMenuId, subMenuAction);
@@ -721,7 +727,8 @@ public class MenuManager {
     public MenuContribution registerMenuItem(String menuId, String pluginId, JMenu menu) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
-            throw new IllegalStateException("Menu with Id " + menuId + " doesn't exist");
+            menuDef = new MenuDefinition(null);
+            menus.put(menuId, menuDef);
         }
 
         DirectSubMenuContribution menuContribution = new DirectSubMenuContribution(menu);
@@ -733,7 +740,8 @@ public class MenuManager {
     public MenuContribution registerMenuGroup(String menuId, String pluginId, String groupId) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
-            throw new IllegalStateException("Menu with Id " + menuId + " doesn't exist");
+            menuDef = new MenuDefinition(null);
+            menus.put(menuId, menuDef);
         }
 
         GroupMenuContribution groupContribution = new GroupMenuContribution(groupId);
