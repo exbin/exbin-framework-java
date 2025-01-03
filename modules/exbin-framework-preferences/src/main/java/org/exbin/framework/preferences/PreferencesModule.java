@@ -17,6 +17,7 @@ package org.exbin.framework.preferences;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 
@@ -48,6 +49,9 @@ public class PreferencesModule implements PreferencesModuleApi {
     @Nonnull
     @Override
     public Preferences getAppPreferences() {
+        if (appPreferences == null) {
+            setupAppPreferences(App.getModuleProvider().getManifestClass());
+        }
         return appPreferences;
     }
 

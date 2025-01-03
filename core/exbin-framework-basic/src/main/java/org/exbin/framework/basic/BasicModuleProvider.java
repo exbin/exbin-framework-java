@@ -56,14 +56,16 @@ import org.xml.sax.SAXException;
 @ParametersAreNonnullByDefault
 public class BasicModuleProvider implements ModuleProvider {
 
+    private Class manifestClass;
     private static final String MODULE_ID = "MODULE_ID";
     private static final String MODULE_FILE = "module.xml";
     private final Map<String, ModuleRecord> modules = new HashMap<>();
     private final Map<String, LibraryRecord> libraries = new HashMap<>();
     private DynamicClassLoader contextClassLoader;
 
-    public BasicModuleProvider(DynamicClassLoader contextClassLoader) {
+    public BasicModuleProvider(DynamicClassLoader contextClassLoader, Class manifestClass) {
         this.contextClassLoader = contextClassLoader;
+        this.manifestClass = manifestClass;
     }
 
     @Override
@@ -107,6 +109,12 @@ public class BasicModuleProvider implements ModuleProvider {
         }
 
         throw new IllegalArgumentException("Module for class " + interfaceClass.getCanonicalName() + " was not found.");
+    }
+
+    @Nonnull
+    @Override
+    public Class getManifestClass() {
+        return manifestClass;
     }
 
     public void addModulesFrom(URI pathUri) {
@@ -174,6 +182,10 @@ public class BasicModuleProvider implements ModuleProvider {
         }
     }
 
+    public void addModulesFromManifest() {
+        addModulesFromManifest(manifestClass);
+    }
+    
     @Nonnull
     public ClassLoader getContextClassLoader() {
         return contextClassLoader;

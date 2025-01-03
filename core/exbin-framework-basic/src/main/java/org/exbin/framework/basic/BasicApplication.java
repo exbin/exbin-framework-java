@@ -21,8 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.prefs.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -41,12 +39,12 @@ public class BasicApplication {
     private Preferences appPreferences;
 
     private BasicModuleProvider moduleProvider;
-    private final List<URI> plugins = new ArrayList<>();
-    private String targetLaf = null;
+//    private final List<URI> plugins = new ArrayList<>();
+//    private String targetLaf = null;
     private File appDirectory = new File("");
 
-    public BasicApplication(DynamicClassLoader dynamicClassLoader) {
-        moduleProvider = new BasicModuleProvider(dynamicClassLoader);
+    public BasicApplication(DynamicClassLoader dynamicClassLoader, Class manifestClass) {
+        moduleProvider = new BasicModuleProvider(dynamicClassLoader, manifestClass);
     }
     
     @Nonnull
@@ -54,8 +52,8 @@ public class BasicApplication {
         try {
             DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(manifestClass);
             Class<?> applicationClass = dynamicClassLoader.loadClass(BasicApplication.class.getCanonicalName());
-            Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class);
-            return (BasicApplication) constructor.newInstance(dynamicClassLoader);
+            Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class);
+            return (BasicApplication) constructor.newInstance(dynamicClassLoader, manifestClass);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException("Unable to create application instance", ex);
         }
@@ -129,6 +127,10 @@ public class BasicApplication {
 
     public void addModulesFromManifest(Class manifestClass) {
         moduleProvider.addModulesFromManifest(manifestClass);
+    }
+
+    public void addModulesFromManifest() {
+        moduleProvider.addModulesFromManifest();
     }
 
     public void initModules() {

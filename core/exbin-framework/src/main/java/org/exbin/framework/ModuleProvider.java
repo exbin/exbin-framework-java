@@ -27,6 +27,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface ModuleProvider {
 
     /**
+     * Returns app manifest class.
+     *
+     * @return manifest class
+     */
+    @Nonnull
+    Class getManifestClass();
+
+    /**
      * Launches application via launcher module.
      *
      * @param launcherModuleId launcher module id

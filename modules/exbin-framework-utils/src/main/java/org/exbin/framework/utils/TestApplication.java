@@ -57,6 +57,12 @@ public class TestApplication {
 
     private void attachModuleProvider() {
         App.setModuleProvider(new ModuleProvider() {
+            @Nonnull
+            @Override
+            public Class getManifestClass() {
+                return TestApplication.this.getClass();
+            }
+
             @Override
             public void launch(Runnable runnable) {
                 runnable.run();

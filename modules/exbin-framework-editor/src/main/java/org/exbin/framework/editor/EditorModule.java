@@ -30,6 +30,7 @@ import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.editor.api.EditorProviderChangeListener;
 import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileModuleApi;
@@ -53,6 +54,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 public class EditorModule implements EditorModuleApi {
 
     private final List<EditorProvider> editors = new ArrayList<>();
+    private final List<EditorProviderChangeListener> changeListeners = new ArrayList<>();
     private final Map<String, List<EditorProvider>> pluginEditorsMap = new HashMap<>();
     private EditorProvider editorProvider = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener = null;
@@ -178,8 +180,14 @@ public class EditorModule implements EditorModuleApi {
                 }
             });
         }
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+        fileModule.setFileOperations(editorProvider);
 
         this.editorProvider = editorProvider;
+
+        for (EditorProviderChangeListener listener : changeListeners) {
+            listener.componentDeactivated(editorProvider);
+        }
     }
 
     public void unregisterModule(String moduleId) {
@@ -196,7 +204,7 @@ public class EditorModule implements EditorModuleApi {
     public void registerEditor(String pluginId, final EditorProvider editorProvider) {
         if (editorProvider instanceof ClipboardActionsHandler) {
             ((ClipboardActionsHandler) editorProvider).setUpdateListener(() -> {
-                if (editorProvider == this.editorProvider) {
+                if (this.editorProvider == editorProvider) {
                     if (clipboardActionsUpdateListener != null) {
                         clipboardActionsUpdateListener.stateChanged();
                     }
@@ -217,8 +225,6 @@ public class EditorModule implements EditorModuleApi {
     @Nonnull
     @Override
     public JComponent getEditorComponent() {
-        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
-        fileModule.setFileOperations(editorProvider);
         return editorProvider.getEditorComponent();
     }
 
@@ -268,5 +274,15 @@ public class EditorModule implements EditorModuleApi {
             editorActions.setup(resourceBundle, (MultiEditorProvider) editorProvider);
         }
         return editorActions;
+    }
+
+    @Override
+    public void addEditorProviderChangeListener(EditorProviderChangeListener listener) {
+        changeListeners.add(listener);
+    }
+
+    @Override
+    public void removeEditorProviderChangeListener(EditorProviderChangeListener listener) {
+        changeListeners.remove(listener);
     }
 }

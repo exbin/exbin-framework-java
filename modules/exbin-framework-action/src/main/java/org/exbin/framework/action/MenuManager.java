@@ -680,6 +680,7 @@ public class MenuManager {
                 throw new IllegalStateException("Menu with ID " + menuId + " already exists.");
             } else {
                 menu.setPluginId(pluginId);
+                return;
             }
         }
 

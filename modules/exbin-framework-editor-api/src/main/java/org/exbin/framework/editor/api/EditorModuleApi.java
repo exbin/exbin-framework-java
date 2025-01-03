@@ -48,17 +48,54 @@ public interface EditorModuleApi extends Module {
     @Nonnull
     JComponent getEditorComponent();
 
+    /**
+     * Creates close file action.
+     *
+     * @return close file action
+     */
     @Nonnull
     AbstractAction createCloseFileAction();
 
+    /**
+     * Creates close all files action.
+     *
+     * @return close all files action
+     */
     @Nonnull
     AbstractAction createCloseAllFilesAction();
 
+    /**
+     * Creates close other files action.
+     *
+     * @return close other files action
+     */
     @Nonnull
     AbstractAction createCloseOtherFilesAction();
 
+    /**
+     * Return editor actions.
+     *
+     * @return editor actions
+     */
     @Nonnull
     EditorActionsApi getEditorActions();
 
+    /**
+     * Registers menu file close actions.
+     */
     void registerMenuFileCloseActions();
+
+    /**
+     * Adds change listener.
+     *
+     * @param listener listener
+     */
+    void addEditorProviderChangeListener(EditorProviderChangeListener listener);
+
+    /**
+     * Removes change listener.
+     *
+     * @param listener listener
+     */
+    void removeEditorProviderChangeListener(EditorProviderChangeListener listener);
 }
