@@ -16,13 +16,12 @@
 package org.exbin.framework.addon.manager.gui;
 
 import java.awt.Component;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractListModel;
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.ItemRecord;
@@ -74,10 +73,17 @@ public class FilterListPanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
-        DefaultListModel<ItemRecord> listModel = new DefaultListModel<>();
-        for (ItemRecord item : controller.getItems()) {
-            listModel.addElement(item);
-        }
+        AbstractListModel<ItemRecord> listModel = new AbstractListModel<ItemRecord>() {
+            @Override
+            public int getSize() {
+                return controller.getItemsCount();
+            }
+
+            @Override
+            public ItemRecord getElementAt(int index) {
+                return controller.getItem(index);
+            }
+        };
         itemsList.setModel(listModel);
     }
 
@@ -154,9 +160,11 @@ public class FilterListPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {
+        
+        int getItemsCount();
 
         @Nonnull
-        List<ItemRecord> getItems();
+        ItemRecord getItem(int index);
 
         void notifyItemSelected(@Nullable ItemRecord itemRecord);
     }

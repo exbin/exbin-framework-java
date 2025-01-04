@@ -12,6 +12,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.ImageIcon;
 import org.exbin.framework.Module;
 
 /**
@@ -30,6 +31,7 @@ public class BasicModuleRecord implements ModuleRecord {
     private String description = null;
     private String provider = null;
     private String homepage = null;
+    private ImageIcon icon = null;
     private final List<String> dependencyModuleIds = new ArrayList<>();
     private final List<String> optionalModuleIds = new ArrayList<>();
     private final List<String> dependencyLibraries = new ArrayList<>();
@@ -123,6 +125,16 @@ public class BasicModuleRecord implements ModuleRecord {
 
     public void setDescription(@Nullable String description) {
         this.description = description;
+    }
+
+    @Nonnull
+    @Override
+    public Optional<ImageIcon> getIcon() {
+        return Optional.ofNullable(icon);
+    }
+
+    public void setIcon(@Nullable ImageIcon icon) {
+        this.icon = icon;
     }
 
     @Nonnull

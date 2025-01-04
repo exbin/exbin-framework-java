@@ -53,7 +53,7 @@ public class FileActions implements FileActionsApi {
     public static final String ALL_FILES_FILTER = "AllFilesFilter";
 
     private ResourceBundle resourceBundle;
-    private boolean useAwtDialogs = true;
+    private boolean useAwtDialogs = false;
 
     public FileActions() {
     }

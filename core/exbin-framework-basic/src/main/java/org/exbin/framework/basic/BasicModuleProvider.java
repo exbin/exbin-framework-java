@@ -336,6 +336,9 @@ public class BasicModuleProvider implements ModuleProvider {
                             moduleRecord.setName(node.getTextContent());
                         } else if ("description".equals(node.getNodeName())) {
                             moduleRecord.setDescription(node.getTextContent());
+                        } else if ("icon".equals(node.getNodeName())) {
+                            String iconPath = node.getTextContent();
+                            moduleRecord.setIcon(null);
                         } else if ("homepage".equals(node.getNodeName())) {
                             moduleRecord.setHomepage(node.getTextContent());
                         } else if ("provider".equals(node.getNodeName())) {

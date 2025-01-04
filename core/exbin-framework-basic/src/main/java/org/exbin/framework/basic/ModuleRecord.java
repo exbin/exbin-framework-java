@@ -8,6 +8,7 @@ package org.exbin.framework.basic;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.swing.ImageIcon;
 import org.exbin.framework.Module;
 
 /**
@@ -56,6 +57,14 @@ public interface ModuleRecord {
      */
     @Nonnull
     Optional<String> getDescription();
+
+    /**
+     * Returns module icon.
+     *
+     * @return icon if present
+     */
+    @Nonnull
+    Optional<ImageIcon> getIcon();
 
     /**
      * Returns module provider.

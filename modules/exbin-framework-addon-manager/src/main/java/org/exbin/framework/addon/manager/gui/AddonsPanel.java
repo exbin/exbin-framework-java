@@ -55,10 +55,14 @@ public class AddonsPanel extends javax.swing.JPanel {
     public void setController(Controller controller) {
         this.controller = controller;
         filterListPanel.setController(new FilterListPanel.Controller() {
-            @Nonnull
             @Override
-            public List<ItemRecord> getItems() {
-                return controller.getItems();
+            public int getItemsCount() {
+                return controller.getItemsCount();
+            }
+
+            @Override
+            public ItemRecord getItem(int index) {
+                return controller.getItem(index);
             }
 
             @Override
@@ -134,7 +138,9 @@ public class AddonsPanel extends javax.swing.JPanel {
 
     public interface Controller {
 
+        int getItemsCount();
+
         @Nonnull
-        List<ItemRecord> getItems();
+        ItemRecord getItem(int index);
     }
 }

@@ -16,11 +16,14 @@
 package org.exbin.framework.addon.manager.action;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
+import org.exbin.framework.ModuleProvider;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
@@ -31,6 +34,8 @@ import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.CloseControlPanel;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
+import org.exbin.framework.basic.BasicModuleProvider;
+import org.exbin.framework.basic.ModuleRecord;
 
 /**
  * Addon manager action.
@@ -54,7 +59,7 @@ public class AddonManagerAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        
+
         addonManagerService = new AddonCatalogServiceImpl();
     }
 
@@ -62,15 +67,29 @@ public class AddonManagerAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
+        addonManagerPanel.setPreferredSize(new Dimension(700, 300));
         addonManagerPanel.setAddonCatalogService(addonManagerService);
         addonManagerPanel.setController(new AddonManagerPanel.Controller() {
             @Override
             public List<ItemRecord> getInstalledItems() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                List<ItemRecord> installedAddons = new ArrayList<>();
+                ModuleProvider moduleProvider = App.getModuleProvider();
+                if (moduleProvider instanceof BasicModuleProvider) {
+                    List<ModuleRecord> modulesList = ((BasicModuleProvider) moduleProvider).getModulesList();
+                    for (ModuleRecord moduleRecord : modulesList) {
+                        ItemRecord itemRecord = new ItemRecord(moduleRecord.getModuleId(), moduleRecord.getName());
+                        itemRecord.setVersion(moduleRecord.getVersion());
+                        itemRecord.setProvider(moduleRecord.getProvider().orElse(null));
+                        itemRecord.setHomepage(moduleRecord.getHomepage().orElse(null));
+                        itemRecord.setDescription(moduleRecord.getDescription().orElse(null));
+                        itemRecord.setIcon(moduleRecord.getIcon().orElse(null));
+                        installedAddons.add(itemRecord);
+                    }
+                }
+                return installedAddons;
             }
         });
-        
-        
+
         CloseControlPanel controlPanel = new CloseControlPanel();
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());
