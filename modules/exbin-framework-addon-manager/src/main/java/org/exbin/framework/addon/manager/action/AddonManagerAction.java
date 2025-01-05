@@ -67,7 +67,7 @@ public class AddonManagerAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
-        addonManagerPanel.setPreferredSize(new Dimension(700, 300));
+        addonManagerPanel.setPreferredSize(new Dimension(800, 500));
         addonManagerPanel.setAddonCatalogService(addonManagerService);
         addonManagerPanel.setController(new AddonManagerPanel.Controller() {
             @Override

@@ -36,7 +36,6 @@ import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonManagerModule implements AddonManagerModuleApi {
 
-//    private CheckForUpdateService checkForUpdateService;
     public AddonManagerModule() {
     }
 

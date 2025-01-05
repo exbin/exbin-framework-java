@@ -31,6 +31,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -47,7 +49,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     @Nonnull
     @Override
     public AddonsListResult searchForAddons(String searchCondition) {
-        List<String> searchResult = new ArrayList<>();
+        List<AddonRecord> searchResult = new ArrayList<>();
         URL seachUrl;
         try {
             seachUrl = new URL(CATALOG_URL + "api/?op=list");
@@ -55,9 +57,32 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                 Document document = documentBuilder.parse(searchStream);
-                NodeList resultNodeList = document.getElementsByTagName("result");
-                searchResult.add("Test 1");
-                searchResult.add("Test 2");
+                NodeList resultNodes = document.getElementsByTagName("result");
+                if (resultNodes.getLength() > 0) {
+                    Node resultNode = resultNodes.item(0);
+                    NodeList resultNodeList = resultNode.getChildNodes();
+                    int childCount = resultNodeList.getLength();
+                    for (int i = 0; i < childCount; i++) {
+                        Node childNode = resultNodeList.item(i);
+                        if ("module".equals(childNode.getNodeName())) {
+                            NamedNodeMap moduleAttributes = childNode.getAttributes();
+                            Node moduleIdNode = moduleAttributes.getNamedItem("id");
+                            String moduleId = moduleIdNode.getNodeValue();
+                            Node moduleNameNode = moduleAttributes.getNamedItem("name");
+                            String moduleName = moduleNameNode.getNodeValue();
+                            AddonRecord record = new AddonRecord(moduleId, moduleName);
+                            NodeList moduleChildNodes = childNode.getChildNodes();
+                            int moduleChildCount = moduleChildNodes.getLength();
+                            for (int j = 0; j < moduleChildCount; j++) {
+                                Node moduleChildNode = moduleChildNodes.item(j);
+                                if ("name".equals(moduleChildNode.getNodeName())) {
+
+                                }
+                            }
+                            searchResult.add(record);
+                        }
+                    }
+                }
             } catch (IOException | SAXException | ParserConfigurationException ex) {
                 Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -74,10 +99,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
             @Nonnull
             @Override
             public AddonRecord getLazyItem(int index) {
-                String id = searchResult.get(index);
-                AddonRecord addonRecord = new AddonRecord(id, "TEST");
-                addonRecord.setDescription("");
-                return addonRecord;
+                return searchResult.get(index);
             }
         };
     }
