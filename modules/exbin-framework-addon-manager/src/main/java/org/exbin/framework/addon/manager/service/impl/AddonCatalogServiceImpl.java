@@ -20,7 +20,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -29,6 +31,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -45,9 +48,12 @@ import org.xml.sax.SAXException;
 public class AddonCatalogServiceImpl implements AddonCatalogService {
 
     private static final String CATALOG_URL = "https://bined.exbin.org/addon/";
+    private final Map<AddonRecord, String> iconPaths = new HashMap();
+    private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
 
     @Nonnull
     @Override
+
     public AddonsListResult searchForAddons(String searchCondition) {
         List<AddonRecord> searchResult = new ArrayList<>();
         URL seachUrl;
@@ -62,8 +68,8 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                     Node resultNode = resultNodes.item(0);
                     NodeList resultNodeList = resultNode.getChildNodes();
                     int childCount = resultNodeList.getLength();
-                    for (int i = 0; i < childCount; i++) {
-                        Node childNode = resultNodeList.item(i);
+                    for (int resultNodeIndex = 0; resultNodeIndex < childCount; resultNodeIndex++) {
+                        Node childNode = resultNodeList.item(resultNodeIndex);
                         if ("module".equals(childNode.getNodeName())) {
                             NamedNodeMap moduleAttributes = childNode.getAttributes();
                             Node moduleIdNode = moduleAttributes.getNamedItem("id");
@@ -73,10 +79,29 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                             AddonRecord record = new AddonRecord(moduleId, moduleName);
                             NodeList moduleChildNodes = childNode.getChildNodes();
                             int moduleChildCount = moduleChildNodes.getLength();
-                            for (int j = 0; j < moduleChildCount; j++) {
-                                Node moduleChildNode = moduleChildNodes.item(j);
-                                if ("name".equals(moduleChildNode.getNodeName())) {
-
+                            for (int moduleNodeIndex = 0; moduleNodeIndex < moduleChildCount; moduleNodeIndex++) {
+                                Node moduleChildNode = moduleChildNodes.item(moduleNodeIndex);
+                                if ("description".equals(moduleChildNode.getNodeName())) {
+                                    record.setDescription(moduleChildNode.getNodeValue());
+                                } else if ("dependency".equals(moduleChildNode.getNodeName())) {
+                                    NodeList depencenyNodes = moduleChildNode.getChildNodes();
+                                    List<DependencyRecord> dependencyRecords = new ArrayList<>();
+                                    int dependecyCount = depencenyNodes.getLength();
+                                    for (int depNodeIndex = 0; depNodeIndex < dependecyCount; depNodeIndex++) {
+                                        Node dependencyNode = depencenyNodes.item(depNodeIndex);
+                                        if ("module".equals(dependencyNode.getNodeName())) {
+                                            Node dependencyModuleId = dependencyNode.getAttributes().getNamedItem("id");
+                                            DependencyRecord dependencyRecord = new DependencyRecord(dependencyModuleId.getNodeValue());
+                                            dependencyRecord.setType(DependencyRecord.Type.MODULE);
+                                        } else if ("library".equals(dependencyNode.getNodeName())) {
+                                            Node dependencyModuleId = dependencyNode.getAttributes().getNamedItem("jar");
+                                            DependencyRecord dependencyRecord = new DependencyRecord(dependencyModuleId.getNodeValue());
+                                            dependencyRecord.setType(DependencyRecord.Type.LIBRARY);
+                                        }
+                                    }
+                                    record.setDependencies(dependencyRecords);
+                                } else if ("icon".equals(moduleChildNode.getNodeName())) {
+                                    iconPaths.put(record, moduleChildNode.getNodeValue());
                                 }
                             }
                             searchResult.add(record);
@@ -102,5 +127,18 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                 return searchResult.get(index);
             }
         };
+    }
+
+    public void addIconChangeListener(IconChangeListener listener) {
+        iconChangeListeners.add(listener);
+    }
+
+    public void removeIconChangeListener(IconChangeListener listener) {
+        iconChangeListeners.remove(listener);
+    }
+
+    public interface IconChangeListener {
+
+        void iconsChanged();
     }
 }
