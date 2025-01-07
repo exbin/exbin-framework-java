@@ -59,15 +59,17 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
+        List<ItemRecord> installedItems = controller.getInstalledItems();
         installedPanel.setController(new AddonsPanel.Controller() {
             @Override
             public int getItemsCount() {
-                return controller.getInstalledItems().size();
+                return installedItems.size();
             }
 
+            @Nonnull
             @Override
             public ItemRecord getItem(int index) {
-                return controller.getInstalledItems().get(index);
+                return installedItems.get(index);
             }
         });
     }

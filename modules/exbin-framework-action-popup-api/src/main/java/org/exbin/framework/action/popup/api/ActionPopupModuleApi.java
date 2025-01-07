@@ -46,9 +46,25 @@ public interface ActionPopupModuleApi extends Module {
      */
     void registerDefaultClipboardPopupMenu(ResourceBundle resourceBundle, Class resourceClass);
 
+    /**
+     * Adds component popup menu event dispatcher.
+     *
+     * @param dispatcher event dispatcher
+     */
     void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher);
 
+    /**
+     * Removes component popup menu event dispatcher.
+     *
+     * @param dispatcher event dispatcher
+     */
     void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher);
 
+    /**
+     * Fills given popup menu with default clipboard actions.
+     *
+     * @param popupMenu popup menu
+     * @param position target index position or -1 for adding at the end
+     */
     void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position);
 }

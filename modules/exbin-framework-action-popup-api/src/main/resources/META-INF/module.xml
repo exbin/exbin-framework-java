@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
   <api>org.exbin.framework.action.popup.api.ActionPopupModuleApi</api>
-  <name>Popup Support Module</name>
+  <name>Popup Menu Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module to support popup operations</description>

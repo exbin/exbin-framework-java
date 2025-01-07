@@ -86,7 +86,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
                 for (Action action : actions) {
                     String name = (String) action.getValue(Action.NAME);
                     ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
-                    String type = "Menu";
+                    String type = getResourceBundle().getString("actionType.menu");
                     KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
                     records.add(new KeyMapRecord(name, icon, type, keyStroke));
                 }
@@ -95,7 +95,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
                 for (Action action : actions) {
                     String name = (String) action.getValue(Action.NAME);
                     ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
-                    String type = "Tool Bar";
+                    String type = getResourceBundle().getString("actionType.toolBar");
                     KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
                     records.add(new KeyMapRecord(name, icon, type, keyStroke));
                 }

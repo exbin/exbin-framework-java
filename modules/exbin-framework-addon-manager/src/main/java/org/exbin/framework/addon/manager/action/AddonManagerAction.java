@@ -84,6 +84,7 @@ public class AddonManagerAction extends AbstractAction {
                         itemRecord.setDescription(moduleRecord.getDescription().orElse(null));
                         itemRecord.setIcon(moduleRecord.getIcon().orElse(null));
                         installedAddons.add(itemRecord);
+                        // System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
                     }
                 }
                 return installedAddons;

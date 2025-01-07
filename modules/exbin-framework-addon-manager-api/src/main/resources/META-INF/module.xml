@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
   <api>org.exbin.framework.addon.manager.api.AddonManagerModuleApi</api>
-  <name>Addon Manager Module</name>
+  <name>Addon Manager API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module to manage addons</description>

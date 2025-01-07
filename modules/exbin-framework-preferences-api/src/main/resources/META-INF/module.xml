@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
   <api>org.exbin.framework.preferences.api.PreferencesModuleApi</api>
-  <name>Preferences Module</name>
+  <name>Preferences API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module for preferences</description>

@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -171,20 +170,6 @@ public interface ActionModuleApi extends Module {
      * Registers default clipboard actions in default popup menu.
      */
     void registerClipboardTextActions();
-
-    /**
-     * Adds component popup menu event dispatcher.
-     *
-     * @param dispatcher event dispatcher
-     */
-    void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher);
-
-    /**
-     * Removes component popup menu event dispatcher.
-     *
-     * @param dispatcher event dispatcher
-     */
-    void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher);
 
     /**
      * Returns list of action managed by menu managers.

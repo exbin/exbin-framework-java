@@ -53,7 +53,6 @@ import org.exbin.framework.action.api.SeparationMenuContributionRule;
 import org.exbin.framework.action.api.ToolBarContribution;
 import org.exbin.framework.action.api.ToolBarContributionRule;
 import org.exbin.framework.action.api.ToolBarManagement;
-import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
@@ -122,18 +121,6 @@ public class ActionModule implements ActionModuleApi {
     @Override
     public ActionManager createActionManager() {
         return new DefaultActionManager();
-    }
-
-    @Override
-    public void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        ActionPopupModuleApi popupModule = App.getModule(ActionPopupModuleApi.class);
-        popupModule.addComponentPopupEventDispatcher(dispatcher);
-    }
-
-    @Override
-    public void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
-        ActionPopupModuleApi popupModule = App.getModule(ActionPopupModuleApi.class);
-        popupModule.removeComponentPopupEventDispatcher(dispatcher);
     }
 
     @Override

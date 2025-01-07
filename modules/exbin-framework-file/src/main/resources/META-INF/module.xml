@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
   <id>org.exbin.framework.file.FileModule</id>
-  <name>File Support Module</name>
+  <name>File Support</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module to support file operations</description>
