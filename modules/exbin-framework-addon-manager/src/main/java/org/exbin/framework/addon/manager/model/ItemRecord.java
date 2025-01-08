@@ -33,6 +33,7 @@ public class ItemRecord {
     private String name;
     private String version = "";
     private boolean enabled = true;
+    private boolean installed = false;
     private ImageIcon icon;
     private String provider = null;
     private String homepage = null;
@@ -76,6 +77,14 @@ public class ItemRecord {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isInstalled() {
+        return installed;
+    }
+
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
     }
 
     @Nonnull

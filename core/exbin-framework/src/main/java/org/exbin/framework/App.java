@@ -15,6 +15,7 @@
  */
 package org.exbin.framework;
 
+import java.io.File;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -28,6 +29,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public final class App {
 
     private static ModuleProvider moduleProvider = null;
+    private static File configDirectory = null;
 
     private App() {
         // No instance
@@ -66,8 +68,21 @@ public final class App {
         App.moduleProvider = moduleProvider;
     }
 
+    public static void setConfigDirectory(File configDirectory) {
+        if (App.configDirectory != null) {
+            throw new IllegalStateException("Config directory already initialized");
+        }
+
+        App.configDirectory = configDirectory;
+    }
+
     @Nonnull
     public static ModuleProvider getModuleProvider() {
         return Objects.requireNonNull(moduleProvider);
+    }
+
+    @Nonnull
+    public static File getConfigDirectory() {
+        return Objects.requireNonNull(configDirectory);
     }
 }

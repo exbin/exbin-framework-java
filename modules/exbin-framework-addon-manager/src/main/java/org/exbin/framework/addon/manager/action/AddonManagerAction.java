@@ -28,6 +28,8 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
+import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
@@ -77,12 +79,21 @@ public class AddonManagerAction extends AbstractAction {
                 if (moduleProvider instanceof BasicModuleProvider) {
                     List<ModuleRecord> modulesList = ((BasicModuleProvider) moduleProvider).getModulesList();
                     for (ModuleRecord moduleRecord : modulesList) {
-                        ItemRecord itemRecord = new ItemRecord(moduleRecord.getModuleId(), moduleRecord.getName());
+                        AddonRecord itemRecord = new AddonRecord(moduleRecord.getModuleId(), moduleRecord.getName());
+                        itemRecord.setInstalled(true);
                         itemRecord.setVersion(moduleRecord.getVersion());
                         itemRecord.setProvider(moduleRecord.getProvider().orElse(null));
                         itemRecord.setHomepage(moduleRecord.getHomepage().orElse(null));
                         itemRecord.setDescription(moduleRecord.getDescription().orElse(null));
                         itemRecord.setIcon(moduleRecord.getIcon().orElse(null));
+                        List<DependencyRecord> dependencyRecords = new ArrayList<>();
+                        for (String dependencyModuleId : moduleRecord.getDependencyModuleIds()) {
+                            dependencyRecords.add(new DependencyRecord(dependencyModuleId));
+                        }
+                        for (String dependencyLibraryId : moduleRecord.getDependencyLibraries()) {
+                            dependencyRecords.add(new DependencyRecord(DependencyRecord.Type.LIBRARY, dependencyLibraryId));
+                        }
+                        itemRecord.setDependencies(dependencyRecords);
                         installedAddons.add(itemRecord);
                         // System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
                     }

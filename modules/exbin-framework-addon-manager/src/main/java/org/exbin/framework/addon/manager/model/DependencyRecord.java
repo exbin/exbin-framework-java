@@ -27,10 +27,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class DependencyRecord {
 
     private String id;
-    private Type type;
-    private boolean required = true;
+    private Type type = Type.MODULE;
+    private boolean optional = false;
 
     public DependencyRecord(String id) {
+        this.id = id;
+    }
+
+    public DependencyRecord(Type type, String id) {
+        this.type = type;
         this.id = id;
     }
 
@@ -52,12 +57,12 @@ public class DependencyRecord {
         this.type = type;
     }
 
-    public boolean isRequired() {
-        return required;
+    public boolean isOptional() {
+        return optional;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
+    public void setOptional(boolean optional) {
+        this.optional = optional;
     }
     
     public enum Type {

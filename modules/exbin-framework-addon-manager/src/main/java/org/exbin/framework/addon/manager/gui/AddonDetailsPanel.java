@@ -20,6 +20,8 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.model.DependenciesTableModel;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
@@ -38,9 +40,15 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonDetailsPanel.class);
     private Controller controller;
     private MouseListener homepageLinkListener;
+    private final DependenciesTableModel dependenciesTableModel = new DependenciesTableModel();
 
     public AddonDetailsPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        dependenciesTable.setModel(dependenciesTableModel);
     }
 
     @Nonnull
@@ -62,7 +70,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             providerLabel.removeMouseListener(homepageLinkListener);
         }
         if (homepage != null) {
-            provider = "<html><body><a href=\"" + homepage + "\">" + (provider.isEmpty() ? "Provider" : provider) + "</a></body></html>";
+            provider = "<html><body><a href=\"" + homepage + "\">" + (provider.isEmpty() ? resourceBundle.getString("record.provider") : provider) + "</a></body></html>";
             providerLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             homepageLinkListener = new java.awt.event.MouseAdapter() {
                 @Override
@@ -77,6 +85,13 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         providerLabel.setText(provider);
         String description = itemRecord.getDescription().orElse("");
         overviewTextPane.setText("<html><body>id: " + itemRecord.getId() + "<br/>" + description + "</body></html>");
+        if (itemRecord instanceof AddonRecord) {
+            dependenciesTableModel.setDependencies(((AddonRecord) itemRecord).getDependencies());
+        } else {
+            dependenciesTableModel.setDependencies(null);
+        }
+        enablementButton.setText(resourceBundle.getString(itemRecord.isEnabled() ? "disableButton.text" : "enableButton.text"));
+        installationlButton.setText(resourceBundle.getString(itemRecord.isInstalled() ? "removeButton.text" : "installButton.text"));
     }
 
     /**
@@ -89,8 +104,8 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         controlPanel = new javax.swing.JPanel();
-        installButton = new javax.swing.JButton();
-        enableButton = new javax.swing.JButton();
+        enablementButton = new javax.swing.JButton();
+        installationlButton = new javax.swing.JButton();
         infoPanel = new javax.swing.JPanel();
         addonNameLabel = new javax.swing.JLabel();
         providerLabel = new javax.swing.JLabel();
@@ -98,14 +113,24 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         tabbedPane = new javax.swing.JTabbedPane();
         overviewScrollPane = new javax.swing.JScrollPane();
         overviewTextPane = new javax.swing.JTextPane();
-        depenciesScrollPane = new javax.swing.JScrollPane();
-        depenciesTable = new javax.swing.JTable();
+        dependenciesScrollPane = new javax.swing.JScrollPane();
+        dependenciesTable = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
-        installButton.setText("Install");
+        enablementButton.setText(resourceBundle.getString("enableButton.text")); // NOI18N
+        enablementButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enablementButtonActionPerformed(evt);
+            }
+        });
 
-        enableButton.setText("Enable");
+        installationlButton.setText(resourceBundle.getString("installButton.text")); // NOI18N
+        installationlButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                installationlButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
         controlPanel.setLayout(controlPanelLayout);
@@ -113,9 +138,9 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
                 .addContainerGap(239, Short.MAX_VALUE)
-                .addComponent(enableButton)
+                .addComponent(enablementButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(installButton)
+                .addComponent(installationlButton)
                 .addContainerGap())
         );
         controlPanelLayout.setVerticalGroup(
@@ -123,8 +148,8 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(installButton)
-                    .addComponent(enableButton))
+                    .addComponent(installationlButton)
+                    .addComponent(enablementButton))
                 .addContainerGap())
         );
 
@@ -139,25 +164,13 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         versionLabel.setText("Version");
 
         overviewTextPane.setContentType("text/html"); // NOI18N
-        overviewTextPane.setText("<html>\n  <head>\n\n  </head>\n  <body>\n    <p style=\"margin-top: 0\">\n      Test\n    </p>\n  </body>\n</html>\n");
         overviewScrollPane.setViewportView(overviewTextPane);
 
-        tabbedPane.addTab("Overview", overviewScrollPane);
+        tabbedPane.addTab(resourceBundle.getString("overviewTab.title"), overviewScrollPane); // NOI18N
 
-        depenciesTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        depenciesScrollPane.setViewportView(depenciesTable);
+        dependenciesScrollPane.setViewportView(dependenciesTable);
 
-        tabbedPane.addTab("Dependencies", depenciesScrollPane);
+        tabbedPane.addTab(resourceBundle.getString("dependenciesTab.title"), dependenciesScrollPane); // NOI18N
 
         javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
         infoPanel.setLayout(infoPanelLayout);
@@ -193,6 +206,14 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         add(infoPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void enablementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enablementButtonActionPerformed
+        controller.enablement();
+    }//GEN-LAST:event_enablementButtonActionPerformed
+
+    private void installationlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installationlButtonActionPerformed
+        controller.installment();
+    }//GEN-LAST:event_installationlButtonActionPerformed
+
     /**
      * Test method for this panel.
      *
@@ -209,11 +230,11 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addonNameLabel;
     private javax.swing.JPanel controlPanel;
-    private javax.swing.JScrollPane depenciesScrollPane;
-    private javax.swing.JTable depenciesTable;
-    private javax.swing.JButton enableButton;
+    private javax.swing.JScrollPane dependenciesScrollPane;
+    private javax.swing.JTable dependenciesTable;
+    private javax.swing.JButton enablementButton;
     private javax.swing.JPanel infoPanel;
-    private javax.swing.JButton installButton;
+    private javax.swing.JButton installationlButton;
     private javax.swing.JScrollPane overviewScrollPane;
     private javax.swing.JTextPane overviewTextPane;
     private javax.swing.JLabel providerLabel;
@@ -223,5 +244,8 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
     public interface Controller {
 
+        void enablement();
+
+        void installment();
     }
 }

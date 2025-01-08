@@ -18,9 +18,13 @@ package org.exbin.framework.basic;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -35,6 +39,7 @@ import org.exbin.framework.App;
 public class BasicApplication {
 
     public static final String PLUGINS_DIRECTORY = "plugins";
+    public static final String ADDONS_DIRECTORY = "addons";
 
     private Preferences appPreferences;
 
@@ -42,11 +47,29 @@ public class BasicApplication {
 //    private final List<URI> plugins = new ArrayList<>();
 //    private String targetLaf = null;
     private File appDirectory = new File("");
+    private File configDirectory;
 
     public BasicApplication(DynamicClassLoader dynamicClassLoader, Class manifestClass) {
         moduleProvider = new BasicModuleProvider(dynamicClassLoader, manifestClass);
+        String osName = System.getProperty("os.name").toLowerCase();
+        try {
+            if (osName.startsWith("win")) {
+                String appData = System.getenv("APPDATA");
+                if (appData != null) {
+                    configDirectory = Paths.get(appData).toFile();
+                } else {
+                    configDirectory = Paths.get(System.getProperty("user.home"), "AppData", "Local").toFile();
+                }
+            } else {
+                configDirectory = new File(System.getProperty("user.home"), ".config");
+            }
+            configDirectory = new File(configDirectory, manifestClass.getName());
+        } catch (Throwable tw) {
+            Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, "Unable to locate configuration directory", tw);
+            configDirectory = new File("");
+        }
     }
-    
+
     @Nonnull
     public static BasicApplication createApplication(Class manifestClass) {
         try {
@@ -61,6 +84,7 @@ public class BasicApplication {
 
     public void init() {
         App.setModuleProvider(moduleProvider);
+        App.setConfigDirectory(configDirectory);
     }
 
     @Nonnull
@@ -103,6 +127,15 @@ public class BasicApplication {
         appDirectoryPath = appDirectoryPath.substring(4, appDirectoryPath.indexOf("!"));
 
         appDirectory = new File(appDirectoryPath).getParentFile();
+    }
+
+    public void addAddonsModules() {
+        try {
+            URL addonsPath = new File(configDirectory.getAbsolutePath(), ADDONS_DIRECTORY).toURI().toURL();
+            addModulesFrom(addonsPath);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void addModulesFrom(URI moduleClassUri) {
