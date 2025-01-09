@@ -28,11 +28,27 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface FileTypes {
 
+    /**
+     * Returns true for all file types filter (asterisk filter).
+     *
+     * @return true if allowed
+     */
     boolean allowAllFiles();
 
+    /**
+     * Returns file type of specific id if present.
+     *
+     * @param fileTypeId file type id
+     * @return file type
+     */
     @Nonnull
     Optional<FileType> getFileType(String fileTypeId);
 
+    /**
+     * Returns collection of all file types.
+     *
+     * @return collection of gile types
+     */
     @Nonnull
     Collection<FileType> getFileTypes();
 }

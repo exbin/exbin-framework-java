@@ -91,7 +91,7 @@ public class AddonManagerAction extends AbstractAction {
                             dependencyRecords.add(new DependencyRecord(dependencyModuleId));
                         }
                         for (String dependencyLibraryId : moduleRecord.getDependencyLibraries()) {
-                            dependencyRecords.add(new DependencyRecord(DependencyRecord.Type.LIBRARY, dependencyLibraryId));
+                            dependencyRecords.add(new DependencyRecord(DependencyRecord.Type.JAR_LIBRARY, dependencyLibraryId));
                         }
                         itemRecord.setDependencies(dependencyRecords);
                         installedAddons.add(itemRecord);

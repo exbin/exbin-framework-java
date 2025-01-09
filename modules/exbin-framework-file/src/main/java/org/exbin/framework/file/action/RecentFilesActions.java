@@ -187,7 +187,7 @@ public class RecentFilesActions {
             int i = 0;
             while (i < recentFiles.size()) {
                 RecentItem recentItem = recentFiles.get(i);
-                if (recentItem.getFileName().equals(fileUri.toString())) {
+                if (fileUri.toString().equals(recentItem.getFileName())) {
                     recentFiles.remove(i);
                 }
                 i++;

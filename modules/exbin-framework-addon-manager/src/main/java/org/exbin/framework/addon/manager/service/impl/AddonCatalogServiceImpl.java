@@ -53,7 +53,6 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
 
     @Nonnull
     @Override
-
     public AddonsListResult searchForAddons(String searchCondition) {
         List<AddonRecord> searchResult = new ArrayList<>();
         URL seachUrl;
@@ -82,7 +81,13 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                             for (int moduleNodeIndex = 0; moduleNodeIndex < moduleChildCount; moduleNodeIndex++) {
                                 Node moduleChildNode = moduleChildNodes.item(moduleNodeIndex);
                                 if ("description".equals(moduleChildNode.getNodeName())) {
-                                    record.setDescription(moduleChildNode.getNodeValue());
+                                    record.setDescription(moduleChildNode.getTextContent());
+                                } else if ("version".equals(moduleChildNode.getNodeName())) {
+                                    record.setVersion(moduleChildNode.getTextContent());
+                                } else if ("homepage".equals(moduleChildNode.getNodeName())) {
+                                    record.setHomepage(moduleChildNode.getTextContent());
+                                } else if ("provider".equals(moduleChildNode.getNodeName())) {
+                                    record.setProvider(moduleChildNode.getTextContent());
                                 } else if ("dependency".equals(moduleChildNode.getNodeName())) {
                                     NodeList depencenyNodes = moduleChildNode.getChildNodes();
                                     List<DependencyRecord> dependencyRecords = new ArrayList<>();
@@ -93,10 +98,19 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                                             Node dependencyModuleId = dependencyNode.getAttributes().getNamedItem("id");
                                             DependencyRecord dependencyRecord = new DependencyRecord(dependencyModuleId.getNodeValue());
                                             dependencyRecord.setType(DependencyRecord.Type.MODULE);
+                                            dependencyRecords.add(dependencyRecord);
                                         } else if ("library".equals(dependencyNode.getNodeName())) {
-                                            Node dependencyModuleId = dependencyNode.getAttributes().getNamedItem("jar");
-                                            DependencyRecord dependencyRecord = new DependencyRecord(dependencyModuleId.getNodeValue());
-                                            dependencyRecord.setType(DependencyRecord.Type.LIBRARY);
+                                            Node libraryMaven = dependencyNode.getAttributes().getNamedItem("maven");
+                                            if (libraryMaven != null) {
+                                                DependencyRecord dependencyRecord = new DependencyRecord(libraryMaven.getNodeValue());
+                                                dependencyRecord.setType(DependencyRecord.Type.MAVEN_LIBRARY);
+                                                dependencyRecords.add(dependencyRecord);
+                                            } else {
+                                                Node libraryJar = dependencyNode.getAttributes().getNamedItem("jar");
+                                                DependencyRecord dependencyRecord = new DependencyRecord(libraryJar.getNodeValue());
+                                                dependencyRecord.setType(DependencyRecord.Type.JAR_LIBRARY);
+                                                dependencyRecords.add(dependencyRecord);
+                                            }
                                         }
                                     }
                                     record.setDependencies(dependencyRecords);

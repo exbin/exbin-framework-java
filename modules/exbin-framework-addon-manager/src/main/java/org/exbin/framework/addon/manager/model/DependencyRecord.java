@@ -67,7 +67,8 @@ public class DependencyRecord {
     
     public enum Type {
         MODULE,
-        LIBRARY,
-        ADDON
+        JAR_LIBRARY,
+        MAVEN_LIBRARY,
+        PLUGIN
     }
 }

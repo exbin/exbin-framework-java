@@ -280,8 +280,8 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
             public OptionsComponent<FileOptionsImpl> createPanel() {
                 FileOptionsPanel fileOptionsPanel = new FileOptionsPanel();
                 List<String> fileDialogsKeys = new ArrayList<>();
-                fileDialogsKeys.add("SWING");
-                fileDialogsKeys.add("AWT");
+                fileDialogsKeys.add(FileDialogsType.SWING.name());
+                fileDialogsKeys.add(FileDialogsType.AWT.name());
                 List<String> fileDialogsNames = new ArrayList<>();
                 fileDialogsNames.add(resourceBundle.getString("fileDialogs.swing"));
                 fileDialogsNames.add(resourceBundle.getString("fileDialogs.swt"));
@@ -316,7 +316,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
             @Override
             public void applyPreferencesChanges(FileOptionsImpl options) {
                 String fileDialogs = options.getFileDialogs();
-                getFileActions().setUseAwtDialogs("AWT".equals(fileDialogs));
+                getFileActions().setUseAwtDialogs(FileDialogsType.AWT.name().equals(fileDialogs));
             }
         };
     }

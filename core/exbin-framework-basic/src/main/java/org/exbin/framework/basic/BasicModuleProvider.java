@@ -352,7 +352,15 @@ public class BasicModuleProvider implements ModuleProvider {
                                 if ("module".equals(depRecord.getNodeName())) {
                                     dependecyModuleIds.add(depRecord.getAttributes().getNamedItem("id").getNodeValue());
                                 } else if ("library".equals(depRecord.getNodeName())) {
-                                    dependecyLibraries.add(depRecord.getAttributes().getNamedItem("jar").getNodeValue());
+                                    Node mavenAttributeNode = depRecord.getAttributes().getNamedItem("maven");
+                                    if (mavenAttributeNode != null) {
+                                        String mavenCode = mavenAttributeNode.getNodeValue();
+                                        int namePart = mavenCode.indexOf(":");
+                                        int versionPart = mavenCode.indexOf(":", namePart + 1);
+                                        dependecyLibraries.add(mavenCode.substring(namePart + 1, versionPart) + "-" + mavenCode.substring(versionPart + 1) + ".jar");
+                                    } else {
+                                        dependecyLibraries.add(depRecord.getAttributes().getNamedItem("jar").getNodeValue());
+                                    }
                                 }
                             }
                             moduleRecord.setDependencyModuleIds(dependecyModuleIds);

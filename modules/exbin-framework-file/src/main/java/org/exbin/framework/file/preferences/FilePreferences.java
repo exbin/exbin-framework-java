@@ -18,6 +18,7 @@ package org.exbin.framework.file.preferences;
 import javax.annotation.Nonnull;
 import org.exbin.framework.preferences.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.file.FileDialogsType;
 import org.exbin.framework.file.options.FileOptions;
 
 /**
@@ -39,7 +40,7 @@ public class FilePreferences implements FileOptions {
     @Nonnull
     @Override
     public String getFileDialogs() {
-        return preferences.get(PREFERENCES_FILE_DIALOGS, "SWING");
+        return preferences.get(PREFERENCES_FILE_DIALOGS, FileDialogsType.SWING.name());
     }
 
     @Override
