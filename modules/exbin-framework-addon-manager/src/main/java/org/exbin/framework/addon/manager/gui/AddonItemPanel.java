@@ -38,6 +38,8 @@ public class AddonItemPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonItemPanel.class);
     private ImageIcon defaultItemIcon = new ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/puzzle-svgrepo-com-48x48.png"));
+    private ImageIcon disabledStateIcon = new ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/16x16/dialog-cancel-2.png"));
+    private ImageIcon updateStateIcon = new ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/16x16/update_misc.png"));
     private Controller controller;
 
     public AddonItemPanel() {
@@ -55,6 +57,13 @@ public class AddonItemPanel extends javax.swing.JPanel {
         } else {
             setBackground(list.getBackground());
             setForeground(list.getForeground());
+        }
+        if (!itemRecord.isEnabled()) {
+            stateLabel.setIcon(disabledStateIcon);
+        } else if (!itemRecord.isUpdateAvailable() || true) {
+            stateLabel.setIcon(updateStateIcon);
+        } else {
+            stateLabel.setIcon(null);
         }
     }
 
@@ -101,23 +110,22 @@ public class AddonItemPanel extends javax.swing.JPanel {
                 .addGap(0, 0, 0)
                 .addComponent(iconLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(providerLabel)
-                        .addGap(137, 137, 137)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(stateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(providerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(stateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(stateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, 0)
-                    .addComponent(providerLabel))
-                .addComponent(iconLabel))
+            .addComponent(iconLabel)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(stateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(providerLabel)))
         );
     }// </editor-fold>//GEN-END:initComponents
 

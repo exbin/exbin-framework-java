@@ -34,6 +34,7 @@ public class ItemRecord {
     private String version = "";
     private boolean enabled = true;
     private boolean installed = false;
+    private boolean updateAvailable = false;
     private ImageIcon icon;
     private String provider = null;
     private String homepage = null;
@@ -85,6 +86,14 @@ public class ItemRecord {
 
     public void setInstalled(boolean installed) {
         this.installed = installed;
+    }
+
+    public boolean isUpdateAvailable() {
+        return updateAvailable;
+    }
+
+    public void setUpdateAvailable(boolean updateAvailable) {
+        this.updateAvailable = updateAvailable;
     }
 
     @Nonnull

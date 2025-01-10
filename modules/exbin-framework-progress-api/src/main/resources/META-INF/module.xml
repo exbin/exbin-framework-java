@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.operation.api.OperationModuleApi</api>
-  <name>Operation Support Module</name>
+  <api>org.exbin.framework.progress.api.ProgressModuleApi</api>
+  <name>Progress Support Module</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module to provide support for operations capability</description>
