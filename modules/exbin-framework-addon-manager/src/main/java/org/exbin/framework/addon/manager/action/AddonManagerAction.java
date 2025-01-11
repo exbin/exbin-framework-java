@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
@@ -28,16 +29,19 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
+import org.exbin.framework.addon.manager.gui.AddonOperationPanel;
+import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
-import org.exbin.framework.window.api.gui.CloseControlPanel;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleRecord;
+import org.exbin.framework.window.api.gui.MultiStepControlPanel;
+import org.exbin.framework.window.api.handler.MultiStepControlHandler;
 
 /**
  * Addon manager action.
@@ -67,11 +71,15 @@ public class AddonManagerAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        AddonsControlPanel controlPanel = new AddonsControlPanel();
+
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
         addonManagerPanel.setPreferredSize(new Dimension(800, 500));
         addonManagerPanel.setAddonCatalogService(addonManagerService);
         addonManagerPanel.setController(new AddonManagerPanel.Controller() {
+
+            @Nonnull
             @Override
             public List<ItemRecord> getInstalledItems() {
                 List<ItemRecord> installedAddons = new ArrayList<>();
@@ -100,9 +108,68 @@ public class AddonManagerAction extends AbstractAction {
                 }
                 return installedAddons;
             }
+
+            @Override
+            public void installSelectionChanged(int toInstall) {
+                controlPanel.setOperationState(AddonsControlPanel.OperationVariant.INSTALL, toInstall);
+            }
+
+            @Override
+            public void updateSelectionChanged(int toUpdate) {
+                controlPanel.setOperationState(AddonsControlPanel.OperationVariant.UPDATE, toUpdate);
+            }
+
+            @Override
+            public void tabSwitched(AddonManagerPanel.Tab tab) {
+                switch (tab) {
+                    case PACKS:
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    case ADDONS:
+                        controlPanel.setOperationState(AddonsControlPanel.OperationVariant.INSTALL, addonManagerPanel.getToInstall());
+                        break;
+                    case INSTALLED:
+                        controlPanel.setOperationState(AddonsControlPanel.OperationVariant.UPDATE, addonManagerPanel.getToUpdate());
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+            }
         });
 
-        CloseControlPanel controlPanel = new CloseControlPanel();
+        controlPanel.setController(new AddonsControlPanel.Controller() {
+            @Override
+            public void performOperation() {
+                AddonManagerPanel.Tab activeTab = addonManagerPanel.getActiveTab();
+
+                MultiStepControlPanel controlPanel = new MultiStepControlPanel();
+                AddonOperationPanel operationPanel = new AddonOperationPanel();
+                operationPanel.setPreferredSize(new Dimension(600, 300));
+
+                final WindowHandler dialog = windowModule.createDialog(operationPanel, controlPanel);
+                windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), operationPanel.getResourceBundle());
+                windowModule.setWindowTitle(dialog, operationPanel.getResourceBundle());
+                controlPanel.setHandler(new MultiStepControlHandler() {
+                    @Override
+                    public void controlActionPerformed(MultiStepControlHandler.ControlActionType actionType) {
+                        switch (actionType) {
+                            case CANCEL:
+                                dialog.close();
+                                break;
+                            case NEXT:
+                            case PREVIOUS:
+                            case FINISH:
+                            default:
+                                throw new AssertionError();
+                        }
+                    }
+                });
+                dialog.showCentered((Component) e.getSource());
+                dialog.dispose();
+            }
+        });
+
+        // controlPanel.showLegacyWarning();
+        controlPanel.setOperationState(AddonsControlPanel.OperationVariant.UPDATE_ALL, 0);
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, addonManagerPanel.getResourceBundle());

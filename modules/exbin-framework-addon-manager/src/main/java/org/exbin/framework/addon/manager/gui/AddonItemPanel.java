@@ -37,12 +37,14 @@ import org.exbin.framework.utils.UtilsModule;
 public class AddonItemPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonItemPanel.class);
-    private ImageIcon defaultItemIcon = new ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/puzzle-svgrepo-com-48x48.png"));
-    private ImageIcon disabledStateIcon = new ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/16x16/dialog-cancel-2.png"));
-    private ImageIcon updateStateIcon = new ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/16x16/update_misc.png"));
-    private Controller controller;
+    private final ImageIcon defaultItemIcon;
+    private final ImageIcon disabledStateIcon;
+    private final ImageIcon updateStateIcon;
 
     public AddonItemPanel() {
+        defaultItemIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("defaultItem.icon")));
+        disabledStateIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("disabledState.icon")));
+        updateStateIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("updateState.icon")));
         initComponents();
     }
 
@@ -60,20 +62,19 @@ public class AddonItemPanel extends javax.swing.JPanel {
         }
         if (!itemRecord.isEnabled()) {
             stateLabel.setIcon(disabledStateIcon);
-        } else if (!itemRecord.isUpdateAvailable() || true) {
+            setToolTipText(resourceBundle.getString("disabledState.toolTip"));
+        } else if (itemRecord.isUpdateAvailable()) {
             stateLabel.setIcon(updateStateIcon);
+            setToolTipText(resourceBundle.getString("updateState.toolTip"));
         } else {
             stateLabel.setIcon(null);
+            setToolTipText(null);
         }
     }
 
     @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
     }
 
     /**
@@ -149,7 +150,4 @@ public class AddonItemPanel extends javax.swing.JPanel {
     private javax.swing.JLabel stateLabel;
     // End of variables declaration//GEN-END:variables
 
-    public interface Controller {
-
-    }
 }

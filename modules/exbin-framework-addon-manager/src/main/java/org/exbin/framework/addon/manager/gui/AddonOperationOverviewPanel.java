@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
-import java.awt.BorderLayout;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,20 +30,13 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonOperationPanel extends javax.swing.JPanel {
+public class AddonOperationOverviewPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationOverviewPanel.class);
     private Controller controller;
 
-    private AddonOperationOverviewPanel overviewPanel = new AddonOperationOverviewPanel();
-
-    public AddonOperationPanel() {
+    public AddonOperationOverviewPanel() {
         initComponents();
-        init();
-    }
-
-    private void init() {
-        add(overviewPanel, BorderLayout.CENTER);
     }
 
     @Nonnull
@@ -65,7 +57,36 @@ public class AddonOperationPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setLayout(new java.awt.BorderLayout());
+        operationsLabel = new javax.swing.JLabel();
+        scrollPane = new javax.swing.JScrollPane();
+        operationsList = new javax.swing.JList<>();
+
+        operationsLabel.setText(resourceBundle.getString("operationsLabel.text")); // NOI18N
+
+        scrollPane.setViewportView(operationsList);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(operationsLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(scrollPane))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(operationsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollPane)
+                .addContainerGap())
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -77,13 +98,17 @@ public class AddonOperationPanel extends javax.swing.JPanel {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
             testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new AddonOperationPanel());
+            WindowUtils.invokeWindow(new AddonOperationOverviewPanel());
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel operationsLabel;
+    private javax.swing.JList<String> operationsList;
+    private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
-    public interface Controller {
 
+    public interface Controller {
+        
     }
 }

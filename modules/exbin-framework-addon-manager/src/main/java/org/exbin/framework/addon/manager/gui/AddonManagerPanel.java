@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.event.ChangeEvent;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -41,9 +42,30 @@ public class AddonManagerPanel extends javax.swing.JPanel {
     private PacksPanel packsPanel = new PacksPanel();
     private AddonsPanel addonsPanel = new AddonsPanel();
     private AddonsPanel installedPanel = new AddonsPanel();
+    private int toInstall = 0;
+    private int toUpdate = 0;
+    private Tab activeTab = Tab.INSTALLED;
 
     public AddonManagerPanel() {
         initComponents();
+        tabbedPane.addChangeListener((ChangeEvent e) -> {
+            if (controller == null) {
+                return;
+            }
+
+            switch (tabbedPane.getSelectedIndex()) {
+                case 0:
+                    activeTab = Tab.ADDONS;
+                    break;
+                case 1:
+                    activeTab = Tab.INSTALLED;
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+
+            controller.tabSwitched(activeTab);
+        });
         // TODO: Support for multimodule packs
 //        tabbedPane.add(resourceBundle.getString("packsTab.title"), packsPanel);
         tabbedPane.add(resourceBundle.getString("addonsTab.title"), addonsPanel);
@@ -71,6 +93,18 @@ public class AddonManagerPanel extends javax.swing.JPanel {
             public ItemRecord getItem(int index) {
                 return installedItems.get(index);
             }
+
+            @Override
+            public void installItem(ItemRecord item) {
+                throw new IllegalStateException();
+            }
+
+            @Override
+            public void updateItem(ItemRecord item) {
+                toUpdate += item.isSelected() ? -1 : 1;
+                item.setSelected(!item.isSelected());
+                controller.updateSelectionChanged(toUpdate);
+            }
         });
     }
 
@@ -96,7 +130,32 @@ public class AddonManagerPanel extends javax.swing.JPanel {
                 }
                 return searchResult.getLazyItem(index);
             }
+
+            @Override
+            public void installItem(ItemRecord item) {
+                toInstall += item.isSelected() ? -1 : 1;
+                item.setSelected(!item.isSelected());
+                controller.installSelectionChanged(toInstall);
+            }
+
+            @Override
+            public void updateItem(ItemRecord item) {
+                throw new IllegalStateException();
+            }
         });
+    }
+
+    public int getToInstall() {
+        return toInstall;
+    }
+
+    public int getToUpdate() {
+        return toUpdate;
+    }
+
+    @Nonnull
+    public Tab getActiveTab() {
+        return activeTab;
     }
 
     /**
@@ -136,5 +195,16 @@ public class AddonManagerPanel extends javax.swing.JPanel {
         @Nonnull
         List<ItemRecord> getInstalledItems();
 
+        void installSelectionChanged(int toInstall);
+
+        void updateSelectionChanged(int toUpdate);
+
+        void tabSwitched(Tab tab);
+    }
+
+    public enum Tab {
+        PACKS,
+        ADDONS,
+        INSTALLED
     }
 }

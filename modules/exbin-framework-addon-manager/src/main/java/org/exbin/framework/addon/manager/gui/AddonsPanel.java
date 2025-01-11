@@ -86,6 +86,22 @@ public class AddonsPanel extends javax.swing.JPanel {
                 }
             }
         });
+        addonDetailsPanel.setController(new AddonDetailsPanel.Controller() {
+            @Override
+            public void enablement() {
+                // TODO
+            }
+
+            @Override
+            public void installment() {
+                controller.installItem(activeRecord);
+            }
+
+            @Override
+            public void update() {
+                controller.updateItem(activeRecord);
+            }
+        });
     }
 
     /**
@@ -142,5 +158,9 @@ public class AddonsPanel extends javax.swing.JPanel {
 
         @Nonnull
         ItemRecord getItem(int index);
+        
+        void installItem(ItemRecord item);
+
+        void updateItem(ItemRecord item);
     }
 }

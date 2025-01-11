@@ -32,6 +32,7 @@ public class ItemRecord {
     private String id;
     private String name;
     private String version = "";
+    private boolean selected = false;
     private boolean enabled = true;
     private boolean installed = false;
     private boolean updateAvailable = false;
@@ -70,6 +71,14 @@ public class ItemRecord {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public boolean isEnabled() {

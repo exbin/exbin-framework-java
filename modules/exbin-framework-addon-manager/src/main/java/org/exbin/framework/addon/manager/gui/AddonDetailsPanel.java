@@ -41,6 +41,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private Controller controller;
     private MouseListener homepageLinkListener;
     private final DependenciesTableModel dependenciesTableModel = new DependenciesTableModel();
+    private ItemRecord activeRecord;
 
     public AddonDetailsPanel() {
         initComponents();
@@ -61,6 +62,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     }
 
     public void setRecord(ItemRecord itemRecord) {
+        activeRecord = itemRecord;
         addonNameLabel.setText(itemRecord.getName());
         versionLabel.setText(itemRecord.getVersion());
         String provider = itemRecord.getProvider().orElse("");
@@ -90,8 +92,10 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         } else {
             dependenciesTableModel.setDependencies(null);
         }
+        updateButton.setEnabled(itemRecord.isUpdateAvailable());
+        updateButton.setText(resourceBundle.getString(itemRecord.isSelected() ? "updateButton.unselect.text" : "updateButton.text"));
         enablementButton.setText(resourceBundle.getString(itemRecord.isEnabled() ? "disableButton.text" : "enableButton.text"));
-        installationlButton.setText(resourceBundle.getString(itemRecord.isInstalled() ? "removeButton.text" : "installButton.text"));
+        installationlButton.setText(resourceBundle.getString(itemRecord.isInstalled() ? "removeButton.text" : (itemRecord.isSelected() ? "installButton.unselect.text" : "installButton.text")));
     }
 
     /**
@@ -104,6 +108,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         controlPanel = new javax.swing.JPanel();
+        updateButton = new javax.swing.JButton();
         enablementButton = new javax.swing.JButton();
         installationlButton = new javax.swing.JButton();
         infoPanel = new javax.swing.JPanel();
@@ -118,7 +123,16 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        updateButton.setText(resourceBundle.getString("updateButton.text")); // NOI18N
+        updateButton.setEnabled(false);
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+
         enablementButton.setText(resourceBundle.getString("enableButton.text")); // NOI18N
+        enablementButton.setEnabled(false);
         enablementButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enablementButtonActionPerformed(evt);
@@ -137,7 +151,9 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(239, Short.MAX_VALUE)
+                .addContainerGap(150, Short.MAX_VALUE)
+                .addComponent(updateButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(enablementButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(installationlButton)
@@ -146,10 +162,11 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         controlPanelLayout.setVerticalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(16, Short.MAX_VALUE)
                 .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(installationlButton)
-                    .addComponent(enablementButton))
+                    .addComponent(enablementButton)
+                    .addComponent(updateButton))
                 .addContainerGap())
         );
 
@@ -199,7 +216,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
                     .addComponent(versionLabel)
                     .addComponent(providerLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -212,7 +229,13 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
     private void installationlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installationlButtonActionPerformed
         controller.installment();
+        installationlButton.setText(resourceBundle.getString(activeRecord.isInstalled() ? "removeButton.text" : (activeRecord.isSelected() ? "installButton.unselect.text" : "installButton.text")));
     }//GEN-LAST:event_installationlButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        controller.update();
+        updateButton.setText(resourceBundle.getString(activeRecord.isSelected() ? "updateButton.unselect.text" : "updateButton.text"));
+    }//GEN-LAST:event_updateButtonActionPerformed
 
     /**
      * Test method for this panel.
@@ -239,6 +262,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JTextPane overviewTextPane;
     private javax.swing.JLabel providerLabel;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JButton updateButton;
     private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
@@ -247,5 +271,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         void enablement();
 
         void installment();
+
+        void update();
     }
 }
