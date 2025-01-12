@@ -37,7 +37,7 @@ public final class App {
 
     public static void launch(Runnable runnable) {
         if (moduleProvider == null) {
-            throw new IllegalStateException("Module provider not initialized");
+            throw createNotInitializedException();
         }
 
         moduleProvider.launch(runnable);
@@ -45,7 +45,7 @@ public final class App {
 
     public static void launch(String launcherModuleId, String[] args) {
         if (moduleProvider == null) {
-            throw new IllegalStateException("Module provider not initialized");
+            throw createNotInitializedException();
         }
 
         moduleProvider.launch(launcherModuleId, args);
@@ -57,12 +57,12 @@ public final class App {
             return moduleProvider.getModule(interfaceClass);
         }
 
-        throw new IllegalStateException("Module provider not initialized");
+        throw createNotInitializedException();
     }
 
     public static void setModuleProvider(ModuleProvider moduleProvider) {
         if (App.moduleProvider != null) {
-            throw new IllegalStateException("Module provider already initialized");
+            throw createAlreadyInitializedException();
         }
 
         App.moduleProvider = moduleProvider;
@@ -70,7 +70,7 @@ public final class App {
 
     public static void setConfigDirectory(File configDirectory) {
         if (App.configDirectory != null) {
-            throw new IllegalStateException("Config directory already initialized");
+            throw createAlreadyInitializedException();
         }
 
         App.configDirectory = configDirectory;
@@ -84,5 +84,13 @@ public final class App {
     @Nonnull
     public static File getConfigDirectory() {
         return Objects.requireNonNull(configDirectory);
+    }
+
+    private static IllegalStateException createNotInitializedException() {
+        return new IllegalStateException("Module provider not initialized");
+    }
+
+    private static IllegalStateException createAlreadyInitializedException() {
+        return new IllegalStateException("Config directory already initialized");
     }
 }

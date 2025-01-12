@@ -35,4 +35,8 @@ public interface AddonManagerModuleApi extends Module {
     Action createAddonManagerAction();
 
     void registerAddonManagerMenuItem();
+
+    boolean isDevMode();
+
+    void setDevMode(boolean devMode);
 }

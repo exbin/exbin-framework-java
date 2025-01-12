@@ -36,6 +36,8 @@ import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonManagerModule implements AddonManagerModuleApi {
 
+    private static boolean devMode = false;
+
     public AddonManagerModule() {
     }
 
@@ -51,6 +53,16 @@ public class AddonManagerModule implements AddonManagerModuleApi {
         MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, createAddonManagerAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE_LAST));
+    }
+
+    @Override
+    public boolean isDevMode() {
+        return devMode;
+    }
+
+    @Override
+    public void setDevMode(boolean devMode) {
+        AddonManagerModule.devMode = devMode;
     }
 
     /*

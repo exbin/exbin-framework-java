@@ -30,6 +30,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -48,16 +50,18 @@ import org.xml.sax.SAXException;
 public class AddonCatalogServiceImpl implements AddonCatalogService {
 
     private static final String CATALOG_URL = "https://bined.exbin.org/addon/";
+    private static final String CATALOG_DEV_URL = "https://bined.exbin.org/addon-dev/";
     private final Map<AddonRecord, String> iconPaths = new HashMap();
     private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
 
     @Nonnull
     @Override
     public AddonsListResult searchForAddons(String searchCondition) {
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         List<AddonRecord> searchResult = new ArrayList<>();
         URL seachUrl;
         try {
-            seachUrl = new URL(CATALOG_URL + "api/?op=list");
+            seachUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=list");
             try (InputStream searchStream = seachUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

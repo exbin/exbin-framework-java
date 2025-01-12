@@ -29,7 +29,7 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
-import org.exbin.framework.addon.manager.gui.AddonOperationPanel;
+import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
