@@ -15,12 +15,9 @@
  */
 package org.exbin.framework.addon.manager.operation.gui;
 
-import java.awt.BorderLayout;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -33,25 +30,13 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonOperationPanel extends javax.swing.JPanel {
+public class AddonOperationSuccessPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationSuccessPanel.class);
     private Controller controller;
 
-    private final AddonOperationOverviewPanel overviewPanel = new AddonOperationOverviewPanel();
-    private final AddonOperationLicensePanel licensePanel = new AddonOperationLicensePanel();
-    private final AddonOperationDownloadPanel downloadPanel = new AddonOperationDownloadPanel();
-    private final AddonOperationSuccessPanel successPanel = new AddonOperationSuccessPanel();
-    
-    private JComponent activePanel = null;
-
-    public AddonOperationPanel() {
+    public AddonOperationSuccessPanel() {
         initComponents();
-        init();
-    }
-
-    private void init() {
-        goToStep(Step.OVERVIEW);
     }
 
     @Nonnull
@@ -61,37 +46,6 @@ public class AddonOperationPanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
-    }
-    
-    public void goToStep(Step step) {
-        if (activePanel != null) {
-            remove(activePanel);
-        }
-        
-        switch (step) {
-            case OVERVIEW:
-                activePanel = overviewPanel;
-                break;
-            case LICENSE:
-                activePanel = licensePanel;
-                break;
-            case DOWNLOAD:
-                activePanel = downloadPanel;
-                break;
-            case SUCCESS:
-                activePanel = successPanel;
-            default:
-                throw new AssertionError();
-        }
-        
-        add(activePanel, BorderLayout.CENTER);
-        revalidate();
-        repaint();
-    }
-    
-    @Nullable
-    public JComponent getActiveComponent() {
-        return activePanel;
     }
 
     /**
@@ -103,7 +57,33 @@ public class AddonOperationPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setLayout(new java.awt.BorderLayout());
+        messageLabel = new javax.swing.JLabel();
+        restartAppLabel = new javax.swing.JLabel();
+
+        messageLabel.setText(resourceBundle.getString("messageLabel.text")); // NOI18N
+
+        restartAppLabel.setText(resourceBundle.getString("restartAppLabel.text")); // NOI18N
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(messageLabel)
+                    .addComponent(restartAppLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(messageLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(restartAppLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -115,20 +95,16 @@ public class AddonOperationPanel extends javax.swing.JPanel {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
             testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new AddonOperationPanel());
+            WindowUtils.invokeWindow(new AddonOperationSuccessPanel());
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel messageLabel;
+    private javax.swing.JLabel restartAppLabel;
     // End of variables declaration//GEN-END:variables
-    public interface Controller {
 
-    }
-    
-    public enum Step {
-        OVERVIEW,
-        LICENSE,
-        DOWNLOAD,
-        SUCCESS
+    public interface Controller {
+        
     }
 }

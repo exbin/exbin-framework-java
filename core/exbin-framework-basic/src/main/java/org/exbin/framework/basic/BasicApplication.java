@@ -15,7 +15,11 @@
  */
 package org.exbin.framework.basic;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -40,6 +44,7 @@ public class BasicApplication {
 
     public static final String PLUGINS_DIRECTORY = "plugins";
     public static final String ADDONS_DIRECTORY = "addons";
+    public static final String ADDONS_UPDATE_DIRECTORY = "addons_update";
 
     private Preferences appPreferences;
 
@@ -129,9 +134,74 @@ public class BasicApplication {
         appDirectory = new File(appDirectoryPath).getParentFile();
     }
 
-    public void addAddonsModules() {
+    public void setupAddons() {
+        File addonsDirectory = new File(configDirectory.getAbsolutePath(), ADDONS_DIRECTORY);
+        File updateDirectory = new File(configDirectory.getAbsolutePath(), ADDONS_UPDATE_DIRECTORY);
+        if (updateDirectory.exists()) {
+            File updateConfig = new File(updateDirectory, "update.cfg");
+            File removeConfig = new File(updateDirectory, "remove.cfg");
+
+            if (updateConfig.exists() || removeConfig.exists()) {
+                if (!addonsDirectory.exists()) {
+                    addonsDirectory.mkdirs();
+                }
+                // Perform update
+                Logger.getLogger(BasicApplication.class.getName()).log(Level.INFO, "Starting addons update");
+                if (updateConfig.exists()) {
+                    boolean success = false;
+                    String line = null;
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(updateConfig)))) {
+                        do {
+                            line = reader.readLine();
+                            if (line != null && !line.isEmpty()) {
+                                File replacedFile = new File(addonsDirectory, line);
+                                File sourceFile = new File(updateDirectory, line);
+                                if (sourceFile.exists()) {
+                                    if (replacedFile.exists()) {
+                                        replacedFile.delete();
+                                    }
+                                }
+                                sourceFile.renameTo(replacedFile);
+                            }
+                        } while (line != null);
+                        success = true;
+                    } catch (IOException ex) {
+                        Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, "Failed to move file " + line, ex);
+                    }
+                    if (success) {
+                        updateConfig.delete();
+                    }
+                }
+
+                if (removeConfig.exists()) {
+                    boolean success = false;
+                    String line = null;
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(removeConfig)))) {
+                        do {
+                            line = reader.readLine();
+                            if (line != null && !line.isEmpty()) {
+                                File removedFile = new File(addonsDirectory, line);
+                                if (removedFile.exists()) {
+                                    removedFile.delete();
+                                }
+                            }
+                        } while (line != null);
+                        success = true;
+                    } catch (IOException ex) {
+                        Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, "Failed to delete file " + line, ex);
+                    }
+                    if (success) {
+                        removeConfig.delete();
+                    }
+                }
+
+                Logger.getLogger(BasicApplication.class.getName()).log(Level.INFO, "Finished addons update");
+            }
+        }
+
+        // Load addons
         try {
-            URL addonsPath = new File(configDirectory.getAbsolutePath(), ADDONS_DIRECTORY).toURI().toURL();
+            URL addonsPath = addonsDirectory.toURI().toURL();
             addModulesFrom(addonsPath);
         } catch (MalformedURLException ex) {
             Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, null, ex);

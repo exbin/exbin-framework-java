@@ -19,12 +19,14 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
@@ -117,7 +119,7 @@ public class AddonManagerPanel extends javax.swing.JPanel {
             @Override
             public int getItemsCount() {
                 if (searchResult == null) {
-                    searchResult = addonCatalogService.searchForAddons("");
+                    searchForAddons();
                 }
                 return searchResult.itemsCount();
             }
@@ -126,7 +128,7 @@ public class AddonManagerPanel extends javax.swing.JPanel {
             @Override
             public ItemRecord getItem(int index) {
                 if (searchResult == null) {
-                    searchResult = addonCatalogService.searchForAddons("");
+                    searchForAddons();
                 }
                 return searchResult.getLazyItem(index);
             }
@@ -136,6 +138,14 @@ public class AddonManagerPanel extends javax.swing.JPanel {
                 toInstall += item.isSelected() ? -1 : 1;
                 item.setSelected(!item.isSelected());
                 controller.installSelectionChanged(toInstall);
+            }
+
+            private void searchForAddons() {
+                searchResult = addonCatalogService.searchForAddons("");
+                if (searchResult instanceof AddonCatalogServiceImpl.ServiceFailureResult) {
+                    // Exception exception = ((AddonCatalogServiceImpl.ServiceFailureResult) searchResult).getException();
+                    JOptionPane.showMessageDialog(AddonManagerPanel.this, "API request failed", "Addon Service Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
             @Override

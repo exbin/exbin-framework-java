@@ -61,7 +61,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
         List<AddonRecord> searchResult = new ArrayList<>();
         URL seachUrl;
         try {
-            seachUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=list");
+            seachUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_URL : CATALOG_URL) + "api/?op=list");
             try (InputStream searchStream = seachUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -128,9 +128,11 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                 }
             } catch (IOException | SAXException | ParserConfigurationException ex) {
                 Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                return new ServiceFailureResult(ex);
             }
         } catch (MalformedURLException ex) {
             Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return new ServiceFailureResult(ex);
         }
 
         return new AddonsListResult() {
@@ -158,5 +160,30 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     public interface IconChangeListener {
 
         void iconsChanged();
+    }
+
+    @ParametersAreNonnullByDefault
+    public static class ServiceFailureResult implements AddonsListResult {
+
+        private final Exception ex;
+
+        public ServiceFailureResult(Exception ex) {
+            this.ex = ex;
+        }
+
+        @Nonnull
+        public Exception getException() {
+            return ex;
+        }
+
+        @Override
+        public int itemsCount() {
+            return 0;
+        }
+
+        @Override
+        public AddonRecord getLazyItem(int index) {
+            throw new IllegalStateException();
+        }
     }
 }

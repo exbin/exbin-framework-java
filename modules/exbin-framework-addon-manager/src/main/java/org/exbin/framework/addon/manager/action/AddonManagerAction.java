@@ -34,6 +34,8 @@ import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
+import static org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel.Step.DOWNLOAD;
+import static org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel.Step.OVERVIEW;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -148,7 +150,11 @@ public class AddonManagerAction extends AbstractAction {
                 final WindowHandler dialog = windowModule.createDialog(operationPanel, controlPanel);
                 windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), operationPanel.getResourceBundle());
                 windowModule.setWindowTitle(dialog, operationPanel.getResourceBundle());
+                MultiStepControlHandler.MultiStepControlEnablementListener enablementListener = controlPanel.createEnablementListener();
                 controlPanel.setHandler(new MultiStepControlHandler() {
+                    
+                    private AddonOperationPanel.Step step = AddonOperationPanel.Step.OVERVIEW;
+
                     @Override
                     public void controlActionPerformed(MultiStepControlHandler.ControlActionType actionType) {
                         switch (actionType) {
@@ -156,13 +162,42 @@ public class AddonManagerAction extends AbstractAction {
                                 dialog.close();
                                 break;
                             case NEXT:
+                                switch (step) {
+                                    case OVERVIEW:
+                                        step = AddonOperationPanel.Step.DOWNLOAD;
+                                        operationPanel.goToStep(step);
+                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.PREVIOUS, true);
+                                        break;
+                                    case DOWNLOAD:
+                                        step = AddonOperationPanel.Step.SUCCESS;
+                                        operationPanel.goToStep(step);
+                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
+                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.PREVIOUS, false);
+                                        break;
+                                    default:
+                                        throw new AssertionError();
+                                }
+                                break;
                             case PREVIOUS:
+                                switch (step) {
+                                    case DOWNLOAD:
+                                        step = AddonOperationPanel.Step.OVERVIEW;
+                                        operationPanel.goToStep(step);
+                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.PREVIOUS, false);
+                                        break;
+                                    default:
+                                        throw new AssertionError();
+                                }
+                                break;
                             case FINISH:
+                                break;
                             default:
                                 throw new AssertionError();
                         }
                     }
                 });
+                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, true);
+                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.FINISH, false);
                 dialog.showCentered((Component) e.getSource());
                 dialog.dispose();
             }
