@@ -13,32 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.api;
+package org.exbin.framework.addon.manager.service;
 
+import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.addon.manager.operation.DownloadOperation;
+import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 
 /**
- * Operation interface.
+ * Addon download service.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface Operation {
+@ParametersAreNonnullByDefault
+public interface AddonDownloadService {
 
-    /**
-     * Returns type of the operation.
-     *
-     * @return operation type
-     */
     @Nonnull
-    OperationType getType();
-
-    /**
-     * Performs operation on given document.
-     */
-    void execute();
-
-    /**
-     * Disposes of the operation.
-     */
-    void dispose();
+    DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records);
 }

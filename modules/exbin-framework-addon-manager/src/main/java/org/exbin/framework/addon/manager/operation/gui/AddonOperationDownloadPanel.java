@@ -15,18 +15,25 @@
  */
 package org.exbin.framework.addon.manager.operation.gui;
 
+import java.awt.Component;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JList;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
 /**
- * Addons operation license approval panel.
+ * Addons operation file downloads panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -35,10 +42,65 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationDownloadPanel.class);
     private Controller controller;
-    private ItemRecord activeRecord;
+    private ListModel listModel = new ListModel();
 
     public AddonOperationDownloadPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        downloadItemsList.setCellRenderer(new DefaultListCellRenderer() {
+
+            private final ImageIcon uncheckedIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("downloadItem.unchecked.icon")));
+            private final ImageIcon checkedIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("downloadItem.checked.icon")));
+            private final ImageIcon inprogressIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("downloadItem.inprogress.icon")));
+            private final ImageIcon doneIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("downloadItem.done.icon")));
+
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, @Nullable Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value instanceof DownloadItemRecord) {
+                    DownloadItemRecord record = (DownloadItemRecord) value;
+                    Component component = super.getListCellRendererComponent(list, record.getDescription(), index, isSelected, cellHasFocus);
+                    switch (record.getStatus()) {
+                        case UNCHECKED:
+                            setIcon(uncheckedIcon);
+                            break;
+                        case CHECKED:
+                            setIcon(checkedIcon);
+                            break;
+                        case INPROGRESS:
+                            setIcon(inprogressIcon);
+                            break;
+                        case DONE:
+                            setIcon(doneIcon);
+                            break;
+                        default:
+                            throw new AssertionError();
+                    }
+                    return component;
+                }
+                return super.getListCellRendererComponent(list, null, index, isSelected, cellHasFocus);
+            }
+        });
+        downloadItemsList.setModel(listModel);
+    }
+
+    public void setDownloadedItemRecords(List<DownloadItemRecord> records) {
+        listModel.removeAllElements();
+        for (DownloadItemRecord record : records) {
+            listModel.addElement(record);
+        }
+    }
+
+    public void notifyDownloadedItemChanged(int recordIndex) {
+        listModel.rowChanged(recordIndex);
+    }
+
+    public void setProgress(String title, int progress, boolean indeterminate) {
+        downloadProgressBar.setString(title);
+        downloadProgressBar.setValue(progress);
+        downloadProgressBar.setIndeterminate(indeterminate);
     }
 
     @Nonnull
@@ -64,32 +126,27 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
         downloadItemsList = new javax.swing.JList<>();
         overallStatusPanel = new javax.swing.JPanel();
         downloadProgressBar = new javax.swing.JProgressBar();
-        cancelDownloadButton = new javax.swing.JButton();
 
         downloadItemsLabel.setText(resourceBundle.getString("downloadItemsLabel.text")); // NOI18N
 
         downloadItemsScrollPane.setViewportView(downloadItemsList);
 
-        cancelDownloadButton.setText(resourceBundle.getString("cancelDownloadButton.text")); // NOI18N
+        downloadProgressBar.setMaximum(1000);
 
         javax.swing.GroupLayout overallStatusPanelLayout = new javax.swing.GroupLayout(overallStatusPanel);
         overallStatusPanel.setLayout(overallStatusPanelLayout);
         overallStatusPanelLayout.setHorizontalGroup(
             overallStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overallStatusPanelLayout.createSequentialGroup()
+            .addGroup(overallStatusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(downloadProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cancelDownloadButton)
                 .addContainerGap())
         );
         overallStatusPanelLayout.setVerticalGroup(
             overallStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overallStatusPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(overallStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(downloadProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cancelDownloadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(downloadProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -133,9 +190,8 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelDownloadButton;
     private javax.swing.JLabel downloadItemsLabel;
-    private javax.swing.JList<String> downloadItemsList;
+    private javax.swing.JList<DownloadItemRecord> downloadItemsList;
     private javax.swing.JScrollPane downloadItemsScrollPane;
     private javax.swing.JProgressBar downloadProgressBar;
     private javax.swing.JPanel overallStatusPanel;
@@ -143,13 +199,12 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
 
     public interface Controller {
 
-        int getItemsCount();
+    }
 
-        @Nonnull
-        ItemRecord getItem(int index);
+    private static class ListModel extends DefaultListModel<DownloadItemRecord> {
 
-        void installItem(ItemRecord item);
-
-        void updateItem(ItemRecord item);
+        void rowChanged(int rowIndex) {
+            fireContentsChanged(this, rowIndex, rowIndex);
+        }
     }
 }

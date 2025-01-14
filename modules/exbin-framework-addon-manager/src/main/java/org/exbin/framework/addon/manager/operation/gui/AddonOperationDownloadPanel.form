@@ -61,7 +61,7 @@
       <SubComponents>
         <Component class="javax.swing.JList" name="downloadItemsList">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;DownloadItemRecord&gt;"/>
           </AuxValues>
         </Component>
       </SubComponents>
@@ -71,11 +71,9 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="downloadProgressBar" max="32767" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="cancelDownloadButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -84,10 +82,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="downloadProgressBar" max="32767" attributes="0"/>
-                      <Component id="cancelDownloadButton" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="downloadProgressBar" min="-2" pref="23" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -95,12 +90,8 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JProgressBar" name="downloadProgressBar">
-        </Component>
-        <Component class="javax.swing.JButton" name="cancelDownloadButton">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/exbin/framework/addon/manager/operation/gui/resources/AddonOperationDownloadPanel.properties" key="cancelDownloadButton.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
-            </Property>
+            <Property name="maximum" type="int" value="1000"/>
           </Properties>
         </Component>
       </SubComponents>

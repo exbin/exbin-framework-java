@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager.action;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -34,8 +35,10 @@ import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.operation.gui.AddonOperationDownloadPanel;
 import static org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel.Step.DOWNLOAD;
 import static org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel.Step.OVERVIEW;
+import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -152,7 +155,7 @@ public class AddonManagerAction extends AbstractAction {
                 windowModule.setWindowTitle(dialog, operationPanel.getResourceBundle());
                 MultiStepControlHandler.MultiStepControlEnablementListener enablementListener = controlPanel.createEnablementListener();
                 controlPanel.setHandler(new MultiStepControlHandler() {
-                    
+
                     private AddonOperationPanel.Step step = AddonOperationPanel.Step.OVERVIEW;
 
                     @Override
@@ -166,13 +169,18 @@ public class AddonManagerAction extends AbstractAction {
                                     case OVERVIEW:
                                         step = AddonOperationPanel.Step.DOWNLOAD;
                                         operationPanel.goToStep(step);
-                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.PREVIOUS, true);
+                                        AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent();
+                                        List<DownloadItemRecord> downloadRecord = new ArrayList<>();
+                                        DownloadItemRecord record = new DownloadItemRecord("Test", "test.dat");
+                                        downloadRecord.add(record);
+                                        panel.setDownloadedItemRecords(downloadRecord);
                                         break;
                                     case DOWNLOAD:
                                         step = AddonOperationPanel.Step.SUCCESS;
                                         operationPanel.goToStep(step);
                                         enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
-                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.PREVIOUS, false);
+                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.CANCEL, false);
+                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.FINISH, true);
                                         break;
                                     default:
                                         throw new AssertionError();
@@ -180,16 +188,16 @@ public class AddonManagerAction extends AbstractAction {
                                 break;
                             case PREVIOUS:
                                 switch (step) {
-                                    case DOWNLOAD:
+                                    case LICENSE:
                                         step = AddonOperationPanel.Step.OVERVIEW;
                                         operationPanel.goToStep(step);
-                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.PREVIOUS, false);
                                         break;
                                     default:
                                         throw new AssertionError();
                                 }
                                 break;
                             case FINISH:
+                                dialog.close();
                                 break;
                             default:
                                 throw new AssertionError();

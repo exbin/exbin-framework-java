@@ -13,32 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.api;
+package org.exbin.framework.addon.manager.operation;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.operation.api.CancellableOperation;
+import org.exbin.framework.operation.api.ProgressOperation;
 
 /**
- * Operation interface.
+ * Download operation.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface Operation {
+@ParametersAreNonnullByDefault
+public interface DownloadOperation extends CancellableOperation, ProgressOperation {
 
-    /**
-     * Returns type of the operation.
-     *
-     * @return operation type
-     */
-    @Nonnull
-    OperationType getType();
+    void run();
 
-    /**
-     * Performs operation on given document.
-     */
-    void execute();
+    void setItemChangeListener(ItemChangeListener listener);
 
-    /**
-     * Disposes of the operation.
-     */
-    void dispose();
+    public static interface ItemChangeListener {
+
+        void itemChanged(int itemIndex);
+    }
 }

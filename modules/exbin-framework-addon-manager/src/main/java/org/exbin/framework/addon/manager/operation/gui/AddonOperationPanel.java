@@ -80,6 +80,7 @@ public class AddonOperationPanel extends javax.swing.JPanel {
                 break;
             case SUCCESS:
                 activePanel = successPanel;
+                break;
             default:
                 throw new AssertionError();
         }
