@@ -72,7 +72,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
         List<AddonRecord> searchResult = new ArrayList<>();
         URL seachUrl;
         try {
-            seachUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_URL : CATALOG_URL) + "api/?op=list");
+            seachUrl = new URL((addonManagerModule.isDevMode() && false ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=list");
             try (InputStream searchStream = seachUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -194,7 +194,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                 }
 
                 // Download
-                File targetDirectory = new File(App.getConfigDirectory(), "addon-update");
+                File targetDirectory = new File(App.getConfigDirectory(), "addons_update");
                 if (!targetDirectory.isDirectory()) {
                     targetDirectory.mkdirs();
                 }
@@ -240,6 +240,11 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                             if (cancelled) {
                                 return;
                             }
+                            try {
+                                Thread.sleep(10);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             int read = inputStream.read(buffer);
                             if (read < 0) {
                                 throw new RuntimeException("Could not receive download size for URL " + downloadUrl);
@@ -250,7 +255,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                             int operationProgress = getOperationProgress();
                             if (operationProgress != lastProgress) {
                                 lastProgress = operationProgress;
-                                listener.itemChanged(recordIndex);
+                                listener.progressChanged(recordIndex);
                             }
                         }
                     }
@@ -305,7 +310,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
             private void writeConfigFile(File configFile, List<String> content) {
                 try (OutputStreamWriter writer = new FileWriter(configFile)) {
                     for (String line : content) {
-                        writer.write(line + "\n\r");
+                        writer.write(line + "\r\n");
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

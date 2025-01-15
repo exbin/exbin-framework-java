@@ -95,12 +95,19 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
 
     public void notifyDownloadedItemChanged(int recordIndex) {
         listModel.rowChanged(recordIndex);
+        if (recordIndex == listModel.getSize() - 1) {
+            DownloadItemRecord record = listModel.get(recordIndex);
+            if (record.getStatus() == DownloadItemRecord.Status.DONE) {
+                downloadProgressBar.setString("Download finished");
+            }
+        }
     }
 
-    public void setProgress(String title, int progress, boolean indeterminate) {
-        downloadProgressBar.setString(title);
+    public void setProgress(String fileName, int progress, boolean indeterminate) {
+        downloadProgressBar.setString("Downloading " + fileName + " (" + (progress / 10f) + " %)");
         downloadProgressBar.setValue(progress);
         downloadProgressBar.setIndeterminate(indeterminate);
+        downloadProgressBar.repaint();
     }
 
     @Nonnull
@@ -132,6 +139,7 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
         downloadItemsScrollPane.setViewportView(downloadItemsList);
 
         downloadProgressBar.setMaximum(1000);
+        downloadProgressBar.setStringPainted(true);
 
         javax.swing.GroupLayout overallStatusPanelLayout = new javax.swing.GroupLayout(overallStatusPanel);
         overallStatusPanel.setLayout(overallStatusPanelLayout);

@@ -23,7 +23,7 @@ package org.exbin.framework.operation.api;
 public interface ProgressOperation {
 
     /**
-     * Returns progress state of the operation in range of 0 to 100 or -1 if
+     * Returns progress state of the operation in range of 0 to 1000 or -1 if
      * state is unknown or currenclty undetemined.
      *
      * @return progress state of the operation or -1 if unknown

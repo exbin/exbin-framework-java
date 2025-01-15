@@ -15,15 +15,19 @@
  */
 package org.exbin.framework.addon.manager.action;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleProvider;
 import org.exbin.framework.action.api.ActionConsts;
@@ -35,9 +39,9 @@ import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.operation.DownloadOperation;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationDownloadPanel;
-import static org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel.Step.DOWNLOAD;
-import static org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel.Step.OVERVIEW;
+import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
@@ -148,68 +152,15 @@ public class AddonManagerAction extends AbstractAction {
             public void performOperation() {
                 AddonManagerPanel.Tab activeTab = addonManagerPanel.getActiveTab();
 
-                MultiStepControlPanel controlPanel = new MultiStepControlPanel();
-                AddonOperationPanel operationPanel = new AddonOperationPanel();
-                operationPanel.setPreferredSize(new Dimension(600, 300));
-
-                final WindowHandler dialog = windowModule.createDialog(operationPanel, controlPanel);
-                windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), operationPanel.getResourceBundle());
-                windowModule.setWindowTitle(dialog, operationPanel.getResourceBundle());
-                MultiStepControlHandler.MultiStepControlEnablementListener enablementListener = controlPanel.createEnablementListener();
-                controlPanel.setHandler(new MultiStepControlHandler() {
-
-                    private AddonOperationPanel.Step step = AddonOperationPanel.Step.OVERVIEW;
-
-                    @Override
-                    public void controlActionPerformed(MultiStepControlHandler.ControlActionType actionType) {
-                        switch (actionType) {
-                            case CANCEL:
-                                dialog.close();
-                                break;
-                            case NEXT:
-                                switch (step) {
-                                    case OVERVIEW:
-                                        step = AddonOperationPanel.Step.DOWNLOAD;
-                                        operationPanel.goToStep(step);
-                                        AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent();
-                                        List<DownloadItemRecord> downloadRecord = new ArrayList<>();
-                                        DownloadItemRecord record = new DownloadItemRecord("Test", "test.dat");
-                                        downloadRecord.add(record);
-                                        panel.setDownloadedItemRecords(downloadRecord);
-                                        break;
-                                    case DOWNLOAD:
-                                        step = AddonOperationPanel.Step.SUCCESS;
-                                        operationPanel.goToStep(step);
-                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
-                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.CANCEL, false);
-                                        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.FINISH, true);
-                                        break;
-                                    default:
-                                        throw new AssertionError();
-                                }
-                                break;
-                            case PREVIOUS:
-                                switch (step) {
-                                    case LICENSE:
-                                        step = AddonOperationPanel.Step.OVERVIEW;
-                                        operationPanel.goToStep(step);
-                                        break;
-                                    default:
-                                        throw new AssertionError();
-                                }
-                                break;
-                            case FINISH:
-                                dialog.close();
-                                break;
-                            default:
-                                throw new AssertionError();
-                        }
-                    }
-                });
-                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, true);
-                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.FINISH, false);
-                dialog.showCentered((Component) e.getSource());
-                dialog.dispose();
+                List<DownloadItemRecord> downloadRecords = new ArrayList<>();
+                DownloadItemRecord downloadRecord = new DownloadItemRecord("Test", "exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar");
+                try {
+                    downloadRecord.setUrl(new URL("https://bined.exbin.org/addon/download/exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar"));
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                downloadRecords.add(downloadRecord);
+                performAddonsDownload(downloadRecords, addonManagerPanel);
             }
         });
 
@@ -220,6 +171,99 @@ public class AddonManagerAction extends AbstractAction {
         windowModule.setWindowTitle(dialog, addonManagerPanel.getResourceBundle());
         controlPanel.setHandler(dialog::close);
         dialog.showCentered((Component) e.getSource());
+        dialog.dispose();
+    }
+
+    public void performAddonsDownload(final List<DownloadItemRecord> downloadRecords, JComponent parentComponent) {
+        MultiStepControlPanel controlPanel = new MultiStepControlPanel();
+        AddonOperationPanel operationPanel = new AddonOperationPanel();
+        operationPanel.setPreferredSize(new Dimension(600, 300));
+        operationPanel.goToStep(AddonOperationPanel.Step.OVERVIEW);
+        AddonOperationOverviewPanel panel = (AddonOperationOverviewPanel) operationPanel.getActiveComponent();
+        for (DownloadItemRecord downloadRecord : downloadRecords) {
+            panel.addOperation("Download module file: " + downloadRecord.getFileName());
+        }
+
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        final WindowHandler dialog = windowModule.createDialog(operationPanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), operationPanel.getClass(), operationPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, operationPanel.getResourceBundle());
+        MultiStepControlHandler.MultiStepControlEnablementListener enablementListener = controlPanel.createEnablementListener();
+        controlPanel.setHandler(new MultiStepControlHandler() {
+
+            private AddonOperationPanel.Step step = AddonOperationPanel.Step.OVERVIEW;
+            private DownloadOperation downloadOperation = null;
+
+            @Override
+            public void controlActionPerformed(MultiStepControlHandler.ControlActionType actionType) {
+                switch (actionType) {
+                    case CANCEL:
+                        if (downloadOperation != null) {
+                            downloadOperation.cancelOperation();
+                        }
+                        dialog.close();
+                        break;
+                    case NEXT:
+                        switch (step) {
+                            case OVERVIEW:
+                                step = AddonOperationPanel.Step.DOWNLOAD;
+                                operationPanel.goToStep(step);
+                                AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent();
+                                panel.setDownloadedItemRecords(downloadRecords);
+                                downloadOperation = addonManagerService.createDownloadsOperation(downloadRecords);
+                                downloadOperation.setItemChangeListener(new DownloadOperation.ItemChangeListener() {
+                                    @Override
+                                    public void itemChanged(int itemIndex) {
+                                        panel.notifyDownloadedItemChanged(itemIndex);
+                                    }
+
+                                    @Override
+                                    public void progressChanged(int itemIndex) {
+                                        DownloadItemRecord record = downloadRecords.get(itemIndex);
+                                        panel.setProgress(record.getFileName(), downloadOperation.getOperationProgress(), false);
+                                    }
+
+                                });
+                                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
+                                Thread thread = new Thread(() -> {
+                                    downloadOperation.run();
+                                    enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, true);
+                                });
+                                thread.start();
+                                break;
+                            case DOWNLOAD:
+                                step = AddonOperationPanel.Step.SUCCESS;
+                                operationPanel.goToStep(step);
+                                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
+                                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.CANCEL, false);
+                                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.FINISH, true);
+                                break;
+                            default:
+                                throw new AssertionError();
+                        }
+                        break;
+                    case PREVIOUS:
+                        // TODO
+                        switch (step) {
+                            case LICENSE:
+                                step = AddonOperationPanel.Step.OVERVIEW;
+                                operationPanel.goToStep(step);
+                                break;
+                            default:
+                                throw new AssertionError();
+                        }
+                        break;
+                    case FINISH:
+                        dialog.close();
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+            }
+        });
+        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, true);
+        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.FINISH, false);
+        dialog.showCentered(parentComponent);
         dialog.dispose();
     }
 }

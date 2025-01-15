@@ -18,6 +18,8 @@ package org.exbin.framework.addon.manager.operation.gui;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -37,6 +39,11 @@ public class AddonOperationOverviewPanel extends javax.swing.JPanel {
 
     public AddonOperationOverviewPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        operationsList.setModel(new DefaultListModel<>());
     }
 
     @Nonnull
@@ -46,6 +53,11 @@ public class AddonOperationOverviewPanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
+    }
+
+    public void addOperation(String operation) {
+        DefaultListModel<String> model = (DefaultListModel<String>) operationsList.getModel();
+        model.addElement(operation);
     }
 
     /**
@@ -109,6 +121,6 @@ public class AddonOperationOverviewPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {
-        
+
     }
 }

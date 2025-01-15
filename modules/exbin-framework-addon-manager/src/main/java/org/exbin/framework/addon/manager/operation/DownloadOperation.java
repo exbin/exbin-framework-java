@@ -34,5 +34,7 @@ public interface DownloadOperation extends CancellableOperation, ProgressOperati
     public static interface ItemChangeListener {
 
         void itemChanged(int itemIndex);
+
+        void progressChanged(int itemIndex);
     }
 }
