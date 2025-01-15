@@ -44,6 +44,7 @@ import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.basic.BasicModuleProvider;
+import org.exbin.framework.basic.ModuleFileLocation;
 import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.window.api.gui.MultiStepControlPanel;
 import org.exbin.framework.window.api.handler.MultiStepControlHandler;
@@ -94,6 +95,7 @@ public class AddonManagerAction extends AbstractAction {
                     for (ModuleRecord moduleRecord : modulesList) {
                         AddonRecord itemRecord = new AddonRecord(moduleRecord.getModuleId(), moduleRecord.getName());
                         itemRecord.setInstalled(true);
+                        itemRecord.setAddon(moduleRecord.getFileLocation() == ModuleFileLocation.ADDON);
                         itemRecord.setVersion(moduleRecord.getVersion());
                         itemRecord.setProvider(moduleRecord.getProvider().orElse(null));
                         itemRecord.setHomepage(moduleRecord.getHomepage().orElse(null));

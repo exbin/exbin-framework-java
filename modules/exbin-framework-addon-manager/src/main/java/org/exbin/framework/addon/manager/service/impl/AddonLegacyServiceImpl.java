@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.operation.DownloadOperation;
+import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 
 /**
@@ -34,13 +36,19 @@ public class AddonLegacyServiceImpl implements AddonCatalogService {
 
     private static final String CATALOG_URL = "https://bined.exbin.org/addon/";
     private static final String CATALOG_DEV_URL = "https://bined.exbin.org/addon-dev/";
-    private final Map<AddonRecord, String> iconPaths = new HashMap();
+    private final Map<AddonRecord, String> iconPaths = new HashMap<>();
     private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
 
     @Nonnull
     @Override
     public AddonsListResult searchForAddons(String searchCondition) {
         throw new IllegalStateException();
+    }
+
+    @Nonnull
+    @Override
+    public DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void addIconChangeListener(IconChangeListener listener) {

@@ -16,7 +16,6 @@
 package org.exbin.framework.addon.manager.gui;
 
 import java.awt.BorderLayout;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,18 +87,28 @@ public class AddonsPanel extends javax.swing.JPanel {
         });
         addonDetailsPanel.setController(new AddonDetailsPanel.Controller() {
             @Override
-            public void enablement() {
+            public void changeEnablement() {
                 // TODO
             }
 
             @Override
-            public void installment() {
+            public void performInstall() {
                 controller.installItem(activeRecord);
             }
 
             @Override
-            public void update() {
+            public void performUpdate() {
                 controller.updateItem(activeRecord);
+            }
+
+            @Override
+            public void performRemove() {
+                controller.removeItem(activeRecord);
+            }
+
+            @Override
+            public void changeSelection() {
+                controller.changeSelection(activeRecord);
             }
         });
     }
@@ -152,15 +161,20 @@ public class AddonsPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane splitPane;
     // End of variables declaration//GEN-END:variables
 
+    @ParametersAreNonnullByDefault
     public interface Controller {
 
         int getItemsCount();
 
         @Nonnull
         ItemRecord getItem(int index);
-        
+
         void installItem(ItemRecord item);
 
         void updateItem(ItemRecord item);
+
+        void removeItem(ItemRecord item);
+
+        void changeSelection(ItemRecord item);
     }
 }

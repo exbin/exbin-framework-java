@@ -36,6 +36,7 @@ public class ItemRecord {
     private boolean enabled = true;
     private boolean installed = false;
     private boolean updateAvailable = false;
+    private boolean addon = false;
     private ImageIcon icon;
     private String provider = null;
     private String homepage = null;
@@ -103,6 +104,14 @@ public class ItemRecord {
 
     public void setUpdateAvailable(boolean updateAvailable) {
         this.updateAvailable = updateAvailable;
+    }
+
+    public boolean isAddon() {
+        return addon;
+    }
+
+    public void setAddon(boolean addon) {
+        this.addon = addon;
     }
 
     @Nonnull

@@ -15,9 +15,12 @@
  */
 package org.exbin.framework.addon.manager.service;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.operation.DownloadOperation;
+import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 
 /**
  * Addon catalog service.
@@ -29,11 +32,14 @@ public interface AddonCatalogService {
 
     @Nonnull
     AddonsListResult searchForAddons(String searchCondition);
-    
+
+    @Nonnull
+    DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records);
+
     public interface AddonsListResult {
-        
+
         int itemsCount();
-        
+
         @Nonnull
         AddonRecord getLazyItem(int index);
     }

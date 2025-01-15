@@ -92,10 +92,22 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         } else {
             dependenciesTableModel.setDependencies(null);
         }
-        updateButton.setEnabled(itemRecord.isUpdateAvailable());
-        updateButton.setText(resourceBundle.getString(itemRecord.isSelected() ? "updateButton.unselect.text" : "updateButton.text"));
-        enablementButton.setText(resourceBundle.getString(itemRecord.isEnabled() ? "disableButton.text" : "enableButton.text"));
-        installationlButton.setText(resourceBundle.getString(itemRecord.isInstalled() ? "removeButton.text" : (itemRecord.isSelected() ? "installButton.unselect.text" : "installButton.text")));
+        controlPanel.removeAll();
+        if (itemRecord.isInstalled()) {
+            removeButton.setEnabled(itemRecord.isAddon());
+            controlPanel.add(removeButton);
+            enablementButton.setText(resourceBundle.getString(itemRecord.isEnabled() ? "disableButton.text" : "enableButton.text"));
+            controlPanel.add(enablementButton);
+            updateCheckBox.setSelected(itemRecord.isSelected());
+            updateCheckBox.setEnabled(itemRecord.isUpdateAvailable());
+            controlPanel.add(updateCheckBox);
+            updateButton.setEnabled(itemRecord.isUpdateAvailable());
+            controlPanel.add(updateButton);
+        } else {
+            installCheckBox.setSelected(itemRecord.isSelected());
+            controlPanel.add(installCheckBox);
+            controlPanel.add(installButton);
+        }
     }
 
     /**
@@ -107,10 +119,13 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        controlPanel = new javax.swing.JPanel();
+        installButton = new javax.swing.JButton();
+        installCheckBox = new javax.swing.JCheckBox();
         updateButton = new javax.swing.JButton();
+        updateCheckBox = new javax.swing.JCheckBox();
         enablementButton = new javax.swing.JButton();
-        installationlButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
+        controlPanel = new javax.swing.JPanel();
         infoPanel = new javax.swing.JPanel();
         addonNameLabel = new javax.swing.JLabel();
         providerLabel = new javax.swing.JLabel();
@@ -121,13 +136,34 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         dependenciesScrollPane = new javax.swing.JScrollPane();
         dependenciesTable = new javax.swing.JTable();
 
-        setLayout(new java.awt.BorderLayout());
+        installButton.setText(resourceBundle.getString("installButton.text")); // NOI18N
+        installButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                installButtonActionPerformed(evt);
+            }
+        });
+
+        installCheckBox.setToolTipText(resourceBundle.getString("installCheckBox.toolTipText")); // NOI18N
+        installCheckBox.setMargin(new java.awt.Insets(2, 2, 2, 0));
+        installCheckBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                installCheckBoxItemStateChanged(evt);
+            }
+        });
 
         updateButton.setText(resourceBundle.getString("updateButton.text")); // NOI18N
         updateButton.setEnabled(false);
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);
+            }
+        });
+
+        updateCheckBox.setToolTipText(resourceBundle.getString("updateCheckBox.toolTipText")); // NOI18N
+        updateCheckBox.setMargin(new java.awt.Insets(2, 2, 2, 0));
+        updateCheckBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updateCheckBoxItemStateChanged(evt);
             }
         });
 
@@ -139,37 +175,16 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             }
         });
 
-        installationlButton.setText(resourceBundle.getString("installButton.text")); // NOI18N
-        installationlButton.addActionListener(new java.awt.event.ActionListener() {
+        removeButton.setText(resourceBundle.getString("removeButton.text")); // NOI18N
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                installationlButtonActionPerformed(evt);
+                removeButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
-        controlPanel.setLayout(controlPanelLayout);
-        controlPanelLayout.setHorizontalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(150, Short.MAX_VALUE)
-                .addComponent(updateButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(enablementButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(installationlButton)
-                .addContainerGap())
-        );
-        controlPanelLayout.setVerticalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
-                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(installationlButton)
-                    .addComponent(enablementButton)
-                    .addComponent(updateButton))
-                .addContainerGap())
-        );
+        setLayout(new java.awt.BorderLayout());
 
+        controlPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
         add(controlPanel, java.awt.BorderLayout.PAGE_END);
 
         addonNameLabel.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
@@ -216,7 +231,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
                     .addComponent(versionLabel)
                     .addComponent(providerLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -224,18 +239,28 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void enablementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enablementButtonActionPerformed
-        controller.enablement();
+        controller.changeEnablement();
     }//GEN-LAST:event_enablementButtonActionPerformed
 
-    private void installationlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installationlButtonActionPerformed
-        controller.installment();
-        installationlButton.setText(resourceBundle.getString(activeRecord.isInstalled() ? "removeButton.text" : (activeRecord.isSelected() ? "installButton.unselect.text" : "installButton.text")));
-    }//GEN-LAST:event_installationlButtonActionPerformed
+    private void installButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installButtonActionPerformed
+        controller.performInstall();
+    }//GEN-LAST:event_installButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        controller.update();
-        updateButton.setText(resourceBundle.getString(activeRecord.isSelected() ? "updateButton.unselect.text" : "updateButton.text"));
+        controller.performUpdate();
     }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        controller.performRemove();
+    }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void installCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_installCheckBoxItemStateChanged
+        controller.changeSelection();
+    }//GEN-LAST:event_installCheckBoxItemStateChanged
+
+    private void updateCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_updateCheckBoxItemStateChanged
+        controller.changeSelection();
+    }//GEN-LAST:event_updateCheckBoxItemStateChanged
 
     /**
      * Test method for this panel.
@@ -257,21 +282,28 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JTable dependenciesTable;
     private javax.swing.JButton enablementButton;
     private javax.swing.JPanel infoPanel;
-    private javax.swing.JButton installationlButton;
+    private javax.swing.JButton installButton;
+    private javax.swing.JCheckBox installCheckBox;
     private javax.swing.JScrollPane overviewScrollPane;
     private javax.swing.JTextPane overviewTextPane;
     private javax.swing.JLabel providerLabel;
+    private javax.swing.JButton removeButton;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JButton updateButton;
+    private javax.swing.JCheckBox updateCheckBox;
     private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {
 
-        void enablement();
+        void changeEnablement();
 
-        void installment();
+        void performInstall();
 
-        void update();
+        void performUpdate();
+
+        void performRemove();
+
+        void changeSelection();
     }
 }

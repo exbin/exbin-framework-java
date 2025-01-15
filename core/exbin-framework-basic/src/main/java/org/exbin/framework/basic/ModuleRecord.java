@@ -35,6 +35,14 @@ public interface ModuleRecord {
     ModuleType getType();
 
     /**
+     * Returns location of the module file.
+     *
+     * @return file location
+     */
+    @Nonnull
+    ModuleFileLocation getFileLocation();
+
+    /**
      * Returns module name.
      *
      * @return module name

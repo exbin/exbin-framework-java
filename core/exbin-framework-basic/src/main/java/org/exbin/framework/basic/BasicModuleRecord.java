@@ -25,6 +25,7 @@ public class BasicModuleRecord implements ModuleRecord {
 
     private String moduleId = "";
     private ModuleType type = ModuleType.MODULE;
+    private ModuleFileLocation fileLocation = ModuleFileLocation.LIBRARY;
     private String name;
     private ClassLoader classLoader;
     private String version = "";
@@ -64,6 +65,16 @@ public class BasicModuleRecord implements ModuleRecord {
 
     public void setType(ModuleType type) {
         this.type = type;
+    }
+
+    @Nonnull
+    @Override
+    public ModuleFileLocation getFileLocation() {
+        return fileLocation;
+    }
+
+    public void setFileLocation(ModuleFileLocation fileLocation) {
+        this.fileLocation = fileLocation;
     }
 
     @Nonnull

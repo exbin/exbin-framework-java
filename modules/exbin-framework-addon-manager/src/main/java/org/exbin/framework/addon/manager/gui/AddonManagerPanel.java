@@ -103,6 +103,15 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
             @Override
             public void updateItem(ItemRecord item) {
+            }
+
+            @Override
+            public void removeItem(ItemRecord item) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void changeSelection(ItemRecord item) {
                 toUpdate += item.isSelected() ? -1 : 1;
                 item.setSelected(!item.isSelected());
                 controller.updateSelectionChanged(toUpdate);
@@ -135,9 +144,23 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
             @Override
             public void installItem(ItemRecord item) {
+            }
+
+            @Override
+            public void updateItem(ItemRecord item) {
+                throw new IllegalStateException();
+            }
+
+            @Override
+            public void changeSelection(ItemRecord item) {
                 toInstall += item.isSelected() ? -1 : 1;
                 item.setSelected(!item.isSelected());
                 controller.installSelectionChanged(toInstall);
+            }
+
+            @Override
+            public void removeItem(ItemRecord item) {
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             private void searchForAddons() {
@@ -146,11 +169,6 @@ public class AddonManagerPanel extends javax.swing.JPanel {
                     // Exception exception = ((AddonCatalogServiceImpl.ServiceFailureResult) searchResult).getException();
                     JOptionPane.showMessageDialog(AddonManagerPanel.this, "API request failed", "Addon Service Error", JOptionPane.ERROR_MESSAGE);
                 }
-            }
-
-            @Override
-            public void updateItem(ItemRecord item) {
-                throw new IllegalStateException();
             }
         });
     }

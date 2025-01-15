@@ -117,37 +117,37 @@ public class BasicModuleProvider implements ModuleProvider {
         return manifestClass;
     }
 
-    public void addModulesFrom(URI pathUri) {
+    public void addModulesFrom(URI pathUri, ModuleFileLocation fileLocation) {
         File directory = new File(pathUri);
         if (directory.exists() && directory.isDirectory()) {
             File[] jarFiles = directory.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".jar"));
             for (File jarFile : jarFiles) {
-                addModulePlugin(jarFile.toURI(), false);
+                addModulePlugin(jarFile.toURI(), fileLocation, false);
             }
         }
     }
 
-    public void addModulesFrom(URL moduleClassUrl) {
+    public void addModulesFrom(URL moduleClassUrl, ModuleFileLocation fileLocation) {
         try {
-            addModulesFrom(moduleClassUrl.toURI());
+            addModulesFrom(moduleClassUrl.toURI(), fileLocation);
         } catch (URISyntaxException ex) {
             Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void addModulesFromPath(URI pathUri) {
+    public void addModulesFromPath(URI pathUri, ModuleFileLocation fileLocation) {
         File directory = new File(pathUri);
         if (directory.exists() && directory.isDirectory()) {
             File[] jarFiles = directory.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".jar"));
             for (File jarFile : jarFiles) {
-                addModulePlugin(jarFile.toURI(), false);
+                addModulePlugin(jarFile.toURI(), fileLocation, false);
             }
         }
     }
 
-    public void addModulesFromPath(URL pathUrl) {
+    public void addModulesFromPath(URL pathUrl, ModuleFileLocation fileLocation) {
         try {
-            addModulesFromPath(pathUrl.toURI());
+            addModulesFromPath(pathUrl.toURI(), fileLocation);
         } catch (URISyntaxException ex) {
             Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -157,7 +157,7 @@ public class BasicModuleProvider implements ModuleProvider {
         String classpath = System.getProperty("java.class.path");
         String[] classpathEntries = classpath.split(File.pathSeparator);
         for (String classpathEntry : classpathEntries) {
-            addModulePlugin(new File(classpathEntry).toURI(), true);
+            addModulePlugin(new File(classpathEntry).toURI(), ModuleFileLocation.CLASSPATH, true);
         }
     }
 
@@ -172,7 +172,7 @@ public class BasicModuleProvider implements ModuleProvider {
             String rootDirectory = new File(moduleClassLocation.toURI()).getParentFile().toURI().toString();
             for (String path : paths) {
                 try {
-                    addModulePlugin(new URI(rootDirectory + path), true);
+                    addModulePlugin(new URI(rootDirectory + path), ModuleFileLocation.MANIFEST, true);
                 } catch (URISyntaxException ex) {
                     // Ignore
                 }
@@ -185,7 +185,7 @@ public class BasicModuleProvider implements ModuleProvider {
     public void addModulesFromManifest() {
         addModulesFromManifest(manifestClass);
     }
-    
+
     @Nonnull
     public ClassLoader getContextClassLoader() {
         return contextClassLoader;
@@ -283,8 +283,9 @@ public class BasicModuleProvider implements ModuleProvider {
      * @param libraryUri library URI
      */
     @Nonnull
-    private BasicModuleRecord addModulePlugin(URI libraryUri, boolean preloaded) {
+    private BasicModuleRecord addModulePlugin(URI libraryUri, ModuleFileLocation fileLocation, boolean preloaded) {
         final BasicModuleRecord moduleRecord = new BasicModuleRecord();
+        moduleRecord.setFileLocation(fileLocation);
         moduleRecord.setClassLoader(contextClassLoader);
         moduleRecord.setModule(new BasicModuleRecord.ModuleLink(libraryUri, preloaded));
 
