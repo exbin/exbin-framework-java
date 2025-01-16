@@ -18,12 +18,8 @@ package org.exbin.framework.addon.manager.action;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -37,10 +33,13 @@ import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.operation.AddonUpdateOperation;
 import org.exbin.framework.addon.manager.operation.DownloadOperation;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationDownloadPanel;
+import org.exbin.framework.addon.manager.operation.gui.AddonOperationLicensePanel;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -83,6 +82,36 @@ public class AddonManagerAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         AddonsControlPanel controlPanel = new AddonsControlPanel();
 
+        AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
+        addonUpdateChanges.readConfigFile();
+        List<ModuleRecord> basicModulesList = null;
+        List<ItemRecord> installedAddons = new ArrayList<>();
+        ModuleProvider moduleProvider = App.getModuleProvider();
+        if (moduleProvider instanceof BasicModuleProvider) {
+            basicModulesList = ((BasicModuleProvider) moduleProvider).getModulesList();
+            for (ModuleRecord moduleRecord : basicModulesList) {
+                AddonRecord itemRecord = new AddonRecord(moduleRecord.getModuleId(), moduleRecord.getName());
+                itemRecord.setInstalled(true);
+                itemRecord.setAddon(moduleRecord.getFileLocation() == ModuleFileLocation.ADDON);
+                itemRecord.setVersion(moduleRecord.getVersion());
+                itemRecord.setProvider(moduleRecord.getProvider().orElse(null));
+                itemRecord.setHomepage(moduleRecord.getHomepage().orElse(null));
+                itemRecord.setDescription(moduleRecord.getDescription().orElse(null));
+                itemRecord.setIcon(moduleRecord.getIcon().orElse(null));
+                List<DependencyRecord> dependencyRecords = new ArrayList<>();
+                for (String dependencyModuleId : moduleRecord.getDependencyModuleIds()) {
+                    dependencyRecords.add(new DependencyRecord(dependencyModuleId));
+                }
+                for (String dependencyLibraryId : moduleRecord.getDependencyLibraries()) {
+                    dependencyRecords.add(new DependencyRecord(DependencyRecord.Type.JAR_LIBRARY, dependencyLibraryId));
+                }
+                itemRecord.setDependencies(dependencyRecords);
+                installedAddons.add(itemRecord);
+                // System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
+            }
+        }
+        final List<ModuleRecord> modulesList = basicModulesList == null ? new ArrayList<>() : basicModulesList;
+
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
         addonManagerPanel.setPreferredSize(new Dimension(800, 500));
@@ -92,32 +121,34 @@ public class AddonManagerAction extends AbstractAction {
             @Nonnull
             @Override
             public List<ItemRecord> getInstalledItems() {
-                List<ItemRecord> installedAddons = new ArrayList<>();
-                ModuleProvider moduleProvider = App.getModuleProvider();
-                if (moduleProvider instanceof BasicModuleProvider) {
-                    List<ModuleRecord> modulesList = ((BasicModuleProvider) moduleProvider).getModulesList();
-                    for (ModuleRecord moduleRecord : modulesList) {
-                        AddonRecord itemRecord = new AddonRecord(moduleRecord.getModuleId(), moduleRecord.getName());
-                        itemRecord.setInstalled(true);
-                        itemRecord.setAddon(moduleRecord.getFileLocation() == ModuleFileLocation.ADDON);
-                        itemRecord.setVersion(moduleRecord.getVersion());
-                        itemRecord.setProvider(moduleRecord.getProvider().orElse(null));
-                        itemRecord.setHomepage(moduleRecord.getHomepage().orElse(null));
-                        itemRecord.setDescription(moduleRecord.getDescription().orElse(null));
-                        itemRecord.setIcon(moduleRecord.getIcon().orElse(null));
-                        List<DependencyRecord> dependencyRecords = new ArrayList<>();
-                        for (String dependencyModuleId : moduleRecord.getDependencyModuleIds()) {
-                            dependencyRecords.add(new DependencyRecord(dependencyModuleId));
-                        }
-                        for (String dependencyLibraryId : moduleRecord.getDependencyLibraries()) {
-                            dependencyRecords.add(new DependencyRecord(DependencyRecord.Type.JAR_LIBRARY, dependencyLibraryId));
-                        }
-                        itemRecord.setDependencies(dependencyRecords);
-                        installedAddons.add(itemRecord);
-                        // System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
-                    }
-                }
                 return installedAddons;
+            }
+
+            @Override
+            public void installItem(ItemRecord item) {
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(modulesList, addonUpdateChanges);
+                addonUpdateOperation.installItem(item);
+//                DownloadItemRecord downloadRecord = new DownloadItemRecord("Test", "exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar");
+//                try {
+//                    downloadRecord.setUrl(new URL("https://bined.exbin.org/addon/download/exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar"));
+//                    operations.add("Download module file: " + downloadRecord.getFileName());
+//                } catch (MalformedURLException ex) {
+//                    Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                downloadRecords.add(downloadRecord);
+                performAddonsOperation(addonUpdateOperation, addonManagerPanel);
+            }
+
+            @Override
+            public void updateItem(ItemRecord item) {
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(modulesList, addonUpdateChanges);
+                addonUpdateOperation.updateItem(item);
+                performAddonsOperation(addonUpdateOperation, addonManagerPanel);
+            }
+
+            @Override
+            public void removeItem(ItemRecord item) {
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -152,15 +183,26 @@ public class AddonManagerAction extends AbstractAction {
             public void performOperation() {
                 AddonManagerPanel.Tab activeTab = addonManagerPanel.getActiveTab();
 
-                List<DownloadItemRecord> downloadRecords = new ArrayList<>();
-                DownloadItemRecord downloadRecord = new DownloadItemRecord("Test", "exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar");
-                try {
-                    downloadRecord.setUrl(new URL("https://bined.exbin.org/addon/download/exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar"));
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                switch (activeTab) {
+                    case ADDONS:
+                        AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(modulesList, addonUpdateChanges);
+
+//                        List<String> operations = new ArrayList<>();
+//                        List<LicenseItemRecord> licenseRecords = new ArrayList<>();
+//                        List<DownloadItemRecord> downloadRecords = new ArrayList<>();
+//                        DownloadItemRecord downloadRecord = new DownloadItemRecord("Test", "exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar");
+//                        try {
+//                            downloadRecord.setUrl(new URL("https://bined.exbin.org/addon/download/exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar"));
+//                            operations.add("Download module file: " + downloadRecord.getFileName());
+//                        } catch (MalformedURLException ex) {
+//                            Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                        downloadRecords.add(downloadRecord);
+                        performAddonsOperation(addonUpdateOperation, addonManagerPanel);
+                        break;
+                    case INSTALLED:
+                        break;
                 }
-                downloadRecords.add(downloadRecord);
-                performAddonsDownload(downloadRecords, addonManagerPanel);
             }
         });
 
@@ -174,14 +216,14 @@ public class AddonManagerAction extends AbstractAction {
         dialog.dispose();
     }
 
-    public void performAddonsDownload(final List<DownloadItemRecord> downloadRecords, JComponent parentComponent) {
+    public void performAddonsOperation(AddonUpdateOperation addonUpdateOperation, JComponent parentComponent) {
         MultiStepControlPanel controlPanel = new MultiStepControlPanel();
         AddonOperationPanel operationPanel = new AddonOperationPanel();
         operationPanel.setPreferredSize(new Dimension(600, 300));
         operationPanel.goToStep(AddonOperationPanel.Step.OVERVIEW);
         AddonOperationOverviewPanel panel = (AddonOperationOverviewPanel) operationPanel.getActiveComponent();
-        for (DownloadItemRecord downloadRecord : downloadRecords) {
-            panel.addOperation("Download module file: " + downloadRecord.getFileName());
+        for (String operation : addonUpdateOperation.getOperations()) {
+            panel.addOperation(operation);
         }
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
@@ -206,30 +248,25 @@ public class AddonManagerAction extends AbstractAction {
                     case NEXT:
                         switch (step) {
                             case OVERVIEW:
-                                step = AddonOperationPanel.Step.DOWNLOAD;
-                                operationPanel.goToStep(step);
-                                AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent();
-                                panel.setDownloadedItemRecords(downloadRecords);
-                                downloadOperation = addonManagerService.createDownloadsOperation(downloadRecords);
-                                downloadOperation.setItemChangeListener(new DownloadOperation.ItemChangeListener() {
-                                    @Override
-                                    public void itemChanged(int itemIndex) {
-                                        panel.notifyDownloadedItemChanged(itemIndex);
-                                    }
-
-                                    @Override
-                                    public void progressChanged(int itemIndex) {
-                                        DownloadItemRecord record = downloadRecords.get(itemIndex);
-                                        panel.setProgress(record.getFileName(), downloadOperation.getOperationProgress(), false);
-                                    }
-
-                                });
-                                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
-                                Thread thread = new Thread(() -> {
-                                    downloadOperation.run();
-                                    enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, true);
-                                });
-                                thread.start();
+                                if (addonUpdateOperation.hasLicenseRecords()) {
+                                    step = AddonOperationPanel.Step.LICENSE;
+                                    operationPanel.goToStep(step);
+                                    AddonOperationLicensePanel panel = (AddonOperationLicensePanel) operationPanel.getActiveComponent();
+                                    panel.setLicenseRecords(addonUpdateOperation.getLicenseRecords());
+                                    // TODO panel.addChangeListener()
+                                    enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
+                                } else if (addonUpdateOperation.hasDownloadRecords()) {
+                                    goToDownload();
+                                } else {
+                                    // TODO Remove only operation
+                                }
+                                break;
+                            case LICENSE:
+                                if (addonUpdateOperation.hasDownloadRecords()) {
+                                    goToDownload();
+                                } else {
+                                    // TODO Remove only operation
+                                }
                                 break;
                             case DOWNLOAD:
                                 step = AddonOperationPanel.Step.SUCCESS;
@@ -259,6 +296,34 @@ public class AddonManagerAction extends AbstractAction {
                     default:
                         throw new AssertionError();
                 }
+            }
+
+            private void goToDownload() {
+                step = AddonOperationPanel.Step.DOWNLOAD;
+                operationPanel.goToStep(step);
+                List<DownloadItemRecord> downloadRecords = addonUpdateOperation.getDownloadRecords();
+                AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent();
+                panel.setDownloadedItemRecords(downloadRecords);
+                downloadOperation = addonManagerService.createDownloadsOperation(downloadRecords);
+                downloadOperation.setItemChangeListener(new DownloadOperation.ItemChangeListener() {
+                    @Override
+                    public void itemChanged(int itemIndex) {
+                        panel.notifyDownloadedItemChanged(itemIndex);
+                    }
+
+                    @Override
+                    public void progressChanged(int itemIndex) {
+                        DownloadItemRecord record = downloadRecords.get(itemIndex);
+                        panel.setProgress(record.getFileName(), downloadOperation.getOperationProgress(), false);
+                    }
+
+                });
+                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
+                Thread thread = new Thread(() -> {
+                    downloadOperation.run();
+                    enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, true);
+                });
+                thread.start();
             }
         });
         enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, true);

@@ -15,16 +15,8 @@
  */
 package org.exbin.framework.addon.manager.service.impl;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,7 +37,6 @@ import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.operation.DownloadOperation;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
-import org.exbin.framework.basic.BasicApplication;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -164,174 +155,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     @Nonnull
     @Override
     public DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records) {
-        return new DownloadOperation() {
-
-            private DownloadOperation.ItemChangeListener listener;
-            private boolean cancelled = false;
-            private long totalDownloadSize = 0;
-            private long downloadProgress = 0;
-            private int lastProgress = 0;
-
-            @Override
-            public void run() {
-                // Ask for download sizes
-                try {
-                    for (int i = 0; i < records.size(); i++) {
-                        DownloadItemRecord record = records.get(i);
-
-                        if (cancelled) {
-                            return;
-                        }
-                        long contentLength = getContentLength(record.getUrl());
-                        totalDownloadSize += contentLength;
-                        record.setSize(contentLength);
-                        record.setStatus(DownloadItemRecord.Status.CHECKED);
-                        listener.itemChanged(i);
-                    }
-                } catch (Exception ex) {
-
-                    return;
-                }
-
-                // Download
-                File targetDirectory = new File(App.getConfigDirectory(), "addons_update");
-                if (!targetDirectory.isDirectory()) {
-                    targetDirectory.mkdirs();
-                }
-                File updateConfigFile = new File(targetDirectory, "update.cfg");
-                List<String> filesToUpdate = readConfigFile(updateConfigFile);
-                File removeConfigFile = new File(targetDirectory, "remove.cfg");
-                List<String> filesToRemove = readConfigFile(removeConfigFile);
-                for (int i = 0; i < records.size(); i++) {
-                    DownloadItemRecord record = records.get(i);
-                    if (cancelled) {
-                        return;
-                    }
-
-                    String fileName = record.getFileName();
-                    filesToRemove.remove(fileName);
-                    if (!filesToUpdate.contains(fileName)) {
-                        filesToUpdate.add(fileName);
-                    }
-
-                    File targetFile = new File(targetDirectory, fileName);
-                    record.setStatus(DownloadItemRecord.Status.INPROGRESS);
-                    listener.itemChanged(i);
-                    downloadToFile(record, i, targetFile);
-                    record.setStatus(DownloadItemRecord.Status.DONE);
-                    listener.itemChanged(i);
-                }
-                writeConfigFile(updateConfigFile, filesToUpdate);
-                writeConfigFile(removeConfigFile, filesToRemove);
-            }
-
-            public void downloadToFile(DownloadItemRecord record, int recordIndex, File targetFile) {
-                URL downloadUrl = record.getUrl();
-                HttpURLConnection connection = null;
-                try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
-                    connection = (HttpURLConnection) downloadUrl.openConnection();
-                    connection.setConnectTimeout(30 * 1000);
-                    connection.setRequestMethod("GET");
-                    connection.connect();
-                    try (InputStream inputStream = connection.getInputStream()) {
-                        final byte[] buffer = new byte[2048];
-                        long remaining = record.getSize();
-                        while (remaining > 0) {
-                            if (cancelled) {
-                                return;
-                            }
-                            try {
-                                Thread.sleep(10);
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            int read = inputStream.read(buffer);
-                            if (read < 0) {
-                                throw new RuntimeException("Could not receive download size for URL " + downloadUrl);
-                            }
-                            outputStream.write(buffer, 0, read);
-                            remaining -= read;
-                            downloadProgress += read;
-                            int operationProgress = getOperationProgress();
-                            if (operationProgress != lastProgress) {
-                                lastProgress = operationProgress;
-                                listener.progressChanged(recordIndex);
-                            }
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException("Could not receive download size for URL " + downloadUrl, e);
-                } finally {
-                    if (connection != null) {
-                        connection.disconnect();
-                    }
-                }
-            }
-
-            @Override
-            public void setItemChangeListener(DownloadOperation.ItemChangeListener listener) {
-                this.listener = listener;
-            }
-
-            @Override
-            public void cancelOperation() {
-                cancelled = true;
-            }
-
-            @Override
-            public boolean isCancelled() {
-                return cancelled;
-            }
-
-            @Override
-            public int getOperationProgress() {
-                return (int) (downloadProgress * 1000 / totalDownloadSize);
-            }
-
-            @Nonnull
-            private List<String> readConfigFile(File configFile) {
-                List<String> result = new ArrayList<>();
-                if (configFile.exists()) {
-                    String line = null;
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)))) {
-                        do {
-                            line = reader.readLine();
-                            if (line != null && !line.isEmpty()) {
-                                result.add(line);
-                            }
-                        } while (line != null);
-                    } catch (IOException ex) {
-                        Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, "Failed to move file " + line, ex);
-                    }
-                }
-                return result;
-            }
-
-            private void writeConfigFile(File configFile, List<String> content) {
-                try (OutputStreamWriter writer = new FileWriter(configFile)) {
-                    for (String line : content) {
-                        writer.write(line + "\r\n");
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        };
-    }
-
-    public static long getContentLength(URL downloadURL) {
-        HttpURLConnection connection = null;
-        try {
-            connection = (HttpURLConnection) downloadURL.openConnection();
-            connection.setRequestMethod("HEAD");
-            return connection.getContentLengthLong();
-        } catch (IOException e) {
-            throw new RuntimeException("Could not receive download size for URL " + downloadURL, e);
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
+        return new DownloadOperation(records);
     }
 
     public void addIconChangeListener(IconChangeListener listener) {

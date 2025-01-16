@@ -103,11 +103,12 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
             @Override
             public void updateItem(ItemRecord item) {
+                controller.updateItem(item);
             }
 
             @Override
             public void removeItem(ItemRecord item) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                controller.removeItem(item);
             }
 
             @Override
@@ -144,6 +145,7 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
             @Override
             public void installItem(ItemRecord item) {
+                controller.installItem(item);
             }
 
             @Override
@@ -160,7 +162,7 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
             @Override
             public void removeItem(ItemRecord item) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new IllegalStateException();
             }
 
             private void searchForAddons() {
@@ -222,6 +224,12 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
         @Nonnull
         List<ItemRecord> getInstalledItems();
+
+        void installItem(ItemRecord item);
+
+        void updateItem(ItemRecord item);
+
+        void removeItem(ItemRecord item);
 
         void installSelectionChanged(int toInstall);
 

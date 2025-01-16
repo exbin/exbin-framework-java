@@ -15,11 +15,15 @@
  */
 package org.exbin.framework.addon.manager.operation.gui;
 
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.TestApplication;
@@ -35,10 +39,15 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationLicensePanel.class);
     private Controller controller;
-    private ItemRecord activeRecord;
+    private List<LicenseItemRecord> licenseRecords;
 
     public AddonOperationLicensePanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        licenseList.setModel(new DefaultListModel<>());
     }
 
     @Nonnull
@@ -48,6 +57,15 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
+    }
+
+    public void setLicenseRecords(List<LicenseItemRecord> licenseRecords) {
+        this.licenseRecords = licenseRecords;
+        DefaultListModel<String> model = (DefaultListModel<String>) licenseList.getModel();
+        model.removeAllElements();
+        for (LicenseItemRecord licenseRecord : licenseRecords) {
+            model.addElement(licenseRecord.getName());
+        }
     }
 
     /**
