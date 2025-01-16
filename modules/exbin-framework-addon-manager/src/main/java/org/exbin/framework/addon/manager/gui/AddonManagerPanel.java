@@ -15,8 +15,10 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
@@ -39,13 +41,12 @@ import org.exbin.framework.utils.UtilsModule;
 public class AddonManagerPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerPanel.class);
-    private AddonCatalogService addonCatalogService;
     private Controller controller;
     private PacksPanel packsPanel = new PacksPanel();
     private AddonsPanel addonsPanel = new AddonsPanel();
     private AddonsPanel installedPanel = new AddonsPanel();
-    private int toInstall = 0;
-    private int toUpdate = 0;
+    private Set<String> toInstall = new HashSet<>();
+    private Set<String> toUpdate = new HashSet<>();
     private Tab activeTab = Tab.INSTALLED;
 
     public AddonManagerPanel() {
@@ -113,15 +114,23 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
             @Override
             public void changeSelection(ItemRecord item) {
-                toUpdate += item.isSelected() ? -1 : 1;
-                item.setSelected(!item.isSelected());
-                controller.updateSelectionChanged(toUpdate);
+                String moduleId = item.getId();
+                if (toUpdate.contains(moduleId)) {
+                    toUpdate.remove(moduleId);
+                } else {
+                    toUpdate.add(moduleId);
+                }
+                controller.updateSelectionChanged(getToUpdateCount());
+            }
+
+            @Override
+            public boolean isItemSelectedForOperation(ItemRecord item) {
+                return toUpdate.contains(item.getId());
             }
         });
     }
 
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
-        this.addonCatalogService = addonCatalogService;
         addonsPanel.setController(new AddonsPanel.Controller() {
 
             private AddonCatalogService.AddonsListResult searchResult;
@@ -155,9 +164,13 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
             @Override
             public void changeSelection(ItemRecord item) {
-                toInstall += item.isSelected() ? -1 : 1;
-                item.setSelected(!item.isSelected());
-                controller.installSelectionChanged(toInstall);
+                String moduleId = item.getId();
+                if (toInstall.contains(moduleId)) {
+                    toInstall.remove(moduleId);
+                } else {
+                    toInstall.add(moduleId);
+                }
+                controller.installSelectionChanged(getToInstallCount());
             }
 
             @Override
@@ -172,15 +185,30 @@ public class AddonManagerPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(AddonManagerPanel.this, "API request failed", "Addon Service Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
+
+            @Override
+            public boolean isItemSelectedForOperation(ItemRecord item) {
+                return toInstall.contains(item.getId());
+            }
         });
     }
 
-    public int getToInstall() {
+    @Nonnull
+    public Set<String> getToInstall() {
         return toInstall;
     }
 
-    public int getToUpdate() {
+    public int getToInstallCount() {
+        return toInstall.size();
+    }
+
+    @Nonnull
+    public Set<String> getToUpdate() {
         return toUpdate;
+    }
+
+    public int getToUpdateCount() {
+        return toUpdate.size();
     }
 
     @Nonnull

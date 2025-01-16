@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -126,7 +127,7 @@ public class AddonManagerAction extends AbstractAction {
 
             @Override
             public void installItem(ItemRecord item) {
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(modulesList, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, modulesList, addonUpdateChanges);
                 addonUpdateOperation.installItem(item);
 //                DownloadItemRecord downloadRecord = new DownloadItemRecord("Test", "exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar");
 //                try {
@@ -141,14 +142,16 @@ public class AddonManagerAction extends AbstractAction {
 
             @Override
             public void updateItem(ItemRecord item) {
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(modulesList, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, modulesList, addonUpdateChanges);
                 addonUpdateOperation.updateItem(item);
                 performAddonsOperation(addonUpdateOperation, addonManagerPanel);
             }
 
             @Override
             public void removeItem(ItemRecord item) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, modulesList, addonUpdateChanges);
+                addonUpdateOperation.removeItem(item);
+                performAddonsOperation(addonUpdateOperation, addonManagerPanel);
             }
 
             @Override
@@ -167,10 +170,10 @@ public class AddonManagerAction extends AbstractAction {
                     case PACKS:
                         throw new UnsupportedOperationException("Not supported yet.");
                     case ADDONS:
-                        controlPanel.setOperationState(AddonsControlPanel.OperationVariant.INSTALL, addonManagerPanel.getToInstall());
+                        controlPanel.setOperationState(AddonsControlPanel.OperationVariant.INSTALL, addonManagerPanel.getToInstallCount());
                         break;
                     case INSTALLED:
-                        controlPanel.setOperationState(AddonsControlPanel.OperationVariant.UPDATE, addonManagerPanel.getToUpdate());
+                        controlPanel.setOperationState(AddonsControlPanel.OperationVariant.UPDATE, addonManagerPanel.getToUpdateCount());
                         break;
                     default:
                         throw new AssertionError();
@@ -183,30 +186,36 @@ public class AddonManagerAction extends AbstractAction {
             public void performOperation() {
                 AddonManagerPanel.Tab activeTab = addonManagerPanel.getActiveTab();
 
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, modulesList, addonUpdateChanges);
                 switch (activeTab) {
                     case ADDONS:
-                        AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(modulesList, addonUpdateChanges);
+                        Set<String> toUpdate = addonManagerPanel.getToUpdate();
+                        AddonCatalogService.AddonsListResult searchForAddons = addonManagerService.searchForAddons("");
+                        for (int i = 0; i < searchForAddons.itemsCount(); i++) {
+                            AddonRecord addon = searchForAddons.getLazyItem(i);
+                            if (toUpdate.contains(addon.getId())) {
+                                addonUpdateOperation.installItem(addon);
+                            }
+                        }
+                        break;
 
-//                        List<String> operations = new ArrayList<>();
-//                        List<LicenseItemRecord> licenseRecords = new ArrayList<>();
-//                        List<DownloadItemRecord> downloadRecords = new ArrayList<>();
-//                        DownloadItemRecord downloadRecord = new DownloadItemRecord("Test", "exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar");
-//                        try {
-//                            downloadRecord.setUrl(new URL("https://bined.exbin.org/addon/download/exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar"));
-//                            operations.add("Download module file: " + downloadRecord.getFileName());
-//                        } catch (MalformedURLException ex) {
-//                            Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
-//                        downloadRecords.add(downloadRecord);
-                        performAddonsOperation(addonUpdateOperation, addonManagerPanel);
-                        break;
                     case INSTALLED:
+                        Set<String> toInstall = addonManagerPanel.getToInstall();
+                        for (ItemRecord addon : installedAddons) {
+                            if (toInstall.contains(addon.getId())) {
+                                addonUpdateOperation.updateItem(addon);
+                            }
+                        }
                         break;
+
                 }
+                performAddonsOperation(addonUpdateOperation, addonManagerPanel);
             }
         });
 
+        // TODO
         // controlPanel.showLegacyWarning();
+        // controlPanel.showManualOnlyWarning();
         controlPanel.setOperationState(AddonsControlPanel.OperationVariant.UPDATE_ALL, 0);
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());

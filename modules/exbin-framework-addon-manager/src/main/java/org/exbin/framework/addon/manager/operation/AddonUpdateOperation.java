@@ -21,9 +21,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
+import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
+import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.basic.ModuleRecord;
 
 /**
@@ -34,6 +36,7 @@ import org.exbin.framework.basic.ModuleRecord;
 @ParametersAreNonnullByDefault
 public class AddonUpdateOperation {
 
+    private final AddonCatalogService addonCatalogService;
     private final AddonUpdateChanges addonUpdateChanges;
     private final UpdateOperations updateOperations = new UpdateOperations();
     private final List<ModuleRecord> modulesList;
@@ -41,7 +44,8 @@ public class AddonUpdateOperation {
     private final List<LicenseItemRecord> licenseRecords = new ArrayList<>();
     private final List<DownloadItemRecord> downloadRecords = new ArrayList<>();
 
-    public AddonUpdateOperation(List<ModuleRecord> modulesList, AddonUpdateChanges addonUpdateChanges) {
+    public AddonUpdateOperation(AddonCatalogService addonCatalogService, List<ModuleRecord> modulesList, AddonUpdateChanges addonUpdateChanges) {
+        this.addonCatalogService = addonCatalogService;
         this.modulesList = modulesList;
         this.addonUpdateChanges = addonUpdateChanges;
     }
@@ -78,6 +82,9 @@ public class AddonUpdateOperation {
     public void installItem(ItemRecord item) {
         if (item instanceof AddonRecord) {
             String addonId = item.getId();
+            if (addonUpdateChanges.hasInstallAddon(addonId)) {
+                throw new IllegalStateException("Addon already queued for installation: " + addonId);
+            }
             updateOperations.installAddons.add(addonId);
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
@@ -87,6 +94,9 @@ public class AddonUpdateOperation {
     public void updateItem(ItemRecord item) {
         if (item instanceof AddonRecord) {
             String addonId = item.getId();
+            if (addonUpdateChanges.hasInstallAddon(addonId)) {
+                throw new IllegalStateException("Addon already queued for installation: " + addonId);
+            }
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
         }
@@ -98,6 +108,12 @@ public class AddonUpdateOperation {
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
         }
+    }
+
+    private void addAddonDependencies(AddonRecord record) {
+        List<DependencyRecord> dependencies = new ArrayList<>();
+        record.getDependencies();
+
     }
 
     private static class UpdateOperations {

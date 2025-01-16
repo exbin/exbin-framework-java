@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class XBApplicationBundle {
+public class ApplicationBundle {
 
     public static final String APPLICATION_NAME = "Application.name";
     public static final String APPLICATION_DESCRIPTION = "Application.description";
@@ -39,6 +39,6 @@ public class XBApplicationBundle {
     public static final String APPLICATION_ABOUT_IMAGE = "Application.aboutImage";
     public static final String APPLICATION_HOMEPAGE = "Application.homepage";
 
-    private XBApplicationBundle() {
+    private ApplicationBundle() {
     }
 }

@@ -71,12 +71,20 @@ public class AddonUpdateChanges {
         installAddons.remove(addonId);
     }
 
+    public boolean hasInstallAddon(String addonId) {
+        return installAddons.contains(addonId);
+    }
+
     public void addRemoveAddon(String addonId) {
         removeAddons.add(addonId);
     }
 
     public void removeRemoveAddon(String addonId) {
         removeAddons.remove(addonId);
+    }
+
+    public boolean hasRemoveAddon(String addonId) {
+        return removeAddons.contains(addonId);
     }
 
     public void addUpdateFile(String fileName) {
@@ -87,12 +95,20 @@ public class AddonUpdateChanges {
         updateFiles.remove(fileName);
     }
 
+    public boolean hasUpdateFile(String fileName) {
+        return updateFiles.contains(fileName);
+    }
+
     public void addRemoveFile(String fileName) {
         removeFiles.add(fileName);
     }
 
     public void removeRemoveFile(String fileName) {
         removeFiles.remove(fileName);
+    }
+
+    public boolean hasremoveFile(String fileName) {
+        return removeFiles.contains(fileName);
     }
 
     public void readConfigFile() {

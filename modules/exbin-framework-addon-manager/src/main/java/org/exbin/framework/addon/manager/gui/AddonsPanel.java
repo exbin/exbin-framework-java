@@ -59,6 +59,7 @@ public class AddonsPanel extends javax.swing.JPanel {
                 return controller.getItemsCount();
             }
 
+            @Nonnull
             @Override
             public ItemRecord getItem(int index) {
                 return controller.getItem(index);
@@ -69,7 +70,7 @@ public class AddonsPanel extends javax.swing.JPanel {
                 if (activeRecord != itemRecord) {
                     if (activeRecord == null) {
                         infoPanel.remove(noItemSelectedLabel);
-                        addonDetailsPanel.setRecord(itemRecord);
+                        addonDetailsPanel.setRecord(itemRecord, controller.isItemSelectedForOperation(itemRecord));
                         infoPanel.add(addonDetailsPanel, BorderLayout.CENTER);
                         infoPanel.revalidate();
                         infoPanel.repaint();
@@ -79,7 +80,7 @@ public class AddonsPanel extends javax.swing.JPanel {
                         infoPanel.revalidate();
                         infoPanel.repaint();
                     } else {
-                        addonDetailsPanel.setRecord(itemRecord);
+                        addonDetailsPanel.setRecord(itemRecord, controller.isItemSelectedForOperation(itemRecord));
                     }
                     activeRecord = itemRecord;
                 }
@@ -176,5 +177,7 @@ public class AddonsPanel extends javax.swing.JPanel {
         void removeItem(ItemRecord item);
 
         void changeSelection(ItemRecord item);
+        
+        boolean isItemSelectedForOperation(ItemRecord item);
     }
 }

@@ -16,12 +16,15 @@
 package org.exbin.framework.addon.manager.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.OkCancelListener;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.window.api.handler.CloseControlHandler;
@@ -62,7 +65,22 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     }
 
     public void showLegacyWarning() {
-        add(warningPanel, BorderLayout.CENTER);
+        add(legacyModePanel, BorderLayout.CENTER);
+    }
+
+    public void showManualOnlyWarning() {
+        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+        ResourceBundle appBundle = languageModule.getAppBundle();
+        String link = "https://github.com/exbin/bined/releases/tag/" + appBundle.getString("Application.release");
+        manualOnlyModeLabel.setText(String.format(resourceBundle.getString("manualOnlyModeLabel.text"), link));
+        manualOnlyModeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DesktopUtils.openDesktopURL(link);
+            }
+        });
+        manualOnlyModeLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        add(manualOnlyModePanel, BorderLayout.CENTER);
     }
 
     public void setOperationState(OperationVariant variant, int selected) {
@@ -114,33 +132,58 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        warningPanel = new javax.swing.JPanel();
-        warningLabel = new javax.swing.JLabel();
+        legacyModePanel = new javax.swing.JPanel();
+        legacyModeLabel = new javax.swing.JLabel();
+        manualOnlyModePanel = new javax.swing.JPanel();
+        manualOnlyModeLabel = new javax.swing.JLabel();
         buttonsPanel = new javax.swing.JPanel();
         operationButton = new javax.swing.JButton();
         operationLabel = new javax.swing.JLabel();
         closeButton = new javax.swing.JButton();
 
-        warningPanel.setBackground(new java.awt.Color(255, 153, 0));
+        legacyModePanel.setBackground(new java.awt.Color(255, 153, 0));
 
-        warningLabel.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
-        warningLabel.setForeground(new java.awt.Color(0, 0, 0));
-        warningLabel.setText(resourceBundle.getString("warningLabel.text")); // NOI18N
+        legacyModeLabel.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        legacyModeLabel.setForeground(new java.awt.Color(0, 0, 0));
+        legacyModeLabel.setText(resourceBundle.getString("legacyModeLabel.text")); // NOI18N
 
-        javax.swing.GroupLayout warningPanelLayout = new javax.swing.GroupLayout(warningPanel);
-        warningPanel.setLayout(warningPanelLayout);
-        warningPanelLayout.setHorizontalGroup(
-            warningPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(warningPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout legacyModePanelLayout = new javax.swing.GroupLayout(legacyModePanel);
+        legacyModePanel.setLayout(legacyModePanelLayout);
+        legacyModePanelLayout.setHorizontalGroup(
+            legacyModePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(legacyModePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(warningLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
+                .addComponent(legacyModeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        warningPanelLayout.setVerticalGroup(
-            warningPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(warningPanelLayout.createSequentialGroup()
+        legacyModePanelLayout.setVerticalGroup(
+            legacyModePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(legacyModePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(warningLabel)
+                .addComponent(legacyModeLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        manualOnlyModePanel.setBackground(new java.awt.Color(255, 102, 102));
+
+        manualOnlyModeLabel.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        manualOnlyModeLabel.setForeground(new java.awt.Color(255, 255, 255));
+        manualOnlyModeLabel.setText(resourceBundle.getString("manualOnlyModeLabel.text")); // NOI18N
+
+        javax.swing.GroupLayout manualOnlyModePanelLayout = new javax.swing.GroupLayout(manualOnlyModePanel);
+        manualOnlyModePanel.setLayout(manualOnlyModePanelLayout);
+        manualOnlyModePanelLayout.setHorizontalGroup(
+            manualOnlyModePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(manualOnlyModePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(manualOnlyModeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        manualOnlyModePanelLayout.setVerticalGroup(
+            manualOnlyModePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(manualOnlyModePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(manualOnlyModeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -203,10 +246,12 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonsPanel;
     private javax.swing.JButton closeButton;
+    private javax.swing.JLabel legacyModeLabel;
+    private javax.swing.JPanel legacyModePanel;
+    private javax.swing.JLabel manualOnlyModeLabel;
+    private javax.swing.JPanel manualOnlyModePanel;
     private javax.swing.JButton operationButton;
     private javax.swing.JLabel operationLabel;
-    private javax.swing.JLabel warningLabel;
-    private javax.swing.JPanel warningPanel;
     // End of variables declaration//GEN-END:variables
 
     @Override

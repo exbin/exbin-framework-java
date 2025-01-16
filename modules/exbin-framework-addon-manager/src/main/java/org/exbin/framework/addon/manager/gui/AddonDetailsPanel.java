@@ -61,7 +61,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         this.controller = control;
     }
 
-    public void setRecord(ItemRecord itemRecord) {
+    public void setRecord(ItemRecord itemRecord, boolean selectedForOperation) {
         activeRecord = itemRecord;
         addonNameLabel.setText(itemRecord.getName());
         versionLabel.setText(itemRecord.getVersion());
@@ -98,13 +98,13 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             controlPanel.add(removeButton);
             enablementButton.setText(resourceBundle.getString(itemRecord.isEnabled() ? "disableButton.text" : "enableButton.text"));
             controlPanel.add(enablementButton);
-            updateCheckBox.setSelected(itemRecord.isSelected());
+            updateCheckBox.setSelected(selectedForOperation);
             updateCheckBox.setEnabled(itemRecord.isUpdateAvailable());
             controlPanel.add(updateCheckBox);
             updateButton.setEnabled(itemRecord.isUpdateAvailable());
             controlPanel.add(updateButton);
         } else {
-            installCheckBox.setSelected(itemRecord.isSelected());
+            installCheckBox.setSelected(selectedForOperation);
             controlPanel.add(installCheckBox);
             controlPanel.add(installButton);
         }

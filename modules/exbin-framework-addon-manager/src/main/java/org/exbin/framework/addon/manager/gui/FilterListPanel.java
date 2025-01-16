@@ -44,7 +44,7 @@ public class FilterListPanel extends javax.swing.JPanel {
     public FilterListPanel() {
         initComponents();
         itemsList.setCellRenderer(new DefaultListCellRenderer() {
-            
+
             private AddonItemPanel addonItemPanel = new AddonItemPanel();
 
             @Override
@@ -160,7 +160,7 @@ public class FilterListPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {
-        
+
         int getItemsCount();
 
         @Nonnull
