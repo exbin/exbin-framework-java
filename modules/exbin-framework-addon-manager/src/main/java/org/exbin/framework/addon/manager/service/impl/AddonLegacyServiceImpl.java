@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.model.AddonRecord;
@@ -43,6 +44,12 @@ public class AddonLegacyServiceImpl implements AddonCatalogService {
     @Override
     public AddonsListResult searchForAddons(String searchCondition) {
         throw new IllegalStateException();
+    }
+
+    @Nonnull
+    @Override
+    public Optional<AddonRecord> getAddon(String addonId) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Nonnull

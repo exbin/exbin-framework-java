@@ -18,7 +18,6 @@ package org.exbin.framework.about.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Properties;
@@ -32,10 +31,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.App;
-import org.exbin.framework.action.popup.DefaultPopupMenu;
-import org.exbin.framework.action.popup.LinkActionsHandler;
+import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
-import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.TestApplication;
@@ -413,28 +410,8 @@ public class AboutPanel extends javax.swing.JPanel {
 
             @Override
             public void show(Component invoker, int x, int y) {
-                JPopupMenu popupMenu = UiUtils.createPopupMenu();
-                DefaultPopupMenu.getInstance().appendLinkMenu(popupMenu, new LinkActionsHandler() {
-                    @Override
-                    public void performCopyLink() {
-                        String targetURL = appHomepageLink;
-                        StringSelection stringSelection = new StringSelection(targetURL);
-                        ClipboardUtils.getClipboard().setContents(stringSelection, stringSelection);
-                    }
-
-                    @Override
-                    public void performOpenLink() {
-                        String targetURL = appHomepageLink;
-                        DesktopUtils.openDesktopURL(targetURL);
-                    }
-
-                    @Override
-                    public boolean isLinkSelected() {
-                        return true;
-                    }
-                });
-
-                popupMenu.show(invoker, x, y);
+                ActionPopupModuleApi actionPopupModule = App.getModule(ActionPopupModuleApi.class);
+                actionPopupModule.createLinkPopupMenu(appHomepageLink).show(invoker, x, y);
             }
         });
     }

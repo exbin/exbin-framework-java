@@ -16,6 +16,7 @@
 package org.exbin.framework.action.popup.api;
 
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.Module;
@@ -67,4 +68,13 @@ public interface ActionPopupModuleApi extends Module {
      * @param position target index position or -1 for adding at the end
      */
     void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position);
+
+    /**
+     * Creates component popup menu for link.
+     *
+     * @param targetURL target URL
+     * @return popup menu
+     */
+    @Nonnull
+    JPopupMenu createLinkPopupMenu(String targetURL);
 }

@@ -16,16 +16,21 @@
 package org.exbin.framework.addon.manager.operation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.model.UpdateRecord;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleRecord;
 
 /**
@@ -39,14 +44,15 @@ public class AddonUpdateOperation {
     private final AddonCatalogService addonCatalogService;
     private final AddonUpdateChanges addonUpdateChanges;
     private final UpdateOperations updateOperations = new UpdateOperations();
-    private final List<ModuleRecord> modulesList;
+    private final LocalModules localModules;
+    private final Map<String, UpdateRecord> availableUpdates = new HashMap<>();
 
     private final List<LicenseItemRecord> licenseRecords = new ArrayList<>();
     private final List<DownloadItemRecord> downloadRecords = new ArrayList<>();
 
-    public AddonUpdateOperation(AddonCatalogService addonCatalogService, List<ModuleRecord> modulesList, AddonUpdateChanges addonUpdateChanges) {
+    public AddonUpdateOperation(AddonCatalogService addonCatalogService, LocalModules localModules, AddonUpdateChanges addonUpdateChanges) {
         this.addonCatalogService = addonCatalogService;
-        this.modulesList = modulesList;
+        this.localModules = localModules;
         this.addonUpdateChanges = addonUpdateChanges;
     }
 
@@ -86,6 +92,8 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
             updateOperations.installAddons.add(addonId);
+            addAddonFile((AddonRecord) item);
+            addAddonDependencies((AddonRecord) item);
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
         }
@@ -97,6 +105,9 @@ public class AddonUpdateOperation {
             if (addonUpdateChanges.hasInstallAddon(addonId)) {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
+            updateOperations.installAddons.add(addonId);
+            addAddonFile((AddonRecord) item);
+            addAddonDependencies((AddonRecord) item);
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
         }
@@ -105,6 +116,10 @@ public class AddonUpdateOperation {
     public void removeItem(ItemRecord item) {
         if (item instanceof AddonRecord) {
             String addonId = item.getId();
+            if (addonUpdateChanges.hasRemoveAddon(addonId)) {
+                throw new IllegalStateException("Addon already queued for removal: " + addonId);
+            }
+            updateOperations.removeAddons.add(addonId);
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
         }
@@ -112,7 +127,48 @@ public class AddonUpdateOperation {
 
     private void addAddonDependencies(AddonRecord record) {
         List<DependencyRecord> dependencies = new ArrayList<>();
-        record.getDependencies();
+        dependencies.addAll(record.getDependencies());
+        while (!dependencies.isEmpty()) {
+            DependencyRecord dependency = dependencies.remove(0);
+            DependencyRecord.Type dependencyType = dependency.getType();
+            String dependencyId = dependency.getId();
+            switch (dependencyType) {
+                case MODULE:
+                case PLUGIN:
+                    boolean include = true;
+
+                    if (updateOperations.installAddons.contains(dependencyId)) {
+                        include = false;
+                    } else if (localModules.hasModule(dependencyId) && !availableUpdates.containsKey(dependencyId)) {
+                        include = false;
+                    }
+
+                    if (include) {
+                        Optional<AddonRecord> optRecord = addonCatalogService.getAddon(dependencyId);
+                        if (!optRecord.isPresent()) {
+                            throw new IllegalStateException("Missing dependecy: " + dependencyId);
+                        }
+                        AddonRecord addonRecord = optRecord.get();
+                        updateOperations.installAddons.add(addonRecord.getId());
+                        addAddonFile(addonRecord);
+                        dependencies.addAll(addonRecord.getDependencies());
+                    }
+                    break;
+                case JAR_LIBRARY:
+                    if (!localModules.hasLibrary(dependencyId) && !updateOperations.downloadLibrary.contains(dependencyId)) {
+                        updateOperations.downloadLibrary.add(dependencyId);
+                    }
+                    break;
+                case MAVEN_LIBRARY:
+                    if (!localModules.hasLibrary(BasicModuleProvider.mavenCodeToFileName(dependencyId)) && !updateOperations.mavenLibrary.contains(dependencyId)) {
+                        updateOperations.mavenLibrary.add(dependencyId);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void addAddonFile(AddonRecord addonRecord) {
 
     }
 
@@ -122,6 +178,14 @@ public class AddonUpdateOperation {
         final List<String> dependencyAddons = new ArrayList<>();
         final List<String> removeAddons = new ArrayList<>();
         final List<String> downloadLibrary = new ArrayList<>();
+        final List<String> mavenLibrary = new ArrayList<>();
         final List<String> removeLibrary = new ArrayList<>();
+    }
+
+    public interface LocalModules {
+
+        boolean hasModule(String moduleId);
+
+        boolean hasLibrary(String libraryFileName);
     }
 }

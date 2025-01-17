@@ -16,6 +16,7 @@
 package org.exbin.framework.addon.manager.service;
 
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.model.AddonRecord;
@@ -32,6 +33,9 @@ public interface AddonCatalogService {
 
     @Nonnull
     AddonsListResult searchForAddons(String searchCondition);
+
+    @Nonnull
+    Optional<AddonRecord> getAddon(String addonId);
 
     @Nonnull
     DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records);

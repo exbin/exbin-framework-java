@@ -355,10 +355,7 @@ public class BasicModuleProvider implements ModuleProvider {
                                 } else if ("library".equals(depRecord.getNodeName())) {
                                     Node mavenAttributeNode = depRecord.getAttributes().getNamedItem("maven");
                                     if (mavenAttributeNode != null) {
-                                        String mavenCode = mavenAttributeNode.getNodeValue();
-                                        int namePart = mavenCode.indexOf(":");
-                                        int versionPart = mavenCode.indexOf(":", namePart + 1);
-                                        dependecyLibraries.add(mavenCode.substring(namePart + 1, versionPart) + "-" + mavenCode.substring(versionPart + 1) + ".jar");
+                                        dependecyLibraries.add(BasicModuleProvider.mavenCodeToFileName(mavenAttributeNode.getNodeValue()));
                                     } else {
                                         dependecyLibraries.add(depRecord.getAttributes().getNamedItem("jar").getNodeValue());
                                     }
@@ -474,7 +471,7 @@ public class BasicModuleProvider implements ModuleProvider {
 
         if (postRoundCount > 0) {
             for (ModuleRecord unprocessedModule : unprocessedModules) {
-                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Unprocessed Module: " + unprocessedModule.getModuleId());
+                Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, "Unprocessed Module: {0}", unprocessedModule.getModuleId());
                 List<String> dependencyModuleIds = unprocessedModule.getDependencyModuleIds();
                 for (String dependecyModuleId : dependencyModuleIds) {
                     ModuleRecord dependecyModule = getModuleRecordById(dependecyModuleId);
@@ -540,6 +537,21 @@ public class BasicModuleProvider implements ModuleProvider {
     @Nonnull
     public List<ModuleRecord> getModulesList() {
         return new ArrayList<>(modules.values());
+    }
+
+    public boolean hasModule(String moduleId) {
+        return modules.containsKey(moduleId);
+    }
+
+    public boolean hasLibrary(String libraryFileName) {
+        return libraries.containsKey(libraryFileName);
+    }
+
+    @Nonnull
+    public static String mavenCodeToFileName(String mavenCode) {
+        int namePart = mavenCode.indexOf(":");
+        int versionPart = mavenCode.indexOf(":", namePart + 1);
+        return mavenCode.substring(namePart + 1, versionPart) + "-" + mavenCode.substring(versionPart + 1) + ".jar";
     }
 
     private static class LibraryRecord {

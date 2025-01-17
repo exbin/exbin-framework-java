@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.action.popup;
 
+import java.awt.datatransfer.StringSelection;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -23,6 +24,9 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.action.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.ClipboardUtils;
+import org.exbin.framework.utils.DesktopUtils;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Implementation of framework popup module.
@@ -88,6 +92,30 @@ public class ActionPopupModule implements ActionPopupModuleApi {
     @Override
     public void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position) {
         DefaultPopupMenu.getInstance().fillDefaultEditPopupMenu(popupMenu, position);
+    }
+
+    @Nonnull
+    @Override
+    public JPopupMenu createLinkPopupMenu(String targetURL) {
+        JPopupMenu popupMenu = UiUtils.createPopupMenu();
+        DefaultPopupMenu.getInstance().appendLinkMenu(popupMenu, new LinkActionsHandler() {
+            @Override
+            public void performCopyLink() {
+                StringSelection stringSelection = new StringSelection(targetURL);
+                ClipboardUtils.getClipboard().setContents(stringSelection, stringSelection);
+            }
+
+            @Override
+            public void performOpenLink() {
+                DesktopUtils.openDesktopURL(targetURL);
+            }
+
+            @Override
+            public boolean isLinkSelected() {
+                return true;
+            }
+        });
+        return popupMenu;
     }
 
     private void ensureSetup() {

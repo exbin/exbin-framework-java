@@ -66,6 +66,7 @@ public class AddonManagerAction extends AbstractAction {
     private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerAction.class);
 
     private AddonCatalogService addonManagerService;
+    private AddonUpdateOperation.LocalModules localModules;
 
     public AddonManagerAction() {
         init();
@@ -110,6 +111,17 @@ public class AddonManagerAction extends AbstractAction {
                 installedAddons.add(itemRecord);
                 // System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
             }
+            localModules = new AddonUpdateOperation.LocalModules() {
+                @Override
+                public boolean hasModule(String moduleId) {
+                    return ((BasicModuleProvider) moduleProvider).hasModule(moduleId);
+                }
+
+                @Override
+                public boolean hasLibrary(String libraryFileName) {
+                    return ((BasicModuleProvider) moduleProvider).hasLibrary(libraryFileName);
+                }
+            };
         }
         final List<ModuleRecord> modulesList = basicModulesList == null ? new ArrayList<>() : basicModulesList;
 
@@ -127,7 +139,7 @@ public class AddonManagerAction extends AbstractAction {
 
             @Override
             public void installItem(ItemRecord item) {
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, modulesList, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
                 addonUpdateOperation.installItem(item);
 //                DownloadItemRecord downloadRecord = new DownloadItemRecord("Test", "exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar");
 //                try {
@@ -142,14 +154,14 @@ public class AddonManagerAction extends AbstractAction {
 
             @Override
             public void updateItem(ItemRecord item) {
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, modulesList, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
                 addonUpdateOperation.updateItem(item);
                 performAddonsOperation(addonUpdateOperation, addonManagerPanel);
             }
 
             @Override
             public void removeItem(ItemRecord item) {
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, modulesList, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
                 addonUpdateOperation.removeItem(item);
                 performAddonsOperation(addonUpdateOperation, addonManagerPanel);
             }
@@ -186,7 +198,7 @@ public class AddonManagerAction extends AbstractAction {
             public void performOperation() {
                 AddonManagerPanel.Tab activeTab = addonManagerPanel.getActiveTab();
 
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, modulesList, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
                 switch (activeTab) {
                     case ADDONS:
                         Set<String> toUpdate = addonManagerPanel.getToUpdate();

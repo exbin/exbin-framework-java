@@ -16,13 +16,17 @@
 package org.exbin.framework.addon.manager.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.event.MouseEvent;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
+import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
+import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.OkCancelListener;
@@ -76,10 +80,20 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         manualOnlyModeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                DesktopUtils.openDesktopURL(link);
+                if (evt.getButton() == MouseEvent.BUTTON1 && !evt.isPopupTrigger()) {
+                    DesktopUtils.openDesktopURL(link);
+                }
             }
         });
         manualOnlyModeLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        manualOnlyModeLabel.setComponentPopupMenu(new JPopupMenu() {
+
+            @Override
+            public void show(Component invoker, int x, int y) {
+                ActionPopupModuleApi actionPopupModule = App.getModule(ActionPopupModuleApi.class);
+                actionPopupModule.createLinkPopupMenu(link).show(invoker, x, y);
+            }
+        });
         add(manualOnlyModePanel, BorderLayout.CENTER);
     }
 
