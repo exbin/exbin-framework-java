@@ -13,42 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.addon.manager.model;
+package org.exbin.framework.addon.manager.service;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Addon update record.
+ * Addon catalog service exception.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class UpdateRecord {
+public class AddonCatalogServiceException extends Exception {
 
-    private String moduleId;
-    private String version = "";
-
-    public UpdateRecord(String moduleId, String version) {
-        this.moduleId = moduleId;
-        this.version = version;
+    public AddonCatalogServiceException() {
     }
 
-    @Nonnull
-    public String getModuleId() {
-        return moduleId;
+    public AddonCatalogServiceException(String string) {
+        super(string);
     }
 
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
+    public AddonCatalogServiceException(String string, Throwable thrwbl) {
+        super(string, thrwbl);
     }
 
-    @Nonnull
-    public String getVersion() {
-        return version;
+    public AddonCatalogServiceException(Throwable thrwbl) {
+        super(thrwbl);
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public AddonCatalogServiceException(String string, Throwable thrwbl, boolean bln, boolean bln1) {
+        super(string, thrwbl, bln, bln1);
     }
 }

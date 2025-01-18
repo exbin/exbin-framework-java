@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -47,6 +49,7 @@ import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleFileLocation;
@@ -138,6 +141,11 @@ public class AddonManagerAction extends AbstractAction {
             }
 
             @Override
+            public boolean isInstalled(String moduleId) {
+                return (((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasInstallAddon(moduleId)) && !addonUpdateChanges.hasRemoveAddon(moduleId);
+            }
+
+            @Override
             public void installItem(ItemRecord item) {
                 AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
                 addonUpdateOperation.installItem(item);
@@ -194,11 +202,13 @@ public class AddonManagerAction extends AbstractAction {
                 switch (activeTab) {
                     case ADDONS:
                         Set<String> toUpdate = addonManagerPanel.getToUpdate();
-                        AddonCatalogService.AddonsListResult searchForAddons = addonManagerService.searchForAddons("");
-                        for (int i = 0; i < searchForAddons.itemsCount(); i++) {
-                            AddonRecord addon = searchForAddons.getLazyItem(i);
-                            if (toUpdate.contains(addon.getId())) {
-                                addonUpdateOperation.installItem(addon);
+                        for (String addonId : toUpdate) {
+                            AddonRecord addonRecord;
+                            try {
+                                addonRecord = addonManagerService.getAddonDependency(addonId);
+                                addonUpdateOperation.installItem(addonRecord);
+                            } catch (AddonCatalogServiceException ex) {
+                                Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                         break;

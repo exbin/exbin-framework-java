@@ -25,9 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.xml.parsers.DocumentBuilder;
@@ -37,9 +34,11 @@ import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
+import org.exbin.framework.addon.manager.model.UpdateRecord;
 import org.exbin.framework.addon.manager.operation.DownloadOperation;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -59,14 +58,19 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     private final Map<AddonRecord, String> iconPaths = new HashMap<>();
     private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
 
+    @Override
+    public boolean checkStatus(String version) throws AddonCatalogServiceException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Nonnull
     @Override
-    public AddonsListResult searchForAddons(String searchCondition) {
+    public List<AddonRecord> searchForAddons(String searchCondition) throws AddonCatalogServiceException {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         List<AddonRecord> searchResult = new ArrayList<>();
         URL searchUrl;
         try {
-            searchUrl = new URL((addonManagerModule.isDevMode() && false ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=list");
+            searchUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=list");
             try (InputStream searchStream = searchUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -139,35 +143,22 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                     }
                 }
             } catch (IOException | SAXException | ParserConfigurationException ex) {
-                Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                return new ServiceFailureResult(ex);
+                throw new AddonCatalogServiceException(ex);
             }
         } catch (MalformedURLException ex) {
-            Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return new ServiceFailureResult(ex);
+            throw new AddonCatalogServiceException(ex);
         }
-
-        return new AddonsListResult() {
-            @Override
-            public int itemsCount() {
-                return searchResult.size();
-            }
-
-            @Nonnull
-            @Override
-            public AddonRecord getLazyItem(int index) {
-                return searchResult.get(index);
-            }
-        };
+        
+        return searchResult;
     }
 
     @Nonnull
     @Override
-    public Optional<AddonRecord> getAddonDependency(String addonId) {
+    public AddonRecord getAddonDependency(String addonId) throws AddonCatalogServiceException {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         URL requestUrl;
         try {
-            requestUrl = new URL((addonManagerModule.isDevMode() && false ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addondep&id=" + addonId);
+            requestUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addondep&id=" + addonId);
             try (InputStream searchStream = requestUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -225,27 +216,27 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                                     record.setDependencies(dependencyRecords);
                                 }
                             }
-                            return Optional.of(record);
+                            return record;
                         }
                     }
                 }
             } catch (IOException | SAXException | ParserConfigurationException ex) {
-                throw new RuntimeException("Error processing response for addon dependency for addon: " + addonId, ex);
+                throw new AddonCatalogServiceException("Error processing response for addon dependency for addon: " + addonId, ex);
             }
         } catch (MalformedURLException ex) {
-            throw new RuntimeException("Error processing response for addon dependency for addon: " + addonId, ex);
+            throw new AddonCatalogServiceException("Error processing response for addon dependency for addon: " + addonId, ex);
         }
 
-        return Optional.empty();
+        throw new AddonCatalogServiceException("No record for addon: " + addonId);
     }
 
     @Nonnull
     @Override
-    public String getAddonFile(String addonId) {
+    public String getAddonFile(String addonId) throws AddonCatalogServiceException {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         URL requestUrl;
         try {
-            requestUrl = new URL((addonManagerModule.isDevMode() && false ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addonfile&id=" + addonId);
+            requestUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addonfile&id=" + addonId);
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
                 String line = reader.readLine();
                 if (line == null || line.isEmpty()) {
@@ -253,11 +244,17 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                 }
                 return line;
             } catch (IOException ex) {
-                throw new RuntimeException("Invalid response for file request for addon: " + addonId, ex);
+                throw new AddonCatalogServiceException("Invalid response for file request for addon: " + addonId, ex);
             }
         } catch (MalformedURLException ex) {
-            throw new RuntimeException("Invalid response for file request for addon: " + addonId, ex);
+            throw new AddonCatalogServiceException("Invalid response for file request for addon: " + addonId, ex);
         }
+    }
+
+    @Nonnull
+    @Override
+    public List<UpdateRecord> getUpdateRecords() throws AddonCatalogServiceException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Nonnull
@@ -277,30 +274,5 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     public interface IconChangeListener {
 
         void iconsChanged();
-    }
-
-    @ParametersAreNonnullByDefault
-    public static class ServiceFailureResult implements AddonsListResult {
-
-        private final Exception ex;
-
-        public ServiceFailureResult(Exception ex) {
-            this.ex = ex;
-        }
-
-        @Nonnull
-        public Exception getException() {
-            return ex;
-        }
-
-        @Override
-        public int itemsCount() {
-            return 0;
-        }
-
-        @Override
-        public AddonRecord getLazyItem(int index) {
-            throw new IllegalStateException();
-        }
     }
 }

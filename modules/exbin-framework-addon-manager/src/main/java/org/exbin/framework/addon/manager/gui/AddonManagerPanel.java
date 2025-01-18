@@ -19,15 +19,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
@@ -133,14 +137,14 @@ public class AddonManagerPanel extends javax.swing.JPanel {
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
         addonsPanel.setController(new AddonsPanel.Controller() {
 
-            private AddonCatalogService.AddonsListResult searchResult;
+            private List<AddonRecord> searchResult;
 
             @Override
             public int getItemsCount() {
                 if (searchResult == null) {
                     searchForAddons();
                 }
-                return searchResult.itemsCount();
+                return searchResult.size();
             }
 
             @Nonnull
@@ -149,7 +153,7 @@ public class AddonManagerPanel extends javax.swing.JPanel {
                 if (searchResult == null) {
                     searchForAddons();
                 }
-                return searchResult.getLazyItem(index);
+                return searchResult.get(index);
             }
 
             @Override
@@ -179,9 +183,15 @@ public class AddonManagerPanel extends javax.swing.JPanel {
             }
 
             private void searchForAddons() {
-                searchResult = addonCatalogService.searchForAddons("");
-                if (searchResult instanceof AddonCatalogServiceImpl.ServiceFailureResult) {
-                    // Exception exception = ((AddonCatalogServiceImpl.ServiceFailureResult) searchResult).getException();
+                try {
+                    searchResult = addonCatalogService.searchForAddons("");
+                    for (int i = searchResult.size() - 1; i >= 0; i--) {
+                        if (controller.isInstalled(searchResult.get(i).getId())) {
+                            searchResult.remove(i);
+                        }
+                    }
+                } catch (AddonCatalogServiceException ex) {
+                    Logger.getLogger(AddonManagerPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(AddonManagerPanel.this, "API request failed", "Addon Service Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -252,6 +262,8 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
         @Nonnull
         List<ItemRecord> getInstalledItems();
+
+        boolean isInstalled(String moduleId);
 
         void installItem(ItemRecord item);
 

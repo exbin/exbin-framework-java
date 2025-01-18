@@ -15,17 +15,15 @@
  */
 package org.exbin.framework.addon.manager.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.model.UpdateRecord;
 import org.exbin.framework.addon.manager.operation.DownloadOperation;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 
 /**
  * Addon legacy service implementation using fixed files.
@@ -35,26 +33,32 @@ import org.exbin.framework.addon.manager.service.AddonCatalogService;
 @ParametersAreNonnullByDefault
 public class AddonLegacyServiceImpl implements AddonCatalogService {
 
-    private static final String CATALOG_URL = "https://bined.exbin.org/addon/";
-    private static final String CATALOG_DEV_URL = "https://bined.exbin.org/addon-dev/";
-    private final Map<AddonRecord, String> iconPaths = new HashMap<>();
-    private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
-
-    @Nonnull
     @Override
-    public AddonsListResult searchForAddons(String searchCondition) {
-        throw new IllegalStateException();
+    public boolean checkStatus(String version) throws AddonCatalogServiceException {
+        return true;
     }
 
     @Nonnull
     @Override
-    public Optional<AddonRecord> getAddonDependency(String addonId) {
+    public List<AddonRecord> searchForAddons(String searchCondition) throws AddonCatalogServiceException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Nonnull
     @Override
-    public String getAddonFile(String addonId) {
+    public AddonRecord getAddonDependency(String moduleId) throws AddonCatalogServiceException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
+    public String getAddonFile(String moduleId) throws AddonCatalogServiceException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
+    public List<UpdateRecord> getUpdateRecords() throws AddonCatalogServiceException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -62,18 +66,5 @@ public class AddonLegacyServiceImpl implements AddonCatalogService {
     @Override
     public DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records) {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void addIconChangeListener(IconChangeListener listener) {
-        iconChangeListeners.add(listener);
-    }
-
-    public void removeIconChangeListener(IconChangeListener listener) {
-        iconChangeListeners.remove(listener);
-    }
-
-    public interface IconChangeListener {
-
-        void iconsChanged();
     }
 }

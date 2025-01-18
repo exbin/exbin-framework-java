@@ -16,10 +16,10 @@
 package org.exbin.framework.addon.manager.service;
 
 import java.util.List;
-import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.model.UpdateRecord;
 import org.exbin.framework.addon.manager.operation.DownloadOperation;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 
@@ -31,23 +31,59 @@ import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 @ParametersAreNonnullByDefault
 public interface AddonCatalogService {
 
-    @Nonnull
-    AddonsListResult searchForAddons(String searchCondition);
+    /**
+     * Checks whether service supports specific catalog version.
+     *
+     * @param version checked version
+     * @return true if supported
+     * @throws AddonCatalogServiceException when service fails
+     */
+    boolean checkStatus(String version) throws AddonCatalogServiceException;
 
+    /**
+     * Request search for addons with option to specifi search condition for
+     * name.
+     *
+     * @param searchCondition search condition
+     * @return list of found addons
+     * @throws AddonCatalogServiceException when service fails
+     */
     @Nonnull
-    Optional<AddonRecord> getAddonDependency(String addonId);
+    List<AddonRecord> searchForAddons(String searchCondition) throws AddonCatalogServiceException;
 
+    /**
+     * Returns simplified record of specific addon with depedency / license info
+     * only.
+     *
+     * @param moduleId module id
+     * @return addon record
+     * @throws AddonCatalogServiceException when service fails
+     */
     @Nonnull
-    String getAddonFile(String addonId);
+    AddonRecord getAddonDependency(String moduleId) throws AddonCatalogServiceException;
+
+    /**
+     * Returns module filename for specific addon.
+     *
+     * @param moduleId module id
+     * @return addon filename
+     * @throws AddonCatalogServiceException when service fails
+     */
+    @Nonnull
+    String getAddonFile(String moduleId) throws AddonCatalogServiceException;
+
+    /**
+     * Returns update records for all addons.
+     *
+     * @return update records
+     * @throws AddonCatalogServiceException when service fails
+     */
+    @Nonnull
+    List<UpdateRecord> getUpdateRecords() throws AddonCatalogServiceException;
 
     @Nonnull
     DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records);
 
-    public interface AddonsListResult {
-
-        int itemsCount();
-
-        @Nonnull
-        AddonRecord getLazyItem(int index);
-    }
+//    @Nonnull
+//    CancellableOperation createIconsDownloadOperation(List<AddonRecord> records);
 }

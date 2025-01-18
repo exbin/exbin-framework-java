@@ -18,11 +18,10 @@ package org.exbin.framework.addon.manager.operation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -37,6 +36,7 @@ import org.exbin.framework.addon.manager.model.UpdateRecord;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
+import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
@@ -54,7 +54,8 @@ public class AddonUpdateOperation {
     private final AddonCatalogService addonCatalogService;
     private final AddonUpdateChanges addonUpdateChanges;
     private final LocalModules localModules;
-    private final Map<String, UpdateRecord> availableUpdates = new HashMap<>();
+    private final List<UpdateRecord> updatesRecords = new ArrayList<>();
+    private final Set<String> availableUpdates = new HashSet<>();
 
     private final UpdateOperations updateOperations = new UpdateOperations();
 
@@ -102,11 +103,11 @@ public class AddonUpdateOperation {
     @Nonnull
     public List<LicenseItemRecord> getLicenseRecords() {
         List<LicenseItemRecord> licenseRecords = new ArrayList<>();
-/*        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        String licenseDownloadPrefix = addonManagerModule.isDevMode() && false ? "https://bined.exbin.org/addon-dev/license/" : "https://bined.exbin.org/addon/license/";
+        /*        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        String licenseDownloadPrefix = addonManagerModule.isDevMode() ? "https://bined.exbin.org/addon-dev/license/" : "https://bined.exbin.org/addon/license/";
         for (String moduleFile : updateOperations.downloadModule) {
             try {
-                LicenseItemRecord record = new LicenseItemRecord("Apache-2.0", new URL(licenseDownloadPrefix + "Apache-2.0.html"));
+                LicenseItemRecord record = new LicenseItemRecord("Apache License, Version 2.0", new URL(licenseDownloadPrefix + "Apache-2.0.html"));
                 licenseRecords.add(record);
             } catch (MalformedURLException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
@@ -119,7 +120,7 @@ public class AddonUpdateOperation {
     @Nonnull
     public List<DownloadItemRecord> getDownloadRecords() {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        String libraryDownloadPrefix = addonManagerModule.isDevMode() && false ? "https://bined.exbin.org/addon-dev/download/" : "https://bined.exbin.org/addon/download/";
+        String libraryDownloadPrefix = addonManagerModule.isDevMode() ? "https://bined.exbin.org/addon-dev/download/" : "https://bined.exbin.org/addon/download/";
         List<DownloadItemRecord> downloadRecords = new ArrayList<>();
         String downloadItemDescription = resourceBundle.getString("downloadItemDescription.module");
         for (String moduleFile : updateOperations.downloadModule) {
@@ -161,7 +162,11 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
             updateOperations.installAddons.add(addonId);
-            updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonId));
+            try {
+                updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonId));
+            } catch (AddonCatalogServiceException ex) {
+                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+            }
             addAddonDependencies((AddonRecord) item);
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
@@ -175,7 +180,11 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
             updateOperations.installAddons.add(addonId);
-            updateOperations.downloadModule.add(addonCatalogService.getAddonFile(item.getId()));
+            try {
+                updateOperations.downloadModule.add(addonCatalogService.getAddonFile(item.getId()));
+            } catch (AddonCatalogServiceException ex) {
+                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+            }
             addAddonDependencies((AddonRecord) item);
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
@@ -189,8 +198,12 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for removal: " + addonId);
             }
             updateOperations.removeAddons.add(addonId);
-            // TODO Should be addon filename instead of filename from catalog
-            updateOperations.removeLibraries.add(addonCatalogService.getAddonFile(item.getId()));
+            try {
+                // TODO Should be addon filename instead of filename from catalog
+                updateOperations.removeLibraries.add(addonCatalogService.getAddonFile(item.getId()));
+            } catch (AddonCatalogServiceException ex) {
+                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
         }
@@ -210,19 +223,20 @@ public class AddonUpdateOperation {
 
                     if (updateOperations.installAddons.contains(dependencyId)) {
                         include = false;
-                    } else if (localModules.hasModule(dependencyId) && !availableUpdates.containsKey(dependencyId)) {
+                    } else if (localModules.hasModule(dependencyId) && !availableUpdates.contains(dependencyId)) {
                         include = false;
                     }
 
                     if (include) {
-                        Optional<AddonRecord> optRecord = addonCatalogService.getAddonDependency(dependencyId);
-                        if (!optRecord.isPresent()) {
-                            throw new IllegalStateException("Missing dependecy: " + dependencyId);
+                        AddonRecord addonRecord;
+                        try {
+                            addonRecord = addonCatalogService.getAddonDependency(dependencyId);
+                            updateOperations.installAddons.add(addonRecord.getId());
+                            updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonRecord.getId()));
+                            dependencies.addAll(addonRecord.getDependencies());
+                        } catch (AddonCatalogServiceException ex) {
+                            Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        AddonRecord addonRecord = optRecord.get();
-                        updateOperations.installAddons.add(addonRecord.getId());
-                        updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonRecord.getId()));
-                        dependencies.addAll(addonRecord.getDependencies());
                     }
                     break;
                 case JAR_LIBRARY:
