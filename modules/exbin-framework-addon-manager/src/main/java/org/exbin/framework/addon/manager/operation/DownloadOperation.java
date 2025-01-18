@@ -22,8 +22,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
@@ -38,7 +36,7 @@ import org.exbin.framework.operation.api.ProgressOperation;
 @ParametersAreNonnullByDefault
 public class DownloadOperation implements Runnable, CancellableOperation, ProgressOperation {
 
-    private List<DownloadItemRecord> records;
+    private final List<DownloadItemRecord> records;
     private DownloadOperation.ItemChangeListener listener;
     private boolean cancelled = false;
     private long totalDownloadSize = 0;

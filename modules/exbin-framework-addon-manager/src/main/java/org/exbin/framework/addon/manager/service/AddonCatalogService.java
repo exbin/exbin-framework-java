@@ -35,7 +35,10 @@ public interface AddonCatalogService {
     AddonsListResult searchForAddons(String searchCondition);
 
     @Nonnull
-    Optional<AddonRecord> getAddon(String addonId);
+    Optional<AddonRecord> getAddonDependency(String addonId);
+
+    @Nonnull
+    String getAddonFile(String addonId);
 
     @Nonnull
     DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records);

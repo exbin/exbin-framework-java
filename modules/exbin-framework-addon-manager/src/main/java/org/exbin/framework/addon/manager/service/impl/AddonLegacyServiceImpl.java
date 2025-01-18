@@ -48,7 +48,13 @@ public class AddonLegacyServiceImpl implements AddonCatalogService {
 
     @Nonnull
     @Override
-    public Optional<AddonRecord> getAddon(String addonId) {
+    public Optional<AddonRecord> getAddonDependency(String addonId) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
+    public String getAddonFile(String addonId) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

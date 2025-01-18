@@ -15,13 +15,20 @@
  */
 package org.exbin.framework.addon.manager.operation;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
@@ -31,7 +38,7 @@ import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.basic.BasicModuleProvider;
-import org.exbin.framework.basic.ModuleRecord;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Addon update operation.
@@ -41,14 +48,15 @@ import org.exbin.framework.basic.ModuleRecord;
 @ParametersAreNonnullByDefault
 public class AddonUpdateOperation {
 
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonUpdateOperation.class);
+
+    private static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
     private final AddonCatalogService addonCatalogService;
     private final AddonUpdateChanges addonUpdateChanges;
-    private final UpdateOperations updateOperations = new UpdateOperations();
     private final LocalModules localModules;
     private final Map<String, UpdateRecord> availableUpdates = new HashMap<>();
 
-    private final List<LicenseItemRecord> licenseRecords = new ArrayList<>();
-    private final List<DownloadItemRecord> downloadRecords = new ArrayList<>();
+    private final UpdateOperations updateOperations = new UpdateOperations();
 
     public AddonUpdateOperation(AddonCatalogService addonCatalogService, LocalModules localModules, AddonUpdateChanges addonUpdateChanges) {
         this.addonCatalogService = addonCatalogService;
@@ -64,25 +72,86 @@ public class AddonUpdateOperation {
     @Nonnull
     public List<String> getOperations() {
         List<String> operations = new ArrayList<>();
+        String operationMessage = resourceBundle.getString("operationMessage.installModule");
+        for (String moduleId : updateOperations.installAddons) {
+            operations.add(String.format(operationMessage, moduleId));
+        }
+        operationMessage = resourceBundle.getString("operationMessage.removeModule");
+        for (String moduleId : updateOperations.removeAddons) {
+            operations.add(String.format(operationMessage, moduleId));
+        }
+        operationMessage = resourceBundle.getString("operationMessage.dependencyAddon");
+        for (String moduleId : updateOperations.dependencyAddons) {
+            operations.add(String.format(operationMessage, moduleId));
+        }
+        operationMessage = resourceBundle.getString("operationMessage.downloadLibrary");
+        for (String libraryFile : updateOperations.downloadLibraries) {
+            operations.add(String.format(operationMessage, libraryFile));
+        }
+        operationMessage = resourceBundle.getString("operationMessage.downloadMavenLibrary");
+        for (String libraryFile : updateOperations.downloadMavenLibraries) {
+            operations.add(String.format(operationMessage, libraryFile));
+        }
+        operationMessage = resourceBundle.getString("operationMessage.removeLibrary");
+        for (String libraryFile : updateOperations.removeLibraries) {
+            operations.add(String.format(operationMessage, libraryFile));
+        }
         return operations;
     }
 
     @Nonnull
     public List<LicenseItemRecord> getLicenseRecords() {
+        List<LicenseItemRecord> licenseRecords = new ArrayList<>();
+/*        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        String licenseDownloadPrefix = addonManagerModule.isDevMode() && false ? "https://bined.exbin.org/addon-dev/license/" : "https://bined.exbin.org/addon/license/";
+        for (String moduleFile : updateOperations.downloadModule) {
+            try {
+                LicenseItemRecord record = new LicenseItemRecord("Apache-2.0", new URL(licenseDownloadPrefix + "Apache-2.0.html"));
+                licenseRecords.add(record);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } */
+
         return licenseRecords;
     }
 
     @Nonnull
     public List<DownloadItemRecord> getDownloadRecords() {
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        String libraryDownloadPrefix = addonManagerModule.isDevMode() && false ? "https://bined.exbin.org/addon-dev/download/" : "https://bined.exbin.org/addon/download/";
+        List<DownloadItemRecord> downloadRecords = new ArrayList<>();
+        String downloadItemDescription = resourceBundle.getString("downloadItemDescription.module");
+        for (String moduleFile : updateOperations.downloadModule) {
+            DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, moduleFile), moduleFile);
+            try {
+                record.setUrl(new URL(libraryDownloadPrefix + moduleFile));
+                downloadRecords.add(record);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        downloadItemDescription = resourceBundle.getString("downloadItemDescription.library");
+        for (String library : updateOperations.downloadLibraries) {
+            DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), library);
+            try {
+                record.setUrl(new URL(libraryDownloadPrefix + library));
+                downloadRecords.add(record);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        downloadItemDescription = resourceBundle.getString("downloadItemDescription.mavenLibrary");
+        for (String library : updateOperations.downloadMavenLibraries) {
+            DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), library);
+            try {
+                record.setUrl(new URL(AddonUpdateOperation.mavenCodeToDownloadUrl(library)));
+                downloadRecords.add(record);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         return downloadRecords;
-    }
-
-    public boolean hasLicenseRecords() {
-        return !licenseRecords.isEmpty();
-    }
-
-    public boolean hasDownloadRecords() {
-        return !downloadRecords.isEmpty();
     }
 
     public void installItem(ItemRecord item) {
@@ -92,7 +161,7 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
             updateOperations.installAddons.add(addonId);
-            addAddonFile((AddonRecord) item);
+            updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonId));
             addAddonDependencies((AddonRecord) item);
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
@@ -106,7 +175,7 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
             updateOperations.installAddons.add(addonId);
-            addAddonFile((AddonRecord) item);
+            updateOperations.downloadModule.add(addonCatalogService.getAddonFile(item.getId()));
             addAddonDependencies((AddonRecord) item);
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
@@ -120,6 +189,8 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for removal: " + addonId);
             }
             updateOperations.removeAddons.add(addonId);
+            // TODO Should be addon filename instead of filename from catalog
+            updateOperations.removeLibraries.add(addonCatalogService.getAddonFile(item.getId()));
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
         }
@@ -144,32 +215,84 @@ public class AddonUpdateOperation {
                     }
 
                     if (include) {
-                        Optional<AddonRecord> optRecord = addonCatalogService.getAddon(dependencyId);
+                        Optional<AddonRecord> optRecord = addonCatalogService.getAddonDependency(dependencyId);
                         if (!optRecord.isPresent()) {
                             throw new IllegalStateException("Missing dependecy: " + dependencyId);
                         }
                         AddonRecord addonRecord = optRecord.get();
                         updateOperations.installAddons.add(addonRecord.getId());
-                        addAddonFile(addonRecord);
+                        updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonRecord.getId()));
                         dependencies.addAll(addonRecord.getDependencies());
                     }
                     break;
                 case JAR_LIBRARY:
-                    if (!localModules.hasLibrary(dependencyId) && !updateOperations.downloadLibrary.contains(dependencyId)) {
-                        updateOperations.downloadLibrary.add(dependencyId);
+                    if (!localModules.hasLibrary(dependencyId) && !updateOperations.downloadLibraries.contains(dependencyId)) {
+                        updateOperations.downloadLibraries.add(dependencyId);
                     }
                     break;
                 case MAVEN_LIBRARY:
-                    if (!localModules.hasLibrary(BasicModuleProvider.mavenCodeToFileName(dependencyId)) && !updateOperations.mavenLibrary.contains(dependencyId)) {
-                        updateOperations.mavenLibrary.add(dependencyId);
+                    if (!localModules.hasLibrary(BasicModuleProvider.mavenCodeToFileName(dependencyId)) && !updateOperations.downloadMavenLibraries.contains(dependencyId)) {
+                        updateOperations.downloadMavenLibraries.add(dependencyId);
                     }
                     break;
             }
         }
     }
 
-    private void addAddonFile(AddonRecord addonRecord) {
+    public void finished() {
+        for (String moduleId : updateOperations.installAddons) {
+            addonUpdateChanges.removeRemoveAddon(moduleId);
+            addonUpdateChanges.addInstallAddon(moduleId);
+        }
+        for (String moduleId : updateOperations.dependencyAddons) {
+            addonUpdateChanges.removeRemoveAddon(moduleId);
+            addonUpdateChanges.addInstallAddon(moduleId);
+        }
+        for (String moduleFile : updateOperations.downloadModule) {
+            addonUpdateChanges.removeRemoveFile(moduleFile);
+            addonUpdateChanges.addUpdateFile(moduleFile);
+        }
+        for (String libraryFile : updateOperations.downloadLibraries) {
+            addonUpdateChanges.removeRemoveFile(libraryFile);
+            addonUpdateChanges.addUpdateFile(libraryFile);
+        }
+        for (String mavenLibrary : updateOperations.downloadMavenLibraries) {
+            String libraryFile = BasicModuleProvider.mavenCodeToFileName(mavenLibrary);
+            addonUpdateChanges.removeRemoveFile(libraryFile);
+            addonUpdateChanges.addUpdateFile(libraryFile);
+        }
+        for (String moduleId : updateOperations.removeAddons) {
+            addonUpdateChanges.removeInstallAddon(moduleId);
+            addonUpdateChanges.addRemoveAddon(moduleId);
+        }
+        for (String file : updateOperations.removeLibraries) {
+            addonUpdateChanges.removeUpdateFile(file);
+            // TODO delete file
+            addonUpdateChanges.addRemoveFile(file);
+        }
+        addonUpdateChanges.writeConfigFile();
+    }
 
+    @Nonnull
+    public static String mavenCodeToDownloadUrl(String mavenCode) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(MAVEN_CENTRAL_URL);
+        int namePos = mavenCode.indexOf(":");
+        int domainSegment = 0;
+        while (domainSegment < namePos) {
+            int segment = mavenCode.indexOf(".", domainSegment);
+            if (segment > namePos) {
+                segment = namePos;
+            }
+            builder.append(mavenCode.substring(domainSegment, segment)).append("/");
+            domainSegment = segment + 1;
+        }
+        int versionPos = mavenCode.indexOf(":", namePos + 1);
+        String namePart = mavenCode.substring(namePos + 1, versionPos);
+        String versionPart = mavenCode.substring(versionPos + 1);
+        builder.append(namePart).append("/").append(versionPart).append("/");
+        builder.append(namePart).append("-").append(versionPart).append(".jar");
+        return builder.toString();
     }
 
     private static class UpdateOperations {
@@ -177,9 +300,10 @@ public class AddonUpdateOperation {
         final List<String> installAddons = new ArrayList<>();
         final List<String> dependencyAddons = new ArrayList<>();
         final List<String> removeAddons = new ArrayList<>();
-        final List<String> downloadLibrary = new ArrayList<>();
-        final List<String> mavenLibrary = new ArrayList<>();
-        final List<String> removeLibrary = new ArrayList<>();
+        final List<String> downloadModule = new ArrayList<>();
+        final List<String> downloadLibraries = new ArrayList<>();
+        final List<String> downloadMavenLibraries = new ArrayList<>();
+        final List<String> removeLibraries = new ArrayList<>();
     }
 
     public interface LocalModules {

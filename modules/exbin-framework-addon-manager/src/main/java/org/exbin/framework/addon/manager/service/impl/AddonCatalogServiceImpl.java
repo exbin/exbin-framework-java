@@ -15,8 +15,10 @@
  */
 package org.exbin.framework.addon.manager.service.impl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -62,10 +64,10 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     public AddonsListResult searchForAddons(String searchCondition) {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         List<AddonRecord> searchResult = new ArrayList<>();
-        URL seachUrl;
+        URL searchUrl;
         try {
-            seachUrl = new URL((addonManagerModule.isDevMode() && false ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=list");
-            try (InputStream searchStream = seachUrl.openStream()) {
+            searchUrl = new URL((addonManagerModule.isDevMode() && false ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=list");
+            try (InputStream searchStream = searchUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                 Document document = documentBuilder.parse(searchStream);
@@ -96,6 +98,12 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                                     record.setHomepage(moduleChildNode.getTextContent());
                                 } else if ("provider".equals(moduleChildNode.getNodeName())) {
                                     record.setProvider(moduleChildNode.getTextContent());
+                                } else if ("license".equals(moduleChildNode.getNodeName())) {
+                                    if (moduleChildNode.hasAttributes()) {
+                                        Node spdxNode = moduleChildNode.getAttributes().getNamedItem("spdx");
+                                        record.setLicenseSpdx(spdxNode.getNodeValue());
+                                    }
+                                    record.setLicense(moduleChildNode.getTextContent());
                                 } else if ("dependency".equals(moduleChildNode.getNodeName())) {
                                     NodeList depencenyNodes = moduleChildNode.getChildNodes();
                                     List<DependencyRecord> dependencyRecords = new ArrayList<>();
@@ -155,8 +163,101 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
 
     @Nonnull
     @Override
-    public Optional<AddonRecord> getAddon(String addonId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Optional<AddonRecord> getAddonDependency(String addonId) {
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        URL requestUrl;
+        try {
+            requestUrl = new URL((addonManagerModule.isDevMode() && false ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addondep&id=" + addonId);
+            try (InputStream searchStream = requestUrl.openStream()) {
+                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                Document document = documentBuilder.parse(searchStream);
+                NodeList resultNodes = document.getElementsByTagName("result");
+                if (resultNodes.getLength() > 0) {
+                    Node resultNode = resultNodes.item(0);
+                    NodeList resultNodeList = resultNode.getChildNodes();
+                    int childCount = resultNodeList.getLength();
+                    for (int resultNodeIndex = 0; resultNodeIndex < childCount; resultNodeIndex++) {
+                        Node childNode = resultNodeList.item(resultNodeIndex);
+                        if ("module".equals(childNode.getNodeName())) {
+                            NamedNodeMap moduleAttributes = childNode.getAttributes();
+                            Node moduleIdNode = moduleAttributes.getNamedItem("id");
+                            String moduleId = moduleIdNode.getNodeValue();
+                            Node moduleNameNode = moduleAttributes.getNamedItem("name");
+                            String moduleName = moduleNameNode.getNodeValue();
+                            AddonRecord record = new AddonRecord(moduleId, moduleName);
+                            record.setAddon(true);
+                            NodeList moduleChildNodes = childNode.getChildNodes();
+                            int moduleChildCount = moduleChildNodes.getLength();
+                            for (int moduleNodeIndex = 0; moduleNodeIndex < moduleChildCount; moduleNodeIndex++) {
+                                Node moduleChildNode = moduleChildNodes.item(moduleNodeIndex);
+                                if ("license".equals(moduleChildNode.getNodeName())) {
+                                    if (moduleChildNode.hasAttributes()) {
+                                        Node spdxNode = moduleChildNode.getAttributes().getNamedItem("spdx");
+                                        record.setLicenseSpdx(spdxNode.getNodeValue());
+                                    }
+                                    record.setLicense(moduleChildNode.getTextContent());
+                                } else if ("dependency".equals(moduleChildNode.getNodeName())) {
+                                    NodeList depencenyNodes = moduleChildNode.getChildNodes();
+                                    List<DependencyRecord> dependencyRecords = new ArrayList<>();
+                                    int dependecyCount = depencenyNodes.getLength();
+                                    for (int depNodeIndex = 0; depNodeIndex < dependecyCount; depNodeIndex++) {
+                                        Node dependencyNode = depencenyNodes.item(depNodeIndex);
+                                        if ("module".equals(dependencyNode.getNodeName())) {
+                                            Node dependencyModuleId = dependencyNode.getAttributes().getNamedItem("id");
+                                            DependencyRecord dependencyRecord = new DependencyRecord(dependencyModuleId.getNodeValue());
+                                            dependencyRecord.setType(DependencyRecord.Type.MODULE);
+                                            dependencyRecords.add(dependencyRecord);
+                                        } else if ("library".equals(dependencyNode.getNodeName())) {
+                                            Node libraryMaven = dependencyNode.getAttributes().getNamedItem("maven");
+                                            if (libraryMaven != null) {
+                                                DependencyRecord dependencyRecord = new DependencyRecord(libraryMaven.getNodeValue());
+                                                dependencyRecord.setType(DependencyRecord.Type.MAVEN_LIBRARY);
+                                                dependencyRecords.add(dependencyRecord);
+                                            } else {
+                                                Node libraryJar = dependencyNode.getAttributes().getNamedItem("jar");
+                                                DependencyRecord dependencyRecord = new DependencyRecord(libraryJar.getNodeValue());
+                                                dependencyRecord.setType(DependencyRecord.Type.JAR_LIBRARY);
+                                                dependencyRecords.add(dependencyRecord);
+                                            }
+                                        }
+                                    }
+                                    record.setDependencies(dependencyRecords);
+                                }
+                            }
+                            return Optional.of(record);
+                        }
+                    }
+                }
+            } catch (IOException | SAXException | ParserConfigurationException ex) {
+                throw new RuntimeException("Error processing response for addon dependency for addon: " + addonId, ex);
+            }
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("Error processing response for addon dependency for addon: " + addonId, ex);
+        }
+
+        return Optional.empty();
+    }
+
+    @Nonnull
+    @Override
+    public String getAddonFile(String addonId) {
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        URL requestUrl;
+        try {
+            requestUrl = new URL((addonManagerModule.isDevMode() && false ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addonfile&id=" + addonId);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
+                String line = reader.readLine();
+                if (line == null || line.isEmpty()) {
+                    throw new RuntimeException("Empty response for file request for addon: " + addonId);
+                }
+                return line;
+            } catch (IOException ex) {
+                throw new RuntimeException("Invalid response for file request for addon: " + addonId, ex);
+            }
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("Invalid response for file request for addon: " + addonId, ex);
+        }
     }
 
     @Nonnull

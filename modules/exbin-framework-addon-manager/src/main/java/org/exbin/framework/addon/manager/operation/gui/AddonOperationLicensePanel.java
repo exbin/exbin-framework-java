@@ -15,16 +15,21 @@
  */
 package org.exbin.framework.addon.manager.operation.gui;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
-import javax.swing.ListModel;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
@@ -48,6 +53,28 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
 
     private void init() {
         licenseList.setModel(new DefaultListModel<>());
+        licenseList.addListSelectionListener((ListSelectionEvent e) -> {
+            int selectedIndex = licenseList.getSelectedIndex();
+            if (selectedIndex < 0) {
+                licenseContentEditorPane.setText("");
+                licenseApprovalCheckBox.setSelected(false);
+                licenseApprovalCheckBox.setEnabled(false);
+            } else {
+                LicenseItemRecord record = licenseRecords.get(selectedIndex);
+                try {
+                    licenseContentEditorPane.setPage(record.getUrl());
+                } catch (IOException ex) {
+                    Logger.getLogger(AddonOperationLicensePanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                licenseApprovalCheckBox.setSelected(record.isApproved());
+                licenseApprovalCheckBox.setEnabled(true);
+            }
+        });
+        licenseContentEditorPane.addHyperlinkListener((HyperlinkEvent event) -> {
+            if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                DesktopUtils.openDesktopURL(event.getURL().toExternalForm());
+            }
+        });
     }
 
     @Nonnull
@@ -103,6 +130,12 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
         licenseContentScrollPane.setViewportView(licenseContentEditorPane);
 
         licenseApprovalCheckBox.setText(resourceBundle.getString("licenseApprovalCheckBox.text")); // NOI18N
+        licenseApprovalCheckBox.setEnabled(false);
+        licenseApprovalCheckBox.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                licenseApprovalCheckBoxStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout licensePanelLayout = new javax.swing.GroupLayout(licensePanel);
         licensePanel.setLayout(licensePanelLayout);
@@ -111,7 +144,7 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
             .addGroup(licensePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(licensePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(licenseContentScrollPane)
+                    .addComponent(licenseContentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
                     .addGroup(licensePanelLayout.createSequentialGroup()
                         .addComponent(licenseApprovalCheckBox)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -135,9 +168,11 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(licensesToApproveLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(splitPane)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(licensesToApproveLabel)
+                        .addContainerGap(518, Short.MAX_VALUE))
+                    .addComponent(splitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,6 +183,14 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
                 .addComponent(splitPane))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void licenseApprovalCheckBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_licenseApprovalCheckBoxStateChanged
+        int selectedIndex = licenseList.getSelectedIndex();
+        if (selectedIndex > 0) {
+            LicenseItemRecord record = licenseRecords.get(selectedIndex);
+            record.setApproved(licenseApprovalCheckBox.isSelected());
+        }
+    }//GEN-LAST:event_licenseApprovalCheckBoxStateChanged
 
     /**
      * Test method for this panel.
@@ -176,13 +219,5 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
 
     public interface Controller {
 
-        int getItemsCount();
-
-        @Nonnull
-        ItemRecord getItem(int index);
-
-        void installItem(ItemRecord item);
-
-        void updateItem(ItemRecord item);
     }
 }

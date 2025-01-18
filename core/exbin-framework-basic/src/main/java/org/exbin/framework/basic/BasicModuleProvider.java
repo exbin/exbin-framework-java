@@ -549,9 +549,9 @@ public class BasicModuleProvider implements ModuleProvider {
 
     @Nonnull
     public static String mavenCodeToFileName(String mavenCode) {
-        int namePart = mavenCode.indexOf(":");
-        int versionPart = mavenCode.indexOf(":", namePart + 1);
-        return mavenCode.substring(namePart + 1, versionPart) + "-" + mavenCode.substring(versionPart + 1) + ".jar";
+        int namePos = mavenCode.indexOf(":");
+        int versionPos = mavenCode.indexOf(":", namePos + 1);
+        return mavenCode.substring(namePos + 1, versionPos) + "-" + mavenCode.substring(versionPos + 1) + ".jar";
     }
 
     private static class LibraryRecord {

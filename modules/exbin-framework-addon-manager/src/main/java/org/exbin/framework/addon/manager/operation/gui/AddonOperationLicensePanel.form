@@ -19,10 +19,14 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="licensesToApproveLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="licensesToApproveLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="518" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="splitPane" alignment="1" pref="0" max="32767" attributes="0"/>
+              </Group>
           </Group>
-          <Component id="splitPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -89,7 +93,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="licenseContentScrollPane" max="32767" attributes="0"/>
+                          <Component id="licenseContentScrollPane" pref="442" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="licenseApprovalCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -131,7 +135,11 @@
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="org/exbin/framework/addon/manager/operation/gui/resources/AddonOperationLicensePanel.properties" key="licenseApprovalCheckBox.text" replaceFormat="resourceBundle.getString(&quot;{key}&quot;)"/>
                 </Property>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="licenseApprovalCheckBoxStateChanged"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

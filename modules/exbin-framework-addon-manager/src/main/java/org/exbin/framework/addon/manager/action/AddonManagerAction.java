@@ -43,6 +43,7 @@ import org.exbin.framework.addon.manager.operation.gui.AddonOperationDownloadPan
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationLicensePanel;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
+import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -123,7 +124,6 @@ public class AddonManagerAction extends AbstractAction {
                 }
             };
         }
-        final List<ModuleRecord> modulesList = basicModulesList == null ? new ArrayList<>() : basicModulesList;
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
@@ -141,14 +141,6 @@ public class AddonManagerAction extends AbstractAction {
             public void installItem(ItemRecord item) {
                 AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
                 addonUpdateOperation.installItem(item);
-//                DownloadItemRecord downloadRecord = new DownloadItemRecord("Test", "exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar");
-//                try {
-//                    downloadRecord.setUrl(new URL("https://bined.exbin.org/addon/download/exbin-framework-flatlaf-laf-fat-0.2.4-SNAPSHOT.jar"));
-//                    operations.add("Download module file: " + downloadRecord.getFileName());
-//                } catch (MalformedURLException ex) {
-//                    Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//                downloadRecords.add(downloadRecord);
                 performAddonsOperation(addonUpdateOperation, addonManagerPanel);
             }
 
@@ -269,26 +261,24 @@ public class AddonManagerAction extends AbstractAction {
                     case NEXT:
                         switch (step) {
                             case OVERVIEW:
-                                if (addonUpdateOperation.hasLicenseRecords()) {
+                                List<LicenseItemRecord> licenseRecords = addonUpdateOperation.getLicenseRecords();
+                                if (!licenseRecords.isEmpty()) {
                                     step = AddonOperationPanel.Step.LICENSE;
                                     operationPanel.goToStep(step);
                                     AddonOperationLicensePanel panel = (AddonOperationLicensePanel) operationPanel.getActiveComponent();
-                                    panel.setLicenseRecords(addonUpdateOperation.getLicenseRecords());
+                                    panel.setLicenseRecords(licenseRecords);
                                     // TODO panel.addChangeListener()
                                     enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
-                                } else if (addonUpdateOperation.hasDownloadRecords()) {
-                                    goToDownload();
-                                } else {
-                                    // TODO Remove only operation
+                                    break;
                                 }
-                                break;
+                            // no break
                             case LICENSE:
-                                if (addonUpdateOperation.hasDownloadRecords()) {
-                                    goToDownload();
-                                } else {
-                                    // TODO Remove only operation
+                                List<DownloadItemRecord> downloadRecords = addonUpdateOperation.getDownloadRecords();
+                                if (!downloadRecords.isEmpty()) {
+                                    goToDownload(downloadRecords);
+                                    break;
                                 }
-                                break;
+                            // no break
                             case DOWNLOAD:
                                 step = AddonOperationPanel.Step.SUCCESS;
                                 operationPanel.goToStep(step);
@@ -312,6 +302,7 @@ public class AddonManagerAction extends AbstractAction {
                         }
                         break;
                     case FINISH:
+                        addonUpdateOperation.finished();
                         dialog.close();
                         break;
                     default:
@@ -319,10 +310,9 @@ public class AddonManagerAction extends AbstractAction {
                 }
             }
 
-            private void goToDownload() {
+            private void goToDownload(List<DownloadItemRecord> downloadRecords) {
                 step = AddonOperationPanel.Step.DOWNLOAD;
                 operationPanel.goToStep(step);
-                List<DownloadItemRecord> downloadRecords = addonUpdateOperation.getDownloadRecords();
                 AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent();
                 panel.setDownloadedItemRecords(downloadRecords);
                 downloadOperation = addonManagerService.createDownloadsOperation(downloadRecords);

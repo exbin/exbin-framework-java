@@ -30,6 +30,8 @@ public class AddonRecord extends ItemRecord {
 
     private RepositoryRecord repository;
     private List<DependencyRecord> dependencies = new ArrayList<>();
+    private String license;
+    private String licenseSpdx;
 
     public AddonRecord(String id, String name) {
         super(id, name);
@@ -51,5 +53,21 @@ public class AddonRecord extends ItemRecord {
 
     public void setDependencies(List<DependencyRecord> dependencies) {
         this.dependencies = dependencies;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
+
+    public String getLicenseSpdx() {
+        return licenseSpdx;
+    }
+
+    public void setLicenseSpdx(String licenseSpdx) {
+        this.licenseSpdx = licenseSpdx;
     }
 }

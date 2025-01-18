@@ -138,61 +138,45 @@ public class BasicApplication {
         File addonsDirectory = new File(configDirectory.getAbsolutePath(), ADDONS_DIRECTORY);
         File updateDirectory = new File(configDirectory.getAbsolutePath(), ADDONS_UPDATE_DIRECTORY);
         if (updateDirectory.exists()) {
-            File updateConfig = new File(updateDirectory, "update.cfg");
-            File removeConfig = new File(updateDirectory, "remove.cfg");
+            File changesConfig = new File(updateDirectory, "changes.cfg");
 
-            if (updateConfig.exists() || removeConfig.exists()) {
+            if (changesConfig.exists()) {
                 if (!addonsDirectory.exists()) {
                     addonsDirectory.mkdirs();
                 }
                 // Perform update
                 Logger.getLogger(BasicApplication.class.getName()).log(Level.INFO, "Starting addons update");
-                if (updateConfig.exists()) {
-                    boolean success = false;
-                    String line = null;
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(updateConfig)))) {
-                        do {
-                            line = reader.readLine();
-                            if (line != null && !line.isEmpty()) {
-                                File replacedFile = new File(addonsDirectory, line);
-                                File sourceFile = new File(updateDirectory, line);
+                boolean success = false;
+                String line = null;
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(changesConfig)))) {
+                    do {
+                        line = reader.readLine();
+                        if (line != null) {
+                            if (line.startsWith("UPDATE_FILE")) {
+                                String fileName = line.substring(12);
+                                File replacedFile = new File(addonsDirectory, fileName);
+                                File sourceFile = new File(updateDirectory, fileName);
                                 if (sourceFile.exists()) {
                                     if (replacedFile.exists()) {
                                         replacedFile.delete();
                                     }
                                 }
                                 sourceFile.renameTo(replacedFile);
-                            }
-                        } while (line != null);
-                        success = true;
-                    } catch (IOException ex) {
-                        Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, "Failed to move file " + line, ex);
-                    }
-                    if (success) {
-                        updateConfig.delete();
-                    }
-                }
-
-                if (removeConfig.exists()) {
-                    boolean success = false;
-                    String line = null;
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(removeConfig)))) {
-                        do {
-                            line = reader.readLine();
-                            if (line != null && !line.isEmpty()) {
-                                File removedFile = new File(addonsDirectory, line);
+                            } else if (line.startsWith("REMOVE_FILE")) {
+                                String fileName = line.substring(12);
+                                File removedFile = new File(addonsDirectory, fileName);
                                 if (removedFile.exists()) {
                                     removedFile.delete();
                                 }
                             }
-                        } while (line != null);
-                        success = true;
-                    } catch (IOException ex) {
-                        Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, "Failed to delete file " + line, ex);
-                    }
-                    if (success) {
-                        removeConfig.delete();
-                    }
+                        }
+                    } while (line != null);
+                    success = true;
+                } catch (IOException ex) {
+                    Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, "Failed to move file " + line, ex);
+                }
+                if (success) {
+                    changesConfig.delete();
                 }
 
                 Logger.getLogger(BasicApplication.class.getName()).log(Level.INFO, "Finished addons update");

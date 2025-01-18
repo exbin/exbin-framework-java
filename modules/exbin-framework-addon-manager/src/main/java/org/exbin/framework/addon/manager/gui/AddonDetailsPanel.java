@@ -195,6 +195,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
         versionLabel.setText("Version");
 
+        overviewTextPane.setEditable(false);
         overviewTextPane.setContentType("text/html"); // NOI18N
         overviewScrollPane.setViewportView(overviewTextPane);
 
