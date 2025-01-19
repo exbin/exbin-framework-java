@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleProvider;
 import org.exbin.framework.action.api.ActionConsts;
@@ -35,12 +37,16 @@ import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
+import org.exbin.framework.addon.manager.gui.AddonsPanel;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.addon.manager.operation.AddonUpdateOperation;
+import org.exbin.framework.addon.manager.operation.ApplicationModulesUsage;
+import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.addon.manager.operation.DownloadOperation;
+import org.exbin.framework.addon.manager.operation.UpdateAvailabilityOperation;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationDownloadPanel;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationLicensePanel;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
@@ -54,6 +60,7 @@ import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleFileLocation;
 import org.exbin.framework.basic.ModuleRecord;
+import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.window.api.gui.MultiStepControlPanel;
 import org.exbin.framework.window.api.handler.MultiStepControlHandler;
 
@@ -69,8 +76,10 @@ public class AddonManagerAction extends AbstractAction {
 
     private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerAction.class);
 
-    private AddonCatalogService addonManagerService;
-    private AddonUpdateOperation.LocalModules localModules;
+    private AddonCatalogService addonCatalogService;
+    private ApplicationModulesUsage applicationModulesUsage;
+    private AvailableModuleUpdates availableModuleUpdates;
+    private int serviceStatus = -1;
 
     public AddonManagerAction() {
         init();
@@ -81,20 +90,22 @@ public class AddonManagerAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
 
-        addonManagerService = new AddonCatalogServiceImpl();
+        addonCatalogService = new AddonCatalogServiceImpl();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // TODO: Extract to separate class to not share fields
         AddonsControlPanel controlPanel = new AddonsControlPanel();
+        availableModuleUpdates = new AvailableModuleUpdates();
+        availableModuleUpdates.readConfigFile();
 
         AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
         addonUpdateChanges.readConfigFile();
-        List<ModuleRecord> basicModulesList = null;
         List<ItemRecord> installedAddons = new ArrayList<>();
         ModuleProvider moduleProvider = App.getModuleProvider();
         if (moduleProvider instanceof BasicModuleProvider) {
-            basicModulesList = ((BasicModuleProvider) moduleProvider).getModulesList();
+            List<ModuleRecord> basicModulesList = ((BasicModuleProvider) moduleProvider).getModulesList();
             for (ModuleRecord moduleRecord : basicModulesList) {
                 AddonRecord itemRecord = new AddonRecord(moduleRecord.getModuleId(), moduleRecord.getName());
                 itemRecord.setInstalled(true);
@@ -115,7 +126,7 @@ public class AddonManagerAction extends AbstractAction {
                 installedAddons.add(itemRecord);
                 // System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
             }
-            localModules = new AddonUpdateOperation.LocalModules() {
+            applicationModulesUsage = new ApplicationModulesUsage() {
                 @Override
                 public boolean hasModule(String moduleId) {
                     return ((BasicModuleProvider) moduleProvider).hasModule(moduleId);
@@ -131,13 +142,149 @@ public class AddonManagerAction extends AbstractAction {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
         addonManagerPanel.setPreferredSize(new Dimension(800, 500));
-        addonManagerPanel.setAddonCatalogService(addonManagerService);
         addonManagerPanel.setController(new AddonManagerPanel.Controller() {
 
             @Nonnull
             @Override
-            public List<ItemRecord> getInstalledItems() {
-                return installedAddons;
+            public AddonsPanel.Controller getInstalledItemsController() {
+                return new AddonsPanel.Controller() {
+                    @Override
+                    public int getItemsCount() {
+                        return installedAddons.size();
+                    }
+
+                    @Nonnull
+                    @Override
+                    public ItemRecord getItem(int index) {
+                        return installedAddons.get(index);
+                    }
+
+                    @Override
+                    public void install(ItemRecord item) {
+                        throw new IllegalStateException("Already installed");
+                    }
+
+                    @Override
+                    public void update(ItemRecord item) {
+                        updateItem(item);
+                    }
+
+                    @Override
+                    public void remove(ItemRecord item) {
+                        removeItem(item);
+                    }
+
+                    @Override
+                    public void changeSelection(ItemRecord item) {
+                        String moduleId = item.getId();
+                        Set<String> toUpdate = addonManagerPanel.getToUpdate();
+                        if (toUpdate.contains(moduleId)) {
+                            toUpdate.remove(moduleId);
+                        } else {
+                            toUpdate.add(moduleId);
+                        }
+                        updateSelectionChanged(addonManagerPanel.getToUpdateCount());
+                    }
+
+                    @Override
+                    public boolean isItemSelectedForOperation(ItemRecord item) {
+                        Set<String> toUpdate = addonManagerPanel.getToUpdate();
+                        return toUpdate.contains(item.getId());
+                    }
+
+                    @Override
+                    public void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener) {
+                        availableModuleUpdates.addChangeListener(listener);
+                    }
+                };
+            }
+
+            @Nonnull
+            @Override
+            public AddonsPanel.Controller getAddonsCatalogController() {
+                return new AddonsPanel.Controller() {
+
+                    private List<AddonRecord> searchResult;
+
+                    @Override
+                    public int getItemsCount() {
+                        if (searchResult == null) {
+                            searchForAddons();
+                        }
+                        return searchResult.size();
+                    }
+
+                    @Nonnull
+                    @Override
+                    public ItemRecord getItem(int index) {
+                        if (searchResult == null) {
+                            searchForAddons();
+                        }
+                        return searchResult.get(index);
+                    }
+
+                    @Override
+                    public void install(ItemRecord item) {
+                        installItem(item);
+                    }
+
+                    @Override
+                    public void update(ItemRecord item) {
+                        updateItem(item);
+                    }
+
+                    @Override
+                    public void remove(ItemRecord item) {
+                        removeItem(item);
+                    }
+
+                    @Override
+                    public void changeSelection(ItemRecord item) {
+                        String moduleId = item.getId();
+                        Set<String> toInstall = addonManagerPanel.getToInstall();
+                        if (toInstall.contains(moduleId)) {
+                            toInstall.remove(moduleId);
+                        } else {
+                            toInstall.add(moduleId);
+                        }
+                        installSelectionChanged(addonManagerPanel.getToInstallCount());
+                    }
+
+                    private void searchForAddons() {
+                        if (serviceStatus == -1) {
+                            searchResult = new ArrayList<>();
+                            return;
+                        }
+
+                        try {
+                            searchResult = addonCatalogService.searchForAddons("");
+                            for (int i = searchResult.size() - 1; i >= 0; i--) {
+                                AddonRecord record = searchResult.get(i);
+                                if (isInstalled(record.getId())) {
+                                    searchResult.remove(i);
+                                } else {
+                                    if (availableModuleUpdates.getStatus() != -1) {
+                                        record.setUpdateAvailable(availableModuleUpdates.isUpdateAvailable(record.getId(), record.getVersion()));
+                                    }
+                                }
+                            }
+                        } catch (AddonCatalogServiceException ex) {
+                            Logger.getLogger(AddonManagerPanel.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(addonManagerPanel, "API request failed", "Addon Service Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+
+                    @Override
+                    public boolean isItemSelectedForOperation(ItemRecord item) {
+                        Set<String> toInstall = addonManagerPanel.getToInstall();
+                        return toInstall.contains(item.getId());
+                    }
+
+                    @Override
+                    public void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener) {
+                        availableModuleUpdates.addChangeListener(listener);
+                    }
+                };
             }
 
             @Override
@@ -147,21 +294,21 @@ public class AddonManagerAction extends AbstractAction {
 
             @Override
             public void installItem(ItemRecord item) {
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
                 addonUpdateOperation.installItem(item);
                 performAddonsOperation(addonUpdateOperation, addonManagerPanel);
             }
 
             @Override
             public void updateItem(ItemRecord item) {
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
                 addonUpdateOperation.updateItem(item);
                 performAddonsOperation(addonUpdateOperation, addonManagerPanel);
             }
 
             @Override
             public void removeItem(ItemRecord item) {
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
                 addonUpdateOperation.removeItem(item);
                 performAddonsOperation(addonUpdateOperation, addonManagerPanel);
             }
@@ -198,14 +345,14 @@ public class AddonManagerAction extends AbstractAction {
             public void performOperation() {
                 AddonManagerPanel.Tab activeTab = addonManagerPanel.getActiveTab();
 
-                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonManagerService, localModules, addonUpdateChanges);
+                AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
                 switch (activeTab) {
                     case ADDONS:
                         Set<String> toUpdate = addonManagerPanel.getToUpdate();
                         for (String addonId : toUpdate) {
                             AddonRecord addonRecord;
                             try {
-                                addonRecord = addonManagerService.getAddonDependency(addonId);
+                                addonRecord = addonCatalogService.getAddonDependency(addonId);
                                 addonUpdateOperation.installItem(addonRecord);
                             } catch (AddonCatalogServiceException ex) {
                                 Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
@@ -227,9 +374,27 @@ public class AddonManagerAction extends AbstractAction {
             }
         });
 
-        // TODO
-        // controlPanel.showLegacyWarning();
-        // controlPanel.showManualOnlyWarning();
+        try {
+            LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+            ResourceBundle appBundle = languageModule.getAppBundle();
+            String releaseString = appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE);
+            serviceStatus = addonCatalogService.checkStatus(releaseString);
+            // TODO
+            // controlPanel.showLegacyWarning();
+            if (serviceStatus == -1) {
+                controlPanel.showManualOnlyWarning();
+            } else if (serviceStatus > availableModuleUpdates.getStatus()) {
+                UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
+                Thread thread = new Thread(() -> {
+                    availabilityOperation.run();
+                    availableModuleUpdates.setLatestVersion(serviceStatus, availabilityOperation.getLatestVersions());
+                    availableModuleUpdates.writeConfigFile();
+                });
+                thread.start();
+            }
+        } catch (AddonCatalogServiceException ex) {
+            Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, "Status check failed", ex);
+        }
         controlPanel.setOperationState(AddonsControlPanel.OperationVariant.UPDATE_ALL, 0);
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());
@@ -325,7 +490,7 @@ public class AddonManagerAction extends AbstractAction {
                 operationPanel.goToStep(step);
                 AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent();
                 panel.setDownloadedItemRecords(downloadRecords);
-                downloadOperation = addonManagerService.createDownloadsOperation(downloadRecords);
+                downloadOperation = addonCatalogService.createDownloadsOperation(downloadRecords);
                 downloadOperation.setItemChangeListener(new DownloadOperation.ItemChangeListener() {
                     @Override
                     public void itemChanged(int itemIndex) {

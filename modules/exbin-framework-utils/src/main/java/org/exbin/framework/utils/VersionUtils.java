@@ -44,7 +44,7 @@ public class VersionUtils {
 
         while (versionSegment < version.length()) {
             int versionSplit = version.indexOf(".", versionSegment);
-            int thanVersionSplit = version.indexOf(".", thanVersionSegment);
+            int thanVersionSplit = thanVersion.indexOf(".", thanVersionSegment);
 
             if (versionSplit == -1 || thanVersionSplit == -1) {
                 return versionSplit > 0;
@@ -69,7 +69,7 @@ public class VersionUtils {
             }
 
             versionSegment = versionSplit + 1;
-            thanVersionSegment = thanVersionSegment + 1;
+            thanVersionSegment = thanVersionSplit + 1;
         }
 
         return true;

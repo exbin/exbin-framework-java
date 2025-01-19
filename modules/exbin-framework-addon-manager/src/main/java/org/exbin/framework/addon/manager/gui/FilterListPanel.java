@@ -86,6 +86,10 @@ public class FilterListPanel extends javax.swing.JPanel {
         };
         itemsList.setModel(listModel);
     }
+    
+    public void notifyItemsChanged() {
+        itemsList.repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

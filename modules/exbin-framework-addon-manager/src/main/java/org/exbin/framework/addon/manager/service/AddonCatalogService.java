@@ -35,10 +35,10 @@ public interface AddonCatalogService {
      * Checks whether service supports specific catalog version.
      *
      * @param version checked version
-     * @return true if supported
+     * @return -1 for failure, greater number for revisions
      * @throws AddonCatalogServiceException when service fails
      */
-    boolean checkStatus(String version) throws AddonCatalogServiceException;
+    int checkStatus(String version) throws AddonCatalogServiceException;
 
     /**
      * Request search for addons with option to specifi search condition for

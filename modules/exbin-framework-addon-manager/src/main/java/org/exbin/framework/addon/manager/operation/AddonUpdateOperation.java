@@ -53,15 +53,15 @@ public class AddonUpdateOperation {
     private static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
     private final AddonCatalogService addonCatalogService;
     private final AddonUpdateChanges addonUpdateChanges;
-    private final LocalModules localModules;
+    private final ApplicationModulesUsage applicationModulesUsage;
     private final List<UpdateRecord> updatesRecords = new ArrayList<>();
     private final Set<String> availableUpdates = new HashSet<>();
 
     private final UpdateOperations updateOperations = new UpdateOperations();
 
-    public AddonUpdateOperation(AddonCatalogService addonCatalogService, LocalModules localModules, AddonUpdateChanges addonUpdateChanges) {
+    public AddonUpdateOperation(AddonCatalogService addonCatalogService, ApplicationModulesUsage applicationModulesUsage, AddonUpdateChanges addonUpdateChanges) {
         this.addonCatalogService = addonCatalogService;
-        this.localModules = localModules;
+        this.applicationModulesUsage = applicationModulesUsage;
         this.addonUpdateChanges = addonUpdateChanges;
     }
 
@@ -223,7 +223,7 @@ public class AddonUpdateOperation {
 
                     if (updateOperations.installAddons.contains(dependencyId)) {
                         include = false;
-                    } else if (localModules.hasModule(dependencyId) && !availableUpdates.contains(dependencyId)) {
+                    } else if (applicationModulesUsage.hasModule(dependencyId) && !availableUpdates.contains(dependencyId)) {
                         include = false;
                     }
 
@@ -240,12 +240,12 @@ public class AddonUpdateOperation {
                     }
                     break;
                 case JAR_LIBRARY:
-                    if (!localModules.hasLibrary(dependencyId) && !updateOperations.downloadLibraries.contains(dependencyId)) {
+                    if (!applicationModulesUsage.hasLibrary(dependencyId) && !updateOperations.downloadLibraries.contains(dependencyId)) {
                         updateOperations.downloadLibraries.add(dependencyId);
                     }
                     break;
                 case MAVEN_LIBRARY:
-                    if (!localModules.hasLibrary(BasicModuleProvider.mavenCodeToFileName(dependencyId)) && !updateOperations.downloadMavenLibraries.contains(dependencyId)) {
+                    if (!applicationModulesUsage.hasLibrary(BasicModuleProvider.mavenCodeToFileName(dependencyId)) && !updateOperations.downloadMavenLibraries.contains(dependencyId)) {
                         updateOperations.downloadMavenLibraries.add(dependencyId);
                     }
                     break;
@@ -318,12 +318,5 @@ public class AddonUpdateOperation {
         final List<String> downloadLibraries = new ArrayList<>();
         final List<String> downloadMavenLibraries = new ArrayList<>();
         final List<String> removeLibraries = new ArrayList<>();
-    }
-
-    public interface LocalModules {
-
-        boolean hasModule(String moduleId);
-
-        boolean hasLibrary(String libraryFileName);
     }
 }

@@ -59,8 +59,23 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
 
     @Override
-    public boolean checkStatus(String version) throws AddonCatalogServiceException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int checkStatus(String version) throws AddonCatalogServiceException {
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        URL checkUrl;
+        try {
+            checkUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=check-" + version);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(checkUrl.openStream()))) {
+                String line = reader.readLine();
+                if (line == null || line.isEmpty()) {
+                    return -1;
+                }
+                return Integer.parseInt(line);
+            } catch (IOException ex) {
+                throw new AddonCatalogServiceException("Invalid response for status", ex);
+            }
+        } catch (MalformedURLException ex) {
+            throw new AddonCatalogServiceException(ex);
+        }
     }
 
     @Nonnull
@@ -148,7 +163,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
         } catch (MalformedURLException ex) {
             throw new AddonCatalogServiceException(ex);
         }
-        
+
         return searchResult;
     }
 
@@ -254,7 +269,25 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     @Nonnull
     @Override
     public List<UpdateRecord> getUpdateRecords() throws AddonCatalogServiceException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<UpdateRecord> records = new ArrayList<>();
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        URL requestUrl;
+        try {
+            requestUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=updates");
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
+                String line = reader.readLine();
+                if (line != null && !line.isEmpty()) {
+                    int split = line.indexOf(":");
+                    records.add(new UpdateRecord(line.substring(0, split), line.substring(split + 1)));
+                }
+            } catch (IOException ex) {
+                throw new AddonCatalogServiceException("Invalid response for addon updates", ex);
+            }
+        } catch (MalformedURLException ex) {
+            throw new AddonCatalogServiceException("Invalid response for addon updates", ex);
+        }
+
+        return records;
     }
 
     @Nonnull

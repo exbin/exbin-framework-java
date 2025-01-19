@@ -34,8 +34,8 @@ import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 public class AddonLegacyServiceImpl implements AddonCatalogService {
 
     @Override
-    public boolean checkStatus(String version) throws AddonCatalogServiceException {
-        return true;
+    public int checkStatus(String version) throws AddonCatalogServiceException {
+        return 0;
     }
 
     @Nonnull

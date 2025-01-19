@@ -39,12 +39,12 @@ public class AddonItemPanel extends javax.swing.JPanel {
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonItemPanel.class);
     private final ImageIcon defaultItemIcon;
     private final ImageIcon disabledStateIcon;
-    private final ImageIcon updateStateIcon;
+    private final ImageIcon updateAvailableStateIcon;
 
     public AddonItemPanel() {
         defaultItemIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("defaultItem.icon")));
         disabledStateIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("disabledState.icon")));
-        updateStateIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("updateState.icon")));
+        updateAvailableStateIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("updateAvailableState.icon")));
         initComponents();
     }
 
@@ -64,8 +64,8 @@ public class AddonItemPanel extends javax.swing.JPanel {
             stateLabel.setIcon(disabledStateIcon);
             setToolTipText(resourceBundle.getString("disabledState.toolTip"));
         } else if (itemRecord.isUpdateAvailable()) {
-            stateLabel.setIcon(updateStateIcon);
-            setToolTipText(resourceBundle.getString("updateState.toolTip"));
+            stateLabel.setIcon(updateAvailableStateIcon);
+            setToolTipText(resourceBundle.getString("updateAvailableState.toolTip"));
         } else {
             stateLabel.setIcon(null);
             setToolTipText(null);

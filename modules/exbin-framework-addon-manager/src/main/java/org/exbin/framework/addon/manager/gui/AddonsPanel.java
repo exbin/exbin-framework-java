@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -94,22 +95,29 @@ public class AddonsPanel extends javax.swing.JPanel {
 
             @Override
             public void performInstall() {
-                controller.installItem(activeRecord);
+                controller.install(activeRecord);
             }
 
             @Override
             public void performUpdate() {
-                controller.updateItem(activeRecord);
+                controller.update(activeRecord);
             }
 
             @Override
             public void performRemove() {
-                controller.removeItem(activeRecord);
+                controller.remove(activeRecord);
             }
 
             @Override
             public void changeSelection() {
                 controller.changeSelection(activeRecord);
+            }
+        });
+        controller.addUpdateAvailabilityListener((AvailableModuleUpdates availableModuleUpdates) -> {
+            filterListPanel.notifyItemsChanged();
+
+            for (int i = 0; i < controller.getItemsCount(); i++) {
+                availableModuleUpdates.applyTo(controller.getItem(i));
             }
         });
     }
@@ -170,14 +178,16 @@ public class AddonsPanel extends javax.swing.JPanel {
         @Nonnull
         ItemRecord getItem(int index);
 
-        void installItem(ItemRecord item);
+        void install(ItemRecord item);
 
-        void updateItem(ItemRecord item);
+        void update(ItemRecord item);
 
-        void removeItem(ItemRecord item);
+        void remove(ItemRecord item);
 
         void changeSelection(ItemRecord item);
-        
+
         boolean isItemSelectedForOperation(ItemRecord item);
+
+        void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener);
     }
 }

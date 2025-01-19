@@ -16,23 +16,15 @@
 package org.exbin.framework.addon.manager.gui;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.addon.manager.service.AddonCatalogService;
-import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
-import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
@@ -88,119 +80,8 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
-        List<ItemRecord> installedItems = controller.getInstalledItems();
-        installedPanel.setController(new AddonsPanel.Controller() {
-            @Override
-            public int getItemsCount() {
-                return installedItems.size();
-            }
-
-            @Nonnull
-            @Override
-            public ItemRecord getItem(int index) {
-                return installedItems.get(index);
-            }
-
-            @Override
-            public void installItem(ItemRecord item) {
-                throw new IllegalStateException();
-            }
-
-            @Override
-            public void updateItem(ItemRecord item) {
-                controller.updateItem(item);
-            }
-
-            @Override
-            public void removeItem(ItemRecord item) {
-                controller.removeItem(item);
-            }
-
-            @Override
-            public void changeSelection(ItemRecord item) {
-                String moduleId = item.getId();
-                if (toUpdate.contains(moduleId)) {
-                    toUpdate.remove(moduleId);
-                } else {
-                    toUpdate.add(moduleId);
-                }
-                controller.updateSelectionChanged(getToUpdateCount());
-            }
-
-            @Override
-            public boolean isItemSelectedForOperation(ItemRecord item) {
-                return toUpdate.contains(item.getId());
-            }
-        });
-    }
-
-    public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
-        addonsPanel.setController(new AddonsPanel.Controller() {
-
-            private List<AddonRecord> searchResult;
-
-            @Override
-            public int getItemsCount() {
-                if (searchResult == null) {
-                    searchForAddons();
-                }
-                return searchResult.size();
-            }
-
-            @Nonnull
-            @Override
-            public ItemRecord getItem(int index) {
-                if (searchResult == null) {
-                    searchForAddons();
-                }
-                return searchResult.get(index);
-            }
-
-            @Override
-            public void installItem(ItemRecord item) {
-                controller.installItem(item);
-            }
-
-            @Override
-            public void updateItem(ItemRecord item) {
-                throw new IllegalStateException();
-            }
-
-            @Override
-            public void changeSelection(ItemRecord item) {
-                String moduleId = item.getId();
-                if (toInstall.contains(moduleId)) {
-                    toInstall.remove(moduleId);
-                } else {
-                    toInstall.add(moduleId);
-                }
-                controller.installSelectionChanged(getToInstallCount());
-            }
-
-            @Override
-            public void removeItem(ItemRecord item) {
-                throw new IllegalStateException();
-            }
-
-            private void searchForAddons() {
-                try {
-                    searchResult = addonCatalogService.searchForAddons("");
-                    for (int i = searchResult.size() - 1; i >= 0; i--) {
-                        if (controller.isInstalled(searchResult.get(i).getId())) {
-                            searchResult.remove(i);
-                        }
-                    }
-                } catch (AddonCatalogServiceException ex) {
-                    Logger.getLogger(AddonManagerPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(AddonManagerPanel.this, "API request failed", "Addon Service Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-
-            @Override
-            public boolean isItemSelectedForOperation(ItemRecord item) {
-                return toInstall.contains(item.getId());
-            }
-        });
+        installedPanel.setController(controller.getInstalledItemsController());
+        addonsPanel.setController(controller.getAddonsCatalogController());
     }
 
     @Nonnull
@@ -258,11 +139,15 @@ public class AddonManagerPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
+    @ParametersAreNonnullByDefault
     public interface Controller {
 
         @Nonnull
-        List<ItemRecord> getInstalledItems();
+        AddonsPanel.Controller getInstalledItemsController();
 
+        @Nonnull
+        AddonsPanel.Controller getAddonsCatalogController();
+        
         boolean isInstalled(String moduleId);
 
         void installItem(ItemRecord item);

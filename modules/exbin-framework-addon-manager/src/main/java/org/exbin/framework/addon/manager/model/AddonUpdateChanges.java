@@ -38,6 +38,8 @@ import org.exbin.framework.App;
 @ParametersAreNonnullByDefault
 public class AddonUpdateChanges {
 
+    private static final String ADDON_UPDATES_DIR = "addons_update";
+    private static final String CHANGES_FILE = "changes.cfg";
     private final List<String> installAddons = new ArrayList<>();
     private final List<String> removeAddons = new ArrayList<>();
     private final List<String> updateFiles = new ArrayList<>();
@@ -112,8 +114,8 @@ public class AddonUpdateChanges {
     }
 
     public void readConfigFile() {
-        File targetDirectory = new File(App.getConfigDirectory(), "addons_update");
-        File changesConfigFile = new File(targetDirectory, "changes.cfg");
+        File targetDirectory = new File(App.getConfigDirectory(), ADDON_UPDATES_DIR);
+        File changesConfigFile = new File(targetDirectory, CHANGES_FILE);
         installAddons.clear();
         removeAddons.clear();
         updateFiles.clear();
@@ -139,14 +141,14 @@ public class AddonUpdateChanges {
                     }
                 } while (line != null);
             } catch (IOException ex) {
-                Logger.getLogger(AddonUpdateChanges.class.getName()).log(Level.SEVERE, "Failed to move file " + line, ex);
+                Logger.getLogger(AddonUpdateChanges.class.getName()).log(Level.SEVERE, "Failed to read config file " + line, ex);
             }
         }
     }
 
     public void writeConfigFile() {
-        File targetDirectory = new File(App.getConfigDirectory(), "addons_update");
-        File changesConfigFile = new File(targetDirectory, "changes.cfg");
+        File targetDirectory = new File(App.getConfigDirectory(), ADDON_UPDATES_DIR);
+        File changesConfigFile = new File(targetDirectory, CHANGES_FILE);
         try (OutputStreamWriter writer = new FileWriter(changesConfigFile)) {
             String prefix = ChangeType.INSTALL_ADDON.name() + ":";
             for (String line : installAddons) {
