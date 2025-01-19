@@ -124,8 +124,8 @@ public class AddonUpdateChanges {
             String line = null;
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(changesConfigFile)))) {
                 do {
+                    line = reader.readLine();
                     if (line != null && !line.isEmpty()) {
-                        line = reader.readLine();
                         int prefixEnd = line.indexOf(":");
                         String prefix = line.substring(0, prefixEnd);
                         String value = line.substring(prefixEnd + 1);

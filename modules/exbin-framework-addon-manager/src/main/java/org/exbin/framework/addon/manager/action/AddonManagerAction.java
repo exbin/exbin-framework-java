@@ -99,6 +99,7 @@ public class AddonManagerAction extends AbstractAction {
         AddonsControlPanel controlPanel = new AddonsControlPanel();
         availableModuleUpdates = new AvailableModuleUpdates();
         availableModuleUpdates.readConfigFile();
+        final List<AddonsPanel.ItemChangedListener> itemChangedListeners = new ArrayList<>();
 
         AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
         addonUpdateChanges.readConfigFile();
@@ -160,6 +161,16 @@ public class AddonManagerAction extends AbstractAction {
                     }
 
                     @Override
+                    public boolean isInstalled(String moduleId) {
+                        return (((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasInstallAddon(moduleId)) && !addonUpdateChanges.hasRemoveAddon(moduleId);
+                    }
+
+                    @Override
+                    public boolean isRemoved(String moduleId) {
+                        return (!((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasRemoveAddon(moduleId)) && !addonUpdateChanges.hasInstallAddon(moduleId);
+                    }
+
+                    @Override
                     public void install(ItemRecord item) {
                         throw new IllegalStateException("Already installed");
                     }
@@ -196,6 +207,11 @@ public class AddonManagerAction extends AbstractAction {
                     public void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener) {
                         availableModuleUpdates.addChangeListener(listener);
                     }
+
+                    @Override
+                    public void addItemChangedListener(AddonsPanel.ItemChangedListener listener) {
+                        itemChangedListeners.add(listener);
+                    }
                 };
             }
 
@@ -221,6 +237,16 @@ public class AddonManagerAction extends AbstractAction {
                             searchForAddons();
                         }
                         return searchResult.get(index);
+                    }
+
+                    @Override
+                    public boolean isInstalled(String moduleId) {
+                        return (((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasInstallAddon(moduleId)) && !addonUpdateChanges.hasRemoveAddon(moduleId);
+                    }
+
+                    @Override
+                    public boolean isRemoved(String moduleId) {
+                        return (!((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasRemoveAddon(moduleId)) && !addonUpdateChanges.hasInstallAddon(moduleId);
                     }
 
                     @Override
@@ -284,33 +310,33 @@ public class AddonManagerAction extends AbstractAction {
                     public void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener) {
                         availableModuleUpdates.addChangeListener(listener);
                     }
-                };
-            }
 
-            @Override
-            public boolean isInstalled(String moduleId) {
-                return (((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasInstallAddon(moduleId)) && !addonUpdateChanges.hasRemoveAddon(moduleId);
+                    @Override
+                    public void addItemChangedListener(AddonsPanel.ItemChangedListener listener) {
+                        itemChangedListeners.add(listener);
+                    }
+                };
             }
 
             @Override
             public void installItem(ItemRecord item) {
                 AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
                 addonUpdateOperation.installItem(item);
-                performAddonsOperation(addonUpdateOperation, addonManagerPanel);
+                performAddonsOperation(addonUpdateOperation, addonManagerPanel, itemChangedListeners);
             }
 
             @Override
             public void updateItem(ItemRecord item) {
                 AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
                 addonUpdateOperation.updateItem(item);
-                performAddonsOperation(addonUpdateOperation, addonManagerPanel);
+                performAddonsOperation(addonUpdateOperation, addonManagerPanel, itemChangedListeners);
             }
 
             @Override
             public void removeItem(ItemRecord item) {
                 AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
                 addonUpdateOperation.removeItem(item);
-                performAddonsOperation(addonUpdateOperation, addonManagerPanel);
+                performAddonsOperation(addonUpdateOperation, addonManagerPanel, itemChangedListeners);
             }
 
             @Override
@@ -370,7 +396,7 @@ public class AddonManagerAction extends AbstractAction {
                         break;
 
                 }
-                performAddonsOperation(addonUpdateOperation, addonManagerPanel);
+                performAddonsOperation(addonUpdateOperation, addonManagerPanel, itemChangedListeners);
             }
         });
 
@@ -404,7 +430,7 @@ public class AddonManagerAction extends AbstractAction {
         dialog.dispose();
     }
 
-    public void performAddonsOperation(AddonUpdateOperation addonUpdateOperation, JComponent parentComponent) {
+    public void performAddonsOperation(AddonUpdateOperation addonUpdateOperation, JComponent parentComponent, List<AddonsPanel.ItemChangedListener> finishListeners) {
         MultiStepControlPanel controlPanel = new MultiStepControlPanel();
         AddonOperationPanel operationPanel = new AddonOperationPanel();
         operationPanel.setPreferredSize(new Dimension(600, 300));
@@ -478,6 +504,9 @@ public class AddonManagerAction extends AbstractAction {
                         break;
                     case FINISH:
                         addonUpdateOperation.finished();
+                        for (AddonsPanel.ItemChangedListener listener : finishListeners) {
+                            listener.itemChanged();
+                        }
                         dialog.close();
                         break;
                     default:

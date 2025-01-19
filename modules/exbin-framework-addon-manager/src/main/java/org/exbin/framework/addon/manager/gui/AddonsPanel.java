@@ -87,10 +87,28 @@ public class AddonsPanel extends javax.swing.JPanel {
                 }
             }
         });
+        controller.addItemChangedListener(new ItemChangedListener() {
+            @Override
+            public void itemChanged() {
+                if (activeRecord != null) {
+                    addonDetailsPanel.setRecord(activeRecord, controller.isItemSelectedForOperation(activeRecord));
+                }
+            }
+        });
         addonDetailsPanel.setController(new AddonDetailsPanel.Controller() {
             @Override
             public void changeEnablement() {
                 // TODO
+            }
+
+            @Override
+            public boolean isInstalled(String moduleId) {
+                return controller.isInstalled(moduleId);
+            }
+
+            @Override
+            public boolean isRemoved(String moduleId) {
+                return controller.isRemoved(moduleId);
             }
 
             @Override
@@ -178,6 +196,10 @@ public class AddonsPanel extends javax.swing.JPanel {
         @Nonnull
         ItemRecord getItem(int index);
 
+        boolean isInstalled(String moduleId);
+
+        boolean isRemoved(String moduleId);
+
         void install(ItemRecord item);
 
         void update(ItemRecord item);
@@ -188,6 +210,13 @@ public class AddonsPanel extends javax.swing.JPanel {
 
         boolean isItemSelectedForOperation(ItemRecord item);
 
+        void addItemChangedListener(ItemChangedListener listener);
+
         void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener);
+    }
+
+    public interface ItemChangedListener {
+
+        void itemChanged();
     }
 }

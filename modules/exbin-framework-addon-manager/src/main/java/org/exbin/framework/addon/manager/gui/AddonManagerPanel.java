@@ -148,8 +148,6 @@ public class AddonManagerPanel extends javax.swing.JPanel {
         @Nonnull
         AddonsPanel.Controller getAddonsCatalogController();
         
-        boolean isInstalled(String moduleId);
-
         void installItem(ItemRecord item);
 
         void updateItem(ItemRecord item);

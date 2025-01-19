@@ -94,17 +94,22 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         }
         controlPanel.removeAll();
         if (itemRecord.isInstalled()) {
-            removeButton.setEnabled(itemRecord.isAddon());
+            boolean isRemoved = controller.isRemoved(itemRecord.getId());
+            boolean isInstalled = controller.isInstalled(itemRecord.getId());
+            removeButton.setEnabled(itemRecord.isAddon() && !isRemoved);
             controlPanel.add(removeButton);
             enablementButton.setText(resourceBundle.getString(itemRecord.isEnabled() ? "disableButton.text" : "enableButton.text"));
             controlPanel.add(enablementButton);
             updateCheckBox.setSelected(selectedForOperation);
-            updateCheckBox.setEnabled(itemRecord.isUpdateAvailable());
+            updateCheckBox.setEnabled(itemRecord.isUpdateAvailable() && !isInstalled);
             controlPanel.add(updateCheckBox);
-            updateButton.setEnabled(itemRecord.isUpdateAvailable());
+            updateButton.setEnabled(itemRecord.isUpdateAvailable() && !isInstalled);
             controlPanel.add(updateButton);
         } else {
+            boolean isInstalled = controller.isInstalled(itemRecord.getId());
             installCheckBox.setSelected(selectedForOperation);
+            installCheckBox.setEnabled(!isInstalled);
+            installButton.setEnabled(!isInstalled);
             controlPanel.add(installCheckBox);
             controlPanel.add(installButton);
         }
@@ -296,6 +301,10 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {
+
+        boolean isInstalled(String moduleId);
+
+        boolean isRemoved(String moduleId);
 
         void changeEnablement();
 
