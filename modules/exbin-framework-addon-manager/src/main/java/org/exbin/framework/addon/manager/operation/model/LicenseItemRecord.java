@@ -28,12 +28,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class LicenseItemRecord {
 
     private String name;
+    private String remoteFile;
     private URL url;
     private boolean approved = false;
 
-    public LicenseItemRecord(String name, URL url) {
+    public LicenseItemRecord(String name, String remoteFile) {
         this.name = name;
-        this.url = url;
+        this.remoteFile = remoteFile;
     }
 
     @Nonnull
@@ -43,6 +44,15 @@ public class LicenseItemRecord {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Nonnull
+    public String getRemoteFile() {
+        return remoteFile;
+    }
+
+    public void setRemoteFile(String remoteFile) {
+        this.remoteFile = remoteFile;
     }
 
     @Nonnull

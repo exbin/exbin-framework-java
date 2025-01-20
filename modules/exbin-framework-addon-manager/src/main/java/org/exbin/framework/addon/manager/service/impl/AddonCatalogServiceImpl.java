@@ -120,7 +120,13 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                                 } else if ("license".equals(moduleChildNode.getNodeName())) {
                                     if (moduleChildNode.hasAttributes()) {
                                         Node spdxNode = moduleChildNode.getAttributes().getNamedItem("spdx");
-                                        record.setLicenseSpdx(spdxNode.getNodeValue());
+                                        if (spdxNode != null) {
+                                            record.setLicenseSpdx(spdxNode.getNodeValue());
+                                        }
+                                        Node fileNode = moduleChildNode.getAttributes().getNamedItem("file");
+                                        if (fileNode != null) {
+                                            record.setLicenseRemoteFile(fileNode.getNodeValue());
+                                        }
                                     }
                                     record.setLicense(moduleChildNode.getTextContent());
                                 } else if ("dependency".equals(moduleChildNode.getNodeName())) {
@@ -200,7 +206,13 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
                                 if ("license".equals(moduleChildNode.getNodeName())) {
                                     if (moduleChildNode.hasAttributes()) {
                                         Node spdxNode = moduleChildNode.getAttributes().getNamedItem("spdx");
-                                        record.setLicenseSpdx(spdxNode.getNodeValue());
+                                        if (spdxNode != null) {
+                                            record.setLicenseSpdx(spdxNode.getNodeValue());
+                                        }
+                                        Node fileNode = moduleChildNode.getAttributes().getNamedItem("file");
+                                        if (fileNode != null) {
+                                            record.setLicenseRemoteFile(fileNode.getNodeValue());
+                                        }
                                     }
                                     record.setLicense(moduleChildNode.getTextContent());
                                 } else if ("dependency".equals(moduleChildNode.getNodeName())) {

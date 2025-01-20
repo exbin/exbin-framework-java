@@ -286,7 +286,7 @@ public class AddonManagerAction extends AbstractAction {
                             searchResult = addonCatalogService.searchForAddons("");
                             for (int i = searchResult.size() - 1; i >= 0; i--) {
                                 AddonRecord record = searchResult.get(i);
-                                if (isInstalled(record.getId())) {
+                                if (((BasicModuleProvider) moduleProvider).hasModule(record.getId()) && !addonUpdateChanges.hasRemoveAddon(record.getId())) {
                                     searchResult.remove(i);
                                 } else {
                                     if (availableModuleUpdates.getStatus() != -1) {
@@ -467,8 +467,13 @@ public class AddonManagerAction extends AbstractAction {
                                     step = AddonOperationPanel.Step.LICENSE;
                                     operationPanel.goToStep(step);
                                     AddonOperationLicensePanel panel = (AddonOperationLicensePanel) operationPanel.getActiveComponent();
+                                    panel.setController(new AddonOperationLicensePanel.Controller() {
+                                        @Override
+                                        public void approvalStateChanged(int toApprove) {
+                                            enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, toApprove == 0);
+                                        }
+                                    });
                                     panel.setLicenseRecords(licenseRecords);
-                                    // TODO panel.addChangeListener()
                                     enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
                                     break;
                                 }

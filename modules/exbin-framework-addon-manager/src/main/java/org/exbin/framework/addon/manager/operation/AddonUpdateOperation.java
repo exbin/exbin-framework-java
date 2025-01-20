@@ -32,7 +32,6 @@ import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
-import org.exbin.framework.addon.manager.model.UpdateRecord;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -54,7 +53,8 @@ public class AddonUpdateOperation {
     private final AddonCatalogService addonCatalogService;
     private final AddonUpdateChanges addonUpdateChanges;
     private final ApplicationModulesUsage applicationModulesUsage;
-    private final List<UpdateRecord> updatesRecords = new ArrayList<>();
+    private final List<LicenseItemRecord> licenseRecords = new ArrayList<>();
+    private final Set<String> licenseCodes = new HashSet<>();
     private final Set<String> availableUpdates = new HashSet<>();
 
     private final UpdateOperations updateOperations = new UpdateOperations();
@@ -102,17 +102,15 @@ public class AddonUpdateOperation {
 
     @Nonnull
     public List<LicenseItemRecord> getLicenseRecords() {
-        List<LicenseItemRecord> licenseRecords = new ArrayList<>();
-        /*        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         String licenseDownloadPrefix = addonManagerModule.isDevMode() ? "https://bined.exbin.org/addon-dev/license/" : "https://bined.exbin.org/addon/license/";
-        for (String moduleFile : updateOperations.downloadModule) {
+        for (LicenseItemRecord record : licenseRecords) {
             try {
-                LicenseItemRecord record = new LicenseItemRecord("Apache License, Version 2.0", new URL(licenseDownloadPrefix + "Apache-2.0.html"));
-                licenseRecords.add(record);
+                record.setUrl(new URL(licenseDownloadPrefix + record.getRemoteFile()));
             } catch (MalformedURLException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } */
+        }
 
         return licenseRecords;
     }
@@ -162,6 +160,7 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
             updateOperations.installAddons.add(addonId);
+            processAddonLicense((AddonRecord) item);
             try {
                 updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonId));
             } catch (AddonCatalogServiceException ex) {
@@ -180,6 +179,7 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
             updateOperations.installAddons.add(addonId);
+            processAddonLicense((AddonRecord) item);
             try {
                 updateOperations.downloadModule.add(addonCatalogService.getAddonFile(item.getId()));
             } catch (AddonCatalogServiceException ex) {
@@ -187,7 +187,7 @@ public class AddonUpdateOperation {
             }
             addAddonDependencies((AddonRecord) item);
         } else {
-            throw new IllegalStateException("Unable to install non-addon item");
+            throw new IllegalStateException("Unable to update non-addon item");
         }
     }
 
@@ -221,7 +221,7 @@ public class AddonUpdateOperation {
                 case PLUGIN:
                     boolean include = true;
 
-                    if (updateOperations.installAddons.contains(dependencyId)) {
+                    if (updateOperations.installAddons.contains(dependencyId) || updateOperations.dependencyAddons.contains(dependencyId)) {
                         include = false;
                     } else if (applicationModulesUsage.hasModule(dependencyId) && !availableUpdates.contains(dependencyId)) {
                         include = false;
@@ -231,7 +231,8 @@ public class AddonUpdateOperation {
                         AddonRecord addonRecord;
                         try {
                             addonRecord = addonCatalogService.getAddonDependency(dependencyId);
-                            updateOperations.installAddons.add(addonRecord.getId());
+                            updateOperations.dependencyAddons.add(addonRecord.getId());
+                            processAddonLicense(addonRecord);
                             updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonRecord.getId()));
                             dependencies.addAll(addonRecord.getDependencies());
                         } catch (AddonCatalogServiceException ex) {
@@ -250,6 +251,17 @@ public class AddonUpdateOperation {
                     }
                     break;
             }
+        }
+    }
+
+    public void processAddonLicense(AddonRecord addonRecord) {
+        String remoteFile = addonRecord.getLicenseRemoteFile();
+        if ("Apache-2.0".equals(addonRecord.getLicenseSpdx().orElse(null))) {
+            return;
+        }
+        if (!licenseCodes.contains(remoteFile)) {
+            licenseCodes.add(remoteFile);
+            licenseRecords.add(new LicenseItemRecord(addonRecord.getLicense(), remoteFile));
         }
     }
 

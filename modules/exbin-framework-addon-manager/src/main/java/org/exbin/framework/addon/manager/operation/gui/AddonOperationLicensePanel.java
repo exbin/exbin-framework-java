@@ -45,6 +45,7 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationLicensePanel.class);
     private Controller controller;
     private List<LicenseItemRecord> licenseRecords;
+    private int toApprove;
 
     public AddonOperationLicensePanel() {
         initComponents();
@@ -93,6 +94,7 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
         for (LicenseItemRecord licenseRecord : licenseRecords) {
             model.addElement(licenseRecord.getName());
         }
+        toApprove = licenseRecords.size();
     }
 
     /**
@@ -131,9 +133,9 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
 
         licenseApprovalCheckBox.setText(resourceBundle.getString("licenseApprovalCheckBox.text")); // NOI18N
         licenseApprovalCheckBox.setEnabled(false);
-        licenseApprovalCheckBox.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                licenseApprovalCheckBoxStateChanged(evt);
+        licenseApprovalCheckBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                licenseApprovalCheckBoxItemStateChanged(evt);
             }
         });
 
@@ -184,13 +186,21 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void licenseApprovalCheckBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_licenseApprovalCheckBoxStateChanged
+    private void licenseApprovalCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_licenseApprovalCheckBoxItemStateChanged
         int selectedIndex = licenseList.getSelectedIndex();
-        if (selectedIndex > 0) {
+        if (selectedIndex >= 0) {
             LicenseItemRecord record = licenseRecords.get(selectedIndex);
-            record.setApproved(licenseApprovalCheckBox.isSelected());
+            boolean isApproved = record.isApproved();
+            boolean changeTo = licenseApprovalCheckBox.isSelected();
+            if (isApproved != changeTo) {
+                record.setApproved(changeTo);
+                toApprove += changeTo ? -1 : 1;
+                if (controller != null) {
+                    controller.approvalStateChanged(toApprove);
+                }
+            }
         }
-    }//GEN-LAST:event_licenseApprovalCheckBoxStateChanged
+    }//GEN-LAST:event_licenseApprovalCheckBoxItemStateChanged
 
     /**
      * Test method for this panel.
@@ -219,5 +229,6 @@ public class AddonOperationLicensePanel extends javax.swing.JPanel {
 
     public interface Controller {
 
+        void approvalStateChanged(int toApprove);
     }
 }

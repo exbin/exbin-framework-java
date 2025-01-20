@@ -17,7 +17,9 @@ package org.exbin.framework.addon.manager.model;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -30,8 +32,9 @@ public class AddonRecord extends ItemRecord {
 
     private RepositoryRecord repository;
     private List<DependencyRecord> dependencies = new ArrayList<>();
-    private String license;
+    private String license = "";
     private String licenseSpdx;
+    private String licenseRemoteFile = "";
 
     public AddonRecord(String id, String name) {
         super(id, name);
@@ -55,6 +58,7 @@ public class AddonRecord extends ItemRecord {
         this.dependencies = dependencies;
     }
 
+    @Nonnull
     public String getLicense() {
         return license;
     }
@@ -63,11 +67,21 @@ public class AddonRecord extends ItemRecord {
         this.license = license;
     }
 
-    public String getLicenseSpdx() {
-        return licenseSpdx;
+    @Nonnull
+    public Optional<String> getLicenseSpdx() {
+        return Optional.ofNullable(licenseSpdx);
     }
 
-    public void setLicenseSpdx(String licenseSpdx) {
+    public void setLicenseSpdx(@Nullable String licenseSpdx) {
         this.licenseSpdx = licenseSpdx;
+    }
+
+    @Nonnull
+    public String getLicenseRemoteFile() {
+        return licenseRemoteFile;
+    }
+
+    public void setLicenseRemoteFile(String licenseRemoteFile) {
+        this.licenseRemoteFile = licenseRemoteFile;
     }
 }
