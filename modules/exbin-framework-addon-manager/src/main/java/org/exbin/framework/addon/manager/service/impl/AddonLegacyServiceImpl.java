@@ -64,6 +64,12 @@ public class AddonLegacyServiceImpl implements AddonCatalogService {
 
     @Nonnull
     @Override
+    public String getModuleDetails(String id) throws AddonCatalogServiceException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
     public DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -130,6 +130,12 @@ public class AddonsPanel extends javax.swing.JPanel {
             public void changeSelection() {
                 controller.changeSelection(activeRecord);
             }
+
+            @Nonnull
+            @Override
+            public String getModuleDetails(ItemRecord itemRecord) {
+                return controller.getModuleDetails(itemRecord);
+            }
         });
         controller.addUpdateAvailabilityListener((AvailableModuleUpdates availableModuleUpdates) -> {
             filterListPanel.notifyItemsChanged();
@@ -213,6 +219,9 @@ public class AddonsPanel extends javax.swing.JPanel {
         void addItemChangedListener(ItemChangedListener listener);
 
         void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener);
+
+        @Nonnull
+        String getModuleDetails(ItemRecord itemRecord);
     }
 
     public interface ItemChangedListener {

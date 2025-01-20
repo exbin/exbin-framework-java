@@ -16,10 +16,17 @@
 package org.exbin.framework.addon.manager.gui;
 
 import java.awt.event.MouseListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.text.html.HTMLDocument;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependenciesTableModel;
 import org.exbin.framework.addon.manager.model.ItemRecord;
@@ -41,7 +48,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private Controller controller;
     private MouseListener homepageLinkListener;
     private final DependenciesTableModel dependenciesTableModel = new DependenciesTableModel();
-    private ItemRecord activeRecord;
+    // TODO private final Thread detailsThread
 
     public AddonDetailsPanel() {
         initComponents();
@@ -50,6 +57,20 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
     private void init() {
         dependenciesTable.setModel(dependenciesTableModel);
+        overviewTextPane.addHyperlinkListener((HyperlinkEvent event) -> {
+            if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                DesktopUtils.openDesktopURL(event.getURL().toExternalForm());
+            }
+        });
+        try {
+            AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+            String baseUrl = addonManagerModule.isDevMode() ? "https://bined.exbin.org/addon-dev/" : "https://bined.exbin.org/addon/";
+            HTMLDocument htmlDocument = new HTMLDocument();
+            htmlDocument.setBase(new URL(baseUrl));
+            overviewTextPane.setDocument(htmlDocument);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(AddonDetailsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Nonnull
@@ -62,7 +83,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     }
 
     public void setRecord(ItemRecord itemRecord, boolean selectedForOperation) {
-        activeRecord = itemRecord;
         addonNameLabel.setText(itemRecord.getName());
         versionLabel.setText(itemRecord.getVersion());
         String provider = itemRecord.getProvider().orElse("");
@@ -86,7 +106,11 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         }
         providerLabel.setText(provider);
         String description = itemRecord.getDescription().orElse("");
-        overviewTextPane.setText("<html><body>id: " + itemRecord.getId() + "<br/>" + description + "</body></html>");
+        String details = controller.getModuleDetails(itemRecord);
+        if (!details.isEmpty()) {
+            details = "<hr/>" + details;
+        }
+        overviewTextPane.setText("<html><body><p>" + description + "<br/>id: " + itemRecord.getId() + "</p>" + details + "</body></html>");
         if (itemRecord instanceof AddonRecord) {
             dependenciesTableModel.setDependencies(((AddonRecord) itemRecord).getDependencies());
         } else {
@@ -113,6 +137,8 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             controlPanel.add(installCheckBox);
             controlPanel.add(installButton);
         }
+        controlPanel.revalidate();
+        controlPanel.repaint();
     }
 
     /**
@@ -315,5 +341,8 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         void performRemove();
 
         void changeSelection();
+
+        @Nonnull
+        String getModuleDetails(ItemRecord itemRecord);
     }
 }

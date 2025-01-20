@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.xml.parsers.DocumentBuilder;
@@ -306,6 +307,22 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     @Override
     public DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records) {
         return new DownloadOperation(records);
+    }
+
+    @Override
+    public String getModuleDetails(String addonId) throws AddonCatalogServiceException {
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        URL requestUrl;
+        try {
+            requestUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addondetail&id=" + addonId);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
+                return reader.lines().collect(Collectors.joining("\n"));
+            } catch (IOException ex) {
+                throw new AddonCatalogServiceException("Invalid response for file request for addon: " + addonId, ex);
+            }
+        } catch (MalformedURLException ex) {
+            throw new AddonCatalogServiceException("Invalid response for file request for addon: " + addonId, ex);
+        }
     }
 
     public void addIconChangeListener(IconChangeListener listener) {

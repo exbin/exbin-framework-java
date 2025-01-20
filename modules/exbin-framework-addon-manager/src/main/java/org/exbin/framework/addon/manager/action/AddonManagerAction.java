@@ -212,6 +212,19 @@ public class AddonManagerAction extends AbstractAction {
                     public void addItemChangedListener(AddonsPanel.ItemChangedListener listener) {
                         itemChangedListeners.add(listener);
                     }
+
+                    @Override
+                    public String getModuleDetails(ItemRecord itemRecord) {
+                        if (itemRecord.isAddon()) {
+                            try {
+                                return addonCatalogService.getModuleDetails(itemRecord.getId());
+                            } catch (AddonCatalogServiceException ex) {
+                                Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+
+                        return "";
+                    }
                 };
             }
 
@@ -314,6 +327,19 @@ public class AddonManagerAction extends AbstractAction {
                     @Override
                     public void addItemChangedListener(AddonsPanel.ItemChangedListener listener) {
                         itemChangedListeners.add(listener);
+                    }
+
+                    @Override
+                    public String getModuleDetails(ItemRecord itemRecord) {
+                        if (itemRecord.isAddon()) {
+                            try {
+                                return addonCatalogService.getModuleDetails(itemRecord.getId());
+                            } catch (AddonCatalogServiceException ex) {
+                                Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+
+                        return "";
                     }
                 };
             }

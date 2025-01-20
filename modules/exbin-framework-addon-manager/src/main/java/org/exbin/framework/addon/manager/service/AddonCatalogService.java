@@ -81,6 +81,16 @@ public interface AddonCatalogService {
     @Nonnull
     List<UpdateRecord> getUpdateRecords() throws AddonCatalogServiceException;
 
+    /**
+     * Returns module details text.
+     *
+     * @param id module id
+     * @return details text
+     * @throws AddonCatalogServiceException when service fails
+     */
+    @Nonnull
+    String getModuleDetails(String id) throws AddonCatalogServiceException;
+
     @Nonnull
     DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records);
 
