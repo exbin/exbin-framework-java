@@ -125,7 +125,10 @@ public class AddonManagerAction extends AbstractAction {
                 }
                 itemRecord.setDependencies(dependencyRecords);
                 installedAddons.add(itemRecord);
-                // System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
+                System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
+                for (DependencyRecord dependency : dependencyRecords) {
+                    System.out.println("- " + dependency.getType().name() + ", " + dependency.getId());
+                }
             }
             applicationModulesUsage = new ApplicationModulesUsage() {
                 @Override
@@ -161,13 +164,13 @@ public class AddonManagerAction extends AbstractAction {
                     }
 
                     @Override
-                    public boolean isInstalled(String moduleId) {
-                        return (((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasInstallAddon(moduleId)) && !addonUpdateChanges.hasRemoveAddon(moduleId);
+                    public boolean isAlreadyInstalled(String moduleId) {
+                        return addonUpdateChanges.hasInstallAddon(moduleId) && !addonUpdateChanges.hasRemoveAddon(moduleId);
                     }
 
                     @Override
-                    public boolean isRemoved(String moduleId) {
-                        return (!((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasRemoveAddon(moduleId)) && !addonUpdateChanges.hasInstallAddon(moduleId);
+                    public boolean isAlreadyRemoved(String moduleId) {
+                        return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
                     }
 
                     @Override
@@ -253,13 +256,13 @@ public class AddonManagerAction extends AbstractAction {
                     }
 
                     @Override
-                    public boolean isInstalled(String moduleId) {
-                        return (((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasInstallAddon(moduleId)) && !addonUpdateChanges.hasRemoveAddon(moduleId);
+                    public boolean isAlreadyInstalled(String moduleId) {
+                        return addonUpdateChanges.hasInstallAddon(moduleId) && !addonUpdateChanges.hasRemoveAddon(moduleId);
                     }
 
                     @Override
-                    public boolean isRemoved(String moduleId) {
-                        return (!((BasicModuleProvider) moduleProvider).hasModule(moduleId) || addonUpdateChanges.hasRemoveAddon(moduleId)) && !addonUpdateChanges.hasInstallAddon(moduleId);
+                    public boolean isAlreadyRemoved(String moduleId) {
+                        return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
                     }
 
                     @Override
@@ -321,7 +324,9 @@ public class AddonManagerAction extends AbstractAction {
 
                     @Override
                     public void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener) {
-                        availableModuleUpdates.addChangeListener(listener);
+                        if (searchResult != null) {
+                            availableModuleUpdates.addChangeListener(listener);
+                        }
                     }
 
                     @Override
@@ -401,22 +406,38 @@ public class AddonManagerAction extends AbstractAction {
                 switch (activeTab) {
                     case ADDONS:
                         Set<String> toUpdate = addonManagerPanel.getToUpdate();
-                        for (String addonId : toUpdate) {
-                            AddonRecord addonRecord;
-                            try {
-                                addonRecord = addonCatalogService.getAddonDependency(addonId);
-                                addonUpdateOperation.installItem(addonRecord);
-                            } catch (AddonCatalogServiceException ex) {
-                                Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                        if (toUpdate.isEmpty()) {
+                            for (ItemRecord addon : installedAddons) {
+                                if (addon.isUpdateAvailable()) {
+                                    addonUpdateOperation.updateItem(addon);
+                                }
+                            }
+                        } else {
+                            for (String addonId : toUpdate) {
+                                AddonRecord addonRecord;
+                                try {
+                                    addonRecord = addonCatalogService.getAddonDependency(addonId);
+                                    addonUpdateOperation.installItem(addonRecord);
+                                } catch (AddonCatalogServiceException ex) {
+                                    Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
                         break;
 
                     case INSTALLED:
                         Set<String> toInstall = addonManagerPanel.getToInstall();
-                        for (ItemRecord addon : installedAddons) {
-                            if (toInstall.contains(addon.getId())) {
-                                addonUpdateOperation.updateItem(addon);
+                        if (toInstall.isEmpty()) {
+                            for (ItemRecord addon : installedAddons) {
+                                if (addon.isUpdateAvailable()) {
+                                    addonUpdateOperation.updateItem(addon);
+                                }
+                            }
+                        } else {
+                            for (ItemRecord addon : installedAddons) {
+                                if (toInstall.contains(addon.getId())) {
+                                    addonUpdateOperation.updateItem(addon);
+                                }
                             }
                         }
                         break;
@@ -426,6 +447,18 @@ public class AddonManagerAction extends AbstractAction {
             }
         });
 
+        AvailableModuleUpdates.AvailableModulesChangeListener availableModulesChangeListener = (AvailableModuleUpdates checker) -> {
+            int availableUpdates = 0;
+            for (ItemRecord installedAddon : installedAddons) {
+                if (checker.isUpdateAvailable(installedAddon.getId(), installedAddon.getVersion())) {
+                    availableUpdates++;
+                }
+            }
+            controlPanel.setAvailableUpdates(availableUpdates);
+        };
+
+        availableModuleUpdates.addChangeListener(availableModulesChangeListener);
+        availableModuleUpdates.notifyChanged();
         try {
             LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
             ResourceBundle appBundle = languageModule.getAppBundle();
@@ -447,7 +480,6 @@ public class AddonManagerAction extends AbstractAction {
         } catch (AddonCatalogServiceException ex) {
             Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, "Status check failed", ex);
         }
-        controlPanel.setOperationState(AddonsControlPanel.OperationVariant.UPDATE_ALL, 0);
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, addonManagerPanel.getResourceBundle());

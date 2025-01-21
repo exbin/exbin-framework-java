@@ -19,6 +19,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Window;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -72,7 +75,19 @@ public class UiUtils {
             return menuBuilder.buildMenu();
         }
 
-        return new JMenu();
+        if (SwingUtilities.isEventDispatchThread()) {
+            return new JMenu();
+        }
+
+        final JMenu[] result = new JMenu[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                result[0] = new JMenu();
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result[0];
     }
 
     /**
@@ -86,7 +101,56 @@ public class UiUtils {
             return menuBuilder.buildPopupMenu();
         }
 
-        return new JPopupMenu();
+        if (SwingUtilities.isEventDispatchThread()) {
+            return new JPopupMenu();
+        }
+
+        final JPopupMenu[] result = new JPopupMenu[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                result[0] = new JPopupMenu();
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result[0];
+    }
+
+    /**
+     * Creates new instance of popup menu.
+     *
+     * @param showMethod show method
+     * @return new instance of popup menu
+     */
+    @Nonnull
+    public static JPopupMenu createPopupMenu(MenuShowMethod showMethod) {
+        if (menuBuilder != null) {
+            return menuBuilder.buildPopupMenu();
+        }
+
+        if (SwingUtilities.isEventDispatchThread()) {
+            return new JPopupMenu() {
+                @Override
+                public void show(Component invoker, int x, int y) {
+                    showMethod.show(invoker, x, y);
+                }
+            };
+        }
+
+        final JPopupMenu[] result = new JPopupMenu[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                result[0] = new JPopupMenu() {
+                    @Override
+                    public void show(Component invoker, int x, int y) {
+                        showMethod.show(invoker, x, y);
+                    }
+                };
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result[0];
     }
 
     /**
@@ -100,7 +164,19 @@ public class UiUtils {
             return menuBuilder.buildMenuItem();
         }
 
-        return new JMenuItem();
+        if (SwingUtilities.isEventDispatchThread()) {
+            return new JMenuItem();
+        }
+
+        final JMenuItem[] result = new JMenuItem[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                result[0] = new JMenuItem();
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result[0];
     }
 
     /**
@@ -114,7 +190,19 @@ public class UiUtils {
             return menuBuilder.buildCheckBoxMenuItem();
         }
 
-        return new JCheckBoxMenuItem();
+        if (SwingUtilities.isEventDispatchThread()) {
+            return new JCheckBoxMenuItem();
+        }
+
+        final JCheckBoxMenuItem[] result = new JCheckBoxMenuItem[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                result[0] = new JCheckBoxMenuItem();
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result[0];
     }
 
     /**
@@ -128,7 +216,19 @@ public class UiUtils {
             return menuBuilder.buildRadioButtonMenuItem();
         }
 
-        return new JRadioButtonMenuItem();
+        if (SwingUtilities.isEventDispatchThread()) {
+            return new JRadioButtonMenuItem();
+        }
+
+        final JRadioButtonMenuItem[] result = new JRadioButtonMenuItem[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                result[0] = new JRadioButtonMenuItem();
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result[0];
     }
 
     /**
@@ -175,6 +275,11 @@ public class UiUtils {
      */
     public static void doButtonClick(JButton button) {
         button.doClick(BUTTON_CLICK_TIME);
+    }
+
+    public interface MenuShowMethod {
+
+        void show(@Nullable Component invoker, int x, int y);
     }
 
     public interface MenuBuilder {

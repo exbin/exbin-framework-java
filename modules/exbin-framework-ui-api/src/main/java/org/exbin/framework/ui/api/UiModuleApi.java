@@ -53,6 +53,13 @@ public interface UiModuleApi extends Module {
     void initSwingUi();
 
     /**
+     * Registers post UI initialization action.
+     *
+     * @param runnable runnable action
+     */
+    void addPostInitAction(Runnable runnable);
+
+    /**
      * Registers options panels.
      */
     void registerOptionsPanels();

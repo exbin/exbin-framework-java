@@ -159,10 +159,10 @@ public class AddonUpdateOperation {
             if (addonUpdateChanges.hasInstallAddon(addonId)) {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
-            updateOperations.installAddons.add(addonId);
             processAddonLicense((AddonRecord) item);
             try {
                 updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonId));
+                updateOperations.installAddons.add(addonId);
             } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -256,7 +256,7 @@ public class AddonUpdateOperation {
 
     public void processAddonLicense(AddonRecord addonRecord) {
         String remoteFile = addonRecord.getLicenseRemoteFile();
-        if ("Apache-2.0".equals(addonRecord.getLicenseSpdx().orElse(null))) {
+        if ("Apache-2.0".equals(addonRecord.getLicenseSpdx().orElse(null)) || remoteFile.isEmpty()) {
             return;
         }
         if (!licenseCodes.contains(remoteFile)) {

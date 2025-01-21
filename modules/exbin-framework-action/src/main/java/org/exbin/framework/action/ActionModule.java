@@ -17,10 +17,13 @@ package org.exbin.framework.action;
 
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,6 +34,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionManager;
@@ -40,6 +44,8 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
+import static org.exbin.framework.action.api.ActionType.CHECK;
+import static org.exbin.framework.action.api.ActionType.RADIO;
 import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
@@ -160,6 +166,24 @@ public class ActionModule implements ActionModuleApi {
     @Nonnull
     @Override
     public JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            return actionToMenuItemInt(action, buttonGroups);
+        }
+
+        JMenuItem[] result = new JMenuItem[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                result[0] = actionToMenuItemInt(action, buttonGroups);
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(ActionModule.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result[0];
+    }
+
+    @Nonnull
+    private JMenuItem actionToMenuItemInt(Action action, @Nullable Map<String, ButtonGroup> buttonGroups) {
         JMenuItem menuItem;
         ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
         if (actionType != null) {
@@ -198,7 +222,6 @@ public class ActionModule implements ActionModuleApi {
             LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
             menuItem.setText(languageModule.getActionWithDialogText(menuItem.getText()));
         }
-
         return menuItem;
     }
 

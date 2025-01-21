@@ -46,6 +46,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     private CloseControlHandler handler;
     private Controller controller;
     private OkCancelListener okCancelListener;
+    private int availableUpdates = 0;
+    private int selectedForOperation = 0;
 
     public AddonsControlPanel() {
         this(App.getModule(LanguageModuleApi.class).getBundle(AddonsControlPanel.class));
@@ -98,6 +100,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     }
 
     public void setOperationState(OperationVariant variant, int selected) {
+        this.selectedForOperation = selected;
         switch (variant) {
             case INSTALL:
                 operationButton.setText(resourceBundle.getString("installButton.text"));
@@ -105,8 +108,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                     operationLabel.setText(String.format(resourceBundle.getString("installLabel.text"), selected));
                     operationButton.setEnabled(true);
                 } else {
-                    operationLabel.setText(null);
-                    operationButton.setEnabled(false);
+                    updateAllState();
                 }
                 break;
             case UPDATE:
@@ -115,17 +117,31 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                     operationLabel.setText(String.format(resourceBundle.getString("updateLabel.text"), selected));
                     operationButton.setEnabled(true);
                 } else {
-                    operationLabel.setText(null);
-                    operationButton.setEnabled(false);
+                    updateAllState();
                 }
                 break;
-            case UPDATE_ALL:
-                operationButton.setText(resourceBundle.getString("updateAllButton.text"));
-                operationButton.setEnabled(selected > 0);
-                operationLabel.setText(null);
-                break;
+            case REMOVE:
+                throw new UnsupportedOperationException("Not supported yet.");
             default:
                 throw new AssertionError();
+        }
+    }
+
+    public void setAvailableUpdates(int availableUpdates) {
+        this.availableUpdates = availableUpdates;
+        updateAllState();
+    }
+
+    public void updateAllState() {
+        if (selectedForOperation == 0) {
+            operationButton.setText(resourceBundle.getString("updateAllButton.text"));
+            if (availableUpdates > 0) {
+                operationButton.setEnabled(availableUpdates > 0);
+                operationLabel.setText(String.format(resourceBundle.getString("updateAllLabel.text"), availableUpdates));
+            } else {
+                operationButton.setEnabled(false);
+                operationLabel.setText(null);
+            }
         }
     }
 
@@ -301,6 +317,6 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     public enum OperationVariant {
         INSTALL,
         UPDATE,
-        UPDATE_ALL
+        REMOVE
     }
 }

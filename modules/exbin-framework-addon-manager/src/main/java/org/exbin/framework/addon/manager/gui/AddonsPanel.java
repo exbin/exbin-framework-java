@@ -102,13 +102,13 @@ public class AddonsPanel extends javax.swing.JPanel {
             }
 
             @Override
-            public boolean isInstalled(String moduleId) {
-                return controller.isInstalled(moduleId);
+            public boolean isAlreadyInstalled(String moduleId) {
+                return controller.isAlreadyInstalled(moduleId);
             }
 
             @Override
-            public boolean isRemoved(String moduleId) {
-                return controller.isRemoved(moduleId);
+            public boolean isAlreadyRemoved(String moduleId) {
+                return controller.isAlreadyRemoved(moduleId);
             }
 
             @Override
@@ -138,11 +138,10 @@ public class AddonsPanel extends javax.swing.JPanel {
             }
         });
         controller.addUpdateAvailabilityListener((AvailableModuleUpdates availableModuleUpdates) -> {
-            filterListPanel.notifyItemsChanged();
-
             for (int i = 0; i < controller.getItemsCount(); i++) {
                 availableModuleUpdates.applyTo(controller.getItem(i));
             }
+            filterListPanel.notifyItemsChanged();
         });
     }
 
@@ -202,9 +201,9 @@ public class AddonsPanel extends javax.swing.JPanel {
         @Nonnull
         ItemRecord getItem(int index);
 
-        boolean isInstalled(String moduleId);
+        boolean isAlreadyInstalled(String moduleId);
 
-        boolean isRemoved(String moduleId);
+        boolean isAlreadyRemoved(String moduleId);
 
         void install(ItemRecord item);
 

@@ -338,6 +338,7 @@ public class BasicModuleProvider implements ModuleProvider {
                         } else if ("description".equals(node.getNodeName())) {
                             moduleRecord.setDescription(node.getTextContent());
                         } else if ("icon".equals(node.getNodeName())) {
+                            // TODO
                             String iconPath = node.getTextContent();
                             moduleRecord.setIcon(null);
                         } else if ("homepage".equals(node.getNodeName())) {
@@ -372,7 +373,9 @@ public class BasicModuleProvider implements ModuleProvider {
             } catch (IOException | SAXException | ParserConfigurationException ex) {
                 Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
             }
-            modules.put(moduleRecord.getModuleId(), moduleRecord);
+            if (!modules.containsKey(moduleRecord.getModuleId())) {
+                modules.put(moduleRecord.getModuleId(), moduleRecord);
+            }
         } else {
             try {
                 String fullPath = libraryUri.toURL().toExternalForm();
@@ -380,7 +383,9 @@ public class BasicModuleProvider implements ModuleProvider {
                 String fileName = lastPart >= 0 ? fullPath.substring(lastPart + 1) : fullPath;
                 LibraryRecord libraryRecord = new LibraryRecord();
                 libraryRecord.uri = libraryUri;
-                libraries.put(fileName, libraryRecord);
+                if (!libraries.containsKey(fileName)) {
+                    libraries.put(fileName, libraryRecord);
+                }
             } catch (MalformedURLException ex) {
                 Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
             }

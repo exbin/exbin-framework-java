@@ -77,9 +77,7 @@ public class AvailableModuleUpdates {
         this.status = status;
         this.latestVersions.clear();
         this.latestVersions.putAll(latestVersions);
-        for (AvailableModulesChangeListener changeListener : changeListeners) {
-            changeListener.changed(this);
-        }
+        notifyChanged();
     }
 
     public void readConfigFile() {
@@ -122,6 +120,12 @@ public class AvailableModuleUpdates {
 
     public void removeChangeListener(AvailableModulesChangeListener listener) {
         changeListeners.remove(listener);
+    }
+
+    public void notifyChanged() {
+        for (AvailableModulesChangeListener changeListener : changeListeners) {
+            changeListener.changed(this);
+        }
     }
 
     public interface AvailableModulesChangeListener {

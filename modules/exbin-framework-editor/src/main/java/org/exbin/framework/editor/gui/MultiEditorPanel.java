@@ -17,10 +17,10 @@ package org.exbin.framework.editor.gui;
 
 import java.awt.Component;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPopupMenu;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Multi editor panel.
@@ -44,15 +44,12 @@ public class MultiEditorPanel extends javax.swing.JPanel {
             changeActiveIndex(selectedIndex);
         });
 
-        tabbedPane.setComponentPopupMenu(new JPopupMenu() {
-            @Override
-            public void show(Component invoker, int x, int y) {
-                int index = tabbedPane.indexAtLocation(x, y);
-                if (controller != null) {
-                    controller.showPopupMenu(index, invoker, x, y);
-                }
+        tabbedPane.setComponentPopupMenu(UiUtils.createPopupMenu((invoker, x, y) -> {
+            int index = tabbedPane.indexAtLocation(x, y);
+            if (controller != null) {
+                controller.showPopupMenu(index, invoker, x, y);
             }
-        });
+        }));
     }
 
     public void setController(Controller controller) {

@@ -114,6 +114,10 @@ public class LanguageModule implements LanguageModuleApi {
             setLanguageLocale(null);
             languageClassLoader = null;
             return;
+        } else if ("en-US".equals(targetLocale.toLanguageTag())) {
+            setLanguageLocale(Locale.ROOT);
+            languageClassLoader = null;
+            return;
         }
 
         if (targetLocale.equals(Locale.ROOT)) {

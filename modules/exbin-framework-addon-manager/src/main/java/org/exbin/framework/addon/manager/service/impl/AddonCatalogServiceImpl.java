@@ -268,7 +268,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
                 String line = reader.readLine();
                 if (line == null || line.isEmpty()) {
-                    throw new RuntimeException("Empty response for file request for addon: " + addonId);
+                    throw new AddonCatalogServiceException("Empty response for file request for addon: " + addonId);
                 }
                 return line;
             } catch (IOException ex) {

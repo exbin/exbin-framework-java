@@ -63,6 +63,7 @@ public class UiModule implements UiModuleApi {
     private OptionsPage<?> mainOptionsExtPage = null;
     private OptionsPage<?> appearanceOptionsExtPage = null;
     private AppearanceOptionsPanel appearanceOptionsPanel;
+    private List<Runnable> postInitActions = new ArrayList<>();
 
     public UiModule() {
     }
@@ -154,16 +155,27 @@ public class UiModule implements UiModuleApi {
         }
 
         // Switching language
+        // TODO Move to language module, because language can be independent of UI
         Locale locale = uiPreferences.getLocale();
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         languageModule.switchToLanguage(locale);
 
         switchToLookAndFeel(uiPreferences.getLookAndFeel());
-        
+
         String iconSet = uiPreferences.getIconSet();
         if (!iconSet.isEmpty()) {
             languageModule.switchToIconSet(iconSet);
         }
+
+        for (Runnable runnable : postInitActions) {
+            runnable.run();
+        }
+        postInitActions.clear();
+    }
+
+    @Override
+    public void addPostInitAction(Runnable runnable) {
+        postInitActions.add(runnable);
     }
 
     public void switchToLookAndFeel(String laf) {

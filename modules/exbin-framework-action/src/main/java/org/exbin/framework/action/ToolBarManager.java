@@ -16,6 +16,7 @@
 package org.exbin.framework.action;
 
 import java.beans.PropertyChangeEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,6 +37,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionToolBarContribution;
 import org.exbin.framework.action.api.ActionType;
@@ -162,66 +166,19 @@ public class ToolBarManager {
             pathNode.childIndex++;
 
             if ((groupRecord.separationMode == SeparationMode.ABOVE || groupRecord.separationMode == SeparationMode.AROUND) && toolBarContinues) {
-                targetToolBar.addSeparator();
+                addToolbarSeparator(targetToolBar);
                 separatorQueued = false;
             }
 
             for (ToolBarContribution contribution : groupRecord.contributions) {
                 if (separatorQueued) {
-                    targetToolBar.addSeparator();
+                    addToolbarSeparator(targetToolBar);
                     separatorQueued = false;
                 }
 
                 if (contribution instanceof ActionToolBarContribution) {
                     Action action = ((ActionToolBarContribution) contribution).getAction();
-                    ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
-                    JComponent toolBarItem;
-                    if (actionType != null) {
-                        switch (actionType) {
-                            case CHECK: {
-                                if (action.getValue(Action.SMALL_ICON) != null) {
-                                    JToggleButton newItem = new JToggleButton(action);
-                                    newItem.setFocusable(false);
-                                    newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                                    newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                                    toolBarItem = newItem;
-                                } else {
-                                    JCheckBox newItem = new JCheckBox(action);
-                                    newItem.setFocusable(false);
-                                    newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                                    newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                                    toolBarItem = newItem;
-                                }
-
-                                break;
-                            }
-                            case RADIO: {
-                                JRadioButton newItem = new JRadioButton(action);
-                                newItem.setFocusable(false);
-                                newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                                newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                                toolBarItem = newItem;
-                                break;
-                            }
-                            case CYCLE: {
-                                JPopupMenu popupMenu = (JPopupMenu) action.getValue(ActionConsts.CYCLE_POPUP_MENU);
-                                DropDownButton dropDown = new DropDownButton(action, popupMenu);
-                                dropDown.setActionTooltip((String) action.getValue(Action.SHORT_DESCRIPTION));
-                                action.addPropertyChangeListener((PropertyChangeEvent evt) -> {
-                                    dropDown.setActionText((String) action.getValue(Action.NAME));
-                                });
-                                // createDefaultToolBarItem(action);
-                                toolBarItem = dropDown;
-                                break;
-                            }
-                            default: {
-                                toolBarItem = createDefaultToolBarItem(action);
-                            }
-                        }
-                    } else {
-                        toolBarItem = createDefaultToolBarItem(action);
-                    }
-
+                    JComponent toolBarItem = createToolBarComponent(action);
                     targetToolBar.add(toolBarItem);
                     finishToolbarAction(action, activationUpdateService);
                 }
@@ -239,19 +196,102 @@ public class ToolBarManager {
         }
     }
 
-    public void finishToolbarAction(Action action, ComponentActivationService activationUpdateService) {
-        if (action != null) {
-            activationUpdateService.requestUpdate(action);
+    @Nonnull
+    private static JComponent createToolBarComponent(Action action) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            return createToolBarComponentInt(action);
+        }
+
+        final JComponent[] result = new JComponent[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                result[0] = createToolBarComponentInt(action);
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(ToolBarManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result[0];
+    }
+
+    @Nonnull
+    private static JComponent createToolBarComponentInt(Action action) {
+        ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
+        JComponent toolBarItem;
+        if (actionType != null) {
+            switch (actionType) {
+                case CHECK: {
+                    if (action.getValue(Action.SMALL_ICON) != null) {
+                        JToggleButton newItem = new JToggleButton(action);
+                        newItem.setFocusable(false);
+                        newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                        newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                        toolBarItem = newItem;
+                    } else {
+                        JCheckBox newItem = new JCheckBox(action);
+                        newItem.setFocusable(false);
+                        newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                        newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                        toolBarItem = newItem;
+                    }
+
+                    break;
+                }
+                case RADIO: {
+                    JRadioButton newItem = new JRadioButton(action);
+                    newItem.setFocusable(false);
+                    newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                    newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                    toolBarItem = newItem;
+                    break;
+                }
+                case CYCLE: {
+                    JPopupMenu popupMenu = (JPopupMenu) action.getValue(ActionConsts.CYCLE_POPUP_MENU);
+                    DropDownButton dropDown = new DropDownButton(action, popupMenu);
+                    dropDown.setActionTooltip((String) action.getValue(Action.SHORT_DESCRIPTION));
+                    action.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                        dropDown.setActionText((String) action.getValue(Action.NAME));
+                    });
+                    // createDefaultToolBarItem(action);
+                    toolBarItem = dropDown;
+                    break;
+                }
+                default: {
+                    toolBarItem = createDefaultToolBarItem(action);
+                }
+            }
+        } else {
+            toolBarItem = createDefaultToolBarItem(action);
+        }
+        return toolBarItem;
+    }
+
+    private static void addToolbarSeparator(JToolBar targetToolBar) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            targetToolBar.addSeparator();
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(() -> {
+                    targetToolBar.addSeparator();
+                });
+            } catch (InterruptedException | InvocationTargetException ex) {
+                Logger.getLogger(ToolBarManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     @Nonnull
-    private JComponent createDefaultToolBarItem(Action action) {
+    private static JComponent createDefaultToolBarItem(Action action) {
         JButton newItem = new JButton(action);
         newItem.setFocusable(false);
         newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         return newItem;
+    }
+
+    public void finishToolbarAction(Action action, ComponentActivationService activationUpdateService) {
+        if (action != null) {
+            activationUpdateService.requestUpdate(action);
+        }
     }
 
     public void registerToolBar(String toolBarId, String pluginId) {

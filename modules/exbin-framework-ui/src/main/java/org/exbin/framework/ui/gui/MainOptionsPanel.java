@@ -366,7 +366,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
             }
         });
 
-        iconSetLabel.setText(resourceBundle.getString("iconSetLabek.text")); // NOI18N
+        iconSetLabel.setText(resourceBundle.getString("iconSetLabel.text")); // NOI18N
 
         iconSetComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
