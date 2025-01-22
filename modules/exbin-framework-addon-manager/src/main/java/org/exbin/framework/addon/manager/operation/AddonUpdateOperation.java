@@ -142,7 +142,8 @@ public class AddonUpdateOperation {
         }
         downloadItemDescription = resourceBundle.getString("downloadItemDescription.mavenLibrary");
         for (String library : updateOperations.downloadMavenLibraries) {
-            DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), library);
+            String libraryFile = BasicModuleProvider.mavenCodeToFileName(library);
+            DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), libraryFile);
             try {
                 record.setUrl(new URL(AddonUpdateOperation.mavenCodeToDownloadUrl(library)));
                 downloadRecords.add(record);

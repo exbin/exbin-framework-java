@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.ui;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.App;
@@ -86,7 +89,6 @@ public class UiModule implements UiModuleApi {
     @Override
     public void registerLafPlugin(LafProvider lafProvider) {
         lafProviders.add(lafProvider);
-        lafProvider.installLaf();
     }
 
     @Nonnull
@@ -159,6 +161,10 @@ public class UiModule implements UiModuleApi {
         Locale locale = uiPreferences.getLocale();
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         languageModule.switchToLanguage(locale);
+
+        for (LafProvider lafProvider : lafProviders) {
+            lafProvider.installLaf();
+        }
 
         switchToLookAndFeel(uiPreferences.getLookAndFeel());
 

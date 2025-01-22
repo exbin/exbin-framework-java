@@ -43,7 +43,7 @@ public class AddonManagerPanel extends javax.swing.JPanel {
     private AddonsPanel installedPanel = new AddonsPanel();
     private Set<String> toInstall = new HashSet<>();
     private Set<String> toUpdate = new HashSet<>();
-    private Tab activeTab = Tab.INSTALLED;
+    private Tab activeTab = Tab.ADDONS;
 
     public AddonManagerPanel() {
         initComponents();

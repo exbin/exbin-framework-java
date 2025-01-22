@@ -209,7 +209,7 @@ public class BasicModuleProvider implements ModuleProvider {
         List<String> dependencyLibraries = moduleRecord.getDependencyLibraries();
         for (String dependencyLibrary : dependencyLibraries) {
             LibraryRecord record = libraries.get(dependencyLibrary);
-            if (!record.loaded) {
+            if (record != null && !record.loaded) {
                 try {
                     contextClassLoader.add(record.uri.toURL());
                     record.loaded = true;

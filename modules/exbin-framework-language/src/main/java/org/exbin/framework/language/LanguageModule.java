@@ -162,6 +162,7 @@ public class LanguageModule implements LanguageModuleApi {
         for (LanguageProvider languageProvider : languagePlugins) {
             if (languageProvider.getLocale().equals(targetLocale)) {
                 languageClassLoader = languageProvider.getClassLoader().orElse(getClass().getClassLoader());
+                setLanguageLocale(targetLocale);
                 break;
             }
         }
@@ -219,6 +220,7 @@ public class LanguageModule implements LanguageModuleApi {
         return languagePlugins;
     }
 
+    @Nonnull
     @Override
     public List<IconSetProvider> getIconSets() {
         return iconSets;

@@ -35,6 +35,7 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
+import static org.exbin.framework.addon.manager.gui.AddonManagerPanel.Tab.ADDONS;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.addon.manager.gui.AddonsPanel;
@@ -405,15 +406,15 @@ public class AddonManagerAction extends AbstractAction {
                 AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
                 switch (activeTab) {
                     case ADDONS:
-                        Set<String> toUpdate = addonManagerPanel.getToUpdate();
-                        if (toUpdate.isEmpty()) {
+                        Set<String> toInstall = addonManagerPanel.getToInstall();
+                        if (toInstall.isEmpty()) {
                             for (ItemRecord addon : installedAddons) {
                                 if (addon.isUpdateAvailable()) {
                                     addonUpdateOperation.updateItem(addon);
                                 }
                             }
                         } else {
-                            for (String addonId : toUpdate) {
+                            for (String addonId : toInstall) {
                                 AddonRecord addonRecord;
                                 try {
                                     addonRecord = addonCatalogService.getAddonDependency(addonId);
@@ -424,10 +425,9 @@ public class AddonManagerAction extends AbstractAction {
                             }
                         }
                         break;
-
                     case INSTALLED:
-                        Set<String> toInstall = addonManagerPanel.getToInstall();
-                        if (toInstall.isEmpty()) {
+                        Set<String> toUpdate = addonManagerPanel.getToUpdate();
+                        if (toUpdate.isEmpty()) {
                             for (ItemRecord addon : installedAddons) {
                                 if (addon.isUpdateAvailable()) {
                                     addonUpdateOperation.updateItem(addon);
@@ -435,13 +435,12 @@ public class AddonManagerAction extends AbstractAction {
                             }
                         } else {
                             for (ItemRecord addon : installedAddons) {
-                                if (toInstall.contains(addon.getId())) {
+                                if (toUpdate.contains(addon.getId())) {
                                     addonUpdateOperation.updateItem(addon);
                                 }
                             }
                         }
                         break;
-
                 }
                 performAddonsOperation(addonUpdateOperation, addonManagerPanel, itemChangedListeners);
             }

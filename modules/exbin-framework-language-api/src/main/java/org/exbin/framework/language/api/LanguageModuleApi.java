@@ -114,6 +114,7 @@ public interface LanguageModuleApi extends Module {
      *
      * @return icon set providers
      */
+    @Nonnull
     List<IconSetProvider> getIconSets();
 
     /**

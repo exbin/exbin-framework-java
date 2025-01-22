@@ -52,6 +52,10 @@ public class VersionUtils {
 
             String segment = version.substring(versionSegment, versionSplit);
             String thanSegment = thanVersion.substring(thanVersionSegment, thanVersionSplit);
+            if (thanSegment.endsWith("-SNAPSHOT") && thanSegment.substring(0, thanSegment.length() - 9).equals(segment)) {
+                return true;
+            }
+
             try {
                 int num = Integer.parseInt(segment);
                 int thanNum = Integer.parseInt(thanSegment);
