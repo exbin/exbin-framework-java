@@ -64,9 +64,6 @@ public class VersionUtils {
 
             if (segment.endsWith("-SNAPSHOT")) {
                 segment = segment.substring(0, segment.length() - 9);
-                if (thanSegment.equals(segment)) {
-                    return false;
-                }
             }
 
             try {

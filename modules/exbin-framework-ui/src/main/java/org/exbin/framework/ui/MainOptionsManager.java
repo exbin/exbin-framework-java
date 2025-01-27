@@ -201,6 +201,8 @@ public class MainOptionsManager {
     @Nonnull
     public OptionsPage<UiOptionsImpl> getMainOptionsPage() {
         return new DefaultOptionsPage<UiOptionsImpl>() {
+            private Map<String, LafOptionsHandler> themeOptionsHandlers = new HashMap<>();
+
             @Nonnull
             @Override
             public OptionsComponent<UiOptionsImpl> createPanel() {
@@ -209,7 +211,6 @@ public class MainOptionsManager {
                     initValues();
                 }
 
-                Map<String, LafOptionsHandler> themeOptionsHandlers = new HashMap<>();
                 mainOptionsPanel = new MainOptionsPanel();
                 mainOptionsPanel.setThemes(themes, themeNames, themeOptions);
                 mainOptionsPanel.setIconSets(iconSets, iconSetNames);
@@ -277,6 +278,9 @@ public class MainOptionsManager {
             public void saveToPreferences(Preferences preferences, UiOptionsImpl options) {
                 UiPreferences prefs = new UiPreferences(preferences);
                 options.saveToParameters(prefs);
+                for (LafOptionsHandler lafOptions : themeOptionsHandlers.values()) {
+                    lafOptions.saveToPreferences(preferences);
+                }
             }
 
             @Override
