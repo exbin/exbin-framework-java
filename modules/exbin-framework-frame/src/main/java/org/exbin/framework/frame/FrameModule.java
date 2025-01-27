@@ -74,6 +74,7 @@ public class FrameModule implements FrameModuleApi {
 
     private ResourceBundle resourceBundle;
     private ApplicationFrame applicationFrame;
+    private boolean undecorated = false;
     private ApplicationExitHandler exitHandler = null;
     private StatusBarHandler statusBarHandler = null;
     private FrameActions frameActions;
@@ -263,7 +264,7 @@ public class FrameModule implements FrameModuleApi {
     @Override
     public ApplicationFrameHandler getFrameHandler() {
         if (applicationFrame == null) {
-            applicationFrame = new ApplicationFrame();
+            applicationFrame = new ApplicationFrame(undecorated);
             applicationFrame.initApplication();
             applicationFrame.setApplicationExitHandler(exitHandler);
             appIcon = applicationFrame.getIconImage();
@@ -378,10 +379,11 @@ public class FrameModule implements FrameModuleApi {
 
     @Override
     public void switchFrameToUndecorated() {
-        getFrame().setUndecorated(true);
+        this.undecorated = true;
     }
 
     @Nonnull
+    @Override
     public Optional<Image> getApplicationIcon() {
         return Optional.ofNullable(appIcon);
     }

@@ -34,10 +34,12 @@ import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
+import org.exbin.framework.addon.manager.preferences.AddonManagerPreferences;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 
 /**
  * Addon update operation.
@@ -118,7 +120,7 @@ public class AddonUpdateOperation {
     @Nonnull
     public List<DownloadItemRecord> getDownloadRecords() {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        String libraryDownloadPrefix = addonManagerModule.isDevMode() ? "https://bined.exbin.org/addon-dev/download/" : "https://bined.exbin.org/addon/download/";
+        String libraryDownloadPrefix = addonManagerModule.isDevMode() ? "https://bined.exbin.org/addon-dev/download/?f=" : "https://bined.exbin.org/addon/download/?f=";
         List<DownloadItemRecord> downloadRecords = new ArrayList<>();
         String downloadItemDescription = resourceBundle.getString("downloadItemDescription.module");
         for (String moduleFile : updateOperations.downloadModule) {
@@ -290,6 +292,11 @@ public class AddonUpdateOperation {
         }
         for (String moduleId : updateOperations.removeAddons) {
             addonUpdateChanges.removeInstallAddon(moduleId);
+            if ("org.exbin.framework.addon.manager.AddonManagerModule".equals(moduleId)) {
+                PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+                AddonManagerPreferences addonPreferences = new AddonManagerPreferences(preferencesModule.getAppPreferences());
+                addonPreferences.setActivatedVersion("0.3.0-SNAPSHOT");
+            }
             addonUpdateChanges.addRemoveAddon(moduleId);
         }
         for (String file : updateOperations.removeLibraries) {
@@ -305,16 +312,24 @@ public class AddonUpdateOperation {
         StringBuilder builder = new StringBuilder();
         builder.append(MAVEN_CENTRAL_URL);
         int namePos = mavenCode.indexOf(":");
+        if (namePos == -1) {
+            throw new IllegalStateException("Maven library code is missing split characters: " + mavenCode);
+        }
         int domainSegment = 0;
         while (domainSegment < namePos) {
             int segment = mavenCode.indexOf(".", domainSegment);
-            if (segment > namePos) {
+            if (segment == -1) {
+                segment = namePos;
+            } else if (segment > namePos) {
                 segment = namePos;
             }
             builder.append(mavenCode.substring(domainSegment, segment)).append("/");
             domainSegment = segment + 1;
         }
         int versionPos = mavenCode.indexOf(":", namePos + 1);
+        if (versionPos == -1) {
+            throw new IllegalStateException("Maven library code is missing split characters: " + mavenCode);
+        }
         String namePart = mavenCode.substring(namePos + 1, versionPos);
         String versionPart = mavenCode.substring(versionPos + 1);
         builder.append(namePart).append("/").append(versionPart).append("/");

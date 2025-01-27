@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager.preferences;
 
+import javax.annotation.Nonnull;
 import org.exbin.framework.preferences.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -26,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class AddonManagerPreferences {
 
-    public static final String PREFERENCES_CHECK_FOR_UPDATE_ON_START = "start.checkForUpdate";
+    public static final String PREFERENCES_ACTIVATED_VERSION = "addonManager.activatedVersion";
 
     private final Preferences preferences;
 
@@ -34,11 +35,12 @@ public class AddonManagerPreferences {
         this.preferences = preferences;
     }
 
-    public boolean isShouldCheckForUpdate() {
-        return preferences.getBoolean(PREFERENCES_CHECK_FOR_UPDATE_ON_START, true);
+    @Nonnull
+    public String getActivatedVersion() {
+        return preferences.get(PREFERENCES_ACTIVATED_VERSION, "0.3.0-SNAPSHOT");
     }
 
-    public void setShouldCheckForUpdate(boolean shouldCheck) {
-        preferences.putBoolean(PREFERENCES_CHECK_FOR_UPDATE_ON_START, shouldCheck);
+    public void setActivatedVersion(String activatedVersion) {
+        preferences.put(PREFERENCES_ACTIVATED_VERSION, activatedVersion);
     }
 }

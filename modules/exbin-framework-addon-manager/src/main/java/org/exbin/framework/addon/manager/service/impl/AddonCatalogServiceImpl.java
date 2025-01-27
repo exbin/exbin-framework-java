@@ -288,11 +288,14 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
         try {
             requestUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=updates");
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
-                String line = reader.readLine();
-                if (line != null && !line.isEmpty()) {
-                    int split = line.indexOf(":");
-                    records.add(new UpdateRecord(line.substring(0, split), line.substring(split + 1)));
-                }
+                String line;
+                do {
+                    line = reader.readLine();
+                    if (line != null && !line.isEmpty()) {
+                        int split = line.indexOf(":");
+                        records.add(new UpdateRecord(line.substring(0, split), line.substring(split + 1)));
+                    }
+                } while (line != null);
             } catch (IOException ex) {
                 throw new AddonCatalogServiceException("Invalid response for addon updates", ex);
             }

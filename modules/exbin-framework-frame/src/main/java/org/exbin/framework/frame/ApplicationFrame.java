@@ -64,11 +64,17 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     private ActionManager frameComponentActivationService;
 
     public ApplicationFrame() {
+        this(true);
+    }
+
+    public ApplicationFrame(boolean undecorated) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         frameComponentActivationService = actionModule.createActionManager();
 
-        // TODO support for undecorated mode
-        // setUndecorated(true);
+        if (undecorated) {
+            setUndecorated(true);
+        }
+
         initComponents();
 
         // Actions on change of look&feel

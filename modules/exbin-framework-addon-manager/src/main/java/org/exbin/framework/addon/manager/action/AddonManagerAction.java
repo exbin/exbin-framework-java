@@ -35,7 +35,6 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
-import static org.exbin.framework.addon.manager.gui.AddonManagerPanel.Tab.ADDONS;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.addon.manager.gui.AddonsPanel;
@@ -53,6 +52,7 @@ import org.exbin.framework.addon.manager.operation.gui.AddonOperationLicensePane
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
+import org.exbin.framework.addon.manager.preferences.AddonManagerPreferences;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -62,6 +62,7 @@ import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleFileLocation;
 import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
+import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.gui.MultiStepControlPanel;
 import org.exbin.framework.window.api.handler.MultiStepControlHandler;
 
@@ -126,10 +127,10 @@ public class AddonManagerAction extends AbstractAction {
                 }
                 itemRecord.setDependencies(dependencyRecords);
                 installedAddons.add(itemRecord);
-                System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
+                /*System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
                 for (DependencyRecord dependency : dependencyRecords) {
                     System.out.println("- " + dependency.getType().name() + ", " + dependency.getId());
-                }
+                } */
             }
             applicationModulesUsage = new ApplicationModulesUsage() {
                 @Override
@@ -217,6 +218,7 @@ public class AddonManagerAction extends AbstractAction {
                         itemChangedListeners.add(listener);
                     }
 
+                    @Nonnull
                     @Override
                     public String getModuleDetails(ItemRecord itemRecord) {
                         if (itemRecord.isAddon()) {
@@ -360,7 +362,13 @@ public class AddonManagerAction extends AbstractAction {
             @Override
             public void updateItem(ItemRecord item) {
                 AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
-                addonUpdateOperation.updateItem(item);
+                AddonRecord addonRecord;
+                try {
+                    addonRecord = addonCatalogService.getAddonDependency(item.getId());
+                    addonUpdateOperation.updateItem(addonRecord);
+                } catch (AddonCatalogServiceException ex) {
+                    Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 performAddonsOperation(addonUpdateOperation, addonManagerPanel, itemChangedListeners);
             }
 
@@ -410,7 +418,13 @@ public class AddonManagerAction extends AbstractAction {
                         if (toInstall.isEmpty()) {
                             for (ItemRecord addon : installedAddons) {
                                 if (addon.isUpdateAvailable()) {
-                                    addonUpdateOperation.updateItem(addon);
+                                    AddonRecord addonRecord;
+                                    try {
+                                        addonRecord = addonCatalogService.getAddonDependency(addon.getId());
+                                        addonUpdateOperation.updateItem(addonRecord);
+                                    } catch (AddonCatalogServiceException ex) {
+                                        Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
                             }
                         } else {
@@ -430,13 +444,25 @@ public class AddonManagerAction extends AbstractAction {
                         if (toUpdate.isEmpty()) {
                             for (ItemRecord addon : installedAddons) {
                                 if (addon.isUpdateAvailable()) {
-                                    addonUpdateOperation.updateItem(addon);
+                                    AddonRecord addonRecord;
+                                    try {
+                                        addonRecord = addonCatalogService.getAddonDependency(addon.getId());
+                                        addonUpdateOperation.updateItem(addonRecord);
+                                    } catch (AddonCatalogServiceException ex) {
+                                        Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
                             }
                         } else {
                             for (ItemRecord addon : installedAddons) {
                                 if (toUpdate.contains(addon.getId())) {
-                                    addonUpdateOperation.updateItem(addon);
+                                    AddonRecord addonRecord;
+                                    try {
+                                        addonRecord = addonCatalogService.getAddonDependency(addon.getId());
+                                        addonUpdateOperation.updateItem(addonRecord);
+                                    } catch (AddonCatalogServiceException ex) {
+                                        Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
                             }
                         }
@@ -467,14 +493,26 @@ public class AddonManagerAction extends AbstractAction {
             // controlPanel.showLegacyWarning();
             if (serviceStatus == -1) {
                 controlPanel.showManualOnlyWarning();
-            } else if (serviceStatus > availableModuleUpdates.getStatus()) {
-                UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
-                Thread thread = new Thread(() -> {
-                    availabilityOperation.run();
-                    availableModuleUpdates.setLatestVersion(serviceStatus, availabilityOperation.getLatestVersions());
-                    availableModuleUpdates.writeConfigFile();
-                });
-                thread.start();
+            } else {
+                PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+                AddonManagerPreferences addonPreferences = new AddonManagerPreferences(preferencesModule.getAppPreferences());
+                String activatedVersion = addonPreferences.getActivatedVersion();
+                // Version 0.3.0-SNAPSHOT is bugged to read only single record. Ignore service status
+                boolean buggedVersion = "0.3.0-SNAPSHOT".equals(activatedVersion);
+                if (serviceStatus > availableModuleUpdates.getStatus() || buggedVersion) {
+                    UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
+                    Thread thread = new Thread(() -> {
+                        availabilityOperation.run();
+                        availableModuleUpdates.setLatestVersion(serviceStatus, availabilityOperation.getLatestVersions());
+                        availableModuleUpdates.writeConfigFile();
+                        if (buggedVersion) {
+                            if (addonUpdateChanges.hasRemoveAddon("org.exbin.framework.addon.manager.AddonManagerModule")) {
+                                addonPreferences.setActivatedVersion("0.3.0-SNAPSHOT.1");
+                            }
+                        }
+                    });
+                    thread.start();
+                }
             }
         } catch (AddonCatalogServiceException ex) {
             Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, "Status check failed", ex);

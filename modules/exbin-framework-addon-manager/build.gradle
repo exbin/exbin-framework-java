@@ -10,6 +10,8 @@ ext.libraryDescription = 'Library for core functionality in ExBin Framework'
 
 apply from: '../exbin-framework-java-modules.gradle'
 
+// version = '0.3.0-SNAPSHOT.1'
+
 if (!hasProperty('mainClass')) {
     ext.mainClass = ''
 }

@@ -44,16 +44,29 @@ public class VersionUtils {
 
         while (versionSegment < version.length()) {
             int versionSplit = version.indexOf(".", versionSegment);
+            if (versionSplit == -1) {
+                versionSplit = version.length();
+            }
             int thanVersionSplit = thanVersion.indexOf(".", thanVersionSegment);
-
-            if (versionSplit == -1 || thanVersionSplit == -1) {
-                return versionSplit > 0;
+            if (thanVersionSplit == -1) {
+                thanVersionSplit = thanVersion.length();
             }
 
             String segment = version.substring(versionSegment, versionSplit);
             String thanSegment = thanVersion.substring(thanVersionSegment, thanVersionSplit);
-            if (thanSegment.endsWith("-SNAPSHOT") && thanSegment.substring(0, thanSegment.length() - 9).equals(segment)) {
-                return true;
+
+            if (thanSegment.endsWith("-SNAPSHOT")) {
+                thanSegment = thanSegment.substring(0, thanSegment.length() - 9);
+                if (thanSegment.equals(segment)) {
+                    return true;
+                }
+            }
+
+            if (segment.endsWith("-SNAPSHOT")) {
+                segment = segment.substring(0, segment.length() - 9);
+                if (thanSegment.equals(segment)) {
+                    return false;
+                }
             }
 
             try {
@@ -74,8 +87,12 @@ public class VersionUtils {
 
             versionSegment = versionSplit + 1;
             thanVersionSegment = thanVersionSplit + 1;
+            
+            if (thanVersionSegment >= thanVersion.length() && versionSegment < version.length()) {
+                return true;
+            }
         }
 
-        return true;
+        return false;
     }
 }

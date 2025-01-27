@@ -25,7 +25,6 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
-import static org.exbin.framework.frame.api.FrameModuleApi.MODULE_ID;
 import org.exbin.framework.help.api.HelpModuleApi;
 
 /**

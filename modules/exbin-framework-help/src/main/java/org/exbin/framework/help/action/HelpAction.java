@@ -96,6 +96,11 @@ public class HelpAction extends AbstractAction {
             File file = new File(appDirectory.getAbsolutePath() + "/" + HELP_SET_FILE);
             if (!file.exists()) {
                 file = new File(appDirectory.getAbsolutePath() + "/../" + HELP_SET_FILE);
+                if (!file.exists()) {
+                    file = new File(System.getProperty("java.class.path"));
+                    file = file.getParentFile();
+                    file = new File(file + "/" + HELP_SET_FILE);
+                }
             }
             if (helpSetURL == null) {
                 helpSetURL = (file.toURI()).toURL();
