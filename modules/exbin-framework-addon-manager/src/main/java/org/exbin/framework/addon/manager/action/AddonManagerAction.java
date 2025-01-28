@@ -365,7 +365,7 @@ public class AddonManagerAction extends AbstractAction {
                 AddonRecord addonRecord;
                 try {
                     addonRecord = addonCatalogService.getAddonDependency(item.getId());
-                    addonUpdateOperation.updateItem(addonRecord);
+                    addonUpdateOperation.updateItem(addonRecord, item);
                 } catch (AddonCatalogServiceException ex) {
                     Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -421,7 +421,7 @@ public class AddonManagerAction extends AbstractAction {
                                     AddonRecord addonRecord;
                                     try {
                                         addonRecord = addonCatalogService.getAddonDependency(addon.getId());
-                                        addonUpdateOperation.updateItem(addonRecord);
+                                        addonUpdateOperation.updateItem(addonRecord, addon);
                                     } catch (AddonCatalogServiceException ex) {
                                         Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
                                     }
@@ -447,7 +447,7 @@ public class AddonManagerAction extends AbstractAction {
                                     AddonRecord addonRecord;
                                     try {
                                         addonRecord = addonCatalogService.getAddonDependency(addon.getId());
-                                        addonUpdateOperation.updateItem(addonRecord);
+                                        addonUpdateOperation.updateItem(addonRecord, addon);
                                     } catch (AddonCatalogServiceException ex) {
                                         Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
                                     }
@@ -459,7 +459,7 @@ public class AddonManagerAction extends AbstractAction {
                                     AddonRecord addonRecord;
                                     try {
                                         addonRecord = addonCatalogService.getAddonDependency(addon.getId());
-                                        addonUpdateOperation.updateItem(addonRecord);
+                                        addonUpdateOperation.updateItem(addonRecord, addon);
                                     } catch (AddonCatalogServiceException ex) {
                                         Logger.getLogger(AddonManagerAction.class.getName()).log(Level.SEVERE, null, ex);
                                     }

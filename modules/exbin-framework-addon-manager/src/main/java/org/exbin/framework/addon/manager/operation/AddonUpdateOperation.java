@@ -15,6 +15,11 @@
  */
 package org.exbin.framework.addon.manager.operation;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,6 +30,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
@@ -175,7 +181,7 @@ public class AddonUpdateOperation {
         }
     }
 
-    public void updateItem(ItemRecord item) {
+    public void updateItem(ItemRecord item, ItemRecord previousItem) {
         if (item instanceof AddonRecord) {
             String addonId = item.getId();
             if (addonUpdateChanges.hasInstallAddon(addonId)) {
@@ -183,6 +189,12 @@ public class AddonUpdateOperation {
             }
             updateOperations.installAddons.add(addonId);
             processAddonLicense((AddonRecord) item);
+            if (previousItem.isAddon()) {
+                String addonFile = findAddonFileName(item.getId());
+                if (addonFile != null) {
+                    updateOperations.removeLibraries.add(addonFile);
+                }
+            }
             try {
                 updateOperations.downloadModule.add(addonCatalogService.getAddonFile(item.getId()));
             } catch (AddonCatalogServiceException ex) {
@@ -201,15 +213,75 @@ public class AddonUpdateOperation {
                 throw new IllegalStateException("Addon already queued for removal: " + addonId);
             }
             updateOperations.removeAddons.add(addonId);
-            try {
-                // TODO Should be addon filename instead of filename from catalog
-                updateOperations.removeLibraries.add(addonCatalogService.getAddonFile(item.getId()));
-            } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+            String addonFile = findAddonFileName(item.getId());
+            if (addonFile != null) {
+                updateOperations.removeLibraries.add(addonFile);
             }
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
         }
+    }
+
+    @Nullable
+    private static String findAddonFileName(String moduleId) {
+        // TODO Replace with including file name in module records
+        File targetDirectory = new File(App.getConfigDirectory(), "addons");
+        if (!targetDirectory.isDirectory()) {
+            return null;
+        }
+
+        File[] addonFiles = targetDirectory.listFiles();
+        if (addonFiles == null) {
+            return null;
+        }
+        for (File addonFile : addonFiles) {
+            if (addonFile.getName().endsWith(".jar")) {
+                try {
+                    URL moduleRecordUrl = new URL("jar:" + addonFile.toURI().toURL().toExternalForm() + "!/META-INF/module.xml");
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(moduleRecordUrl.openStream()))) {
+                        String line = reader.readLine();
+                        do {
+                            line = reader.readLine();
+                            if (line != null && !line.isEmpty()) {
+                                int idTag = line.indexOf("<id>");
+                                if (idTag >= 0) {
+                                    int end = line.indexOf("</id>");
+                                    String fileModuleId = line.substring(idTag + 4, end);
+                                    if (moduleId.equals(fileModuleId)) {
+                                        return addonFile.getName();
+                                    }
+                                } else {
+                                    int apiTag = line.indexOf("<api>");
+                                    if (apiTag >= 0) {
+                                        int end = line.indexOf("</api>");
+                                        String fileModuleId = line.substring(apiTag + 5, end);
+                                        if (moduleId.equals(fileModuleId)) {
+                                            return addonFile.getName();
+                                        }
+                                    } else {
+                                        int pluginTag = line.indexOf("<plugin>");
+                                        if (pluginTag >= 0) {
+                                            int end = line.indexOf("</plugin>");
+                                            String fileModuleId = line.substring(pluginTag + 8, end);
+                                            if (moduleId.equals(fileModuleId)) {
+                                                return addonFile.getName();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } while (line != null);
+                    } catch (FileNotFoundException ex) {
+                    } catch (NumberFormatException | IOException ex) {
+                        Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, "Failed to read modules update cache", ex);
+                    }
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        return null;
     }
 
     private void addAddonDependencies(AddonRecord record) {
