@@ -263,7 +263,7 @@ public class LanguageModule implements LanguageModuleApi {
         public LanguageResourceBundle(String baseName) {
             this.prefix = baseName.replace("/", ".") + ".";
             mainResourceBundle = ResourceBundle.getBundle(baseName, Locale.ROOT);
-            languageResourceBundle = ResourceBundle.getBundle(baseName, getLanguageBundleLocale(), languageClassLoader);
+            languageResourceBundle = languageClassLoader == null ? ResourceBundle.getBundle(baseName, getLanguageBundleLocale()) : ResourceBundle.getBundle(baseName, getLanguageBundleLocale(), languageClassLoader);
         }
 
         public void setIconSet(@Nullable IconSetProvider iconSetProvider) {

@@ -44,8 +44,6 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
-import static org.exbin.framework.action.api.ActionType.CHECK;
-import static org.exbin.framework.action.api.ActionType.RADIO;
 import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
