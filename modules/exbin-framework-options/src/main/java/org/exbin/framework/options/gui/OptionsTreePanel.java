@@ -119,6 +119,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
                 }
             }
         });
+        optionsTree.setRootVisible(true);
     }
 
     @Nonnull

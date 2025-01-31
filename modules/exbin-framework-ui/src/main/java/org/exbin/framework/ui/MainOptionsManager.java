@@ -72,12 +72,12 @@ public class MainOptionsManager {
     private List<LanguageRecord> languageLocales = null;
     private List<String> renderingMethodKeys;
     private List<String> renderingMethodNames;
+    private List<String> fontAntialiasingKeys;
     private List<String> fontAntialiasingNames;
     private List<String> guiScalingKeys;
     private List<String> guiScalingNames;
+    private List<String> guiMacOsAppearanceKeys;
     private List<String> guiMacOsAppearanceNames;
-    private List<String> guiMacOsAppearancesKeys;
-    private List<String> macOsAppearancesKeys;
 
     private MainOptionsPanel mainOptionsPanel;
 
@@ -157,10 +157,10 @@ public class MainOptionsManager {
             }
         }
 
-        macOsAppearancesKeys = new ArrayList<>();
+        fontAntialiasingKeys = new ArrayList<>();
         fontAntialiasingNames = new ArrayList<>();
         for (GuiFontAntialiasing fontAntialiasing : GuiFontAntialiasing.getAvailable()) {
-            macOsAppearancesKeys.add(fontAntialiasing.getPropertyValue());
+            fontAntialiasingKeys.add(fontAntialiasing.getPropertyValue());
             if (fontAntialiasing == GuiFontAntialiasing.DEFAULT) {
                 fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing.default"));
             } else {
@@ -183,11 +183,10 @@ public class MainOptionsManager {
 
         if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             List<GuiMacOsAppearance> guiMacOsAppearances = GuiMacOsAppearance.getAvailable();
-            guiMacOsAppearancesKeys = new ArrayList<>();
+            guiMacOsAppearanceKeys = new ArrayList<>();
             guiMacOsAppearanceNames = new ArrayList<>();
             for (GuiMacOsAppearance macOsAppearance : guiMacOsAppearances) {
-                guiMacOsAppearancesKeys.add(macOsAppearance.getPropertyValue());
-                macOsAppearancesKeys.add(macOsAppearance.getPropertyValue());
+                guiMacOsAppearanceKeys.add(macOsAppearance.getPropertyValue());
                 if (macOsAppearance == GuiMacOsAppearance.DEFAULT) {
                     guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances.default"));
                 } else {
@@ -217,10 +216,10 @@ public class MainOptionsManager {
                 mainOptionsPanel.setDefaultLocaleName("<" + resourceBundle.getString("locale.defaultLanguage") + ">");
                 mainOptionsPanel.setLanguageLocales(languageLocales);
                 mainOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
-                mainOptionsPanel.setFontAntialiasings(macOsAppearancesKeys, fontAntialiasingNames);
+                mainOptionsPanel.setFontAntialiasings(fontAntialiasingKeys, fontAntialiasingNames);
                 mainOptionsPanel.setGuiScalings(guiScalingKeys, guiScalingNames);
                 if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
-                    mainOptionsPanel.setMacOsAppearances(guiMacOsAppearancesKeys, guiMacOsAppearanceNames);
+                    mainOptionsPanel.setMacOsAppearances(guiMacOsAppearanceKeys, guiMacOsAppearanceNames);
                 }
                 mainOptionsPanel.setThemeConfigurationListener((ConfigurableLafProvider lafProvider) -> {
                     LafOptionsHandler optionsHandler = themeOptionsHandlers.get(lafProvider.getLafId());

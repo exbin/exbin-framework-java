@@ -42,7 +42,6 @@ import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
 import org.exbin.framework.action.api.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import static org.exbin.framework.frame.api.FrameModuleApi.MODULE_ID;
 import org.exbin.framework.options.action.OptionsAction;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.DesktopUtils;

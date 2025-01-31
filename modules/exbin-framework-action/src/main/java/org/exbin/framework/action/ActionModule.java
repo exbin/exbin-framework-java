@@ -18,6 +18,7 @@ package org.exbin.framework.action;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -148,10 +149,30 @@ public class ActionModule implements ActionModuleApi {
             action.putValue(Action.SHORT_DESCRIPTION, bundle.getString(actionId + ActionConsts.ACTION_SHORT_DESCRIPTION_POSTFIX));
         }
         if (bundle.containsKey(actionId + ActionConsts.ACTION_SMALL_ICON_POSTFIX)) {
-            action.putValue(Action.SMALL_ICON, new javax.swing.ImageIcon(resourceClass.getResource(bundle.getString(actionId + ActionConsts.ACTION_SMALL_ICON_POSTFIX))));
+            String key = bundle.getString(actionId + ActionConsts.ACTION_SMALL_ICON_POSTFIX);
+            URL resourceUrl = resourceClass.getResource(key);
+            if (resourceUrl != null) {
+                try {
+                    action.putValue(Action.SMALL_ICON, new javax.swing.ImageIcon(resourceUrl));
+                } catch (Exception ex) {
+                    Logger.getLogger(ActionModule.class.getName()).log(Level.SEVERE, "Icon loading failed", ex);
+                }
+            } else {
+                Logger.getLogger(ActionModule.class.getName()).log(Level.SEVERE, "Invalid action icon for key: {0}", key);
+            }
         }
         if (bundle.containsKey(actionId + ActionConsts.ACTION_SMALL_LARGE_POSTFIX)) {
-            action.putValue(Action.LARGE_ICON_KEY, new javax.swing.ImageIcon(resourceClass.getResource(bundle.getString(actionId + ActionConsts.ACTION_SMALL_LARGE_POSTFIX))));
+            String key = bundle.getString(actionId + ActionConsts.ACTION_SMALL_LARGE_POSTFIX);
+            URL resourceUrl = resourceClass.getResource(key);
+            if (resourceUrl != null) {
+                try {
+                    action.putValue(Action.LARGE_ICON_KEY, new javax.swing.ImageIcon(resourceUrl));
+                } catch (Exception ex) {
+                    Logger.getLogger(ActionModule.class.getName()).log(Level.SEVERE, "Icon loading failed", ex);
+                }
+            } else {
+                Logger.getLogger(ActionModule.class.getName()).log(Level.SEVERE, "Invalid action icon for key: {0}", key);
+            }
         }
     }
 
