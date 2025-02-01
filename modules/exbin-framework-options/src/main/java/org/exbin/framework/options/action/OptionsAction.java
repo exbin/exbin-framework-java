@@ -76,6 +76,7 @@ public class OptionsAction extends AbstractAction {
                 optionsListPanel.loadAllFromPreferences();
 
                 dialog = windowModule.createDialog(optionsListPanel, controlPanel);
+                dialog.getWindow().setSize(780, 500);
                 windowModule.setWindowTitle(dialog, optionsListPanel.getResourceBundle());
                 controlPanel.setHandler((actionType) -> {
                     switch (actionType) {
@@ -103,6 +104,7 @@ public class OptionsAction extends AbstractAction {
                 optionsTreePanel.loadAllFromPreferences();
 
                 dialog = windowModule.createDialog(optionsTreePanel, controlPanel);
+                dialog.getWindow().setSize(780, 500);
                 windowModule.setWindowTitle(dialog, optionsTreePanel.getResourceBundle());
                 controlPanel.setHandler((actionType) -> {
                     switch (actionType) {

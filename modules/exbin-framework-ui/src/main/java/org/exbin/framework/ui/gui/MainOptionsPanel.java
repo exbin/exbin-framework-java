@@ -422,7 +422,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
                     .addComponent(renderingModeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(fontAntialiasingComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(generalPanelLayout.createSequentialGroup()
-                        .addComponent(guiScalingComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(guiScalingComboBox, 0, 201, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(guiScalingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(generalPanelLayout.createSequentialGroup()
@@ -482,7 +482,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
             mainOptionsNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainOptionsNotePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(requireRestartLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
+                .addComponent(requireRestartLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         mainOptionsNotePanelLayout.setVerticalGroup(
