@@ -117,7 +117,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
                 // TODO dispose?
             }
         });
-
+        
         activeFileChanged();
     }
 

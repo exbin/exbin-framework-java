@@ -27,8 +27,6 @@ import org.exbin.framework.editor.text.TextEditor;
 import org.exbin.framework.editor.text.gui.TextPropertiesPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.CloseControlPanel;
 

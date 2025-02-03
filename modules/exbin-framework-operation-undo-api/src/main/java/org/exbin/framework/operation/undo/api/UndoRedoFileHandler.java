@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.operation.undo.api;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 
 /**
@@ -30,5 +31,5 @@ public interface UndoRedoFileHandler {
      * @return undo handler
      */
     @Nonnull
-    UndoRedoState getUndoRedo();
+    Optional<UndoRedoState> getUndoRedo();
 }

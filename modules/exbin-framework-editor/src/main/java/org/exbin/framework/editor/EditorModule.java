@@ -31,6 +31,7 @@ import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.EditorProviderChangeListener;
+import org.exbin.framework.editor.api.EditorProviderComponentListener;
 import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileModuleApi;
@@ -55,6 +56,7 @@ public class EditorModule implements EditorModuleApi {
 
     private final List<EditorProvider> editors = new ArrayList<>();
     private final List<EditorProviderChangeListener> changeListeners = new ArrayList<>();
+    private final List<EditorProviderComponentListener> componentListeners = new ArrayList<>();
     private final Map<String, List<EditorProvider>> pluginEditorsMap = new HashMap<>();
     private EditorProvider editorProvider = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener = null;
@@ -186,7 +188,11 @@ public class EditorModule implements EditorModuleApi {
         this.editorProvider = editorProvider;
 
         for (EditorProviderChangeListener listener : changeListeners) {
-            listener.componentDeactivated(editorProvider);
+            listener.providerChanged(editorProvider);
+        }
+        
+        if (editorProvider instanceof DefaultMultiEditorProvider) {
+            notifyEditorComponentCreated(editorProvider.getEditorComponent());
         }
     }
 
@@ -226,6 +232,13 @@ public class EditorModule implements EditorModuleApi {
     @Override
     public JComponent getEditorComponent() {
         return editorProvider.getEditorComponent();
+    }
+
+    @Override
+    public void notifyEditorComponentCreated(JComponent component) {
+        for (EditorProviderComponentListener listener : componentListeners) {
+            listener.componentCreated(component);
+        }
     }
 
     @Override
@@ -284,5 +297,15 @@ public class EditorModule implements EditorModuleApi {
     @Override
     public void removeEditorProviderChangeListener(EditorProviderChangeListener listener) {
         changeListeners.remove(listener);
+    }
+
+    @Override
+    public void addEditorProviderComponentListener(EditorProviderComponentListener listener) {
+        componentListeners.add(listener);
+    }
+
+    @Override
+    public void removeEditorProviderComponentListener(EditorProviderComponentListener listener) {
+        componentListeners.remove(listener);
     }
 }

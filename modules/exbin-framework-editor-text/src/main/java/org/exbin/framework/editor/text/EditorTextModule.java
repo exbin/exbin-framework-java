@@ -527,7 +527,6 @@ public class EditorTextModule implements Module {
                     ((TextPanel) getEditorProvider().getEditorComponent()).setCharset(Charset.forName(encodingsHandler.getSelectedEncoding()));
                 }
             });
-            encodingsHandler.setParentComponent(getEditorProvider().getEditorComponent());
             if (textStatusPanel != null) {
                 encodingsHandler.setTextEncodingStatus(textStatusPanel);
             }

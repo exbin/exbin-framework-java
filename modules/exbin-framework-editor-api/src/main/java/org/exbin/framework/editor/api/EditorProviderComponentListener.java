@@ -16,19 +16,20 @@
 package org.exbin.framework.editor.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 
 /**
- * Interface for editor provider changes.
+ * Interface for editor provider component listener.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditorProviderChangeListener {
+public interface EditorProviderComponentListener {
 
     /**
-     * Notifies that editor provider changed.
+     * Notifies that editor provider component was created.
      *
-     * @param editorProvider editor provider
+     * @param component editor provider component
      */
-    void providerChanged(EditorProvider editorProvider);
+    void componentCreated(JComponent component);
 }

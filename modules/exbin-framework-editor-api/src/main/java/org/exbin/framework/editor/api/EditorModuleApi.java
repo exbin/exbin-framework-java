@@ -49,6 +49,13 @@ public interface EditorModuleApi extends Module {
     JComponent getEditorComponent();
 
     /**
+     * Notifies editor component created.
+     *
+     * @param component editor component
+     */
+    void notifyEditorComponentCreated(JComponent component);
+
+    /**
      * Creates close file action.
      *
      * @return close file action
@@ -98,4 +105,18 @@ public interface EditorModuleApi extends Module {
      * @param listener listener
      */
     void removeEditorProviderChangeListener(EditorProviderChangeListener listener);
+
+    /**
+     * Adds component listener.
+     *
+     * @param listener listener
+     */
+    void addEditorProviderComponentListener(EditorProviderComponentListener listener);
+
+    /**
+     * Removes component listener.
+     *
+     * @param listener listener
+     */
+    void removeEditorProviderComponentListener(EditorProviderComponentListener listener);
 }
