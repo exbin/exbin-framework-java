@@ -29,7 +29,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.action.ManageEncodingsAction;
@@ -204,7 +203,7 @@ public class EncodingsHandler {
         }
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        popupMenu.add(new JSeparator());
+        popupMenu.addSeparator();
         popupMenu.add(actionModule.actionToMenuItem(manageEncodingsAction));
 
         popupMenu.show((Component) mouseEvent.getSource(), mouseEvent.getX(), mouseEvent.getY());

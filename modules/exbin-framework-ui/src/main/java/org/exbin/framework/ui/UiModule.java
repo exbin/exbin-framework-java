@@ -173,15 +173,20 @@ public class UiModule implements UiModuleApi {
             languageModule.switchToIconSet(iconSet);
         }
 
-        for (Runnable runnable : postInitActions) {
-            runnable.run();
-        }
-        postInitActions.clear();
+        executePostInitActions();
     }
 
     @Override
     public void addPostInitAction(Runnable runnable) {
         postInitActions.add(runnable);
+    }
+    
+    @Override
+    public void executePostInitActions() {
+        for (Runnable runnable : postInitActions) {
+            runnable.run();
+        }
+        postInitActions.clear();
     }
 
     public void switchToLookAndFeel(String laf) {

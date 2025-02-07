@@ -269,7 +269,10 @@ public class MenuManager {
                                 }
 
                                 targetMenu.add(menuItem);
-                                finishMenuAction(action, activationUpdateService);
+                                Action menuItemAction = menuItem.getAction();
+                                if (menuItemAction != null) {
+                                    finishMenuAction(menuItemAction, activationUpdateService);
+                                }
                             }
                         };
                     } else if (next.contribution instanceof SubMenuContribution) {
@@ -325,6 +328,7 @@ public class MenuManager {
                                 }
 
                                 targetMenu.add(subMenu);
+                                finishMenu(subMenu, activationUpdateService);
                                 finishMenuAction(action, activationUpdateService);
                             }
                         };
@@ -372,7 +376,7 @@ public class MenuManager {
                             @Override
                             public void finish() {
                                 JMenu menuItem = directMenuContribution.getMenu();
-                                Action action = directMenuContribution.getMenu().getAction();
+                                Action action = menuItem.getAction();
                                 if (targetMenu.isPopup() && action != null) {
                                     ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                                     if (menuCreation != null) {

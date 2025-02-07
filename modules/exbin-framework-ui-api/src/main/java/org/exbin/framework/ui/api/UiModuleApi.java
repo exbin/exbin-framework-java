@@ -60,6 +60,11 @@ public interface UiModuleApi extends Module {
     void addPostInitAction(Runnable runnable);
 
     /**
+     * Manually execute post init actions.
+     */
+    void executePostInitActions();
+
+    /**
      * Registers options panels.
      */
     void registerOptionsPanels();
