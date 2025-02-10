@@ -13,36 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.help.api;
+package org.exbin.framework.language.api;
 
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JButton;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for help module.
+ * Language modifier.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface HelpModuleApi extends Module {
-
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(HelpModuleApi.class);
+public interface LanguageModifier {
 
     /**
-     * Opens help page on given position.
+     * Enhances action title to indicate action which is opening dialog.
      *
-     * @param helpLink help link
-     */
-    void openHelp(HelpLink helpLink);
-
-    /**
-     * Create button with help symbol.
-     *
-     * @return help button
+     * @param actionTitle action title
+     * @return enhanced action title
      */
     @Nonnull
-    JButton createHelpButton();
+    String getActionWithDialogText(String actionTitle);
+
+    /**
+     * Enhances action title to indicate action which is opening dialog.
+     *
+     * @param bundle resource bundle
+     * @param key resource key
+     * @return enhanced action title
+     */
+    @Nonnull
+    String getActionWithDialogText(ResourceBundle bundle, String key);
 }

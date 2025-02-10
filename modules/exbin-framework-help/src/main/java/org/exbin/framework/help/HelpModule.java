@@ -15,17 +15,18 @@
  */
 package org.exbin.framework.help;
 
+import java.util.Optional;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.help.action.HelpAction;
-import org.exbin.framework.action.api.PositionMode;
-import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuManagement;
-import org.exbin.framework.action.api.PositionMenuContributionRule;
+import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.api.HelpModuleApi;
+import org.exbin.framework.help.api.HelpOpeningHandler;
+import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
  * Framework help module.
@@ -35,22 +36,46 @@ import org.exbin.framework.help.api.HelpModuleApi;
 @ParametersAreNonnullByDefault
 public class HelpModule implements HelpModuleApi {
 
+    private ResourceBundle resourceBundle;
+    private HelpOpeningHandler helpOpeningHandler = null;
+
     public HelpModule() {
     }
 
     @Nonnull
+    private ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(HelpModule.class);
+        }
+
+        return resourceBundle;
+    }
+
+    @Nonnull
     @Override
-    public HelpAction createHelpAction() {
-        HelpAction helpAction = new HelpAction();
-        helpAction.setup();
-        return helpAction;
+    public JButton createHelpButton() {
+        // TODO Change button shape to rounded
+        getResourceBundle();
+        JButton helpButton = new JButton();
+        helpButton.setEnabled(false);
+        helpButton.setIcon(new ImageIcon(getClass().getResource(resourceBundle.getString("helpAction.smallIcon"))));
+        helpButton.setToolTipText(resourceBundle.getString("helpAction.toolTipText"));
+        return helpButton;
     }
 
     @Override
-    public void registerMainMenu() {
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, createHelpAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+    public void openHelp(HelpLink helpLink) {
+        if (helpOpeningHandler != null) {
+            helpOpeningHandler.openHelpLink(helpLink);
+        }
+    }
+
+    @Nonnull
+    public Optional<HelpOpeningHandler> getHelpOpeningHandler() {
+        return Optional.ofNullable(helpOpeningHandler);
+    }
+
+    public void setHelpOpeningHandler(@Nullable HelpOpeningHandler helpOpeningHandler) {
+        this.helpOpeningHandler = helpOpeningHandler;
     }
 }

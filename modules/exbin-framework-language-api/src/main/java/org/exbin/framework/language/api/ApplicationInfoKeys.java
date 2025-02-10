@@ -38,6 +38,7 @@ public class ApplicationInfoKeys {
     public static final String APPLICATION_ICON = "Application.icon";
     public static final String APPLICATION_ABOUT_IMAGE = "Application.aboutImage";
     public static final String APPLICATION_HOMEPAGE = "Application.homepage";
+    public static final String APPLICATION_LANGUAGE_MODIFIER = "Application.languageModifier";
 
     private ApplicationInfoKeys() {
     }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.help.action;
+package org.exbin.framework.help.local.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,18 +42,18 @@ import org.exbin.framework.language.api.LanguageModuleApi;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class HelpAction extends AbstractAction {
+public class HelpLocalAction extends AbstractAction {
 
     public static final String ACTION_ID = "helpAction";
     public static final String HELP_SET_FILE = "help/help.hs";
 
-    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(HelpAction.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(HelpLocalAction.class);
 
     private HelpSet mainHelpSet;
     private HelpBroker mainHelpBroker;
     private ActionListener helpActionLisneter;
 
-    public HelpAction() {
+    public HelpLocalAction() {
     }
 
     public void setup() {
@@ -74,7 +74,7 @@ public class HelpAction extends AbstractAction {
                 // helpContextMenuItem.addActionListener(helpActionLisneter);
             }
         } catch (IOException ex) {
-            Logger.getLogger(HelpAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HelpLocalAction.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -107,7 +107,7 @@ public class HelpAction extends AbstractAction {
             }
             helpSet = new HelpSet(null, helpSetURL);
         } catch (MalformedURLException | HelpSetException ex) {
-            Logger.getLogger(HelpAction.class.getName()).log(Level.INFO, "HelpSet: " + helpSetFile + " not found", ex);
+            Logger.getLogger(HelpLocalAction.class.getName()).log(Level.INFO, "HelpSet: " + helpSetFile + " not found", ex);
         }
         return helpSet;
     }

@@ -29,7 +29,9 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.language.api.IconSetProvider;
+import org.exbin.framework.language.api.LanguageModifier;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.LanguageProvider;
 
@@ -45,6 +47,7 @@ public class LanguageModule implements LanguageModuleApi {
     private ClassLoader languageClassLoader = null;
     private IconSetProvider iconSetProvider = null;
     private Locale languageLocale = null;
+    private LanguageModifier languageModifier = null;
     private final List<LanguageProvider> languagePlugins = new ArrayList<>();
     private final List<IconSetProvider> iconSets = new ArrayList<>();
 
@@ -113,10 +116,12 @@ public class LanguageModule implements LanguageModuleApi {
         if (targetLocale == null) {
             setLanguageLocale(null);
             languageClassLoader = null;
+            updateModifier();
             return;
         } else if ("en-US".equals(targetLocale.toLanguageTag())) {
             setLanguageLocale(Locale.ROOT);
             languageClassLoader = null;
+            updateModifier();
             return;
         }
 
@@ -163,8 +168,26 @@ public class LanguageModule implements LanguageModuleApi {
             if (languageProvider.getLocale().equals(targetLocale)) {
                 languageClassLoader = languageProvider.getClassLoader().orElse(getClass().getClassLoader());
                 setLanguageLocale(targetLocale);
+                updateModifier();
                 break;
             }
+        }
+    }
+
+    private void updateModifier() {
+        boolean modifierPresent = appBundle.containsKey(ApplicationInfoKeys.APPLICATION_LANGUAGE_MODIFIER);
+        if (modifierPresent) {
+            try {
+                String modifierClassName = appBundle.getString(ApplicationInfoKeys.APPLICATION_LANGUAGE_MODIFIER);
+                Class<?> modifierClass = Class.forName(modifierClassName, true, languageClassLoader != null ? languageClassLoader : this.getClass().getClassLoader());
+                if (modifierClass != null) {
+                    languageModifier = (LanguageModifier) modifierClass.cast(LanguageModifier.class);
+                }
+            } catch (ClassNotFoundException ex) {
+                languageModifier = null;
+            }
+        } else {
+            languageModifier = null;
         }
     }
 
@@ -198,14 +221,20 @@ public class LanguageModule implements LanguageModuleApi {
     @Nonnull
     @Override
     public String getActionWithDialogText(String actionTitle) {
-        // TODO support for language plugins
+        if (languageModifier != null) {
+            return languageModifier.getActionWithDialogText(actionTitle);
+        }
+
         return actionTitle + "...";
     }
 
     @Nonnull
     @Override
     public String getActionWithDialogText(ResourceBundle bundle, String key) {
-        // TODO support for language plugins
+        if (languageModifier != null) {
+            return languageModifier.getActionWithDialogText(bundle, key);
+        }
+
         return bundle.getString(key) + "...";
     }
 

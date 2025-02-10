@@ -15,34 +15,15 @@
  */
 package org.exbin.framework.help.api;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JButton;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for help module.
+ * Link to help page.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface HelpModuleApi extends Module {
+public interface HelpLinkable {
 
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(HelpModuleApi.class);
-
-    /**
-     * Opens help page on given position.
-     *
-     * @param helpLink help link
-     */
-    void openHelp(HelpLink helpLink);
-
-    /**
-     * Create button with help symbol.
-     *
-     * @return help button
-     */
-    @Nonnull
-    JButton createHelpButton();
+    void setHelpLink(HelpLink helpLink);
 }
