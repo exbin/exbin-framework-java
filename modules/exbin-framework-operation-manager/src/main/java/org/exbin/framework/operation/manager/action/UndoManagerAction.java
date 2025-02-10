@@ -21,8 +21,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionActiveComponent;
-import org.exbin.framework.action.api.ComponentActivationManager;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.operation.manager.OperationManagerModule;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -33,6 +31,8 @@ import org.exbin.framework.operation.undo.api.UndoRedo;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 
 /**
  * Undo manager action.
@@ -40,7 +40,7 @@ import org.exbin.framework.window.api.WindowModuleApi;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class UndoManagerAction extends AbstractAction implements ActionActiveComponent {
+public class UndoManagerAction extends AbstractAction implements ActionContextChange {
 
     public static final String EDIT_UNDO_MANAGER_ACTION_ID = "editUndoManagerAction";
 
@@ -73,7 +73,7 @@ public class UndoManagerAction extends AbstractAction implements ActionActiveCom
     }
 
     @Override
-    public void register(ComponentActivationManager manager) {
+    public void register(ActionContextChangeManager manager) {
         manager.registerUpdateListener(UndoRedoState.class, (instance) -> {
             undoHandler = instance;
             setEnabled(instance != null);

@@ -16,19 +16,32 @@
 package org.exbin.framework.action.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 
 /**
- * Listener for action update when menu is activated for component.
+ * Service for action context handling.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionActiveComponent {
+public interface ActionContextService {
 
     /**
-     * Registers component activation listeners via provided manager.
+     * Registers component activation listener.
      *
-     * @param manager activation manager
+     * @param listener listener
      */
-    void register(ComponentActivationManager manager);
+    void registerListener(ComponentActivationListener listener);
+
+    /**
+     * Requests update of registered listeners.
+     */
+    void requestUpdate();
+
+    /**
+     * Requests update of registered listeners.
+     *
+     * @param action action
+     */
+    void requestUpdate(Action action);
 }

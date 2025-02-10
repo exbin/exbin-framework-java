@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * @author ExBin Project (https://exbin.org)
  * @param <T> instance type
  */
-public interface ComponentActivationInstanceListener<T> {
+public interface ActionContextChangeListener<T> {
 
     /**
      * Notifies active instance changed.

@@ -71,7 +71,7 @@ public class TextEditor implements EditorProvider {
                 propertyChangeListener.propertyChange(evt);
             }
         });
-        activeFile.getComponentActivationService().registerListener(componentActivationListener);
+        activeFile.getActionContextService().registerListener(componentActivationListener);
 
         activeFileChanged();
     }

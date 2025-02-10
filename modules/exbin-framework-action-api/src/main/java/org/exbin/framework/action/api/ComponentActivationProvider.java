@@ -32,5 +32,5 @@ public interface ComponentActivationProvider {
      * @return component activation service
      */
     @Nonnull
-    ComponentActivationService getComponentActivationService();
+    ActionContextService getActionContextService();
 }

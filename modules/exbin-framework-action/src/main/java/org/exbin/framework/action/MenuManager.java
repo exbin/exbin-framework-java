@@ -36,7 +36,6 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionMenuContribution;
 import org.exbin.framework.action.api.ActionMenuCreation;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.DirectSubMenuContribution;
 import org.exbin.framework.action.api.GroupMenuContribution;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
@@ -51,6 +50,7 @@ import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.SubMenuContribution;
 import org.exbin.framework.utils.ObjectUtils;
 import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.action.api.ActionContextService;
 
 /**
  * Menu manager.
@@ -76,22 +76,22 @@ public class MenuManager {
     public MenuManager() {
     }
 
-    public void buildMenu(JMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
+    public void buildMenu(JMenu targetMenu, String menuId, ActionContextService activationUpdateService) {
         buildMenu(new MenuWrapper(targetMenu), menuId, activationUpdateService);
         activationUpdateService.requestUpdate();
     }
 
-    public void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
+    public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextService activationUpdateService) {
         buildMenu(new PopupMenuWrapper(targetMenu), menuId, activationUpdateService);
         activationUpdateService.requestUpdate();
     }
 
-    public void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService) {
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService activationUpdateService) {
         buildMenu(new MenuBarWrapper(targetMenuBar), menuId, activationUpdateService);
         activationUpdateService.requestUpdate();
     }
 
-    private void buildMenu(MenuTarget targetMenu, String menuId, ComponentActivationService activationUpdateService) {
+    private void buildMenu(MenuTarget targetMenu, String menuId, ActionContextService activationUpdateService) {
         MenuDefinition menuDef = menus.get(menuId);
 
         if (menuDef == null) {
@@ -190,7 +190,7 @@ public class MenuManager {
         processMenuGroup(groupRecords, beforeItem, afterItem, targetMenu, buttonGroups, menuId, activationUpdateService);
     }
 
-    private void processMenuGroup(List<MenuGroupRecord> groups, Map<String, List<MenuContribution>> beforeItem, Map<String, List<MenuContribution>> afterItem, final MenuTarget targetMenu, final Map<String, ButtonGroup> buttonGroups, String menuId, ComponentActivationService activationUpdateService) {
+    private void processMenuGroup(List<MenuGroupRecord> groups, Map<String, List<MenuContribution>> beforeItem, Map<String, List<MenuContribution>> afterItem, final MenuTarget targetMenu, final Map<String, ButtonGroup> buttonGroups, String menuId, ActionContextService activationUpdateService) {
         List<MenuGroupRecordPathNode> processingPath = new LinkedList<>();
         processingPath.add(new MenuGroupRecordPathNode(groups));
 
@@ -483,13 +483,13 @@ public class MenuManager {
         }
     }
 
-    private void finishMenuAction(@Nullable Action action, ComponentActivationService activationUpdateService) {
+    private void finishMenuAction(@Nullable Action action, ActionContextService activationUpdateService) {
         if (action != null) {
             activationUpdateService.requestUpdate(action);
         }
     }
 
-    private void finishMenu(JMenu menu, ComponentActivationService activationUpdateService) {
+    private void finishMenu(JMenu menu, ActionContextService activationUpdateService) {
         for (int i = 0; i < menu.getItemCount(); i++) {
             JMenuItem menuItem = menu.getItem(i);
             if (menuItem == null) {

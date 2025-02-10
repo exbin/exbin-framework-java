@@ -45,8 +45,6 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
-import org.exbin.framework.action.api.ComponentActivationManager;
-import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.GroupToolBarContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
@@ -62,6 +60,8 @@ import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.action.api.ActionContextService;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 
 /**
  * Implementation of action module.
@@ -287,12 +287,12 @@ public class ActionModule implements ActionModuleApi {
     public MenuManagement getMenuManagement(String moduleId) {
         return new MenuManagement() {
             @Override
-            public void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService) {
+            public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextService activationUpdateService) {
                 getMenuManager().buildMenu(targetMenu, menuId, activationUpdateService);
             }
 
             @Override
-            public void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService) {
+            public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService activationUpdateService) {
                 getMenuManager().buildMenu(targetMenuBar, menuId, activationUpdateService);
             }
 
@@ -359,7 +359,7 @@ public class ActionModule implements ActionModuleApi {
     public ToolBarManagement getToolBarManagement(String moduleId) {
         return new ToolBarManagement() {
             @Override
-            public void buildToolBar(JToolBar targetToolBar, String toolBarId, ComponentActivationService activationUpdateService) {
+            public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
                 getToolBarManager().buildToolBar(targetToolBar, toolBarId, activationUpdateService);
             }
 
@@ -453,7 +453,7 @@ public class ActionModule implements ActionModuleApi {
         return customClipboardActions;
     }
      */
-    public void registerClipboardFlavorListener(ComponentActivationManager activationManager) {
+    public void registerClipboardFlavorListener(ActionContextChangeManager activationManager) {
         ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
 
             private final ClipboardFlavorState clipboardFlavorState = new ClipboardFlavorState();

@@ -23,8 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.ComponentActivationListener;
-import org.exbin.framework.action.api.ComponentActivationService;
-import org.exbin.framework.action.api.DefaultComponentActivationService;
+import org.exbin.framework.action.api.ActionContextService;
+import org.exbin.framework.action.api.DefaultActionContextService;
 import org.exbin.framework.file.api.FileHandler;
 
 /**
@@ -33,7 +33,7 @@ import org.exbin.framework.file.api.FileHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MultiEditorComponentActivationService extends DefaultComponentActivationService {
+public class MultiEditorActionContextService extends DefaultActionContextService {
 
     protected final Set<Class<?>> passActiveComponentState = new HashSet<>();
     protected final Map<FileHandler, ComponentActivationListener> fileActivationListeners = new HashMap<>();
@@ -47,15 +47,15 @@ public class MultiEditorComponentActivationService extends DefaultComponentActiv
         }
     }
 
-    public void passRequestUpdate(@Nullable ComponentActivationService componentActivationService) {
+    public void passRequestUpdate(@Nullable ActionContextService actionContextService) {
         // TODO optimize later
         for (Class<?> instanceClass : passActiveComponentState) {
             for (ComponentActivationListener listener : listeners) {
                 listener.updated(instanceClass, null);
             }
         }
-        if (componentActivationService != null) {
-            componentActivationService.requestUpdate();
+        if (actionContextService != null) {
+            actionContextService.requestUpdate();
         }
     }
 

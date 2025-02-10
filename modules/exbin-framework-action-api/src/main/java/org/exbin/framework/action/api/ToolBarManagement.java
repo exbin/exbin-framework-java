@@ -35,7 +35,7 @@ public interface ToolBarManagement {
      * @param toolBarId toolbar id
      * @param activationUpdateService activation update service
      */
-    void buildToolBar(JToolBar targetToolBar, String toolBarId, ComponentActivationService activationUpdateService);
+    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService);
 
     /**
      * Registers tool bar associating it with given identificator.

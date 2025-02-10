@@ -19,12 +19,12 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for component activation registration.
+ * Interface for action context change registration.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ComponentActivationManager {
+public interface ActionContextChangeManager {
 
     /**
      * Registers listener to call once when menu is created for component or
@@ -34,7 +34,7 @@ public interface ComponentActivationManager {
      * @param componentClass component class
      * @param listener listener
      */
-    <T> void registerListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener);
+    <T> void registerListener(Class<T> componentClass, ActionContextChangeListener<T> listener);
 
     /**
      * Registers listener to call each time when component is activated or empty
@@ -44,7 +44,7 @@ public interface ComponentActivationManager {
      * @param componentClass component class
      * @param listener listener
      */
-    <T> void registerUpdateListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener);
+    <T> void registerUpdateListener(Class<T> componentClass, ActionContextChangeListener<T> listener);
 
     /**
      * Requests update for component class.

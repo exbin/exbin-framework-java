@@ -45,13 +45,13 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ToolBarContribution;
 import org.exbin.framework.action.gui.DropDownButton;
-import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.action.api.GroupToolBarContribution;
 import org.exbin.framework.action.api.GroupToolBarContributionRule;
 import org.exbin.framework.action.api.PositionToolBarContributionRule;
 import org.exbin.framework.action.api.SeparationToolBarContributionRule;
 import org.exbin.framework.action.api.ToolBarContributionRule;
 import org.exbin.framework.utils.ObjectUtils;
+import org.exbin.framework.action.api.ActionContextService;
 
 /**
  * Toolbar manager.
@@ -80,7 +80,7 @@ public class ToolBarManager {
     }
 
     // TODO support for multiple frames / toolbars
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ComponentActivationService activationUpdateService) {
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
         ToolBarDefinition toolBarDef = toolBars.get(toolBarId);
 
         if (toolBarDef == null) {
@@ -148,7 +148,7 @@ public class ToolBarManager {
         processToolBarGroup(groupRecords, targetToolBar, activationUpdateService);
     }
 
-    private void processToolBarGroup(List<ToolBarGroupRecord> groups, JToolBar targetToolBar, ComponentActivationService activationUpdateService) {
+    private void processToolBarGroup(List<ToolBarGroupRecord> groups, JToolBar targetToolBar, ActionContextService activationUpdateService) {
         List<ToolBarGroupRecordPathNode> processingPath = new LinkedList<>();
         processingPath.add(new ToolBarGroupRecordPathNode(groups));
 
@@ -288,7 +288,7 @@ public class ToolBarManager {
         return newItem;
     }
 
-    public void finishToolbarAction(Action action, ComponentActivationService activationUpdateService) {
+    public void finishToolbarAction(Action action, ActionContextService activationUpdateService) {
         if (action != null) {
             activationUpdateService.requestUpdate(action);
         }

@@ -36,18 +36,18 @@ public interface MenuManagement {
      *
      * @param targetMenu target menu
      * @param menuId menu identificator
-     * @param activationUpdateService activation update service
+     * @param actionContextService action context service
      */
-    void buildMenu(JPopupMenu targetMenu, String menuId, ComponentActivationService activationUpdateService);
+    void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextService actionContextService);
 
     /**
      * Returns menu using given identificator.
      *
      * @param targetMenuBar target menu bar
      * @param menuId menu identificator
-     * @param activationUpdateService activation update service
+     * @param actionContextService action context service
      */
-    void buildMenu(JMenuBar targetMenuBar, String menuId, ComponentActivationService activationUpdateService);
+    void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService actionContextService);
 
     /**
      * Registers menu associating it with given identificator.

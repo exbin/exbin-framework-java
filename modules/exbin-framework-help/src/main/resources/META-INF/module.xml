@@ -12,6 +12,5 @@
     <module id="org.exbin.framework.window.api.WindowModuleApi" />
     <module id="org.exbin.framework.language.api.LanguageModuleApi" />
     <module id="org.exbin.framework.utils.UtilsModule" />
-    <library jar="javahelp-2.0.05.jar" />
   </dependency>
 </module>

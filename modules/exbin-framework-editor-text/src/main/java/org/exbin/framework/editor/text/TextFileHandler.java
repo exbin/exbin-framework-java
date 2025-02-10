@@ -31,15 +31,15 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.ComponentActivationService;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.action.api.ComponentActivationProvider;
-import org.exbin.framework.action.api.DefaultComponentActivationService;
+import org.exbin.framework.action.api.DefaultActionContextService;
 import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
 import org.exbin.framework.operation.undo.api.UndoRedoControl;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
+import org.exbin.framework.action.api.ActionContextService;
 
 /**
  * Text file handler.
@@ -54,7 +54,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     protected URI fileUri = null;
     protected String title;
     protected FileType fileType = null;
-    protected DefaultComponentActivationService componentActivationService = new DefaultComponentActivationService();
+    protected DefaultActionContextService componentActivationService = new DefaultActionContextService();
     protected UndoRedoControl undoRedoControl = null;
 
     public TextFileHandler() {
@@ -228,7 +228,7 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
 
     @Nonnull
     @Override
-    public ComponentActivationService getComponentActivationService() {
+    public ActionContextService getActionContextService() {
         return componentActivationService;
     }
 

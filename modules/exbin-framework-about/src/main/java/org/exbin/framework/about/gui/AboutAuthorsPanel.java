@@ -18,7 +18,7 @@ package org.exbin.framework.about.gui;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.about.ApplicationBundle;
+import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
@@ -43,7 +43,7 @@ public class AboutAuthorsPanel extends javax.swing.JPanel {
     }
 
     public void loadFromResources(ResourceBundle appBundle) {
-        authorsTextArea.setText(appBundle.getString(ApplicationBundle.APPLICATION_AUTHORS));
+        authorsTextArea.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_AUTHORS));
     }
 
     /**

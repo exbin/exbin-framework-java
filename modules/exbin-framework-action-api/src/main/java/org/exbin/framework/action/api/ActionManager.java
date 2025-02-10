@@ -24,7 +24,7 @@ import javax.swing.Action;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionManager extends ComponentActivationService, ComponentActivationListener {
+public interface ActionManager extends ActionContextService, ComponentActivationListener {
 
     /**
      * Registers given action.

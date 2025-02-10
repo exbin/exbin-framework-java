@@ -22,12 +22,12 @@ import java.util.Map;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.action.api.ActionActiveComponent;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionManager;
-import org.exbin.framework.action.api.ComponentActivationInstanceListener;
-import org.exbin.framework.action.api.ComponentActivationManager;
-import org.exbin.framework.action.api.DefaultComponentActivationService;
+import org.exbin.framework.action.api.DefaultActionContextService;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeListener;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 
 /**
  * Action manager.
@@ -35,10 +35,10 @@ import org.exbin.framework.action.api.DefaultComponentActivationService;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultActionManager extends DefaultComponentActivationService implements ActionManager {
+public class DefaultActionManager extends DefaultActionContextService implements ActionManager {
 
     protected final Map<String, ActionRecord> actions = new HashMap<>();
-    protected final Map<Class<?>, List<ComponentActivationInstanceListener<?>>> activeComponentListeners = new HashMap<>();
+    protected final Map<Class<?>, List<ActionContextChangeListener<?>>> activeComponentListeners = new HashMap<>();
 
     public DefaultActionManager() {
     }
@@ -57,15 +57,15 @@ public class DefaultActionManager extends DefaultComponentActivationService impl
     @SuppressWarnings("unchecked")
     @Override
     public void initAction(Action action) {
-        ActionActiveComponent actionActiveComponent = (ActionActiveComponent) action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
-        if (actionActiveComponent != null) {
+        ActionContextChange ActionContextChange = (ActionContextChange) action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
+        if (ActionContextChange != null) {
             String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
             ActionRecord actionRecord = actions.get(actionId);
-            actionActiveComponent.register(new ActivationManager(actionRecord));
-            for (Map.Entry<Class<?>, ComponentActivationInstanceListener<?>> entry : actionRecord.updateComponents.entrySet()) {
+            ActionContextChange.register(new ActivationManager(actionRecord));
+            for (Map.Entry<Class<?>, ActionContextChangeListener<?>> entry : actionRecord.updateComponents.entrySet()) {
                 Class<?> updateComponent = entry.getKey();
                 Object updateValue = activeComponentState.get(updateComponent);
-                ComponentActivationInstanceListener listener = entry.getValue();
+                ActionContextChangeListener listener = entry.getValue();
                 listener.update(updateValue);
             }
         }
@@ -75,16 +75,16 @@ public class DefaultActionManager extends DefaultComponentActivationService impl
     @Override
     public <T> void updated(Class<T> componentClass, @Nullable T componentInstance) {
         super.updated(componentClass, componentInstance);
-        List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
+        List<ActionContextChangeListener<?>> componentListeners = activeComponentListeners.get(componentClass);
         if (componentListeners != null) {
-            for (ComponentActivationInstanceListener componentListener : componentListeners) {
+            for (ActionContextChangeListener componentListener : componentListeners) {
                 componentListener.update(componentInstance);
             }
         }
     }
 
     @ParametersAreNonnullByDefault
-    private class ActivationManager implements ComponentActivationManager {
+    private class ActivationManager implements ActionContextChangeManager {
 
         private final ActionRecord actionRecord;
 
@@ -96,19 +96,19 @@ public class DefaultActionManager extends DefaultComponentActivationService impl
         @Override
         public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
             activeComponentState.put(componentClass, componentInstance);
-            List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
+            List<ActionContextChangeListener<?>> componentListeners = activeComponentListeners.get(componentClass);
             if (componentListeners != null) {
-                for (ComponentActivationInstanceListener componentListener : componentListeners) {
+                for (ActionContextChangeListener componentListener : componentListeners) {
                     componentListener.update(componentInstance);
                 }
             }
         }
 
         @Override
-        public <T> void registerListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+        public <T> void registerListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
             actionRecord.updateComponents.put(componentClass, listener);
 
-            List<ComponentActivationInstanceListener<?>> componentListeners = activeComponentListeners.get(componentClass);
+            List<ActionContextChangeListener<?>> componentListeners = activeComponentListeners.get(componentClass);
             if (componentListeners == null) {
                 componentListeners = new ArrayList<>();
                 activeComponentListeners.put(componentClass, componentListeners);
@@ -118,7 +118,7 @@ public class DefaultActionManager extends DefaultComponentActivationService impl
         }
 
         @Override
-        public <T> void registerUpdateListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+        public <T> void registerUpdateListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
             registerListener(componentClass, listener);
         }
     }
@@ -126,6 +126,6 @@ public class DefaultActionManager extends DefaultComponentActivationService impl
     protected static class ActionRecord {
 
         List<Action> actionInstances = new ArrayList<>();
-        Map<Class<?>, ComponentActivationInstanceListener<?>> updateComponents = new HashMap<>();
+        Map<Class<?>, ActionContextChangeListener<?>> updateComponents = new HashMap<>();
     }
 }

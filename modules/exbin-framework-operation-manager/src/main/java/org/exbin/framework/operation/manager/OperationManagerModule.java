@@ -24,7 +24,6 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.GroupMenuContributionRule;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuManagement;
-import static org.exbin.framework.frame.api.FrameModuleApi.MODULE_ID;
 import org.exbin.framework.operation.manager.action.UndoManagerAction;
 import org.exbin.framework.operation.manager.api.OperationManagerModuleApi;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
@@ -61,7 +60,7 @@ public class OperationManagerModule implements OperationManagerModuleApi {
         undoManagerAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(undoManagerAction, undoManagerAction.getResourceBundle(), UndoManagerAction.EDIT_UNDO_MANAGER_ACTION_ID);
-        undoManagerAction.putValue(ActionConsts.ACTION_ACTIVE_COMPONENT, undoManagerAction);
+        undoManagerAction.putValue(ActionConsts.ACTION_CONTEXT_CHANGE, undoManagerAction);
         return undoManagerAction;
     }
 }

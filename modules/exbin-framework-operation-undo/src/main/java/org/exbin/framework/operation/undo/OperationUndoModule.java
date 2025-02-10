@@ -15,9 +15,10 @@
  */
 package org.exbin.framework.operation.undo;
 
-import org.exbin.framework.operation.undo.action.BasicUndoActions;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.PositionMode;
@@ -35,6 +36,9 @@ import org.exbin.framework.action.api.SeparationMenuContributionRule;
 import org.exbin.framework.action.api.SeparationToolBarContributionRule;
 import org.exbin.framework.action.api.ToolBarContribution;
 import org.exbin.framework.action.api.ToolBarManagement;
+import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.operation.undo.action.RedoAction;
+import org.exbin.framework.operation.undo.action.UndoAction;
 
 /**
  * Implementation of undo/redo support module.
@@ -44,12 +48,19 @@ import org.exbin.framework.action.api.ToolBarManagement;
 @ParametersAreNonnullByDefault
 public class OperationUndoModule implements OperationUndoModuleApi {
 
-    private BasicUndoActions defaultUndoActions = null;
+    private UndoActions defaultUndoActions = null;
+    private java.util.ResourceBundle resourceBundle = null;
 
     public OperationUndoModule() {
     }
 
-    public void init() {
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OperationUndoModule.class);
+        }
+
+        return resourceBundle;
     }
 
     public void unregisterModule(String moduleId) {
@@ -86,16 +97,39 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     @Nonnull
     @Override
     public UndoActions createUndoActions() {
-        BasicUndoActions undoActions = new BasicUndoActions();
-        return undoActions;
+        return new UndoActions() {
+            @Override
+            public Action createUndoAction() {
+                return OperationUndoModule.this.createUndoAction();
+            }
+
+            @Override
+            public Action createRedoAction() {
+                return OperationUndoModule.this.createRedoAction();
+            }
+        };
     }
 
     @Nonnull
-    public BasicUndoActions getDefaultUndoActions() {
+    public UndoActions getDefaultUndoActions() {
         if (defaultUndoActions == null) {
-            defaultUndoActions = new BasicUndoActions();
+            defaultUndoActions = createUndoActions();
         }
 
         return defaultUndoActions;
+    }
+
+    @Nonnull
+    public UndoAction createUndoAction() {
+        UndoAction undoAction = new UndoAction();
+        undoAction.setup(getResourceBundle());
+        return undoAction;
+    }
+
+    @Nonnull
+    public RedoAction createRedoAction() {
+        RedoAction redoAction = new RedoAction();
+        redoAction.setup(getResourceBundle());
+        return redoAction;
     }
 }

@@ -56,11 +56,11 @@ public class ActionConsts {
      */
     public static final String ACTION_MENU_ACTIVATION = "menuActivation";
     /**
-     * Class active component bus / message registration.
+     * Context change bus / message registration.
      *
-     * Value is {@link ActionActiveComponent}.
+     * Value is {@link ActionContextChange}.
      */
-    public static final String ACTION_ACTIVE_COMPONENT = "activeComponent";
+    public static final String ACTION_CONTEXT_CHANGE = "actionContextChange";
 
     public static final String ACTION_ID = "actionId";
     public static final String ACTION_NAME_POSTFIX = ".text";

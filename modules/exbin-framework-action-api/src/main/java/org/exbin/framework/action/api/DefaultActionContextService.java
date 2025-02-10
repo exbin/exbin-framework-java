@@ -29,7 +29,7 @@ import javax.swing.Action;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultComponentActivationService implements ComponentActivationService, ComponentActivationListener {
+public class DefaultActionContextService implements ActionContextService, ComponentActivationListener {
 
     protected final List<ComponentActivationListener> listeners = new ArrayList<>();
     protected final Map<Class<?>, Object> activeComponentState = new HashMap<>();
@@ -54,17 +54,17 @@ public class DefaultComponentActivationService implements ComponentActivationSer
     @SuppressWarnings("unchecked")
     @Override
     public void requestUpdate(Action action) {
-        Object value = action.getValue(ActionConsts.ACTION_ACTIVE_COMPONENT);
-        Map<Class<?>, ComponentActivationInstanceListener<?>> actionListeners = new HashMap<>();
-        if (value instanceof ActionActiveComponent) {
-            ((ActionActiveComponent) value).register(new ComponentActivationManager() {
+        Object value = action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
+        Map<Class<?>, ActionContextChangeListener<?>> actionListeners = new HashMap<>();
+        if (value instanceof ActionContextChange) {
+            ((ActionContextChange) value).register(new ActionContextChangeManager() {
                 @Override
-                public <T> void registerListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+                public <T> void registerListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
                     actionListeners.put(componentClass, listener);
                 }
 
                 @Override
-                public <T> void registerUpdateListener(Class<T> componentClass, ComponentActivationInstanceListener<T> listener) {
+                public <T> void registerUpdateListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
                     registerListener(componentClass, listener);
                 }
 
@@ -78,7 +78,7 @@ public class DefaultComponentActivationService implements ComponentActivationSer
         for (Map.Entry<Class<?>, Object> entry : activeComponentState.entrySet()) {
             Class key = entry.getKey();
             Object instance = entry.getValue();
-            ComponentActivationInstanceListener listener = actionListeners.get(key);
+            ActionContextChangeListener listener = actionListeners.get(key);
             if (listener != null) {
                 listener.update(instance);
             }

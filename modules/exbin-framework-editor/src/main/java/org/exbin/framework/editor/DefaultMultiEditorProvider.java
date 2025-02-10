@@ -35,7 +35,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationProvider;
-import org.exbin.framework.action.api.ComponentActivationService;
+import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.MenuContribution;
 import org.exbin.framework.action.api.MenuManagement;
 import org.exbin.framework.action.api.PositionMenuContributionRule;
@@ -108,11 +108,11 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
                 }
 
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                ComponentActivationService componentActivationService = frameModule.getFrameHandler().getComponentActivationService();
+                ActionContextService actionContextService = frameModule.getFrameHandler().getActionContextService();
                 ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
                 MenuManagement mgmt = actionModule.getMenuManagement(EditorModule.MODULE_ID);
                 JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
-                mgmt.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, componentActivationService);
+                mgmt.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, actionContextService);
                 fileContextPopupMenu.show(component, positionX, positionY);
                 // TODO dispose?
             }
@@ -130,7 +130,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         }
 
         updateActiveFile();
-//        ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getComponentActivationService() : null;
+//        ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getActionContextService() : null;
 //        fileComponentActivationService.requestUpdate();
 //        fileComponentActivationService.passRequestUpdate(fileComponentActivationService);
         if (activeFile instanceof EditorFileHandler) {
@@ -208,7 +208,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     public void initFileHandler(FileHandler fileHandler) {
         if (fileHandler instanceof ComponentActivationProvider) {
-//            ComponentActivationService fileComponentActivationService = ((ComponentActivationProvider) fileHandler).getComponentActivationService();
+//            ComponentActivationService fileComponentActivationService = ((ComponentActivationProvider) fileHandler).getActionContextService();
 //            fileComponentActivationService.registerListener(new ComponentActivationListener() {
 //                @Override
 //                public <T> void updated(Class<T> instanceClass, T instance) {
