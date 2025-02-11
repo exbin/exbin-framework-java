@@ -28,11 +28,11 @@ import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.about.api.AboutModuleApi;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.GroupMenuContributionRule;
-import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuManagement;
-import org.exbin.framework.action.api.PositionMenuContributionRule;
-import org.exbin.framework.action.api.SeparationMenuContributionRule;
+import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
+import org.exbin.framework.action.api.menu.MenuContribution;
+import org.exbin.framework.action.api.menu.MenuManagement;
+import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
+import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 

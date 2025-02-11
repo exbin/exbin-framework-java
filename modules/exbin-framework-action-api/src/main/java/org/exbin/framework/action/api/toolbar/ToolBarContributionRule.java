@@ -13,29 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
-
-import org.exbin.framework.action.api.toolbar.ToolBarContribution;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
+package org.exbin.framework.action.api.toolbar;
 
 /**
- * Record for action as menu item contribution.
+ * Interface for tool bar contributions rule.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class ActionToolBarContribution implements ToolBarContribution {
-
-    private final Action action;
-
-    public ActionToolBarContribution(Action action) {
-        this.action = action;
-    }
-
-    @Nonnull
-    public Action getAction() {
-        return action;
-    }
+public interface ToolBarContributionRule {
 }

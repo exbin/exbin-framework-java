@@ -45,23 +45,24 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
-import org.exbin.framework.action.api.GroupMenuContributionRule;
-import org.exbin.framework.action.api.GroupToolBarContributionRule;
-import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuContributionRule;
-import org.exbin.framework.action.api.MenuManagement;
-import org.exbin.framework.action.api.PositionMenuContributionRule;
-import org.exbin.framework.action.api.PositionToolBarContributionRule;
-import org.exbin.framework.action.api.SeparationMenuContributionRule;
-import org.exbin.framework.action.api.ToolBarContribution;
-import org.exbin.framework.action.api.ToolBarContributionRule;
-import org.exbin.framework.action.api.ToolBarManagement;
+import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.GroupToolBarContributionRule;
+import org.exbin.framework.action.api.menu.MenuContribution;
+import org.exbin.framework.action.api.menu.MenuContributionRule;
+import org.exbin.framework.action.api.menu.MenuManagement;
+import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.PositionToolBarContributionRule;
+import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.ToolBarContribution;
+import org.exbin.framework.action.api.toolbar.ToolBarContributionRule;
+import org.exbin.framework.action.api.toolbar.ToolBarManagement;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.action.api.menu.MenuItemProvider;
 
 /**
  * Implementation of action module.
@@ -185,20 +186,7 @@ public class ActionModule implements ActionModuleApi {
     @Nonnull
     @Override
     public JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            return actionToMenuItemInt(action, buttonGroups);
-        }
-
-        JMenuItem[] result = new JMenuItem[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                result[0] = actionToMenuItemInt(action, buttonGroups);
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(ActionModule.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return result[0];
+        return actionToMenuItemInt(action, buttonGroups);
     }
 
     @Nonnull
@@ -308,14 +296,8 @@ public class ActionModule implements ActionModuleApi {
 
             @Nonnull
             @Override
-            public MenuContribution registerMenuItem(String menuId, JMenu item) {
-                return getMenuManager().registerMenuItem(menuId, moduleId, item);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuItem(String menuId, JMenuItem item) {
-                throw new UnsupportedOperationException("Not supported yet.");
+            public MenuContribution registerMenuItem(String menuId, MenuItemProvider menuItemProvider) {
+                return getMenuManager().registerMenuItem(menuId, moduleId, menuItemProvider);
             }
 
             @Nonnull

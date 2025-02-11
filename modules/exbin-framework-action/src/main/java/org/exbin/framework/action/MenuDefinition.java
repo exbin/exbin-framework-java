@@ -23,8 +23,8 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuContributionRule;
+import org.exbin.framework.action.api.menu.MenuContribution;
+import org.exbin.framework.action.api.menu.MenuContributionRule;
 
 /**
  * Menu definition.

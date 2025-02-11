@@ -13,36 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.menu;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.concurrent.Immutable;
+import javax.swing.JMenuItem;
 
 /**
- * Menu contribution rule for item relative position.
+ * Listener for action update when menu is created.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-@Immutable
-public class RelativeMenuContributionRule implements MenuContributionRule {
+public interface ActionMenuCreation {
 
-    private final NextToMode nextToMode;
-    private final String contributionActionId;
+    /**
+     * Checks whether menu item should be created.
+     *
+     * @param menuId menu ID
+     * @return true if menu item should be created
+     */
+    boolean shouldCreate(String menuId);
 
-    public RelativeMenuContributionRule(NextToMode nextToMode, String contributionActionId) {
-        this.nextToMode = nextToMode;
-        this.contributionActionId = contributionActionId;
-    }
-
-    @Nonnull
-    public NextToMode getNextToMode() {
-        return nextToMode;
-    }
-
-    @Nonnull
-    public String getContributionActionId() {
-        return contributionActionId;
-    }
+    /**
+     * Called when new menu item is created.
+     *
+     * @param menuItem new menu item instance
+     * @param menuId menu ID
+     */
+    void onCreate(JMenuItem menuItem, String menuId);
 }

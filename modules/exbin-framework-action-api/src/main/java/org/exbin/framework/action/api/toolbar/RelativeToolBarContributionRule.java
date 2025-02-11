@@ -13,29 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.toolbar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
+import org.exbin.framework.action.api.NextToMode;
 
 /**
- * Menu contribution rule for item position.
+ * Toolbar contribution rule for item relative position.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class PositionMenuContributionRule implements MenuContributionRule {
+public class RelativeToolBarContributionRule implements ToolBarContributionRule {
 
-    private final PositionMode positionMode;
+    private final NextToMode nextToMode;
+    private final String toolbarContributionId;
 
-    public PositionMenuContributionRule(PositionMode positionMode) {
-        this.positionMode = positionMode;
+    public RelativeToolBarContributionRule(NextToMode nextToMode, String toolbarContributionId) {
+        this.nextToMode = nextToMode;
+        this.toolbarContributionId = toolbarContributionId;
     }
 
     @Nonnull
-    public PositionMode getPositionMode() {
-        return positionMode;
+    public NextToMode getNextToMode() {
+        return nextToMode;
+    }
+
+    @Nonnull
+    public String getToolbarContributionId() {
+        return toolbarContributionId;
     }
 }

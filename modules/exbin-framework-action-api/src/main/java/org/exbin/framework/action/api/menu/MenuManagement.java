@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.menu;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import org.exbin.framework.action.api.ActionContextService;
 
 /**
  * Interface for registered menus management.
@@ -67,21 +66,11 @@ public interface MenuManagement {
      * Registers menu as a child item for given menu.
      *
      * @param menuId menu Id
-     * @param item menu item
+     * @param menuProvider menu provider
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuItem(String menuId, JMenu item);
-
-    /**
-     * Registers menu item as a child item for given menu.
-     *
-     * @param menuId menu Id
-     * @param item menu item
-     * @return menu contribution
-     */
-    @Nonnull
-    MenuContribution registerMenuItem(String menuId, JMenuItem item);
+    MenuContribution registerMenuItem(String menuId, MenuItemProvider menuProvider);
 
     /**
      * Registers menu item as a child item for given menu.

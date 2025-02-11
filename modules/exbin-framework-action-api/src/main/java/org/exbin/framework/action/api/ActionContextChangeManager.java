@@ -31,27 +31,27 @@ public interface ActionContextChangeManager {
      * empty when no such component is active.
      *
      * @param <T> monitored class type
-     * @param componentClass component class
+     * @param contextClass context class
      * @param listener listener
      */
-    <T> void registerListener(Class<T> componentClass, ActionContextChangeListener<T> listener);
+    <T> void registerListener(Class<T> contextClass, ActionContextChangeListener<T> listener);
 
     /**
      * Registers listener to call each time when component is activated or empty
      * when deactivated.
      *
      * @param <T> monitored class type
-     * @param componentClass component class
+     * @param contextClass context class
      * @param listener listener
      */
-    <T> void registerUpdateListener(Class<T> componentClass, ActionContextChangeListener<T> listener);
+    <T> void registerUpdateListener(Class<T> contextClass, ActionContextChangeListener<T> listener);
 
     /**
      * Requests update for component class.
      *
      * @param <T> monitored class type
-     * @param componentClass component class
+     * @param contextClass context class
      * @param componentInstance component instance
      */
-    <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance);
+    <T> void updateActionsForComponent(Class<T> contextClass, @Nullable T componentInstance);
 }

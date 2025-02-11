@@ -13,32 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.menu;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JMenuItem;
+import javax.swing.Action;
 
 /**
- * Listener for action update when menu is created.
+ * Record of sub/child menu contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionMenuCreation {
+public class SubMenuContribution implements MenuContribution {
 
-    /**
-     * Checks whether menu item should be created.
-     *
-     * @param menuId menu ID
-     * @return true if menu item should be created
-     */
-    boolean shouldCreate(String menuId);
+    private final String menuId;
+    private final Action action;
 
-    /**
-     * Called when new menu item is created.
-     *
-     * @param menuItem new menu item instance
-     * @param menuId menu ID
-     */
-    void onCreate(JMenuItem menuItem, String menuId);
+    public SubMenuContribution(String menuId, Action action) {
+        this.menuId = menuId;
+        this.action = action;
+    }
+
+    @Nonnull
+    public String getMenuId() {
+        return menuId;
+    }
+
+    @Nonnull
+    public Action getAction() {
+        return action;
+    }
 }

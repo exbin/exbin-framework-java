@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.action.api;
 
+import org.exbin.framework.action.api.toolbar.ToolBarManagement;
+import org.exbin.framework.action.api.menu.MenuManagement;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.menu;
 
 /**
- * Interface for menu contributions.
+ * Menu contribution rule.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface MenuContribution {
+public interface MenuContributionRule {
 }

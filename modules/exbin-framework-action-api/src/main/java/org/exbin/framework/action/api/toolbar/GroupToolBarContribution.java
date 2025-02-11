@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.toolbar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Menu contribution rule for items group.
+ * Toolbar contribution rule for items group.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class GroupMenuContributionRule implements MenuContributionRule {
+public class GroupToolBarContribution implements ToolBarContribution {
 
     private final String groupId;
 
-    public GroupMenuContributionRule(String groupId) {
+    public GroupToolBarContribution(String groupId) {
         this.groupId = groupId;
     }
 

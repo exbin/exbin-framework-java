@@ -13,31 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.menu;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
- * Record of sub/child menu contribution.
+ * Record for action as menu item contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SubMenuContribution implements MenuContribution {
+public class ActionMenuContribution implements MenuContribution {
 
-    private final String menuId;
     private final Action action;
 
-    public SubMenuContribution(String menuId, Action action) {
-        this.menuId = menuId;
+    public ActionMenuContribution(Action action) {
         this.action = action;
-    }
-
-    @Nonnull
-    public String getMenuId() {
-        return menuId;
     }
 
     @Nonnull

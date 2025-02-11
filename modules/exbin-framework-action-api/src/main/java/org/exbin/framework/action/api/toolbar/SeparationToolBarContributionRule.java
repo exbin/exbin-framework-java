@@ -13,36 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.toolbar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
+import org.exbin.framework.action.api.SeparationMode;
 
 /**
- * Toolbar contribution rule for item relative position.
+ * Tool bar contribution rule for items separation.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class RelativeToolBarContributionRule implements ToolBarContributionRule {
+public class SeparationToolBarContributionRule implements ToolBarContributionRule {
 
-    private final NextToMode nextToMode;
-    private final String toolbarContributionId;
+    private final SeparationMode separationMode;
 
-    public RelativeToolBarContributionRule(NextToMode nextToMode, String toolbarContributionId) {
-        this.nextToMode = nextToMode;
-        this.toolbarContributionId = toolbarContributionId;
+    public SeparationToolBarContributionRule(SeparationMode separationMode) {
+        this.separationMode = separationMode;
     }
 
     @Nonnull
-    public NextToMode getNextToMode() {
-        return nextToMode;
-    }
-
-    @Nonnull
-    public String getToolbarContributionId() {
-        return toolbarContributionId;
+    public SeparationMode getSeparationMode() {
+        return separationMode;
     }
 }

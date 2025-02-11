@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.menu;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
+import org.exbin.framework.action.api.SeparationMode;
 
 /**
- * Tool bar contribution rule for item position.
+ * Menu contribution rule for items separation.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class PositionToolBarContributionRule implements ToolBarContributionRule {
+public class SeparationMenuContributionRule implements MenuContributionRule {
 
-    private final PositionMode positionMode;
+    private final SeparationMode separationMode;
 
-    public PositionToolBarContributionRule(PositionMode positionMode) {
-        this.positionMode = positionMode;
+    public SeparationMenuContributionRule(SeparationMode separationMode) {
+        this.separationMode = separationMode;
     }
 
     @Nonnull
-    public PositionMode getPositionMode() {
-        return positionMode;
+    public SeparationMode getSeparationMode() {
+        return separationMode;
     }
 }

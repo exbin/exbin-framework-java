@@ -70,16 +70,16 @@ import org.exbin.framework.editor.text.service.TextFontService;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.GroupMenuContributionRule;
-import org.exbin.framework.action.api.GroupToolBarContributionRule;
-import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuManagement;
-import org.exbin.framework.action.api.PositionMenuContributionRule;
-import org.exbin.framework.action.api.PositionToolBarContributionRule;
-import org.exbin.framework.action.api.SeparationMenuContributionRule;
-import org.exbin.framework.action.api.SeparationToolBarContributionRule;
-import org.exbin.framework.action.api.ToolBarContribution;
-import org.exbin.framework.action.api.ToolBarManagement;
+import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.GroupToolBarContributionRule;
+import org.exbin.framework.action.api.menu.MenuContribution;
+import org.exbin.framework.action.api.menu.MenuManagement;
+import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.PositionToolBarContributionRule;
+import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.SeparationToolBarContributionRule;
+import org.exbin.framework.action.api.toolbar.ToolBarContribution;
+import org.exbin.framework.action.api.toolbar.ToolBarManagement;
 import org.exbin.framework.editor.text.options.gui.TextEncodingPanel;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -165,7 +165,7 @@ public class EditorTextModule implements Module {
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, encodingsHandler.getToolsEncodingMenu());
+        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, () -> encodingsHandler.getToolsEncodingMenu());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP_LAST));
     }
 

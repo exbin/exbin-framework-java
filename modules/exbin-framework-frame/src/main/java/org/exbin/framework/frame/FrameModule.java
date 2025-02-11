@@ -41,12 +41,12 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowPosition;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.GroupMenuContributionRule;
-import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuManagement;
-import org.exbin.framework.action.api.PositionMenuContributionRule;
-import org.exbin.framework.action.api.SeparationMenuContributionRule;
-import org.exbin.framework.action.api.ToolBarManagement;
+import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
+import org.exbin.framework.action.api.menu.MenuContribution;
+import org.exbin.framework.action.api.menu.MenuManagement;
+import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
+import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.ToolBarManagement;
 import org.exbin.framework.frame.action.FrameActions;
 import org.exbin.framework.utils.DesktopUtils;
 

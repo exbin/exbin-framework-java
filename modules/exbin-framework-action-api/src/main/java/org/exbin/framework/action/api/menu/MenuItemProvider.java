@@ -13,29 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.menu;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.concurrent.Immutable;
+import javax.swing.JMenuItem;
 
 /**
- * Menu contribution rule for items separation.
+ * Menu item provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-@Immutable
-public class SeparationMenuContributionRule implements MenuContributionRule {
-
-    private final SeparationMode separationMode;
-
-    public SeparationMenuContributionRule(SeparationMode separationMode) {
-        this.separationMode = separationMode;
-    }
+public interface MenuItemProvider {
 
     @Nonnull
-    public SeparationMode getSeparationMode() {
-        return separationMode;
-    }
+    JMenuItem createMenuItem();
 }

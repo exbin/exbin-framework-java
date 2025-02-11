@@ -33,24 +33,25 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.ActionMenuContribution;
-import org.exbin.framework.action.api.ActionMenuCreation;
+import org.exbin.framework.action.api.menu.ActionMenuContribution;
+import org.exbin.framework.action.api.menu.ActionMenuCreation;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.DirectSubMenuContribution;
-import org.exbin.framework.action.api.GroupMenuContribution;
-import org.exbin.framework.action.api.GroupMenuContributionRule;
-import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuContributionRule;
+import org.exbin.framework.action.api.menu.DirectSubMenuContribution;
+import org.exbin.framework.action.api.menu.GroupMenuContribution;
+import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
+import org.exbin.framework.action.api.menu.MenuContribution;
+import org.exbin.framework.action.api.menu.MenuContributionRule;
 import org.exbin.framework.action.api.NextToMode;
-import org.exbin.framework.action.api.PositionMenuContributionRule;
+import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
-import org.exbin.framework.action.api.RelativeMenuContributionRule;
-import org.exbin.framework.action.api.SeparationMenuContributionRule;
+import org.exbin.framework.action.api.menu.RelativeMenuContributionRule;
+import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
 import org.exbin.framework.action.api.SeparationMode;
-import org.exbin.framework.action.api.SubMenuContribution;
+import org.exbin.framework.action.api.menu.SubMenuContribution;
 import org.exbin.framework.utils.ObjectUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionContextService;
+import org.exbin.framework.action.api.menu.MenuItemProvider;
 
 /**
  * Menu manager.
@@ -61,7 +62,7 @@ import org.exbin.framework.action.api.ActionContextService;
 public class MenuManager {
 
     /**
-     * Menu records: menu id -> menu definition.
+     * Menu records: menuItem id -> menuItem definition.
      */
     private Map<String, MenuDefinition> menus = new HashMap<>();
 
@@ -70,7 +71,7 @@ public class MenuManager {
      */
     // private Set<String> menuModified = new HashSet<>();
     /**
-     * Map of plugins usage per menu id.
+     * Map of plugins usage per menuItem id.
      */
     // private Map<String, String> pluginsUsage = new HashMap<>();
     public MenuManager() {
@@ -335,12 +336,14 @@ public class MenuManager {
                     } else if (next.contribution instanceof DirectSubMenuContribution) {
                         processed = new ProcessedContribution() {
                             DirectSubMenuContribution directMenuContribution;
+                            JMenuItem menuItem;
                             String actionId;
 
                             @Override
                             public void process() {
                                 directMenuContribution = (DirectSubMenuContribution) next.contribution;
-                                Action action = directMenuContribution.getMenu().getAction();
+                                menuItem = directMenuContribution.getMenuItemProvider().createMenuItem();
+                                Action action = menuItem.getAction();
                                 if (action != null) {
                                     actionId = (String) action.getValue(ActionConsts.ACTION_ID);
                                 }
@@ -349,7 +352,7 @@ public class MenuManager {
                             @Nonnull
                             @Override
                             public String getName() {
-                                return directMenuContribution.getMenu().getName();
+                                return menuItem.getName();
                             }
 
                             @Nonnull
@@ -361,7 +364,7 @@ public class MenuManager {
                             @Override
                             public boolean shouldCreate() {
                                 if (targetMenu.isPopup()) {
-                                    Action action = directMenuContribution.getMenu().getAction();
+                                    Action action = menuItem.getAction();
                                     if (action != null) {
                                         ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                                         if (menuCreation != null) {
@@ -375,7 +378,6 @@ public class MenuManager {
 
                             @Override
                             public void finish() {
-                                JMenu menuItem = directMenuContribution.getMenu();
                                 Action action = menuItem.getAction();
                                 if (targetMenu.isPopup() && action != null) {
                                     ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
@@ -385,7 +387,7 @@ public class MenuManager {
                                 }
 
                                 targetMenu.add(menuItem);
-                                finishMenu(menuItem, activationUpdateService);
+                                finishMenuItem(menuItem, activationUpdateService);
                                 finishMenuAction(action, activationUpdateService);
                             }
                         };
@@ -429,7 +431,7 @@ public class MenuManager {
                     }
                 }
 
-                // Perform insertion of all processed menu contributions
+                // Perform insertion of all processed menuItem contributions
                 List<OrderingContribution> orderingPath = new LinkedList<>();
 
                 orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, rootProcessed));
@@ -486,6 +488,17 @@ public class MenuManager {
     private void finishMenuAction(@Nullable Action action, ActionContextService activationUpdateService) {
         if (action != null) {
             activationUpdateService.requestUpdate(action);
+        }
+    }
+
+    private void finishMenuItem(JMenuItem menuItem, ActionContextService activationUpdateService) {
+        if (menuItem instanceof JMenu) {
+            finishMenu((JMenu) menuItem, activationUpdateService);
+        } else {
+            Action action = menuItem.getAction();
+            if (action != null) {
+                finishMenuAction(action, activationUpdateService);
+            }
         }
     }
 
@@ -729,14 +742,14 @@ public class MenuManager {
     }
 
     @Nonnull
-    public MenuContribution registerMenuItem(String menuId, String pluginId, JMenu menu) {
+    public MenuContribution registerMenuItem(String menuId, String pluginId, MenuItemProvider menuProvider) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
             menuDef = new MenuDefinition(null);
             menus.put(menuId, menuDef);
         }
 
-        DirectSubMenuContribution menuContribution = new DirectSubMenuContribution(menu);
+        DirectSubMenuContribution menuContribution = new DirectSubMenuContribution(menuProvider);
         menuDef.getContributions().add(menuContribution);
         return menuContribution;
     }

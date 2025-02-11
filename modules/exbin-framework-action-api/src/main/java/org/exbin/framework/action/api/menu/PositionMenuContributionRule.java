@@ -13,12 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.action.api.menu;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+import org.exbin.framework.action.api.PositionMode;
 
 /**
- * Menu contribution rule.
+ * Menu contribution rule for item position.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface MenuContributionRule {
+@ParametersAreNonnullByDefault
+@Immutable
+public class PositionMenuContributionRule implements MenuContributionRule {
+
+    private final PositionMode positionMode;
+
+    public PositionMenuContributionRule(PositionMode positionMode) {
+        this.positionMode = positionMode;
+    }
+
+    @Nonnull
+    public PositionMode getPositionMode() {
+        return positionMode;
+    }
 }

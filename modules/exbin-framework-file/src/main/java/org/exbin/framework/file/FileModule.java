@@ -35,16 +35,16 @@ import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.GroupMenuContributionRule;
-import org.exbin.framework.action.api.GroupToolBarContributionRule;
-import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuManagement;
+import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.GroupToolBarContributionRule;
+import org.exbin.framework.action.api.menu.MenuContribution;
+import org.exbin.framework.action.api.menu.MenuManagement;
 import org.exbin.framework.action.api.NextToMode;
-import org.exbin.framework.action.api.PositionMenuContributionRule;
-import org.exbin.framework.action.api.PositionToolBarContributionRule;
-import org.exbin.framework.action.api.RelativeMenuContributionRule;
-import org.exbin.framework.action.api.ToolBarContribution;
-import org.exbin.framework.action.api.ToolBarManagement;
+import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.PositionToolBarContributionRule;
+import org.exbin.framework.action.api.menu.RelativeMenuContributionRule;
+import org.exbin.framework.action.api.toolbar.ToolBarContribution;
+import org.exbin.framework.action.api.toolbar.ToolBarManagement;
 import org.exbin.framework.file.action.FileActions;
 import org.exbin.framework.file.action.NewFileAction;
 import org.exbin.framework.file.action.OpenFileAction;
@@ -168,9 +168,8 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public void registerRecenFilesMenuActions() {
         getRecentFilesActions();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        JMenu recentFileMenu = recentFilesActions.getOpenRecentMenu();
         MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, recentFileMenu);
+        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, () -> recentFilesActions.getOpenRecentMenu());
         mgmt.registerMenuRule(contribution, new RelativeMenuContributionRule(NextToMode.AFTER, OpenFileAction.ACTION_ID));
     }
 

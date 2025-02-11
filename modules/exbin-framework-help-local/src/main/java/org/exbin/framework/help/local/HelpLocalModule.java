@@ -23,9 +23,9 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.help.local.action.HelpLocalAction;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.MenuContribution;
-import org.exbin.framework.action.api.MenuManagement;
-import org.exbin.framework.action.api.PositionMenuContributionRule;
+import org.exbin.framework.action.api.menu.MenuContribution;
+import org.exbin.framework.action.api.menu.MenuManagement;
+import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
 
 /**
  * Local help module.

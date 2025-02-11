@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.ToolBarContribution;
-import org.exbin.framework.action.api.ToolBarContributionRule;
+import org.exbin.framework.action.api.toolbar.ToolBarContribution;
+import org.exbin.framework.action.api.toolbar.ToolBarContributionRule;
 
 /**
  * Toolbar definition.
