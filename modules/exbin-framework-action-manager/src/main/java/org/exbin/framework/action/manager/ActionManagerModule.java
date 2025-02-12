@@ -35,7 +35,9 @@ import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPage;
+import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.options.api.OptionsPathItem;
+import org.exbin.framework.options.api.PathOptionsPageRule;
 import org.exbin.framework.utils.ComponentResourceProvider;
 import org.exbin.framework.preferences.api.Preferences;
 
@@ -131,9 +133,12 @@ public class ActionManagerModule implements org.exbin.framework.Module {
             public void applyPreferencesChanges(ActionOptionsImpl options) {
             }
         };
+        
+        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+        optionsPageManagement.registerOptionsPage(actionOptionsPage);
         ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) actionOptionsPage).getResourceBundle();
         List<OptionsPathItem> optionsPath = new ArrayList<>();
         optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
-        optionsModule.addOptionsPage(actionOptionsPage, optionsPath);
+        optionsPageManagement.registerOptionsPageRule(actionOptionsPage, new PathOptionsPageRule(optionsPath));
     }
 }

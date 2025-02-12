@@ -13,47 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options;
+package org.exbin.framework.ui.theme.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.preferences.api.Preferences;
-import org.exbin.framework.options.api.OptionsComponent;
 
 /**
- * Interface for application options panels management.
+ * Look&feel provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface OptionsManagement {
+public interface LafProvider {
 
     /**
-     * Adds options panel.
+     * Returns look and feel string identifier.
      *
-     * @param optionsPanel options panel
-     */
-    void addOptionsPanel(OptionsComponent optionsPanel);
-
-    /**
-     * Extends main options panel.
-     *
-     * @param optionsPanel options panel
-     */
-    void extendMainOptionsPanel(OptionsComponent optionsPanel);
-
-    /**
-     * Extends appearance options panel.
-     *
-     * @param optionsPanel options panel
-     */
-    void extendAppearanceOptionsPanel(OptionsComponent optionsPanel);
-
-    /**
-     * Gets preferences.
-     *
-     * @return prefereces
+     * @return string identifier
      */
     @Nonnull
-    Preferences getPreferences();
+    String getLafId();
+
+    /**
+     * Returns look and feel default name.
+     *
+     * @return name
+     */
+    @Nonnull
+    String getLafName();
+
+    /**
+     * Installs look and feel into UIManager.
+     */
+    void installLaf();
+
+    /**
+     * Applies specific look and feel.
+     */
+    void applyLaf();
 }

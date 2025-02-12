@@ -15,20 +15,13 @@
  */
 package org.exbin.framework.ui;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.App;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -60,12 +53,10 @@ import org.exbin.framework.utils.DesktopUtils;
 public class UiModule implements UiModuleApi {
 
     private ResourceBundle resourceBundle;
-    private final List<LafProvider> lafProviders = new ArrayList<>();
 
     private MainOptionsManager mainOptionsManager;
-    private OptionsPage<?> mainOptionsExtPage = null;
-    private OptionsPage<?> appearanceOptionsExtPage = null;
     private AppearanceOptionsPanel appearanceOptionsPanel;
+    private List<Runnable> preInitActions = new ArrayList<>();
     private List<Runnable> postInitActions = new ArrayList<>();
 
     public UiModule() {
@@ -87,86 +78,17 @@ public class UiModule implements UiModuleApi {
     }
 
     @Override
-    public void registerLafPlugin(LafProvider lafProvider) {
-        lafProviders.add(lafProvider);
-    }
-
-    @Nonnull
-    @Override
-    public List<LafProvider> getLafProviders() {
-        return lafProviders;
-    }
-
-    @Override
     public void initSwingUi() {
+        executePreInitActions();
+        
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
         UiPreferences uiPreferences = new UiPreferences(preferencesModule.getAppPreferences());
-
-        // Rendering should be initialized first before any GUI is used
-        String renderingMode = uiPreferences.getRenderingMode();
-        if ("software".equals(renderingMode)) {
-            System.setProperty("sun.java2d.noddraw", "true");
-        } else if ("directdraw".equals(renderingMode)) {
-            System.setProperty("sun.java2d.d3d", "false");
-        } else if ("hw_scale".equals(renderingMode)) {
-            System.setProperty("sun.java2d.d3d", "true");
-            System.setProperty("sun.java2d.ddforcevram", "true");
-            System.setProperty("sun.java2d.translaccel", "true");
-            System.setProperty("sun.java2d.ddscale", "true");
-        } else if ("opengl".equals(renderingMode)) {
-            System.setProperty("sun.java2d.opengl", "true");
-        } else if ("xrender".equals(renderingMode)) {
-            System.setProperty("sun.java2d.xrender", "true");
-        } else if ("metal".equals(renderingMode)) {
-            System.setProperty("sun.java2d.metal", "true");
-        } else if ("wayland".equals(renderingMode)) {
-            System.setProperty("awt.toolkit.name", "WLToolkit");
-        }
-
-        String guiScaling = uiPreferences.getGuiScaling();
-        if (!guiScaling.isEmpty()) {
-            if ("custom".equals(guiScaling)) {
-                float guiScalingRate = uiPreferences.getGuiScalingRate();
-                String scalingRateText = guiScalingRate == Math.floor(guiScalingRate) ? String.format("%.0f", guiScalingRate) : String.valueOf(guiScalingRate);
-                System.setProperty("sun.java2d.uiScale.enabled", "true");
-                System.setProperty("sun.java2d.uiScale", scalingRateText);
-            } else {
-                System.setProperty("sun.java2d.uiScale.enabled", guiScaling);
-            }
-        }
-
-        String fontAntialiasing = uiPreferences.getFontAntialiasing();
-        if (!fontAntialiasing.isEmpty()) {
-            System.setProperty("awt.useSystemAAFontSettings", fontAntialiasing);
-        }
-
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
-            boolean useScreenMenuBar = uiPreferences.isUseScreenMenuBar();
-            if (useScreenMenuBar) {
-                System.setProperty("apple.laf.useScreenMenuBar", "true");
-            }
-
-            String macOsAppearance = uiPreferences.getMacOsAppearance();
-            if ("light".equals(macOsAppearance)) {
-                System.setProperty("apple.awt.application.appearance", "NSAppearanceNameAqua");
-            } else if ("dark".equals(macOsAppearance)) {
-                System.setProperty("apple.awt.application.appearance", "NSAppearanceNameDarkAqua");
-            } else if ("system".equals(macOsAppearance)) {
-                System.setProperty("apple.awt.application.appearance", "system");
-            }
-        }
 
         // Switching language
         // TODO Move to language module, because language can be independent of UI
         Locale locale = uiPreferences.getLocale();
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         languageModule.switchToLanguage(locale);
-
-        for (LafProvider lafProvider : lafProviders) {
-            lafProvider.installLaf();
-        }
-
-        switchToLookAndFeel(uiPreferences.getLookAndFeel());
 
         String iconSet = uiPreferences.getIconSet();
         if (!iconSet.isEmpty()) {
@@ -177,10 +99,23 @@ public class UiModule implements UiModuleApi {
     }
 
     @Override
+    public void addPreInitAction(Runnable runnable) {
+        preInitActions.add(runnable);
+    }
+
+    @Override
+    public void executePreInitActions() {
+        for (Runnable runnable : preInitActions) {
+            runnable.run();
+        }
+        preInitActions.clear();
+    }
+
+    @Override
     public void addPostInitAction(Runnable runnable) {
         postInitActions.add(runnable);
     }
-    
+
     @Override
     public void executePostInitActions() {
         for (Runnable runnable : postInitActions) {
@@ -189,52 +124,18 @@ public class UiModule implements UiModuleApi {
         postInitActions.clear();
     }
 
-    public void switchToLookAndFeel(String laf) {
-        for (LafProvider provider : lafProviders) {
-            if (laf.equals(provider.getLafId())) {
-                provider.applyLaf();
-                return;
-            }
-        }
-
-        try {
-            if (laf.isEmpty()) {
-                String osName = System.getProperty("os.name").toLowerCase();
-                if (!osName.startsWith("windows") && !osName.startsWith("mac")) {
-                    // Try "GTK+" on linux
-                    try {
-                        UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                        laf = UIManager.getSystemLookAndFeelClassName();
-                    }
-                } else {
-                    laf = UIManager.getSystemLookAndFeelClassName();
-                }
-            }
-
-            if (laf != null && !laf.isEmpty()) {
-//                LookAndFeelApplier applier = lafPlugins.get(laf);
-//                if (applier != null) {
-//                    applier.applyLookAndFeel(laf);
-//                } else {
-                UIManager.setLookAndFeel(laf);
-//                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(UiModule.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     @Override
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         getMainOptionsManager();
         OptionsPage<UiOptionsImpl> mainOptionsPage = mainOptionsManager.getMainOptionsPage();
-        optionsModule.addOptionsPage(mainOptionsPage, "");
+        // TODO optionsModule.addOptionsPage(mainOptionsPage, "");
         Optional<MainOptionsPanel> mainOptionsPanel = mainOptionsManager.getMainOptionsPanel();
+        // TODO
+        /*
         if (mainOptionsExtPage != null) {
             mainOptionsPanel.get().addExtendedPanel(mainOptionsExtPage.createPanel());
-        }
+        } */
 
         OptionsPage<AppearanceOptionsImpl> appearanceOptionsPage = new DefaultOptionsPage<AppearanceOptionsImpl>() {
             @Nonnull
@@ -282,10 +183,14 @@ public class UiModule implements UiModuleApi {
         ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) appearanceOptionsPage).getResourceBundle();
         List<OptionsPathItem> optionsPath = new ArrayList<>();
         optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
+        
+        // TODO
+        /*
         optionsModule.addOptionsPage(appearanceOptionsPage, optionsPath);
         if (appearanceOptionsExtPage != null) {
             appearanceOptionsPanel.addExtendedPanel(appearanceOptionsExtPage.createPanel());
         }
+        */
     }
 
     @Nonnull
@@ -294,29 +199,5 @@ public class UiModule implements UiModuleApi {
             mainOptionsManager = new MainOptionsManager();
         }
         return mainOptionsManager;
-    }
-
-    @Override
-    public void extendMainOptionsPage(OptionsPage<?> optionsPage) {
-        if (mainOptionsExtPage != null) {
-            throw new IllegalStateException("Main options page extension already registered");
-        }
-        mainOptionsExtPage = optionsPage;
-
-        Optional<MainOptionsPanel> mainOptionsPanel = mainOptionsManager.getMainOptionsPanel();
-        if (mainOptionsPanel.isPresent()) {
-            mainOptionsPanel.get().addExtendedPanel(mainOptionsExtPage.createPanel());
-        }
-    }
-
-    @Override
-    public void extendAppearanceOptionsPage(OptionsPage<?> optionsPage) {
-        if (appearanceOptionsExtPage != null) {
-            throw new IllegalStateException("Appearance options page extension already registered");
-        }
-        appearanceOptionsExtPage = optionsPage;
-        if (appearanceOptionsPanel != null) {
-            appearanceOptionsPanel.addExtendedPanel(appearanceOptionsExtPage.createPanel());
-        }
     }
 }

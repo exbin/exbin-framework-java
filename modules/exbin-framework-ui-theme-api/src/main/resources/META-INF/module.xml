@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.ui.theme.api.UiThemeModuleApi</api>
+  <name>UI theme handling</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Module for user interface theme handling</description>
+  <dependency>
+    <module id="org.exbin.framework.utils.UtilsModule" />
+    <module id="org.exbin.framework.preferences.api.PreferencesModuleApi" />
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+    <module id="org.exbin.framework.options.api.OptionsModuleApi" />
+    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
+  </dependency>
+</module>

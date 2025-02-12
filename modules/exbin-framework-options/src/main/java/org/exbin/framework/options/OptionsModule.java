@@ -16,23 +16,16 @@
 package org.exbin.framework.options;
 
 import com.formdev.flatlaf.extras.FlatDesktop;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.api.OptionsPanelType;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.api.OptionsPathItem;
-import org.exbin.framework.utils.ComponentResourceProvider;
 import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.action.api.ActionModuleApi;
@@ -43,7 +36,8 @@ import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
 import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.action.OptionsAction;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
+import org.exbin.framework.options.api.OptionsPageManagement;
+import org.exbin.framework.options.api.OptionsPageRule;
 import org.exbin.framework.utils.DesktopUtils;
 
 /**
@@ -56,8 +50,8 @@ public class OptionsModule implements OptionsModuleApi {
 
     private ResourceBundle resourceBundle;
 
-    private final List<OptionsPageRecord> optionsPages = new ArrayList<>();
     private OptionsPanelType optionsPanelType = OptionsPanelType.TREE;
+    private OptionsPageManager optionsPageManager;
 
     public OptionsModule() {
     }
@@ -83,9 +77,7 @@ public class OptionsModule implements OptionsModuleApi {
         ensureSetup();
         OptionsAction optionsAction = new OptionsAction();
         optionsAction.setup(resourceBundle, (OptionsPageReceiver optionsTreePanel) -> {
-            optionsPages.forEach((record) -> {
-                optionsTreePanel.addOptionsPage(record.optionsPage, record.path);
-            });
+            getOptionsPageManager().passOptionsPages(optionsTreePanel);
         });
 
         return optionsAction;
@@ -98,59 +90,34 @@ public class OptionsModule implements OptionsModuleApi {
     }
 
     @Override
-    public void addOptionsPage(OptionsPage<?> optionsPage, List<OptionsPathItem> path) {
-        optionsPages.add(new OptionsPageRecord(path, optionsPage));
-    }
-
-    @Override
-    public void addOptionsPage(OptionsPage<?> optionsPage, String parentPath) {
-        ArrayList<OptionsPathItem> optionsPath = new ArrayList<>();
-        String[] pathParts = parentPath.split("/");
-        for (String pathPart : pathParts) {
-            if (!pathPart.isEmpty()) {
-                optionsPath.add(new OptionsPathItem(pathPart, null));
-            }
-        }
-        if (optionsPage instanceof ComponentResourceProvider) {
-            ResourceBundle componentResourceBundle = ((ComponentResourceProvider) optionsPage).getResourceBundle();
-            String optionsDefaultName = componentResourceBundle.getString("options.name");
-            String optionsDefaultCaption = componentResourceBundle.getString("options.caption");
-            optionsPath.add(new OptionsPathItem(optionsDefaultName, optionsDefaultCaption));
-        }
-        addOptionsPage(optionsPage, optionsPath);
-    }
-
-    @Override
-    public void addOptionsPage(OptionsPage<?> optionsPage) {
-        String optionsDefaultPath;
-        if (optionsPage instanceof ComponentResourceProvider) {
-            ResourceBundle componentResourceBundle = ((ComponentResourceProvider) optionsPage).getResourceBundle();
-            optionsDefaultPath = componentResourceBundle.getString("options.path");
-        } else {
-            optionsDefaultPath = null;
-        }
-
-        addOptionsPage(optionsPage, optionsDefaultPath);
-    }
-
-    @Override
-    public void passOptionsPages(OptionsPageReceiver optionsPageReceiver) {
-        for (OptionsPageRecord optionsPageRecord : optionsPages) {
-            optionsPageReceiver.addOptionsPage(optionsPageRecord.optionsPage, optionsPageRecord.path);
-        }
-    }
-
-    @Override
     public void initialLoadFromPreferences() {
-        // TODO use preferences instead of options for initial apply
-        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-        Preferences preferences = preferencesModule.getAppPreferences();
-        for (OptionsPageRecord optionsPage : optionsPages) {
-            OptionsPage<?> page = optionsPage.optionsPage;
-            OptionsData options = page.createOptions();
-            ((OptionsPage) page).loadFromPreferences(preferences, options);
-        }
+        getOptionsPageManager().initialLoadFromPreferences();
         notifyOptionsChanged();
+    }
+
+    @Nonnull
+    public OptionsPageManager getOptionsPageManager() {
+        if (optionsPageManager == null) {
+            optionsPageManager = new OptionsPageManager();
+        }
+
+        return optionsPageManager;
+    }
+
+    @Nonnull
+    @Override
+    public OptionsPageManagement getOptionsPageManagement(String moduleId) {
+        return new OptionsPageManagement() {
+            @Override
+            public void registerOptionsPage(OptionsPage<?> optionsPage) {
+                getOptionsPageManager().registerOptionsPage(optionsPage);
+            }
+
+            @Override
+            public void registerOptionsPageRule(OptionsPage<?> optionsPage, OptionsPageRule optionsPageRule) {
+                getOptionsPageManager().registerOptionsPageRule(optionsPage, optionsPageRule);
+            }
+        };
     }
 
     @Override
@@ -189,17 +156,5 @@ public class OptionsModule implements OptionsModuleApi {
     @Override
     public void setOptionsPanelType(OptionsPanelType optionsPanelType) {
         this.optionsPanelType = optionsPanelType;
-    }
-
-    @ParametersAreNonnullByDefault
-    private static class OptionsPageRecord {
-
-        List<OptionsPathItem> path;
-        OptionsPage<?> optionsPage;
-
-        public OptionsPageRecord(@Nullable List<OptionsPathItem> path, OptionsPage<?> optionsPage) {
-            this.path = path;
-            this.optionsPage = optionsPage;
-        }
     }
 }

@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JMenu;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.file.api.FileType;
@@ -63,7 +62,9 @@ import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPage;
+import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.options.api.OptionsPathItem;
+import org.exbin.framework.options.api.PathOptionsPageRule;
 import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.utils.ComponentResourceProvider;
 
@@ -327,6 +328,8 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) fileOptionsPage).getResourceBundle();
         List<OptionsPathItem> optionsPath = new ArrayList<>();
         optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
-        optionsModule.addOptionsPage(fileOptionsPage, optionsPath);
+        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+        optionsPageManagement.registerOptionsPage(fileOptionsPage);
+        optionsPageManagement.registerOptionsPageRule(fileOptionsPage, new PathOptionsPageRule(optionsPath));
     }
 }

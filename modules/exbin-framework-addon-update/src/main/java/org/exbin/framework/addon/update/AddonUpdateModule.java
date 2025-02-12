@@ -43,6 +43,7 @@ import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
 import org.exbin.framework.addon.update.api.AddonUpdateModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.options.api.OptionsPageManagement;
 
 /**
  * Implementation of framework check update module.
@@ -87,8 +88,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
 
     @Override
     public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        optionsModule.addOptionsPage(new DefaultOptionsPage<CheckForUpdateOptions>() {
+        DefaultOptionsPage<CheckForUpdateOptions> optionsPage = new DefaultOptionsPage<CheckForUpdateOptions>() {
             @Override
             public OptionsComponent<CheckForUpdateOptions> createPanel() {
                 return new ApplicationUpdateOptionsPanel();
@@ -119,7 +119,10 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
             @Override
             public void applyPreferencesChanges(CheckForUpdateOptions options) {
             }
-        });
+        };
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+        optionsPageManagement.registerOptionsPage(optionsPage);
     }
 
     @Nonnull

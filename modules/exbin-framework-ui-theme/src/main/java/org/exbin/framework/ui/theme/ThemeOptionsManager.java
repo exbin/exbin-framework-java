@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui;
+package org.exbin.framework.ui.theme;
 
 import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
@@ -37,21 +33,19 @@ import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsPage;
-import org.exbin.framework.ui.api.ConfigurableLafProvider;
-import org.exbin.framework.ui.gui.MainOptionsPanel;
-import org.exbin.framework.ui.options.impl.UiOptionsImpl;
+import org.exbin.framework.ui.theme.api.ConfigurableLafProvider;
+import org.exbin.framework.ui.theme.gui.ThemeOptionsPanel;
+import org.exbin.framework.ui.theme.options.impl.ThemeOptionsImpl;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.language.api.LanguageProvider;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.ui.api.LafOptionsHandler;
-import org.exbin.framework.ui.api.LafProvider;
-import org.exbin.framework.ui.api.UiModuleApi;
-import org.exbin.framework.ui.api.preferences.UiPreferences;
-import org.exbin.framework.ui.model.LanguageRecord;
+import org.exbin.framework.ui.theme.api.LafOptionsHandler;
+import org.exbin.framework.ui.theme.api.LafProvider;
+import org.exbin.framework.ui.theme.api.preferences.UiPreferences;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
+import org.exbin.framework.ui.theme.api.UiThemeModuleApi;
 
 /**
  * Interface for application options panels management.
@@ -59,9 +53,9 @@ import org.exbin.framework.window.api.gui.DefaultControlPanel;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MainOptionsManager {
+public class ThemeOptionsManager {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(MainOptionsManager.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ThemeOptionsManager.class);
 
     private boolean valuesInitialized = false;
     private List<String> themes;
@@ -69,7 +63,6 @@ public class MainOptionsManager {
     private Map<String, ConfigurableLafProvider> themeOptions;
     private List<String> iconSets;
     private List<String> iconSetNames;
-    private List<LanguageRecord> languageLocales = null;
     private List<String> renderingMethodKeys;
     private List<String> renderingMethodNames;
     private List<String> fontAntialiasingKeys;
@@ -79,9 +72,9 @@ public class MainOptionsManager {
     private List<String> guiMacOsAppearanceKeys;
     private List<String> guiMacOsAppearanceNames;
 
-    private MainOptionsPanel mainOptionsPanel;
+    private ThemeOptionsPanel mainOptionsPanel;
 
-    public MainOptionsManager() {
+    public ThemeOptionsManager() {
     }
 
     public void initValues() {
@@ -107,6 +100,13 @@ public class MainOptionsManager {
                 themeNames.add(lookAndFeelInfo.getName());
             }
         }
+        themeOptions = new HashMap<>();
+        List<LafProvider> lafProviders = App.getModule(UiThemeModuleApi.class).getLafProviders();
+        for (LafProvider lafProvider : lafProviders) {
+            if (lafProvider instanceof ConfigurableLafProvider) {
+                themeOptions.put(lafProvider.getLafId(), (ConfigurableLafProvider) lafProvider);
+            }
+        }
 
         iconSets = new ArrayList<>();
         iconSets.add("");
@@ -116,21 +116,6 @@ public class MainOptionsManager {
         for (IconSetProvider provider : providers) {
             iconSets.add(provider.getId());
             iconSetNames.add(provider.getName());
-        }
-
-        languageLocales = new ArrayList<>();
-        languageLocales.add(new LanguageRecord(Locale.ROOT, null));
-        languageLocales.add(new LanguageRecord(Locale.US, new ImageIcon(getClass().getResource(resourceBundle.getString("locale.englishFlag")))));
-
-        List<LanguageProvider> languagePlugins = App.getModule(LanguageModuleApi.class).getLanguagePlugins();
-        for (LanguageProvider languageProvider : languagePlugins) {
-            ImageIcon flag = null;
-            try {
-                flag = languageProvider.getFlag().orElse(null);
-            } catch (Throwable ex) {
-                Logger.getLogger(MainOptionsManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            languageLocales.add(new LanguageRecord(languageProvider.getLocale(), flag, null));
         }
 
         renderingMethodKeys = new ArrayList<>();
@@ -191,23 +176,21 @@ public class MainOptionsManager {
     }
 
     @Nonnull
-    public OptionsPage<UiOptionsImpl> getMainOptionsPage() {
-        return new DefaultOptionsPage<UiOptionsImpl>() {
+    public OptionsPage<ThemeOptionsImpl> getMainOptionsPage() {
+        return new DefaultOptionsPage<ThemeOptionsImpl>() {
             private Map<String, LafOptionsHandler> themeOptionsHandlers = new HashMap<>();
 
             @Nonnull
             @Override
-            public OptionsComponent<UiOptionsImpl> createPanel() {
+            public OptionsComponent<ThemeOptionsImpl> createPanel() {
                 if (!valuesInitialized) {
                     valuesInitialized = true;
                     initValues();
                 }
 
-                mainOptionsPanel = new MainOptionsPanel();
+                mainOptionsPanel = new ThemeOptionsPanel();
                 mainOptionsPanel.setThemes(themes, themeNames, themeOptions);
                 mainOptionsPanel.setIconSets(iconSets, iconSetNames);
-                mainOptionsPanel.setDefaultLocaleName("<" + resourceBundle.getString("locale.defaultLanguage") + ">");
-                mainOptionsPanel.setLanguageLocales(languageLocales);
                 mainOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
                 mainOptionsPanel.setFontAntialiasings(fontAntialiasingKeys, fontAntialiasingNames);
                 mainOptionsPanel.setGuiScalings(guiScalingKeys, guiScalingNames);
@@ -251,23 +234,23 @@ public class MainOptionsManager {
             @Nonnull
             @Override
             public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(MainOptionsPanel.class);
+                return App.getModule(LanguageModuleApi.class).getBundle(ThemeOptionsPanel.class);
             }
 
             @Nonnull
             @Override
-            public UiOptionsImpl createOptions() {
-                return new UiOptionsImpl();
+            public ThemeOptionsImpl createOptions() {
+                return new ThemeOptionsImpl();
             }
 
             @Override
-            public void loadFromPreferences(Preferences preferences, UiOptionsImpl options) {
+            public void loadFromPreferences(Preferences preferences, ThemeOptionsImpl options) {
                 UiPreferences prefs = new UiPreferences(preferences);
                 options.loadFromPreferences(prefs);
             }
 
             @Override
-            public void saveToPreferences(Preferences preferences, UiOptionsImpl options) {
+            public void saveToPreferences(Preferences preferences, ThemeOptionsImpl options) {
                 UiPreferences prefs = new UiPreferences(preferences);
                 options.saveToParameters(prefs);
                 for (LafOptionsHandler lafOptions : themeOptionsHandlers.values()) {
@@ -276,7 +259,7 @@ public class MainOptionsManager {
             }
 
             @Override
-            public void applyPreferencesChanges(UiOptionsImpl options) {
+            public void applyPreferencesChanges(ThemeOptionsImpl options) {
                 String selectedTheme = options.getLookAndFeel();
                 // TODO application.applyLookAndFeel(selectedTheme);
 
@@ -287,7 +270,7 @@ public class MainOptionsManager {
     }
 
     @Nonnull
-    public Optional<MainOptionsPanel> getMainOptionsPanel() {
+    public Optional<ThemeOptionsPanel> getMainOptionsPanel() {
         return Optional.ofNullable(mainOptionsPanel);
     }
 

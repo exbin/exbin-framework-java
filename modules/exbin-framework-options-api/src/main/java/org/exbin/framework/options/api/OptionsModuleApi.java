@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.options.api;
 
-import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -33,39 +32,22 @@ public interface OptionsModuleApi extends Module {
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(OptionsModuleApi.class);
     public static String TOOLS_OPTIONS_MENU_GROUP_ID = MODULE_ID + ".toolsOptionsMenuGroup";
 
+    /**
+     * Returns options page management.
+     *
+     * @param moduleId module id
+     * @return
+     */
+    @Nonnull
+    OptionsPageManagement getOptionsPageManagement(String moduleId);
+
+    /**
+     * Creates open options dialog action.
+     *
+     * @return options action
+     */
     @Nonnull
     Action createOptionsAction();
-
-    /**
-     * Adds options panel to given path.
-     *
-     * @param optionsPage options panel
-     * @param path path to use for options panel tree
-     */
-    void addOptionsPage(OptionsPage<?> optionsPage, List<OptionsPathItem> path);
-
-    /**
-     * Adds options panel to given path with default name.
-     *
-     * @param optionsPage options panel
-     * @param parentPath path string to use for options panel tree with strings
-     * separated by /
-     */
-    void addOptionsPage(OptionsPage<?> optionsPage, String parentPath);
-
-    /**
-     * Adds options panel to default path and name.
-     *
-     * @param optionsPage options panel
-     */
-    void addOptionsPage(OptionsPage<?> optionsPage);
-
-    /**
-     * Passes options page to receiver.
-     *
-     * @param optionsPageReceiver options page receiver
-     */
-    void passOptionsPages(OptionsPageReceiver optionsPageReceiver);
 
     /**
      * Registers options menu action in default position.

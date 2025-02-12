@@ -13,50 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.api;
+package org.exbin.framework.ui.theme.api;
 
+import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.options.api.OptionsPage;
 
 /**
- * Interface for framework UI module.
+ * Interface for framework UI theme module.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UiModuleApi extends Module {
+public interface UiThemeModuleApi extends Module {
 
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(UiModuleApi.class);
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(UiThemeModuleApi.class);
+
+    /**
+     * Register look and feel provider.
+     *
+     * @param lafProvider look and feel provider
+     */
+    void registerLafPlugin(LafProvider lafProvider);
+
+    /**
+     * Returns list of available look and feel providers.
+     *
+     * @return list of look and feel providers
+     */
+    @Nonnull
+    List<LafProvider> getLafProviders();
 
     /**
      * Initialize UI. Should be called before any GUI is created.
      */
-    void initSwingUi();
-
-    /**
-     * Registers pre UI initialization action.
-     *
-     * @param runnable runnable action
-     */
-    void addPreInitAction(Runnable runnable);
-
-    /**
-     * Manually execute pre init actions.
-     */
-    void executePreInitActions();
-
-    /**
-     * Registers post UI initialization action.
-     *
-     * @param runnable runnable action
-     */
-    void addPostInitAction(Runnable runnable);
-
-    /**
-     * Manually execute post init actions.
-     */
-    void executePostInitActions();
+    void registerThemeInit();
 
     /**
      * Registers options panels.

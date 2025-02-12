@@ -83,6 +83,8 @@ import org.exbin.framework.action.api.toolbar.ToolBarManagement;
 import org.exbin.framework.editor.text.options.gui.TextEncodingPanel;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.options.api.OptionsPage;
+import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 
@@ -190,7 +192,7 @@ public class EditorTextModule implements Module {
             }
         };
 
-        optionsModule.addOptionsPage(new DefaultOptionsPage<TextColorOptionsImpl>() {
+        OptionsPage<TextColorOptionsImpl> textColorsOptionsPage = new DefaultOptionsPage<TextColorOptionsImpl>() {
             private TextColorOptionsPanel panel;
 
             @Nonnull
@@ -244,7 +246,9 @@ public class EditorTextModule implements Module {
             private Color intToColor(@Nullable Integer intValue) {
                 return intValue == null ? null : new Color(intValue);
             }
-        });
+        };
+        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+        optionsPageManagement.registerOptionsPage(textColorsOptionsPage);
 
         TextFontService textFontService = new TextFontService() {
             @Nonnull
@@ -265,7 +269,7 @@ public class EditorTextModule implements Module {
             }
         };
 
-        optionsModule.addOptionsPage(new DefaultOptionsPage<TextFontOptionsImpl>() {
+        OptionsPage<TextFontOptionsImpl> textFontOptionsPage = new DefaultOptionsPage<TextFontOptionsImpl>() {
 
             private TextFontOptionsPanel panel;
 
@@ -345,7 +349,8 @@ public class EditorTextModule implements Module {
                     textFontService.setCurrentFont(options.getFont(textFontService.getDefaultFont()));
                 }
             }
-        });
+        };
+        optionsPageManagement.registerOptionsPage(textFontOptionsPage);
 
         TextAppearanceService textAppearanceService;
         textAppearanceService = new TextAppearanceService() {
@@ -360,7 +365,7 @@ public class EditorTextModule implements Module {
             }
         };
 
-        optionsModule.addOptionsPage(new DefaultOptionsPage<TextEncodingOptionsImpl>() {
+        OptionsPage<TextEncodingOptionsImpl> textEncodingOptionsPage = new DefaultOptionsPage<TextEncodingOptionsImpl>() {
             private TextEncodingOptionsPanel panel;
 
             @Override
@@ -419,10 +424,13 @@ public class EditorTextModule implements Module {
                 encodingsHandler.setSelectedEncoding(options.getSelectedEncoding());
                 encodingsHandler.setEncodings(options.getEncodings());
             }
-        });
+        };
+        optionsPageManagement.registerOptionsPage(textEncodingOptionsPage);
 
         UiModuleApi uiModule = App.getModule(UiModuleApi.class);
-        uiModule.extendAppearanceOptionsPage(new DefaultOptionsPage<TextAppearanceOptionsImpl>() {
+        throw new UnsupportedOperationException("Not supported yet.");
+        // TODO
+/*        uiModule.extendAppearanceOptionsPage(new DefaultOptionsPage<TextAppearanceOptionsImpl>() {
             private TextAppearanceOptionsPanel panel;
 
             @Override
@@ -459,7 +467,7 @@ public class EditorTextModule implements Module {
             public void applyPreferencesChanges(TextAppearanceOptionsImpl options) {
                 textAppearanceService.setWordWrapMode(options.isWordWrapping());
             }
-        });
+        }); */
     }
 
     public void registerUndoHandler() {
